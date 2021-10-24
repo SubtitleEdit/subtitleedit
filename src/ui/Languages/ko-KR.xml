@@ -1208,7 +1208,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <CloseVideo>비디오 파일 닫기</CloseVideo>
         <OpenSecondSubtitle>두 번째 자막 파일 열기...</OpenSecondSubtitle>
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
-        <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
+        <SmptTimeMode>SMPTE 타이밍 (비 정수 프레임 속도)</SmptTimeMode>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>자막 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
@@ -2422,6 +2422,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SwitchOriginalAndTranslation>원본과 번역본 바꾸기</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>원본과 번역본 병합</MergeOriginalAndTranslation>
     <MergeWithNext>다음과 병합</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>이전과 병합하고 줄바꿈 제거</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>다음과 병합하고 줄바꿈 제거</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>이전과 병합하고 자동 줄바꿈</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>다음과 병합하고 자동 줄바꿈</MergeWithNextAndBreak>
     <MergeWithPrevious>이전과 병합</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>이미 정의된 단축키: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>비디오/오디오 미리 보기에서 번역본 및 원본 전환</ToggleTranslationAndOriginalInPreviews>
@@ -2761,6 +2765,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Info>※ 하나의 동기화 지점을 정한 후 나머지 지점들의 위치와 속도를 정하고 조정합니다.</Info>
     <ApplySync>동기화 적용</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE 타이밍</Title>
+    <UseSmpteTiming>현재 자막에 SMPTE 타이밍을 사용하시겠습니까?</UseSmpteTiming>
+    <SmpteTimingInfo>참고: SMPTE 타이밍은 나중에 "비디오 메뉴"에서 변경할 수 있습니다.</SmpteTimingInfo>
+    <YesAlways>예, 항상 비 정수 프레임속도 용</YesAlways>
+    <NoNever>아니요, 절대로</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>전송 스트림 자막 선택기 - {0}</Title>
     <PidLineImage>이미지 - 전송 패킷 식별자 (PID) = {0}, 언어 = {1}, 자막 수 = {2}</PidLineImage>
