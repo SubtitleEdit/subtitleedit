@@ -15,6 +15,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
@@ -1338,23 +1339,35 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        if (format != null && format.GetType() == typeof(Ebu))
-                        {
-                            var ebuOriginal = new Ebu();
-                            var temp = new Subtitle();
-                            ebuOriginal.LoadSubtitle(temp, null, fileName);
-                            ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
-                        }
-                        else if (!string.IsNullOrEmpty(ebuHeaderFile))
+                        if (!string.IsNullOrEmpty(ebuHeaderFile))
                         {
                             var ebuOriginal = new Ebu();
                             var temp = new Subtitle();
                             ebuOriginal.LoadSubtitle(temp, null, ebuHeaderFile);
                             ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
                         }
+                        else if (format != null && format.GetType() == typeof(Ebu))
+                        {
+                            var ebuOriginal = new Ebu();
+                            var temp = new Subtitle();
+                            ebuOriginal.LoadSubtitle(temp, null, fileName);
+                            if (sub.Header != null && new Regex("^\\d\\d\\dSTL\\d\\d").IsMatch(sub.Header))
+                            {
+                                ebuOriginal.Header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(sub.Header));
+                            }
+                            ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
+                        }
                         else
                         {
-                            ebu.Save(outputFileName, sub, true);
+                            if (sub.Header != null && new Regex("^\\d\\d\\dSTL\\d\\d").IsMatch(sub.Header))
+                            {
+                                var header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(sub.Header));
+                                ebu.Save(outputFileName, sub, true, header);
+                            }
+                            else
+                            {
+                                ebu.Save(outputFileName, sub, true);
+                            }
                         }
                         _stdOutWriter?.WriteLine(" done.");
                     }
