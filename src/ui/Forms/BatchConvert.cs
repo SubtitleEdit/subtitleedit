@@ -934,34 +934,34 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            UpdateChangeCasingSettings();
-            UpdateRtlSettings();
-            UpdateActionEnabledCache();
             if (listViewInputFiles.Items.Count == 0)
             {
                 MessageBox.Show(LanguageSettings.Current.BatchConvert.NothingToConvert);
                 return;
             }
-            if (!checkBoxOverwrite.Checked)
+
+            if (radioButtonSaveInOutputFolder.Checked && !Directory.Exists(textBoxOutputFolder.Text))
             {
                 if (textBoxOutputFolder.Text.Length < 2)
                 {
                     MessageBox.Show(LanguageSettings.Current.BatchConvert.PleaseChooseOutputFolder);
                     return;
                 }
-                if (!Directory.Exists(textBoxOutputFolder.Text))
+
+                try
                 {
-                    try
-                    {
-                        Directory.CreateDirectory(textBoxOutputFolder.Text);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message);
-                        return;
-                    }
+                    Directory.CreateDirectory(textBoxOutputFolder.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                    return;
                 }
             }
+
+            UpdateChangeCasingSettings();
+            UpdateRtlSettings();
+            UpdateActionEnabledCache();
             _converting = true;
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Maximum = listViewInputFiles.Items.Count;
@@ -2747,6 +2747,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (!Directory.Exists(textBoxOutputFolder.Text))
+            {
+                try
+                {
+                    Directory.CreateDirectory(textBoxOutputFolder.Text);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             if (Directory.Exists(textBoxOutputFolder.Text))
             {
                 UiUtil.OpenFolder(textBoxOutputFolder.Text);
