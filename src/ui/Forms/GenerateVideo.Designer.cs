@@ -49,10 +49,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
+            this.contextMenuStripRes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uHD3840x2160ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.k2048x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dCI2KScope2048x858ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dCI2KFlat1998x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.p1920x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.x1080ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.p1280x720ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.x720ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.p848x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pAL720x576ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.groupBoxBackground.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMinutes)).BeginInit();
+            this.contextMenuStripRes.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelColor
@@ -78,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(451, 155);
+            this.buttonOK.Location = new System.Drawing.Point(499, 155);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(121, 23);
             this.buttonOK.TabIndex = 20;
@@ -91,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(578, 155);
+            this.buttonCancel.Location = new System.Drawing.Point(626, 155);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 21;
@@ -105,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 155);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(433, 10);
+            this.progressBar1.Size = new System.Drawing.Size(481, 10);
             this.progressBar1.TabIndex = 8;
             this.progressBar1.Visible = false;
             // 
@@ -198,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxBackground.Controls.Add(this.radioButtonCheckeredImage);
             this.groupBoxBackground.Controls.Add(this.buttonColor);
             this.groupBoxBackground.Controls.Add(this.panelColor);
-            this.groupBoxBackground.Location = new System.Drawing.Point(339, 12);
+            this.groupBoxBackground.Location = new System.Drawing.Point(387, 12);
             this.groupBoxBackground.Name = "groupBoxBackground";
             this.groupBoxBackground.Size = new System.Drawing.Size(314, 118);
             this.groupBoxBackground.TabIndex = 7;
@@ -292,11 +309,142 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelProgress.TabIndex = 30;
             this.labelProgress.Text = "Remaining time...";
             // 
+            // contextMenuStripRes
+            // 
+            this.contextMenuStripRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.x2160ToolStripMenuItem,
+            this.uHD3840x2160ToolStripMenuItem,
+            this.k2048x1080ToolStripMenuItem,
+            this.dCI2KScope2048x858ToolStripMenuItem,
+            this.dCI2KFlat1998x1080ToolStripMenuItem,
+            this.p1920x1080ToolStripMenuItem,
+            this.x1080ToolStripMenuItem,
+            this.p1280x720ToolStripMenuItem,
+            this.x720ToolStripMenuItem,
+            this.p848x480ToolStripMenuItem,
+            this.pAL720x576ToolStripMenuItem,
+            this.nTSC720x480ToolStripMenuItem,
+            this.x352ToolStripMenuItem,
+            this.x272ToolStripMenuItem});
+            this.contextMenuStripRes.Name = "contextMenuStripRes";
+            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 334);
+            // 
+            // x2160ToolStripMenuItem
+            // 
+            this.x2160ToolStripMenuItem.Name = "x2160ToolStripMenuItem";
+            this.x2160ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x2160ToolStripMenuItem.Text = "4K (4096x2160)";
+            this.x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // uHD3840x2160ToolStripMenuItem
+            // 
+            this.uHD3840x2160ToolStripMenuItem.Name = "uHD3840x2160ToolStripMenuItem";
+            this.uHD3840x2160ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.uHD3840x2160ToolStripMenuItem.Text = "UHD (3840x2160)";
+            this.uHD3840x2160ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // k2048x1080ToolStripMenuItem
+            // 
+            this.k2048x1080ToolStripMenuItem.Name = "k2048x1080ToolStripMenuItem";
+            this.k2048x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.k2048x1080ToolStripMenuItem.Text = "2K (2048x1080)";
+            this.k2048x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // dCI2KScope2048x858ToolStripMenuItem
+            // 
+            this.dCI2KScope2048x858ToolStripMenuItem.Name = "dCI2KScope2048x858ToolStripMenuItem";
+            this.dCI2KScope2048x858ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.dCI2KScope2048x858ToolStripMenuItem.Text = "DCI 2K Scope (2048x858)";
+            this.dCI2KScope2048x858ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // dCI2KFlat1998x1080ToolStripMenuItem
+            // 
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Name = "dCI2KFlat1998x1080ToolStripMenuItem";
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Text = "DCI 2K Flat (1998x1080)";
+            this.dCI2KFlat1998x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // p1920x1080ToolStripMenuItem
+            // 
+            this.p1920x1080ToolStripMenuItem.Name = "p1920x1080ToolStripMenuItem";
+            this.p1920x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.p1920x1080ToolStripMenuItem.Text = "1080p (1920x1080)";
+            this.p1920x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // x1080ToolStripMenuItem
+            // 
+            this.x1080ToolStripMenuItem.Name = "x1080ToolStripMenuItem";
+            this.x1080ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x1080ToolStripMenuItem.Text = "1440x1080";
+            this.x1080ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // p1280x720ToolStripMenuItem
+            // 
+            this.p1280x720ToolStripMenuItem.Name = "p1280x720ToolStripMenuItem";
+            this.p1280x720ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.p1280x720ToolStripMenuItem.Text = "720p (1280x720)";
+            this.p1280x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // x720ToolStripMenuItem
+            // 
+            this.x720ToolStripMenuItem.Name = "x720ToolStripMenuItem";
+            this.x720ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x720ToolStripMenuItem.Text = "960x720";
+            this.x720ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // p848x480ToolStripMenuItem
+            // 
+            this.p848x480ToolStripMenuItem.Name = "p848x480ToolStripMenuItem";
+            this.p848x480ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.p848x480ToolStripMenuItem.Text = "480p (848x480)";
+            this.p848x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // pAL720x576ToolStripMenuItem
+            // 
+            this.pAL720x576ToolStripMenuItem.Name = "pAL720x576ToolStripMenuItem";
+            this.pAL720x576ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.pAL720x576ToolStripMenuItem.Text = "PAL (720x576)";
+            this.pAL720x576ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // nTSC720x480ToolStripMenuItem
+            // 
+            this.nTSC720x480ToolStripMenuItem.Name = "nTSC720x480ToolStripMenuItem";
+            this.nTSC720x480ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.nTSC720x480ToolStripMenuItem.Text = "NTSC (720x480)";
+            this.nTSC720x480ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // x352ToolStripMenuItem
+            // 
+            this.x352ToolStripMenuItem.Name = "x352ToolStripMenuItem";
+            this.x352ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x352ToolStripMenuItem.Text = "640x352";
+            this.x352ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // x272ToolStripMenuItem
+            // 
+            this.x272ToolStripMenuItem.Name = "x272ToolStripMenuItem";
+            this.x272ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.x272ToolStripMenuItem.Text = "640x272";
+            this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
+            // 
+            // buttonVideoChooseStandardRes
+            // 
+            this.buttonVideoChooseStandardRes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(323, 56);
+            this.buttonVideoChooseStandardRes.Name = "buttonVideoChooseStandardRes";
+            this.buttonVideoChooseStandardRes.Size = new System.Drawing.Size(27, 23);
+            this.buttonVideoChooseStandardRes.TabIndex = 32;
+            this.buttonVideoChooseStandardRes.Text = "...";
+            this.buttonVideoChooseStandardRes.UseVisualStyleBackColor = true;
+            this.buttonVideoChooseStandardRes.Click += new System.EventHandler(this.buttonVideoChooseStandardRes_Click);
+            // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(665, 190);
+            this.ClientSize = new System.Drawing.Size(713, 190);
+            this.Controls.Add(this.buttonVideoChooseStandardRes);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.comboBoxFrameRate);
             this.Controls.Add(this.labelFrameRate);
@@ -325,6 +473,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxBackground.ResumeLayout(false);
             this.groupBoxBackground.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMinutes)).EndInit();
+            this.contextMenuStripRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -350,5 +499,21 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ComboBox comboBoxFrameRate;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelProgress;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripRes;
+        private System.Windows.Forms.ToolStripMenuItem x2160ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uHD3840x2160ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem k2048x1080ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dCI2KScope2048x858ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dCI2KFlat1998x1080ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem p1920x1080ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x1080ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem p1280x720ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x720ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem p848x480ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pAL720x576ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nTSC720x480ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x352ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem x272ToolStripMenuItem;
+        private System.Windows.Forms.Button buttonVideoChooseStandardRes;
     }
 }
