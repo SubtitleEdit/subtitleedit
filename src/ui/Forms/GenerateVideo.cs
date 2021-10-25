@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownWidth.Left = left;
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
+            buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             comboBoxFrameRate.Left = left;
 
             comboBoxFrameRate.Items.Clear();
@@ -226,8 +227,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (_processedFrames <= 0)
@@ -240,6 +239,21 @@ namespace Nikse.SubtitleEdit.Forms
             var estimatedTotalMs = msPerFrame * _totalFrames;
             var estimatedLeft = GenerateVideoWithHardSubs.ToProgressTime(estimatedTotalMs - durationMs);
             labelProgress.Text = estimatedLeft;
+        }
+
+        private void ResolutionPickClick(object sender, EventArgs e)
+        {
+            var text = (sender as ToolStripMenuItem).Text;
+            var match = new Regex("\\d+x\\d+").Match(text);
+            var parts = match.Value.Split('x');
+            numericUpDownWidth.Value = int.Parse(parts[0]);
+            numericUpDownHeight.Value = int.Parse(parts[1]);
+        }
+
+        private void buttonVideoChooseStandardRes_Click(object sender, EventArgs e)
+        {
+            var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
+            contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
         }
     }
 }

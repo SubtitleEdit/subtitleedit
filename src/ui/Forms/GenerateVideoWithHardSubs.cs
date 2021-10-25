@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownWidth.Left = left;
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
+            buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOff;
             checkBoxRightToLeft.Left = left;
             checkBoxAlignRight.Left = left;
@@ -777,6 +778,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return new Paragraph("Example text", 0, 10000);
+        }
+
+        private void ResolutionPickClick(object sender, EventArgs e)
+        {
+            var text = (sender as ToolStripMenuItem).Text;
+            var match = new Regex("\\d+x\\d+").Match(text);
+            var parts = match.Value.Split('x');
+            numericUpDownWidth.Value = int.Parse(parts[0]);
+            numericUpDownHeight.Value = int.Parse(parts[1]);
+        }
+
+        private void buttonVideoChooseStandardRes_Click(object sender, EventArgs e)
+        {
+            var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
+            contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
         }
     }
 }
