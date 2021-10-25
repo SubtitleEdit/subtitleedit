@@ -1213,7 +1213,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <OpenSecondSubtitle>Abrir segunda legenda...</OpenSecondSubtitle>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
-        <SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
+        <SmptTimeMode>SMPTE temporização (taxa de fotogramas sem número inteiro)</SmptTimeMode>
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda embutida...</GenerateVideoWithBurnedInSub>
@@ -2426,6 +2426,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
     <MergeWithNext>Combinar com a próxima</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Combinar com a anterior e eliminar quebra de linha</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Combinar com a próxima e eliminar quebra de linha</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Combinar com a anterior e quebrar linha automaticamente</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Combinar com a próxima e quebrar linha automaticamente</MergeWithNextAndBreak>
     <MergeWithPrevious>Combinar com a anterior</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Atalho já definido: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Alternar tradução e original na pré-visualização vídeo/áudio</ToggleTranslationAndOriginalInPreviews>
@@ -2766,6 +2770,13 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Info>Um ponto de sincronia ajustará a posição, dois ou mais pontos ajustam a posição e a velocidade</Info>
     <ApplySync>Aplicar</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE temporização</Title>
+    <UseSmpteTiming>Usar o SMPTE temporização para a legenda atual?</UseSmpteTiming>
+    <SmpteTimingInfo>Nota: O SMPTE temporização pode ser alterado mais tarde no "Menu de Vídeo"</SmpteTimingInfo>
+    <YesAlways>Sim, sempre para taxas de fotogramas sem números inteiros</YesAlways>
+    <NoNever>Não, nunca</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Fluxo de transporte da legenda indicado - {0}</Title>
     <PidLineImage>Imagens - Transporte identificador do pacote (PID) = {0}, idioma = {1}, número de legendas = {2}</PidLineImage>
