@@ -28923,9 +28923,19 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
+            if (ft == typeof(TimedText10))
             {
                 using (var properties = new TimedTextProperties(_subtitle))
+                {
+                    properties.ShowDialog(this);
+                }
+
+                return;
+            }
+
+            if (ft == typeof(ItunesTimedText))
+            {
+                using (var properties = new TimedTextPropertiesItunes(_subtitle))
                 {
                     properties.ShowDialog(this);
                 }

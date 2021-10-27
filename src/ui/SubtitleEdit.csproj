@@ -367,6 +367,12 @@
     <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.Designer.cs">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TimedTextPropertiesItunes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TimedTextPropertiesItunes.Designer.cs">
+      <DependentUpon>TimedTextPropertiesItunes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TimedTextSmpteTiming.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1427,6 +1433,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TimedTextPropertiesItunes.resx">
+      <DependentUpon>TimedTextPropertiesItunes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextSmpteTiming.resx">
       <DependentUpon>TimedTextSmpteTiming.cs</DependentUpon>
