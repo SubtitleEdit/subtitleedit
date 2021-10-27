@@ -618,6 +618,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TimedText10TimeCodeFormatSource { get; set; }
         public bool TimedText10ShowStyleAndLanguage { get; set; }
         public string TimedText10FileExtension { get; set; }
+        public string TimedTextItunesTopOrigin { get; set; }
+        public string TimedTextItunesTopExtent { get; set; }
+        public string TimedTextItunesBottomOrigin { get; set; }
+        public string TimedTextItunesBottomExtent { get; set; }
 
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
@@ -691,6 +695,11 @@ $HorzAlign          =   Center
             TimedText10TimeCodeFormat = "Source";
             TimedText10ShowStyleAndLanguage = true;
             TimedText10FileExtension = ".xml";
+
+            TimedTextItunesTopOrigin = "0% 0%";
+            TimedTextItunesTopExtent = "100% 15%";
+            TimedTextItunesBottomOrigin = "0% 85%";
+            TimedTextItunesBottomExtent = "100% 15%";
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
@@ -5650,6 +5659,30 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.TimedText10FileExtension = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("TimedTextItunesTopOrigin");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextItunesTopOrigin = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("TimedTextItunesTopExtent");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextItunesTopExtent = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("TimedTextItunesBottomOrigin");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextItunesBottomOrigin = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("TimedTextItunesBottomExtent");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextItunesBottomExtent = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                 {
@@ -9252,6 +9285,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
                 textWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TimedText10FileExtension", settings.SubtitleSettings.TimedText10FileExtension);
+                textWriter.WriteElementString("TimedTextItunesTopOrigin", settings.SubtitleSettings.TimedTextItunesTopOrigin);
+                textWriter.WriteElementString("TimedTextItunesTopExtent", settings.SubtitleSettings.TimedTextItunesTopExtent);
+                textWriter.WriteElementString("TimedTextItunesBottomOrigin", settings.SubtitleSettings.TimedTextItunesBottomOrigin);
+                textWriter.WriteElementString("TimedTextItunesBottomExtent", settings.SubtitleSettings.TimedTextItunesBottomExtent);
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
                 textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
