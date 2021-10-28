@@ -1334,7 +1334,7 @@ namespace Nikse.SubtitleEdit.Controls
             lock (SyntaxColorListLock)
             {
                 _syntaxColorLineTimer.Stop();
-                
+
                 for (int i = _syntaxColorList.Count - 1; i >= 0; i--)
                 {
                     var item = _syntaxColorList[i];
@@ -1752,6 +1752,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetTimeAndText(int index, Paragraph paragraph, Paragraph next)
         {
+            if (paragraph == null)
+            {
+                return;
+            }
+
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
@@ -1876,6 +1881,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetDuration(int index, Paragraph paragraph, Paragraph next)
         {
+            if (paragraph == null)
+            {
+                return;
+            }
+
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
@@ -1974,6 +1984,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetGap(int index, Paragraph paragraph, Paragraph next)
         {
+            if (paragraph == null)
+            {
+                return;
+            }
+
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
@@ -2143,6 +2158,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowState(int index, Paragraph paragraph)
         {
+            if (paragraph == null)
+            {
+                return;
+            }
+
             if (IsValidIndex(index))
             {
                 Items[index].StateImageIndex = paragraph.Bookmark != null ? 0 : -1;

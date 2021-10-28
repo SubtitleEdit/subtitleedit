@@ -239,7 +239,6 @@ namespace Nikse.SubtitleEdit.Forms
                             var oldFormat = _currentSubtitleFormat;
                             _makeHistoryPaused = true;
                             _currentSubtitleFormat = format;
-                            //ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
                             MakeFormatChange(oldFormat, _currentSubtitleFormat);
                             _makeHistoryPaused = false;
                         }
@@ -9536,7 +9535,7 @@ namespace Nikse.SubtitleEdit.Forms
                     bool showSource = false;
 
                     var last = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                    if (textBoxListViewText.Text != last.Text)
+                    if (last != null && textBoxListViewText.Text != last.Text)
                     {
                         last.Text = textBoxListViewText.Text.TrimEnd();
                         SubtitleListview1.SetText(_subtitleListViewIndex, last.Text);
