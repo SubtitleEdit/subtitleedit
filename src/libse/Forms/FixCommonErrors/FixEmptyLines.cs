@@ -137,16 +137,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
                     var arr = text.SplitToLines();
-                    if (text.Contains('-') && arr.Count == 2 && callbacks.AllowFix(p, fixAction3))
+                    if (text.Contains('-') && arr.Count == 2)
                     {
-                        if (arr[0].Trim() == "-" && arr[1].Length > 2)
+                        if (arr[0].Trim() == "-" && arr[1].Length > 2 && callbacks.AllowFix(p, fixAction1))
                         {
                             text = arr[1].TrimStart('-').TrimStart();
                             p.Text = text;
                             emptyLinesRemoved++;
                             callbacks.AddFixToListView(p, fixAction1, oldText, p.Text);
                         }
-                        else if (arr[1].Trim() == "-" && arr[0].Length > 2)
+                        else if (arr[1].Trim() == "-" && arr[0].Length > 2 && callbacks.AllowFix(p, fixAction2))
                         {
                             text = arr[0].TrimStart('-').TrimStart();
                             p.Text = text;
@@ -177,6 +177,5 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 subtitle.Renumber();
             }
         }
-
     }
 }
