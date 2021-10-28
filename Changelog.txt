@@ -7,9 +7,12 @@
    * New sub format - thx Leon
    * Add read support for "combined ttml" files - thx Martin
    * Save SMPTE video time mode for recent files - thx OmrSi
-   * Optionally prompt some TTML files regarding SMPTE time mode - thx uckthis
+   * Prompt some TTML files regarding SMPTE time mode - thx uckthis
    * New shortcuts for merge - the Leon
    * New shortcut for calc duration by CPS - thx OmrSi
+   * Custom alignment values for format "iTunesTimedText" - thx Moisés
+   * Show ASSA style icon + ASSA prop icon for SSA - thx Mike
+   * Add option to allow single letter/digit as shortcut in text box - thx walgvogel
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Chinese translation - thx nkh0472
@@ -33,8 +36,6 @@
    * Improve split with ASSA tags - thx Leon
    * Improve drag'n'drop to list view with istm format - thx Zivko
    * Ignore text between {} when spell checking ASSA/SSA - thx Omair
-   * Show ASSA style icon + ASSA prop icon for SSA - thx Mike
-   * Add option to allow single letter/digit as shortcut in text box - thx walgvogel
    * Try avoid set mpv volume to 0 - thx Janusz
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
