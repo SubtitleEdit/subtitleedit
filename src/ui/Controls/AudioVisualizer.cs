@@ -1632,7 +1632,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         double seconds = RelativeXPositionToSeconds(e.X);
                         var milliseconds = (int)(seconds * TimeCode.BaseUnit);
-                        var subtitleIndex = _subtitle.GetIndex(_mouseDownParagraph);
+                        var subtitleIndex = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
                         _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
                         _nextParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex + 1);
 
