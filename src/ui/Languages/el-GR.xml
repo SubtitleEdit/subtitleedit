@@ -523,7 +523,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DiskSequenceNumber>Αύξων αριθμός δίσκου</DiskSequenceNumber>
     <TotalNumberOfDisks>Συνολικός αριθμός δίσκων</TotalNumberOfDisks>
     <Import>Εισαγωγή…</Import>
-    <TextAndTimingInformation>Πληροφορίες κειμένου και χρονισμού</TextAndTimingInformation>
+    <TextAndTimingInformation>Πληροφορίες κειμένου και συγχρονισμού</TextAndTimingInformation>
     <JustificationCode>Κωδικός αιτιολόγησης</JustificationCode>
     <VerticalPosition>Κάθετη θέση</VerticalPosition>
     <MarginTop>Άνω περιθώριο (για άνω στοιχισμένους υποτίτλους)</MarginTop>
@@ -742,8 +742,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixedBut>Διόρθωση {0} θεμάτων, αλλά υπάρχουν ακόμη σφάλματα. Προβολή αρχείου καταγραφής.</XFixedBut>
     <XCouldBeFixedBut>Διόρθωση {0} θεμάτων, αλλά θα υπάρχουν ακόμη σφάλματα. Προβολή αρχείου καταγραφής.</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Διόρθωση αρχικού γράμματος σε κεφαλαίο μετά από παράγραφο</FixFirstLetterToUppercaseAfterParagraph>
-    <MergeShortLine>Συγχώνευση γραμμών</MergeShortLine>
-    <MergeShortLineAll>Συγχώνευση γραμμών (εκτός διαλόγου)</MergeShortLineAll>
+    <MergeShortLine>Συνένωση γραμμής</MergeShortLine>
+    <MergeShortLineAll>Συνένωση γραμμής (εκτός διαλόγου)</MergeShortLineAll>
     <BreakLongLine>Διάσπαση γραμμής</BreakLongLine>
     <FixLongDisplayTime>Διόρθωση μεγάλου χρόνου</FixLongDisplayTime>
     <FixInvalidItalicTag>Διόρθωση ετικέτας πλαγιαστής γραφής</FixInvalidItalicTag>
@@ -1175,7 +1175,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeDuplicateText>Συγχώνευση γραμμών με ίδιο κείμενο…</MergeDuplicateText>
         <MergeSameTimeCodes>Συγχώνευση γραμμών με ίδιο χρόνο…</MergeSameTimeCodes>
         <SplitLongLines>Διαχωρισμός μεγάλων γραμμών…</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Ελάχιστος χρόνος εμφάνισης μεταξύ παραγράφων…</MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>Ελάχιστος χρόνος εμφάνισης μεταξύ υποτίτλων…</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ταξινόμηση</SortBy>
         <NetflixQualityCheck>Έλεγχος ποιότητας Netflix…</NetflixQualityCheck>
         <Number>Αριθμός</Number>
@@ -1208,7 +1208,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Κλείσιμο βίντεο</CloseVideo>
         <OpenSecondSubtitle>Άνοιγμα δεύτερου υποτίτλου…</OpenSecondSubtitle>
         <SetVideoOffset>Μετατόπιση έναρξης βίντεο…</SetVideoOffset>
-        <SmptTimeMode>Χρονισμός SMPTE (ρήξη καρέ)</SmptTimeMode>
+        <SmptTimeMode>Συγχρονισμός SMPTE (ρήξη καρέ)</SmptTimeMode>
         <GenerateTextFromVideo>Δημιουργία κειμένου από βίντεο…</GenerateTextFromVideo>
         <GenerateBlankVideo>Δημιουργία κενού αρχείου βίντεο…</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους…</GenerateVideoWithBurnedInSub>
@@ -2411,17 +2411,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MeasureFont>Μέτρηση γραμματοσειράς:</MeasureFont>
     <GoToFirstSelectedLine>Μετάβαση σε πρώτη επιλεγμένη γραμμή</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Μετάβαση σε επόμενη κενή γραμμή</GoToNextEmptyLine>
-    <MergeSelectedLines>Συγχώνευση</MergeSelectedLines>
-    <MergeSelectedLinesAndAutoBreak>Συγχώνευση και αυτόματη διάσπαση</MergeSelectedLinesAndAutoBreak>
-    <MergeSelectedLinesAndUnbreak>Συγχώνευση και συνένωση</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>Συγχώνευση και συνένωση χωρίς κενό</MergeSelectedLinesAndUnbreakCjk>
-    <MergeSelectedLinesOnlyFirstText>Συγχώνευση, κράτημα μόνο του πρώτου κειμένου</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLines>Συγχώνευση επιλεγμένων γραμμών</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>Συγχώνευση επιλεγμένων γραμμών και αυτόματη διάσπαση</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>Συγχώνευση επιλεγμένων γραμμών και συνένωση</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Συγχώνευση επιλεγμένων γραμμών και συνένωση χωρίς κενό</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesOnlyFirstText>Συγχώνευση επιλεγμένων γραμμών, κράτημα μόνο του πρώτου κειμένου</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Συγχώνευση γραμμών δίγλωσσα</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Διαχωρισμός γραμμής δίγλωσσα</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Εναλλαγή τρόπου μετάφρασης</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Εναλλαγή αρχικού και μετάφρασης</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Συγχώνευση αρχικού και μετάφρασης</MergeOriginalAndTranslation>
     <MergeWithNext>Συγχώνευση με επόμενη</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Συγχώνευση με προηγούμενη και συνένωση</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Συγχώνευση με επόμενη και συνένωση</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Συγχώνευση με προηγούμενη και αυτόματη διάσπαση</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Συγχώνευση με επόμενη και αυτόματη διάσπαση</MergeWithNextAndBreak>
     <MergeWithPrevious>Συγχώνευση με προηγούμενη</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Ορισμένη συντόμευση: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Εναλλαγή μετάφρασης και αρχικού στην προεπισκόπηση βίντεο/ήχου</ToggleTranslationAndOriginalInPreviews>
@@ -2483,6 +2487,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BDOpensIn>Άνοιγμα BD sup/bdn-xml σε</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Επεξεργασία</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Συντομεύσεις: Να επιτρέπεται μονό γράμμα και μονός αριθμός στο πλαίσιο κειμένου</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Λήψη mpv lib</DownloadMpv>
@@ -2656,7 +2661,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OriginalScript>Αρχικό σενάριο</OriginalScript>
     <Translation>Μετάφραση</Translation>
     <Editing>Επεξεργασία</Editing>
-    <Timing>Χρονισμός</Timing>
+    <Timing>Συγχρονισμός</Timing>
     <SyncPoint>Σημείο συγχρονισμού</SyncPoint>
     <UpdatedBy>Ενημερωμένο από</UpdatedBy>
     <UpdateDetails>Λεπτομέρειες ενημέρωσης</UpdateDetails>
@@ -2757,6 +2762,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Info>Ένα σημείο συγχρονισμού θα προσαρμόσει τη θέση, δύο ή περισσότερα θα προσαρμόσουν τη θέση και την ταχύτητα</Info>
     <ApplySync>Εφαρμογή</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>Συγχρονισμός SMPTE</Title>
+    <UseSmpteTiming>Χρήση συγχρονισμού SMPTE για τον τρέχων υπότιτλο;</UseSmpteTiming>
+    <SmpteTimingInfo>Σημείωση: Ο συγχρονισμός SMPTE μπορεί να αλλάξει αργότερα στο "μενού Βίντεο".</SmpteTimingInfo>
+    <YesAlways>Ναι, πάντα, για δεκαδικούς ρυθμούς καρέ</YesAlways>
+    <NoNever>Όχι, ποτέ</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Επιλογέας ροής μεταφοράς υποτίτλου - {0}</Title>
     <PidLineImage>Εικόνες - Αναγνωριστικό πακέτου μεταφοράς = {0}, γλώσσα = {1}, αριθμός υποτίτλων = {2}</PidLineImage>
@@ -2948,8 +2960,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DeleteParagraph>Διαγραφή κειμένου</DeleteParagraph>
     <Split>Διαχωρισμός</Split>
     <SplitAtCursor>Διαχωρισμός στη θέση του δείκτη</SplitAtCursor>
-    <MergeWithPrevious>Συγχώνευση με προηγούμενο</MergeWithPrevious>
-    <MergeWithNext>Συγχώνευση με επόμενο</MergeWithNext>
+    <MergeWithPrevious>Συγχώνευση με προηγούμενο υπότιτλο</MergeWithPrevious>
+    <MergeWithNext>Συγχώνευση με επόμενο υπότιτλο</MergeWithNext>
     <ExtendToPrevious>Επέκταση μέχρι τον προηγούμενο υπότιτλο</ExtendToPrevious>
     <ExtendToNext>Επέκταση μέχρι τον επόμενο υπότιτλο</ExtendToNext>
     <PlaySelection>Αναπαραγωγή επιλογής</PlaySelection>
