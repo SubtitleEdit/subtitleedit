@@ -1209,7 +1209,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
                         int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
-                        if (_mouseDownParagraphType == MouseDownParagraphType.Start)
+                        if (_mouseDownParagraphType == MouseDownParagraphType.Start && ModifierKeys != Keys.Alt)
                         {
                             if (curIdx > 0)
                             {
