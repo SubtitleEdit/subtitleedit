@@ -94,16 +94,27 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _saveColumnWidthChanges;
         private Timer _setLastColumnWidthTimer;
 
-        public class SyntaxColorLineParamter
+        public class SyntaxColorLineParameter
         {
             public List<Paragraph> Paragraphs { get; set; }
             public int Index { get; set; }
             public Paragraph Paragraph { get; set; }
         }
 
-        private readonly List<SyntaxColorLineParamter> _syntaxColorList = new List<SyntaxColorLineParamter>();
+        public class SetStartAndDurationParameter
+        {
+            public int Index { get; set; }
+            public Paragraph Paragraph { get; set; }
+            public Paragraph Next { get; set; }
+            public Paragraph Prev { get; set; }
+        }
+
+        private readonly List<SyntaxColorLineParameter> _syntaxColorList = new List<SyntaxColorLineParameter>();
+        private readonly List<SetStartAndDurationParameter> _setStartAndDurationList = new List<SetStartAndDurationParameter>();
         private static readonly object SyntaxColorListLock = new object();
+        private static readonly object SetStartTimeAndDurationLock = new object();
         private readonly Timer _syntaxColorLineTimer;
+        private readonly Timer _setStartAndDurationTimer;
 
         public int FirstVisibleIndex { get; set; } = -1;
 
@@ -386,8 +397,11 @@ namespace Nikse.SubtitleEdit.Controls
                 ShowGapColumn(LanguageSettings.Current.General.Gap);
             }
 
-            _syntaxColorLineTimer = new Timer { Interval = 50 };
+            _syntaxColorLineTimer = new Timer { Interval = 43 };
             _syntaxColorLineTimer.Tick += SyntaxColorLineTimerTick;
+
+            _setStartAndDurationTimer = new Timer { Interval = 49 };
+            _setStartAndDurationTimer.Tick += SetStartAndDurationTimerTick;
 
             SubtitleListViewLastColumnFill(this, null);
 
@@ -1351,6 +1365,28 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private void SetStartAndDurationTimerTick(object sender, EventArgs e)
+        {
+            var hashSet = new HashSet<int>();
+            lock (SetStartTimeAndDurationLock)
+            {
+                _setStartAndDurationTimer.Stop();
+                for (int i = _setStartAndDurationList.Count - 1; i >= 0; i--)
+                {
+                    var item = _setStartAndDurationList[i];
+                    if (!hashSet.Contains(item.Index))
+                    {
+                        if (IsValidIndex(item.Index))
+                        {
+                            SetStartTimeAndDuration(item.Index, item.Paragraph, item.Next, item.Prev);
+                        }
+                        hashSet.Add(item.Index);
+                    }
+                }
+                _setStartAndDurationList.Clear();
+            }
+        }
+
         /// <summary>
         /// Can handle multiple events to same line - but not line adding/splitting.
         /// </summary>
@@ -1364,8 +1400,26 @@ namespace Nikse.SubtitleEdit.Controls
             lock (SyntaxColorListLock)
             {
                 _syntaxColorLineTimer.Stop();
-                _syntaxColorList.Add(new SyntaxColorLineParamter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
+                _syntaxColorList.Add(new SyntaxColorLineParameter { Index = i, Paragraphs = paragraphs, Paragraph = paragraph });
                 _syntaxColorLineTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Can handle multiple events to same line - but not line adding/splitting.
+        /// </summary>
+        public void SetStartTimeAndDurationBackground(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
+        {
+            if (_settings == null)
+            {
+                return;
+            }
+
+            lock (SetStartTimeAndDurationLock)
+            {
+                _setStartAndDurationTimer.Stop();
+                _setStartAndDurationList.Add(new SetStartAndDurationParameter { Index = index, Paragraph = paragraph, Next = next, Prev = prev });
+                _setStartAndDurationTimer.Start();
             }
         }
 
