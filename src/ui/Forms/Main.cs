@@ -1163,7 +1163,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             InitializeListViewEditBoxTimeOnly(p);
-            SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            SubtitleListview1.SetStartTimeAndDurationBackground(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
             UpdateSourceView();
         }
 
@@ -1238,7 +1238,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
-                SubtitleListview1.SetStartTimeAndDuration(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                SubtitleListview1.SetStartTimeAndDurationBackground(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
 
                 var durationInSeconds = (decimal)paragraph.Duration.TotalSeconds;
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
@@ -1277,7 +1277,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         index = _subtitle.GetIndex(current);
 
-                        SubtitleListview1.SetStartTimeAndDuration(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                        SubtitleListview1.SetStartTimeAndDurationBackground(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
 
                         if (index == selectedIndex)
                         {
@@ -1313,7 +1313,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
                     }
 
-                    SubtitleListview1.SetStartTimeAndDuration(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                    SubtitleListview1.SetStartTimeAndDurationBackground(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                 }
             }
             else
@@ -1357,7 +1357,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                SubtitleListview1.SetStartTimeAndDuration(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                SubtitleListview1.SetStartTimeAndDurationBackground(index, paragraph, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
             }
 
             beforeParagraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
