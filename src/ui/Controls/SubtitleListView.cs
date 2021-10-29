@@ -397,10 +397,10 @@ namespace Nikse.SubtitleEdit.Controls
                 ShowGapColumn(LanguageSettings.Current.General.Gap);
             }
 
-            _syntaxColorLineTimer = new Timer { Interval = 43 };
+            _syntaxColorLineTimer = new Timer { Interval = 41 };
             _syntaxColorLineTimer.Tick += SyntaxColorLineTimerTick;
 
-            _setStartAndDurationTimer = new Timer { Interval = 49 };
+            _setStartAndDurationTimer = new Timer { Interval = 3 };
             _setStartAndDurationTimer.Tick += SetStartAndDurationTimerTick;
 
             SubtitleListViewLastColumnFill(this, null);
