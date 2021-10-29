@@ -1235,7 +1235,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
+                timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+
                 var durationInSeconds = (decimal)paragraph.Duration.TotalSeconds;
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                 {
@@ -1277,7 +1280,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (index == selectedIndex)
                         {
+                            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                             timeUpDownStartTime.TimeCode = paragraph.StartTime;
+                            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
                             var durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
                             if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                             {
@@ -1339,8 +1344,6 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index - 1, prev);
                         }
                     }
-
-
 
                     if (_subtitleOriginal != null)
                     {
