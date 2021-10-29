@@ -440,12 +440,21 @@ namespace Nikse.SubtitleEdit.Controls
         private int _mpvSubOldHash = -1;
         private string _mpvTextFileName;
         private int _retryCount = 3;
+      
         private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle, SubtitleFormat uiFormat)
         {
             if (subtitle == null)
             {
                 return;
             }
+
+            var hash = subtitle.GetFastHashCode(null);
+            if (hash == _mpvSubOldHash)
+            {
+                return;
+            }
+
+            _mpvSubOldHash = hash;
 
             try
             {
@@ -508,11 +517,9 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                     }
 
-                    var hash = subtitle.GetFastHashCode(null);
                     if (hash != _mpvSubOldHash || string.IsNullOrEmpty(_mpvTextOld))
                     {
                         text = subtitle.ToText(format);
-                        _mpvSubOldHash = hash;
                     }
                     else
                     {
