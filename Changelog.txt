@@ -12,7 +12,7 @@
    * New shortcut for calc duration by CPS - thx OmrSi
    * Custom alignment values for format "iTunesTimedText" - thx Moisés
    * Show ASSA style icon + ASSA prop icon for SSA - thx Mike
-   * Add option to allow single letter/digit as shortcut in text box - thx walgvogel
+   * Add UI option to allow single letter/digit shortcut in text box - thx walgvogel
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Chinese translation - thx nkh0472
