@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled);
+                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)

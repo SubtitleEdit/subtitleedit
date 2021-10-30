@@ -37,6 +37,7 @@
    * Improve drag'n'drop to list view with istm format - thx Zivko
    * Ignore text between {} when spell checking ASSA/SSA - thx Omair
    * Try avoid set mpv volume to 0 - thx Janusz
+   * Improve waveform move-element performance - thx Leon
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
@@ -55,6 +56,7 @@
    * Fix "Set start and set end of prev" when playing - thx Leon
    * Fix "Set end minus gap, go to next and start next here" - thx Leon
    * Fix for mpc-hc not showing video
+   * Add timeout for main win regex search - thx darksen/Janusz 
 
 
 3.6.2 (24th August 2021)
