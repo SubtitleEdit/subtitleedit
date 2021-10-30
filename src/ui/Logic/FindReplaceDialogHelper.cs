@@ -414,7 +414,17 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (FindReplaceType.FindType == FindType.RegEx)
                 {
-                    count += _regEx.Matches(p.Text).Count;
+                    try
+                    {
+                        count += _regEx.Matches(p.Text).Count;
+                    }
+                    catch (RegexMatchTimeoutException exception)
+                    {
+                        MessageBox.Show(exception.Message + Environment.NewLine +
+                                        Environment.NewLine +
+                                        "Input: " + exception.Input);
+                        return count;
+                    }
                 }
                 else
                 {
