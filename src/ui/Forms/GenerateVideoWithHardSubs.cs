@@ -633,6 +633,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateVideoWithHardSubs_Shown(object sender, EventArgs e)
         {
+            if (!File.Exists(_inputVideoFileName))
+            {
+                MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileNotFound, _inputVideoFileName));
+                buttonOK.Enabled = false;
+                return;
+            }
+
             var targetFileSizeMb = (int)Math.Round(new FileInfo(_inputVideoFileName).Length / 1024.0 / 1024);
             numericUpDownTargetFileSize.Value = Math.Max(targetFileSizeMb, numericUpDownTargetFileSize.Minimum);
         }
