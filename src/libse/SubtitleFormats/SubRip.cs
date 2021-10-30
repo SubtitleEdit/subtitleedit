@@ -352,6 +352,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (IsValidTimeCode(line))
             {
                 string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');
+
+                if (parts.Length < 8)
+                {
+                    return false;
+                }
+
                 try
                 {
                     int startHours = int.Parse(parts[0]);
