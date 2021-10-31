@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 for (int x = 0; x < bitmap.Width; x++)
                 {
                     var c = bitmap.GetPixel(x, y);
-                    if (c != Color.Transparent)
+                    if (c.A > 0)
                     {
                         if (lookup.Contains(c.ToArgb()))
                         {
@@ -274,7 +274,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
             }
 
-            pal.Add(Color.Transparent); // last entry must be transparent
+            pal.Add(Color.FromArgb(0, 0, 0, 0)); // last entry must be transparent
             return pal;
         }
 
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment, Point? overridePosition = null)
         {
             var bm = new NikseBitmap(bmp);
-            bm.SetTransparentTo(Color.Transparent);
+            bm.SetTransparentTo(Color.FromArgb(0, 0, 0, 0));
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
             for (int i = 0; i < colorPalette.Count; i++)
