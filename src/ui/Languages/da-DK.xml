@@ -2421,6 +2421,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Flet original og oversættelse</MergeOriginalAndTranslation>
     <MergeWithNext>Flet med næste</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Flet sammen med forrige og fjern linjeskift</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Flet sammen med næste og fjern linjeskift</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Flet med forrige og auto-break</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Flet sammen med næste og auto-break</MergeWithNextAndBreak>
     <MergeWithPrevious>Flet med forrige</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Genvej allerede defineret:
 {0}</ShortcutIsAlreadyDefinedX>
@@ -2760,6 +2764,13 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Info>Et synkronisering punkt vil justere positioner, to eller flere synkroniserings punkter vil justere position og hastighed</Info>
     <ApplySync>Anvend</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE timing</Title>
+    <UseSmpteTiming>Vil du bruge SMPTE-timing til aktuelle undertekster?</UseSmpteTiming>
+    <SmpteTimingInfo>Bemærk: SMPTE-timing kan ændres senere i "Video-menuen"</SmpteTimingInfo>
+    <YesAlways>Ja, altid for ikke-heltal frame rates</YesAlways>
+    <NoNever>Nej, aldrig</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Transport Stream undertikst vælger - {0}</Title>
     <PidLineImage>Billeder - Transportpakkeidentifikator (PID) = {0}, sprog = {1}, antal undertekster = {2}</PidLineImage>
