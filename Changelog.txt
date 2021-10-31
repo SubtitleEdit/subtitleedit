@@ -57,6 +57,7 @@
    * Fix "Set end minus gap, go to next and start next here" - thx Leon
    * Fix for mpc-hc not showing video
    * Add timeout for main win regex search - thx darksen/Janusz 
+   * Fix crash in "Batch convert - Auto balance"
 
 
 3.6.2 (24th August 2021)
