@@ -13,7 +13,6 @@
    * Custom alignment values for format "iTunesTimedText" - thx Moisés
    * Show ASSA style icon + ASSA prop icon for SSA - thx Mike
    * Add UI option to allow single letter/digit shortcut in text box - thx walgvogel
-   * testing...
 * IMPROVED:
    * Update Greek translation - thx PMitsakis
    * Update Chinese translation - thx nkh0472
