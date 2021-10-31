@@ -5035,7 +5035,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (ContinueNewOrExit())
             {
-                if (Configuration.Settings.General.ShowRecentFiles)
+                if (Configuration.Settings.General.ShowRecentFiles && File.Exists(_fileName))
                 {
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
