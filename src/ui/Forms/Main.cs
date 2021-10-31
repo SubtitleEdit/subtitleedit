@@ -6462,73 +6462,30 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (replaceDialog.ReplaceAll)
                     {
-                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                        replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        RestoreSubtitleListviewIndices();
+
+                        if (_replaceStartLineIndex >= 1) // Prompt for start over
                         {
-                            if (_findHelper.SelectedIndex > stopAtIndex)
+                            _replaceStartLineIndex = 0;
+                            string msgText = _language.ReplaceContinueNotFound;
+                            if (replaceCount > 0)
                             {
-                                break;
+                                msgText = string.Format(_language.ReplaceXContinue, replaceCount);
                             }
 
-                            SetTextForFindAndReplace(true, replaceDialog.ReplaceAll);
-                            searchStringFound = true;
-                            replaceCount++;
-                        }
-                        else
-                        {
-                            textBoxListViewText.Visible = true;
-                            _subtitleListViewIndex = -1;
-                            if (firstIndex >= 0 && firstIndex < SubtitleListview1.Items.Count)
+                            if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                             {
-                                SubtitleListview1.Items[firstIndex].Selected = true;
-                                SubtitleListview1.Items[firstIndex].Focused = true;
-                                SubtitleListview1.Focus();
-                                textBoxListViewText.Text = _subtitle.Paragraphs[firstIndex].Text;
-                                if (_subtitleOriginal != null && textBoxListViewTextOriginal.Visible)
-                                {
-                                    var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleOriginal.Paragraphs);
-                                    if (orginial != null)
-                                    {
-                                        textBoxListViewTextOriginal.Text = orginial.Text;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                            }
-
-                            ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
-
-                            if (_replaceStartLineIndex >= 1) // Prompt for start over
-                            {
-                                _replaceStartLineIndex = 0;
-                                string msgText = _language.ReplaceContinueNotFound;
-                                if (replaceCount > 0)
-                                {
-                                    msgText = string.Format(_language.ReplaceXContinue, replaceCount);
-                                }
-
-                                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                                {
-                                    stopAtIndex = firstIndex;
-                                    _findHelper.MatchInOriginal = false;
-                                    _findHelper.StartLineIndex = 0;
-                                    _findHelper.SelectedIndex = 0;
-                                    _findHelper.SelectedPosition = 0;
-                                    _findHelper.ReplaceFromPosition = 0;
-                                    SetTextForFindAndReplace(false, replaceDialog.ReplaceAll);
-
-                                    if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
-                                    {
-                                        SetTextForFindAndReplace(true, replaceDialog.ReplaceAll);
-                                        _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                                        _findHelper.ReplaceFromPosition = _findHelper.SelectedPosition;
-                                        searchStringFound = true;
-                                        replaceCount++;
-                                    }
-                                }
+                                stopAtIndex = firstIndex;
+                                _findHelper.StartLineIndex = 0;
+                                _findHelper.SelectedIndex = 0;
+                                replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
+                                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                             }
                         }
+
+                        break;
                     }
                     else if (replaceDialog.FindOnly)
                     {

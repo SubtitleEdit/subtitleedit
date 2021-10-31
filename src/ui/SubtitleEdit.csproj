@@ -1225,6 +1225,7 @@
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\LanguageStructure.cs" />
     <Compile Include="Logic\Networking\SeNetworkService.cs" />
+    <Compile Include="Logic\ReplaceAllHelper.cs" />
     <Compile Include="Logic\SceneChangesGenerator.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
