@@ -38,6 +38,7 @@
    * Ignore text between {} when spell checking ASSA/SSA - thx Omair
    * Try avoid set mpv volume to 0 - thx Janusz
    * Improve waveform move-element performance - thx Leon
+   * Optimize list view "Replace all" - thx Jamakmake
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
@@ -58,6 +59,8 @@
    * Fix for mpc-hc not showing video
    * Add timeout for main win regex search - thx darksen/Janusz 
    * Fix crash in "Batch convert - Auto balance"
+   * Fix for recent files after convert format - thx Jamakmake
+   * Fix for Blu-ray .sup noisy transparent border - thx shaino
 
 
 3.6.2 (24th August 2021)
