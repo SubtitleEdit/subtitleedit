@@ -15888,22 +15888,6 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Play();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
-            {
-                if (!textBoxListViewText.Focused && !textBoxListViewTextOriginal.Focused)
-                {
-                    mediaPlayer.CurrentPosition += 1.0;
-                    e.SuppressKeyPress = true;
-                }
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Left)
-            {
-                if (!textBoxListViewText.Focused && !textBoxListViewTextOriginal.Focused)
-                {
-                    mediaPlayer.CurrentPosition -= 1.0;
-                    e.SuppressKeyPress = true;
-                }
-            }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextOriginal.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
