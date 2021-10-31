@@ -2133,6 +2133,7 @@ namespace Nikse.SubtitleEdit.Forms
             var formatType = format.GetType();
 
             _oldSubtitleFormat = oldFormat;
+            var oldParagraphCount = _subtitle.Paragraphs.Count;
             if (_oldSubtitleFormat == null)
             {
                 if (!_loading && _lastChangedToFormat != format.FriendlyName)
@@ -2170,9 +2171,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                SaveSubtitleListviewIndices();
+                _subtitle.Renumber();
+                if (oldParagraphCount == _subtitle.Paragraphs.Count)
+                {
+                    SaveSubtitleListviewIndices();
+                }
+
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                RestoreSubtitleListviewIndices();
+
+                if (oldParagraphCount == _subtitle.Paragraphs.Count)
+                {
+                    RestoreSubtitleListviewIndices();
+                }
 
                 if (_oldSubtitleFormat.HasStyleSupport)
                 {
