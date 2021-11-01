@@ -1173,25 +1173,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void SelectFirstSelectedItemOnly(this ListView lv)
         {
-            int itemsCount = lv.SelectedItems.Count - 1;
-            if (itemsCount > 0)
+            if (lv.SelectedIndices.Count > 1)
             {
+                var first = lv.SelectedIndices[0];
                 lv.BeginUpdate();
-                do
-                {
-                    lv.SelectedItems[itemsCount--].Selected = false;
-                }
-                while (itemsCount > 0);
-                if (lv.SelectedItems.Count > 0)
-                {
-                    lv.EnsureVisible(lv.SelectedItems[0].Index);
-                    lv.FocusedItem = lv.SelectedItems[0];
-                }
-                else if (lv.Items.Count > 0)
-                {
-                    lv.EnsureVisible(0);
-                    lv.FocusedItem = lv.Items[0];
-                }
+                lv.SelectedIndices.Clear();
+                lv.EnsureVisible(first);
+                lv.FocusedItem = lv.Items[first];
+                lv.Items[first].Selected = true;
                 lv.EndUpdate();
             }
         }
