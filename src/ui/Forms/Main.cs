@@ -236,12 +236,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var oldIdx = comboBoxSubtitleFormats.SelectedIndex;
                         comboBoxSubtitleFormats.SelectedIndex = index;
-                        if (oldIdx == comboBoxSubtitleFormats.SelectedIndex)
+                        if (oldIdx != index)
                         {
                             var oldFormat = _currentSubtitleFormat;
                             _makeHistoryPaused = true;
                             _currentSubtitleFormat = format;
-                            MakeFormatChange(oldFormat, _currentSubtitleFormat);
+                            MakeFormatChange(_currentSubtitleFormat, oldFormat);
                             _makeHistoryPaused = false;
                         }
 
