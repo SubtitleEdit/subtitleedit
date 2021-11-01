@@ -57,7 +57,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="UTF.Unknown" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <PackageReference Include="UTF.Unknown" Version="2.5.0" />
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.5" />
   </ItemGroup>
 
