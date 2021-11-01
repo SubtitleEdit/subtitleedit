@@ -9598,20 +9598,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (InListView)
             {
-                if (SubtitleListview1.SelectedItems.Count == 1)
-                {
-                    var profile = Configuration.Settings.General.CurrentProfile + "   ";
-                    if (!ShowProfileInStatusBar)
-                    {
-                        profile = string.Empty;
-                    }
-
-                    toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
-                }
-                else
-                {
-                    _updateSelectedCountStatusBar = true;
-                }
+                _updateSelectedCountStatusBar = true;
             }
         }
 
