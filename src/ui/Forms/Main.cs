@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _listViewTextTicks = -1;
         private string _listViewOriginalTextUndoLast;
         private long _listViewOriginalTextTicks = -1;
+        private bool _listViewMouseDown;
         private long _sourceTextTicks = -1;
 
         private int _videoAudioTrackNumber = -1;
@@ -9488,6 +9489,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void SubtitleListView1SelectedIndexChange()
         {
             StopAutoDuration();
+
+            if (_listViewMouseDown)
+            {
+                return;
+            }
+
             ShowLineInformationListView();
             if (_subtitle.Paragraphs.Count > 0)
             {
@@ -9800,7 +9807,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            SubtitleListview1.SuspendLayout();
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             var temp = firstSelectedIndex;
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -9814,7 +9821,8 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
 
-            SubtitleListview1.ResumeLayout();
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
         private int _lastNumberOfNewLines = -1;
@@ -15604,17 +15612,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
-            {
-                SubtitleListview1.FirstVisibleIndex = -1;
-                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.End && e.Modifiers == Keys.Alt)
-            {
-                SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
-                e.SuppressKeyPress = true;
-            }
             else if (_shortcuts.MainGeneralGoToFirstSelectedLine == e.KeyData) //Locate first selected line in subtitle listview
             {
                 if (SubtitleListview1.SelectedItems.Count > 0)
@@ -19088,7 +19085,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 SubtitleListview1.SelectAll();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                RefreshSelectedParagraph();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
@@ -19113,26 +19113,62 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertAfter(string.Empty, true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Home)
+            else if ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Home) ||
+                     (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Home) ||
+                     (e.Modifiers == Keys.None && e.KeyCode == Keys.Home))
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 SubtitleListview1.FirstVisibleIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                RefreshSelectedParagraph();
+                SubtitleListview1_SelectedIndexChanged(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.End)
+            else if ((e.Modifiers == Keys.Control && e.KeyCode == Keys.End) ||
+                     (e.Modifiers == Keys.Alt && e.KeyCode == Keys.End) ||
+                     (e.Modifiers == Keys.None && e.KeyCode == Keys.End))
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                RefreshSelectedParagraph();
+                SubtitleListview1_SelectedIndexChanged(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
+            {
+                var topIndex = FirstSelectedIndex;
+                var numberOfVisibleItems = (SubtitleListview1.Height - 30) / SubtitleListview1.GetItemRect(0).Height;
+                var next = Math.Min(SubtitleListview1.Items.Count - 1, topIndex + numberOfVisibleItems);
+                if (next >= 0 && next < SubtitleListview1.Items.Count)
+                {
+                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                    SubtitleListview1.SelectNone();
+                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                    SubtitleListview1.Items[next].Selected = true;
+                    SubtitleListview1.Items[next].Focused = true;
+                    SubtitleListview1.EnsureVisible(next);
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
+            {
+                var topIndex = FirstSelectedIndex;
+                var numberOfVisibleItems = (SubtitleListview1.Height - 30) / SubtitleListview1.GetItemRect(0).Height;
+                var next = Math.Max(0, topIndex - numberOfVisibleItems);
+                if (next >= 0 && next < SubtitleListview1.Items.Count)
+                {
+                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                    SubtitleListview1.SelectNone();
+                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                    SubtitleListview1.Items[next].Selected = true;
+                    SubtitleListview1.Items[next].Focused = true;
+                    SubtitleListview1.EnsureVisible(next);
+                }
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -32139,6 +32175,17 @@ namespace Nikse.SubtitleEdit.Forms
                 item.Click += CallPluginAssa;
                 item.PerformClick();
             }
+        }
+
+        private void SubtitleListview1_MouseDown(object sender, MouseEventArgs e)
+        {
+            _listViewMouseDown = true;
+        }
+
+        private void SubtitleListview1_MouseUp(object sender, MouseEventArgs e)
+        {
+            _listViewMouseDown = false;
+            SubtitleListview1_SelectedIndexChanged(null, null);
         }
     }
 }
