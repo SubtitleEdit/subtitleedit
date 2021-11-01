@@ -22929,7 +22929,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 lock (_updateShowEarlierLock)
                 {
-
                     SubtitleListview1.BeginUpdate();
                     for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                     {
@@ -22950,6 +22949,7 @@ namespace Nikse.SubtitleEdit.Forms
                     profile = string.Empty;
                 }
 
+                _updateSelectedCountStatusBar = false;
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
                     toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
@@ -22958,8 +22958,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
                 }
-
-                _updateSelectedCountStatusBar = false;
             }
 
             _timerSlow.Start();
