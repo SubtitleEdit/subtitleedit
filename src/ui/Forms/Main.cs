@@ -187,6 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _restorePreviewAfterSecondSubtitle;
         private ListBox _intellisenceList;
         private ListBox _intellisenceListOriginal;
+        private bool _updateSelectedCountStatusBar;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -9595,21 +9596,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowLineInformationListView()
         {
-            var profile = Configuration.Settings.General.CurrentProfile + "   ";
-            if (!ShowProfileInStatusBar)
-            {
-                profile = string.Empty;
-            }
-
             if (InListView)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
+                    var profile = Configuration.Settings.General.CurrentProfile + "   ";
+                    if (!ShowProfileInStatusBar)
+                    {
+                        profile = string.Empty;
+                    }
+
                     toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
                 }
                 else
                 {
-                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
+                    _updateSelectedCountStatusBar = true;
                 }
             }
         }
@@ -22939,6 +22940,26 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.EndUpdate();
                     _updateShowEarlier = false;
                 }
+            }
+
+            if (_updateSelectedCountStatusBar)
+            {
+                var profile = Configuration.Settings.General.CurrentProfile + "   ";
+                if (!ShowProfileInStatusBar)
+                {
+                    profile = string.Empty;
+                }
+
+                if (SubtitleListview1.SelectedItems.Count == 1)
+                {
+                    toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
+                }
+                else
+                {
+                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
+                }
+
+                _updateSelectedCountStatusBar = false;
             }
 
             _timerSlow.Start();
