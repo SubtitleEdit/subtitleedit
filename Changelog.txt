@@ -40,6 +40,7 @@
    * Try avoid set mpv volume to 0 - thx Janusz
    * Improve waveform move-element performance - thx Leon
    * Optimize list view "Replace all" - thx Jamakmake
+   * Improve mouse wheel scrolling in waveform when locked/centered
    * Update/clean nuget packages
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
