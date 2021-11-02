@@ -1479,7 +1479,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MatchFoundX>Εύρεση αντιστοιχίας: {0}</MatchFoundX>
     <NoMatchFoundX>Αδυναμία εύρεσης αντιστοιχίας: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Αδυναμία εύρεσης για αντικατάσταση</FoundNothingToReplace>
-    <ReplaceCountX>Αριθμός αντικαταστάσεων: {0}</ReplaceCountX>
+    <ReplaceCountX>Αριθμός αντικαταστάσεων: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>Εύρεση αντιστοιχίας στη γραμμή {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Αντικατάσταση ενός.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Πριν των αλλαγν στην προβολή πηγής</BeforeChangesMadeInSourceView>
@@ -2558,7 +2558,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckCompleted>Ολοκλήρωση ορθογραφικού ελέγχου</SpellCheckCompleted>
     <SpellCheckAborted>Ματαίωση ορθογραφικού ελέγχου</SpellCheckAborted>
     <SpacesNotAllowed>Απαγορεύονται τα κενά σε λέξη.</SpacesNotAllowed>
-    <UndoX>Αναιρέθηκαν: {0}</UndoX>
+    <UndoX>Αναιρέθηκαν: "{0}"</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Μη έγκυρος χαρακτήρας {0} στη στήλη {1}</GlyphCheckReport>
