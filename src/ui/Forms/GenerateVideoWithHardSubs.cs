@@ -636,6 +636,11 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
 
+                comboBoxTune.Items.Clear();
+                comboBoxTune.Items.Add(string.Empty);
+                comboBoxTune.Items.Add("animation");
+                comboBoxTune.Items.Add("grain");
+
                 comboBoxCrf.Text = "28";
             }
             else if (comboBoxVideoEncoding.Text == "libvpx-vp9")
@@ -656,6 +661,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
+
+                comboBoxTune.Items.Clear();
+                comboBoxTune.Items.Add(string.Empty);
+                comboBoxTune.Items.Add("film");
+                comboBoxTune.Items.Add("animation");
+                comboBoxTune.Items.Add("grain");
+
 
                 comboBoxCrf.Text = "23";
             }
