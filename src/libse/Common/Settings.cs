@@ -358,6 +358,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GenVideoAudioSampleRate { get; set; }
         public bool GenVideoTargetFileSize { get; set; }
         public float GenVideoFontSizePercentOfHeight { get; set; }
+        public bool GenVideoNonAssaBox { get; set; }
+        public bool GenVideoNonAssaAlignRight { get; set; }
+        public bool GenVideoNonAssaFixRtlUnicode { get; set; }
 
         public ToolsSettings()
         {
@@ -520,6 +523,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoAudioForceStereo = true;
             GenVideoAudioSampleRate = "48000";
             GenVideoFontSizePercentOfHeight = 0.078f;
+            GenVideoNonAssaBox = true;
         }
     }
 
@@ -5398,6 +5402,24 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoFontSizePercentOfHeight = (float)Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenVideoNonAssaBox");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaBox = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaAlignRight");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaAlignRight = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("GenVideoNonAssaFixRtlUnicode");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoNonAssaFixRtlUnicode = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -9210,6 +9232,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoAudioSampleRate", settings.Tools.GenVideoAudioSampleRate);
                 textWriter.WriteElementString("GenVideoTargetFileSize", settings.Tools.GenVideoTargetFileSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoFontSizePercentOfHeight", settings.Tools.GenVideoFontSizePercentOfHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
