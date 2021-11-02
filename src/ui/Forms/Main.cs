@@ -19146,37 +19146,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
+            else if (e.Modifiers == Keys.None && (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.PageUp || e.KeyCode == Keys.PageDown))
             {
-                var topIndex = FirstSelectedIndex;
-                var numberOfVisibleItems = (SubtitleListview1.Height - 30) / SubtitleListview1.GetItemRect(0).Height;
-                var next = Math.Min(SubtitleListview1.Items.Count - 1, topIndex + numberOfVisibleItems);
-                if (next >= 0 && next < SubtitleListview1.Items.Count)
+                if (SubtitleListview1.SelectedIndices.Count > 1)
                 {
                     SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                     SubtitleListview1.SelectNone();
                     SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                    SubtitleListview1.Items[next].Selected = true;
-                    SubtitleListview1.Items[next].Focused = true;
-                    SubtitleListview1.EnsureVisible(next);
                 }
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
-            {
-                var topIndex = FirstSelectedIndex;
-                var numberOfVisibleItems = (SubtitleListview1.Height - 30) / SubtitleListview1.GetItemRect(0).Height;
-                var next = Math.Max(0, topIndex - numberOfVisibleItems);
-                if (next >= 0 && next < SubtitleListview1.Items.Count)
-                {
-                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                    SubtitleListview1.SelectNone();
-                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                    SubtitleListview1.Items[next].Selected = true;
-                    SubtitleListview1.Items[next].Focused = true;
-                    SubtitleListview1.EnsureVisible(next);
-                }
-                e.SuppressKeyPress = true;
             }
         }
 
