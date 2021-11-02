@@ -78,6 +78,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAudioSampleRate.Text = Configuration.Settings.Tools.GenVideoAudioSampleRate;
             checkBoxMakeStereo.Checked = Configuration.Settings.Tools.GenVideoAudioForceStereo;
             checkBoxTargetFileSize.Checked = Configuration.Settings.Tools.GenVideoTargetFileSize;
+            checkBoxBox.Checked = Configuration.Settings.Tools.GenVideoNonAssaBox;
+            checkBoxAlignRight.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
+            checkBoxRightToLeft.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
 
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
@@ -191,7 +194,8 @@ namespace Nikse.SubtitleEdit.Forms
             _log = new StringBuilder();
             buttonOK.Enabled = false;
             numericUpDownFontSize.Enabled = false;
-            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
+
+            using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
@@ -259,6 +263,30 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+        }
+
+        private string SuggestNewVideoFileName()
+        {
+            var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
+
+            fileName += $".burn-in";
+
+            fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
+
+            if (comboBoxVideoEncoding.Text == "libx265")
+            {
+                fileName += ".x265";
+            }
+            else if (comboBoxVideoEncoding.Text == "libvpx-vp9")
+            {
+                fileName += ".vp9";
+            }
+            else
+            {
+                fileName += ".x264";
+            }
+
+            return fileName;
         }
 
         private void FixRightToLeft(Subtitle subtitle)
@@ -580,6 +608,9 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GenVideoAudioForceStereo = checkBoxMakeStereo.Checked;
             Configuration.Settings.Tools.GenVideoAudioSampleRate = comboBoxAudioSampleRate.Text;
             Configuration.Settings.Tools.GenVideoTargetFileSize = checkBoxTargetFileSize.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaBox = checkBoxBox.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaAlignRight = checkBoxAlignRight.Checked;
+            Configuration.Settings.Tools.GenVideoNonAssaFixRtlUnicode = checkBoxRightToLeft.Checked;
 
             using (var graphics = CreateGraphics())
             {
@@ -748,6 +779,8 @@ namespace Nikse.SubtitleEdit.Forms
             var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
             style.FontSize = (float)numericUpDownFontSize.Value;
             style.FontName = comboBoxSubtitleFont.Text;
+            style.Background = Color.FromArgb(150, 0, 0, 0);
+
             if (checkBoxAlignRight.Checked)
             {
                 style.Alignment = "3";
@@ -756,7 +789,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxBox.Checked)
             {
                 style.BorderStyle = "4"; // box - multi line
-                style.ShadowWidth = 5;
+                style.ShadowWidth = 5;                
             }
 
             sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });
