@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 switch (Language)
                 {
                     case "ar": // Arabic
+                    case "pt": // Brazilian Portuguese
                     case "cs": // Czech
                     case "fr": // French
                     case "hu": // Hungarian
