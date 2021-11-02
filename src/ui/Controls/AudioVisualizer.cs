@@ -2266,12 +2266,13 @@ namespace Nikse.SubtitleEdit.Controls
             int delta = e.Delta;
             if (!MouseWheelScrollUpIsForward)
             {
-                delta = delta * -1;
+                delta *= -1;
             }
 
             if (Locked)
             {
-                OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_currentVideoPositionSeconds + (delta / 256.0), null));
+                _currentVideoPositionSeconds += delta / 256.0;
+                OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_currentVideoPositionSeconds, null));
             }
             else
             {
@@ -2282,7 +2283,6 @@ namespace Nikse.SubtitleEdit.Controls
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));
                 }
             }
-            Invalidate();
         }
 
         /////////////////////////////////////////////////
