@@ -463,7 +463,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxVideoEncoding.FormattingEnabled = true;
             this.comboBoxVideoEncoding.Items.AddRange(new object[] {
             "libx264",
-            "libx264rgb",
             "libx265",
             "libvpx-vp9"});
             this.comboBoxVideoEncoding.Location = new System.Drawing.Point(101, 58);
