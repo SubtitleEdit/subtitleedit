@@ -9831,7 +9831,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
 
-            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
