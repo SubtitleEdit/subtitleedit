@@ -1387,7 +1387,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MatchFoundX = "Match found: {0}",
                 NoMatchFoundX = "No match found: {0}",
                 FoundNothingToReplace = "Found nothing to replace",
-                ReplaceCountX = "Replace count: {0}",
+                ReplaceCountX = "Replace count: {0:#,##0}",
                 NoXFoundAtLineY = "Match found at line {0}: {1}",
                 OneReplacementMade = "One replacement made.",
                 BeforeChangesMadeInSourceView = "Before changes made in source view",
