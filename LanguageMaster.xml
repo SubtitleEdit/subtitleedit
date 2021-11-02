@@ -1483,7 +1483,7 @@ Would you like to start from the top of the document and continue search and rep
     <MatchFoundX>Match found: {0}</MatchFoundX>
     <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Found nothing to replace</FoundNothingToReplace>
-    <ReplaceCountX>Replace count: {0}</ReplaceCountX>
+    <ReplaceCountX>Replace count: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>One replacement made.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Before changes made in source view</BeforeChangesMadeInSourceView>
