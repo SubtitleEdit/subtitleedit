@@ -208,7 +208,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
-    <Title>Change script resolution</Title>
+    <Title>Change ASSA script resolution</Title>
     <SourceVideoRes>Source video resolution</SourceVideoRes>
     <TargetVideoRes>Target video resolution</TargetVideoRes>
     <ChangeResolutionMargins>Change resolution for margin</ChangeResolutionMargins>
