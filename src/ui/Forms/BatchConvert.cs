@@ -157,6 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxAdjustDuration.Text = LanguageSettings.Current.AdjustDisplayDuration.Title;
             addFilesToolStripMenuItem.Text = l.AddFiles;
             groupBoxDeleteLines.Text = l.DeleteLines;
+            groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResulationChanger.Title;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
@@ -349,7 +350,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
-
+            labelSourceRes.Text = "Source";
+            labelTargetRes.Text = "Target";
+            checkBoxMargins.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionMargins;
+            checkBoxFontSize.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionFontSize;
+            checkBoxPosition.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionPositions;
+            checkBoxDrawing.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionDrawing;
 
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
             if (mode == RemoveUnicode)
@@ -534,8 +540,14 @@ namespace Nikse.SubtitleEdit.Forms
                     Checked = Configuration.Settings.Tools.BatchConvertDeleteLines,
                     Action = CommandLineConverter.BatchAction.DeleteLines,
                     Control = groupBoxDeleteLines
-                }
-
+                },
+                new FixActionItem
+                {
+                    Text =  LanguageSettings.Current.AssaResulationChanger.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertAssaChangeRes,
+                    Action = CommandLineConverter.BatchAction.AssaChangeRes,
+                    Control = groupBoxAssaChangeRes
+                },
             };
             foreach (var fixItem in fixItems)
             {
@@ -1510,6 +1522,11 @@ namespace Nikse.SubtitleEdit.Forms
                 DeleteLines(sub);
             }
 
+            if (IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes))
+            {
+                AssaChangeResolution(sub);
+            }
+
             if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
             {
                 sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Style == textBoxRemoveStyle.Text);
@@ -1643,6 +1660,89 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return sub;
+        }
+
+        private void AssaChangeResolution(Subtitle sub)
+        {
+            if (sub.OriginalFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
+            {
+                return;
+            }
+
+            if (!checkBoxMargins.Checked && !checkBoxFontSize.Checked && !checkBoxPosition.Checked && !checkBoxDrawing.Checked)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(sub.Header))
+            {
+                sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
+            var sourceWidth = numericUpDownSourceWidth.Value;
+            var sourceHeight = numericUpDownSourceHeight.Value;
+            var targetWidth = numericUpDownTargetWidth.Value;
+            var targetHeight = numericUpDownTargetHeight.Value;
+
+            if (sourceWidth == 0 || sourceHeight == 0 || targetWidth == 0 || targetHeight == 0)
+            {
+                return;
+            }
+
+            if (sourceWidth == targetWidth && sourceHeight == targetHeight)
+            {
+                return;
+            }
+
+            var fixMargins = checkBoxMargins.Checked;
+            var fixFonts = checkBoxFontSize.Checked;
+            var fixPos = checkBoxPosition.Checked;
+            var fixDraw = checkBoxDrawing.Checked;
+            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(sub.Header);
+            foreach (var style in styles)
+            {
+                if (fixMargins)
+                {
+                    style.MarginLeft = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
+                    style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginRight);
+                    style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginVertical);
+                }
+
+                if (fixFonts)
+                {
+                    style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
+                }
+
+                if (fixFonts || fixDraw)
+                {
+                    style.OutlineWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.OutlineWidth);
+                    style.ShadowWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.ShadowWidth);
+                    style.Spacing = (decimal)AssaResampler.Resample(sourceWidth, targetWidth, (float)style.Spacing);
+                }
+            }
+
+            sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, styles);
+
+            sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+            sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+
+            foreach (var p in sub.Paragraphs)
+            {
+                if (fixFonts)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
+
+                if (fixPos)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
+
+                if (fixDraw)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, null);
+                }
+            }
         }
 
         private void DeleteLines(Subtitle sub)
@@ -2444,6 +2544,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertApplyDurationLimits = IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits);
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
+            Configuration.Settings.Tools.BatchConvertDeleteLines = IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines);
+            Configuration.Settings.Tools.BatchConvertAssaChangeRes = IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes);
 
             UpdateRtlSettings();
         }
@@ -2790,6 +2892,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxRemoveStyle.Visible = false;
             groupBoxAdjustDuration.Visible = false;
             groupBoxDeleteLines.Visible = false;
+            groupBoxAssaChangeRes.Visible = false;
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
@@ -3019,6 +3122,46 @@ namespace Nikse.SubtitleEdit.Forms
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             buttonInputBrowse_Click(sender, e);
+        }
+
+        private void buttonSourceRes_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    if (info != null && info.Success)
+                    {
+                        numericUpDownSourceWidth.Value = info.Width;
+                        numericUpDownSourceHeight.Value = info.Height;
+                    }
+                }
+            }
+        }
+
+        private void buttonGetResolutionFromVideo_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    if (info != null && info.Success)
+                    {
+                        numericUpDownTargetWidth.Value = info.Width;
+                        numericUpDownTargetHeight.Value = info.Height;
+                    }
+                }
+            }
         }
     }
 }
