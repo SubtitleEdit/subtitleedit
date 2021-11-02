@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             AssaResulationChanger = new LanguageStructure.AssaResulationChanger
             {
-                Title = "Change script resolution",
+                Title = "Change ASSA script resolution",
                 SourceVideoRes = "Source video resolution",
                 TargetVideoRes = "Target video resolution",
                 ChangeResolutionMargins = "Change resolution for margin",
