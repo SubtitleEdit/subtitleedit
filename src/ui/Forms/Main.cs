@@ -22772,7 +22772,6 @@ namespace Nikse.SubtitleEdit.Forms
             generateDatetimeInfoFromVideoToolStripMenuItem.Visible = showBeta;
             toolStripMenuItemExportCaptionInc.Visible = showBeta;
             toolStripMenuItemExportUltech130.Visible = showBeta;
-            toolStripMenuItemInverseSelection.Visible = showBeta;
             toolStripMenuItemSpellCheckFromCurrentLine.Visible = showBeta;
             toolStripMenuItemImportOcrHardSub.Visible = showBeta;
             toolStripMenuItemOpenDvd.Visible = showBeta;
@@ -29772,10 +29771,16 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SubtitleListview1.BeginUpdate();
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             foreach (ListViewItem item in SubtitleListview1.Items)
             {
+
                 item.Selected = !item.Selected;
             }
+
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.EndUpdate();
         }
 
         private void toolStripMenuItemSpellCheckFromCurrentLine_Click(object sender, EventArgs e)
