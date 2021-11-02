@@ -5,6 +5,7 @@
    * Auto set ASSA resolution - thx Leon
    * Icon for plugin "ASSA Draw" - thx Leon
    * New sub format - thx Leon
+   * New sub format (json) - thx Cedric
    * Add read support for "combined ttml" files - thx Martin
    * Save SMPTE video time mode for recent files - thx OmrSi
    * Prompt some TTML files regarding SMPTE time mode - thx uckthis
@@ -39,6 +40,7 @@
    * Try avoid set mpv volume to 0 - thx Janusz
    * Improve waveform move-element performance - thx Leon
    * Optimize list view "Replace all" - thx Jamakmake
+   * Update/clean nuget packages
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
