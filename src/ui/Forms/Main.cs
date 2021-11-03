@@ -2223,7 +2223,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _lastChangedToFormat = format.FriendlyName;
             UpdateSourceView();
-            if (_converted && _subtitle?.Paragraphs.Count > 0)
+            if (_converted && _subtitle?.Paragraphs.Count > 0 && oldFormat != null)
             {
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
             }
@@ -5079,7 +5079,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_currentSubtitleFormat == null)
             {
                 _currentSubtitleFormat = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-                MakeFormatChange(null, _currentSubtitleFormat);
+                MakeFormatChange(_currentSubtitleFormat, _oldSubtitleFormat);
             }
 
             return _currentSubtitleFormat;
