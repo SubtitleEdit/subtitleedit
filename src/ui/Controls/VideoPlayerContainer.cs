@@ -600,6 +600,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 Color fontColor = Color.White;
+                int extraAdd = 0;
                 while (i < text.Length)
                 {
                     if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
@@ -715,7 +716,7 @@ namespace Nikse.SubtitleEdit.Controls
                             TextBox.AppendText(sb.ToString());
                             sb.Clear();
                             isFontColor = true;
-                            fontColorBegin = letterCount;
+                            fontColorBegin = letterCount + extraAdd;
                         }
                     }
                     else if (isFontColor && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
@@ -736,6 +737,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (text[i] == '\r')
                     {
+                        extraAdd++;
                         // skip carriage return (0xd / 13)
                     }
                     else
