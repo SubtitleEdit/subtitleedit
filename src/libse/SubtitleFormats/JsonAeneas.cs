@@ -15,27 +15,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("{ \"fragments\": [");
+            sb.AppendLine("{" + Environment.NewLine + "    \"fragments\": [");
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var number = (i + 1).ToString(CultureInfo.InvariantCulture).PadLeft(6, '0');
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.AppendLine(@"    {
-      ""begin"": """ + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + @""",
-      ""children"": [],
-      ""end"": """ + p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + @""",
-      ""id"": ""f" + number + @""",
-      ""language"": ""eng"",
-      ""lines"": [
-        " + GetTextArray(p.Text) + @"
-      ]
-    },");
+                sb.AppendLine(@"        {
+            ""begin"": """ + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + @""",
+            ""children"": [],
+            ""end"": """ + p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + @""",
+            ""id"": ""f" + number + @""",
+            ""language"": ""eng"",
+            ""lines"": [
+                " + GetTextArray(p.Text) + @"
+            ]
+        },");
             }
 
-            var result = sb.ToString().TrimEnd(',') + @"  ]
-}";
-
+            var result = sb.ToString().Trim().TrimEnd(',') + Environment.NewLine + "    ]" + Environment.NewLine + "}";
             return result;
         }
 
@@ -44,10 +42,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (var line in text.SplitToLines())
             {
-                sb.Append("\"  " + Json.EncodeJsonText(line) + " \",");
+                sb.Append("\"" + Json.EncodeJsonText(line) + "\", ");
             }
 
-            return sb.ToString().TrimEnd(',');
+            return sb.ToString().Trim().TrimEnd(',');
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
