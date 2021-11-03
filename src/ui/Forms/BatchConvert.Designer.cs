@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -40,11 +40,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPosition = new System.Windows.Forms.CheckBox();
             this.checkBoxFontSize = new System.Windows.Forms.CheckBox();
             this.checkBoxMargins = new System.Windows.Forms.CheckBox();
-            this.labelSourceRes = new System.Windows.Forms.Label();
-            this.numericUpDownSourceHeight = new System.Windows.Forms.NumericUpDown();
-            this.buttonSourceRes = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDownSourceWidth = new System.Windows.Forms.NumericUpDown();
             this.labelTargetRes = new System.Windows.Forms.Label();
             this.numericUpDownTargetHeight = new System.Windows.Forms.NumericUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
@@ -161,8 +156,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxAssaChangeRes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).BeginInit();
             this.contextMenuStripOptions.SuspendLayout();
@@ -247,11 +240,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxPosition);
             this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxFontSize);
             this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxMargins);
-            this.groupBoxAssaChangeRes.Controls.Add(this.labelSourceRes);
-            this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownSourceHeight);
-            this.groupBoxAssaChangeRes.Controls.Add(this.buttonSourceRes);
-            this.groupBoxAssaChangeRes.Controls.Add(this.label2);
-            this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownSourceWidth);
             this.groupBoxAssaChangeRes.Controls.Add(this.labelTargetRes);
             this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownTargetHeight);
             this.groupBoxAssaChangeRes.Controls.Add(this.buttonGetResolutionFromVideo);
@@ -311,72 +299,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxMargins.Text = "Change resolution for margins";
             this.checkBoxMargins.UseVisualStyleBackColor = true;
             // 
-            // labelSourceRes
-            // 
-            this.labelSourceRes.AutoSize = true;
-            this.labelSourceRes.Location = new System.Drawing.Point(11, 31);
-            this.labelSourceRes.Name = "labelSourceRes";
-            this.labelSourceRes.Size = new System.Drawing.Size(41, 13);
-            this.labelSourceRes.TabIndex = 12;
-            this.labelSourceRes.Text = "Source";
-            // 
-            // numericUpDownSourceHeight
-            // 
-            this.numericUpDownSourceHeight.Location = new System.Drawing.Point(163, 28);
-            this.numericUpDownSourceHeight.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDownSourceHeight.Name = "numericUpDownSourceHeight";
-            this.numericUpDownSourceHeight.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownSourceHeight.TabIndex = 15;
-            this.numericUpDownSourceHeight.Value = new decimal(new int[] {
-            288,
-            0,
-            0,
-            0});
-            // 
-            // buttonSourceRes
-            // 
-            this.buttonSourceRes.Location = new System.Drawing.Point(214, 28);
-            this.buttonSourceRes.Name = "buttonSourceRes";
-            this.buttonSourceRes.Size = new System.Drawing.Size(27, 23);
-            this.buttonSourceRes.TabIndex = 16;
-            this.buttonSourceRes.Text = "...";
-            this.buttonSourceRes.UseVisualStyleBackColor = true;
-            this.buttonSourceRes.Click += new System.EventHandler(this.buttonSourceRes_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(145, 31);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(14, 13);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "X";
-            // 
-            // numericUpDownSourceWidth
-            // 
-            this.numericUpDownSourceWidth.Location = new System.Drawing.Point(94, 28);
-            this.numericUpDownSourceWidth.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDownSourceWidth.Name = "numericUpDownSourceWidth";
-            this.numericUpDownSourceWidth.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownSourceWidth.TabIndex = 13;
-            this.numericUpDownSourceWidth.Value = new decimal(new int[] {
-            384,
-            0,
-            0,
-            0});
-            // 
             // labelTargetRes
             // 
             this.labelTargetRes.AutoSize = true;
-            this.labelTargetRes.Location = new System.Drawing.Point(12, 56);
+            this.labelTargetRes.Location = new System.Drawing.Point(9, 29);
             this.labelTargetRes.Name = "labelTargetRes";
             this.labelTargetRes.Size = new System.Drawing.Size(38, 13);
             this.labelTargetRes.TabIndex = 17;
@@ -384,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownTargetHeight
             // 
-            this.numericUpDownTargetHeight.Location = new System.Drawing.Point(163, 54);
+            this.numericUpDownTargetHeight.Location = new System.Drawing.Point(82, 46);
             this.numericUpDownTargetHeight.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -401,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonGetResolutionFromVideo
             // 
-            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(214, 54);
+            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(133, 46);
             this.buttonGetResolutionFromVideo.Name = "buttonGetResolutionFromVideo";
             this.buttonGetResolutionFromVideo.Size = new System.Drawing.Size(27, 23);
             this.buttonGetResolutionFromVideo.TabIndex = 21;
@@ -412,7 +338,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(145, 57);
+            this.labelX.Location = new System.Drawing.Point(64, 49);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(14, 13);
             this.labelX.TabIndex = 19;
@@ -420,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownTargetWidth
             // 
-            this.numericUpDownTargetWidth.Location = new System.Drawing.Point(94, 54);
+            this.numericUpDownTargetWidth.Location = new System.Drawing.Point(13, 46);
             this.numericUpDownTargetWidth.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -623,14 +549,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -1677,8 +1603,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxAssaChangeRes.ResumeLayout(false);
             this.groupBoxAssaChangeRes.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).EndInit();
             this.contextMenuStripOptions.ResumeLayout(false);
@@ -1843,11 +1767,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.NumericUpDown numericUpDownDeleteFirst;
         private System.Windows.Forms.Label labelDeleteFirstLines;
         private System.Windows.Forms.GroupBox groupBoxAssaChangeRes;
-        private System.Windows.Forms.Label labelSourceRes;
-        private System.Windows.Forms.NumericUpDown numericUpDownSourceHeight;
-        private System.Windows.Forms.Button buttonSourceRes;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown numericUpDownSourceWidth;
         private System.Windows.Forms.Label labelTargetRes;
         private System.Windows.Forms.NumericUpDown numericUpDownTargetHeight;
         private System.Windows.Forms.Button buttonGetResolutionFromVideo;
