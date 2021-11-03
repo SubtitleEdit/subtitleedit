@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using System;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -54,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static int ReplaceAllRegEx(FindReplaceDialogHelper findHelper, Subtitle subtitle, int stopAtIndex)
         {
             var replaceCount = 0;
-            for (int i = findHelper.StartLineIndex; i < subtitle.Paragraphs.Count; i++)
+            for (int i = Math.Max(0, findHelper.StartLineIndex); i < subtitle.Paragraphs.Count; i++)
             {
                 if (i >= stopAtIndex)
                 {
