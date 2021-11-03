@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -468,6 +469,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     region = "topRight";
                 }
             }
+            else
+            {
+                if (text.StartsWith("{\\an8}", StringComparison.Ordinal))
+                {
+                    var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+                    if (topRegions.Count == 1)
+                    {
+                        region = topRegions[0];
+                    }
+                    else
+                    {
+                        var topStyle = topRegions.FirstOrDefault(r => r.ToLowerInvariant() == "top");
+                        if (topStyle != null)
+                        {
+                            region = topStyle;
+                        }
+                    }
+
+                }
+                else if (text.StartsWith("{\\an2}", StringComparison.Ordinal) || !text.Contains("{\\an"))
+                {
+                    var bottomRegions = GetRegionsBottomFromHeader(xml.OuterXml);
+                    if (bottomRegions.Count == 1)
+                    {
+                        region = bottomRegions[0];
+                    }
+                    else
+                    {
+                        var bottomStyle = bottomRegions.FirstOrDefault(r => r.ToLowerInvariant() == "bottom");
+                        if (bottomStyle != null)
+                        {
+                            region = bottomStyle;
+                        }
+                    }
+                }
+            }
+
             text = Utilities.RemoveSsaTags(text);
             text = HtmlUtil.FixInvalidItalicTags(text);
 
@@ -1411,6 +1449,54 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
+        public static List<string> GetRegionsBottomFromHeader(string xmlAsString)
+        {
+            var list = new List<string>();
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml(xmlAsString);
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+                {
+                    bool top = false;
+                    foreach (XmlNode styleNode in node.ChildNodes)
+                    {
+                        top = GetIfBottomAligned(styleNode);
+                        if (top)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (!top && node.Attributes != null)
+                    {
+                        top = GetIfBottomAligned(node);
+                    }
+
+                    if (top)
+                    {
+                        if (node.Attributes["xml:id"] != null)
+                        {
+                            list.Add(node.Attributes["xml:id"].Value);
+                        }
+                        else if (node.Attributes["id"] != null)
+                        {
+                            list.Add(node.Attributes["id"].Value);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return list;
+        }
+
         private static bool GetIfTopAligned(XmlNode styleNode)
         {
             if (styleNode?.Attributes == null)
@@ -1463,6 +1549,60 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return true;
                 }
                 else if (yPos <= 25 && displayAlign == "before") // before = top align
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool GetIfBottomAligned(XmlNode styleNode)
+        {
+            if (styleNode?.Attributes == null)
+            {
+                return false;
+            }
+
+            var origin = string.Empty;
+            if (styleNode.Attributes["tts:origin"] != null)
+            {
+                origin = styleNode.Attributes["tts:origin"].Value;
+            }
+            else if (styleNode.Attributes["origin"] != null)
+            {
+                origin = styleNode.Attributes["origin"].Value;
+            }
+
+            var originArr = origin.Split(' ');
+
+            var extent = string.Empty;
+            if (styleNode.Attributes["tts:extent"] != null)
+            {
+                extent = styleNode.Attributes["tts:extent"].Value;
+            }
+            else if (styleNode.Attributes["extent"] != null)
+            {
+                extent = styleNode.Attributes["extent"].Value;
+            }
+
+            var extentArr = extent.Split(' ');
+
+            var displayAlign = string.Empty;
+            if (styleNode.Attributes["tts:displayAlign"] != null)
+            {
+                displayAlign = styleNode.Attributes["tts:displayAlign"].Value;
+            }
+            else if (styleNode.Attributes["displayAlign"] != null)
+            {
+                displayAlign = styleNode.Attributes["displayAlign"].Value;
+            }
+
+            if (originArr.Length == 2 && originArr[0].EndsWith("%", StringComparison.Ordinal) && originArr[1].EndsWith("%", StringComparison.Ordinal) &&
+                extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(displayAlign))
+            {
+                var yPos = Convert.ToDouble(originArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
+                if (yPos > 40 && displayAlign == "after")
                 {
                     return true;
                 }
