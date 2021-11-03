@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static int ReplaceAllNonRegEx(FindReplaceDialogHelper findHelper, Subtitle subtitle, int stopAtIndex)
         {
             var replaceCount = 0;
-            for (int i = findHelper.StartLineIndex; i < subtitle.Paragraphs.Count; i++)
+            for (int i = Math.Max(0, findHelper.StartLineIndex); i < subtitle.Paragraphs.Count; i++)
             {
                 if (i >= stopAtIndex)
                 {
