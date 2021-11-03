@@ -1033,6 +1033,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Empty;
         }
 
+        private static Regex _endsWithTreeDigits = new Regex(@"\d\d\d$");
         private static bool IsFrames(string timeCode)
         {
             if (timeCode.Length == 12 && (timeCode[8] == '.' || timeCode[8] == ',')) // 00:00:08.292 or 00:00:08,292
@@ -1041,6 +1042,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (timeCode.Length == 11 && timeCode[8] == '.') // 00:00:08.12 (last part is milliseconds / 10)
+            {
+                return false;
+            }
+
+            if (_endsWithTreeDigits.IsMatch(timeCode))
             {
                 return false;
             }
@@ -1287,7 +1293,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "frames";
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
             }
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), parts.Length > 3 ? int.Parse(parts[3]) : 0);
+
+            var hours = int.Parse(parts[0]);
+            if (hours > 99)
+            {
+                hours = 0;
+            }
+
+            return new TimeCode(hours, int.Parse(parts[1]), int.Parse(parts[2]), parts.Length > 3 ? int.Parse(parts[3]) : 0);
         }
 
         public override List<string> AlternateExtensions => new List<string> { ".itt", ".dfxp", ".ttml" };
