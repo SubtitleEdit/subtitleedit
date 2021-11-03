@@ -992,12 +992,12 @@
             65536});
             this.numericUpDownAngle.Location = new System.Drawing.Point(391, 84);
             this.numericUpDownAngle.Maximum = new decimal(new int[] {
-            180,
+            99000,
             0,
             0,
             0});
             this.numericUpDownAngle.Minimum = new decimal(new int[] {
-            180,
+            99000,
             0,
             0,
             -2147483648});
@@ -1603,7 +1603,7 @@
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
-            // Styles
+            // AssaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1616,7 +1616,7 @@
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(1060, 630);
-            this.Name = "Styles";
+            this.Name = "AssaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
