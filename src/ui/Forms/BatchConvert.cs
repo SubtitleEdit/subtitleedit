@@ -350,8 +350,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
-            labelSourceRes.Text = "Source";
-            labelTargetRes.Text = "Target";
+            labelTargetRes.Text = LanguageSettings.Current.AssaResulationChanger.TargetVideoRes;
             checkBoxMargins.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionMargins;
             checkBoxFontSize.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionFontSize;
             checkBoxPosition.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionPositions;
@@ -1679,8 +1678,22 @@ namespace Nikse.SubtitleEdit.Forms
                 sub.Header = AdvancedSubStationAlpha.DefaultHeader;
             }
 
-            var sourceWidth = numericUpDownSourceWidth.Value;
-            var sourceHeight = numericUpDownSourceHeight.Value;
+            // default resolution for ASSA
+            var sourceWidth = 384;
+            var sourceHeight = 288;
+
+            var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", sub.Header);
+            if (int.TryParse(oldPlayResX, out var w))
+            {
+                sourceWidth = w;
+            }
+
+            var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", sub.Header);
+            if (int.TryParse(oldPlayResY, out var h))
+            {
+                sourceHeight = h;
+            }
+
             var targetWidth = numericUpDownTargetWidth.Value;
             var targetHeight = numericUpDownTargetHeight.Value;
 
@@ -3122,26 +3135,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             buttonInputBrowse_Click(sender, e);
-        }
-
-        private void buttonSourceRes_Click(object sender, EventArgs e)
-        {
-            using (var openFileDialog1 = new OpenFileDialog())
-            {
-                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
-                openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
-                openFileDialog1.FileName = string.Empty;
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
-                    if (info != null && info.Success)
-                    {
-                        numericUpDownSourceWidth.Value = info.Width;
-                        numericUpDownSourceHeight.Value = info.Height;
-                    }
-                }
-            }
         }
 
         private void buttonGetResolutionFromVideo_Click(object sender, EventArgs e)
