@@ -2223,7 +2223,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _lastChangedToFormat = format.FriendlyName;
             UpdateSourceView();
-            if (_converted)
+            if (_converted && _subtitle?.Paragraphs.Count > 0)
             {
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
             }
