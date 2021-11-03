@@ -22562,7 +22562,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tc = TimeCode.FromSeconds(videoPosition);
 
                 double offset = tc.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
-                if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds || offset > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds)
                 {
                     return;
                 }
