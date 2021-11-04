@@ -2001,7 +2001,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void SetStartTimeAndEndTimeSameDuration(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
+        public void SetStartTimeAndEndTimeSameDuration(int index, Paragraph paragraph)
         {
             if (paragraph == null)
             {
