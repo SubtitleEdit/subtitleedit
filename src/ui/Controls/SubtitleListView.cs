@@ -2001,6 +2001,28 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public void SetStartTimeAndEndTimeSameDuration(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
+        {
+            if (paragraph == null)
+            {
+                return;
+            }
+
+            if (IsValidIndex(index))
+            {
+                ListViewItem item = Items[index];
+                if (ColumnIndexStart >= 0)
+                {
+                    item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
+                }
+
+                if (ColumnIndexEnd >= 0)
+                {
+                    item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
+                }
+            }
+        }
+
         public void SetStartTimeAndDuration(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
         {
             if (paragraph == null)
@@ -2033,6 +2055,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 UpdateCpsAndWpm(item, paragraph);
             }
+
             SetGap(index - 1, prev, paragraph);
         }
 
