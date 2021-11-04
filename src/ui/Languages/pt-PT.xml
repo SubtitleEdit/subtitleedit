@@ -1484,7 +1484,7 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <MatchFoundX>Correspondências encontradas: {0}</MatchFoundX>
     <NoMatchFoundX>Não foram encontradas correspondências: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Não foi encontrado nada para substituir</FoundNothingToReplace>
-    <ReplaceCountX>Número de substituições: {0}</ReplaceCountX>
+    <ReplaceCountX>Número de substituições: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>Correspondências encontradas na linha {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Uma substituição concluída.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Antes de concluir alterações na visualização de origem</BeforeChangesMadeInSourceView>
