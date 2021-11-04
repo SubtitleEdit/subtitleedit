@@ -42,6 +42,8 @@
    * Optimize list view "Replace all" - thx Jamakmake
    * Improve mouse wheel scrolling in waveform when locked/centered
    * Update/clean nuget packages
+   * Allow large angles in ASSA styles window - thx yiwenchi
+   * Remove shortcut action limit for duration a few places - thx Leon
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
