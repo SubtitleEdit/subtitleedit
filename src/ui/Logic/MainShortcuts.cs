@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewColor3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor3);
             MainListViewColor4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor4);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
-            MainListViewRemoveBlankLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralListViewRemoveBlankLines);
+            MainListViewRemoveBlankLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralRemoveBlankLines);
             MainListViewRemoveTimeCodes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes);
             MainEditFixRTLViaUnicodeChars = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFixRTLViaUnicodeChars);
             MainEditRemoveRTLUnicodeChars = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRemoveRTLUnicodeChars);
