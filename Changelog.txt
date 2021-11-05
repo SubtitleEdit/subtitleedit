@@ -65,7 +65,7 @@
    * Add timeout for main win regex search - thx darksen/Janusz 
    * Fix crash in "Batch convert - Auto balance"
    * Fix for recent files after convert format - thx Jamakmake
-   * Fix for Blu-ray .sup noisy transparent border - thx shaino
+   * Fix for Blu-ray .sup noisy transparent border in VLC - thx shaino
 
 
 3.6.2 (24th August 2021)
