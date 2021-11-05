@@ -5132,6 +5132,8 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxColorLongLines +
                                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap +
                                        Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorGap +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorWideLines +
                                        Configuration.Settings.General.MaxNumberOfLines +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
