@@ -417,50 +417,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        internal static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
-        {
-            var list = new Dictionary<string, string>();
-            XmlNode node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
-            {
-                foreach (XmlNode item in node.ChildNodes)
-                {
-                    if (item.Attributes?["to"] != null && item.Attributes["from"] != null)
-                    {
-                        string to = item.Attributes["to"].InnerText;
-                        string from = item.Attributes["from"].InnerText;
-                        if (!list.ContainsKey(from))
-                        {
-                            list.Add(from, to);
-                        }
-                    }
-                }
-            }
-            return list;
-        }
-
-        internal static Dictionary<string, string> LoadRegExList(XmlDocument doc, string name)
-        {
-            var list = new Dictionary<string, string>();
-            XmlNode node = doc.DocumentElement?.SelectSingleNode(name);
-            if (node != null)
-            {
-                foreach (XmlNode item in node.ChildNodes)
-                {
-                    if (item.Attributes?["replaceWith"] != null && item.Attributes["find"] != null)
-                    {
-                        string to = item.Attributes["replaceWith"].InnerText;
-                        string from = item.Attributes["find"].InnerText;
-                        if (!list.ContainsKey(from))
-                        {
-                            list.Add(from, to);
-                        }
-                    }
-                }
-            }
-            return list;
-        }
-
         public string FixOcrErrors(string input, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var text = input;
