@@ -2044,7 +2044,7 @@ $HorzAlign          =   Center
         public string MainEditFixRTLViaUnicodeChars { get; set; }
         public string MainEditRemoveRTLUnicodeChars { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
-        public string MainToggleVideoControls { get; set; }
+        public string MainVideoToggleControls { get; set; }
         public string MainEditToggleTranslationOriginalInPreviews { get; set; }
         public string MainEditInverseSelection { get; set; }
         public string MainEditModifySelection { get; set; }
@@ -2152,10 +2152,10 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextUp { get; set; }
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewGoToNextError { get; set; }
-        public string MainListViewRemoveBlankLines { get; set; }
-        public string ApplyAssaOverrideTags { get; set; }
-        public string SetAssaPosition { get; set; }
-        public string SetAssaResolution { get; set; }
+        public string GeneralListViewRemoveBlankLines { get; set; }
+        public string GeneralApplyAssaOverrideTags { get; set; }
+        public string GeneralSetAssaPosition { get; set; }
+        public string GeneralSetAssaResolution { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -2257,7 +2257,7 @@ $HorzAlign          =   Center
         public string Waveform1000MsRight { get; set; }
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslateIt { get; set; }
-        public string MainAutoTranslate { get; set; }
+        public string MainTranslateAuto { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
         public string MainTranslateCustomSearch3 { get; set; }
@@ -2330,7 +2330,7 @@ $HorzAlign          =   Center
             MainWaveformInsertAtCurrentPosition = "Insert";
             MainInsertBefore = "Control+Shift+Insert";
             MainTextBoxAutoBreak = "Control+R";
-            MainAutoTranslate = "Control+Shift+G";
+            MainTranslateAuto = "Control+Shift+G";
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
             WaveformVerticalZoom = "Shift+Add";
@@ -2577,7 +2577,7 @@ $HorzAlign          =   Center
                              settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) ||
                              settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
                     {
-                        settings.Shortcuts.MainAutoTranslate = "Control+Shift+G";
+                        settings.Shortcuts.MainTranslateAuto = "Control+Shift+G";
                         settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
                     }
                 }
@@ -8031,25 +8031,25 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainListViewRemoveBlankLines");
                 if (subNode != null)
                 {
-                    shortcuts.MainListViewRemoveBlankLines = subNode.InnerText;
+                    shortcuts.GeneralListViewRemoveBlankLines = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("ApplyAssaOverrideTags");
+                subNode = node.SelectSingleNode("GeneralApplyAssaOverrideTags");
                 if (subNode != null)
                 {
-                    shortcuts.ApplyAssaOverrideTags = subNode.InnerText;
+                    shortcuts.GeneralApplyAssaOverrideTags = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("SetAssaPosition");
+                subNode = node.SelectSingleNode("GeneralSetAssaPosition");
                 if (subNode != null)
                 {
-                    shortcuts.SetAssaPosition = subNode.InnerText;
+                    shortcuts.GeneralSetAssaPosition = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("SetAssaResolution");
+                subNode = node.SelectSingleNode("GeneralSetAssaResolution");
                 if (subNode != null)
                 {
-                    shortcuts.SetAssaResolution = subNode.InnerText;
+                    shortcuts.GeneralSetAssaResolution = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainListViewRemoveTimeCodes");
@@ -8076,10 +8076,10 @@ $HorzAlign          =   Center
                     shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainToggleVideoControls");
+                subNode = node.SelectSingleNode("MainVideoToggleControls");
                 if (subNode != null)
                 {
-                    shortcuts.MainToggleVideoControls = subNode.InnerText;
+                    shortcuts.MainVideoToggleControls = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
@@ -8682,10 +8682,10 @@ $HorzAlign          =   Center
                     shortcuts.MainTranslateGoogleTranslateIt = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAutoTranslate");
+                subNode = node.SelectSingleNode("MainTranslateAuto");
                 if (subNode != null)
                 {
-                    shortcuts.MainAutoTranslate = subNode.InnerText;
+                    shortcuts.MainTranslateAuto = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
@@ -9768,15 +9768,15 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnTextUp", shortcuts.MainListViewColumnTextUp);
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
-            textWriter.WriteElementString("MainListViewRemoveBlankLines", shortcuts.MainListViewRemoveBlankLines);
-            textWriter.WriteElementString("ApplyAssaOverrideTags", shortcuts.ApplyAssaOverrideTags);
-            textWriter.WriteElementString("SetAssaPosition", shortcuts.SetAssaPosition);
-            textWriter.WriteElementString("SetAssaResolution", shortcuts.SetAssaResolution);
+            textWriter.WriteElementString("MainListViewRemoveBlankLines", shortcuts.GeneralListViewRemoveBlankLines);
+            textWriter.WriteElementString("GeneralApplyAssaOverrideTags", shortcuts.GeneralApplyAssaOverrideTags);
+            textWriter.WriteElementString("GeneralSetAssaPosition", shortcuts.GeneralSetAssaPosition);
+            textWriter.WriteElementString("GeneralSetAssaResolution", shortcuts.GeneralSetAssaResolution);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
             textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", shortcuts.MainEditFixRTLViaUnicodeChars);
             textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", shortcuts.MainEditRemoveRTLUnicodeChars);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", shortcuts.MainEditReverseStartAndEndingForRTL);
-            textWriter.WriteElementString("MainToggleVideoControls", shortcuts.MainToggleVideoControls);
+            textWriter.WriteElementString("MainVideoToggleControls", shortcuts.MainVideoToggleControls);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", shortcuts.MainTextBoxSplitSelectedLineBilingual);
@@ -9877,7 +9877,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("Waveform1000MsRight", shortcuts.Waveform1000MsRight);
             textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
             textWriter.WriteElementString("MainTranslateGoogleTranslateIt", shortcuts.MainTranslateGoogleTranslateIt);
-            textWriter.WriteElementString("MainAutoTranslate", shortcuts.MainAutoTranslate);
+            textWriter.WriteElementString("MainTranslateAuto", shortcuts.MainTranslateAuto);
             textWriter.WriteElementString("MainTranslateCustomSearch1", shortcuts.MainTranslateCustomSearch1);
             textWriter.WriteElementString("MainTranslateCustomSearch2", shortcuts.MainTranslateCustomSearch2);
             textWriter.WriteElementString("MainTranslateCustomSearch3", shortcuts.MainTranslateCustomSearch3);
