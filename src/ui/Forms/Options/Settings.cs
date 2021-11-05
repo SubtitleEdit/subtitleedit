@@ -1284,7 +1284,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.GeneralToggleView));
             AddNode(generalNode, language.ToggleMode, nameof(Configuration.Settings.Shortcuts.GeneralToggleMode));
             AddNode(generalNode, language.TogglePreviewOnVideo, nameof(Configuration.Settings.Shortcuts.GeneralTogglePreviewOnVideo));
-            AddNode(generalNode, language.RemoveBlankLines, nameof(Configuration.Settings.Shortcuts.GeneralListViewRemoveBlankLines));
+            AddNode(generalNode, language.RemoveBlankLines, nameof(Configuration.Settings.Shortcuts.GeneralRemoveBlankLines));
             AddNode(generalNode, language.ApplyAssaOverrideTags, nameof(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags), true);
             AddNode(generalNode, language.SetAssaPosition, nameof(Configuration.Settings.Shortcuts.GeneralSetAssaPosition), true);
             AddNode(generalNode, language.SetAssaResolution, nameof(Configuration.Settings.Shortcuts.GeneralSetAssaResolution));
