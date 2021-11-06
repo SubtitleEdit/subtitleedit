@@ -22596,7 +22596,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SetStartTimeAndEndTimeSameDuration(i, _subtitle.Paragraphs[i]);
                     }
                 }
-                SubtitleListview1.BeginUpdate();
+                SubtitleListview1.EndUpdate();
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
