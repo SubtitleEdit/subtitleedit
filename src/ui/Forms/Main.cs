@@ -15368,8 +15368,9 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.SelectAll();
                     GotoSubtitleIndex(newIndex);
                     ShowSubtitle();
-                    e.SuppressKeyPress = true;
                 }
+
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGoToNextSubtitleAndFocusVideo == e.KeyData)
             {
@@ -15383,8 +15384,9 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.SelectAll();
                     GotoSubtitleIndex(newIndex);
                     ShowSubtitle();
-                    e.SuppressKeyPress = true;
                 }
+
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGoToNextSubtitleAndPlay == e.KeyData && mediaPlayer != null)
             {
