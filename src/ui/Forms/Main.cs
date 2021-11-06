@@ -23702,11 +23702,15 @@ namespace Nikse.SubtitleEdit.Forms
                         f.LoadSubtitle(s, lines, null);
 
                         // we only update selected lines
-                        int i = 0;
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
-                            _subtitle.Paragraphs[index] = s.Paragraphs[i];
-                            i++;
+                            var currentP = _subtitle.Paragraphs[index];
+                            var translatedP = s.Paragraphs.FirstOrDefault(p => Math.Abs(p.StartTime.TotalMilliseconds - currentP.StartTime.TotalMilliseconds) < 0.001 &&
+                                                                               Math.Abs(p.EndTime.TotalMilliseconds - currentP.EndTime.TotalMilliseconds) < 0.001);
+                            if (translatedP != null)
+                            {
+                                currentP.Text = translatedP.Text;
+                            }
                         }
 
                         UpdateSourceView();
@@ -31724,10 +31728,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ResetHistory();
                         _fileName = translateDialog.GetFileNameWithTargetLanguage(oldFileName, VideoFileName, _subtitleOriginal, GetCurrentSubtitleFormat());
+                        _converted = true;
                     }
 
                     RestoreSubtitleListviewIndices();
-                    _converted = true;
+ 
                     SetTitle();
                     SetEncoding(Encoding.UTF8);
                     if (!isOriginalVisible)
