@@ -5,7 +5,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -143,15 +142,36 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (DllNotFoundException)
             {
-                if (MessageBox.Show(LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                    Environment.NewLine + LanguageSettings.Current.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                    LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFoundTitle,
-                                    MessageBoxButtons.YesNo) == DialogResult.Yes)
+                var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+                if (isFfmpegAvailable)
                 {
-                    UiUtil.OpenUrl("http://www.videolan.org/");
+                    Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                    process = GetCommandLineProcess(SourceVideoFileName, AudioTrackNumber, targetFile, _encodeParameters, out encoderName);
+                    labelInfo.Text = encoderName;
                 }
-                buttonRipWave.Enabled = true;
-                return;
+                else
+                {
+                    if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    {
+                        buttonRipWave.Enabled = true;
+                        return;
+                    }
+
+                    using (var form = new DownloadFfmpeg())
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                        {
+                            Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                            Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                            process = GetCommandLineProcess(SourceVideoFileName, AudioTrackNumber, targetFile, _encodeParameters, out encoderName);
+                        }
+                        else
+                        {
+                            buttonRipWave.Enabled = true;
+                            return;
+                        }
+                    }
+                }
             }
 
             process.Start();
@@ -502,6 +522,5 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
             }
         }
-
     }
 }
