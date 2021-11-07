@@ -376,6 +376,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AddWaveform/VlcMediaPlayerNotFound":
                     language.AddWaveform.VlcMediaPlayerNotFound = reader.Value;
                     break;
+                case "AddWaveform/FfmpegNotFound":
+                    language.AddWaveform.FfmpegNotFound = reader.Value;
+                    break;
                 case "AddWaveform/GoToVlcMediaPlayerHomePage":
                     language.AddWaveform.GoToVlcMediaPlayerHomePage = reader.Value;
                     break;
