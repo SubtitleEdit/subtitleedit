@@ -45,6 +45,7 @@
    * Allow large angles in ASSA styles window - thx yiwenchi
    * Remove shortcut action limit for duration a few places - thx Leon
    * Update Tesseract 5 alpha 2021-08-11 to RC1 2021-10-30
+   * Prefer FFmpeg over VLC for extracting audio - thx Jamakmake
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
