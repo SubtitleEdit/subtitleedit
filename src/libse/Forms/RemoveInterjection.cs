@@ -299,6 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
+            var lineIndexRemoved = -1;
             var lines = text.SplitToLines();
             if (lines.Count == 2 && text != oldText)
             {
@@ -402,11 +403,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     text = lines[0];
                     lines = text.SplitToLines();
+                    lineIndexRemoved = 1;
                 }
                 else if (string.IsNullOrWhiteSpace(lines[0].RemoveChar('.', '?', '!', '-', '—')))
                 {
                     text = lines[1];
                     lines = text.SplitToLines();
+                    lineIndexRemoved = 0;
                 }
             }
 
@@ -469,8 +472,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var newLines = text.SplitToLines();
                     if (oldLines.Count == 2 && newLines.Count == 1 &&
                         (oldLines[0] == newLines[0] || oldLines[1] == newLines[0]))
-                    {
+                    {                        
                         return text;
+                    }
+
+                    if (lineIndexRemoved == 0)
+                    {
+                        return RemoveStartDashSingleLine(oldLines[1]);
+                    }
+                    else if (lineIndexRemoved == 1)
+                    {
+                        return RemoveStartDashSingleLine(oldLines[0]);
                     }
 
                     return oldText;
@@ -486,6 +498,42 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             return text;
+        }
+
+        private string RemoveStartDashSingleLine(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            var s = input;
+            if (s[0] == '-')
+            {
+                return s.TrimStart('-').TrimStart();
+            }
+
+            var pre = string.Empty;
+            if (s.StartsWith("{\\") && s.Contains("}"))
+            {
+                var idx = s.IndexOf('}');
+                pre = s.Substring(0, idx + 1);
+                s = s.Remove(0, idx + 1).TrimStart();
+            }
+
+            if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+            {
+                pre += "<i>";
+                s = s.Remove(0, 3).TrimStart();
+            }
+
+            if (s.StartsWith("<font>", StringComparison.OrdinalIgnoreCase))
+            {
+                pre += "<font>";
+                s = s.Remove(0, 6).TrimStart();
+            }
+
+            return pre + s.TrimStart('-').TrimStart();
         }
     }
 }
