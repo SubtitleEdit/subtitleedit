@@ -121,18 +121,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Adicionar palavra ao dicionário (não diferencia maiús/minús)</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Gerar dados em "waveform"</Title>
+    <Title>Gerar dados na forma de onda</Title>
     <SourceVideoFile>Ficheiro fonte de vídeo:</SourceVideoFile>
-    <GenerateWaveformData>Gerar dados em "waveform"</GenerateWaveformData>
+    <GenerateWaveformData>Gerar dados na forma de onda</GenerateWaveformData>
     <PleaseWait>Isto pode levar alguns minutos - por favor, aguarde</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player não foi encontrado</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>O Subtitle Edit necessita do VLC media player 1.1.x ou superior para extrair áudio.</VlcMediaPlayerNotFound>
+    <VlcMediaPlayerNotFound>O Subtitle Edit necessita do FFmpeg para extrair dados de áudio para gerar a forma de onda.
+
+Deseja transferir e usar o FFmpeg</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Deseja visitar a página do VLC media player na Internet?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>A gerar o ficheiro de pico...</GeneratingPeakFile>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>A extrair o áudio: {0}:{1:00} minutos</ExtractingMinutes>
-    <WaveFileNotFound>Não é possível encontrar o ficheiro wav que foi extraído!
+    <WaveFileNotFound>Não foi possível encontrar o ficheiro de ondas extraído!
 É necessário o VLC media player 1.1.x ({0}-bit) ou superior para executar esta operação.
 
 Linha de comando: {1} {2}</WaveFileNotFound>
@@ -143,10 +145,10 @@ Linha de comando: {1} {2}
 Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <LowDiskSpace>ESPAÇO INSUFICIENTE EM DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} livre</FreeDiskSpace>
-    <NoAudioTracksFoundGenerateEmptyWaveform>Não foi encontrado áudio! Gerar "waveform" em branco?</NoAudioTracksFoundGenerateEmptyWaveform>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Não foi encontrado áudio! Gerar forma de onda vazia?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
-    <Title>Gerar pacote de dados de "waveform"</Title>
+    <Title>Gerar pacote de dados de forma de onda</Title>
     <ExtractingAudio>A extrair o áudio...</ExtractingAudio>
     <Calculating>A calcular...</Calculating>
     <Done>Concluído</Done>
@@ -718,7 +720,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <StartWithUppercaseLetterAfterParagraph>Iniciar parágrafo com maiúscula</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Iniciar com maiúscula depois de ponto final dentro do parágrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Iniciar com maiúscula depois de ":" ou ";"</StartWithUppercaseLetterAfterColon>
-    <FixLowercaseIToUppercaseI>Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)</FixLowercaseIToUppercaseI>
+    <FixLowercaseIToUppercaseI>Corrigir 'i' minúscula sozinha por 'I' maiúscula (Inglês)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Corrigir erros frequentes de OCR (usando lista de substituição OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erros frequentes de OCR corrigidos (ficheiro OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Eliminar espaços entre números</RemoveSpaceBetweenNumber>
@@ -885,7 +887,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <Title>Importar imagens</Title>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
     <Input>Entrada</Input>
-    <InputDescription>Escolher ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
+    <InputDescription>Escolher ficheiros de entrada (Seleccionar ou arrastar-e-soltar)</InputDescription>
     <Remove>Eliminar</Remove>
     <RemoveAll>Eliminar tudo</RemoveAll>
   </ImportImages>
@@ -1220,10 +1222,10 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Gerar/Importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Eliminar mudanças de cena</RemoveSceneChanges>
-        <WaveformBatchGenerate>Gerar "waveforms" em série...</WaveformBatchGenerate>
+        <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
-        <ShowHideWaveform>Mostrar/ocultar "waveform"</ShowHideWaveform>
-        <ShowHideWaveformAndSpectrogram>Mostrar/ocultar "waveform" e espectrograma</ShowHideWaveformAndSpectrogram>
+        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
+        <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Separar controlos de vídeo</UnDockVideoControls>
         <ReDockVideoControls>Unir controlos de vídeo</ReDockVideoControls>
       </Video>
@@ -1281,7 +1283,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <NetflixQualityCheck>Controlo de qualidade Netflix</NetflixQualityCheck>
         <Settings>Definições</Settings>
         <Help>Ajuda</Help>
-        <ShowHideWaveform>Mostrar/ocultar "waveform"</ShowHideWaveform>
+        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
         <AssaDraw>Desenho de Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
@@ -1424,7 +1426,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Posição vídeo:</VideoPosition>
       <TranslateTip>Dica: Use &lt;ALT+seta acima/abaixo&gt; para ir à linha ant/seg</TranslateTip>
-      <BeforeChangingTimeInWaveformX>Antes de alterar o tempo na "waveform": {0}</BeforeChangingTimeInWaveformX>
+      <BeforeChangingTimeInWaveformX>Antes de alterar o tempo na forma de onda: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Novo texto inserido em {0}</NewTextInsertAtX>
       <Center>Centralizar</Center>
       <PlayRate>Velocidade de reprodução</PlayRate>
@@ -1682,7 +1684,7 @@ Continuar?</SubtitleAppendPrompt>
     <ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
     <XPercentCompleted>{0}% concluído</XPercentCompleted>
     <NextX>Próximo: {0}</NextX>
-    <PromptInsertSubtitleOverlap>Inserir linha na posição da "waveform" causará sobreposição!
+    <PromptInsertSubtitleOverlap>Inserir linha na posição da forma de onda causará sobreposição!
 
 Continuar mesmo assim?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>A legenda contém a duração negativa na(s) linha(s): {0}</SubtitleContainsNegativeDurationsX>
@@ -1936,7 +1938,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Type>Tipo</Type>
     <OpenPluginsFolder>Abrir a pasta de plugins</OpenPluginsFolder>
     <GetPluginsInfo1>Os plugins do Subtitle Edit devem ser transferidos para a pasta 'Plugins'</GetPluginsInfo1>
-    <GetPluginsInfo2>Seleccione o plugin e clique "Transferir"</GetPluginsInfo2>
+    <GetPluginsInfo2>Seleccione o plugin e clique 'Transferir'</GetPluginsInfo2>
     <PluginXDownloaded>Plugin {0} transferido</PluginXDownloaded>
     <Download>&amp;Transferir</Download>
     <Remove>&amp;Eliminar</Remove>
@@ -2151,7 +2153,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PreviewFontSize>Tamanho na pré-visualização</PreviewFontSize>
     <MainWindowVideoControls>Controlos de vídeo na janela principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Procura de texto e URL personalizada</CustomSearchTextAndUrl>
-    <WaveformAppearance>Aparência da "waveform"</WaveformAppearance>
+    <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
     <WaveformGridColor>Cor da grelha</WaveformGridColor>
     <WaveformShowGridLines>Mostrar linhas na grelha</WaveformShowGridLines>
     <WaveformShowCps>Mostrar caracteres/seg</WaveformShowCps>
@@ -2171,14 +2173,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformCursorColor>Cor do Cursor</WaveformCursorColor>
     <WaveformTextColor>Cor do texto</WaveformTextColor>
     <WaveformTextFontSize>Tamanho do tipo de letra</WaveformTextFontSize>
-    <WaveformAndSpectrogramsFolderEmpty>Esvaziar pastas "Espectrogramas" e "Waveforms"</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>As pastas "Espectrogramas" e "Waveforms" contém {0} ficheiros ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Esvaziar pastas 'Espectrogramas' e 'Formas de onda'</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>As pastas 'Espectrogramas' e Formas de onda' contêm {0} ficheiros ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Espectrograma</Spectrogram>
     <GenerateSpectrogram>Gerar espectrograma</GenerateSpectrogram>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
-    <WaveformUseFFmpeg>Usar o FFmpeg para extrair o áudio "wav"</WaveformUseFFmpeg>
+    <WaveformUseFFmpeg>Usar o FFmpeg para extrair o áudio onda</WaveformUseFFmpeg>
     <DownloadFFmpeg>Transferir o FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
@@ -2461,7 +2463,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
     <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista"</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Utilizar uma lista que não tenha uma quebra de linha após a mesma</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Quebrar linha no penúltimo ponto (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Quebrar linha pela largura do pixel</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Preferir tamanho desproporcional</BreakPreferBottomHeavy>
@@ -2736,7 +2738,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <StyleStorage>Estilos guardados</StyleStorage>
     <StyleCurrentFile>Estilos no ficheiro</StyleCurrentFile>
     <OverwriteX>Substituir {0}?</OverwriteX>
-    <CategoryNote>Nota: Os estilos "Predefinidos" (a verde) serão aplicados aos novos ficheiros ASSA</CategoryNote>
+    <CategoryNote>Nota: Os estilos na categoria predefinida (a verde) serão aplicados aos novos ficheiros ASSA</CategoryNote>
     <CategoriesManage>Gerir</CategoriesManage>
     <MoveToCategory>Mover estilos seleccionados para categoria...</MoveToCategory>
     <ScaleX>EscalaX</ScaleX>
@@ -2772,7 +2774,7 @@ Continuar?</RestoreDefaultSettingsMsg>
   </PointSync>
   <TimedTextSmpteTiming>
     <Title>SMPTE temporização</Title>
-    <UseSmpteTiming>Usar o SMPTE temporização para a legenda atual?</UseSmpteTiming>
+    <UseSmpteTiming>Usar o SMPTE temporização para a legenda actual?</UseSmpteTiming>
     <SmpteTimingInfo>Nota: O SMPTE temporização pode ser alterado mais tarde no "Menu de Vídeo"</SmpteTimingInfo>
     <YesAlways>Sim, sempre para taxas de fotogramas sem números inteiros</YesAlways>
     <NoNever>Não, nunca</NoNever>
@@ -2954,7 +2956,7 @@ Manter as alterações?</KeepChangesMessage>
   </Watermark>
   <Waveform>
     <AddWaveformAndSpectrogram>Adicionar waveform/espectrograma</AddWaveformAndSpectrogram>
-    <ClickToAddWaveform>Clique para adicionar "waveform"</ClickToAddWaveform>
+    <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar waveform/espectrograma</ClickToAddWaveformAndSpectrogram>
     <Seconds>Segundos</Seconds>
     <ZoomIn>Aumentar</ZoomIn>
@@ -2973,8 +2975,8 @@ Manter as alterações?</KeepChangesMessage>
     <ExtendToPrevious>Prolongar até à anterior</ExtendToPrevious>
     <ExtendToNext>Prolongar até à seguinte</ExtendToNext>
     <PlaySelection>Reporduzir a selecção</PlaySelection>
-    <ShowWaveformAndSpectrogram>Mostrar "waveform" e espectrograma</ShowWaveformAndSpectrogram>
-    <ShowWaveformOnly>Mostrar só "waveform"</ShowWaveformOnly>
+    <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Mostrar apenas forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
     <AddSceneChange>Adicionar mudança de cena</AddSceneChange>
     <RemoveSceneChange>Remover mudança de cena</RemoveSceneChange>
