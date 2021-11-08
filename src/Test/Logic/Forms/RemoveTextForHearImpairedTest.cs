@@ -2018,5 +2018,19 @@ namespace Test.Logic.Forms
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh!?", onlyInSeparatedLine: false));
             Assert.AreEqual("Hey!?", actual);
         }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDualOh()
+        {
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Oh, what?" + Environment.NewLine + "- Oh.", onlyInSeparatedLine: false));
+            Assert.AreEqual("What?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDualOhOnlySeparateLine()
+        {
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Oh, what?" + Environment.NewLine + "- Oh.", onlyInSeparatedLine: true));
+            Assert.AreEqual("Oh, what?", actual);
+        }
     }
 }
