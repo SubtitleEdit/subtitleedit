@@ -46,25 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
                         if (buffer[00] != 0 &&
-                            buffer[01] == 0 &&
-                            buffer[02] == 0 &&
-                            buffer[03] == 0 &&
-                            buffer[04] == 0 &&
-                            buffer[05] == 0 &&
-                            buffer[06] == 0 &&
-                            buffer[07] == 0 &&
-                            buffer[08] == 0 &&
-                            buffer[09] == 0 &&
-                            buffer[10] == 0 &&
-                            buffer[11] == 0 &&
-                            buffer[12] == 0 &&
-                            buffer[13] == 0 &&
-                            buffer[14] == 0 &&
-                            buffer[15] == 0 &&
-                            buffer[16] == 0 &&
-                            buffer[17] == 0 &&
-                            buffer[18] == 0 &&
-                            buffer[19] == 0)
+                            buffer[01] == 0)
                         {
                             var sub = new Subtitle();
                             LoadSubtitle(sub, null, fileName);
@@ -89,17 +71,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+            var buffer = FileUtil.ReadAllBytesShared(fileName);
 
             int index = 40;
             while (index < buffer.Length)
             {
-                Paragraph p = GetParagraph(ref index, buffer);
+                var p = GetParagraph(ref index, buffer);
                 if (p != null)
                 {
                     subtitle.Paragraphs.Add(p);
                 }
             }
+
+            subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
 
@@ -136,19 +120,62 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (buffer.Length > index + 15 + textLength)
                     {
+                        var sb = new StringBuilder();
+                        var skipCount = 0;
                         for (int j = index + 16; j < index + 16 + textLength; j++)
                         {
-                            if (buffer[j] < 32 && buffer[j] != 0xd)
+                            if (skipCount > 0)
                             {
-                                buffer[j] = 0;
+                                skipCount--;
+                                continue;
+                            }
+
+                            var v = buffer[j];
+
+                            if (v < 32 && v != 0xd && v != 0xa)
+                            {
+                                if (v == 1)
+                                {
+                                    skipCount = 1;
+                                    continue;
+                                }
+                                else if (v == 2)
+                                {
+                                    skipCount = 2;
+                                    continue;
+                                }
+                                else if (v == 5)
+                                {
+                                    sb.Append("<i>");
+                                }
+                                else if (v == 15)
+                                {
+                                    sb.Append("</i>");
+                                }
+                            }
+                            else
+                            {
+                                sb.Append(Encoding.GetEncoding(1250).GetString(buffer, j, 1)); // encoding?
                             }
                         }
-                        string text = Encoding.GetEncoding(1250).GetString(buffer, index + 16, textLength); // encoding?
+
+                        var text = sb.ToString();
                         text = text.Replace("\0", string.Empty);
-                        text = text.Replace("\n", Environment.NewLine);
+                        text = text.Replace("\n", "\r");
                         text = text.Replace("\r", Environment.NewLine);
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                        index += (15 + textLength);
+                        text = string.Join(Environment.NewLine, text.SplitToLines());
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        if (text.StartsWith("</i>"))
+                        {
+                            text = text.Remove(0, "</i>".Length);
+                        }
+
+                        text = text.Trim();
+
+                        text = FixItalics(text);
+
+                        index += 15 + textLength;
                         var p = new Paragraph(text, startSeconds * 1000 + FramesToMillisecondsMax999(startFrame), endSeconds * 1000 + FramesToMillisecondsMax999(endFrame));
                         return p;
                     }
@@ -161,5 +188,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
+        private string FixItalics(string text)
+        {
+            if (text.StartsWith("<i>", StringComparison.Ordinal) && !text.Contains("</i>"))
+            {
+                return "<i>" + text.Replace("<i>", string.Empty) + "</i>";
+            }
+
+            return text;
+        }
     }
 }

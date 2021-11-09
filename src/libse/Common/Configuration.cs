@@ -24,11 +24,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string SceneChangesDirectory = DataDirectory + "SceneChanges" + Path.DirectorySeparatorChar;
         public static readonly string AutoBackupDirectory = DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
         public static readonly string VobSubCompareDirectory = DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
-        public static readonly string TesseractDirectory = DataDirectory + "Tesseract500.Alpha.20201127" + Path.DirectorySeparatorChar;
+        public static readonly string TesseractDirectory = DataDirectory + "Tesseract500.Alpha.20210811" + Path.DirectorySeparatorChar;
         public static readonly string Tesseract302Directory = DataDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
         public static readonly string PluginsDirectory = DataDirectory + "Plugins" + Path.DirectorySeparatorChar;
-        public static readonly string IconsDirectory = BaseDirectory + "Icons" + Path.DirectorySeparatorChar;
+        public static readonly string IconsDirectory = DataDirectory + "Icons" + Path.DirectorySeparatorChar;
         public static readonly string OcrDirectory = DataDirectory + "Ocr" + Path.DirectorySeparatorChar;
         public static readonly string SettingsFileName = DataDirectory + "Settings.xml";
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();

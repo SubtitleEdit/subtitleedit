@@ -45,15 +45,43 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                     stream.Seek(next, SeekOrigin.Begin);
                     var klv = new KlvPacket(stream);
                     next += klv.TotalSize;
-                    if (klv.IdentifierType == KeyIdentifier.EssenceElement && klv.DataSize < 500000)
+                    if ((klv.IdentifierType == KeyIdentifier.EssenceElement || klv.IdentifierType == KeyIdentifier.Unknown) && klv.DataSize < 500000)
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
                         var buffer = new byte[klv.DataSize];
                         stream.Read(buffer, 0, buffer.Length);
-                        string s = System.Text.Encoding.UTF8.GetString(buffer);
-                        if (IsSubtitle(s))
+                        if (buffer.Length >= 12)
                         {
-                            _subtitleList.Add(s);
+                            string s;
+                            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+                            {
+                                s = System.Text.Encoding.UTF8.GetString(buffer, 3, buffer.Length - 3);
+                            }
+                            else if (buffer[0] == 0xff && buffer[1] == 0xfe && buffer[2] == 0 && buffer[3] == 0)
+                            {
+                                s = System.Text.Encoding.GetEncoding(12000).GetString(buffer, 4, buffer.Length - 4); // UTF-32 (LE)
+                            }
+                            else if (buffer[0] == 0xff && buffer[1] == 0xfe)
+                            {
+                                s = System.Text.Encoding.Unicode.GetString(buffer, 2, buffer.Length - 2);
+                            }
+                            else if (buffer[0] == 0xfe && buffer[1] == 0xff) // utf-16 and ucs-2
+                            {
+                                s = System.Text.Encoding.BigEndianUnicode.GetString(buffer, 2, buffer.Length - 2);
+                            }
+                            else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff) // ucs-4
+                            {
+                                s = System.Text.Encoding.GetEncoding(12001).GetString(buffer, 4, buffer.Length - 4); // UTF-32 (BE)
+                            }
+                            else
+                            {
+                                s = System.Text.Encoding.UTF8.GetString(buffer);
+                            }
+
+                            if (IsSubtitle(s))
+                            {
+                                _subtitleList.Add(s);
+                            }
                         }
                     }
                 }

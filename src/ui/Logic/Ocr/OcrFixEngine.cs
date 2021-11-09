@@ -1522,7 +1522,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             .All(w => w.Length > 2 && (DoSpell(w) || IsWordKnownOrNumber(word, line)));
                     }
 
-                    if (!correct && word.Length == 1 && i < words.Count - 1 && words[i + 1].Length == 1)
+                    if (word.Length == 1 && i < words.Count - 1 && words[i + 1].Length == 1)
                     {
                         var abbreviation = word + "." + words[i + 1] + ".";
                         if (_abbreviationList.Contains(abbreviation) && line.Contains(abbreviation, StringComparison.Ordinal))
@@ -1703,7 +1703,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             else
                             {
-                                if (word.ToUpperInvariant() != "LT'S" && word.ToUpperInvariant() != "SOX'S") // TODO: Get fixed nhunspell
+                                if (!string.Equals(word, "LT'S", StringComparison.InvariantCultureIgnoreCase) && !string.Equals(word, "SOX'S", StringComparison.InvariantCultureIgnoreCase)) // TODO: Get fixed nhunspell
                                 {
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                                 }

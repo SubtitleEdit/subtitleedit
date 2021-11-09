@@ -318,13 +318,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // Get last word
-            string lastWord = GetLastWord(text);
-            string newLastWord = lastWord;
+            var lastWord = GetLastWord(text);
+            var newLastWord = lastWord;
 
             if (gap && profile.UseDifferentStyleGap)
             {
                 // Make new last word
-                string gapAddEnd = (profile.GapSuffixAddSpace ? " " : "") + profile.GapSuffix;
+                var gapAddEnd = (profile.GapSuffixAddSpace ? " " : "") + profile.GapSuffix;
 
                 if (gapAddEnd.Length == 0 || !newLastWord.EndsWith(gapAddEnd, StringComparison.Ordinal))
                 {
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             else
             {
                 // Make new last word
-                string addEnd = (profile.SuffixAddSpace ? " " : "") + profile.Suffix;
+                var addEnd = (profile.SuffixAddSpace ? " " : "") + profile.Suffix;
 
                 if (addEnd.Length == 0 || !newLastWord.EndsWith(addEnd, StringComparison.Ordinal))
                 {
@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
+            var text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
 
             // Return if empty string
             if (string.IsNullOrEmpty(text))
@@ -461,13 +461,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // Get first word of the paragraph
-            string firstWord = GetFirstWord(text);
-            string newFirstWord = firstWord;
+            var firstWord = GetFirstWord(text);
+            var newFirstWord = firstWord;
 
             if (gap && profile.UseDifferentStyleGap)
             {
                 // Make new first word
-                string gapAddStart = profile.GapPrefix + (profile.GapPrefixAddSpace ? " " : "");
+                var gapAddStart = profile.GapPrefix + (profile.GapPrefixAddSpace ? " " : "");
 
                 if (gapAddStart.Length == 0 || !newFirstWord.StartsWith(gapAddStart, StringComparison.Ordinal))
                 {
@@ -477,8 +477,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             else
             {
                 // Make new first word
-                string addStart = profile.Prefix + (profile.PrefixAddSpace ? " " : "");
-
+                var addStart = profile.Prefix + (profile.PrefixAddSpace ? " " : "");
                 if (addStart.Length == 0 || !newFirstWord.StartsWith(addStart, StringComparison.Ordinal))
                 {
                     newFirstWord = addStart + newFirstWord;
@@ -490,9 +489,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var wordIndex = originalText.IndexOf(firstWord, StringComparison.Ordinal);
             if (wordIndex >= 1)
             {
-                bool needsInsertion = false;
-                int currentIndex = wordIndex - 1;
-
+                var needsInsertion = false;
+                var currentIndex = wordIndex - 1;
                 if (currentIndex >= 0 && ExplanationQuotes.Contains(originalText[currentIndex])
                                       && !IsFullLineQuote(originalText, currentIndex + 1, originalText[currentIndex], QuotePairs[originalText[currentIndex]]))
                 {
@@ -542,9 +540,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // Get last word
-            string lastWord = GetLastWord(text);
-            string newLastWord = lastWord;
-
+            var lastWord = GetLastWord(text);
+            var newLastWord = lastWord;
             foreach (string suffix in Suffixes.Union(additionalSuffixes))
             {
                 if (newLastWord.EndsWith(suffix, StringComparison.Ordinal) && !newLastWord.EndsWith(Environment.NewLine + suffix, StringComparison.Ordinal))
@@ -596,8 +593,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string RemovePrefix(string originalText, ContinuationProfile profile, bool shouldRemoveDashesDuringSanitization, bool gap)
         {
             // Decide if we need to remove dashes
-            string textWithDash = SanitizeString(originalText, false);
-            string textWithoutDash = SanitizeString(originalText, true);
+            var textWithDash = SanitizeString(originalText, false);
+            var textWithoutDash = SanitizeString(originalText, true);
             string leadingDialogDash = null;
             bool removeDashesDuringSanitization = shouldRemoveDashesDuringSanitization;
 
@@ -673,7 +670,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             newFirstWord = newFirstWord.Trim();
 
-            string result;
+            string result = null;
 
             // If we can find it...
             if (originalText.IndexOf(firstWord, StringComparison.Ordinal) >= 0)
@@ -681,7 +678,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // Replace it
                 result = ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
             }
-            else
+            else if (newFirstWord.Length > 0)
             {
                 // Just remove whatever prefix we need to remove
                 var prefix = firstWord.Replace(newFirstWord, "");
@@ -1176,7 +1173,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     "mais", "car", "donc", "parce que", "par exemple"
                 };
             }
-
+            else if (language == "pt")
+            {
+                conjunctions = new List<string>
+                {
+                    "mas", "nem", "por exemplo", "e", "bem com", "todavia", "no entanto", "mas também", "como também",
+                    "bem como", "porém", "por isso", "porque", "portanto"
+                };
+            }
+            
             if (conjunctions != null)
             {
                 foreach (string conjunction in conjunctions)
@@ -1280,6 +1285,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 5;
                 case ContinuationStyle.LeadingTrailingDashDots:
                     return 6;
+                case ContinuationStyle.LeadingTrailingEllipsis:
+                    return 7;
+                case ContinuationStyle.NoneEllipsisForPauses:
+                    return 8;
                 default:
                     return 0;
             }
@@ -1301,6 +1310,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return ContinuationStyle.LeadingTrailingDash;
                 case 6:
                     return ContinuationStyle.LeadingTrailingDashDots;
+                case 7:
+                    return ContinuationStyle.LeadingTrailingEllipsis;
+                case 8:
+                    return ContinuationStyle.NoneEllipsisForPauses;
                 default:
                     return ContinuationStyle.None;
             }
@@ -1344,6 +1357,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                         GapPrefix = "",
                         GapPrefixAddSpace = false
                     };
+                case ContinuationStyle.NoneEllipsisForPauses:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "",
+                        SuffixApplyIfComma = false,
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = false,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = true,
+                        GapSuffix = "…",
+                        GapSuffixApplyIfComma = true,
+                        GapSuffixAddSpace = false,
+                        GapSuffixReplaceComma = true,
+                        GapPrefix = "",
+                        GapPrefixAddSpace = false
+                    };
                 case ContinuationStyle.NoneLeadingTrailingDots:
                     return new ContinuationProfile
                     {
@@ -1380,6 +1410,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         SuffixAddSpace = false,
                         SuffixReplaceComma = true,
                         Prefix = "...",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = false
+                    };
+                case ContinuationStyle.LeadingTrailingEllipsis:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "…",
+                        SuffixApplyIfComma = true,
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = true,
+                        Prefix = "…",
                         PrefixAddSpace = false,
                         UseDifferentStyleGap = false
                     };

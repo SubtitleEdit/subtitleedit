@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.CDG;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -275,7 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ffmpegLocation = "ffmpeg";
             }
 
-            var process = new Process
+            return new Process
             {
                 StartInfo =
                 {
@@ -285,7 +284,6 @@ namespace Nikse.SubtitleEdit.Forms
                     CreateNoWindow = true
                 }
             };
-            return process;
         }
 
         public Process GetMkvMergeProcess(string videoFileName, string subtitleFileName, string outputFileName)

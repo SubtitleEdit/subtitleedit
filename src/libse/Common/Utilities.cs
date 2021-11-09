@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return format;
                 }
             }
+
             return null;
         }
 
@@ -130,6 +131,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return 0;
+        }
+
+        public static void SetSecurityProtocol()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
         /// <summary>
@@ -220,7 +226,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             string s2 = s.Substring(0, index);
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
+                var noBreakList = NoBreakAfterList(language).ToArray();
+                foreach (NoBreakAfterItem ending in noBreakList)
                 {
                     if (ending.IsMatch(s2))
                     {
@@ -240,6 +247,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (s2.EndsWith("? -", StringComparison.Ordinal) || s2.EndsWith("! -", StringComparison.Ordinal) || s2.EndsWith(". -", StringComparison.Ordinal))
             {
                 return false;
+            }
+
+            if (nextChar == ' ' && language == "fr" && index + 1 < s.Length)
+            {
+                var nextNext = s[index + 1];
+                if (nextNext == '?' || nextNext == '!' || nextNext == '.')
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -786,21 +802,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (s.StartsWith("m ", StringComparison.Ordinal))
             {
                 var test = s.Remove(0, 2)
-                    .RemoveChar('0')
-                    .RemoveChar('1')
-                    .RemoveChar('2')
-                    .RemoveChar('3')
-                    .RemoveChar('4')
-                    .RemoveChar('5')
-                    .RemoveChar('6')
-                    .RemoveChar('7')
-                    .RemoveChar('8')
-                    .RemoveChar('9')
-                    .RemoveChar('-')
-                    .RemoveChar('l')
-                    .RemoveChar('m')
-                    .RemoveChar(' ')
-                    .RemoveChar('.');
+                    .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'l', 'm', ' ', '.');
                 if (test.Length == 0)
                 {
                     return string.Empty;
@@ -896,7 +898,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
         }
 
-        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond)
+        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond, bool onlyOptimal = false)
         {
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
             {
@@ -905,17 +907,20 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var duration = text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace, Configuration.Settings.General.IgnoreArabicDiacritics) / optimalCharactersPerSecond * TimeCode.BaseUnit;
 
-            if (duration < 1400)
+            if (!onlyOptimal)
             {
-                duration *= 1.2;
-            }
-            else if (duration < 1400 * 1.2)
-            {
-                duration = 1400 * 1.2;
-            }
-            else if (duration > 2900)
-            {
-                duration = Math.Max(2900, duration * 0.96);
+                if (duration < 1400)
+                {
+                    duration *= 1.2;
+                }
+                else if (duration < 1400 * 1.2)
+                {
+                    duration = 1400 * 1.2;
+                }
+                else if (duration > 2900)
+                {
+                    duration = Math.Max(2900, duration * 0.96);
+                }
             }
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
@@ -2070,29 +2075,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Remove(text.Length - 6, 1);
             }
 
-            while (text.EndsWith(" !</i>", StringComparison.Ordinal))
-            {
-                text = text.Remove(text.Length - 6, 1);
-            }
-
-            while (text.EndsWith(" ?</i>", StringComparison.Ordinal))
-            {
-                text = text.Remove(text.Length - 6, 1);
-            }
-
             while (text.Contains(" .</i>" + Environment.NewLine))
             {
                 text = text.Replace(" .</i>" + Environment.NewLine, ".</i>" + Environment.NewLine);
-            }
-
-            while (text.Contains(" !</i>" + Environment.NewLine))
-            {
-                text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
-            }
-
-            while (text.Contains(" ?</i>" + Environment.NewLine))
-            {
-                text = text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
             }
 
             if (text.StartsWith("- ... ", StringComparison.Ordinal))
@@ -2107,6 +2092,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (language != "fr") // special rules for French
             {
+                while (text.EndsWith(" !</i>", StringComparison.Ordinal))
+                {
+                    text = text.Remove(text.Length - 6, 1);
+                }
+
+                while (text.EndsWith(" ?</i>", StringComparison.Ordinal))
+                {
+                    text = text.Remove(text.Length - 6, 1);
+                }
+
+                while (text.Contains(" !</i>" + Environment.NewLine))
+                {
+                    text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+                }
+
+                while (text.Contains(" ?</i>" + Environment.NewLine))
+                {
+                    text = text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
+                }
+
                 text = text.Replace("... ?", "...?");
                 text = text.Replace("... !", "...!");
 
@@ -2181,7 +2186,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     text = text.Replace(" ?", "?");
                 }
             }
-
 
             if (language == "ar") // special rules for Arabic
             {
@@ -2878,6 +2882,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return text;
             }
+
             return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
         }
 
@@ -2891,16 +2896,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveUnicodeControlChars(string input)
         {
-            input = input.Replace("\u200E", string.Empty);
-            input = input.Replace("\u200F", string.Empty);
-            input = input.Replace("\u202A", string.Empty);
-            input = input.Replace("\u202B", string.Empty);
-            input = input.Replace("\u202C", string.Empty);
-            input = input.Replace("\u202D", string.Empty);
-            input = input.Replace("\u202E", string.Empty);
-            input = input.Replace("\u00C2", " "); // no break space
-            input = input.Replace("\u00A0", " "); // no break space
-            return input;
+            return input.Replace("\u200E", string.Empty)
+                .Replace("\u200F", string.Empty)
+                .Replace("\u202A", string.Empty)
+                .Replace("\u202B", string.Empty)
+                .Replace("\u202C", string.Empty)
+                .Replace("\u202D", string.Empty)
+                .Replace("\u202E", string.Empty)
+                .Replace("\u00A0", " "); // no break space
         }
     }
 }

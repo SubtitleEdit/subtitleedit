@@ -2,7 +2,7 @@
 <Language Name="Bahasa Indonesia">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Diterjemahkan oleh Nicedward (04/2018)</TranslatedBy>
     <CultureName>id-ID</CultureName>
     <HelpFile />
@@ -204,9 +204,6 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <AutoBalanceErrorX>Oto. seimbangkan: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Offset kode waktu</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Ubah sensitifitas huruf</Title>
     <ChangeCasingTo>Ubah sensitifitas huruf ke</ChangeCasingTo>
@@ -468,7 +465,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <CenterLeftJustify>Pusat, sama rata ke kirir</CenterLeftJustify>
     <BottomMargin>Margin bawah</BottomMargin>
     <LeftRightMargin>Margin kiri/kanan</LeftRightMargin>
-    <SaveBluRraySupAs>Pilih nama file sub Blu-ray</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Pilih nama file sub Blu-ray</SaveBluRaySupAs>
     <SaveVobSubAs>Pilih nama file VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Pilih nama file skrip gambar FAB</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Pilih nama file DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -559,7 +556,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <BreakLongLines>Jeda baris yg panjang</BreakLongLines>
     <RemoveLineBreaks>Buang jeda baris dlm teks singkat hanya dgn satu kalimat</RemoveLineBreaks>
     <RemoveLineBreaksAll>Buang jeda baris dlm teks singkat (semua kecuali dialog)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Perbaiki huruf besar 'i' dlm kata huruf kecil (eror OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Perbaiki huruf besar 'i' dlm kata huruf kecil (eror OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Perbaiki karakter apostrop ganda ('') ke satu kutipan (")</FixDoubleApostrophes>
     <AddPeriods>Tambah tanda titik sesudah baris berikutnya dimulai dgn huruf besar</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Mulai dgn huruf besar sesudah paragraf</StartWithUppercaseLetterAfterParagraph>
@@ -607,7 +604,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hei  kamu, di sana. -&gt; Hei kamu, disana.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hei kamu!. -&gt; Hei kamu!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hei.Kamu. -&gt; Hei. Kamu.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Bumi itu dAtar. -&gt; Bumi itu datar.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Bumi itu dAtar. -&gt; Bumi itu datar.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Apa peduli. -&gt; Apa Peduliku.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Teks nomor {0}: Waktu mulai lebih lambat dari waktu akhir: {4}{1} -&gt; {2}{3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Gagal memperbaiki teks nomor {0}: Waktu mulai adalah waktu akhir: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1191,7 +1188,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Atur &amp;akhir &amp;&amp; ke brktnya</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Disesuaikan melalui waktu akhir {0}</AdjustedViaEndTime>
       <SetEndTime>Atur &amp;waktu akhir</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Atur &amp;mulai dan off-set sisanya</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Atur &amp;mulai dan off-set sisanya</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Cari teks daring</SearchTextOnline>
       <GoogleTranslate>Google terjemahan</GoogleTranslate>
       <GoogleIt>Cari di Google</GoogleIt>
@@ -1316,8 +1313,8 @@ Lanjutkan?</SubtitleAppendPrompt>
     <SpellCheck>Periksa ejaan</SpellCheck>
     <BeforeSpellCheck>Sebelum periksa ejaan</BeforeSpellCheck>
     <SpellCheckChangedXToY>Periksa ejaan: Diubah '{0}' ke '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Sebelum menambahkan tag &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>Tag &lt;{0}&gt; ditambahkan</TagXAdded>
+    <BeforeAddingTagX>Sebelum menambahkan tag '{0}'</BeforeAddingTagX>
+    <TagXAdded>Tag '{0}' ditambahkan</TagXAdded>
     <LineXOfY>baris {0} dari {1}</LineXOfY>
     <XLinesSavedAsY>{0} baris disimpan sebagai {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} baris dihapus</XLinesDeleted>
@@ -1540,8 +1537,8 @@ Bila Anda telah mengedit file ini dgn Subtitle Edit Anda bisa menemukan cadangan
     <EndsWith>Diakhiri dgn</EndsWith>
     <NoContains>Tidak berisi</NoContains>
     <RegEx>Ekspresi reguler</RegEx>
-    <UnequalLines>Baris bernomor ganjil</UnequalLines>
-    <EqualLines>Baris bernomor genap</EqualLines>
+    <OddLines>Baris bernomor ganjil</OddLines>
+    <EvenLines>Baris bernomor genap</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Ganti banyak</Title>
@@ -1731,7 +1728,7 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <AutoDetectAnsiEncoding>Oto. deteksi pengkodean ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Panjang maks. baris tunggal</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks. karakter/dtk</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maks. kata/mnt</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maks. kata/mnt</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Oto. bungkus saat mengetik</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. durasi, milidetik</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maks. durasi, milidetik</DurationMaximumMilliseconds>
@@ -1972,7 +1969,6 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <ListViewColumnTextUp>Kolom, teks ke atas</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, teks ke bawah</ListViewColumnTextDown>
     <ListViewGoToNextError>Pergi ke eror berikutnya</ListViewGoToNextError>
-    <ShowBeamer>Mulai beamer layar penuh subjudul</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pindah kata terakhir ke subjudul berikutnya</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Ambil kata pertama dari subjudul berikutnya</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Pindah kata pertama dari baris berikutnya ke atas (subjudul saat ini)</MainTextBoxMoveFirstWordUpCurrent>

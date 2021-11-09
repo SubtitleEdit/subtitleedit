@@ -2,19 +2,24 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>C&amp;ancel</Cancel>
     <Apply>Apply</Apply>
+    <ApplyTo>Apply to</ApplyTo>
     <None>None</None>
     <All>All</All>
     <Preview>Preview</Preview>
+    <ShowPreview>Show preview</ShowPreview>
+    <HidePreview>Hide preview</HidePreview>
     <SubtitleFiles>Subtitle files</SubtitleFiles>
     <AllFiles>All files</AllFiles>
     <VideoFiles>Video files</VideoFiles>
+    <Images>Images</Images>
+    <Fonts>Fonts</Fonts>
     <AudioFiles>Audio files</AudioFiles>
     <OpenSubtitle>Open subtitle...</OpenSubtitle>
     <OpenVideoFile>Open video file...</OpenVideoFile>
@@ -32,11 +37,13 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
-    <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>Hour:min:sec{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>Hour:min:sec:frames</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} seconds</XSeconds>
     <Bold>Bold</Bold>
     <Italic>Italic</Italic>
     <Underline>Underline</Underline>
+    <Strikeout>Strikeout</Strikeout>
     <Visible>Visible</Visible>
     <FrameRate>Frame rate</FrameRate>
     <Name>Name</Name>
@@ -50,6 +57,7 @@
     <TotalLengthXSplitLine>Total length: {0} (split line!)</TotalLengthXSplitLine>
     <SplitLine>Split line!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
+    <Overlap>Overlap</Overlap>
     <OverlapPreviousLineX>Overlap prev line ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
@@ -60,6 +68,7 @@
     <OpenOriginalSubtitleFile>Open original subtitle file...</OpenOriginalSubtitleFile>
     <PleaseWait>Please wait...</PleaseWait>
     <SessionKey>Session key</SessionKey>
+    <SessionKeyGenerate>Generate new key</SessionKeyGenerate>
     <UserName>Username</UserName>
     <UserNameAlreadyInUse>Username already in use</UserNameAlreadyInUse>
     <WebServiceUrl>Webservice URL</WebServiceUrl>
@@ -160,6 +169,65 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesAvailable>Fixes available: {0}</FixesAvailable>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Advanced Sub Station Alpha attachments</Title>
+    <AttachFiles>Attach files...</AttachFiles>
+    <FontsAndImages>Fonts and images</FontsAndImages>
+    <Graphics>Graphics</Graphics>
+    <Font>Font</Font>
+    <ImageName>Image name ({0}x{1}):</ImageName>
+    <IconName>Icon name:</IconName>
+    <FontName>Font name:</FontName>
+    <ImageResized>Image resized to fit current window</ImageResized>
+    <FilesSkippedX>Files skipped: {0}</FilesSkippedX>
+    <RemoveOneAttachment>Remove one attachment?</RemoveOneAttachment>
+    <RemoveXAttachments>Remove {0} attachments?</RemoveXAttachments>
+  </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>Apply custom override tags</ApplyCustomTags>
+    <History>History</History>
+    <TagsToApply>Tags to apply</TagsToApply>
+    <ApplyTo>Apply to</ApplyTo>
+    <SelectedLinesX>Selected lines: {0}</SelectedLinesX>
+    <AdvancedSelection>Advanced selection</AdvancedSelection>
+  </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>Generate progress bar</Title>
+    <Progressbar>Progress bar</Progressbar>
+    <Chapters>Chapters</Chapters>
+    <SplitterWidth>Splitter width</SplitterWidth>
+    <SplitterHeight>Splitter height</SplitterHeight>
+    <XAdjustment>X adjustment</XAdjustment>
+    <YAdjustment>Y adjustment</YAdjustment>
+    <Position>Position</Position>
+    <TextAlignment>Text alignment</TextAlignment>
+    <SquareCorners>Square corners</SquareCorners>
+    <RoundedCorners>Rounded corners</RoundedCorners>
+    <Top>Top</Top>
+    <Bottom>Bottom</Bottom>
+    <TakePosFromVideo>Take video position</TakePosFromVideo>
+  </AssaProgressBarGenerator>
+  <AssaResulationChanger>
+    <Title>Change ASSA script resolution</Title>
+    <SourceVideoRes>Source video resolution</SourceVideoRes>
+    <TargetVideoRes>Target video resolution</TargetVideoRes>
+    <ChangeResolutionMargins>Change resolution for margin</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
+  </AssaResulationChanger>
+  <AssaSetPosition>
+    <SetPosition>Set position</SetPosition>
+    <VideoResolutionX>Video resolution: {0}</VideoResolutionX>
+    <StyleAlignmentX>Style alignment: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>Mouse position: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>Text position: {0}</CurrentTextPositionX>
+    <SetPosInfo>Click on video to toggle set/move position</SetPosInfo>
+    <Clipboard>Clipboard</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY are not set - set the resolution now?</ResolutionMissing>
+    <RotateXAxis>Rotate {0} axis</RotateXAxis>
+    <DistortX>Distort {0}</DistortX>
+  </AssaSetPosition>
   <AudioToText>
     <Title>Audio to text</Title>
     <ExtractingAudioUsingX>Extracting audio using {0}...</ExtractingAudioUsingX>
@@ -209,6 +277,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BridgeGaps>Bridge gaps</BridgeGaps>
     <PlainText>Plain text</PlainText>
     <Ocr>OCR...</Ocr>
+    <AddFiles>Add files...</AddFiles>
     <Filter>Filter</Filter>
     <FilterSkipped>Skipped by filter</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
@@ -238,9 +307,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Three letter language code</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Import image...</ImportImage>
     <ExportImage>Export image...</ExportImage>
@@ -257,6 +323,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CenterSelectedLines>Center selected lines (horizontally, keep vertical position)</CenterSelectedLines>
     <TopAlignSelectedLines>Top align selected lines (keep horizontal position)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Bottom align selected lines (keep horizontal position)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>Toggle "Forced" for selected lines</ToggleForcedSelectedLines>
+    <SelectForcedLines>Select forced lines</SelectForcedLines>
     <SizeXY>Size: {0}x{1}</SizeXY>
     <SetAspectRatio11>Set aspect ratio 1:1</SetAspectRatio11>
     <ChangeBrightnessTitle>Adjust brightness</ChangeBrightnessTitle>
@@ -384,6 +452,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
     <ChooseColor>Choose color...</ChooseColor>
     <Generate>Generate</Generate>
+    <GenerateNewIdOnSave>Generate new ID on save</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Bridge small gaps between subtitles</Title>
@@ -548,7 +617,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CenterRightJustify>Center, right justify</CenterRightJustify>
     <BottomMargin>Bottom margin</BottomMargin>
     <LeftRightMargin>Left/right margin</LeftRightMargin>
-    <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Choose Blu-ray sup file name</SaveBluRaySupAs>
     <SaveVobSubAs>Choose VobSub file name</SaveVobSubAs>
     <SaveFabImageScriptAs>Choose FAB image script file name</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Choose DVD Studio Pro STL file name</SaveDvdStudioProStlAs>
@@ -642,7 +711,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start with uppercase letter after paragraph</StartWithUppercaseLetterAfterParagraph>
@@ -653,6 +722,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Common OCR errors fixed (OcrReplaceList file used): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
+    <RemoveDialogFirstInNonDialogs>Remove start dash in first line for non dialogs</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalize strings</NormalizeStrings>
     <FixTurkishAnsi>Fix Turkish ANSI (Icelandic) letters to Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
@@ -685,7 +755,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later than end time: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -697,7 +767,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixUppercaseIInsideLowercaseWord>Fix uppercase 'i' inside lowercase word</FixUppercaseIInsideLowercaseWord>
     <FixMissingPeriodAtEndOfLine>Add missing period at end of line</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>Refresh available fixes</RefreshFixes>
-    <ApplyFixes>Apply selected fixes</ApplyFixes>
+    <ApplyFixes>A&amp;pply selected fixes</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Unbreak</Unbreak>
     <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
@@ -715,11 +785,39 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- How are you? -&gt; How are you?</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>Select default</SelectDefault>
     <SetDefault>Set current fixes as default</SetDefault>
     <FixContinuationStyleX>Fix continuation style: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Remove unnecessary leading dots</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>Generate blank video file</Title>
+    <CheckeredImage>Checkered image</CheckeredImage>
+    <SolidColor>Solid color</SolidColor>
+    <DurationInMinutes>Duration in minutes</DurationInMinutes>
+  </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>Generate video with burned-in subtile</Title>
+    <InfoAssaOff>Note: Advanced Substation Alpha styling supported.</InfoAssaOff>
+    <InfoAssaOn>Note: Advanced Substation Alpha styling will be used :)</InfoAssaOn>
+    <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
+    <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Target file name: {0}</TargetFileName>
+    <TargetFileSize>Target file size (requires 2 pass encoding)</TargetFileSize>
+    <FileSizeMb>File size in MB</FileSizeMb>
+    <PassX>Pass {0}</PassX>
+    <Encoding>Encoding</Encoding>
+    <BitRate>Bit rate</BitRate>
+    <SampleRate>Sample rate</SampleRate>
+    <Stereo>Stereo</Stereo>
+    <Preset>Preset</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>Tune for</TuneFor>
+    <AlignRight>Align right</AlignRight>
+  </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
@@ -821,6 +919,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <RemoveEmptyLines>Remove empty lines</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remove lines without letters</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generate time codes</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>Take time from current file</TakeTimeFromCurrentFile>
     <TakeTimeFromFileName>Take time from file name</TakeTimeFromFileName>
     <GapBetweenSubtitles>Gap between subtitles (milliseconds)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
@@ -1002,18 +1101,13 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <Save>&amp;Save</Save>
         <SaveAs>Save &amp;as...</SaveAs>
         <RestoreAutoBackup>Restore auto-backup...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
-        <EbuProperties>EBU STL properties...</EbuProperties>
-        <DvdStuioProProperties>DVD Studio Pro properties...</DvdStuioProProperties>
-        <TimedTextProperties>Timed Text properties...</TimedTextProperties>
-        <PacProperties>PAC properties...</PacProperties>
+        <FormatXProperties>{0} properties...</FormatXProperties>
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
         <CloseOriginal>Close original subtitle</CloseOriginal>
         <OpenContainingFolder>Open containing folder</OpenContainingFolder>
         <Compare>&amp;Compare...</Compare>
-        <Statistics>Statisti&amp;cs...</Statistics>
+        <Statistics>S&amp;tatistics...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
@@ -1118,8 +1212,10 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <CloseVideo>Close video file</CloseVideo>
         <OpenSecondSubtitle>Open second subtitle file...</OpenSecondSubtitle>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
-        <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
+        <SmptTimeMode>SMPTE timing (non integer frame rate)</SmptTimeMode>
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
+        <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
@@ -1186,12 +1282,13 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <Help>Help</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <AssaDraw>Advanced Sub Station Alpha draw</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
+        <SetStyle>Set style</SetStyle>
         <SetActor>Set actor</SetActor>
+        <AssaTools>ASSA tools</AssaTools>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
@@ -1208,6 +1305,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>
+        <Insert>Insert</Insert>
         <InsertFirstLine>Insert line</InsertFirstLine>
         <InsertBefore>Insert before</InsertBefore>
         <InsertAfter>Insert after</InsertAfter>
@@ -1252,9 +1350,14 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <ShowSelectedLinesEarlierLater>Show selected lines earlier/later...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync selected lines...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft translate original line</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>Selected lines</SelectedLines>
         <TranslateSelectedLines>Translate selected lines...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Apply duration limits for selected lines...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
+        <SetPosition>Set position...</SetPosition>
+        <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
+        <AssaResolutionChanger>Change script resolution...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -1262,7 +1365,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
         <NewActor>New actor...</NewActor>
         <RemoveActors>Remove actors</RemoveActors>
-        <EditBookmark>Edit bookmark</EditBookmark>
+        <EditBookmark>Edit bookmark...</EditBookmark>
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
@@ -1311,9 +1414,10 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
       <SetEndTime>Set e&amp;nd time</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and offset the rest</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Set sta&amp;rt and offset the rest</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
+      <AutoTranslate>Auto-translate</AutoTranslate>
       <GoogleIt>Google it</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -1330,6 +1434,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <SaveChangesToOriginalX>Save changes to original {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Save subtitle as...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Save original subtitle as...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Cannot save empty subtitle</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
     <VisualSyncTitle>Visual sync</VisualSyncTitle>
@@ -1378,7 +1483,7 @@ Would you like to start from the top of the document and continue search and rep
     <MatchFoundX>Match found: {0}</MatchFoundX>
     <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Found nothing to replace</FoundNothingToReplace>
-    <ReplaceCountX>Replace count: {0}</ReplaceCountX>
+    <ReplaceCountX>Replace count: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>One replacement made.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Before changes made in source view</BeforeChangesMadeInSourceView>
@@ -1435,7 +1540,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeSpellCheck>Before spell check</BeforeSpellCheck>
     <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Before adding &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags added</TagXAdded>
+    <TagXAdded>{0} tag added</TagXAdded>
     <LineXOfY>line {0} of {1}</LineXOfY>
     <XLinesSavedAsY>{0} lines saved as {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lines deleted</XLinesDeleted>
@@ -1451,6 +1556,8 @@ Continue?</SubtitleAppendPrompt>
     <LineSplitted>Line was split</LineSplitted>
     <BeforeMergeLines>Before merge lines</BeforeMergeLines>
     <LinesMerged>Lines merged</LinesMerged>
+    <MergeSentences>Merge sentences...</MergeSentences>
+    <MergeSentencesXLines>Merge sentences - lines merged: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Before setting color</BeforeSettingColor>
     <BeforeSettingFontName>Before setting font name</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Before typewriter effect</BeforeTypeWriterEffect>
@@ -1468,6 +1575,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtitle imported from Matroska file</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Drop file '{0}' not accepted - file is too large</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Drop file '{0}' not accepted - file is too large for a subtitle</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>You can only drop one file</DropOnlyOneFile>
     <OpenAnsiSubtitle>Open subtitle...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Before change casing</BeforeChangeCasing>
@@ -1749,11 +1857,12 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <EndsWith>Ends with</EndsWith>
     <NoContains>Not contains</NoContains>
     <RegEx>Regular expression</RegEx>
-    <UnequalLines>Odd-numbered lines</UnequalLines>
-    <EqualLines>Even-numbered lines</EqualLines>
+    <OddLines>Odd-numbered lines</OddLines>
+    <EvenLines>Even-numbered lines</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
+    <Bookmarked>Bookmarked</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multiple replace</Title>
@@ -1869,6 +1978,7 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveTextIfAllUppercase>Remove line if UPPERCASE</RemoveTextIfAllUppercase>
     <RemoveInterjections>Remove interjections (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Edit...</EditInterjections>
+    <Apply>A&amp;pply</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Replace</Title>
@@ -1917,6 +2027,7 @@ can edit in same subtitle file (collaboration)</Information>
   <Settings>
     <Title>Settings</Title>
     <General>General</General>
+    <SubtitleFormats>Subtitle formats</SubtitleFormats>
     <Toolbar>Toolbar</Toolbar>
     <VideoPlayer>Video player</VideoPlayer>
     <WaveformAndSpectrogram>Waveform/spectrogram</WaveformAndSpectrogram>
@@ -1939,16 +2050,19 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
-    <GoToBookmark>Go to bookmark</GoToBookmark>
+    <ExportBookmarks>Export bookmarks...</ExportBookmarks>
+    <GoToBookmark>Go to bookmark...</GoToBookmark>
     <GoToPreviousBookmark>Go to previous bookmark</GoToPreviousBookmark>
     <GoToNextBookmark>Go to next bookmark</GoToNextBookmark>
     <ChooseProfile>Choose profile</ChooseProfile>
+    <OpenDataFolder>Open the Subtitle Edit data folder</OpenDataFolder>
     <DuplicateLine>Duplicate line</DuplicateLine>
     <ToggleView>Toggle list/source view</ToggleView>
     <ToggleMode>Toggle translate/create/adjust mode</ToggleMode>
     <TogglePreviewOnVideo>Toggle preview on video</TogglePreviewOnVideo>
     <Help>Help</Help>
     <FontInUi>UI Font</FontInUi>
+    <Appearance>Appearance</Appearance>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
@@ -1960,7 +2074,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal chars/sec</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. chars/sec</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. words/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. words/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
@@ -1981,6 +2095,10 @@ can edit in same subtitle file (collaboration)</Information>
     <RememberPositionAndSize>Remember main window position and size</RememberPositionAndSize>
     <StartInSourceView>Start in source view</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>Remove blank lines</RemoveBlankLines>
+    <ApplyAssaOverrideTags>Apply ASSA override tags to selection</ApplyAssaOverrideTags>
+    <SetAssaPosition>Set/get ASSA position</SetAssaPosition>
+    <SetAssaResolution>Set ASSA resolution (PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Save as..." uses file name from</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
@@ -2112,6 +2230,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ContinuationStyleNoneLeadingTrailingDots>None, dots for pauses</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>Dots (trailing only)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Dots</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>None, ellipsis for pauses</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Dash</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Dash, but dots for pauses</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Music symbol</MusicSymbol>
@@ -2119,6 +2239,12 @@ can edit in same subtitle file (collaboration)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Skip step one (choose fix rules)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>Default format</DefaultFormat>
+    <DefaultSaveAsFormat>Default save as format</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>- Auto -</DefaultSaveAsFormatAuto>
+    <Favorites>Favorites</Favorites>
+    <FavoriteFormats>Favorite formats</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Note: favorite formats will be shown first when selecting a format, the default format will always be shown first</FavoriteSubtitleFormatsNote>
     <Shortcuts>Shortcuts</Shortcuts>
     <Shortcut>Shortcut</Shortcut>
     <Control>Control</Control>
@@ -2133,6 +2259,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AssaColor>ASSA color</AssaColor>
     <DarkTheme>Dark theme</DarkTheme>
     <DarkThemeEnabled>Use dark theme</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>Show list view grid lines</DarkThemeShowGridViewLines>
     <UpdateShortcut>Update</UpdateShortcut>
     <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
@@ -2162,6 +2289,9 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustEndOneFrameBackKeepGapNext>Move end 1 frame back (keep gap to next if close)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Move end 1 frame forward (keep gap to next if close)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>Set start for appropriate line</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>Set end for appropriate line</AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>Set start time, offset the whole subtitle</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>Snap selected lines start to next scene change</AdjustSnapStartToNextSceneChange>
@@ -2178,11 +2308,14 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Extend previous line's end to current's start</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Extend next line's start to current's end</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Re-calculate duration of current subtitle (based on optimal reading speed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
+    <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
     <GoToPrevious>Go to previous line</GoToPrevious>
+    <GoToPreviousPlayTranslate>Go to previous line (and play in 'Translate mode')</GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Go to previous line and set video position</GoToPreviousSubtitleAndFocusVideo>
@@ -2192,6 +2325,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleFocusWaveform>Toggle focus between list view and waveform/spectrogram</ToggleFocusWaveform>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
+    <ToggleQuotes>Toggle quotes</ToggleQuotes>
+    <ToggleHiTags>Toggle HI tags</ToggleHiTags>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
     <AlignmentN1>Alignment bottom left - {\an1}</AlignmentN1>
@@ -2243,7 +2378,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoBack3Second>Three seconds back</GoBack3Second>
     <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
     <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
-    <PlayCurrent>Play current subtitle</PlayCurrent>
+    <PlaySelectedLines>Play selected lines</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Go to previous chapter</WaveformGoToPrevChapter>
@@ -2255,6 +2390,9 @@ can edit in same subtitle file (collaboration)</Information>
     <PlayRateSlower>Play rate slower</PlayRateSlower>
     <PlayRateFaster>Play rate faster</PlayRateFaster>
     <VideoResetSpeedAndZoom>Reset speed/zoom</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
+    <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
+    <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
@@ -2288,6 +2426,10 @@ can edit in same subtitle file (collaboration)</Information>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
     <MergeWithNext>Merge with next</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Merge with previous and unbreak</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Merge with next and unbreak</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Merge with previous and auto-break</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Merge with next and auto-break</MergeWithNextAndBreak>
     <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
@@ -2298,11 +2440,11 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
-    <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <ShowStyleManager>Show style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>Move text after cursor position to next subtitle and go to next</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
@@ -2314,6 +2456,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak without space (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>Show ASSA tag helper</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>Remove ASSA tag at cursor</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
@@ -2347,6 +2491,10 @@ Continue?</RestoreDefaultSettingsMsg>
     <MinFrameGap>Min. gap in frames</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} frames at a frame rate of {1} gives {2} milliseconds.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml opens in</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Edit</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Shortcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
@@ -2417,14 +2565,14 @@ Continue?</RestoreDefaultSettingsMsg>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <SpacesNotAllowed>Spaces not allowed in single word!</SpacesNotAllowed>
-    <UndoX>Undo: {0}</UndoX>
+    <UndoX>Undo: "{0}"</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
     <OpenReportInFolder>Open report in folder</OpenReportInFolder>
-    <FoundXIssues>Netflix quality check found {0:#,###} issues.</FoundXIssues>
+    <FoundXIssues>Netflix quality check found {0:#,##0} issues.</FoundXIssues>
     <CheckOk>Netflix quality check OK :)</CheckOk>
     <MaximumXCharsPerSecond>Maximum {0} characters per second (incl. white spaces)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximum line length ({0})</MaximumLineLength>
@@ -2526,6 +2674,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <UpdateDetails>Update details</UpdateDetails>
     <Resolution>Resolution</Resolution>
     <VideoResolution>Video resolution</VideoResolution>
+    <FromCurrentVideo>From current video</FromCurrentVideo>
     <Options>Options</Options>
     <WrapStyle>Wrap style</WrapStyle>
     <Collision>Collision</Collision>
@@ -2565,7 +2714,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <Vertical>Vertical</Vertical>
     <Border>Border</Border>
     <PlusShadow>+ Shadow</PlusShadow>
-    <OpaqueBox>Opaque box (uses outline color)</OpaqueBox>
+    <OpaqueBox>Opaque box</OpaqueBox>
     <Import>Import...</Import>
     <Export>Export...</Export>
     <Copy>Copy</Copy>
@@ -2584,8 +2733,32 @@ Continue?</RestoreDefaultSettingsMsg>
     <AddToFile>Add to file</AddToFile>
     <AddToStorage>Add to storage</AddToStorage>
     <StyleStorage>Style storage</StyleStorage>
+    <StyleCurrentFile>Styles in current file</StyleCurrentFile>
     <OverwriteX>Overwrite {0}?</OverwriteX>
+    <CategoryNote>Note: The styles in the default category (colored in green) will be applied to new ASSA files</CategoryNote>
+    <CategoriesManage>Manage</CategoriesManage>
+    <MoveToCategory>Move selected styles to category...</MoveToCategory>
+    <ScaleX>ScaleX</ScaleX>
+    <ScaleY>ScaleY</ScaleY>
+    <Spacing>Spacing</Spacing>
+    <Angle>Angle</Angle>
+    <BoxPerLine>Box per line (use outline color)</BoxPerLine>
+    <BoxMultiLine>One box (use shadow color)</BoxMultiLine>
   </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>Category</Category>
+    <Categories>Categories</Categories>
+    <CategoryName>Category name</CategoryName>
+    <CategoryDelete>Are you sure you want to delete the selected category/categories?</CategoryDelete>
+    <NewCategory>New category</NewCategory>
+    <CategoryRename>Rename category</CategoryRename>
+    <CategorySetDefault>Set as default</CategorySetDefault>
+    <NumberOfStyles>Number of styles</NumberOfStyles>
+    <CategoryDefault>Default</CategoryDefault>
+    <ChooseCategories>Choose categories to {0}</ChooseCategories>
+    <ImportCategoriesTitle>Import categories from...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>Export categories to...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Point synchronization</Title>
     <TitleViaOtherSubtitle>Point sync via other subtitle</TitleViaOtherSubtitle>
@@ -2596,6 +2769,13 @@ Continue?</RestoreDefaultSettingsMsg>
     <Info>One sync point will adjust position, two or more sync points will adjust position and speed</Info>
     <ApplySync>Apply</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE timing</Title>
+    <UseSmpteTiming>Use SMPTE timing for current subtitle?</UseSmpteTiming>
+    <SmpteTimingInfo>Note: SMPTE timing can be changed later in the "Video menu"</SmpteTimingInfo>
+    <YesAlways>Yes, always for non-whole-number frame rates</YesAlways>
+    <NoNever>No, never</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Transport stream subtitle chooser - {0}</Title>
     <PidLineImage>Images - Transport Packet Identifier (PID) = {0}, language = {1}, number of subtitles = {2}</PidLineImage>
@@ -2797,6 +2977,7 @@ Keep changes?</KeepChangesMessage>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
     <AddSceneChange>Add scene change</AddSceneChange>
     <RemoveSceneChange>Remove scene change</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>Remove scene changes from selection</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
     <InsertSubtitleHere>Insert subtitle here...</InsertSubtitleHere>

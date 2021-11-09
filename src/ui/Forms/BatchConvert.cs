@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
@@ -144,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSpeed.Text = LanguageSettings.Current.ChangeSpeedInPercent.TitleShort;
             labelFromFrameRate.Text = LanguageSettings.Current.ChangeFrameRate.FromFrameRate;
             labelToFrameRate.Text = LanguageSettings.Current.ChangeFrameRate.ToFrameRate;
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : LanguageSettings.Current.General.HourMinutesSecondsMilliseconds;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : string.Format(LanguageSettings.Current.General.HourMinutesSecondsDecimalSeparatorMilliseconds, UiUtil.DecimalSeparator);
             openContainingFolderToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.OpenContainingFolder;
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
             removeAllToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
@@ -156,6 +155,9 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDeleteFirst.Left = labelDeleteFirstLines.Left + labelDeleteFirstLines.Width + 5;
             numericUpDownDeleteLast.Left = labelDeleteLastLines.Left + labelDeleteLastLines.Width + 5;
             groupBoxAdjustDuration.Text = LanguageSettings.Current.AdjustDisplayDuration.Title;
+            addFilesToolStripMenuItem.Text = l.AddFiles;
+            groupBoxDeleteLines.Text = l.DeleteLines;
+            groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResulationChanger.Title;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
@@ -348,7 +350,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
-
+            labelTargetRes.Text = LanguageSettings.Current.AssaResulationChanger.TargetVideoRes;
+            checkBoxMargins.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionMargins;
+            checkBoxFontSize.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionFontSize;
+            checkBoxPosition.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionPositions;
+            checkBoxDrawing.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionDrawing;
 
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
             if (mode == RemoveUnicode)
@@ -380,7 +386,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
             }
-            numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
+
+            if (Configuration.Settings.Tools.MergeShortLinesMaxGap >= numericUpDownMaxMillisecondsBetweenLines.Minimum &&
+                Configuration.Settings.Tools.MergeShortLinesMaxGap <= numericUpDownMaxMillisecondsBetweenLines.Maximum)
+            {
+                numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
+            }
+
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
 
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
@@ -527,8 +539,14 @@ namespace Nikse.SubtitleEdit.Forms
                     Checked = Configuration.Settings.Tools.BatchConvertDeleteLines,
                     Action = CommandLineConverter.BatchAction.DeleteLines,
                     Control = groupBoxDeleteLines
-                }
-
+                },
+                new FixActionItem
+                {
+                    Text =  LanguageSettings.Current.AssaResulationChanger.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertAssaChangeRes,
+                    Action = CommandLineConverter.BatchAction.AssaChangeRes,
+                    Control = groupBoxAssaChangeRes
+                },
             };
             foreach (var fixItem in fixItems)
             {
@@ -747,49 +765,31 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewInputFiles.Items.Add(item);
                     }
 
-                    foreach (var lang in mkvPgs)
+                    bool mkvLangCodeFilterActive = comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0;
+                    var mkvSubFormats = new Dictionary<string, List<string>>
                     {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/PGS - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvVobSub)
+                        { "PGS", mkvPgs },
+                        { "VobSub", mkvVobSub },
+                        { "SRT", mkvSrt },
+                        { "SSA", mkvSsa },
+                        { "ASS", mkvAss }
+                    };
+
+                    foreach (var mkvSubFormat in mkvSubFormats)
                     {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/VobSub - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvSrt)
-                    {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        foreach (var lang in mkvSubFormat.Value)
                         {
-                            continue;
+                            if (mkvLangCodeFilterActive && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            item = new ListViewItem(fileName);
+                            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                            listViewInputFiles.Items.Add(item);
+                            item.SubItems.Add($"Matroska/{mkvSubFormat.Key} - {lang}");
+                            item.SubItems.Add("-");
                         }
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/SRT - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvSsa)
-                    {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/SSA - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvAss)
-                    {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/ASS - " + lang);
-                        item.SubItems.Add("-");
                     }
                 }
                 else if (isTs)
@@ -814,6 +814,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // ignored
             }
+
             UpdateNumberOfFiles();
         }
 
@@ -944,34 +945,34 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            UpdateChangeCasingSettings();
-            UpdateRtlSettings();
-            UpdateActionEnabledCache();
             if (listViewInputFiles.Items.Count == 0)
             {
                 MessageBox.Show(LanguageSettings.Current.BatchConvert.NothingToConvert);
                 return;
             }
-            if (!checkBoxOverwrite.Checked)
+
+            if (radioButtonSaveInOutputFolder.Checked && !Directory.Exists(textBoxOutputFolder.Text))
             {
                 if (textBoxOutputFolder.Text.Length < 2)
                 {
                     MessageBox.Show(LanguageSettings.Current.BatchConvert.PleaseChooseOutputFolder);
                     return;
                 }
-                if (!Directory.Exists(textBoxOutputFolder.Text))
+
+                try
                 {
-                    try
-                    {
-                        Directory.CreateDirectory(textBoxOutputFolder.Text);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message);
-                        return;
-                    }
+                    Directory.CreateDirectory(textBoxOutputFolder.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                    return;
                 }
             }
+
+            UpdateChangeCasingSettings();
+            UpdateRtlSettings();
+            UpdateActionEnabledCache();
             _converting = true;
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Maximum = listViewInputFiles.Items.Count;
@@ -1520,6 +1521,11 @@ namespace Nikse.SubtitleEdit.Forms
                 DeleteLines(sub);
             }
 
+            if (IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes))
+            {
+                AssaChangeResolution(sub);
+            }
+
             if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
             {
                 sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Style == textBoxRemoveStyle.Text);
@@ -1653,6 +1659,103 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return sub;
+        }
+
+        private void AssaChangeResolution(Subtitle sub)
+        {
+            if (sub.OriginalFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
+            {
+                return;
+            }
+
+            if (!checkBoxMargins.Checked && !checkBoxFontSize.Checked && !checkBoxPosition.Checked && !checkBoxDrawing.Checked)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(sub.Header))
+            {
+                sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
+            // default resolution for ASSA
+            var sourceWidth = 384;
+            var sourceHeight = 288;
+
+            var oldPlayResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", sub.Header);
+            if (int.TryParse(oldPlayResX, out var w))
+            {
+                sourceWidth = w;
+            }
+
+            var oldPlayResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", sub.Header);
+            if (int.TryParse(oldPlayResY, out var h))
+            {
+                sourceHeight = h;
+            }
+
+            var targetWidth = numericUpDownTargetWidth.Value;
+            var targetHeight = numericUpDownTargetHeight.Value;
+
+            if (sourceWidth == 0 || sourceHeight == 0 || targetWidth == 0 || targetHeight == 0)
+            {
+                return;
+            }
+
+            if (sourceWidth == targetWidth && sourceHeight == targetHeight)
+            {
+                return;
+            }
+
+            var fixMargins = checkBoxMargins.Checked;
+            var fixFonts = checkBoxFontSize.Checked;
+            var fixPos = checkBoxPosition.Checked;
+            var fixDraw = checkBoxDrawing.Checked;
+            var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(sub.Header);
+            foreach (var style in styles)
+            {
+                if (fixMargins)
+                {
+                    style.MarginLeft = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginLeft);
+                    style.MarginRight = AssaResampler.Resample(sourceWidth, targetWidth, style.MarginRight);
+                    style.MarginVertical = AssaResampler.Resample(sourceHeight, targetHeight, style.MarginVertical);
+                }
+
+                if (fixFonts)
+                {
+                    style.FontSize = AssaResampler.Resample(sourceHeight, targetHeight, style.FontSize);
+                }
+
+                if (fixFonts || fixDraw)
+                {
+                    style.OutlineWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.OutlineWidth);
+                    style.ShadowWidth = (decimal)AssaResampler.Resample(sourceHeight, targetHeight, (float)style.ShadowWidth);
+                    style.Spacing = (decimal)AssaResampler.Resample(sourceWidth, targetWidth, (float)style.Spacing);
+                }
+            }
+
+            sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, styles);
+
+            sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+            sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+
+            foreach (var p in sub.Paragraphs)
+            {
+                if (fixFonts)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsFont(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
+
+                if (fixPos)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsPosition(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text);
+                }
+
+                if (fixDraw)
+                {
+                    p.Text = AssaResampler.ResampleOverrideTagsDrawing(sourceWidth, targetWidth, sourceHeight, targetHeight, p.Text, null);
+                }
+            }
         }
 
         private void DeleteLines(Subtitle sub)
@@ -2338,14 +2441,16 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int first = -1;
+            var first = int.MaxValue;
             for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                if (first < 0)
+                var idx = listViewInputFiles.SelectedIndices[i];
+                if (idx < first)
                 {
-                    first = listViewInputFiles.SelectedIndices[i];
+                    first = idx;
                 }
-                listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
+
+                listViewInputFiles.Items.RemoveAt(idx);
             }
 
             // keep an item selected/focused for improved UX
@@ -2359,6 +2464,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewInputFiles.Items[listViewInputFiles.Items.Count - 1].Selected = true;
                 listViewInputFiles.FocusedItem = listViewInputFiles.Items[listViewInputFiles.Items.Count - 1];
             }
+
             UpdateNumberOfFiles();
             UpdateTransportStreamSettings();
         }
@@ -2404,6 +2510,11 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewInputFiles.InverseSelection();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#batchconvert");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)
@@ -2446,6 +2557,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertApplyDurationLimits = IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits);
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
+            Configuration.Settings.Tools.BatchConvertDeleteLines = IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines);
+            Configuration.Settings.Tools.BatchConvertAssaChangeRes = IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes);
 
             UpdateRtlSettings();
         }
@@ -2690,18 +2803,41 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_Shown(object sender, EventArgs e)
         {
-            BatchConvert_ResizeEnd(this, EventArgs.Empty);
+            BatchConvert_ResizeEnd(sender, e);
         }
 
         private void BatchConvert_ResizeEnd(object sender, EventArgs e)
         {
-            listViewInputFiles.Columns[listViewInputFiles.Columns.Count - 1].Width = -2;
-            listViewConvertOptions.Columns[listViewConvertOptions.Columns.Count - 1].Width = -2;
+            listViewInputFiles.AutoSizeLastColumn();
+            listViewConvertOptions.AutoSizeLastColumn();
         }
 
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4 || comboBoxFilter.SelectedIndex == 5;
+        }
+
+        private void textBoxFilter_TextChanged(object sender, EventArgs e)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+            {
+                return;
+            }
+
+            if (comboBoxFilter.SelectedIndex == 5)
+            {
+                var listViewItems = new List<ListViewItem>();
+                foreach (ListViewItem item in listViewInputFiles.Items)
+                {
+                    listViewItems.Add(item);
+                }
+
+                listViewInputFiles.BeginUpdate();
+                listViewInputFiles.Items.Clear();
+                listViewInputFiles.Items.AddRange(listViewItems.FindAll(item => item.SubItems[2].Text.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase)).ToArray());
+                listViewInputFiles.EndUpdate();
+                UpdateNumberOfFiles();
+            }
         }
 
         private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
@@ -2726,6 +2862,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (!Directory.Exists(textBoxOutputFolder.Text))
+            {
+                try
+                {
+                    Directory.CreateDirectory(textBoxOutputFolder.Text);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
             if (Directory.Exists(textBoxOutputFolder.Text))
             {
                 UiUtil.OpenFolder(textBoxOutputFolder.Text);
@@ -2757,6 +2905,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxRemoveStyle.Visible = false;
             groupBoxAdjustDuration.Visible = false;
             groupBoxDeleteLines.Visible = false;
+            groupBoxAssaChangeRes.Visible = false;
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
@@ -2986,6 +3135,26 @@ namespace Nikse.SubtitleEdit.Forms
         private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             buttonInputBrowse_Click(sender, e);
+        }
+
+        private void buttonGetResolutionFromVideo_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(false);
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    if (info != null && info.Success)
+                    {
+                        numericUpDownTargetWidth.Value = info.Width;
+                        numericUpDownTargetHeight.Value = info.Height;
+                    }
+                }
+            }
         }
     }
 }

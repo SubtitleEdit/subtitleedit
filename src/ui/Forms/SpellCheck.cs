@@ -1,8 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
         public string ChangeWholeText => textBoxWholeText.Text;
         public bool AutoFixNames => checkBoxAutoChangeNames.Checked;
-
+        private SubtitleFormat _subtitleFormat;
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
         private HashSet<string> _skipOneList = new HashSet<string>();
@@ -85,11 +85,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public SpellCheck()
+        public SpellCheck(SubtitleFormat subtitleFormat)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            _subtitleFormat = subtitleFormat;
             labelActionInfo.Text = string.Empty;
             Text = LanguageSettings.Current.SpellCheck.Title;
             labelFullText.Text = LanguageSettings.Current.SpellCheck.FullText;
@@ -105,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAbort.Text = LanguageSettings.Current.SpellCheck.Abort;
             buttonEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
             checkBoxAutoChangeNames.Text = LanguageSettings.Current.SpellCheck.AutoFixNames;
-            checkBoxAutoChangeNames.Checked = Configuration.Settings.Tools.SpellCheckAutoChangeNames;
+            checkBoxAutoChangeNames.Checked = Configuration.Settings.Tools.SpellCheckAutoChangeNameCasing;
             groupBoxEditWholeText.Text = LanguageSettings.Current.SpellCheck.EditWholeText;
             buttonChangeWholeText.Text = LanguageSettings.Current.SpellCheck.Change;
             buttonSkipText.Text = LanguageSettings.Current.SpellCheck.SkipOnce;
@@ -114,6 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
             UiUtil.FixLargeFonts(this, buttonAbort);
+            richTextBoxParagraph.DetectUrls = false;
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
@@ -195,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Action = SpellCheckAction.Abort;
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#spellcheck");
                 e.SuppressKeyPress = true;
@@ -318,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Configuration.Settings.Tools.SpellCheckAutoChangeNames = AutoFixNames;
+            Configuration.Settings.Tools.SpellCheckAutoChangeNameCasing = AutoFixNames;
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 DialogResult = DialogResult.Abort;
@@ -376,7 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator1.Visible = showAddItems;
         }
 
-        private void AddXToNamesnoiseListToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddXToNamesNoiseListToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
@@ -590,6 +592,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // ignore short/empty words and special chars
                     }
+                    else if (IsBetweenActiveAssaTags(_words[_wordsIndex].Index, _currentParagraph, _subtitleFormat))
+
+                    {
+                        // ignore words between {} in ASSA/SSA
+                    }
                     else if (_spellCheckWordLists.HasName(_currentWord))
                     {
                         _noOfNames++;
@@ -608,6 +615,10 @@ namespace Nikse.SubtitleEdit.Forms
                         _noOfSkippedWords++;
                     }
                     else if (_spellCheckWordLists.HasUserWord(_currentWord))
+                    {
+                        _noOfCorrectWords++;
+                    }
+                    else if (_postfix.Length > 0 && _spellCheckWordLists.HasUserWord(_currentWord + _postfix))
                     {
                         _noOfCorrectWords++;
                     }
@@ -730,11 +741,26 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 if (!correct)
                                 {
-                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash);
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
                                 }
+                                if (!correct && _spellCheckWordLists.HasName(wordWithDash.Replace("‑", "-")))
+                                {
+                                    correct = true;
+                                    _noOfNames++;
+                                }
+                            }
+                            if (!correct && _currentWord.EndsWith('\u2014')) // em dash
+                            {
+                                var wordWithoutDash = _currentWord.TrimEnd('\u2014');
+                                correct = DoSpell(wordWithoutDash);
                                 if (!correct)
                                 {
-                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithoutDash);
+                                }
+                                if (!correct && _spellCheckWordLists.HasName(wordWithoutDash))
+                                {
+                                    correct = true;
+                                    _noOfNames++;
                                 }
                             }
                         }
@@ -745,13 +771,32 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 correct = true;
                             }
-                            else if (_languageName.StartsWith("en_", StringComparison.Ordinal) && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
+                            else if (_languageName.StartsWith("en", StringComparison.Ordinal) && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
                             {
                                 correct = true;
                             }
-                            else if (_languageName.StartsWith("da_", StringComparison.Ordinal) && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
+                            else if (_languageName.StartsWith("da", StringComparison.Ordinal) && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
                             {
                                 correct = true;
+                            }
+                            else if (_languageName.StartsWith("fr", StringComparison.Ordinal))
+                            {
+                                if (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("à", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("y", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    correct = true;
+                                }
+                            }
+                            else if (_languageName.StartsWith("es", StringComparison.Ordinal))
+                            {
+                                if (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("y", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("o", StringComparison.OrdinalIgnoreCase) ||
+                                    _currentWord.Equals("u", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    correct = true;
+                                }
                             }
                         }
 
@@ -846,6 +891,20 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private static bool IsBetweenActiveAssaTags(int currentIndex, Paragraph currentParagraph, SubtitleFormat subtitleFormat)
+        {
+            if (subtitleFormat.Name != AdvancedSubStationAlpha.NameOfFormat &&
+                subtitleFormat.Name != SubStationAlpha.NameOfFormat)
+            {
+                return false;
+            }
+
+            var s = currentParagraph.Text.Substring(0, currentIndex);
+            var lastIndexOfStart = s.LastIndexOf('{');
+            var lastIndexOfEnd = s.LastIndexOf('}');
+            return lastIndexOfStart > lastIndexOfEnd;
         }
 
         private bool DoAutoFixNames(string word, List<string> suggestions)
@@ -1159,12 +1218,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string format = LanguageSettings.Current.SpellCheck.UndoX;
-            if (string.IsNullOrEmpty(format))
-            {
-                format = "Undo: {0}";
-            }
-
-            string undoText = string.Format(format, text);
+            string undoText = string.Format(format, text.RemoveChar('&'));
 
             _undoList.Add(new UndoObject
             {

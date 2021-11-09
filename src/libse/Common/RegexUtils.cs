@@ -257,5 +257,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return string.Join(Environment.NewLine, text.SplitToLines());
         }
 
+        public static int CountNewLineSafe(Regex regularExpression, string text)
+        {
+            return regularExpression.Matches(string.Join(Environment.NewLine, text.SplitToLines())).Count;
+        }
     }
 }

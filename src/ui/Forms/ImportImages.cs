@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -163,6 +162,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonInputBrowse_Click(null, EventArgs.Empty);
             }
+        }
+
+        private void ImportImages_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.AutoSizeLastColumn();
+        }
+
+        private void ImportImages_Shown(object sender, EventArgs e)
+        {
+            ImportImages_ResizeEnd(sender, e);
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)

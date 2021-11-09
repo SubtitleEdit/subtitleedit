@@ -73,6 +73,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "GoToLine";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGoToLine_KeyDown);
             this.ResumeLayout(false);

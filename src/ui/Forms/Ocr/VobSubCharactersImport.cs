@@ -37,8 +37,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
+        private void VobSubCharactersImport_ResizeEnd(object sender, EventArgs e)
+        {
+            listView1.AutoSizeLastColumn();
+        }
+
         private void VobSubCharactersImport_Shown(object sender, EventArgs e)
         {
+            VobSubCharactersImport_ResizeEnd(sender, e);
+
             openFileDialog1.Filter = "Binary OCR db files|*.db";
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.InitialDirectory = Configuration.OcrDirectory;

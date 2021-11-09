@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                if (fs.Length > 20000000)
+                if (fs.Length > 50_000_000)
                 {
                     return false;
                 }
@@ -34,8 +34,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
                 }
 
+                // ftypisml, ftypdash, ftyppiff, stypiso6 or ?
                 var str = Encoding.ASCII.GetString(buffer, 4, 8);
-                if (!str.StartsWith("ftyp", StringComparison.Ordinal)) // ftypisml, ftypdash, ftyppiff or ?
+                if (!str.StartsWith("ftyp", StringComparison.Ordinal) && !str.StartsWith("styp", StringComparison.Ordinal))
                 {
                     return false;
                 }
@@ -75,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     // adjust to last exisiting sub
                     var lastSub = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
-                    if (lastSub != null)
+                    if (lastSub != null && sub.Paragraphs.Count > 0 && lastSub.StartTime.TotalMilliseconds > sub.Paragraphs[0].StartTime.TotalMilliseconds)
                     {
                         sub.AddTimeToAllParagraphs(lastSub.EndTime.TimeSpan);
                     }
@@ -86,6 +87,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                 }
+            }
+
+            var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 250);
+            if (merged.Paragraphs.Count < subtitle.Paragraphs.Count)
+            {
+                subtitle.Paragraphs.Clear();
+                subtitle.Paragraphs.AddRange(merged.Paragraphs);
             }
 
             subtitle.Renumber();

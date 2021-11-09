@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -158,9 +158,6 @@
     <SetMinMsBetweenSubtitles>กำหนดวินาทีต่ำสุดระหว่างซับไตเติ้ล</SetMinMsBetweenSubtitles>
     <PlainText>ข้อความล้วน</PlainText>
   </BatchConvert>
-  <Beamer>
-    <Title>บีมเมอร์</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>เปลี่ยนลักษณะตัวพิมพ์</Title>
     <ChangeCasingTo>เปลี่ยนลักษณะตัวพิมพ์เป็น</ChangeCasingTo>
@@ -399,7 +396,7 @@
     <Right>ขวา</Right>
     <Center>กลาง</Center>
     <BottomMargin>ขอบล่าง</BottomMargin>
-    <SaveBluRraySupAs>เลือกชื่อไฟล์ sup บลูเรย์</SaveBluRraySupAs>
+    <SaveBluRaySupAs>เลือกชื่อไฟล์ sup บลูเรย์</SaveBluRaySupAs>
     <SaveVobSubAs>เลือกชื่อไฟล์ VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>เลือกชื่่อไฟล์ sup บลูเรย์</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>เลือกชื่อไฟล์ DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -478,7 +475,7 @@
     <BreakLongLines>แยกบรรทัดที่ยาว</BreakLongLines>
     <RemoveLineBreaks>ลบตัวแบ่งบรรทัดในข้อความที่สั้นเพียงประโยคเดียว</RemoveLineBreaks>
     <RemoveLineBreaksAll>ลบตัวแบ่งบรรทัดในข้อความที่สั้น (ยกเว้นไดอะล็อก)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>แก้ตัวพิมพ์ใหญ่ 'i' ที่อยู่ในกลุ่มคำตัวพิมพ์เล็ก (ข้อผิดพลาดของ OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>แก้ตัวพิมพ์ใหญ่ 'i' ที่อยู่ในกลุ่มคำตัวพิมพ์เล็ก (ข้อผิดพลาดของ OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>แก้อะพอสทรอฟีคู่ ('') เป็นอัญประกาศเดี่ยว (")</FixDoubleApostrophes>
     <AddPeriods>เพิ่มจุดหลังบรรทัดที่บรรทัดถัดไปขึ้นต้นด้วยตัวพิมพ์ใหญ่</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>เริ่มต้นด้วยตัวพิมพ์ใหญ่หลังย่อหน้า</StartWithUppercaseLetterAfterParagraph>
@@ -526,7 +523,7 @@
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>ไม่สามารถแก้ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1075,7 +1072,7 @@
       <SetEndTimeAndGoToNext>กำหนด&amp;จุดสิ้นสุด &amp; ไปต่อไป</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>ปรับจากจุดสิ้นสุด {0}</AdjustedViaEndTime>
       <SetEndTime>กำหนด&amp;เวลาสิ้นสุด</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>กำหนด&amp;เวลาเริ่มและออฟเซ็ตส่วนที่เหลือ</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>กำหนด&amp;เวลาเริ่มและออฟเซ็ตส่วนที่เหลือ</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>ค้นหาข้อความออนไลน์</SearchTextOnline>
       <GoogleTranslate>กูเกิ้ลแปลภาษา</GoogleTranslate>
       <GoogleIt>หาด้วยกูเกิ้ล</GoogleIt>
@@ -1197,8 +1194,8 @@
     <SpellCheck>ตรวจคำ</SpellCheck>
     <BeforeSpellCheck>ก่อนตรวจคำ</BeforeSpellCheck>
     <SpellCheckChangedXToY>ตรวจคำ: เปลี่ยน '{0}' เป็น '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>ก่อนเพิ่มแท็ก &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; แท็กถูกเพิ่มแล้ว</TagXAdded>
+    <BeforeAddingTagX>ก่อนเพิ่มแท็ก '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' แท็กถูกเพิ่มแล้ว</TagXAdded>
     <LineXOfY>บรรทัด {0} จาก {1}</LineXOfY>
     <XLinesSavedAsY>{0} บรรทัดบันทึกเป็น {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} บรรทัดที่ถูกลบ</XLinesDeleted>
@@ -1394,8 +1391,8 @@
     <EndsWith>ลงท้ายด้วย</EndsWith>
     <NoContains>ไม่มี</NoContains>
     <RegEx>เรกูลาร์เอ็กซ์เพรสชัน</RegEx>
-    <UnequalLines>บรรทัดที่ไม่เท่ากัน</UnequalLines>
-    <EqualLines>บรรทัดที่เท่ากัน</EqualLines>
+    <OddLines>บรรทัดที่ไม่เท่ากัน</OddLines>
+    <EvenLines>บรรทัดที่เท่ากัน</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>แทนที่เป็นชุด</Title>
@@ -1753,7 +1750,6 @@
     <ListViewColumnInsert>คอลัมน์ แทรกข้อความ</ListViewColumnInsert>
     <ListViewColumnPaste>คอลัมน์ วาง</ListViewColumnPaste>
     <ListViewGoToNextError>ไปที่ข้อผิดพลาดถัดไป</ListViewGoToNextError>
-    <ShowBeamer>เริ่มซับไตเติ้ลเต็มจอแสดงบีมเมอร์</ShowBeamer>
     <MainTextBoxMoveLastWordDown>ย้ายคำสุดท้ายไปซับไตเติ้ลบรรทัดถัดไป</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>ย้ายคำแรกจากซับไตเติ้ลถัดไปขึ้นมา</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>เปลี่ยนส่วนที่เลือกเป็นตัวพิมพ์เล็ก</MainTextBoxSelectionToLower>

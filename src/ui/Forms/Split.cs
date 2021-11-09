@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -30,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             RadioButtonLines.Text = l.Lines;
             radioButtonCharacters.Text = l.Characters;
             labelNumberOfParts.Text = l.NumberOfEqualParts;
+            radioButtonTime.Text = LanguageSettings.Current.MeasurementConverter.Time;
             groupBoxSubtitleInfo.Text = l.SubtitleInfo;
             groupBoxOutput.Text = l.Output;
             labelFileName.Text = l.FileName;
@@ -87,6 +87,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.Tools.SplitVia.Trim().Equals("lines", StringComparison.OrdinalIgnoreCase))
             {
                 RadioButtonLines.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.SplitVia.Trim().Equals("time", StringComparison.OrdinalIgnoreCase))
+            {
+                radioButtonTime.Checked = true;
             }
             else
             {
@@ -206,6 +210,43 @@ namespace Nikse.SubtitleEdit.Forms
                 lvi2.SubItems.Add(fileNameNoExt + ".Part" + numericUpDownParts.Value + ".srt");
                 listViewParts.Items.Add(lvi2);
             }
+            else if (radioButtonTime.Checked)
+            {
+                var startMs = _subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
+                var endMs = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds;
+                var partSize = (endMs - startMs) / (double)numericUpDownParts.Value;
+                var nextLimit = startMs + partSize;
+                int currentSize = 0;
+                var temp = new Subtitle { Header = _subtitle.Header };
+                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                {
+                    Paragraph p = _subtitle.Paragraphs[i];
+                    int size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
+                    if (p.StartTime.TotalMilliseconds > nextLimit - 10 && _parts.Count < numericUpDownParts.Value - 1)
+                    {
+                        _parts.Add(temp);
+                        var lvi = new ListViewItem($"{temp.Paragraphs.Count:#,###,###}");
+                        lvi.SubItems.Add($"{currentSize:#,###,###}");
+                        lvi.SubItems.Add(fileNameNoExt + ".Part" + _parts.Count + format.Extension);
+                        listViewParts.Items.Add(lvi);
+                        temp = new Subtitle { Header = _subtitle.Header };
+                        temp.Paragraphs.Add(new Paragraph(p));
+                        nextLimit += partSize;
+                        currentSize = 0;
+                    }
+                    else
+                    {
+                        currentSize += size;
+                        temp.Paragraphs.Add(new Paragraph(p));
+                    }
+                }
+                _parts.Add(temp);
+                var lvi2 = new ListViewItem($"{temp.Paragraphs.Count:#,###,###}");
+                lvi2.SubItems.Add($"{currentSize:#,###,###}");
+                lvi2.SubItems.Add(fileNameNoExt + ".Part" + numericUpDownParts.Value + ".srt");
+                listViewParts.Items.Add(lvi2);
+            }
+
             _loading = false;
         }
 
@@ -256,6 +297,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (RadioButtonLines.Checked)
             {
                 Configuration.Settings.Tools.SplitVia = "Lines";
+            }
+            else if (radioButtonTime.Checked)
+            {
+                Configuration.Settings.Tools.SplitVia = "Time";
             }
             else
             {
@@ -311,12 +356,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void Split_Shown(object sender, EventArgs e)
         {
             _loading = false;
+            Split_ResizeEnd(sender, e);
             CalculateParts();
-        }
-
-        private void Split_Resize(object sender, EventArgs e)
-        {
-            columnHeaderFileName.Width = -2;
         }
 
         private void Split_KeyDown(object sender, KeyEventArgs e)

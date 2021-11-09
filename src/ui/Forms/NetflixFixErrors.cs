@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using static Nikse.SubtitleEdit.Forms.FixCommonErrors;
 
@@ -20,10 +20,11 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly SubtitleFormat _subtitleFormat;
         private readonly string _subtitleFileName;
         private readonly string _videoFileName;
+        private readonly double _frameRate;
         private bool _loading;
         private NetflixQualityController _netflixQualityController;
 
-        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName, string videoFileName)
+        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName, string videoFileName, double frameRate)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -37,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFormat = subtitleFormat;
             _subtitleFileName = subtitleFileName;
             _videoFileName = videoFileName;
+            _frameRate = frameRate;
 
             labelTotal.Text = string.Empty;
             linkLabelOpenReportFolder.Text = string.Empty;
@@ -44,6 +46,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = LanguageSettings.Current.ChooseLanguage.Language;
             groupBoxRules.Text = LanguageSettings.Current.Settings.Rules;
             checkBoxMinDuration.Text = LanguageSettings.Current.NetflixQualityCheck.MinimumDuration;
+            buttonFixesSelectAll.Text = LanguageSettings.Current.FixCommonErrors.SelectAll;
+            buttonFixesInverse.Text = LanguageSettings.Current.FixCommonErrors.InverseSelection;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             _loading = true;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
@@ -56,21 +60,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshCheckBoxes(string language)
         {
-            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName };
+            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName, FrameRate = _frameRate };
 
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
 
-            var sceneChangesExists = false;
+            int halfSecGapInFrames = (int)Math.Round(_frameRate / 2);
+            checkBoxGapBridge.Text = $"Frame gap: 3 to {halfSecGapInFrames - 1} frames => 2 frames";
+
+            var sceneChangesExist = false;
             if (_netflixQualityController.VideoExists)
             {
                 if (SceneChangeHelper.FromDisk(_videoFileName).Count > 0)
                 {
-                    sceneChangesExists = true;
+                    sceneChangesExist = true;
                 }
             }
-            checkBoxSceneChange.Checked = _netflixQualityController.VideoExists && sceneChangesExists;
-            checkBoxSceneChange.Enabled = _netflixQualityController.VideoExists && sceneChangesExists;
+            checkBoxSceneChange.Checked = sceneChangesExist;
+            checkBoxSceneChange.Enabled = sceneChangesExist;
 
             var checkFrameRate = _subtitleFormat.GetType() == new NetflixTimedText().GetType();
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
@@ -319,12 +326,42 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NetflixFixErrors_ResizeEnd(object sender, EventArgs e)
         {
-            listViewFixes.Columns[listViewFixes.Columns.Count - 1].Width = -2;
+            listViewFixes.AutoSizeLastColumn();
         }
 
         private void NetflixFixErrors_Shown(object sender, EventArgs e)
         {
-            NetflixFixErrors_ResizeEnd(this, EventArgs.Empty);
+            NetflixFixErrors_ResizeEnd(sender, e);
+        }
+
+        private void buttonFixesSelectAll_Click(object sender, EventArgs e)
+        {
+            _loading = true;
+            foreach (var checkBox in groupBoxRules.Controls.OfType<CheckBox>())
+            {
+                if (checkBox.Enabled)
+                {
+                    checkBox.Checked = true;
+                }
+            }
+
+            _loading = false;
+            RuleCheckedChanged(null, null);
+        }
+
+        private void buttonFixesInverse_Click(object sender, EventArgs e)
+        {
+            _loading = true;
+            foreach (var checkBox in groupBoxRules.Controls.OfType<CheckBox>())
+            {
+                if (checkBox.Enabled)
+                {
+                    checkBox.Checked = !checkBox.Checked;
+                }
+            }
+
+            _loading = false;
+            RuleCheckedChanged(null, null);
         }
     }
 }

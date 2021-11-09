@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -271,7 +270,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var subtract = listViewTranslate.Columns[0].Width + 20;
             var width = listViewTranslate.Width / 2 - subtract;
             listViewTranslate.Columns[1].Width = width;
-            listViewTranslate.Columns[2].Width = -2;
+            listViewTranslate.AutoSizeLastColumn();
         }
 
         private void MainForm_ResizeEnd(object sender, EventArgs e)
@@ -279,7 +278,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             var subtract = listViewTranslate.Columns[0].Width + 20;
             var width = listViewTranslate.Width / 2 - subtract;
             listViewTranslate.Columns[1].Width = width;
-            listViewTranslate.Columns[2].Width = -2;
+            listViewTranslate.AutoSizeLastColumn();
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

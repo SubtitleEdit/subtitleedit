@@ -54,9 +54,8 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
             if (content != null)
             {
-                request.Content = new StringContent(JsonConvert.SerializeObject(content),
-                    Encoding.UTF8,
-                    "application/json");
+                var json = JsonConvert.SerializeObject(content);
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
             return _httpClient.SendAsync(request);

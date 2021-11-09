@@ -2,7 +2,7 @@
 <Language Name="Tiếng Việt">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
 Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
 Cảm ơn rất nhiều</TranslatedBy>
@@ -152,9 +152,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Vui lòng chọn đường dẫn đầu ra thư mục</PleaseChooseOutputFolder>
     <Converted>Chuyển đổi</Converted>
   </BatchConvert>
-  <Beamer>
-    <Title>Chuẩn xác</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Thay đổi cách hiển thị</Title>
     <ChangeCasingTo>Chọn cách hiển thị c ở</ChangeCasingTo>
@@ -317,7 +314,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <Right>Phải</Right>
     <Center>Giữa</Center>
     <BottomMargin>Lề dưới</BottomMargin>
-    <SaveBluRraySupAs>Chọn tên tập tin Blu-ray được hỗ trợ</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Chọn tên tập tin Blu-ray được hỗ trợ</SaveBluRaySupAs>
     <SaveVobSubAs>Chọn tên tập tin VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Chọn tên tập tin Blu-ray được hỗ trợ</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Chọn tên tập tin DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -383,7 +380,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Ngắt dòng do dòng quá dài</BreakLongLines>
     <RemoveLineBreaks>Gỡ bỏ ngắt dòng trong văn bản ngắn chỉ có một câu</RemoveLineBreaks>
     <RemoveLineBreaksAll>Gỡ bỏ ngắt dòng trong đoạn văn ngắn (tất cả ngoại trừ các cuộc đối thoại)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Sữa lỗi in hoa 'i' trong dạng chữ thường (lỗi OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Sữa lỗi in hoa 'i' trong dạng chữ thường (lỗi OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Sữa lỗi lặp ký tự dấu cặp dấu nháy đơn ('') trong 1 lần duy nhất (")</FixDoubleApostrophes>
     <AddPeriods>Thêm thời gian sau dòng tiếp theo với dòng bắt đầu viết bằng chữ cái viết hoa</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Chữ cái sẽ viết hoa bắt đầu sau đoạn</StartWithUppercaseLetterAfterParagraph>
@@ -431,7 +428,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Này cậu , ở đây. -&gt; Này cậu, ở đây.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care . -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Số văn bản {0}: Thời gian bắt đầu ở sau thời gian kết thúc: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Không thể sửa lỗi văn bản số {0}: Thời gian bắt đầu ở sau thời gian kết thúc: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -925,7 +922,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Thiết đặt đến thời điểm &amp;&amp;kết thúc</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Điều chỉnh thời gian kết thúc {0}</AdjustedViaEndTime>
       <SetEndTime>Thiết đặt &amp;thời gian kết thúc</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Thiết đặt bắt đầu &amp;và tắt các thiết lập khác</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Thiết đặt bắt đầu &amp;và tắt các thiết lập khác</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Tìm kiếm văn bản trực tuyến</SearchTextOnline>
       <GoogleTranslate>Google dịch</GoogleTranslate>
       <GoogleIt>Google It</GoogleIt>
@@ -1047,8 +1044,8 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <SpellCheck>Kiểm tra chính tả</SpellCheck>
     <BeforeSpellCheck>Trước khi kiểm tra chính tả</BeforeSpellCheck>
     <SpellCheckChangedXToY>kiểm tra chính tả: Thay đổi '{0}' thành '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Trước khi thêm &lt;{0}&gt; thẻ</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; thêm thẻ</TagXAdded>
+    <BeforeAddingTagX>Trước khi thêm '{0}' thẻ</BeforeAddingTagX>
+    <TagXAdded>'{0}' thêm thẻ</TagXAdded>
     <LineXOfY>{0} {1}</LineXOfY>
     <XLinesSavedAsY>{0} lưu dòng này dưới dạng {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} xóa dòng này</XLinesDeleted>
@@ -1491,7 +1488,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <ListViewColumnDelete>Cột, xóa văn bản</ListViewColumnDelete>
     <ListViewColumnInsert>Cột, chèn văn bản</ListViewColumnInsert>
     <ListViewColumnPaste>Cột, dán</ListViewColumnPaste>
-    <ShowBeamer>Phát phụ đề toàn màn hình của máy chiếu</ShowBeamer>
   </Settings>
   <ShowEarlierLater>
     <Title>Hiện chọn dòng trước/sau</Title>

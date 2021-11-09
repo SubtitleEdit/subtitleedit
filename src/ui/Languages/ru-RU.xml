@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
 Последующие правки и дополнения перевода: Elheym (mailto:Subs.for.everybody@gmail.com)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
@@ -239,9 +239,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleThreeLetter>Трёхбуквенный код языка</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Код языка отсутствует</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Проектор</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Изменить закладку</EditBookmark>
     <AddBookmark>Добавить закладку</AddBookmark>
@@ -517,7 +514,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CenterRightJustify>Центрировать по правому краю</CenterRightJustify>
     <BottomMargin>Отступ снизу</BottomMargin>
     <LeftRightMargin>Лев./Прав. поле</LeftRightMargin>
-    <SaveBluRraySupAs>Выбор имени файла Blu-ray sup</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Выбор имени файла Blu-ray sup</SaveBluRaySupAs>
     <SaveVobSubAs>Выбор имени файла VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Выбор имени файла Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Выбор имени файла DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -612,7 +609,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BreakLongLines>Вставить перенос для слишком длинных строк</BreakLongLines>
     <RemoveLineBreaks>Удалить перенос, если короткий субтитр является одним предложением</RemoveLineBreaks>
     <RemoveLineBreaksAll>Удалить переносы в коротких субтитрах (во всех, за исключением диалогов)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Исправить заглавные буквы "i" внутри слов (ошибка OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Исправить заглавные буквы "i" внутри слов (ошибка OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Исправить удвоенный символ апострофа ('') на кавычки (")</FixDoubleApostrophes>
     <AddPeriods>Добавить точку, если следующая строка начинается с заглавной буквы</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Начать с заглавной буквы новый абзац</StartWithUppercaseLetterAfterParagraph>
@@ -662,7 +659,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Номер текста {0}: Начальное время позже, чем конечное время: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не удается исправить номер текста {0}: Начальное время позже, чем конечное время: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1290,7 +1287,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <SetEndTimeAndGoToNext>Уст. конец и перейти далее</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Настроено через конечное время {0}</AdjustedViaEndTime>
       <SetEndTime>Установить конечное время</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Сместить начальное время</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Сместить начальное время</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Поиск текста онлайн</SearchTextOnline>
       <GoogleTranslate>Переводчик Google</GoogleTranslate>
       <GoogleIt>Сайт Google</GoogleIt>
@@ -1414,8 +1411,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheck>Проверка орфографии</SpellCheck>
     <BeforeSpellCheck>Перед проверкой орфографии</BeforeSpellCheck>
     <SpellCheckChangedXToY>Проверка орфографии: "{0}" изменено на "{1}"</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Перед добавлением &lt;{0}&gt; тега</BeforeAddingTagX>
-    <TagXAdded>Добавлены &lt;{0}&gt; теги</TagXAdded>
+    <BeforeAddingTagX>Перед добавлением '{0}' тега</BeforeAddingTagX>
+    <TagXAdded>Добавлены '{0}' теги</TagXAdded>
     <LineXOfY>строка {0} из {1}</LineXOfY>
     <XLinesSavedAsY>{0} строк записано как {1}</XLinesSavedAsY>
     <XLinesDeleted>Удалено строк: {0}</XLinesDeleted>
@@ -1637,8 +1634,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <EndsWith>Заканчивается на</EndsWith>
     <NoContains>Не содержит</NoContains>
     <RegEx>Регулярные выражения</RegEx>
-    <UnequalLines>Неравные строки</UnequalLines>
-    <EqualLines>Равные строки</EqualLines>
+    <OddLines>Неравные строки</OddLines>
+    <EvenLines>Равные строки</EvenLines>
     <DurationLessThan>Продолжите-ность меньше</DurationLessThan>
     <DurationGreaterThan>Продолжите-ность больше</DurationGreaterThan>
     <MoreThanTwoLines>Более двух строк</MoreThanTwoLines>
@@ -1846,7 +1843,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleLineMaximumLength>Макс. число символов в строке</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Оптимально симв./сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Макс. симв./сек</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Макс. слов/мин</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Макс. слов/мин</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Перенос по словам</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>
@@ -2171,7 +2168,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewColumnTextUp>Колонка, текст выше</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колонка, текст ниже</ListViewColumnTextDown>
     <ListViewGoToNextError>Перейти к следующей ошибке</ListViewGoToNextError>
-    <ShowBeamer>Запустить субтитры при полноэкранном режиме проектора</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Переместить первое слово вверх на предыдущую строку субтитров</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Переместить первое слово из следующей строки вверх (текущий субтитр)</MainTextBoxMoveFirstWordUpCurrent>

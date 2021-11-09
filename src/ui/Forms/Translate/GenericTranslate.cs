@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
@@ -10,10 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Translate
 {
     public sealed partial class GenericTranslate : PositionAndSizeForm
     {
@@ -65,6 +65,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = title;
             }
 
+            // required in translation engine atm
+            subtitle.Renumber();
+
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
             _subtitle = subtitle;
@@ -74,6 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (target != null)
             {
                 TranslatedSubtitle = new Subtitle(target);
+                TranslatedSubtitle.Renumber();
                 subtitleListViewTarget.Fill(TranslatedSubtitle);
             }
             else
@@ -120,7 +124,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (comboBoxParagraphHandling.Items.Count > 0)
             {
-                comboBoxParagraphHandling.SelectedIndex = 0;
+                for (var index = 0; index < comboBoxParagraphHandling.Items.Count; index++)
+                {
+                    var item = comboBoxParagraphHandling.Items[index].ToString();
+                    if (item == Configuration.Settings.Tools.TranslateMergeStrategy)
+                    {
+                        comboBoxParagraphHandling.SelectedIndex = index;
+                        break;
+                    }
+                }
+
+                if (comboBoxParagraphHandling.SelectedIndex == -1)
+                {
+                    comboBoxParagraphHandling.SelectedIndex = 0;
+                }
             }
         }
 
@@ -297,6 +314,21 @@ namespace Nikse.SubtitleEdit.Forms
             Translate();
         }
 
+        public static bool IsAvailableNetworkActive()
+        {
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                var interfaces = NetworkInterface.GetAllNetworkInterfaces();
+                return (from face in interfaces
+                        where face.OperationalStatus == OperationalStatus.Up
+                        where (face.NetworkInterfaceType != NetworkInterfaceType.Tunnel) && (face.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                        select face.GetIPv4Statistics()).Any(statistics => (statistics.BytesReceived > 0) && (statistics.BytesSent > 0));
+            }
+
+            return false;
+        }
+
+
         private void Translate()
         {
             var translator = (ITranslationProcessor)comboBoxParagraphHandling.SelectedItem;
@@ -324,8 +356,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (TranslationException translationException)
             {
-                MessageBox.Show(translationException.Message + Environment.NewLine +
-                                translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
+                if (translationException.InnerException != null && !IsAvailableNetworkActive())
+                {
+                    ShowNetworkError(translationException.InnerException);
+                }
+                else
+                {
+                    MessageBox.Show(translationException.Message + Environment.NewLine +
+                                    translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
+                }
+            }
+            catch (Exception exception)
+            {
+                SeLogger.Error(exception);
+                ShowNetworkError(exception);
             }
             finally
             {
@@ -339,6 +383,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetLanguageIsoCode;
             }
+        }
+
+        private static void ShowNetworkError(Exception exception)
+        {
+            MessageBox.Show("Subtitle Edit was unable to connect to the translation service." + Environment.NewLine +
+                            "Try again later or check your internet connection." + Environment.NewLine +
+                            Environment.NewLine +
+                            "Error: " + exception.Message);
         }
 
         private List<Paragraph> GetSelectedParagraphs()
@@ -475,7 +527,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _breakTranslation = true;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#translation");
             }
@@ -559,6 +611,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenericTranslate_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.TranslateLastService = _translationService.GetType().ToString();
+            Configuration.Settings.Tools.TranslateMergeStrategy = comboBoxParagraphHandling.Text;
         }
 
         private void comboBoxTranslationServices_SelectedIndexChanged(object sender, EventArgs e)

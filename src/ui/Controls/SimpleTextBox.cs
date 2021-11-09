@@ -251,6 +251,7 @@ namespace Nikse.SubtitleEdit.Controls
                 UiUtil.SelectWordAtCaret(this);
                 return;
             }
+
             if (m.Msg == WM_LBUTTONDOWN)
             {
                 long milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
@@ -261,6 +262,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _dragStartTicks = DateTime.UtcNow.Ticks;
                 }
             }
+
             base.WndProc(ref m);
         }
     }

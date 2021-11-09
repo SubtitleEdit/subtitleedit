@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxAbout1.Text = aboutText;
 
             SetHeight();
+            pictureBoxSE.Image = Properties.Resources.SEIcon.ToBitmap();
         }
 
         private void SetHeight()
@@ -77,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp(null);
                 e.SuppressKeyPress = true;

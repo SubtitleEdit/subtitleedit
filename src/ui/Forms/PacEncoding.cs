@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
                 CodePageIndex = comboBoxCodePage.SelectedIndex;
                 if (_previewBuffer != null)
                 {
-                    Encoding encoding = Pac.GetEncoding(CodePageIndex);
+                    var encoding = Pac.GetEncoding(CodePageIndex);
                     const int feIndex = 0;
                     const int endDelimiter = 0x00;
                     int index;
@@ -66,17 +66,20 @@ namespace Nikse.SubtitleEdit.Forms
                             textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingChineseSimplified).GetString(_previewBuffer, index, _previewBuffer.Length - index);
                             return;
                         }
-                        else if (CodePageIndex == Pac.CodePageChineseTraditional)
+
+                        if (CodePageIndex == Pac.CodePageChineseTraditional)
                         {
                             textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingChineseTraditional).GetString(_previewBuffer, index, _previewBuffer.Length - index);
                             return;
                         }
-                        else if (CodePageIndex == Pac.CodePageKorean)
+
+                        if (CodePageIndex == Pac.CodePageKorean)
                         {
                             textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingKorean).GetString(_previewBuffer, index, _previewBuffer.Length - index);
                             return;
                         }
-                        else if (CodePageIndex == Pac.CodePageJapanese)
+
+                        if (CodePageIndex == Pac.CodePageJapanese)
                         {
                             textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingJapanese).GetString(_previewBuffer, index, _previewBuffer.Length - index);
                             return;
@@ -123,6 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         index++;
                     }
+
                     if (CodePageIndex == Pac.CodePageArabic)
                     {
                         textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString(), PreviewChars);
@@ -144,6 +148,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             DialogResult = DialogResult.Cancel;
         }
-
     }
 }

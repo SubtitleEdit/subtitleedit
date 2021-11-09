@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Text.RegularExpressions;
@@ -86,7 +85,20 @@ namespace Nikse.SubtitleEdit.Logic
                 return -1;
             }
 
-            var match = _regEx.Match(text, startIndex);
+
+            Match match;
+            try
+            {
+                match = _regEx.Match(text, startIndex);
+            }
+            catch (RegexMatchTimeoutException exception)
+            {
+                MessageBox.Show(exception.Message + Environment.NewLine +
+                                Environment.NewLine +
+                                "Input: " + exception.Input);
+                return -1;
+            }
+
             if (match.Success)
             {
                 string groupName = RegexUtils.GetRegExGroup(FindText);
@@ -98,6 +110,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FindTextLength = match.Length;
                 return match.Index;
             }
+
             return -1;
         }
 
@@ -394,14 +407,24 @@ namespace Nikse.SubtitleEdit.Logic
                     MessageBox.Show(LanguageSettings.Current.General.RegularExpressionIsNotValid);
                     return count;
                 }
-                _regEx = new Regex(findText);
+                _regEx = new Regex(findText, RegexOptions.None, TimeSpan.FromSeconds(5));
             }
             var comparison = GetComparison();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (FindReplaceType.FindType == FindType.RegEx)
                 {
-                    count += _regEx.Matches(p.Text).Count;
+                    try
+                    {
+                        count += _regEx.Matches(p.Text).Count;
+                    }
+                    catch (RegexMatchTimeoutException exception)
+                    {
+                        MessageBox.Show(exception.Message + Environment.NewLine +
+                                        Environment.NewLine +
+                                        "Input: " + exception.Input);
+                        return count;
+                    }
                 }
                 else
                 {

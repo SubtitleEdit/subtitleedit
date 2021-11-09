@@ -143,6 +143,8 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "NetworkChat";
+            this.ResizeEnd += new System.EventHandler(this.NetworkChat_ResizeEnd);
+            this.Shown += new System.EventHandler(this.NetworkChat_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

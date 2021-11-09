@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
@@ -52,8 +51,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexUppercaseIInsideLowercaseWord = 28;
         private const int IndexRemoveSpaceBetweenNumbers = 29;
         private const int IndexDialogsOnOneLine = 30;
-        private const int IndexNormalizeStrings = 31;
-        private const int IndexFixEllipsesStart = 32;
+        private const int IndexRemoveDashFirstLine = 31;
+        private const int IndexNormalizeStrings = 32;
+        private const int IndexFixEllipsesStart = 33;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -66,7 +66,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
         private readonly Keys _preview = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
         private readonly Keys _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
 
         private class FixItem
@@ -308,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Visible = true;
             listView1.Columns[0].Width = 50;
             listView1.Columns[1].Width = 310;
-            listView1.Columns[2].Width = 400;
+            listView1.Columns[2].Width = -2;
 
             UiUtil.InitializeSubtitleFont(textBoxListViewText);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
@@ -406,9 +408,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }.Fix(Subtitle, this), ce.FixContinuationStyleTicked),
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, () => new FixMissingOpenBracket().Fix(Subtitle, this), ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked),
-                new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
+                new FixItem(_language.FixUppercaseIInsideLowercaseWords, _language.FixUppercaseIInsideLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
                 new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, () => new RemoveSpaceBetweenNumbers().Fix(Subtitle, this), ce.RemoveSpaceBetweenNumberTicked),
                 new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked),
+                new FixItem(_language.RemoveDialogFirstInNonDialogs, _language.RemoveDialogFirstInNonDialogsExample, () => new RemoveDialogFirstLineInNonDialogs().Fix(Subtitle, this), ce.RemoveDialogFirstLineInNonDialogs),
                 new FixItem(_language.NormalizeStrings, string.Empty, () => new NormalizeStrings().Fix(Subtitle, this), ce.NormalizeStringsTicked),
             };
 
@@ -531,6 +534,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixContinuationStyle.Language.FixUnnecessaryLeadingDots = LanguageSettings.Current.FixCommonErrors.FixUnnecessaryLeadingDots;
             FixDanishLetterI.Language.FixDanishLetterI = LanguageSettings.Current.FixCommonErrors.FixDanishLetterI;
             FixDialogsOnOneLine.Language.FixDialogsOnOneLine = LanguageSettings.Current.FixCommonErrors.FixDialogsOnOneLine;
+            RemoveDialogFirstLineInNonDialogs.Language.RemoveDialogFirstInNonDialogs = LanguageSettings.Current.FixCommonErrors.RemoveDialogFirstInNonDialogs;
             FixDoubleApostrophes.Language.FixDoubleApostrophes = LanguageSettings.Current.FixCommonErrors.FixDoubleApostrophes;
             FixDoubleDash.Language.FixDoubleDash = LanguageSettings.Current.FixCommonErrors.FixDoubleDash;
             FixDoubleGreaterThan.Language.FixDoubleGreaterThan = LanguageSettings.Current.FixCommonErrors.FixDoubleGreaterThan;
@@ -579,7 +583,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixUnneededSpaces.Language.RemoveUnneededSpaces = LanguageSettings.Current.FixCommonErrors.RemoveUnneededSpaces;
             FixUnneededSpaces.Language.UnneededSpace = LanguageSettings.Current.FixCommonErrors.UnneededSpace;
             FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWord;
-            FixUppercaseIInsideWords.Language.FixUppercaseIInsindeLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsindeLowercaseWords;
+            FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWords = LanguageSettings.Current.FixCommonErrors.FixUppercaseIInsideLowercaseWords;
             NormalizeStrings.Language.NormalizeStrings = LanguageSettings.Current.FixCommonErrors.NormalizeStrings;
 
             FixLargeFonts();
@@ -846,7 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#fixcommonerrors");
             }
@@ -862,7 +866,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GenerateDiff();
             }
-            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
@@ -872,7 +876,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
             }
-            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
@@ -1167,6 +1171,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
+            ce.RemoveDialogFirstLineInNonDialogs = listView1.Items[IndexRemoveDashFirstLine].Checked;
             ce.NormalizeStringsTicked = listView1.Items[IndexNormalizeStrings].Checked;
             if (_danishLetterIIndex >= 0)
             {
@@ -1781,6 +1786,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ListViewFixesAutoSizeAllColumns()
         {
+            listView1.AutoSizeLastColumn();
+
             using (var graphics = CreateGraphics())
             {
                 var timestampSizeF = graphics.MeasureString(listViewFixes.Columns[0].Text, Font); // Apply

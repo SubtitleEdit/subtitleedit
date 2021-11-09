@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -20,7 +20,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _subtitleFileName;
         private Subtitle _inputSubtitle;
         private Subtitle _inputOriginalSubtitle;
-        private double _oldFrameRate;
         private bool _isStartSceneActive;
         private double _startGoBackPosition;
         private double _startStopPosition = -1.0;
@@ -36,15 +35,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool OkPressed { get; set; }
 
-        public bool FrameRateChanged { get; private set; }
-
         public double FrameRate => _videoInfo?.FramesPerSecond ?? 0;
 
         public List<Paragraph> Paragraphs => _paragraphs;
 
         public List<Paragraph> ParagraphsOriginal => _paragraphsOriginal;
 
-        public VisualSync()
+        public VisualSync(Control parentControl)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -79,6 +76,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            var arr = Configuration.Settings.Tools.VisualSyncStartSize?.Split(';');
+            if (arr != null && arr.Length == 2 && int.TryParse(arr[0], out var x) && int.TryParse(arr[1], out var y))
+            {
+                var bounds = Screen.FromControl(parentControl).Bounds;
+                if (x >= MinimumSize.Width && x < bounds.Width && y > MinimumSize.Height && y < bounds.Height)
+                {
+                    Width = x;
+                    Height = y;
+                }
+            }
+
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
             _timerHideSyncLabel.Interval = 1000;
         }
@@ -161,10 +170,6 @@ namespace Nikse.SubtitleEdit.Forms
             MediaPlayerStart.Pause();
             GotoSubtitlePosition(MediaPlayerStart);
 
-            _startGoBackPosition = MediaPlayerStart.CurrentPosition;
-            _startStopPosition = _startGoBackPosition + 0.1;
-            MediaPlayerStart.Play();
-
             if (MediaPlayerStart.VideoPlayer.GetType() == typeof(LibVlcDynamic))
             {
                 MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as LibVlcDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
@@ -197,10 +202,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             MediaPlayerEnd.Pause();
             GotoSubtitlePosition(MediaPlayerEnd);
-
-            _endGoBackPosition = MediaPlayerEnd.CurrentPosition;
-            _endStopPosition = _endGoBackPosition + 0.1;
-            MediaPlayerEnd.Play();
 
             if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
             {
@@ -253,7 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerStart.CurrentPosition = _startGoBackPosition;
                         _startStopPosition = -1;
                     }
-                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerStart);
+                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerStart, new SubRip());
                 }
                 if (!MediaPlayerEnd.IsPaused)
                 {
@@ -264,7 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerEnd.CurrentPosition = _endGoBackPosition;
                         _endStopPosition = -1;
                     }
-                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerEnd);
+                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerEnd, new SubRip());
                 }
             }
         }
@@ -278,6 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
             MediaPlayerStart?.Pause();
             MediaPlayerEnd?.Pause();
 
+            Configuration.Settings.Tools.VisualSyncStartSize = Width + ";" + Height;
             bool change = false;
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -330,7 +332,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _inputSubtitle = subtitle;
             _inputOriginalSubtitle = original;
-            _oldFrameRate = frameRate;
             _subtitleFileName = fileName;
             Text = title;
         }
@@ -508,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.CurrentPosition = 0;
             }
 
-            UiUtil.ShowSubtitle(new Subtitle(_paragraphs), mediaPlayer);
+            UiUtil.ShowSubtitle(new Subtitle(_paragraphs), mediaPlayer, new SubRip());
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)
@@ -629,7 +630,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#visual_sync");
             }

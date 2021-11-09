@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -227,9 +227,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MkvLanguageStyleThreeLetter>Codi d'idioma tres lletres</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Sense codi d'idioma</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Projector</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Edita marcador</EditBookmark>
     <AddBookmark>Afegeix marcador</AddBookmark>
@@ -511,7 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CenterRightJustify>Centrat, justificat a la dreta</CenterRightJustify>
     <BottomMargin>Marge inferior</BottomMargin>
     <LeftRightMargin>Marge esquerre/dret</LeftRightMargin>
-    <SaveBluRraySupAs>Selecciona nom fitxer Blu-ray sup</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Selecciona nom fitxer Blu-ray sup</SaveBluRaySupAs>
     <SaveVobSubAs>Selecciona nom fitxer VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Selecciona nom fitxer Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Selecciona nom fitxer DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -605,7 +602,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Divideix línies llargues</BreakLongLines>
     <RemoveLineBreaks>Suprimeix salts de línia en textos curts amb una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Suprimeix salts de línia en textos curts (tots excepte els diàlegs)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Arregla majúscula 'i' dins de mots en minúscules (error OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Arregla majúscula 'i' dins de mots en minúscules (error OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Arregla caràcters de doble apòstrof ('') amb una cometa (")</FixDoubleApostrophes>
     <AddPeriods>Afegeix espai després de línia quan la següent comença amb majúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Comença paràgraf amb majúscula</StartWithUppercaseLetterAfterParagraph>
@@ -655,7 +652,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Nombre text {0}: Temps d'inici posterior a temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>No pot Arreglar-se nombre text {0}: Temps d'inici posterior a temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1280,7 +1277,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Estableix temps final &amp;&amp; Aneu al següent</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajusta via temps final {0}</AdjustedViaEndTime>
       <SetEndTime>Estableix temps final</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Estableix inici i reprodueix la resta</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Estableix inici i reprodueix la resta</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Cerca text en línia</SearchTextOnline>
       <GoogleTranslate>Traductor Google</GoogleTranslate>
       <GoogleIt>Google it</GoogleIt>
@@ -1394,8 +1391,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Corrector ortogràfic</SpellCheck>
     <BeforeSpellCheck>Abans correció ortogràfica</BeforeSpellCheck>
     <SpellCheckChangedXToY>Corrector ortogràfic: Canviat '{0}' a '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Abans afegeix &lt;{0}&gt; etiqueta</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; etiquetes afegides</TagXAdded>
+    <BeforeAddingTagX>Abans afegeix '{0}' etiqueta</BeforeAddingTagX>
+    <TagXAdded>'{0}' etiquetes afegides</TagXAdded>
     <LineXOfY>línia {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} línies desades com {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} línies suprimides</XLinesDeleted>
@@ -1705,8 +1702,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Finalitza amb</EndsWith>
     <NoContains>No conté</NoContains>
     <RegEx>Expressió regular</RegEx>
-    <UnequalLines>Línies no iguals</UnequalLines>
-    <EqualLines>Línies iguals</EqualLines>
+    <OddLines>Línies no iguals</OddLines>
+    <EvenLines>Línies iguals</EvenLines>
     <DurationLessThan>Durada menor que</DurationLessThan>
     <DurationGreaterThan>Durada major que</DurationGreaterThan>
     <MoreThanTwoLines>Més de dues línies</MoreThanTwoLines>
@@ -1912,7 +1909,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleLineMaximumLength>Màx. llargaria línia única</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Caracters/segon òptims</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Caracters/segon màxims</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Mots/minut màxims</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Mots/minut màxims</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto-empaqueta mentre s'escriu</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. durada, mil·lisegons</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Màx. durada, mil·lisegons</DurationMaximumMilliseconds>
@@ -2240,7 +2237,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextDown>Columna, text avall</ListViewColumnTextDown>
     <ListViewFocusWaveform>Focus a espectrograma/forma ona</ListViewFocusWaveform>
     <ListViewGoToNextError>Aneu al següent error</ListViewGoToNextError>
-    <ShowBeamer>Inicia subtítol projecció pantalla sencera</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mou últim mot avall a següent línia subtítol</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mou primer mot de la següent línia subtítol amunt</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Moure el primer mot de la següent línia amunt (subtítol actual)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2497,7 +2493,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MarginVertical>Marge vertical</MarginVertical>
     <Border>Vora</Border>
     <PlusShadow>+ Sombra</PlusShadow>
-    <OpaqueBox>Caixa opaca(empra color absent)</OpaqueBox>
+    <OpaqueBox>Caixa opaca</OpaqueBox>
     <Import>Importa...</Import>
     <Export>Exporta...</Export>
     <Copy>Copia</Copy>

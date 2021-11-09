@@ -11,6 +11,11 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Main _mainForm;
         private readonly Controls.VideoPlayerContainer _videoPlayerContainer;
         private readonly Keys _redockKeys;
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
+        private bool _autoSized;
 
         public bool RedockOnFullscreenEnd { get; set; }
 
@@ -81,21 +86,38 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.A)
             {
-                if (_videoPlayerContainer.VideoWidth > 0 && _videoPlayerContainer.VideoHeight > 0)
+                if (_videoPlayerContainer.VideoWidth > 0 && _videoPlayerContainer.VideoHeight > 0 && !_autoSized)
                 {
                     int wDiff = _videoPlayerContainer.VideoWidth - _videoPlayerContainer.PanelPlayer.Width;
                     int hDiff = _videoPlayerContainer.VideoHeight - _videoPlayerContainer.PanelPlayer.Height;
                     Width += wDiff;
                     Height += hDiff;
-                    e.SuppressKeyPress = true;
+                    _autoSized = true;
                 }
+                else
+                {
+                    var parts = Configuration.Settings.General.UndockedVideoPosition.Split(';');
+                    if (parts.Length == 4)
+                    {
+                        if (int.TryParse(parts[2], out var width)
+                            && int.TryParse(parts[3], out var height))
+                        {
+                            Width = width;
+                            Height = height;
+                        }
+                    }
+
+                    _autoSized = false;
+                }
+
+                e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && IsFullscreen)
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
                 _mainForm.GotoPrevSubPosFromvideoPos();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && IsFullscreen)
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
                 _mainForm.GotoNextSubPosFromVideoPos();
                 e.SuppressKeyPress = true;
@@ -168,5 +190,14 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (_mainForm.ProcessCmdKeyFromChildForm(ref msg, keyData))
+            {
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

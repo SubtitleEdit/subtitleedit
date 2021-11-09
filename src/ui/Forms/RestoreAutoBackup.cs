@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
         {
-            listViewBackups.Columns[2].Width = -2;
+            RestoreAutoBackup_ResizeEnd(sender, e);
             if (Directory.Exists(Configuration.AutoBackupDirectory))
             {
                 _files = Directory.GetFiles(Configuration.AutoBackupDirectory, "*.*");
@@ -137,12 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RestoreAutoBackup_ResizeEnd(object sender, EventArgs e)
         {
-            listViewBackups.Columns[2].Width = -2;
-        }
-
-        private void RestoreAutoBackup_SizeChanged(object sender, EventArgs e)
-        {
-            listViewBackups.Columns[2].Width = -2;
+            listViewBackups.AutoSizeLastColumn();
         }
 
         private void linkLabelOpenContainingFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

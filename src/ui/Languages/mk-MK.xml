@@ -2,7 +2,7 @@
 <Language Name="Македонски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.15</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Превод на македонски: Numberguy
 dzoole@hotmail.com</TranslatedBy>
     <CultureName>mk-MK</CultureName>
@@ -233,9 +233,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MkvLanguageStyleThreeLetter>Код за јазик со три букви</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Без код за јазик</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Проектор</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Уреди ознака</EditBookmark>
     <AddBookmark>Додади ознака</AddBookmark>
@@ -509,7 +506,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CenterTopJustify>Централно, горно порамнување</CenterTopJustify>
     <BottomMargin>Долна маргина</BottomMargin>
     <LeftRightMargin>Лева/десна маргина</LeftRightMargin>
-    <SaveBluRraySupAs>Избери име на запис за Blu-ray sup</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Избери име на запис за Blu-ray sup</SaveBluRaySupAs>
     <SaveVobSubAs>Избери име на запис за VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Избери име на запис на FAB сликовна скрипта</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Избери име на запис за DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -603,7 +600,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Стави во два реда долги линии</BreakLongLines>
     <RemoveLineBreaks>Стави во еден ред кратки текстови со една реченица</RemoveLineBreaks>
     <RemoveLineBreaksAll>Стави во еден ред кратки текстови (сите освен дијалози)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Поправи голема буква за 'i' во зборови кои содржат мали букви (OCR грешка)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Поправи голема буква за 'i' во зборови кои содржат мали букви (OCR грешка)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Поправи двоен знак за апостроф ('') во самостојни наводници (")</FixDoubleApostrophes>
     <AddPeriods>Додај точка по линиите каде што следната почнува со голема буква</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Започни со голема буква после параграф</StartWithUppercaseLetterAfterParagraph>
@@ -652,7 +649,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Еј  ти ,таму .-&gt; Еј ти, таму.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Еј ти!. -&gt; Еј ти!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Еј.Ти. -&gt; Еј. Ти.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth Is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth Is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Реден бр. на текст{0}: Почетното време доцни во однос на крајното: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не може да се поправи текстот со реден бр.{0}: Почетокот доцни во однос на крајот: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1277,7 +1274,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Постави крајно време и продолжи</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Прилагоди преку крајно време {0}</AdjustedViaEndTime>
       <SetEndTime>Постави крајно време</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Постави почеток и крај и неутрализирај остаток</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Постави почеток и крај и неутрализирај остаток</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Побарај го текстот на интернет</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>
@@ -1402,8 +1399,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Проверка на правопис</SpellCheck>
     <BeforeSpellCheck>Пред проверка на правопис</BeforeSpellCheck>
     <SpellCheckChangedXToY>Проверка на правопис: Промените '{0}' во '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Пред додавање на &lt;{0}&gt; таг</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; тагови додадени</TagXAdded>
+    <BeforeAddingTagX>Пред додавање на '{0}' таг</BeforeAddingTagX>
+    <TagXAdded>'{0}' тагови додадени</TagXAdded>
     <LineXOfY>линија {0} од {1}</LineXOfY>
     <XLinesSavedAsY>{0} линии зачувани како {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} избришани линии</XLinesDeleted>
@@ -1625,8 +1622,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Завршува со</EndsWith>
     <NoContains>Не содржи</NoContains>
     <RegEx>Регуларен израз</RegEx>
-    <UnequalLines>Линии со непарни редни бр.</UnequalLines>
-    <EqualLines>Линии со парни редни бр.</EqualLines>
+    <OddLines>Линии со непарни редни бр.</OddLines>
+    <EvenLines>Линии со парни редни бр.</EvenLines>
     <DurationLessThan>Траење помало од</DurationLessThan>
     <DurationGreaterThan>Траење поголемо од</DurationGreaterThan>
     <MoreThanTwoLines>Повеќе од два реда</MoreThanTwoLines>
@@ -1834,7 +1831,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleLineMaximumLength>Максимум знаци во еден ред</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Оптимални знаци/сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Максимум знаци/сек</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Максимум зборови/мин</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Максимум зборови/мин</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Автоматски прелом во тек на пишување</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. траење на линија .мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. траење на линија .мс</DurationMaximumMilliseconds>
@@ -2141,7 +2138,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextDown>Колона, помести текст долу</ListViewColumnTextDown>
     <ListViewFocusWaveform>Фокусирај брановиден облик/спектограм</ListViewFocusWaveform>
     <ListViewGoToNextError>Оди на следна грешка</ListViewGoToNextError>
-    <ShowBeamer>Отвори титл на проектор на цел екран</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Премести го последниот збор во следната линија</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Земи го првиот збор од следната линија</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Помести горе прв збор од следна линија (моментален титл)</MainTextBoxMoveFirstWordUpCurrent>

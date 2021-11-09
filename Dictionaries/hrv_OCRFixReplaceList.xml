@@ -142,6 +142,7 @@
     <Word from="čas" to="sat" />
     <Word from="četvoro" to="četvero" />
     <Word from="Čitaću" to="Čitat ću" />
+    <Word from="čitaću" to="čitat ću" />
     <Word from="čerku" to="kćer" />
     <Word from="Čerku" to="Kćer" />
     <Word from="čud" to="ćud" />
@@ -788,8 +789,11 @@
     <Word from="metkovima" to="mecima" />
     <Word from="milijuner" to="milijunaš" />
     <Word from="minut" to="minutu" />
+    <Word from="miraš" to="moraš" />
     <Word from="mje" to="moje" />
     <Word from="mleo" to="mljeo" />
+    <Word from="moež" to="može" />
+    <Word from="možemp" to="možemo" />
     <Word from="moč" to="moć" />
     <Word from="motiviši" to="motiviraj" />
     <Word from="Motiviši" to="Motiviraj" />
@@ -930,9 +934,11 @@
     <Word from="nteko" to="netko" />
     <Word from="nr" to="ne" />
     <Word from="nrgo" to="nego" />
+    <Word from="oar" to="par" />
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
     <Word from="obema" to="objema" />
+    <Word from="obezbede" to="osiguraju" />
     <Word from="Obezbeđuju" to="Osiguravaju" />
     <Word from="obezbeđuju" to="osiguravaju" />
     <Word from="objekat" to="objekt" />
@@ -1136,6 +1142,7 @@
     <Word from="poeni" to="bodovi" />
     <Word from="Poeni" to="Bodovi" />
     <Word from="poenima" to="bodovima" />
+    <Word from="pojačaću" to="pojačat ću" />
     <Word from="Pokušaču" to="Pokušat ću" />
     <Word from="poleće" to="polijeće" />
     <Word from="Polcija" to="Policija" />
@@ -1710,7 +1717,6 @@
     <Word from="Šta" to="Što" />
     <Word from="štagod" to="što god" />
     <Word from="šta" to="što" />
-    <Word from="štp" to="što" />
     <Word from="štampa" to="tisak" />
     <Word from="štampu" to="tisak" />
     <Word from="štampom" to="tiskom" />
@@ -1741,6 +1747,7 @@
     <Word from="tešile" to="tješile" />
     <Word from="tiće" to="tiče" />
     <Word from="tki" to="tko" />
+    <Word from="toag" to="toga" />
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
     <Word from="togs" to="toga" />
@@ -2050,6 +2057,7 @@
     <Word from="Zaželeo" to="Zaželio" />
     <Word from="Zaželjeo" to="Zaželio" />
     <Word from="zaželjeo" to="zaželio" />
+    <Word from="zbala" to="zvala" />
     <Word from="zbg" to="zbog" />
     <Word from="zenice" to="zjenice" />
     <Word from="zevaju" to="zijevaju" />
@@ -2129,6 +2137,7 @@
     <Word from="Dablina" to="Dublina" />
     <Word from="Dablinu" to="Dublinu" />
     <Word from="Dag" to="Doug" />
+    <Word from="Dajen" to="Diane" />
     <Word from="Darvin" to="Darwin" />
     <Word from="Darvina" to="Darwina" />
     <Word from="Darvinu" to="Darwinu" />
@@ -3222,6 +3231,7 @@
     <RegEx find="sačeka" replaceWith="pričeka" />
     <RegEx find="Sačeka" replaceWith="Pričeka" />
     <RegEx find="aglasno" replaceWith="uglasno" />
+    <RegEx find="samk" replaceWith="samo" />
     <RegEx find="\bsam sam\b" replaceWith="sam sâm" />
     <RegEx find="amoubic" replaceWith="amoubojic" />
     <RegEx find="\bsanti" replaceWith="centi" />
@@ -3555,6 +3565,7 @@
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="dnp" replaceWith="dno" />
+        <RegEx find="dps" replaceWith="dos" />
     <RegEx find="domač" replaceWith="domać" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
@@ -3628,6 +3639,7 @@
     <RegEx find="koriš[čć]a" replaceWith="korišta" />
     <!-- doktorica / profesorica -->
     <RegEx find="(kt|s)ork" replaceWith="$1oric" />
+    <RegEx find="kpd" replaceWith="kod" />
     <RegEx find="kpr" replaceWith="kor" />
     <RegEx find="ktovanj" replaceWith="ktiranj" />
     <RegEx find="ktuj" replaceWith="ktiraj" />
@@ -3656,11 +3668,11 @@
     <RegEx find="m([io]t?)rić" replaceWith="m$1rit ć" />
     <RegEx find="mi?j?enić" replaceWith="mijenit ć" />
     <RegEx find="mjenim" replaceWith="mijenim" />
-    <RegEx find="mpl" replaceWith="mol" />
     <RegEx find="mpra" replaceWith="mora" />
     <RegEx find="mros" replaceWith="mors" />
     <RegEx find="msč" replaceWith="mač" />
     <RegEx find="mtić" replaceWith="mtit ć" />
+    <RegEx find="mwn" replaceWith="men" />
     <RegEx find="napredi" replaceWith="naprijedi" />
     <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
     <RegEx find="nimp" replaceWith="nimo" />
@@ -3679,6 +3691,7 @@
     <RegEx find="nović" replaceWith="novit ć" />
     <RegEx find="npz" replaceWith="noz" />
     <RegEx find="nrd" replaceWith="ned" />
+    <RegEx find="nrk" replaceWith="nek" />
     <RegEx find="nrm" replaceWith="nem" />
     <RegEx find="nsj" replaceWith="naj" />
     <RegEx find="ntis" replaceWith="ntir" />
@@ -3686,6 +3699,7 @@
     <RegEx find="ntišu" replaceWith="ntiraju" />
     <RegEx find="ntitj?el" replaceWith="ntitijel" />
     <RegEx find="ntv" replaceWith="nstv" />
+    <RegEx find="nwz" replaceWith="nez" />
     <RegEx find="nzuje" replaceWith="nzira" />
     <RegEx find="atursk" replaceWith="aturaln" />
     <RegEx find="azuij" replaceWith="azumij" />
@@ -3718,6 +3732,7 @@
     <RegEx find="sj?etić" replaceWith="sjetit ć" />
     <RegEx find="osb" replaceWith="osob" />
     <RegEx find="otstak" replaceWith="otak" />
+    <RegEx find="ovetn" replaceWith="ovjetn" />
     <RegEx find="ovinova([lt])" replaceWith="okorava$1" />
     <RegEx find="posel" replaceWith="posjel" />
     <RegEx find="produkova" replaceWith="producira" />
@@ -3757,7 +3772,9 @@
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="rpeu" replaceWith="preu" />
+    <RegEx find="([rv])pd" replaceWith="$1od" />
     <RegEx find="rsd" replaceWith="rad" />
+    <RegEx find="rsv" replaceWith="rav" />
     <RegEx find="ršč" replaceWith="ršć" />
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
@@ -3775,7 +3792,6 @@
     <RegEx find="\bstaral" replaceWith="brinul" />
     <RegEx find="\bStaral" replaceWith="Brinul" />
     <RegEx find="stkl" replaceWith="stakl" />
-    <RegEx find="stovet" replaceWith="stovjet" />
     <RegEx find="struis" replaceWith="struir" />
     <RegEx find="struiše" replaceWith="struira" />
     <RegEx find="struišu" replaceWith="struiraju" />
@@ -3788,6 +3804,7 @@
     <RegEx find="svk" replaceWith="svj" />
     <RegEx find="([šđ])ać" replaceWith="$1ač" />
     <RegEx find="šević" replaceWith="ševit ć" />
+    <RegEx find="štp" replaceWith="što" />
     <RegEx find="šunjać" replaceWith="šuljat ć" />
     <RegEx find="tambul" replaceWith="tanbul" />
     <RegEx find="tamlj" replaceWith="tamnj" />
@@ -3799,6 +3816,7 @@
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="tićn" replaceWith="tičn" />
     <RegEx find="tisanj" replaceWith="tiranj" />
+    <RegEx find="tkn" replaceWith="ktn" />
     <RegEx find="tks" replaceWith="tsk" />
     <RegEx find="(mo|ti|r)viš[eu]" replaceWith="$1vira" />
     <RegEx find="tegri(sa|še)" replaceWith="tegrira" />
@@ -3857,6 +3875,7 @@
     <RegEx find="vnsk" replaceWith="vinsk" />
     <RegEx find="(?&lt;!d)vof" replaceWith="vog" />
     <RegEx find="vpj" replaceWith="voj" />
+    <RegEx find="vpm" replaceWith="vom" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
     <RegEx find="vršić" replaceWith="vršit ć" />

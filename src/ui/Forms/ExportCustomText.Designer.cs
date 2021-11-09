@@ -262,6 +262,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export custom text format";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportCustomText_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.ExportCustomText_ResizeEnd);
+            this.Shown += new System.EventHandler(this.ExportCustomText_Shown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxFormats.ResumeLayout(false);
             this.groupBoxPreview.ResumeLayout(false);

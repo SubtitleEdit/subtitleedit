@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;

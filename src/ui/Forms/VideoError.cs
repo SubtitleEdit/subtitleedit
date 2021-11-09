@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VideoError : Form
     {
+        public bool VideoPlayerInstalled { get; set; }
+
         public VideoError()
         {
             UiUtil.PreInitialize(this);
@@ -18,13 +20,20 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
-        public void Initialize(string fileName, Exception exception)
+        public void Initialize(string fileName)
         {
+            Text += fileName;
             var sb = new StringBuilder();
-            sb.AppendLine("There seems to be missing a codec (or file is not a valid video/audio file)!");
-            sb.AppendLine();
+            sb.Append("SE was unable to play the video/audio file (or file is not a valid video/audio file).");
 
             var currentVideoPlayer = Configuration.Settings.General.VideoPlayer;
+            if (string.IsNullOrEmpty(currentVideoPlayer))
+            {
+                Text = "Please install video player";
+                sb.Clear();
+                sb.Append("Subtitle Edit needs a video player.");
+                currentVideoPlayer = "DirectShow";
+            }
 
             var isLibMpvInstalled = LibMpvDynamic.IsInstalled;
             if (currentVideoPlayer == "MPV" && !isLibMpvInstalled)
@@ -39,27 +48,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.IsRunningOnLinux)
             {
+                sb.AppendLine();
                 sb.AppendLine("Try installing latest version of libmpv and libvlc!");
                 sb.Append("Read more about Subtitle Edit on Linux here: https://nikse.dk/SubtitleEdit/Help#linux");
             }
-            else if (currentVideoPlayer == "DirectShow")
-            {
-                sb.AppendLine("Try installing/updating \"LAV Filters - DirectShow Media Splitter and Decoders\": https://github.com/Nevcairiel/LAVFilters/releases");
-                sb.Append("Note that Subtitle Edit is a " + IntPtr.Size * 8 + "-bit program, and hence requires " + IntPtr.Size * 8 + "-bit codecs!");
-                sb.AppendLine();
-            }
-            else if (currentVideoPlayer == "VLC")
-            {
-                sb.AppendLine("VLC media player was unable to play this file (perhaps it's not a valid video/audio file) - you can change video player via Options -> Settings -> Video Player");
-                sb.AppendLine("Latest version of VLC is available here: http://www.videolan.org/vlc/  (get the " + IntPtr.Size * 8 + "-bit version!)");
-                sb.AppendLine();
-            }
             else if (currentVideoPlayer == "MPV" && Configuration.IsRunningOnWindows)
             {
-                sb.AppendLine("You can re-download mpv or change video player via Options -> Settings -> Video Player");
                 sb.AppendLine();
+                sb.AppendLine("You can re-download mpv or change video player via Options -> Settings -> Video Player");
+                labelMpvInfo.Visible = false;
+                buttonMpvSettings.Visible = false;
             }
-            richTextBoxMessage.Text = sb.ToString();
+
+            labelError.Text = sb.ToString();
 
             if (!Configuration.IsRunningOnWindows || currentVideoPlayer == "MPV")
             {
@@ -68,27 +69,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (currentVideoPlayer != "MPV")
             {
-                labelMpvInfo.Text = $"You could also switch video player from \"{currentVideoPlayer}\" to \"mpv\".";
+                labelMpvInfo.Text = "To use the recommended video player \"mpv\" click on the button below.";
                 if (isLibMpvInstalled)
                 {
                     buttonMpvSettings.Text = "Use \"mpv\" as video player";
                 }
             }
-
-            if (exception != null)
-            {
-                var source = string.Empty;
-                if (!string.IsNullOrEmpty(exception.Source))
-                {
-                    source = "Source: " + exception.Source.Trim() + Environment.NewLine + Environment.NewLine;
-                }
-
-                textBoxError.Text = "Message: " + exception.Message.Trim() + Environment.NewLine +
-                                    source +
-                                    "Stack Trace: " + Environment.NewLine +
-                                    exception.StackTrace.Trim();
-            }
-            Text += fileName;
         }
 
         private void VideoError_KeyDown(object sender, KeyEventArgs e)
@@ -97,11 +83,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-        }
-
-        private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            UiUtil.OpenUrl(e.LinkText);
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#settings_video");
+            }
         }
 
         private void buttonMpvSettings_Click(object sender, EventArgs e)
@@ -117,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    VideoPlayerInstalled = true;
                     Configuration.Settings.General.VideoPlayer = "MPV";
                     DialogResult = DialogResult.OK;
                 }

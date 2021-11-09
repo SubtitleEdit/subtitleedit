@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
+            VobSubEditCharacters.MakeToolStripLetters(contextMenuStripLetters, InsertLanguageCharacter);
             UiUtil.FixFonts(this);
 
             labelCount.Text = string.Empty;
@@ -47,24 +48,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelDoubleSize.Text = LanguageSettings.Current.VobSubEditCharacters.ImageDoubleSize;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-
-            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
-            {
-                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
-                {
-                    foreach (ToolStripItem item in i.DropDownItems)
-                    {
-                        item.Click += InsertLanguageCharacter;
-                    }
-                }
-                else
-                {
-                    toolStripItem.Click += InsertLanguageCharacter;
-                }
-            }
-
             UiUtil.FixLargeFonts(this, buttonOK);
-
             buttonDetectFont.Visible = Configuration.Settings.General.ShowBetaStuff;
         }
 
@@ -91,10 +75,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            for (int i = 0; i < _matches.Count; i++)
-            {
-                listBoxInspectItems.Items.Add(_matches[i]);
-            }
+            SyncListBoxToMatches();
 
             if (LastIndex > listBoxInspectItems.Items.Count)
             {
@@ -454,13 +435,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _matches[index].ExpandCount = expandCount;
                 _matches[index].Italic = checkBoxItalic.Checked;
                 _matches[index].Text = textBoxText.Text;
-                listBoxInspectItems.Items.Clear();
-                for (int i = 0; i < _matches.Count; i++)
-                {
-                    listBoxInspectItems.Items.Add(_matches[i].Text);
-                }
+                SyncListBoxToMatches();
 
-                listBoxInspectItems.SelectedIndex = index;
                 listBoxInspectItems_SelectedIndexChanged(null, null);
                 ShowCount();
 
@@ -521,13 +497,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _matches[index].ExpandCount = 0;
                 _matches[index].Italic = checkBoxItalic.Checked;
                 _matches[index].Text = textBoxText.Text;
-                listBoxInspectItems.Items.Clear();
-                for (int i = 0; i < _matches.Count; i++)
-                {
-                    listBoxInspectItems.Items.Add(_matches[i].Text);
-                }
+                SyncListBoxToMatches();
 
-                listBoxInspectItems.SelectedIndex = index;
                 ShowCount();
                 listBoxInspectItems_SelectedIndexChanged(null, null);
             }
@@ -536,6 +507,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void ShowCount()
         {
             labelCount.Text = listBoxInspectItems.Items.Count > 1 ? listBoxInspectItems.Items.Count.ToString(CultureInfo.InvariantCulture) : string.Empty;
+        }
+
+        private void SyncListBoxToMatches()
+        {
+            int index = listBoxInspectItems.SelectedIndex;
+            listBoxInspectItems.Items.Clear();
+            for (int i = 0; i < _matches.Count; i++)
+            {
+                listBoxInspectItems.Items.Add(_matches[i]);
+            }
+            listBoxInspectItems.SelectedIndex = index;
         }
 
         private void VobSubOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)

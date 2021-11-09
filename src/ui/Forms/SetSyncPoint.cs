@@ -1,5 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private int _audioTrackNumber = -1;
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
         private string _subtitleFileName;
         public string VideoFileName { get; private set; }
 
@@ -205,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (Math.Abs(pos - _lastPosition) > 0.01)
                 {
-                    UiUtil.ShowSubtitle(_subtitle, videoPlayerContainer1);
+                    UiUtil.ShowSubtitle(_subtitle, videoPlayerContainer1, new SubRip());
                     timeUpDownLine.TimeCode = TimeCode.FromSeconds(pos);
                     _lastPosition = pos;
                 }
@@ -258,12 +260,12 @@ namespace Nikse.SubtitleEdit.Forms
                 GoBackSeconds(-0.1, videoPlayerContainer1.VideoPlayer);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#sync");
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToNextSubtitle == e.KeyData || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+            else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
@@ -274,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
+            else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)

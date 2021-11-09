@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -12,10 +14,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var twoLetterLanguageCode = callbacks.Language;
-            int noOfFixes = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var noOfFixes = 0;
+            foreach (var p in subtitle.Paragraphs)
             {
-                var p = subtitle.Paragraphs[i];
                 var oldText = p.Text;
                 var text = p.Text
                         .Normalize()
@@ -32,33 +33,41 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         .Replace('\u2010', '-') // ‐ Hyphen (\u2010)
                         .Replace('\u2012', '-') // ‒ Figure dash (\u2012)
                         .Replace('\u2013', '-') // – En dash (\u2013)
-                        .Replace('\u2014', '-') // — Em dash (\u2014)
-                        .Replace('\u2015', '-') // ― Horizontal bar (\u2015)
+                                                //.Replace('\u2014', '-') // — Em dash (\u2014) - we keep em dash
+                        .Replace('\u2015', '\u2014') // ― Horizontal bar (\u2015)
+                    ;
+
+                var cyrillicLanguages = new[] { "ru" };
+                if (!cyrillicLanguages.Contains(twoLetterLanguageCode))
+                {
+                    text = text
+                            .Replace('\u0435', 'e') // Cyrillic Small Letter Ie: "е"
                         ;
+                }
 
                 if (twoLetterLanguageCode != "el")
                 {
                     text = text
-                        .Replace("\u03a4", "T") // Greek Capital Letter Tau
-                        .Replace("\u03a5", "Y") // Greek Capital Letter Upsilon
-                        .Replace("\u03b3", "Y") // Greek Small Letter Gamma
-                        .Replace("\u03a7", "X") // Greek Capital Letter Chi
-                        .Replace("\u03ba", "k") // Greek Small Letter Kappa
-                        .Replace("\u03bd", "v") // Greek Small Letter Nu
-                        .Replace("\u03c1", "p") // Greek Small Letter Rho
-                        .Replace("\u03c5", "u") // Greek Small Letter Upsilon
-                        .Replace("\u039c", "M") // Greek Capital Letter Mu
-                        .Replace("\u039a", "K") // Greek Capital Letter Kappa
-                        .Replace("\u039d", "N") // Greek Capital Letter Nu
-                        .Replace("\u039f", "O") // Greek Capital Letter Omicron
-                        .Replace("\u03a1", "P") // Greek Capital Letter Rho
-                        .Replace("\u0395", "E") // Greek Capital Letter Epsilon
-                        .Replace("\u0396", "Z") // Greek Capital Letter Zeta
-                        .Replace("\u0397", "H") // Greek Capital Letter Eta
-                        .Replace("\u0384", "'") // Greek Tonos
-                        .Replace("\u0392", "B") // Greek Capital Letter Beta
-                        .Replace("\u0391", "A") // Greek Capital Letter Alpha
-                        .Replace("\u03bf", "o") // Greek small letter Omicron
+                            .Replace("\u03a4", "T") // Greek Capital Letter Tau
+                            .Replace("\u03a5", "Y") // Greek Capital Letter Upsilon
+                            .Replace("\u03b3", "Y") // Greek Small Letter Gamma
+                            .Replace("\u03a7", "X") // Greek Capital Letter Chi
+                            .Replace("\u03ba", "k") // Greek Small Letter Kappa
+                            .Replace("\u03bd", "v") // Greek Small Letter Nu
+                            .Replace("\u03c1", "p") // Greek Small Letter Rho
+                            .Replace("\u03c5", "u") // Greek Small Letter Upsilon
+                            .Replace("\u039c", "M") // Greek Capital Letter Mu
+                            .Replace("\u039a", "K") // Greek Capital Letter Kappa
+                            .Replace("\u039d", "N") // Greek Capital Letter Nu
+                            .Replace("\u039f", "O") // Greek Capital Letter Omicron
+                            .Replace("\u03a1", "P") // Greek Capital Letter Rho
+                            .Replace("\u0395", "E") // Greek Capital Letter Epsilon
+                            .Replace("\u0396", "Z") // Greek Capital Letter Zeta
+                            .Replace("\u0397", "H") // Greek Capital Letter Eta
+                            .Replace("\u0384", "'") // Greek Tonos
+                            .Replace("\u0392", "B") // Greek Capital Letter Beta
+                            .Replace("\u0391", "A") // Greek Capital Letter Alpha
+                            .Replace("\u03bf", "o") // Greek small letter Omicron
                         ;
                 }
 

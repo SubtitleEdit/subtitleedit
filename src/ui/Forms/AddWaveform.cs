@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -232,10 +233,18 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (_numberOfAudioTracks == 0 && MessageBox.Show(LanguageSettings.Current.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                if (_numberOfAudioTracks == 0)
                 {
-                    MakeEmptyWaveFile();
-                    DialogResult = DialogResult.OK;
+                    if (MessageBox.Show(LanguageSettings.Current.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        MakeEmptyWaveFile();
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+
                     return;
                 }
 
@@ -249,10 +258,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (targetFileInfo.Length <= 200)
             {
-                if (_numberOfAudioTracks == 0 && MessageBox.Show(LanguageSettings.Current.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                if (_numberOfAudioTracks == 0)
                 {
-                    MakeEmptyWaveFile();
-                    DialogResult = DialogResult.OK;
+                    if (MessageBox.Show(LanguageSettings.Current.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        MakeEmptyWaveFile();
+                        DialogResult = DialogResult.OK;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+
                     return;
                 }
 
@@ -390,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
 
                                 _peakWaveFileName = peakWaveFileName;
-                                _spectrogramDirectory = spectrogramFolder; 
+                                _spectrogramDirectory = spectrogramFolder;
                             }
                         }
                         else
@@ -438,7 +455,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#waveform");
                 e.SuppressKeyPress = true;

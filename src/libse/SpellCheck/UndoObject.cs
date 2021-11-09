@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.SpellCheck
 {

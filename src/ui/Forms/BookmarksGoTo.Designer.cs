@@ -34,6 +34,7 @@
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStartTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.buttonExport = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -44,7 +45,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(555, 308);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 0;
+            this.buttonCancel.TabIndex = 30;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -55,7 +56,7 @@
             this.buttonOK.Location = new System.Drawing.Point(474, 308);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 2;
+            this.buttonOK.TabIndex = 20;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -75,7 +76,7 @@
             this.listViewBookmarks.Location = new System.Drawing.Point(13, 12);
             this.listViewBookmarks.Name = "listViewBookmarks";
             this.listViewBookmarks.Size = new System.Drawing.Size(617, 289);
-            this.listViewBookmarks.TabIndex = 1;
+            this.listViewBookmarks.TabIndex = 0;
             this.listViewBookmarks.UseCompatibleStateImageBehavior = false;
             this.listViewBookmarks.View = System.Windows.Forms.View.Details;
             this.listViewBookmarks.DoubleClick += new System.EventHandler(this.listViewBookmarks_DoubleClick);
@@ -92,11 +93,24 @@
             // 
             this.columnHeaderText.Width = 480;
             // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonExport.Location = new System.Drawing.Point(371, 308);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(97, 23);
+            this.buttonExport.TabIndex = 10;
+            this.buttonExport.Text = "Export...";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
             // BookmarksGoTo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(642, 341);
+            this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.listViewBookmarks);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
@@ -109,6 +123,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BookmarksGoTo";
+            this.Shown += new System.EventHandler(this.BookmarksGoTo_Shown);
+            this.ResizeEnd += new System.EventHandler(this.BookmarksGoTo_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BookmarksGoTo_KeyDown);
             this.ResumeLayout(false);
 
@@ -122,5 +138,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
         private System.Windows.Forms.ColumnHeader columnHeaderStartTime;
         private System.Windows.Forms.ColumnHeader columnHeaderText;
+        private System.Windows.Forms.Button buttonExport;
     }
 }

@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#spellcheck");
                 e.SuppressKeyPress = true;
@@ -306,6 +306,5 @@ namespace Nikse.SubtitleEdit.Forms
                 LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
             }
         }
-
     }
 }

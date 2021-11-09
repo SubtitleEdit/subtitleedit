@@ -56,6 +56,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
             this.buttonBasic = new System.Windows.Forms.Button();
+            this.radioButtonTime = new System.Windows.Forms.RadioButton();
             this.groupBoxSplitOptions.SuspendLayout();
             this.groupBoxSubtitleInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
@@ -67,6 +68,7 @@
             // 
             this.groupBoxSplitOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSplitOptions.Controls.Add(this.radioButtonTime);
             this.groupBoxSplitOptions.Controls.Add(this.groupBoxSubtitleInfo);
             this.groupBoxSplitOptions.Controls.Add(this.labelNumberOfParts);
             this.groupBoxSplitOptions.Controls.Add(this.numericUpDownParts);
@@ -74,7 +76,7 @@
             this.groupBoxSplitOptions.Controls.Add(this.RadioButtonLines);
             this.groupBoxSplitOptions.Location = new System.Drawing.Point(13, 13);
             this.groupBoxSplitOptions.Name = "groupBoxSplitOptions";
-            this.groupBoxSplitOptions.Size = new System.Drawing.Size(684, 86);
+            this.groupBoxSplitOptions.Size = new System.Drawing.Size(684, 96);
             this.groupBoxSplitOptions.TabIndex = 0;
             this.groupBoxSplitOptions.TabStop = false;
             this.groupBoxSplitOptions.Text = "Split options";
@@ -175,7 +177,7 @@
             this.groupBoxOutput.Controls.Add(this.labelChooseOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonChooseFolder);
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
-            this.groupBoxOutput.Location = new System.Drawing.Point(12, 105);
+            this.groupBoxOutput.Location = new System.Drawing.Point(12, 115);
             this.groupBoxOutput.Name = "groupBoxOutput";
             this.groupBoxOutput.Size = new System.Drawing.Size(688, 143);
             this.groupBoxOutput.TabIndex = 1;
@@ -279,9 +281,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.listViewParts);
-            this.groupBoxPreview.Location = new System.Drawing.Point(12, 254);
+            this.groupBoxPreview.Location = new System.Drawing.Point(12, 264);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(688, 245);
+            this.groupBoxPreview.Size = new System.Drawing.Size(688, 254);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -297,7 +299,7 @@
             this.listViewParts.HideSelection = false;
             this.listViewParts.Location = new System.Drawing.Point(3, 16);
             this.listViewParts.Name = "listViewParts";
-            this.listViewParts.Size = new System.Drawing.Size(682, 226);
+            this.listViewParts.Size = new System.Drawing.Size(682, 235);
             this.listViewParts.TabIndex = 0;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
@@ -321,7 +323,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(625, 505);
+            this.buttonCancel.Location = new System.Drawing.Point(625, 524);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -333,7 +335,7 @@
             // 
             this.buttonSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSplit.Location = new System.Drawing.Point(544, 505);
+            this.buttonSplit.Location = new System.Drawing.Point(544, 524);
             this.buttonSplit.Name = "buttonSplit";
             this.buttonSplit.Size = new System.Drawing.Size(75, 23);
             this.buttonSplit.TabIndex = 4;
@@ -345,7 +347,7 @@
             // 
             this.buttonBasic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonBasic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonBasic.Location = new System.Drawing.Point(440, 505);
+            this.buttonBasic.Location = new System.Drawing.Point(440, 524);
             this.buttonBasic.Name = "buttonBasic";
             this.buttonBasic.Size = new System.Drawing.Size(98, 23);
             this.buttonBasic.TabIndex = 3;
@@ -353,11 +355,21 @@
             this.buttonBasic.UseVisualStyleBackColor = true;
             this.buttonBasic.Click += new System.EventHandler(this.buttonBasic_Click);
             // 
+            // radioButtonTime
+            // 
+            this.radioButtonTime.AutoSize = true;
+            this.radioButtonTime.Location = new System.Drawing.Point(15, 66);
+            this.radioButtonTime.Name = "radioButtonTime";
+            this.radioButtonTime.Size = new System.Drawing.Size(48, 17);
+            this.radioButtonTime.TabIndex = 0;
+            this.radioButtonTime.Text = "Time";
+            this.radioButtonTime.UseVisualStyleBackColor = true;
+            // 
             // Split
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 537);
+            this.ClientSize = new System.Drawing.Size(712, 556);
             this.Controls.Add(this.buttonBasic);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSplit);
@@ -376,7 +388,6 @@
             this.Shown += new System.EventHandler(this.Split_Shown);
             this.ResizeEnd += new System.EventHandler(this.Split_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Split_KeyDown);
-            this.Resize += new System.EventHandler(this.Split_Resize);
             this.groupBoxSplitOptions.ResumeLayout(false);
             this.groupBoxSplitOptions.PerformLayout();
             this.groupBoxSubtitleInfo.ResumeLayout(false);
@@ -419,5 +430,6 @@
         private System.Windows.Forms.Label labelFileName;
         private System.Windows.Forms.TextBox textBoxFileName;
         private System.Windows.Forms.Button buttonOpenOutputFolder;
+        private System.Windows.Forms.RadioButton radioButtonTime;
     }
 }

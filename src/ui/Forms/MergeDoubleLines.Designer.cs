@@ -58,9 +58,9 @@
             this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
-            this.groupBoxLinesFound.Location = new System.Drawing.Point(15, 55);
+            this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 50);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(1025, 196);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(1028, 201);
             this.groupBoxLinesFound.TabIndex = 45;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be merged";
@@ -227,9 +227,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Merge lines with same text";
-            this.Shown += new System.EventHandler(this.MergeDoubleLines_Shown);
-            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeDoubleLines_KeyDown);
+            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
+            this.Shown += new System.EventHandler(this.MergeDoubleLines_Shown);
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

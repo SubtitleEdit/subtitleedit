@@ -2,7 +2,7 @@
 <Language Name="slovenski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Prevedel: Hawk</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -163,9 +163,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Recursive>Vključi podmape</Recursive>
     <SetMinMsBetweenSubtitles>Nastavi mini. milisekund med vrsticami</SetMinMsBetweenSubtitles>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Spremeni primere</Title>
     <ChangeCasingTo>Spremeni primere v</ChangeCasingTo>
@@ -375,7 +372,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Right>Desno</Right>
     <Center>Sredina</Center>
     <BottomMargin>Spodnji rob</BottomMargin>
-    <SaveBluRraySupAs>Izberi Blu-ray sup ime datoteke</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Izberi Blu-ray sup ime datoteke</SaveBluRaySupAs>
     <SaveVobSubAs>Izberi VobSub ime datoteke</SaveVobSubAs>
     <SaveFabImageScriptAs>Izberi Blu-ray sup ime datoteke</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Izberi DVD Studio Pro STL ime datoteke</SaveDvdStudioProStlAs>
@@ -452,7 +449,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <BreakLongLines>Prelomi dolge vrstice</BreakLongLines>
     <RemoveLineBreaks>Odstrani lome vrstic v kratkih besedilih v enem stavku</RemoveLineBreaks>
     <RemoveLineBreaksAll>Odstrani lome vrstic v kratkih besedilih (vse, razen dialogi)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Popravi veliko začetnico "i" v besedah z malo začetnico (OCR napake)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Popravi veliko začetnico "i" v besedah z malo začetnico (OCR napake)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Spremeni dvojni apostrof ('') v enojnega, navednice (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj piko za vrstico tam, kjer se lačne nova vrstica z veliko začetnico</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Za odstavkom začni z veliko začetnico</StartWithUppercaseLetterAfterParagraph>
@@ -500,7 +497,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Poglej,  tja. -&gt; Poglej, tja.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Tam gori!. -&gt; Tam gori!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Tam.Gori. -&gt; Tam. Gori.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>ZemIja je ravna. -&gt; Zemlja je ravna. (veliki "I" z mali "l")</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>ZemIja je ravna. -&gt; Zemlja je ravna. (veliki "I" z mali "l")</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Številka vrstice {0}: Začetni čas je manjši od končnega: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ne gre popraviti št. vrstice {0}: Začetni čas je manjši od končnega: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1044,7 +1041,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Nastavi končni čas in pojdi naprej</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Prilagojeno končnemu času {0}</AdjustedViaEndTime>
       <SetEndTime>Nastavi končni čas</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Nastavi začetni čas in odznači ostalo</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Nastavi začetni čas in odznači ostalo</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Poišči besedilo na spletu</SearchTextOnline>
       <GoogleTranslate>Google prevod</GoogleTranslate>
       <GoogleIt>PoGooglaj</GoogleIt>
@@ -1167,8 +1164,8 @@ Nadaljujem?</SubtitleAppendPrompt>
     <SpellCheck>Črkovalnik</SpellCheck>
     <BeforeSpellCheck>Pred črkovanjem</BeforeSpellCheck>
     <SpellCheckChangedXToY>Črkovalnik: Spremenjenih '{0}' to '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Pred dodajanjem &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; dodanih oznak</TagXAdded>
+    <BeforeAddingTagX>Pred dodajanjem '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' dodanih oznak</TagXAdded>
     <LineXOfY>vrstice {0} od {1}</LineXOfY>
     <XLinesSavedAsY>{0} vrstic shranjenih kot {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} izbrisanih vrstic</XLinesDeleted>
@@ -1355,8 +1352,8 @@ Nadaljujem?</SubtitleAppendPrompt>
     <EndsWith>Konča z</EndsWith>
     <NoContains>Ne vsebuje</NoContains>
     <RegEx>Pravilni izraz</RegEx>
-    <UnequalLines>Neenake vrstice</UnequalLines>
-    <EqualLines>Enake vrstice</EqualLines>
+    <OddLines>Neenake vrstice</OddLines>
+    <EvenLines>Enake vrstice</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Množična zamenjava</Title>
@@ -1708,7 +1705,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <ListViewColumnDelete>Stolpec, pobriši besedilo</ListViewColumnDelete>
     <ListViewColumnInsert>Stolpec, vstavi besedilo</ListViewColumnInsert>
     <ListViewColumnPaste>Stolpec, prilepi</ListViewColumnPaste>
-    <ShowBeamer>Zaženi prenosnik za podnapise v celem ekranu</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni besedo nižje v naslednjo vrstico</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni besedo višje v naslednjo vrstico</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxAutoBreak>Samodejno lomi besedilo</MainTextBoxAutoBreak>

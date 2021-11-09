@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -189,9 +189,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MultipleReplaceErrorX>Множинна заміна: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Автобалансування: {0}</AutoBalanceErrorX>
   </BatchConvert>
-  <Beamer>
-    <Title>Проектор</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Зміна регістру</Title>
     <ChangeCasingTo>Змінити регістр на</ChangeCasingTo>
@@ -434,7 +431,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Center>По центру</Center>
     <BottomMargin>Нижній відступ</BottomMargin>
     <LeftRightMargin>Лів/прав відступ</LeftRightMargin>
-    <SaveBluRraySupAs>Оберіть назву для Blu-ray sup-файлу</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Оберіть назву для Blu-ray sup-файлу</SaveBluRaySupAs>
     <SaveVobSubAs>Оберіть назву для VobSub-файлу</SaveVobSubAs>
     <SaveFabImageScriptAs>Оберіть ім'я для файлу FAB image script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Оберіть ім'я для файлу DVD Studio Pro STL</SaveDvdStudioProStlAs>
@@ -520,7 +517,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>Розбити довгі рядки</BreakLongLines>
     <RemoveLineBreaks>Вилучити розбиття рядків із коротких текстів, що містять лише одне речення</RemoveLineBreaks>
     <RemoveLineBreaksAll>Вилучити розбиття рядків із коротких текстів (усіх, окрім діалогів)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Виправити велику 'i' всередині слів з маленьких літер (помилка розпізнавання тексту)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Виправити велику 'i' всередині слів з маленьких літер (помилка розпізнавання тексту)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Замінити подвійні апострофи ('') на лапки (")</FixDoubleApostrophes>
     <AddPeriods>Додати крапку після рядків, після яких наступний рядок починається з великої літери</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Починати з великої літери після субтитру</StartWithUppercaseLetterAfterParagraph>
@@ -568,7 +565,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Не   йди , стій. -&gt; Не йди, стій.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Агов, ти!. -&gt; Агов, ти!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Агов.Ти. -&gt; Агов. Ти.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Текст номер {0}: Початок розташований пізніше за кінець: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Неможливо виправити текст номер {0}: Початок розташований пізніше за кінець: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1130,7 +1127,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Встан. &amp;кінець &amp;&amp; йти до наст.</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Посунено через встановлення кінцевої позиції {0}</AdjustedViaEndTime>
       <SetEndTime>Встановити &amp;кінець</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Встан. по&amp;чаток і посун. решту</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Встан. по&amp;чаток і посун. решту</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Шукати текст онлайн</SearchTextOnline>
       <GoogleTranslate>Google-перекладач</GoogleTranslate>
       <GoogleIt>Заґуґлити</GoogleIt>
@@ -1259,8 +1256,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Перевірка правопису</SpellCheck>
     <BeforeSpellCheck>Перед перевіркою правопису</BeforeSpellCheck>
     <SpellCheckChangedXToY>Перевірка правопису: Замінено '{0}' на '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Перед додаванням тегу &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; теги додано</TagXAdded>
+    <BeforeAddingTagX>Перед додаванням тегу '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' теги додано</TagXAdded>
     <LineXOfY>рядок {0} із {1}</LineXOfY>
     <XLinesSavedAsY>{0} рядків збережено як {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} рядків видалено</XLinesDeleted>
@@ -1473,8 +1470,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EndsWith>Закінчується на</EndsWith>
     <NoContains>Не містить</NoContains>
     <RegEx>Регулярний вираз</RegEx>
-    <UnequalLines>Непарні рядки</UnequalLines>
-    <EqualLines>Парні рядки</EqualLines>
+    <OddLines>Непарні рядки</OddLines>
+    <EvenLines>Парні рядки</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Множинна заміна</Title>
@@ -1844,7 +1841,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnInsert>Стовпчик, вставити текст</ListViewColumnInsert>
     <ListViewColumnPaste>Стовпчик, вставити з буферу обміну</ListViewColumnPaste>
     <ListViewGoToNextError>Перейти до наступної помилки</ListViewGoToNextError>
-    <ShowBeamer>Запустити повноекранний проектор субтитрів</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Пересунути останнє слово вниз до наступного субтитру</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Пересунути перше слово з наступного субтитру на рядок вище</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Виділення - у нижній регістр</MainTextBoxSelectionToLower>

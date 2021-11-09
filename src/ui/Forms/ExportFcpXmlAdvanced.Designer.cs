@@ -81,6 +81,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxFontSize);
             this.groupBoxImageSettings.Controls.Add(this.buttonCustomResolution);
             this.groupBoxImageSettings.Controls.Add(this.labelResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
@@ -94,7 +95,6 @@
             this.groupBoxImageSettings.Controls.Add(this.labelHorizontalAlign);
             this.groupBoxImageSettings.Controls.Add(this.labelSubtitleFontSize);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxFontName);
-            this.groupBoxImageSettings.Controls.Add(this.comboBoxFontSize);
             this.groupBoxImageSettings.Controls.Add(this.labelSubtitleFont);
             this.groupBoxImageSettings.Controls.Add(this.panelColor);
             this.groupBoxImageSettings.Controls.Add(this.buttonColor);
@@ -279,7 +279,7 @@
             "98",
             "99",
             "100"});
-            this.comboBoxBaseline.Location = new System.Drawing.Point(112, 170);
+            this.comboBoxBaseline.Location = new System.Drawing.Point(113, 170);
             this.comboBoxBaseline.Name = "comboBoxBaseline";
             this.comboBoxBaseline.Size = new System.Drawing.Size(121, 21);
             this.comboBoxBaseline.TabIndex = 70;
@@ -299,7 +299,7 @@
             this.comboBoxFontFace.FormattingEnabled = true;
             this.comboBoxFontFace.Items.AddRange(new object[] {
             "Regular"});
-            this.comboBoxFontFace.Location = new System.Drawing.Point(112, 78);
+            this.comboBoxFontFace.Location = new System.Drawing.Point(113, 78);
             this.comboBoxFontFace.Name = "comboBoxFontFace";
             this.comboBoxFontFace.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFontFace.TabIndex = 30;
@@ -313,7 +313,7 @@
             "center",
             "right",
             "justified"});
-            this.comboBoxHAlign.Location = new System.Drawing.Point(112, 140);
+            this.comboBoxHAlign.Location = new System.Drawing.Point(113, 140);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
             this.comboBoxHAlign.TabIndex = 60;
@@ -339,8 +339,9 @@
             // comboBoxFontName
             // 
             this.comboBoxFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFontName.DropDownWidth = 190;
             this.comboBoxFontName.FormattingEnabled = true;
-            this.comboBoxFontName.Location = new System.Drawing.Point(112, 24);
+            this.comboBoxFontName.Location = new System.Drawing.Point(113, 24);
             this.comboBoxFontName.Name = "comboBoxFontName";
             this.comboBoxFontName.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFontName.TabIndex = 10;
@@ -458,7 +459,7 @@
             "450",
             "475",
             "500"});
-            this.comboBoxFontSize.Location = new System.Drawing.Point(112, 51);
+            this.comboBoxFontSize.Location = new System.Drawing.Point(113, 51);
             this.comboBoxFontSize.Name = "comboBoxFontSize";
             this.comboBoxFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFontSize.TabIndex = 20;
@@ -475,7 +476,7 @@
             // panelColor
             // 
             this.panelColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColor.Location = new System.Drawing.Point(239, 106);
+            this.panelColor.Location = new System.Drawing.Point(240, 106);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
             this.panelColor.TabIndex = 50;
@@ -483,7 +484,7 @@
             // 
             // buttonColor
             // 
-            this.buttonColor.Location = new System.Drawing.Point(112, 105);
+            this.buttonColor.Location = new System.Drawing.Point(113, 105);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 23);
             this.buttonColor.TabIndex = 40;

@@ -21,7 +21,9 @@ namespace Nikse.SubtitleEdit.Forms
             ResetTotalAdjustment();
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
             Text = LanguageSettings.Current.ShowEarlierLater.Title.RemoveChar('&');
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? LanguageSettings.Current.General.HourMinutesSecondsFrames : LanguageSettings.Current.General.HourMinutesSecondsMilliseconds;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? 
+                LanguageSettings.Current.General.HourMinutesSecondsFrames : 
+                string.Format(LanguageSettings.Current.General.HourMinutesSecondsDecimalSeparatorMilliseconds, UiUtil.DecimalSeparator);
             buttonShowEarlier.Text = LanguageSettings.Current.ShowEarlierLater.ShowEarlier;
             buttonShowLater.Text = LanguageSettings.Current.ShowEarlierLater.ShowLater;
             radioButtonAllLines.Text = LanguageSettings.Current.ShowEarlierLater.AllLines;
@@ -54,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Close();
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#sync");
                 e.SuppressKeyPress = true;
@@ -102,14 +104,27 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds - tc.TotalMilliseconds);
-                ShowTotalAdjustMent();
+                ShowTotalAdjustment();
                 Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
             }
         }
 
-        private void ShowTotalAdjustMent()
+        private void ShowTotalAdjustment()
         {
-            TimeCode tc = new TimeCode(_totalAdjustment);
+            var tc = new TimeCode(_totalAdjustment);
+
+            if (Configuration.Settings?.General.UseTimeFormatHHMMSSFF == true)
+            {
+                labelTotalAdjustment.Text = string.Format(LanguageSettings.Current.ShowEarlierLater.TotalAdjustmentX, tc.ToShortDisplayString());
+                return;
+            }
+
+            if (tc.TotalSeconds < 60)
+            {
+                labelTotalAdjustment.Text = string.Format(LanguageSettings.Current.ShowEarlierLater.TotalAdjustmentX, string.Format(LanguageSettings.Current.General.XSeconds, tc.TotalSeconds));
+                return;
+            }
+
             labelTotalAdjustment.Text = string.Format(LanguageSettings.Current.ShowEarlierLater.TotalAdjustmentX, tc.ToShortString());
         }
 
@@ -120,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _adjustCallback.Invoke(tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + tc.TotalMilliseconds);
-                ShowTotalAdjustMent();
+                ShowTotalAdjustment();
                 Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
             }
         }

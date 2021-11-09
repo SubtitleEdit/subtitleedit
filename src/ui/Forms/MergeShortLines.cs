@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -285,8 +284,15 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.MergedShortLines.NumberOfMergesX, NumberOfMerges);
         }
 
+        private void MergeShortLines_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.AutoSizeLastColumn();
+        }
+
         private void MergeShortLines_Shown(object sender, EventArgs e)
         {
+            MergeShortLines_ResizeEnd(sender, e);
+
             GeneratePreview();
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)

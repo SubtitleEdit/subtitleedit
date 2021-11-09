@@ -119,8 +119,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ProfileChoose_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewProfiles.AutoSizeLastColumn();
+        }
+
         private void ProfileChoose_Shown(object sender, EventArgs e)
         {
+            ProfileChoose_ResizeEnd(sender, e);
+
             if (listViewProfiles.SelectedIndices.Count == 0)
             {
                 return;

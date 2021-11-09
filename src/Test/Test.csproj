@@ -11,7 +11,7 @@
     <ProjectGuid>{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}</ProjectGuid>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <RootNamespace>Test</RootNamespace>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -61,6 +61,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
+    <Compile Include="Assa\ResamplerTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
+    <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
     <Compile Include="Core\DialogTypeTest.cs" />
     <Compile Include="Core\SeJsonParserTest.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="Logic\Mp4\Mp4Test.cs" />
     <Compile Include="Logic\Ocr\MatchesToItalicStringConverterTest.cs" />
     <Compile Include="Logic\SplitLongLinesHelperTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\Cea708Test.cs" />
     <Compile Include="Logic\TarFileTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />
@@ -101,6 +106,7 @@
     <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
     <Compile Include="Logic\UtilitiesTest.cs" />
     <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
+    <Compile Include="SETextBoxControl\SeTextBoxTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Dictionaries\en_US.aff" />
@@ -174,6 +180,7 @@
       <Name>SubtitleEdit</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

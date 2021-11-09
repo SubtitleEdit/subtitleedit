@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         public SettingsProfileExport(List<RulesProfile> profiles)
         {
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             listViewExportStyles.Columns[0].Width = listViewExportStyles.Width - 20;
             foreach (var profile in profiles)

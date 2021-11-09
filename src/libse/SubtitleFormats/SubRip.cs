@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -13,6 +14,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
+        private static Regex _regExWsrtItalicStart;
+        private static Regex _regExWsrtItalicEnd;
 
         private enum ExpectingLine
         {
@@ -23,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private Paragraph _paragraph;
         private Paragraph _lastParagraph;
-        private ExpectingLine _expecting = ExpectingLine.Number;
+        private ExpectingLine _expecting;
 
         public override string Extension => ".srt";
 
@@ -60,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            bool doRenumber = false;
+            var doRenumber = false;
             _errors = new StringBuilder();
             _lineNumber = 0;
             _isMsFrames = true;
@@ -70,25 +73,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
-            for (int i = 0; i < lines.Count; i++)
+            for (var i = 0; i < lines.Count; i++)
             {
                 _lineNumber++;
-                string line = lines[i].TrimEnd();
+                var line = lines[i].TrimEnd();
                 line = line.Trim('\u007F'); // 127=delete ascii
 
-                string next = string.Empty;
+                var next = string.Empty;
                 if (i + 1 < lines.Count)
                 {
                     next = lines[i + 1];
                 }
 
-                string nextNext = string.Empty;
+                var nextNext = string.Empty;
                 if (i + 2 < lines.Count)
                 {
                     nextNext = lines[i + 2];
                 }
 
-                string nextNextNext = string.Empty;
+                var nextNextNext = string.Empty;
                 if (i + 3 < lines.Count)
                 {
                     nextNextNext = lines[i + 3];
@@ -123,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ReadLine(subtitle, line, next, nextNext, nextNextNext);
             }
 
-            if (_paragraph?.IsDefault == false)
+            if (_paragraph?.IsDefault == false || _paragraph != null && _expecting == ExpectingLine.Text)
             {
                 subtitle.Paragraphs.Add(_paragraph);
             }
@@ -142,6 +145,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 p.Text = p.Text.TrimEnd();
             }
+
             Errors = _errors.ToString();
         }
 
@@ -220,13 +224,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
                     {
-                        if (_isWsrt && !string.IsNullOrEmpty(line))
+                        if (_isWsrt && !string.IsNullOrEmpty(line) && line.Contains("<3", StringComparison.Ordinal))
                         {
-                            for (int i = 30; i < 40; i++)
+                            if (_regExWsrtItalicStart == null)
                             {
-                                line = line.Replace("<" + i + ">", "<i>");
-                                line = line.Replace("</" + i + ">", "</i>");
+                                _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
                             }
+
+                            if (_regExWsrtItalicEnd == null)
+                            {
+                                _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
+                            }
+
+                            line = _regExWsrtItalicStart.Replace(line, "<i>");
+                            line = _regExWsrtItalicEnd.Replace(line, "</i>");
                         }
 
                         if (_paragraph.Text.Length > 0)
@@ -264,11 +275,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetLastNumber(Paragraph p)
         {
-            if (p == null)
-            {
-                return "1";
-            }
-            return (p.Number + 1).ToString(CultureInfo.InvariantCulture);
+            return p == null ? "1" : (p.Number + 1).ToString(CultureInfo.InvariantCulture);
         }
 
         private bool IsText(string text)
@@ -345,6 +352,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (IsValidTimeCode(line))
             {
                 string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');
+
+                if (parts.Length < 8)
+                {
+                    return false;
+                }
+
                 try
                 {
                     int startHours = int.Parse(parts[0]);

@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
@@ -403,6 +402,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.Tools.OcrTrainFonts = sb.ToString().Trim(';');
             Configuration.Settings.Tools.OcrTrainSrtFile = textBoxInputFile.Text;
             Configuration.Settings.Tools.OcrTrainMergedLetters = textBoxMerged.Text;
+        }
+
+        private void VobSubNOcrTrain_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFonts.AutoSizeLastColumn();
+        }
+
+        private void VobSubNOcrTrain_Shown(object sender, EventArgs e)
+        {
+            VobSubNOcrTrain_ResizeEnd(sender, e);
         }
     }
 }

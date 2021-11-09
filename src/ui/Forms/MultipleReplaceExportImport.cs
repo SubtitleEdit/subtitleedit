@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         public MultipleReplaceExportImport(List<MultipleSearchAndReplaceGroup> groups, bool export)
         {
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _groups = groups;
             _export = export;

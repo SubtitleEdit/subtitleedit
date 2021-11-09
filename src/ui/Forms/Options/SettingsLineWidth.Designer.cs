@@ -106,6 +106,7 @@
             this.comboBoxMeasureFontName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxMeasureFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMeasureFontName.DropDownWidth = 240;
             this.comboBoxMeasureFontName.FormattingEnabled = true;
             this.comboBoxMeasureFontName.Location = new System.Drawing.Point(119, 38);
             this.comboBoxMeasureFontName.Name = "comboBoxMeasureFontName";

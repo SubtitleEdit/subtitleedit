@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             const string language = "en-US";
-            string xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
+            var xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
             "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier + "\" ttp:dropMode=\"" + dropMode + "\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
             "       <styling>" + Environment.NewLine +
@@ -117,14 +117,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"italic\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"italic\"/>" + Environment.NewLine +
             "      </styling>" + Environment.NewLine +
             "      <layout>" + Environment.NewLine +
-            "        <region xml:id=\"top\" tts:origin=\"0% 0%\" tts:extent=\"100% 15%\" tts:textAlign=\"center\" tts:displayAlign=\"before\"/>" + Environment.NewLine +
-            "        <region xml:id=\"bottom\" tts:origin=\"0% 85%\" tts:extent=\"100% 15%\" tts:textAlign=\"center\" tts:displayAlign=\"after\"/>" + Environment.NewLine +
+            "        <region xml:id=\"top\" tts:origin=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin + "\" tts:extent=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent + "]\" tts:textAlign=\"center\" tts:displayAlign=\"before\"/>" + Environment.NewLine +
+            "        <region xml:id=\"bottom\" tts:origin=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin + "\" tts:extent=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent + "\" tts:textAlign=\"center\" tts:displayAlign=\"after\"/>" + Environment.NewLine +
             "      </layout>" + Environment.NewLine +
             "   </head>" + Environment.NewLine +
             "   <body>" + Environment.NewLine +
             "       <div />" + Environment.NewLine +
             "   </body>" + Environment.NewLine +
             "</tt>";
+
             if (styleHead == null)
             {
                 xml.LoadXml(xmlStructure);
@@ -151,6 +152,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         foreach (XmlNode child in lst)
                         {
                             divNode.RemoveChild(child);
+                        }
+
+                        foreach (XmlNode child in xml.DocumentElement.SelectNodes("//ttml:region", nsmgr))
+                        {
+                            var id = child.Attributes["xml:id"];
+                            if (id?.Value == "top")
+                            {
+                                var originAttr = child.Attributes["tts:origin"];
+                                if (originAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin))
+                                {
+                                    originAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin;
+                                }
+
+                                var extentAttr = child.Attributes["tts:extent"];
+                                if (extentAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent))
+                                {
+                                    extentAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent;
+                                }
+                            }
+                            else if (id?.Value == "bottom")
+                            {
+                                var originAttr = child.Attributes["tts:origin"];
+                                if (originAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin))
+                                {
+                                    originAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin;
+                                }
+
+                                var extentAttr = child.Attributes["tts:extent"];
+                                if (extentAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent))
+                                {
+                                    extentAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent;
+                                }
+                            }
                         }
                     }
                     else

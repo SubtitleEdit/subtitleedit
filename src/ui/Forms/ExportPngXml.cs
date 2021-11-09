@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -526,7 +525,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_exportType == ExportFormats.BluraySup)
             {
-                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRraySupAs;
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveBluRaySupAs;
                 saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
@@ -630,7 +629,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 if (_exportType == ExportFormats.Stl)
                 {
-                    sb.AppendLine("$SetFilePathToken =" + folderBrowserDialog1.SelectedPath);
+                    sb.AppendLine("$SetFilePathToken =" + Path.GetDirectoryName(saveFileDialog1.FileName));
                     sb.AppendLine();
                 }
 
@@ -751,12 +750,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (errors.Count > 0)
                 {
                     var errorSb = new StringBuilder();
-                    for (int i = 0; i < 20; i++)
+                    var maxErrorsToDisplay = Math.Min(20, errors.Count);
+                    for (var i = 0; i < maxErrorsToDisplay; i++)
                     {
-                        if (i < errors.Count)
-                        {
-                            errorSb.AppendLine(errors[i]);
-                        }
+                        errorSb.AppendLine(errors[i]);
                     }
                     if (errors.Count > 20)
                     {
@@ -797,9 +794,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == ExportFormats.Stl)
                 {
-                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
+                    File.WriteAllText(saveFileDialog1.FileName, sb.ToString());
                     var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
-                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Spumux)
                 {
@@ -1468,7 +1465,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         string numberString = $"IMAGE{i:000}";
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
+                        var path = Path.GetDirectoryName(saveFileDialog1.FileName);
+                        string fileName = Path.Combine(path, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                         SaveImage(param.Bitmap, fileName, ImageFormat);
 
                         imagesSavedCount++;
@@ -1741,6 +1739,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         // 001  7M6C7986 V     C        14:14:55:21 14:15:16:24 01:00:10:18 01:00:31:21
                         var fileName1 = "IMG" + i.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0');
+                        if (!string.IsNullOrEmpty(_outputFileName))
+                        {
+                            var prefix = Path.GetFileNameWithoutExtension(_outputFileName);
+                            if (!string.IsNullOrEmpty(prefix))
+                            {
+                                fileName1 = prefix
+                                    .Replace(' ', '_')
+                                    .Replace('.', '_')
+                                    + "_" + fileName1;
+                            }
+                        }
 
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         using (var g = Graphics.FromImage(fullSize))
@@ -4875,7 +4884,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#export");
                 e.SuppressKeyPress = true;
@@ -4898,7 +4907,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
             _isLoading = false;
-            subtitleListView1_SelectedIndexChanged(null, null);
+            ExportPngXml_ResizeEnd(sender, e);
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
@@ -4926,7 +4935,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_ResizeEnd(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
-            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
+            subtitleListView1.AutoSizeLastColumn();
         }
 
         private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)
@@ -4942,7 +4951,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_SizeChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
-            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
+            subtitleListView1.AutoSizeLastColumn();
         }
 
         private void ExportPngXml_FormClosing(object sender, FormClosingEventArgs e)
@@ -5333,7 +5342,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
         {
-            var italicShortCut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            var italicShortCut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             if (e.KeyData == italicShortCut)
             {
                 ListViewToggleTag("i");

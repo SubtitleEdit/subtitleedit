@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -187,9 +187,6 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FilterSkipped>フィルタによってスキップ</FilterSkipped>
     <OffsetTimeCodes>タイムコードのオフセット</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>ビーマー</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>ブックマークを編集</EditBookmark>
     <AddBookmark>ブックマークを追加</AddBookmark>
@@ -395,7 +392,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <CenterTopJustify>中央、上端揃え</CenterTopJustify>
     <BottomMargin>下の余白</BottomMargin>
     <LeftRightMargin>左右の余白</LeftRightMargin>
-    <SaveBluRraySupAs>Blu-ray sup ファイルの名前の選択</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Blu-ray sup ファイルの名前の選択</SaveBluRaySupAs>
     <SaveVobSubAs>VobSub ファイルの名前の選択</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB イメージ スクリプト ファイルの名前の選択</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL ファイルの名前の選択</SaveDvdStudioProStlAs>
@@ -464,7 +461,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BreakLongLines>長い行を改行する</BreakLongLines>
     <RemoveLineBreaks>1 文しかない短いテキストの改行を削除する</RemoveLineBreaks>
     <RemoveLineBreaksAll>短いテキストの改行を削除する (会話を除くすべて)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>小文字の単語中の大文字の 'i' (OCR エラー) を修正する</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>小文字の単語中の大文字の 'i' (OCR エラー) を修正する</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>二重のアポストロフィ ('') を二重引用符 (") に修正する</FixDoubleApostrophes>
     <AddPeriods>次の行が大文字で始まる行の後にピリオドを追加する</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>段落の後を大文字で始める</StartWithUppercaseLetterAfterParagraph>
@@ -510,7 +507,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>テキスト番号 {0}: 開始時間が終了時間より遅いです: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>テキスト番号 {0} を修正することができません: 開始時間が終了時間より遅いです: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1078,7 +1075,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
       <SetEndTimeAndGoToNext>終了時間に設定して次へ移動(&amp;E)</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>終了時間 {0} から調整ました</AdjustedViaEndTime>
       <SetEndTime>終了時間に設定(&amp;N)</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>開始時間に設定して残りを補正(&amp;R)</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>開始時間に設定して残りを補正(&amp;R)</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>テキストのオンライン検索</SearchTextOnline>
       <GoogleTranslate>Google 翻訳</GoogleTranslate>
       <GoogleIt>ググる</GoogleIt>
@@ -1200,8 +1197,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <SpellCheck>スペル チェック</SpellCheck>
     <BeforeSpellCheck>スペル チェック前</BeforeSpellCheck>
     <SpellCheckChangedXToY>スペルチェック: '{0}' を '{1}' へ変更しました</SpellCheckChangedXToY>
-    <BeforeAddingTagX>&lt;{0}&gt; タグの追加前</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; タグが追加されました</TagXAdded>
+    <BeforeAddingTagX>'{0}' タグの追加前</BeforeAddingTagX>
+    <TagXAdded>'{0}' タグが追加されました</TagXAdded>
     <LineXOfY>{1} の行 {0}</LineXOfY>
     <XLinesSavedAsY>{0} 行が {1} として保存されました</XLinesSavedAsY>
     <XLinesDeleted>{0} 行削除されました</XLinesDeleted>
@@ -1571,7 +1568,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ExportProfiles>プロファイルをエクスポート</ExportProfiles>
     <SubtitleLineMaximumLength>各行の最大文字数</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>1 秒あたりの最大文字数</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>1分あたりの最大単語数</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>1分あたりの最大単語数</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>入力中に自動改行する</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>最小表示時間 (ミリ秒)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>最大表示時間 (ミリ秒)</DurationMaximumMilliseconds>
@@ -1787,7 +1784,6 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ListViewColumnDelete>列、テキストの削除</ListViewColumnDelete>
     <ListViewColumnInsert>列、テキストの挿入</ListViewColumnInsert>
     <ListViewColumnPaste>列、貼り付け</ListViewColumnPaste>
-    <ShowBeamer>字幕の全画面ビーマーの開始</ShowBeamer>
     <MainTextBoxAutoBreakFromPos>カーソル位置から最初のスペースで中断</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>カーソル位置から最初のスペースで中断し、次へ進む</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainFileSaveAll>すべて保存</MainFileSaveAll>

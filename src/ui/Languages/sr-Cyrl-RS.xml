@@ -267,7 +267,7 @@
     <BreakLongLines>Раздвоји дуге линије</BreakLongLines>
     <RemoveLineBreaks>Уклони редове у кратким текстовима (само једна реченица)</RemoveLineBreaks>
     <RemoveLineBreaksAll>Уклони редове у кратким текстовима (све осим дијалога)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Исправи велико латиничко слово И насред речи</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Исправи велико латиничко слово И насред речи</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Промени двоструке апострофе у наводнике</FixDoubleApostrophes>
     <AddPeriods>Додај тачку после линија где следећа почиње с великим словом</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Почни с великим словом после новог реда</StartWithUppercaseLetterAfterParagraph>
@@ -312,7 +312,7 @@
     <RemoveUnneededSpacesExample>Здраво ,  Ђорђе. → Здраво, Ђорђе.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Здраво!. → Здраво!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Здраво.Шта радиш? → Здраво. Шта радиш?</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>VrIina. → Vrlina.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>VrIina. → Vrlina.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. → What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Текст број {0}: завршно време се појављује пре почетног: {4}{1} &gt;&gt; {2} {3}.</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не могу да исправим текст под бројем {0}: завршно време се појављује пре почетног: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -744,7 +744,7 @@
       <SetEndTimeAndGoToNext>Поста&amp;ви крај и иди на идуће</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Прилагођено преко завршног времена {0}</AdjustedViaEndTime>
       <SetEndTime>По&amp;стави завршетак</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Пос&amp;тави почетак и помакни</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Пос&amp;тави почетак и помакни</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Претрага текста на мрежи</SearchTextOnline>
       <GoogleTranslate>Пр&amp;еведи</GoogleTranslate>
       <GoogleIt>П&amp;ретражи</GoogleIt>
@@ -862,8 +862,8 @@
     <SpellCheck>Провера писања</SpellCheck>
     <BeforeSpellCheck>Проверено писање</BeforeSpellCheck>
     <SpellCheckChangedXToY>Провера писања: „{0}“ је измењен у „{1}“</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Додато &lt;{0}&gt; ознака</BeforeAddingTagX>
-    <TagXAdded>Додато ознака: &lt;{0}&gt;</TagXAdded>
+    <BeforeAddingTagX>Додато '{0}' ознака</BeforeAddingTagX>
+    <TagXAdded>Додато ознака: '{0}'</TagXAdded>
     <LineXOfY>линија {0} од {1}</LineXOfY>
     <XLinesDeleted>Обрисано линија: {0}</XLinesDeleted>
     <BeforeDeletingXLines>Обрисано линија: {0}</BeforeDeletingXLines>

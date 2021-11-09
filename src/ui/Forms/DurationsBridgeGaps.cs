@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -22,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
             get => (int)numericUpDownMinMsBetweenLines.Value;
             set => numericUpDownMinMsBetweenLines.Value = value;
         }
+
+        private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
 
         public bool PreviousSubtitleTakesAllTime => radioButtonProlongEndTime.Checked;
 
@@ -179,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var index in fixedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
+                SubtitleListview1.SetBackgroundColor(index, _listViewGreen);
             }
 
             SubtitleListview1.EndUpdate();

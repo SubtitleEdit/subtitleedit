@@ -28,15 +28,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.okButton = new System.Windows.Forms.Button();
             this.labelProduct = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSE = new System.Windows.Forms.PictureBox();
             this.richTextBoxAbout1 = new System.Windows.Forms.RichTextBox();
             this.buttonDonate = new System.Windows.Forms.Button();
             this.linkLabelGitBuildHash = new System.Windows.Forms.LinkLabel();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSE)).BeginInit();
             this.SuspendLayout();
             // 
             // okButton
@@ -60,14 +59,14 @@
             this.labelProduct.TabIndex = 26;
             this.labelProduct.Text = "Subtitle Edit 3.2";
             // 
-            // pictureBox1
+            // pictureBoxSE
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(399, 14);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(70, 64);
-            this.pictureBox1.TabIndex = 27;
-            this.pictureBox1.TabStop = false;
+            this.pictureBoxSE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxSE.Location = new System.Drawing.Point(432, 12);
+            this.pictureBoxSE.Name = "pictureBoxSE";
+            this.pictureBoxSE.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxSE.TabIndex = 27;
+            this.pictureBoxSE.TabStop = false;
             // 
             // richTextBoxAbout1
             // 
@@ -122,7 +121,7 @@
             this.Controls.Add(this.linkLabelGitBuildHash);
             this.Controls.Add(this.buttonDonate);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBoxSE);
             this.Controls.Add(this.richTextBoxAbout1);
             this.Controls.Add(this.labelProduct);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -137,7 +136,7 @@
             this.Text = "About Subtitle Edit";
             this.Shown += new System.EventHandler(this.About_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.About_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSE)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,7 +146,7 @@
 
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label labelProduct;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBoxSE;
         private System.Windows.Forms.RichTextBox richTextBoxAbout1;
         private System.Windows.Forms.Button buttonDonate;
         private System.Windows.Forms.LinkLabel linkLabelGitBuildHash;

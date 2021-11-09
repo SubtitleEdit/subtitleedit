@@ -67,6 +67,8 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonImportWithFfmpeg.Enabled = true;
                 numericUpDownThreshold.Enabled = true;
             }
+
+            numericUpDownThreshold.Left = labelFfmpegThreshold.Left + labelFfmpegThreshold.Width + 4;
         }
 
         public sealed override string Text

@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -48,6 +47,12 @@ namespace Nikse.SubtitleEdit.Logic
                 return info;
             }
 
+            info = TryReadVideoInfoViaLibMpv(fileName);
+            if (info.Success)
+            {
+                return info;
+            }
+
             return new VideoInfo { VideoCodec = "Unknown" };
         }
 
@@ -56,10 +61,15 @@ namespace Nikse.SubtitleEdit.Logic
             return QuartsPlayer.GetVideoInfo(fileName);
         }
 
+        private static VideoInfo TryReadVideoInfoViaLibMpv(string fileName)
+        {
+            return LibMpvDynamic.GetVideoInfo(fileName);
+        }
+
         private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
         private static int _lastShowSubHash;
 
-        public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
+        public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
         {
             if (videoPlayerContainer.VideoPlayer == null)
             {
@@ -79,13 +89,13 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (videoPlayerContainer.LastParagraph != p)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
                         }
                         else if (videoPlayerContainer.SubtitleText != text)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
                         }
-                        TimeOutRefresh(subtitle, videoPlayerContainer, p);
+                        TimeOutRefresh(subtitle, videoPlayerContainer, format, p);
                         return i;
                     }
                 }
@@ -93,23 +103,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
             }
             else
             {
-                TimeOutRefresh(subtitle, videoPlayerContainer);
+                TimeOutRefresh(subtitle, videoPlayerContainer, format);
             }
             return -1;
         }
 
-        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, Paragraph p = null)
+        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format, Paragraph p = null)
         {
             if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
                 var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
                 {
-                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle);
+                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle, format);
                     _lastShowSubHash = newHash;
                 }
 
@@ -117,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer)
+        public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer, SubtitleFormat format)
         {
             if (videoPlayerContainer.VideoPlayer == null)
             {
@@ -143,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (videoPlayerContainer.LastParagraph != p || videoPlayerContainer.SubtitleText != text)
                         {
-                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle, format);
                         }
                         return i;
                     }
@@ -151,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
             {
-                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle, format);
             }
             return -1;
         }
@@ -170,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static bool IsMpcHcInstalled
+        public static bool IsMpcInstalled
         {
             get
             {
@@ -181,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 try
                 {
-                    return MpcHc.GetMpcHcFileName() != null;
+                    return MpcHc.GetMpcFileName() != null;
                 }
                 catch (FileNotFoundException)
                 {
@@ -242,34 +252,52 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                videoPlayerContainer.VideoPlayer = GetVideoPlayer();
-                videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
-                videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
-                videoPlayerContainer.ShowFullscreenButton = false;
-                videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
-                videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
-                videoPlayerContainer.EnableMouseWheelStep();
-                if (fileName != null && (fileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
-                {
-                    // we don't have videoInfo for streams...
-                }
-                else
-                {
-                    videoPlayerContainer.VideoWidth = videoInfo.Width;
-                    videoPlayerContainer.VideoHeight = videoInfo.Height;
-                    videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
-                }
-
+                DoInitializeVideoPlayer(fileName, videoInfo, videoPlayerContainer, onVideoLoaded, onVideoEnded);
                 return true;
             }
             catch (Exception exception)
             {
                 videoPlayerContainer.VideoPlayer = null;
                 var videoError = new VideoError();
-                videoError.Initialize(fileName, exception);
+                videoError.Initialize(fileName);
                 videoError.ShowDialog();
                 SeLogger.Error(exception, "InitializeVideoPlayerAndContainer failed to load video player");
+
+                if (videoError.VideoPlayerInstalled)
+                {
+                    try
+                    {
+                        DoInitializeVideoPlayer(fileName, videoInfo, videoPlayerContainer, onVideoLoaded, onVideoEnded);
+                        return true;
+                    }
+                    catch
+                    {
+                        // ignore second error
+                    }
+                }
+
                 return false;
+            }
+        }
+
+        private static void DoInitializeVideoPlayer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        {
+            videoPlayerContainer.VideoPlayer = GetVideoPlayer();
+            videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
+            videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
+            videoPlayerContainer.ShowFullscreenButton = false;
+            videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
+            videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
+            videoPlayerContainer.EnableMouseWheelStep();
+            if (fileName != null && (fileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
+            {
+                // we don't have videoInfo for streams...
+            }
+            else
+            {
+                videoPlayerContainer.VideoWidth = videoInfo.Width;
+                videoPlayerContainer.VideoHeight = videoInfo.Height;
+                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
         }
 
@@ -407,9 +435,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (AllKeys.ContainsKey(k))
                 {
-                    resultKeys = resultKeys | AllKeys[k];
+                    resultKeys |= AllKeys[k];
                 }
             }
+
             return resultKeys;
         }
 
@@ -699,8 +728,9 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                sb.Append(line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics));
-                if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
+                var count = line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+                sb.Append(count);
+                if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
                     label.ForeColor = Color.Red;
                 }
@@ -785,8 +815,10 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
+
                 comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
             }
+
             comboBox.BeginUpdate();
             comboBox.Items.Clear();
             comboBox.Items.AddRange(formatNames.ToArray<object>());
@@ -899,7 +931,16 @@ namespace Nikse.SubtitleEdit.Logic
             comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 with BOM
         }
 
+        public static void BeginRichTextBoxUpdate(this RichTextBox richTextBox)
+        {
+            NativeMethods.SendMessage(richTextBox.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)0, IntPtr.Zero);
+        }
 
+        public static void EndRichTextBoxUpdate(this RichTextBox richTextBox)
+        {
+            NativeMethods.SendMessage(richTextBox.Handle, NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+            richTextBox.Invalidate();
+        }
 
         private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|؟،";
 
@@ -1058,10 +1099,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var sb = new StringBuilder();
             sb.Append(LanguageSettings.Current.General.SubtitleFiles + "|");
-            foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
+            foreach (var s in SubtitleFormat.AllSubtitleFormats.Concat(SubtitleFormat.GetTextOtherFormats()))
             {
                 AddExtension(sb, s.Extension);
-                foreach (string ext in s.AlternateExtensions)
+                foreach (var ext in s.AlternateExtensions)
                 {
                     AddExtension(sb, ext);
                 }
@@ -1081,7 +1122,6 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mks");
             AddExtension(sb, ".mxf");
             AddExtension(sb, ".sup");
-            AddExtension(sb, ".dost");
             AddExtension(sb, new FinalDraftTemplate2().Extension);
             AddExtension(sb, new Ayato().Extension);
             AddExtension(sb, new PacUnicode().Extension);
@@ -1089,6 +1129,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new IsmtDfxp().Extension);
             AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
             AddExtension(sb, ".cdg"); // karaoke
+            AddExtension(sb, ".pns"); // karaoke
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
@@ -1111,9 +1152,14 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-        public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+        public static string GetListViewTextFromString(string s) =>
+            s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
 
-        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+        public static string GetStringFromListViewText(string lviText) =>
+            lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+
+        public static void AutoSizeLastColumn(this ListView listView) =>
+            listView.Columns[listView.Columns.Count - 1].Width = -2;
 
         public static void SelectAll(this ListView lv)
         {
@@ -1127,25 +1173,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void SelectFirstSelectedItemOnly(this ListView lv)
         {
-            int itemsCount = lv.SelectedItems.Count - 1;
-            if (itemsCount > 0)
+            if (lv.SelectedIndices.Count > 1)
             {
+                var first = lv.SelectedIndices[0];
                 lv.BeginUpdate();
-                do
-                {
-                    lv.SelectedItems[itemsCount--].Selected = false;
-                }
-                while (itemsCount > 0);
-                if (lv.SelectedItems.Count > 0)
-                {
-                    lv.EnsureVisible(lv.SelectedItems[0].Index);
-                    lv.FocusedItem = lv.SelectedItems[0];
-                }
-                else if (lv.Items.Count > 0)
-                {
-                    lv.EnsureVisible(0);
-                    lv.FocusedItem = lv.Items[0];
-                }
+                lv.SelectedIndices.Clear();
+                lv.EnsureVisible(first);
+                lv.FocusedItem = lv.Items[first];
+                lv.Items[first].Selected = true;
                 lv.EndUpdate();
             }
         }
@@ -1158,6 +1193,26 @@ namespace Nikse.SubtitleEdit.Logic
                 item.Selected = !item.Selected;
             }
             lv.EndUpdate();
+        }
+
+        public static void SelectAll(this ListBox listbox)
+        {
+            listbox.BeginUpdate();
+            for (int i = 0; i < listbox.Items.Count; i++)
+            {
+                listbox.SetSelected(i, true);
+            }
+            listbox.EndUpdate();
+        }
+
+        public static void InverseSelection(this ListBox listbox)
+        {
+            listbox.BeginUpdate();
+            for (int i = 0; i < listbox.Items.Count; i++)
+            {
+                listbox.SetSelected(i, !listbox.GetSelected(i));
+            }
+            listbox.EndUpdate();
         }
 
         internal static void CleanUpMenuItemPlugin(ToolStripMenuItem tsmi)
@@ -1296,9 +1351,15 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash;
                 case ContinuationStyle.LeadingTrailingDashDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots;
+                case ContinuationStyle.LeadingTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
+                case ContinuationStyle.NoneEllipsisForPauses:
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
             }
         }
+
+        public static string DecimalSeparator => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
     }
 }

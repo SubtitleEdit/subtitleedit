@@ -23,6 +23,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private const string LanguageCodeChinese = "75";
 
+        private static readonly Dictionary<int, string> SpecialAsciiCodes = new Dictionary<int, string>
+        {
+            { 0xd3, "©" },
+            { 0xd4, "™" },
+            { 0xd5, "♪" },
+
+            { 0xe0, "Ω" },
+            { 0xe1, "Æ" },
+            { 0xe2, "Ð" },
+            { 0xe3, "ª" },
+            { 0xe4, "Ħ" },
+
+            { 0xe6, "Ĳ" },
+            { 0xe7, "Ŀ" },
+            { 0xe8, "Ł" },
+            { 0xe9, "Ø" },
+            { 0xea, "Œ" },
+            { 0xeb, "º" },
+            { 0xec, "Þ" },
+            { 0xed, "Ŧ" },
+            { 0xee, "Ŋ" },
+            { 0xef, "ŉ" },
+
+            { 0xf0, "ĸ" },
+            { 0xf1, "æ" },
+            { 0xf2, "đ" },
+            { 0xf3, "ð" },
+            { 0xf4, "ħ" },
+            { 0xf5, "ı" },
+            { 0xf6, "ĳ" },
+            { 0xf7, "ŀ" },
+            { 0xf8, "ł" },
+            { 0xf9, "ø" },
+            { 0xfa, "œ" },
+            { 0xfb, "ß" },
+            { 0xfc, "þ" },
+            { 0xfd, "ŧ" },
+            { 0xfe, "ŋ" },
+        };
+
         public interface IEbuUiHelper
         {
             void Initialize(EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle);
@@ -251,16 +291,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 buffer[3] = ExtensionBlockNumber;
                 buffer[4] = CumulativeStatus;
 
-                buffer[5] = (byte)TimeCodeInHours;
-                buffer[6] = (byte)TimeCodeInMinutes;
                 var frames = GetFrameFromMilliseconds(TimeCodeInMilliseconds, header.FrameRate, out var extraSeconds);
-                buffer[7] = (byte)(TimeCodeInSeconds + extraSeconds);
+                var tc = new TimeCode(TimeCodeInHours, TimeCodeInMinutes, TimeCodeInSeconds + extraSeconds, 0);
+                buffer[5] = (byte)tc.Hours;
+                buffer[6] = (byte)tc.Minutes;
+                buffer[7] = (byte)tc.Seconds;
                 buffer[8] = frames;
 
-                buffer[9] = (byte)TimeCodeOutHours;
-                buffer[10] = (byte)TimeCodeOutMinutes;
                 frames = GetFrameFromMilliseconds(TimeCodeOutMilliseconds, header.FrameRate, out extraSeconds);
-                buffer[11] = (byte)(TimeCodeOutSeconds + extraSeconds);
+                tc = new TimeCode(TimeCodeOutHours, TimeCodeOutMinutes, TimeCodeOutSeconds + extraSeconds, 0);
+                buffer[9] = (byte)tc.Hours;
+                buffer[10] = (byte)tc.Minutes;
+                buffer[11] = (byte)tc.Seconds;
                 buffer[12] = frames;
 
                 buffer[13] = VerticalPosition;
@@ -426,9 +468,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TextField = TextField.Replace("</BOX>", boxingOff);
                 if (header.CharacterCodeTableNumber == "00")
                 {
-                    TextField = TextField.Replace("©", encoding.GetString(new byte[] { 0xd3 }));
-                    TextField = TextField.Replace("™", encoding.GetString(new byte[] { 0xd4 }));
-                    TextField = TextField.Replace("♪", encoding.GetString(new byte[] { 0xd5 }));
+                    foreach (KeyValuePair<int, string> entry in SpecialAsciiCodes)
+                    {
+                        TextField = TextField.Replace(entry.Value, encoding.GetString(new[] { (byte)entry.Key }));
+                    }
                 }
 
                 TextField = EncodeText(TextField, encoding, header.DisplayStandardCode);
@@ -767,6 +810,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        internal struct SpecialCharacter
+        {
+            internal SpecialCharacter(string character, bool switchOrder = false, int priority = 2)
+            {
+                Character = character;
+                SwitchOrder = switchOrder;
+                Priority = priority;
+            }
+
+            internal string Character { get; set; }
+            internal bool SwitchOrder { get; set; }
+            internal int Priority { get; set; }
+        }
+
         public bool Save(string fileName, Subtitle subtitle)
         {
             return Save(fileName, subtitle, false);
@@ -818,6 +875,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             header.TotalNumberOfSubtitles = subtitle.Paragraphs.Count.ToString("D5"); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
+            header.TotalNumberOfSubtitleGroups = "001";
 
             var today = $"{DateTime.Now:yyMMdd}";
             if (today.Length == 6)
@@ -831,7 +889,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var tc = firstParagraph.StartTime;
                 var frames = EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds, header.FrameRate, out var extraSeconds);
-                var firstTimeCode = $"{tc.Hours:00}{tc.Minutes:00}{tc.Seconds + extraSeconds:00}{frames:00}";
+                tc = new TimeCode(tc.Hours, tc.Minutes, tc.Seconds + extraSeconds, 0);
+                var firstTimeCode = $"{tc.Hours:00}{tc.Minutes:00}{tc.Seconds:00}{frames:00}";
                 if (firstTimeCode.Length == 8)
                 {
                     header.TimeCodeFirstInCue = firstTimeCode;
@@ -1037,9 +1096,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
             subtitle.Paragraphs.Clear();
-            subtitle.Header = null;
             var header = ReadHeader(buffer);
-            subtitle.Header = Encoding.UTF8.GetString(buffer);
+            subtitle.Header = header.ToString();
             Paragraph last = null;
             byte lastExtensionBlockNumber = 0xff;
             JustificationCodes = new List<int>();
@@ -1120,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return header;
         }
 
-        private static Encoding GetEncoding(string codePageNumber)
+        public static Encoding GetEncoding(string codePageNumber)
         {
             try
             {
@@ -1153,19 +1211,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (header.CharacterCodeTableNumber == "00")
             {
                 var b = buffer[index];
-                if (b == 0xd3)
+                if (SpecialAsciiCodes.TryGetValue(b, out var s))
                 {
-                    return "©";
-                }
-
-                if (b == 0xd4)
-                {
-                    return "™";
-                }
-
-                if (b == 0xd5)
-                {
-                    return "♪";
+                    return s;
                 }
 
                 Encoding encoding;

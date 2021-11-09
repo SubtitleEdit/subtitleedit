@@ -1,11 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -15,6 +13,18 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private bool _loading = true;
         private readonly Timer _previewTimer = new Timer();
+        private List<FixListItem> _fixItems;
+
+        public class FixListItem
+        {
+            public List<int> LineNumbers { get; set; }
+            public bool Checked { get; set; }
+
+            public FixListItem()
+            {
+                LineNumbers = new List<int>();
+            }
+        }
 
         public int NumberOfMerges { get; private set; }
         public Subtitle MergedSubtitle { get; private set; }
@@ -24,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            _fixItems = new List<FixListItem>();
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 250;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -55,15 +66,18 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
             _subtitle = subtitle;
-            MergeDoubleLines_ResizeEnd(null, null);
         }
 
-        private void AddToListView(Paragraph p, string lineNumbers, string newText)
+        private ListViewItem MakeListViewItem(Paragraph p, List<int> lineNumbers, string newText)
         {
+            var fixItem = new FixListItem { Checked = true };
+            fixItem.LineNumbers.AddRange(lineNumbers);
+            _fixItems.Add(fixItem);
+
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
-            item.SubItems.Add(lineNumbers.TrimEnd(','));
+            item.SubItems.Add(string.Join(",", lineNumbers));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
-            listViewFixes.Items.Add(item);
+            return item;
         }
 
         private void GeneratePreview()
@@ -89,24 +103,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsFixAllowed(Paragraph p)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
+            foreach (var fixItem in _fixItems)
             {
-                string numbers = item.SubItems[1].Text;
-                foreach (string number in numbers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var lineNumber in fixItem.LineNumbers)
                 {
-                    if (number == p.Number.ToString(CultureInfo.InvariantCulture))
+                    if (p.Number == lineNumber)
                     {
-                        return item.Checked;
+                        return fixItem.Checked;
                     }
                 }
             }
+
             return true;
         }
 
         public Subtitle MergeLinesWithSameTextInSubtitle(Subtitle subtitle, out int numberOfMerges, bool clearFixes, bool fixIncrementing, bool lineAfterNext, int maxMsBetween)
         {
+            _fixItems = new List<FixListItem>();
             var mergedIndexes = new List<int>();
-            var removed = new List<int>();
+            var removed = new HashSet<int>();
             if (!_loading)
             {
                 listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
@@ -120,7 +135,8 @@ namespace Nikse.SubtitleEdit.Forms
             numberOfMerges = 0;
             var mergedSubtitle = new Subtitle();
             Paragraph p = null;
-            var lineNumbers = new StringBuilder();
+            var lineNumbers = new List<int>();
+            var listViewItems = new List<ListViewItem>();
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (removed.Contains(i - 1))
@@ -149,17 +165,14 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
-                        if (lineNumbers.Length > 0)
+                        if (lineNumbers.Count > 0)
                         {
-                            lineNumbers.Append(next.Number);
-                            lineNumbers.Append(',');
+                            lineNumbers.Add(next.Number);
                         }
                         else
                         {
-                            lineNumbers.Append(p.Number);
-                            lineNumbers.Append(',');
-                            lineNumbers.Append(next.Number);
-                            lineNumbers.Append(',');
+                            lineNumbers.Add(p.Number);
+                            lineNumbers.Add(next.Number);
                         }
 
                         removed.Add(j);
@@ -176,17 +189,19 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (!removed.Contains(i - 1) && lineNumbers.Length > 0 && clearFixes)
+                if (!removed.Contains(i - 1) && lineNumbers.Count > 0 && clearFixes)
                 {
-                    AddToListView(p, lineNumbers.ToString(), p.Text);
+                    listViewItems.Add(MakeListViewItem(p, lineNumbers, p.Text));
                     lineNumbers.Clear();
                 }
             }
 
-            if (lineNumbers.Length > 0 && clearFixes && p != null)
+            if (lineNumbers.Count > 0 && clearFixes && p != null)
             {
-                AddToListView(p, lineNumbers.ToString(), p.Text);
+                listViewItems.Add(MakeListViewItem(p, lineNumbers, p.Text));
             }
+
+            listViewFixes.Items.AddRange(listViewItems.ToArray());
 
             if (!mergedIndexes.Contains(subtitle.Paragraphs.Count - 1))
             {
@@ -214,20 +229,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listViewFixes.SelectedIndices.Count > 0)
+            if (listViewFixes.SelectedIndices.Count <= 0)
             {
-                int index = listViewFixes.SelectedIndices[0];
-                ListViewItem item = listViewFixes.Items[index];
-                var numbers = item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string number in numbers)
+                return;
+            }
+
+            int index = listViewFixes.SelectedIndices[0];
+            foreach (var number in _fixItems[index].LineNumbers)
+            {
+                foreach (var p in _subtitle.Paragraphs)
                 {
-                    foreach (var p in _subtitle.Paragraphs)
+                    if (p.Number == number)
                     {
-                        if (p.Number.ToString(CultureInfo.InvariantCulture) == number)
-                        {
-                            index = _subtitle.GetIndex(p);
-                            SubtitleListview1.EnsureVisible(index);
-                        }
+                        index = _subtitle.GetIndex(p);
+                        SubtitleListview1.EnsureVisible(index);
                     }
                 }
             }
@@ -240,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _fixItems[e.Item.Index].Checked = e.Item.Checked;
             NumberOfMerges = 0;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
@@ -253,31 +269,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateBackgroundColor()
         {
+            int colorIdx = 0;
             var colors = new List<Color>
             {
                 Color.Green,
                 Color.LimeGreen,
                 Color.GreenYellow,
             };
-            int colorIdx = 0;
 
-            for (int i = 0; i < listViewFixes.Items.Count; i++)
+            foreach (var fixItem in _fixItems.Where(p => p.Checked))
             {
-                ListViewItem item = listViewFixes.Items[i];
-                var lineNumbers = item.SubItems[1].Text;
-                if (item.Checked && !string.IsNullOrEmpty(lineNumbers))
+                foreach (var number in fixItem.LineNumbers)
                 {
-                    var numbers = lineNumbers.Split(',');
-                    foreach (var number in numbers)
-                    {
-                        SubtitleListview1.SetBackgroundColor(Convert.ToInt32(number) - 1, colors[colorIdx]);
-                    }
+                    SubtitleListview1.SetBackgroundColor(number - 1, colors[colorIdx]);
+                }
 
-                    colorIdx++;
-                    if (colorIdx >= colors.Count)
-                    {
-                        colorIdx = 0;
-                    }
+                colorIdx++;
+                if (colorIdx >= colors.Count)
+                {
+                    colorIdx = 0;
                 }
             }
         }
@@ -292,6 +302,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeDoubleLines_Shown(object sender, EventArgs e)
         {
+            MergeDoubleLines_ResizeEnd(sender, e);
+
             GeneratePreview();
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)
@@ -333,6 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (ListViewItem item in listViewFixes.Items)
             {
+                _fixItems[item.Index].Checked = true;
                 item.Checked = true;
             }
         }
@@ -341,6 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (ListViewItem item in listViewFixes.Items)
             {
+                _fixItems[item.Index].Checked = !item.Checked;
                 item.Checked = !item.Checked;
             }
         }

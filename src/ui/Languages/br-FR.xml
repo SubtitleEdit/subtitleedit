@@ -2,7 +2,7 @@
 <Language Name="brezhoneg">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
@@ -192,9 +192,6 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <MultipleReplaceErrorX>Erlec'hiadennoù lies: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Pouezerez emgefreek: {0}</AutoBalanceErrorX>
   </BatchConvert>
-  <Beamer>
-    <Title>Istitl an arvester</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Cheñch al log</Title>
     <ChangeCasingTo>Cheñch al log</ChangeCasingTo>
@@ -441,7 +438,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Center>Kreiz</Center>
     <BottomMargin>Marzoù izelel</BottomMargin>
     <LeftRightMargin>Marzoù kostezel</LeftRightMargin>
-    <SaveBluRraySupAs>Enrollañ evel Blu-ray sup</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Enrollañ evel Blu-ray sup</SaveBluRaySupAs>
     <SaveVobSubAs>Enrollañ evel VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Enrollañ evel FabImage Script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Enrollañ evel DVD Studio Pro Stl</SaveDvdStudioProStlAs>
@@ -526,7 +523,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <BreakLongLines>Troc'hañ al linennoù hir</BreakLongLines>
     <RemoveLineBreaks>Diverkañ al lammoù-linennoù e-barzh ar rannbennadoù berr gant ur frazenn</RemoveLineBreaks>
     <RemoveLineBreaksAll>Tennañ an distro al linenn e-barzh an testennoù berr (war-bouez an divizoù)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Reizhañ ar 'i' pennlizherennoù e-diabarzh ar gerioù (Fazi OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Reizhañ ar 'i' pennlizherennoù e-diabarzh ar gerioù (Fazi OCR)</FixUppercaseIInsideLowercaseWords>
     <AddPeriods>Ouzhpennañ ur poent pa grog al linenn da-heul gant ur bennlizherenn</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Kregiñ gant ur bennlizherenn goude ur rannbennad</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Lakaat pennlizherennoù goude ur poent e-barzh ur rannbennad</StartWithUppercaseLetterAfterPeriodInsideParagraph>
@@ -573,7 +570,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey tu , du se. -&gt; Hey te, du-se.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>He te !. -&gt; He te !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>He.Te. -&gt; He. Te.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Tost emañ ar fIn. -&gt; Tost emañ ar fin.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Tost emañ ar fIn. -&gt; Tost emañ ar fin.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Testenn n°{0}: An amzer deraouek a zeu war-lerc'h an amzer fin : {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Dibosupl da reizhañ an destenn n°{0}: amzer deraoeuk &gt; amzer fin : {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1130,7 +1127,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Despeziñ &amp;fin ha mont an hini da-heul</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Keidet diwar an amzer diwezhañ {0}</AdjustedViaEndTime>
       <SetEndTime>Despeziñ ar &amp; fin</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Despeziñ ar &amp;penn-kentañ ha dilec'hiañ ar pezh a zeu goude</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Despeziñ ar &amp;penn-kentañ ha dilec'hiañ ar pezh a zeu goude</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Klask an destenn enlinenn</SearchTextOnline>
       <GoogleTranslate>Troidigezh gant Google</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>
@@ -1257,8 +1254,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <SpellCheck>Reizher reizhskrivadurel</SpellCheck>
     <BeforeSpellCheck>A-raok ar wiriekadenn reizhskrivadurel</BeforeSpellCheck>
     <SpellCheckChangedXToY>Gwiriekadenn reizhskrivadurel : Cheñchet '{0}' en '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>A-raok ouzhpennañ &lt;{0}&gt; tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; tags ouzhpennet</TagXAdded>
+    <BeforeAddingTagX>A-raok ouzhpennañ '{0}' tag</BeforeAddingTagX>
+    <TagXAdded>'{0}' tag ouzhpennet</TagXAdded>
     <LineXOfY>linenn {0}/{1}</LineXOfY>
     <XLinesSavedAsY>{0} linennoù enrollet evel {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linennoù diverket</XLinesDeleted>
@@ -1477,8 +1474,8 @@ M'ho peus kemmet ar restr gant Subtitle Edit gellout a rafec'h kavout une enroll
     <EndsWith>A echu gant</EndsWith>
     <NoContains>Na endalc'h ket</NoContains>
     <RegEx>Tro-lavar reoliataet</RegEx>
-    <UnequalLines>Linennoù disheñvel</UnequalLines>
-    <EqualLines>Linennoù heñvel</EqualLines>
+    <OddLines>Linennoù disheñvel</OddLines>
+    <EvenLines>Linennoù heñvel</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Lies-erlec'hiañ</Title>
@@ -1842,7 +1839,6 @@ meur a zen ar memes restr istitloù (kenlabour)</Information>
     <ListViewColumnInsert>Bann, pegañ testenn</ListViewColumnInsert>
     <ListViewColumnPaste>Bann, pegañ golvar</ListViewColumnPaste>
     <ListViewGoToNextError>Mont d'ar fazi da-heul</ListViewGoToNextError>
-    <ShowBeamer>Penn-kentañ an istitloù arvester (skramm a-bezh)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Diblaseal ar ger diwezhañ e-barzh linenn an istitl da-heul</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Diblaseal ar ger kentañ e-barzh linenn an istitl a-raok</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Diuzit lizherennoù munut</MainTextBoxSelectionToLower>
@@ -2044,7 +2040,7 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <MarginVertical>A-blom</MarginVertical>
     <Border>Bevenn</Border>
     <PlusShadow>Skeud</PlusShadow>
-    <OpaqueBox>Boest-Demer (a implij liv an tro-dro)</OpaqueBox>
+    <OpaqueBox>Boest-Demer</OpaqueBox>
     <Import>Enporzhiañ...</Import>
     <Export>Ezporzhiañ...</Export>
     <Copy>Eilañ</Copy>

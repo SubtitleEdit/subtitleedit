@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
 {
     public sealed partial class NetworkChat : Form
     {
-        private Logic.Networking.NikseWebServiceSession _networkSession;
+        private NikseWebServiceSession _networkSession;
 
         protected override bool ShowWithoutActivation => true;
 
@@ -118,6 +118,17 @@ namespace Nikse.SubtitleEdit.Forms.Networking
             {
                 listViewUsers.Items.Remove(removeItem);
             }
+        }
+
+        private void NetworkChat_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewChat.AutoSizeLastColumn();
+            listViewUsers.AutoSizeLastColumn();
+        }
+
+        private void NetworkChat_Shown(object sender, EventArgs e)
+        {
+            NetworkChat_ResizeEnd(sender, e);
         }
     }
 }

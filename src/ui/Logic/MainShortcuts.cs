@@ -18,14 +18,20 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralMergeTranslationAndOriginal { get; set; }
         public Keys MainGeneralMergeWithNext { get; set; }
         public Keys MainGeneralMergeWithPrevious { get; set; }
+        public Keys MainGeneralMergeWithNextAndUnbreak { get; set; }
+        public Keys MainGeneralMergeWithPreviousAndUnbreak { get; set; }
+        public Keys MainGeneralMergeWithNextAndBreak { get; set; }
+        public Keys MainGeneralMergeWithPreviousAndBreak { get; set; }
         public Keys MainGeneralGoToNextSubtitle { get; set; }
+        public Keys MainGeneralGoToNextSubtitlePlayTranslate { get; set; }
         public Keys MainGeneralGoToNextSubtitleCursorAtEnd { get; set; }
         public Keys MainGeneralGoToPrevSubtitle { get; set; }
+        public Keys MainGeneralGoToPrevSubtitlePlayTranslate { get; set; }
         public Keys MainGeneralGoToStartOfCurrentSubtitle { get; set; }
         public Keys MainGeneralGoToEndOfCurrentSubtitle { get; set; }
         public Keys MainGeneralFileSaveAll { get; set; }
+        public Keys MainGeneralSetAssaResolution { get; set; }
         public Keys MainToolsAutoDuration { get; set; }
-        public Keys MainToolsBeamer { get; set; }
         public Keys MainVideoFoucsSetVideoPosition { get; set; }
         public Keys ToggleVideoDockUndock { get; set; }
         public Keys VideoPause { get; set; }
@@ -52,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideo3000MsLeft { get; set; }
         public Keys MainVideoGoToStartCurrent { get; set; }
         public Keys MainVideoToggleStartEndCurrent { get; set; }
-        public Keys MainVideoPlayCurrent { get; set; }
+        public Keys MainVideoPlaySelectedLines { get; set; }
         public Keys VideoGoToPrevSubtitle { get; set; }
         public Keys VideoGoToNextSubtitle { get; set; }
         public Keys VideoGoToPrevChapter { get; set; }
@@ -63,17 +69,21 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideoSlower { get; set; }
         public Keys MainVideoFaster { get; set; }
         public Keys MainVideoReset { get; set; }
+        public Keys MainVideoToggleBrightness { get; set; }
+        public Keys MainVideoToggleContrast { get; set; }
         public Keys MainGoToPreviousSubtitleAndFocusVideo { get; set; }
         public Keys MainGoToNextSubtitleAndFocusVideo { get; set; }
         public Keys MainGoToPrevSubtitleAndPlay { get; set; }
         public Keys MainGoToNextSubtitleAndPlay { get; set; }
         public Keys MainAutoCalcCurrentDuration { get; set; }
+        public Keys MainAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
         public Keys MainGeneralToggleBookmarks { get; set; }
         public Keys MainGeneralClearBookmarks { get; set; }
         public Keys MainGeneralGoToBookmark { get; set; }
         public Keys MainGeneralGoToPreviousBookmark { get; set; }
         public Keys MainGeneralGoToNextBookmark { get; set; }
         public Keys MainGeneralChooseProfile { get; set; }
+        public Keys MainGeneralOpenDataFolder { get; set; }
         public Keys MainGeneralDuplicateLine { get; set; }
         public Keys MainGeneralToggleView { get; set; }
         public Keys MainGeneralToggleMode { get; set; }
@@ -84,6 +94,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxMoveLastWordDown { get; set; }
         public Keys MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public Keys MainTextBoxMoveLastWordDownCurrent { get; set; }
+        public Keys MainTextBoxMoveFromCursorToNextAndGoToNext { get; set; }
         public Keys MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public Keys MainTextBoxSelectionToLower { get; set; }
         public Keys MainTextBoxSelectionToUpper { get; set; }
@@ -93,11 +104,14 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
         public Keys MainCreateSetStart { get; set; }
         public Keys MainCreateSetEnd { get; set; }
+        public Keys MainAdjustVideoSetStartForAppropriateLine { get; set; }
+        public Keys MainAdjustVideoSetEndForAppropriateLine { get; set; }
         public Keys MainAdjustSetEndAndPause { get; set; }
         public Keys MainCreateStartDownEndUp { get; set; }
         public Keys MainCreateSetEndAddNewAndGoToNew { get; set; }
         public Keys MainAdjustSetStartAndOffsetTheRest { get; set; }
         public Keys MainAdjustSetStartAndOffsetTheRest2 { get; set; }
+        public Keys MainAdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRest { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
         public Keys MainAdjustSetEndAndGotoNext { get; set; }
@@ -142,6 +156,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxAutoBreak { get; set; }
         public Keys MainTextBoxUnbreak { get; set; }
         public Keys MainTextBoxUnbreakNoSpace { get; set; }
+        public Keys MainTextBoxAssaIntellisense { get; set; }
+        public Keys MainTextBoxAssaRemoveTag { get; set; }
         public Keys MainTextBoxBreakAtCursorPosition { get; set; }
         public Keys MainTextBoxBreakAtCursorPositionAndGoToNext { get; set; }
         public Keys MainMergeDialog { get; set; }
@@ -149,6 +165,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainToggleFocusWaveform { get; set; }
         public Keys MainWaveformAdd { get; set; }
         public Keys MainListViewToggleDashes { get; set; }
+        public Keys MainListViewToggleQuotes { get; set; }
+        public Keys MainListViewToggleHiTags { get; set; }
         public Keys MainListViewToggleMusicSymbols { get; set; }
         public Keys MainListViewAutoDuration { get; set; }
         public Keys MainListViewAlignmentN1 { get; set; }
@@ -165,11 +183,13 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewColor3 { get; set; }
         public Keys MainListViewColor4 { get; set; }
         public Keys MainListViewGoToNextError { get; set; }
+        public Keys MainListViewRemoveBlankLines { get; set; }
         public Keys MainListViewRemoveTimeCodes { get; set; }
         public Keys MainListViewCopyText { get; set; }
         public Keys MainEditFixRTLViaUnicodeChars { get; set; }
         public Keys MainEditRemoveRTLUnicodeChars { get; set; }
         public Keys MainEditReverseStartAndEndingForRtl { get; set; }
+        public Keys MainToggleVideoControls { get; set; }
         public Keys WaveformVerticalZoom { get; set; }
         public Keys WaveformVerticalZoomOut { get; set; }
         public Keys WaveformZoomIn { get; set; }
@@ -187,6 +207,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformToggleSceneChange { get; set; }
         public Keys WaveformGuessStart { get; set; }
         public Keys MainTranslateGoogleIt { get; set; }
+        public Keys MainTranslateGoogleTranslateIt { get; set; }
         public Keys MainTranslateCustomSearch1 { get; set; }
         public Keys MainTranslateCustomSearch2 { get; set; }
         public Keys MainTranslateCustomSearch3 { get; set; }
@@ -208,12 +229,19 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             MainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
             MainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);
+            MainGeneralMergeWithPreviousAndUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPreviousAndUnbreak);
+            MainGeneralMergeWithNextAndUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNextAndUnbreak);
+            MainGeneralMergeWithPreviousAndBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPreviousAndBreak);
+            MainGeneralMergeWithNextAndBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNextAndBreak);
             MainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+            MainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
             MainGeneralGoToNextSubtitleCursorAtEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleCursorAtEnd);
             MainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+            MainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
             MainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
             MainGeneralGoToEndOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
             MainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
+            MainGeneralSetAssaResolution = UiUtil.GetKeys(Configuration.Settings.Shortcuts.SetAssaResolution);
             MainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
             MainVideoPlayFromBeginning = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
@@ -240,7 +268,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideo3000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo3000MsLeft);
             MainVideoGoToStartCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
             MainVideoToggleStartEndCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent);
-            MainVideoPlayCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayCurrent);
+            MainVideoPlaySelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlaySelectedLines);
             VideoGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle);
             VideoGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle);
             VideoGoToPrevChapter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevChapter);
@@ -252,12 +280,14 @@ namespace Nikse.SubtitleEdit.Logic
             MainGoToPrevSubtitleAndPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay);
             MainGoToNextSubtitleAndPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
             MainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
+            MainAutoCalcCurrentDurationByOptimalReadingSpeed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed);
             MainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
             MainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
             MainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
             MainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
             MainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
             MainGeneralChooseProfile = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralChooseProfile);
+            MainGeneralOpenDataFolder = UiUtil.GetKeys(Configuration.Settings.Shortcuts.OpenDataFolder);
             MainGeneralDuplicateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralDuplicateLine);
             MainGeneralToggleView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             MainGeneralToggleMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleMode);
@@ -266,9 +296,12 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
             MainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);
             MainVideoReset = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoReset);
+            MainVideoToggleBrightness = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleBrightness);
+            MainVideoToggleContrast = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleContrast);
             MainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
-            MainToolsBeamer = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
             MainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
+            MainListViewToggleQuotes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleQuotes);
+            MainListViewToggleHiTags = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleHiTags);
             MainListViewToggleMusicSymbols = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             MainListViewAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
             MainListViewAlignmentN1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN1);
@@ -285,10 +318,12 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewColor3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor3);
             MainListViewColor4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor4);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+            MainListViewRemoveBlankLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveBlankLines);
             MainListViewRemoveTimeCodes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes);
             MainEditFixRTLViaUnicodeChars = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFixRTLViaUnicodeChars);
             MainEditRemoveRTLUnicodeChars = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRemoveRTLUnicodeChars);
             MainEditReverseStartAndEndingForRtl = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
+            MainToggleVideoControls = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleVideoControls);
             MainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
@@ -296,6 +331,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             MainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             MainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
+            MainTextBoxMoveFromCursorToNextAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFromCursorToNextAndGoToNext);
             MainTextBoxMoveFirstWordUpCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             MainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
             MainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
@@ -305,11 +341,14 @@ namespace Nikse.SubtitleEdit.Logic
             MainCreateInsertSubAtVideoPosNoTextBoxFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
             MainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
             MainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+            MainAdjustVideoSetStartForAppropriateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustVideoSetStartForAppropriateLine);
+            MainAdjustVideoSetEndForAppropriateLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustVideoSetEndForAppropriateLine);
             MainAdjustSetEndAndPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndPause);
             MainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
             MainCreateSetEndAddNewAndGoToNew = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
             MainAdjustSetStartAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             MainAdjustSetStartAndOffsetTheRest2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2);
+            MainAdjustSetStartAndOffsetTheWholeSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheWholeSubtitle);
             MainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
             MainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
             MainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
@@ -356,6 +395,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxBreakAtCursorPositionAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             MainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             MainTextBoxUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace);
+            MainTextBoxAssaIntellisense = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaIntellisense);
+            MainTextBoxAssaRemoveTag = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaRemoveTag);
             MainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
             MainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
             MainToggleFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocusWaveform);
@@ -377,6 +418,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
             WaveformGuessStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGuessStart);
             MainTranslateGoogleIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleIt);
+            MainTranslateGoogleTranslateIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslateIt);
             MainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             MainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
             MainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);

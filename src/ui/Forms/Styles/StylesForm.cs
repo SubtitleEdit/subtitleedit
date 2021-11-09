@@ -1,10 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    public /* abstract */ class StylesForm : Form
+    public class StylesForm : Form
     {
         private readonly Timer _previewTimer = new Timer();
 

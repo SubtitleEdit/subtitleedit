@@ -283,6 +283,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
+                    if (Configuration.IsRunningOnWindows && string.IsNullOrEmpty(GetVlcPath("libvlc.dll")))
+                    {
+                        return false;
+                    }
+
                     using (var vlc = new LibVlcDynamic())
                     {
                         vlc.Initialize(null, null, null, null);
@@ -376,7 +381,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get => _libvlc_media_player_get_rate(_mediaPlayer);
             set
             {
-                if (value >= 0 && value <= 2.0)
+                if (value >= 0 && value <= 3.0)
                 {
                     _libvlc_media_player_set_rate(_mediaPlayer, (float)value);
                 }
@@ -388,7 +393,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_next_frame(_mediaPlayer);
         }
 
-        public int VlcState => _libvlc_media_player_get_state(_mediaPlayer);
+        public int VlcState
+        {
+            get
+            {
+                if (_mediaPlayer == IntPtr.Zero)
+                {
+                    return 0;
+                }
+
+                return _libvlc_media_player_get_state(_mediaPlayer);
+            }
+        }
 
         public override void Play()
         {
@@ -404,7 +420,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
 
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
+
             WaitUntilReady();
+            if (_mediaPlayer == IntPtr.Zero)
+            {
+                return;
+            }
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
         }
 
@@ -416,6 +437,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 System.Threading.Thread.Sleep(10);
                 Application.DoEvents();
+                if (_mediaPlayer == IntPtr.Zero)
+                {
+                    return;
+                }
+
                 state = VlcState;
                 i++;
             }
@@ -431,6 +457,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
+                if (_mediaPlayer == IntPtr.Zero)
+                {
+                    return true;
+                }
+
                 const int paused = 4;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
                 return state == paused;
@@ -441,6 +472,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
+                if (_mediaPlayer == IntPtr.Zero)
+                {
+                    return false;
+                }
+
                 const int playing = 3;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
                 return state == playing;

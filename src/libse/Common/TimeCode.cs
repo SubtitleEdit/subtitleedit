@@ -43,6 +43,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             return 0;
         }
 
+        public static double ParseHHMMSSToMilliseconds(string text)
+        {
+            var parts = text.Split(TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 3)
+            {
+                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds))
+                {
+                    return new TimeCode(hours, minutes, seconds, 0).TotalMilliseconds;
+                }
+            }
+            return 0;
+        }
+
         public TimeCode()
         {
         }
@@ -191,6 +204,42 @@ namespace Nikse.SubtitleEdit.Core.Common
             else
             {
                 s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
+            }
+            return PrefixSign(s);
+        }
+
+        public string ToHHMMSS()
+        {
+            string s;
+            var ts = TimeSpan;
+            var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
+            {
+                var newTs = new TimeSpan(ts.Ticks);
+                newTs = newTs.Add(new TimeSpan(0, 0, 1));
+                s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00}";
+            }
+            else
+            {
+                s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
+            }
+            return PrefixSign(s);
+        }
+
+        public string ToHHMMSSFFDropFrame()
+        {
+            string s;
+            var ts = TimeSpan;
+            var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
+            {
+                var newTs = new TimeSpan(ts.Ticks);
+                newTs = newTs.Add(new TimeSpan(0, 0, 1));
+                s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00};{0:00}";
+            }
+            else
+            {
+                s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
             }
             return PrefixSign(s);
         }

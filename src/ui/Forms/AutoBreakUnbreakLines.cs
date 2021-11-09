@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -173,6 +172,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void AutoBreakUnbreakLines_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.AutoSizeLastColumn();
+        }
+
+        private void AutoBreakUnbreakLines_Shown(object sender, EventArgs e)
+        {
+            AutoBreakUnbreakLines_ResizeEnd(sender, e);
         }
 
         private void AddToListView(Paragraph p, string newText)

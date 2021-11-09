@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -335,6 +334,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void ExportCustomText_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewTemplates.AutoSizeLastColumn();
+        }
+
+        private void ExportCustomText_Shown(object sender, EventArgs e)
+        {
+            ExportCustomText_ResizeEnd(sender, e);
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)

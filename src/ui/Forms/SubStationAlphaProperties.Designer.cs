@@ -55,6 +55,7 @@
             this.labelVideoResolution = new System.Windows.Forms.Label();
             this.numericUpDownVideoHeight = new System.Windows.Forms.NumericUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
+            this.buttonGetResolutionFromCurrentVideo = new System.Windows.Forms.Button();
             this.labelX = new System.Windows.Forms.Label();
             this.numericUpDownVideoWidth = new System.Windows.Forms.NumericUpDown();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -298,6 +299,7 @@
             this.groupBoxResolution.Controls.Add(this.labelVideoResolution);
             this.groupBoxResolution.Controls.Add(this.numericUpDownVideoHeight);
             this.groupBoxResolution.Controls.Add(this.buttonGetResolutionFromVideo);
+            this.groupBoxResolution.Controls.Add(this.buttonGetResolutionFromCurrentVideo);
             this.groupBoxResolution.Controls.Add(this.labelX);
             this.groupBoxResolution.Controls.Add(this.numericUpDownVideoWidth);
             this.groupBoxResolution.Location = new System.Drawing.Point(12, 251);
@@ -313,12 +315,12 @@
             this.labelVideoResolution.Location = new System.Drawing.Point(7, 21);
             this.labelVideoResolution.Name = "labelVideoResolution";
             this.labelVideoResolution.Size = new System.Drawing.Size(82, 13);
-            this.labelVideoResolution.TabIndex = 16;
+            this.labelVideoResolution.TabIndex = 0;
             this.labelVideoResolution.Text = "Video resolution";
             // 
             // numericUpDownVideoHeight
             // 
-            this.numericUpDownVideoHeight.Location = new System.Drawing.Point(264, 19);
+            this.numericUpDownVideoHeight.Location = new System.Drawing.Point(260, 19);
             this.numericUpDownVideoHeight.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -326,22 +328,32 @@
             0});
             this.numericUpDownVideoHeight.Name = "numericUpDownVideoHeight";
             this.numericUpDownVideoHeight.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownVideoHeight.TabIndex = 1;
+            this.numericUpDownVideoHeight.TabIndex = 3;
             // 
             // buttonGetResolutionFromVideo
             // 
-            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(317, 17);
+            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(311, 19);
             this.buttonGetResolutionFromVideo.Name = "buttonGetResolutionFromVideo";
             this.buttonGetResolutionFromVideo.Size = new System.Drawing.Size(27, 23);
-            this.buttonGetResolutionFromVideo.TabIndex = 2;
+            this.buttonGetResolutionFromVideo.TabIndex = 4;
             this.buttonGetResolutionFromVideo.Text = "...";
             this.buttonGetResolutionFromVideo.UseVisualStyleBackColor = true;
             this.buttonGetResolutionFromVideo.Click += new System.EventHandler(this.buttonGetResolutionFromVideo_Click);
             // 
+            // buttonGetResolutionFromCurrentVideo
+            // 
+            this.buttonGetResolutionFromCurrentVideo.Location = new System.Drawing.Point(342, 19);
+            this.buttonGetResolutionFromCurrentVideo.Name = "buttonGetResolutionFromCurrentVideo";
+            this.buttonGetResolutionFromCurrentVideo.Size = new System.Drawing.Size(124, 23);
+            this.buttonGetResolutionFromCurrentVideo.TabIndex = 5;
+            this.buttonGetResolutionFromCurrentVideo.Text = "From current video";
+            this.buttonGetResolutionFromCurrentVideo.UseVisualStyleBackColor = true;
+            this.buttonGetResolutionFromCurrentVideo.Click += new System.EventHandler(this.buttonGetResolutionFromCurrentVideo_Click);
+            // 
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(244, 21);
+            this.labelX.Location = new System.Drawing.Point(242, 22);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(14, 13);
             this.labelX.TabIndex = 2;
@@ -357,7 +369,7 @@
             0});
             this.numericUpDownVideoWidth.Name = "numericUpDownVideoWidth";
             this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownVideoWidth.TabIndex = 0;
+            this.numericUpDownVideoWidth.TabIndex = 1;
             // 
             // buttonOK
             // 
@@ -404,6 +416,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Sub Station Alpha properties";
+            this.Shown += new System.EventHandler(this.SubStationAlphaProperties_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaProperties_KeyDown);
             this.groupBoxScript.ResumeLayout(false);
             this.groupBoxScript.PerformLayout();
@@ -446,6 +459,7 @@
         private System.Windows.Forms.Label labelVideoResolution;
         private System.Windows.Forms.NumericUpDown numericUpDownVideoHeight;
         private System.Windows.Forms.Button buttonGetResolutionFromVideo;
+        private System.Windows.Forms.Button buttonGetResolutionFromCurrentVideo;
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.NumericUpDown numericUpDownVideoWidth;
         private System.Windows.Forms.Button buttonOK;

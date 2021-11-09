@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -394,6 +394,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xEC55, new SpecialCharacter("Ű")},
             { 0xEC6F, new SpecialCharacter("ő")},
             { 0xEC75, new SpecialCharacter("ű")},
+            { 0xC0, new SpecialCharacter("[")},
+            { 0xC1, new SpecialCharacter("]")},
         };
 
         private static readonly Dictionary<int, SpecialCharacter> LatinTurkishOverrides = new Dictionary<int, SpecialCharacter>
@@ -490,7 +492,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xdd, new SpecialCharacter("דּ")},
             { 0xde, new SpecialCharacter("גּ")},
             { 0xdf, new SpecialCharacter("בּ")},
-            { 0x2b, new SpecialCharacter(".")},
+            { 0x2e, new SpecialCharacter(".")},
             { 0x2c, new SpecialCharacter(",")}
         };
 
@@ -1006,9 +1008,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".pac";
 
+        public virtual bool IsFPC { get; set; } = false;
+
         public const string NameOfFormat = "PAC (Screen Electronics)";
 
         public override string Name => NameOfFormat;
+
+        private static readonly byte[] MarkerStartOfUnicode = new byte[] { 0x1f, 0xef, 0xbb, 0xbf };
+        private const byte MarkerEndOfUnicode = 0x2e;
+        private const byte MarkerReplaceEndOfUnicode = 0xff;
+
+        private bool doWritePACHeaderOpt => IsFPC; // Unknown paragraph header. Seems optionnal both for PAC and FPC: inserted here for expected broader FPC compatibility, including prior versions of SubtitleEdit
+        private static readonly byte[] PACHeaderOpt = new byte[] { 0x80, 0x80, 0x80 };
 
         public bool Save(string fileName, Subtitle subtitle)
         {
@@ -1058,7 +1069,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
 
-            if (CodePage == -1)
+            if (CodePage == -1 && !IsFPC)
             {
                 GetCodePage(null, 0, 0);
             }
@@ -1095,7 +1106,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var encoding = GetEncoding(CodePage);
             byte[] textBuffer;
 
-            if (CodePage == CodePageArabic)
+            if (IsFPC)
+            {
+                textBuffer = GetUnicodeBytes(text, alignment);
+            }
+            else if (CodePage == CodePageArabic)
             {
                 textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), alignment);
             }
@@ -1145,10 +1160,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             // write text length
-            var length = (UInt16)(textBuffer.Length + 4);
+            var length = (UInt16)(textBuffer.Length + 4 + (doWritePACHeaderOpt ? PACHeaderOpt.Length : 0));
             fs.Write(BitConverter.GetBytes(length), 0, 2);
 
             fs.WriteByte(verticalAlignment); // fs.WriteByte(0x0a); // sometimes 0x0b? - this seems to be vertical alignment - 0 to 11
+            if (doWritePACHeaderOpt)
+                fs.Write(PACHeaderOpt, 0, PACHeaderOpt.Length);
             fs.WriteByte(0xfe);
             fs.WriteByte(alignment); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
             //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
@@ -1175,18 +1192,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
-
-            if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
-            {
-                return "<" + HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
-            }
-
             var sb = new StringBuilder();
             var parts = text.SplitToLines();
+            var nextPre = string.Empty;
             foreach (string line in parts)
             {
-                string s = line.Trim();
-                if (Utilities.CountTagInText(s, "<i>") == 1 && s.StartsWith("<i>", StringComparison.Ordinal) && s.EndsWith("</i>", StringComparison.Ordinal))
+                string s = nextPre + line.Trim();
+                nextPre = string.Empty;
+                var noOfStartTags = Utilities.CountTagInText(s, "<i>");
+                var noOfEndTags = Utilities.CountTagInText(s, "</i>");
+                if (noOfStartTags == 1 && noOfEndTags ==1 && s.StartsWith("<i>", StringComparison.Ordinal) && s.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     sb.AppendLine("<" + HtmlUtil.RemoveHtmlTags(s));
                 }
@@ -1197,6 +1212,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = s.Replace("___@___", ">");
                     s = s.Replace(" <", "<");
                     s = s.Replace("> ", ">");
+                    if (noOfStartTags > noOfEndTags)
+                    {
+                        s = s.TrimEnd() + ">";
+                        nextPre = "<i>";
+                    }
                     sb.AppendLine(s);
                 }
             }
@@ -1269,8 +1289,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             buffer[20] == 0 &&
                             //buffer[21] < 10 && // start from number
                             //buffer[22] == 0 &&
-                            (buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
-                            fileName.EndsWith(".pac", StringComparison.OrdinalIgnoreCase))
+                            //(buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
+                            fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;
                         }
@@ -1335,6 +1355,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private double _lastStartTotalSeconds;
         private double _lastEndTotalSeconds;
+
+        private static bool CompareBytes(byte[] buff, int pos, byte[] seq)
+        {
+            if (buff.Length < pos + seq.Length)
+                return false;
+            for (int i = 0; i < seq.Length; i++)
+                if (buff[pos + i] != seq[i])
+                    return false;
+            return true;
+        }
 
         private Paragraph GetPacParagraph(ref int index, byte[] buffer, bool usesSecondaryCodePage)
         {
@@ -1424,7 +1454,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             byte verticalAlignment = buffer[timeStartIndex + 11];
 
-            if (CodePage == -1)
+            if (CodePage == -1 && !IsFPC)
             {
                 GetCodePage(buffer, index, endDelimiter);
             }
@@ -1438,12 +1468,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index += 5;
             }
 
+            bool isUnicode = false;
             while (index < buffer.Length && index <= maxIndex) // buffer[index] != endDelimiter)
             {
                 if (buffer.Length > index + 3 && buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16")
                 {
                     w16 = true;
                     index += 5;
+                }
+                else if (CompareBytes(buffer, index, MarkerStartOfUnicode))
+                {
+                    isUnicode = true; IsFPC = true;
+                    index += MarkerStartOfUnicode.Length;
                 }
                 else if (buffer.Length > index + 2 && buffer[index] == 0x1f && buffer[index + 1] == 'C' && char.IsDigit((char)buffer[index + 2]))
                 {
@@ -1496,10 +1532,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         index++;
                     }
                 }
-                else if (buffer[index] == 0xFF)
-                {
-                    sb.Append(' ');
-                }
                 else if (buffer[index] == 0xFE)
                 {
                     alignment = buffer[index + 1];
@@ -1507,6 +1539,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     alignment &= 0x07;
                     sb.AppendLine();
                     index += 2;
+                }
+                else if (isUnicode)
+                {
+                    if (buffer[index] == MarkerEndOfUnicode)
+                        isUnicode = false;
+                    else if (buffer[index] == MarkerReplaceEndOfUnicode)
+                        sb.Append((char)MarkerEndOfUnicode);
+                    else
+                    {
+                        int len = 1;
+                        byte b = buffer[index];
+                        if (b >= 0xE0)
+                            len = 3;
+                        else if (b >= 0xC0)
+                            len = 2;
+                        if (buffer.Length > index + len - 1)
+                            sb.Append(Encoding.UTF8.GetString(buffer, index, len));
+                        index += len - 1;
+                    }
+                }
+                else if (buffer[index] == 0xFF)
+                {
+                    sb.Append(' ');
                 }
                 else if (CodePage == CodePageLatin || CodePage == CodePageLatinTurkish || CodePage == CodePageLatinCzech
                          || (usesSecondaryCodePage && !isSecondaryCodePage))
@@ -1626,7 +1681,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             while (index >= 0 && index < text.Length - 1)
             {
+                bool insertSpace = false;
+                if (index >= 1 && text[index - 1] != ' ')
+                {
+                    insertSpace = true;
+                }
+
                 text = text.Insert(index + 1, "i>");
+                if (insertSpace)
+                {
+                    text = text.Insert(index, " ");
+                    index++;
+                }
+
                 int indexOfNewLine = text.IndexOf(Environment.NewLine, index + 3, StringComparison.Ordinal);
                 int indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
@@ -1636,9 +1703,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
+                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && (indexOfEnd < indexOfNewLine || indexOfEnd == -1)))
                     {
+                        insertSpace = indexOfEnd > 1 && text[indexOfEnd - 1] != ' ';
                         text = text.Insert(indexOfEnd, "</i");
+                        if (insertSpace)
+                        {
+                            if (text.Length > indexOfEnd + 4 && ".!?\"".Contains(text[indexOfEnd + 4]))
+                            {
+                                insertSpace = false;
+                            }
+
+                            if (insertSpace)
+                            {
+                                text = text.Insert(indexOfEnd + 4, " ");
+                                indexOfEnd++;
+                            }
+                        }
                         index = text.IndexOf('<', indexOfEnd + 3);
                     }
                     else
@@ -1648,9 +1729,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            text = text.Replace("</i>", "</i> ");
-            text = text.Replace("  ", " ");
-            return pre + text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+
+            text = text
+                .Replace("  ", " ")
+                .Replace("  ", " ")
+                .Replace(" " + Environment.NewLine, Environment.NewLine)
+                .Replace(" " + Environment.NewLine, Environment.NewLine)
+                .Replace(Environment.NewLine + " ", Environment.NewLine)
+                .Replace(Environment.NewLine + " ", Environment.NewLine)
+                .Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine)
+                .Trim();
+
+            return pre + HtmlUtil.FixInvalidItalicTags(text);
         }
 
         public static Encoding GetEncoding(int codePage)
@@ -1685,14 +1775,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var dictionary = new Dictionary<int, string>
                 {
-                    { CodePageLatin, "en-da-no-sv-es-it-fr-pt-de-nl-pl-bg-sq-hr" },
+                    { CodePageLatin, "en-da-no-sv-es-it-fr-pt-de-nl-pl-sq-hr-sr-ro-id" },
                     { CodePageGreek, "el" },
-                    { CodePageLatinCzech, "cz" },
+                    { CodePageLatinCzech, "cs-sk" },
                     { CodePageLatinTurkish, "tr" },
-                    { CodePageArabic, "ar" },
+                    { CodePageCyrillic, "bg-ru-uk-mk" },
                     { CodePageHebrew, "he" },
                     { CodePageThai, "th" },
-                    { CodePageCyrillic, "ru-uk-mk" },
+                    { CodePageArabic, "ar" },
                     { CodePageKorean, "ko" },
                     { CodePageChineseTraditional, "zh" },
                     { CodePageChineseSimplified, "zh" },
@@ -2009,6 +2099,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return true;
+        }
+
+        private static byte[] GetUnicodeBytes(string text, byte alignment)
+        {
+            var result = new List<byte>();
+            bool firstLine = true;
+            foreach (var line in text.SplitToLines())
+            {
+                if (!firstLine)
+                {
+                    result.Add(0xfe);
+                    result.Add(alignment);
+                    result.Add(3);
+                }
+                result.AddRange(MarkerStartOfUnicode);
+                foreach (var b in Encoding.UTF8.GetBytes(line))
+                {
+                    result.Add(b == MarkerEndOfUnicode ? MarkerReplaceEndOfUnicode : b);
+                }
+                result.Add(MarkerEndOfUnicode);
+                firstLine = false;
+            }
+            return result.ToArray();
         }
 
         public static string GetArabicString(byte[] buffer, ref int index)

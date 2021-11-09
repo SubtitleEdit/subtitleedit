@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return time.ToDisplayString().Replace(",", ".");
+            return time.ToString().Replace(",", ".");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 var s = line.Trim();
                 if (s.StartsWith("CHAPTER", StringComparison.Ordinal))

@@ -15,15 +15,15 @@
 ;* GNU General Public License for more details.
 ;*
 ;* You should have received a copy of the GNU General Public License
-;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
+;* along with Subtitle Edit.  If not, see <https://www.gnu.org/licenses/>.
 
 ; Requirements:
-; Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
+; Inno Setup Unicode: https://jrsoftware.org/isdl.php
 
 
 ; preprocessor checks
-#if VER < EncodeVer(5,6,0)
-  #error Update your Inno Setup version (5.6.0 or newer)
+#if VER < EncodeVer(6,0,0)
+  #error Update your Inno Setup version (6.0.0 or newer)
 #endif
 
 #ifndef UNICODE
@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2020, Nikse"
+#define app_copyright "Copyright © 2001-2021, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -77,7 +77,7 @@
 [Setup]
 AppID=SubtitleEdit
 AppCopyright={#app_copyright}
-AppContact=https://www.nikse.dk/SubtitleEdit/
+AppContact=https://www.nikse.dk/SubtitleEdit/Help
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit {#app_ver}
 AppVersion={#app_ver_full}
@@ -90,7 +90,7 @@ UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoVersion={#app_ver_full}
-MinVersion=5.6
+MinVersion=6.0
 LicenseFile=..\LICENSE.txt
 InfoAfterFile=..\Changelog.txt
 SetupIconFile=..\src\ui\Icons\SE.ico
@@ -112,6 +112,7 @@ DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64
+WizardStyle=modern
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -122,14 +123,12 @@ Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
 Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "el"; MessagesFile: "compiler:Languages\Greek.isl"
 Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "eu"; MessagesFile: "Languages\Basque.isl"
 Name: "fa"; MessagesFile: "Languages\Farsi.isl"
 Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
 Name: "hr"; MessagesFile: "Languages\Croatian.isl"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
 Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "ko"; MessagesFile: "Languages\Korean.isl"
@@ -142,8 +141,6 @@ Name: "ptBR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "ro"; MessagesFile: "Languages\Romanian.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "srC"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
-Name: "srL"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
 Name: "sv"; MessagesFile: "Languages\Swedish.isl"
 Name: "th"; MessagesFile: "Languages\Thai.isl"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
@@ -157,9 +154,9 @@ Name: "zhTW"; MessagesFile: "Languages\ChineseTraditional.isl"
 #include "Custom_Messages.iss"
 
 [Messages]
-BeveledLabel=Subtitle Edit {#app_ver} by Nikse
+;BeveledLabel=Subtitle Edit {#app_ver} by Nikse
 SetupAppTitle=Setup - Subtitle Edit
-SetupWindowTitle=Setup - Subtitle Edit
+SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 
 
 [Types]
@@ -239,6 +236,9 @@ Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtit
 Source: ..\Ocr\Latin.db;                           DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Ocr\Latin.nocr;                         DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 
+Source: ..\preview.mkv;                            DestDir: {userappdata}\Subtitle Edit;              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+
+
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -282,9 +282,17 @@ Source: {#bindir}\Languages\zh-TW.xml;             DestDir: {app}\Languages;    
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindirres}\SubtitleEdit.resources.dll;      DestDir: {app};                                    Flags: ignoreversion; Components: main; AfterInstall: ClearMUICache
+Source: {#bindirres}\SubtitleEdit.resources.dll;   DestDir: {app};                                    Flags: ignoreversion; Components: main; AfterInstall: ClearMUICache
 Source: {#bindir}\Hunspellx64.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\libse.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\zlib.net.dll;                    DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\NHunspell.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\UtfUnknown.dll;                  DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -313,11 +321,15 @@ Name: {#quick_launch}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; Wo
 Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: not IsTaskSelected('desktopicon\user')   and IsUpgrade()
 Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: not IsTaskSelected('desktopicon\common') and IsUpgrade()
 Type: files;      Name: {#quick_launch}\Subtitle Edit.lnk; Check: not IsTaskSelected('quicklaunchicon')    and IsUpgrade(); OnlyBelowVersion: 6.01
-
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
-
-; Remove files merged from now on with ILRepack
-Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;               Check: IsUpgrade()
+Type: files;      Name: {app}\libse.dll;                              Check: IsUpgrade()
+Type: files;      Name: {app}\zlib.net.dll;                           Check: IsUpgrade()
+Type: files;      Name: {app}\NHunspell.dll;                          Check: IsUpgrade()
+Type: files;      Name: {app}\UtfUnknown.dll;                         Check: IsUpgrade()
+Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsUpgrade()
+Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
+Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsUpgrade()
+Type: files;      Name: {app}\System.Net.Http.Primitives.dll;         Check: IsUpgrade()
 
 ; Remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_names.xml;               Check: IsUpgrade()
@@ -405,19 +417,22 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 
 [Run]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
-Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not IsWin64
+Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: IsWin64
+Filename: {app}\SubtitleEdit.exe;             Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: https://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe;   Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not IsWin64
+Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: IsWin64
 
 
 [Registry]
 #include bindirres + "\Resources.h"
 #define rcicon(id) "{app}\SubtitleEdit.resources.dll,-" + Str(id)
 #define rctext(id) "@{app}\SubtitleEdit.resources.dll,-" + Str(id)
+
 Root: HKLM; Subkey: "{#keyAppPaths}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyAppPaths}')
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{#SetupSetting('AppName')} {#app_ver_full}"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyApps}')
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""; Check: HklmKeyExists('{#keyApps}')
@@ -619,6 +634,7 @@ begin
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\Latin.db'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\Latin.nocr'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\preview.mkv'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\*.*'), False, True, False);
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Ocr'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Plugins\*.*'), False, True, False);
@@ -676,130 +692,7 @@ begin
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
 
-      // Remove tesseract
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tesseract.exe'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\iconv.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\icudt64.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\icuin64.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\icuuc64.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libarchive-13.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libbz2-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libcairo-2.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libcurl-4.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libeay32.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libexpat-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libffi-6.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libfontconfig-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libfreetype-6.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libgcc_s_sjlj-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libgif-7.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libglib-2.0-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libgobject-2.0-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libgomp-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libharfbuzz-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libintl-8.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libjbig-2.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libjpeg-8.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\liblept-5.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\liblz4-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\liblzma-5.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libnettle-6.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libnghttp2-14.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libopenjp2.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpango-1.0-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpangocairo-1.0-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpangoft2-1.0-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpangowin32-1.0-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpcre-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpixman-1-0.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libpng16-16.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libssh2-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libstdc++-6.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libtesseract-5.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libtiff-5.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libwebp-7.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libwinpthread-1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\libxml2-2.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\ssleay32.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\zlib1.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\alto'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\ambigs.train'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\api_config'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\bigram'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\box.train'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\box.train.stderr'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\digits'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\get.images'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\hocr'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\inter'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\kannada'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\linebox'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\logfile'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\lstm.train'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\lstmbox'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\lstmdebug'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\makebox'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\pdf'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\quiet'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\rebox'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\strokewidth'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\tsv'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\txt'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\unlv'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs\wordstrbox'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs\batch'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs\batch.nochop'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs\matdemo'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs\msdemo'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs\nobatch'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs\segdemo'));
-      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\*.traineddata'), False, True, False);
-      
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tesseract.exe'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tessdata\configs\hocr'));
-      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tessdata\*.traineddata'), False, True, False);
-      
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tesseract.exe'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\configs\hocr'));
-      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\*.traineddata'), False, True, False);
-      
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tesseract.exe'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\configs\hocr'));
-      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\*.traineddata'), False, True, False);
-      
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\msvcp90.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\msvcr90.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tesseract.exe'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\configs\hocr'));
-      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\*.traineddata'), False, True, False);
-
-      // Remove possibly installed mpv
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\mpv-1.dll'));
-
-      // Remove the dirs if they are empty
-      RemoveDir(ExpandConstant('{app}\Languages'));
-      RemoveDir(ExpandConstant('{app}\Spectrograms'));
-      RemoveDir(ExpandConstant('{app}\VobSub\English'));
-      RemoveDir(ExpandConstant('{app}\VobSub'));
-      RemoveDir(ExpandConstant('{app}\WaveForms'));
-      RemoveDir(ExpandConstant('{app}'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Spectrograms'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub\English'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\WaveForms'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Plugins'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\configs'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata\tessconfigs'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127\tessdata'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract500.Alpha.20201127'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\configs'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\configs'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302'));
-      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
-
+      DelTree(ExpandConstant('{userappdata}\Subtitle Edit'), True, True, True);
     end;
   end;
 end;
@@ -892,10 +785,11 @@ function InitializeSetup(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  Result := IsDotNetDetected('v4.6.2', 0); //Returns True if .NET Framework version 4.6.2 is installed, or a compatible version such as 4.8
+  // Returns True if .NET Framework version 4.7.2 is installed, or a compatible version such as 4.8
+  Result := IsDotNetDetected('v4.7.2', 0);
   if not Result then
   begin
-    if not WizardSilent() then 
+    if not WizardSilent() then
     begin
       if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then
         ShellExec('open','https://go.microsoft.com/fwlink/?LinkId=2085155','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);

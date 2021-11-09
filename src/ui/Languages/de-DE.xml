@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -212,9 +212,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <AutoBalanceErrorX>Text ausbalancieren: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Zeitstempel verschieben</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Lesezeichen bearbeiten</EditBookmark>
     <AddBookmark>Lesezeichen hinzufügen</AddBookmark>
@@ -484,7 +481,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <CenterTopJustify>Zentriert, Blocksatz oben</CenterTopJustify>
     <BottomMargin>Rand unten</BottomMargin>
     <LeftRightMargin>Rand links/rechts</LeftRightMargin>
-    <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Blu-ray sup Dateiname wählen</SaveBluRaySupAs>
     <SaveVobSubAs>VobSub Dateiname wählen</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB image script Dateiname wählen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
@@ -576,7 +573,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <BreakLongLines>Lange Texte umbrechen</BreakLongLines>
     <RemoveLineBreaks>Zeilenumbrüche in kurzen Texten mit nur einem Satz entfernen</RemoveLineBreaks>
     <RemoveLineBreaksAll>Zeilenumbrüche in kurzen Texten (außer Dialoge) entfernen</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Großes 'i' in klein geschriebenen Wörtern (OCR Fehler) korrigieren</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Großes 'i' in klein geschriebenen Wörtern (OCR Fehler) korrigieren</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Doppelte Apostrophe ('') zu Anführungszeichen (") korrigieren</FixDoubleApostrophes>
     <AddPeriods>Punkt am Ende einfügen, wenn nächste Zeile mit Großbuchstaben beginnt.</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Mit Großbuchstaben nach einem Punkt beginnen</StartWithUppercaseLetterAfterParagraph>
@@ -622,7 +619,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey du , da drüben. -&gt; Hey du, da drüben.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey du!. -&gt; Hey du!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.Du. -&gt; Hey. Du.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Textnummer {0}: Startzeit kommt nach Endzeit: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Konnte Textnummer {0} nicht korrigieren: Startzeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1233,7 +1230,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
       <SetEndTimeAndGoToNext>&amp;Endzeit setzen und weiter</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Angepasst mit Endzeit {0}</AdjustedViaEndTime>
       <SetEndTime>Als E&amp;ndzeit setzen</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Sta&amp;rt setzen und Rest versch.</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Sta&amp;rt setzen und Rest versch.</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Text online suchen</SearchTextOnline>
       <GoogleTranslate>Google Übersetzung</GoogleTranslate>
       <GoogleIt>Google Suche</GoogleIt>
@@ -1356,8 +1353,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <SpellCheck>Rechtschreibung</SpellCheck>
     <BeforeSpellCheck>Vor Rechtschreibprüfung</BeforeSpellCheck>
     <SpellCheckChangedXToY>Rechtschreibprüfung: '{0}' zu '{1}' geändert</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Vor Hinzufügen des &lt;{0}&gt; Tags</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; Tag hinzugefügt</TagXAdded>
+    <BeforeAddingTagX>Vor Hinzufügen des '{0}' Tags</BeforeAddingTagX>
+    <TagXAdded>'{0}' Tag hinzugefügt</TagXAdded>
     <LineXOfY>Text {0} von {1}</LineXOfY>
     <XLinesSavedAsY>{0} Texte gespeichert als {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} Texte gelöscht</XLinesDeleted>
@@ -1575,8 +1572,8 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <EndsWith>Endet mit</EndsWith>
     <NoContains>Beinhaltet nicht</NoContains>
     <RegEx>Regulärer Ausdruck</RegEx>
-    <UnequalLines>Ungleiche Texte</UnequalLines>
-    <EqualLines>Gleiche Texte</EqualLines>
+    <OddLines>Ungleiche Texte</OddLines>
+    <EvenLines>Gleiche Texte</EvenLines>
     <DurationLessThan>Dauer unter</DurationLessThan>
     <DurationGreaterThan>Dauer über</DurationGreaterThan>
   </ModifySelection>
@@ -1780,7 +1777,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SubtitleLineMaximumLength>Max. Einzelzeilenlänge</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Opt. Zeichen/Sek.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. Zeichen/Sek.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Max. Wörter/Min.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Max. Wörter/Min.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Auto Umbruch beim Tippen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. Länge, Millisekunden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. Länge, Millisekunden</DurationMaximumMilliseconds>
@@ -2003,7 +2000,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ListViewColumnInsert>Zeile, Text einfügen</ListViewColumnInsert>
     <ListViewColumnPaste>Zeile, Einfügen</ListViewColumnPaste>
     <ListViewGoToNextError>Zum nächsten Fehler</ListViewGoToNextError>
-    <ShowBeamer>Starte Untertitel Vollbildbeamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Letzes Wort zur nächsten Zeile</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>
@@ -2218,7 +2214,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <MarginVertical>Rand vertikal</MarginVertical>
     <Border>Umrandung</Border>
     <PlusShadow>+ Schatten</PlusShadow>
-    <OpaqueBox>Opake Box (verwendet Konturfarben)</OpaqueBox>
+    <OpaqueBox>Opake Box</OpaqueBox>
     <Import>Importiere...</Import>
     <Export>Exportiere...</Export>
     <Copy>Kopie</Copy>

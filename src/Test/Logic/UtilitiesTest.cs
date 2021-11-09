@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System;
@@ -62,6 +61,15 @@ namespace Test.Logic
             string s1 = "!دعه -" + Environment.NewLine + "!دعه أنت -";
             string s2 = Utilities.AutoBreakLine(s1, "ar");
             Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakFrenchSpaceBeforePunctuation()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "Et elle te le dis maintenant ? Pour quoi donc donc ?";
+            string s2 = Utilities.AutoBreakLine(s1, "fr");
+            Assert.AreEqual("Et elle te le dis maintenant ?" + Environment.NewLine + "Pour quoi donc donc ?", s2);
         }
 
         [TestMethod]
@@ -443,7 +451,7 @@ namespace Test.Logic
         {
             var s1 = "<i<Hallo!<i/>";
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
-            Assert.AreEqual( "<i>Hallo!</i>", s2);
+            Assert.AreEqual("<i>Hallo!</i>", s2);
         }
 
         [TestMethod]
@@ -717,7 +725,7 @@ namespace Test.Logic
         public void RemoveLineBreaks5()
         {
             string result = Utilities.RemoveLineBreaks("<i>Foobar" + Environment.NewLine + "</i>");
-            Assert.AreEqual( "<i>Foobar</i>", result);
+            Assert.AreEqual("<i>Foobar</i>", result);
         }
 
         [TestMethod]

@@ -77,6 +77,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void FormMatroskaSubtitleChooser_ResizeEnd(object sender, EventArgs e)
+        {
+            listView1.AutoSizeLastColumn();
+        }
+
+        private void FormMatroskaSubtitleChooser_Shown(object sender, EventArgs e)
+        {
+            FormMatroskaSubtitleChooser_ResizeEnd(sender, e);
+        }
+
         private void ButtonOkClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;

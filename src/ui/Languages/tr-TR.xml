@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -17,6 +17,8 @@ Son eklemeler: ismail0100</TranslatedBy>
     <SubtitleFiles>Altyazı dosyaları</SubtitleFiles>
     <AllFiles>Tüm dosyalar</AllFiles>
     <VideoFiles>Video dosyaları</VideoFiles>
+    <Images>Resimler</Images>
+    <Fonts>Yazı Tipleri</Fonts>
     <AudioFiles>Ses dosyaları</AudioFiles>
     <OpenSubtitle>Altyazı aç...</OpenSubtitle>
     <OpenVideoFile>Video dosyası aç...</OpenVideoFile>
@@ -34,8 +36,9 @@ Son eklemeler: ismail0100</TranslatedBy>
     <NumberSymbol>#</NumberSymbol>
     <Number>Numara</Number>
     <Text>Metin</Text>
-    <HourMinutesSecondsMilliseconds>sa:dk:sn:msn</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>sa:dk:sn{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>sa:dk:sn:kare</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} saniye</XSeconds>
     <Bold>Kalın</Bold>
     <Italic>İtalik</Italic>
     <Underline>Alt çizgili</Underline>
@@ -62,6 +65,7 @@ Son eklemeler: ismail0100</TranslatedBy>
     <OpenOriginalSubtitleFile>Orijinal altyazı dosyası aç...</OpenOriginalSubtitleFile>
     <PleaseWait>Lütfen bekleyin...</PleaseWait>
     <SessionKey>Oturum anahtarı</SessionKey>
+    <SessionKeyGenerate>Yeni anahtar oluştur</SessionKeyGenerate>
     <UserName>Kullanıcı adı</UserName>
     <UserNameAlreadyInUse>Kullanıcı adı zaten kullanımda</UserNameAlreadyInUse>
     <WebServiceUrl>Web adresi</WebServiceUrl>
@@ -162,6 +166,20 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixesAvailable>Kullanılabilir düzeltmeler: {0}</FixesAvailable>
     <UnableToFix>Düzeltmek için açılamıyor: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AssaAttachments>
+    <Title>Advanced Sub Station Alpha ekleri</Title>
+    <AttachFiles>Dosyaları ekle...</AttachFiles>
+    <FontsAndImages>Yazı tipleri ve resimler</FontsAndImages>
+    <Graphics>Grafikler</Graphics>
+    <Font>Yazı tipi</Font>
+    <ImageName>Resim adı ({0}x{1}):</ImageName>
+    <IconName>İkon adı:</IconName>
+    <FontName>Yazı tipi adı:</FontName>
+    <ImageResized>Resim, geçerli pencereye sığacak şekilde yeniden boyutlandırıldı</ImageResized>
+    <FilesSkippedX>Atlanan dosyalar: {0}</FilesSkippedX>
+    <RemoveOneAttachment>Bir ek kaldırılsın mı?</RemoveOneAttachment>
+    <RemoveXAttachments>{0} ek kaldırılsın mı?</RemoveXAttachments>
+  </AssaAttachments>
   <AudioToText>
     <Title>Sesten metine</Title>
     <ExtractingAudioUsingX>{0} kullanılarak ses çıkarılıyor...</ExtractingAudioUsingX>
@@ -240,9 +258,6 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Üç harfli dil kodu</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Dil kodu yok</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Dengeleyici</Title>
-  </Beamer>
   <BinEdit>
     <ImportImage>Görüntüyü içe aktar...</ImportImage>
     <ExportImage>Görüntüyü dışa aktar...</ExportImage>
@@ -250,19 +265,25 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <QuickOcr>Hızlı OCR metinleri (yalnızca genel bakış için)</QuickOcr>
     <ResizeBitmaps>Görüntüleri yeniden boyutlandır...</ResizeBitmaps>
     <ChangeBrightness>Parlaklığı değiştir...</ChangeBrightness>
+    <ChangeAlpha>Alpha ayarla...</ChangeAlpha>
     <ResizeBitmapsForSelectedLines>Resimleri seçili satırlar için yeniden boyutlandırın...</ResizeBitmapsForSelectedLines>
     <ChangeColorForSelectedLines>Seçili satırlar için rengi değiştir...</ChangeColorForSelectedLines>
     <ChangeBrightnessForSelectedLines>Seçili satırlar için parlaklığı değiştir...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>Seçili satırlar için alphayı ayarla...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>Seçili çizgileri hizala</AlignSelectedLines>
     <CenterSelectedLines>Seçili satırları ortala (yatay olarak, dikey konumu koru)</CenterSelectedLines>
     <TopAlignSelectedLines>Seçili satırları üstten hizala (yatay konumu koru)</TopAlignSelectedLines>
     <BottomAlignSelectedLines>Seçili satırları alta hizala (yatay konumu koru)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>Seçili satırlar için "Forced" seçeneğini değiştirin</ToggleForcedSelectedLines>
+    <SelectForcedLines>Forced satırları seçin</SelectForcedLines>
     <SizeXY>Boyut : {0}x{1}</SizeXY>
     <SetAspectRatio11>1:1 en boy oranını ayarla</SetAspectRatio11>
     <ChangeBrightnessTitle>Parlaklığı değiştir</ChangeBrightnessTitle>
     <BrightnessX>Parlaklık:%{0}</BrightnessX>
     <ResizeTitle>Görüntüleri yeniden boyutlandırın</ResizeTitle>
     <ResizeX>Yeniden boyutlandır: %{0}</ResizeX>
+    <ChangeAlphaTitle>Alpha ayarla</ChangeAlphaTitle>
+    <AlphaX>Alpha: {0}%</AlphaX>
   </BinEdit>
   <Bookmarks>
     <EditBookmark>Yer imini düzenle</EditBookmark>
@@ -547,7 +568,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <CenterRightJustify>Merkez, sağa yasla</CenterRightJustify>
     <BottomMargin>Alt boşluk</BottomMargin>
     <LeftRightMargin>Sol/sağ boşluk</LeftRightMargin>
-    <SaveBluRraySupAs>Blu-ray altyazı dosya adı seçin</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Blu-ray sup dosya adını seçin</SaveBluRaySupAs>
     <SaveVobSubAs>VobSub dosya adı seçin</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB görüntü komut dosya adını seçin</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studyo Pro STL dosya adını seçin</SaveDvdStudioProStlAs>
@@ -641,7 +662,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <BreakLongLines>Uzun satırları böl</BreakLongLines>
     <RemoveLineBreaks>Tek cümle olan kısa metinleri, tek satırda birleştir</RemoveLineBreaks>
     <RemoveLineBreaksAll>Tüm kısa metinleri, tek satırda birleştir (diyaloglar hariç)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Kelime içinde büyük harf, küçük harf düzeltme 'i' (OCR hatası)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Kelime içinde büyük harf, küçük harf düzeltme 'i' (OCR hatası)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Çift tırnak (''), tek tırnak karakterini düzelt (")</FixDoubleApostrophes>
     <AddPeriods>Sonraki satır büyük harfle başlıyorsa bulunan satırın sonuna nokta ekleyin</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Paragraftan sonra büyük harfle başlayın</StartWithUppercaseLetterAfterParagraph>
@@ -662,6 +683,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixHyphensInDialogs>İletişim çizgisi ekleyerek diyalogları düzelt (tire ekle)</FixHyphensInDialogs>
     <AddMissingQuotesExample>"Nasılsın? -&gt; "Nasılsın?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Kayıp alıntılar eklendi: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>İkiden fazla satır içeren altyazıyı düzeltin</Fix3PlusLine>
     <Fix3PlusLines>İki satırdan fazla altyazıları düzelt</Fix3PlusLines>
     <Analysing>Analiz ediliyor...</Analysing>
     <NothingToFix>Düzeltilecek bir şey yok :)</NothingToFix>
@@ -683,7 +705,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey  sen , oradaki. -&gt; Hey sen, oradaki.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey sen!. -&gt; Hey sen!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.Sen. -&gt; Hey. Sen.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Dünya yuvarIak. -&gt; Dünya yuvarlak.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>Dünya yuvarIak. -&gt; Dünya yuvarlak.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Umrumda değil. -&gt; Umrumda değIl.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Metin numarası {0}: Başlangıç zamanı bitiş zamanından sonra: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Metin numarasını düzeltilemez {0}: Başlangıç zamanı bitiş zamanından sonra: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -715,7 +737,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixDialogsOneLineExample>Selam Ali! - Selam Veli! -&gt; Selam Ali!&lt;br /&gt;- Selam Veli!</FixDialogsOneLineExample>
     <SelectDefault>Varsayılanı seç</SelectDefault>
     <SetDefault>Mevcut düzeltmeleri varsayılan olarak ayarla</SetDefault>
-    <FixContinuationStyleX>Devam stilini düzelt (... kaldırır): {0}</FixContinuationStyleX>
+    <FixContinuationStyleX>Devam stilini düzelt: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Gereksiz önde gelen noktaları kaldırın (...)</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
@@ -820,6 +842,7 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
     <RemoveEmptyLines>Boş satırları kaldır</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Harf içermeyen satırları kaldırın</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Zamanlama kodları oluştur</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>Mevcut dosyadan zamanları alın</TakeTimeFromCurrentFile>
     <TakeTimeFromFileName>Dosya adından zaman ayırın</TakeTimeFromFileName>
     <GapBetweenSubtitles>Altyazılar arasındaki boşluk (milisaniye)</GapBetweenSubtitles>
     <Auto>Otomatik</Auto>
@@ -1253,6 +1276,7 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft çeviri orijinal satır</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>Seçili satırları çevir...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Seçilen satırlar için süreleri ayarla...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>Seçili satırlar için süre sınırları uygula...</ApplyDurationLimitsForSelectedLines>
         <FixCommonErrorsInSelectedLines>Seçilen satırdaki yaygın hataları düzelt...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Seçilen satırdaki harf boyutunu değiştir...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Seçilen satırları farklı kaydet...</SaveSelectedLines>
@@ -1309,9 +1333,10 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
       <SetEndTimeAndGoToNext>Bitişi &amp;ayarla &amp;&amp; sonrakine git</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>{0} bitiş zamanı ile ayarlandı</AdjustedViaEndTime>
       <SetEndTime>Bitiş&amp; zamanını ayarla</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Başlama&amp; ve bitiş kalanını ayarla</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Başlangıcı&amp; ayarlayın ve gerisini dengeleyin</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Çevrimiçi metin ara</SearchTextOnline>
       <GoogleTranslate>Google çeviri</GoogleTranslate>
+      <AutoTranslate>Otomatik çevir</AutoTranslate>
       <GoogleIt>Google'da arat</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
@@ -1328,6 +1353,7 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
     <SaveChangesToOriginalX>Orijinal {0} değişiklikleri kaydedilsin mi?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Altyazıyı farklı kaydet...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Orijinal altyazıyı farklı kaydet...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>Boş altyazı kaydedilemez</CannotSaveEmptySubtitle>
     <NoSubtitleLoaded>Yüklü altyazı yok</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Görsel senkron - seçilen satırlar</VisualSyncSelectedLines>
     <VisualSyncTitle>Görsel senkron</VisualSyncTitle>
@@ -1430,8 +1456,8 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <SpellCheck>Yazımı denetle</SpellCheck>
     <BeforeSpellCheck>Yazımı denetlemeden önce</BeforeSpellCheck>
     <SpellCheckChangedXToY>Yazım denetimi: değişmiş '{0}' dan '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>&lt;{0}&gt; etiketi eklemeden önce</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; etiket eklendi</TagXAdded>
+    <BeforeAddingTagX>'{0}' etiketi eklemeden önce</BeforeAddingTagX>
+    <TagXAdded>'{0}' etiket eklendi</TagXAdded>
     <LineXOfY>Satır {0} nin {1}</LineXOfY>
     <XLinesSavedAsY>{0} satır {1} olarak kaydedildi</XLinesSavedAsY>
     <XLinesDeleted>{0} satır silindi</XLinesDeleted>
@@ -1447,6 +1473,8 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <LineSplitted>Satır bölündü</LineSplitted>
     <BeforeMergeLines>Satırları birleştirmeden önce</BeforeMergeLines>
     <LinesMerged>Satır birleştirildi</LinesMerged>
+    <MergeSentences>Cümleleri birleştir...</MergeSentences>
+    <MergeSentencesXLines>Cümleleri birleştir - birleştirilmiş satırlar: {0}</MergeSentencesXLines>
     <BeforeSettingColor>Renk ayarından önce</BeforeSettingColor>
     <BeforeSettingFontName>Yazı tipi adı ayarından önce</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Daktilo efektinden önce</BeforeTypeWriterEffect>
@@ -1745,11 +1773,12 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <EndsWith>Bununla bitir</EndsWith>
     <NoContains>İçerik yok</NoContains>
     <RegEx>Düzenli ifadeler</RegEx>
-    <UnequalLines>Tek sayılı satırlar</UnequalLines>
-    <EqualLines>Çift sayılı satırlar</EqualLines>
+    <OddLines>Tek sayılı çizgiler</OddLines>
+    <EvenLines>Çift sayılı çizgiler</EvenLines>
     <DurationLessThan>Daha kısa süre</DurationLessThan>
     <DurationGreaterThan>Daha uzun süre</DurationGreaterThan>
     <MoreThanTwoLines>İkiden fazla satır</MoreThanTwoLines>
+    <Bookmarked>Yer imi eklendi</Bookmarked>
   </ModifySelection>
   <MultipleReplace>
     <Title>Çoklu değiştirme</Title>
@@ -1913,6 +1942,7 @@ Yeni oturum başlatın (işbirliği)</Information>
   <Settings>
     <Title>Ayarlar</Title>
     <General>Genel</General>
+    <SubtitleFormats>Altyazı formatları</SubtitleFormats>
     <Toolbar>Araç çubuğu</Toolbar>
     <VideoPlayer>Video oynatıcı</VideoPlayer>
     <WaveformAndSpectrogram>Dalga formu/spektrogra</WaveformAndSpectrogram>
@@ -1935,6 +1965,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ToggleBookmarks>Yer imlerini değiştir</ToggleBookmarks>
     <ToggleBookmarksWithComment>Yer imlerini değiştirin - yorum ekleyin</ToggleBookmarksWithComment>
     <ClearBookmarks>Yer imlerini temizle</ClearBookmarks>
+    <ExportBookmarks>Yer imlerini dışa aktar...</ExportBookmarks>
     <GoToBookmark>Yer imine git</GoToBookmark>
     <GoToPreviousBookmark>Önceki yer imine git</GoToPreviousBookmark>
     <GoToNextBookmark>Sonraki yer imine git</GoToNextBookmark>
@@ -1945,6 +1976,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <TogglePreviewOnVideo>Videoda önizlemeyi aç/kapat</TogglePreviewOnVideo>
     <Help>Yardım</Help>
     <FontInUi>UI Font</FontInUi>
+    <Appearance>Görünüm</Appearance>
     <ShowFrameRate>Kare hızını araç çubuğunda göster</ShowFrameRate>
     <DefaultFrameRate>Varsayılan kare hızı</DefaultFrameRate>
     <DefaultFileEncoding>Varsayılan dosya kodlama</DefaultFileEncoding>
@@ -1956,7 +1988,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <SubtitleLineMaximumLength>Tek satırda en çok harf sayısı</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal karakter/saniye</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>En çok harf sayısı (sn)</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>En çok kelime sayısı (dk)</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maks. kelime/dakika</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Yazarken otomatik kaydır</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>En az altyazı süresi (ms)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>En çok altyazı süresi (ms)</DurationMaximumMilliseconds>
@@ -1977,6 +2009,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <RememberPositionAndSize>Ana pencere konumunu ve boyutunu hatırla</RememberPositionAndSize>
     <StartInSourceView>Kaynak görünümünde başlat</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Bir altyazı açarken boş satırları kaldır</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>Boş satırları kaldır</RemoveBlankLines>
     <ShowLineBreaksAs>Satır sonlarını liste görünümü olarak göster</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Farklı kaydet..." kullandığı dosya adı</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Satıra çift-tıklandığına görüntülenecek ana pencere listesi</MainListViewDoubleClickAction>
@@ -2115,6 +2148,11 @@ Yeni oturum başlatın (işbirliği)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>OCR güncellemelerini düzelt. Ayrıca sabit kodlanmış kuralları kullan</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Kısa gösterim zamanını düzelt. Başlama zamanını taşınmaya izin ver</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Bir adım atla (düzeltme kuralları seçin)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>Varsayılan format</DefaultFormat>
+    <DefaultSaveAsFormat>Varsayılan format olarak kaydet</DefaultSaveAsFormat>
+    <Favorites>Favoriler</Favorites>
+    <FavoriteFormats>Favori formatlar</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>Not: Bir format seçildiğinde ilk olarak favori formatlar gösterilecek, varsayılan format her zaman önce gösterilecektir</FavoriteSubtitleFormatsNote>
     <Shortcuts>Kısayollar</Shortcuts>
     <Shortcut>Kısayol</Shortcut>
     <Control>Kontrol</Control>
@@ -2129,12 +2167,14 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AssaColor>ASSA rengi</AssaColor>
     <DarkTheme>Koyu tema</DarkTheme>
     <DarkThemeEnabled>Koyu tema kullan</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>Liste görünümü kılavuz çizgilerini göster</DarkThemeShowGridViewLines>
     <UpdateShortcut>Güncelle</UpdateShortcut>
     <FoucsSetVideoPosition>Odak video konumunu ayarla</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Video kontrol geçişlerini azalt/azaltma</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sonunu ayarla, yeni ekle ve yeniye git</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Son konuma göre ayarla</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Son konum üzerinden ayarla ve sonrakine git</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>Son *minus aralığını ayarlayın, sonrakine gidin ve buradan başlayın</AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>Sonunu ayarla ve sonrakine git</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Bitişi ve duraklamayı ayarla</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Başlangıç ayarla, otomatik süresini ayarla ve bir sonraki git</AdjustSetStartAutoDurationAndGoToNext>
@@ -2157,6 +2197,9 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AdjustEndOneFrameBackKeepGapNext>Sonu 1 kare geri taşı (sonraki yakınsa aralığı koru)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Sonu 1 kare ileri taşı (sonraki yakınsa aralığı koru)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Başlangıç zamanını ayarla, süreyi koru</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>İlgili satır için başlangıcı ayarlayın</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>İlgili satır için sonu ayarlayın</AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>Başlangıç ​​zamanını ayarlayın, tüm altyazıyı kaydırın</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Bitişi ayarla, süreyi gir</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Bitişi ayarla süreyi gir, ve sonrakine git</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextSceneChange>Seçili satırları yapıştır, sonraki sahne değiştiğinde başlar</AdjustSnapStartToNextSceneChange>
@@ -2187,6 +2230,8 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ToggleFocus>Odağı liste görünümü ve altyazı metin kutusu arasında değiştir</ToggleFocus>
     <ToggleFocusWaveform>Odağı liste görünümü ve dalga formu/spektrogram arasında değiştir</ToggleFocusWaveform>
     <ToggleDialogDashes>Diyalog çizgilerini aç/kapat</ToggleDialogDashes>
+    <ToggleQuotes>Alıntıları aç/kapat</ToggleQuotes>
+    <ToggleHiTags>HI etiketlerini değiştir</ToggleHiTags>
     <ToggleMusicSymbols>Müzik sembollerini değiştir</ToggleMusicSymbols>
     <Alignment>Hizala (seçilmiş satırlarda)</Alignment>
     <AlignmentN1>Sol alta hizalama - { an1}</AlignmentN1>
@@ -2250,6 +2295,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <PlayRateSlower>Daha yavaş oynatma hızı</PlayRateSlower>
     <PlayRateFaster>Daha hızlı oynatma hızı</PlayRateFaster>
     <VideoResetSpeedAndZoom>Hızı/yakınlaştırmayı sıfırla</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>Video kontrollerini değiştir</MainToggleVideoControls>
     <CustomSearch1>Çevir, özel arama 1</CustomSearch1>
     <CustomSearch2>Çevir, özel arama 2</CustomSearch2>
     <CustomSearch3>Çevir, özel arama 3</CustomSearch3>
@@ -2293,11 +2339,11 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ListViewColumnTextUp>Sütun, metin yukarı</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sütun, metin aşağı</ListViewColumnTextDown>
     <ListViewGoToNextError>Sonraki hataya git</ListViewGoToNextError>
-    <ShowBeamer>Altyazı tam ekran akışını başlat</ShowBeamer>
     <ShowStyleManager>Stil yöneticisini göster</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Bir sonraki altyazı satırının son kelimesini aşağı taşı</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Bir sonraki altyazı satırından ilk kelimeyi yukarı taşı</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Bir sonraki satıra ilk kelimeyi taşı (geçerli altyazı)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>İmleç konumundan sonraki metni sonraki altyazıya taşı ve sonrakine git</MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Son kelimeyi ilk satırdan aşağı taşı (geçerli altyazı)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Küçük harf seçimi</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Büyük harf seçimi</MainTextBoxSelectionToUpper>
@@ -2521,6 +2567,7 @@ Devam et?</RestoreDefaultSettingsMsg>
     <UpdateDetails>Güncelleme ayrıntıları</UpdateDetails>
     <Resolution>Çözünürlük</Resolution>
     <VideoResolution>Video çözünürlüğü</VideoResolution>
+    <FromCurrentVideo>Mevcut videodan</FromCurrentVideo>
     <Options>Seçenekler</Options>
     <WrapStyle>Örtüşme tarzı</WrapStyle>
     <Collision>Çarpışma</Collision>
@@ -2579,8 +2626,26 @@ Devam et?</RestoreDefaultSettingsMsg>
     <AddToFile>Dosyaya ekle</AddToFile>
     <AddToStorage>Depoya ekle</AddToStorage>
     <StyleStorage>Stil saklama</StyleStorage>
+    <StyleCurrentFile>Mevcut dosyadaki stiller</StyleCurrentFile>
     <OverwriteX>{0} üzerine yazılsın mı?</OverwriteX>
+    <CategoryNote>Not: Varsayılan kategorideki (yeşil renkli) stiller yeni ASSA dosyalarına uygulanacaktır.</CategoryNote>
+    <CategoriesManage>Yönet</CategoriesManage>
+    <MoveToCategory>Seçili stilleri kategoriye taşı...</MoveToCategory>
   </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>Kategori</Category>
+    <Categories>Kategoriler</Categories>
+    <CategoryName>Kategori adı</CategoryName>
+    <CategoryDelete>Seçili kategoriyi/kategorileri silmek istediğinizden emin misiniz?</CategoryDelete>
+    <NewCategory>Yeni kategori</NewCategory>
+    <CategoryRename>Kategoriyi yeniden adlandırın</CategoryRename>
+    <CategorySetDefault>Varsayılan olarak ayarla</CategorySetDefault>
+    <NumberOfStyles>Stil sayısı</NumberOfStyles>
+    <CategoryDefault>Varsayılan</CategoryDefault>
+    <ChooseCategories>{0} için kategorileri seçin</ChooseCategories>
+    <ImportCategoriesTitle>Kategorileri buradan içe aktar...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>Kategorileri dışa aktar...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Nokta senkronlama</Title>
     <TitleViaOtherSubtitle>Diğer altyazı üzerinden nokta senkronla</TitleViaOtherSubtitle>

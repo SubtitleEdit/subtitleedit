@@ -98,6 +98,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return preAssTag + text;
             }
 
+            string language = Settings.NameList != null ? Settings.NameList.LanguageName : "en";
             string newText = string.Empty;
             var lines = text.Trim().SplitToLines();
             int noOfNames = 0;
@@ -241,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     }
                                 }
 
-                                if (remove && !ShouldRemoveNarrator(pre))
+                                if (remove && !ShouldRemoveNarrator(pre, language))
                                 {
                                     remove = false;
                                 }
@@ -581,7 +582,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             else if (noOfNames == 2 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
             {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = "en" };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (dialogHelper.IsDialog(text.SplitToLines()))
                 {
                     if (removedInFirstLine && removedInSecondLine)
@@ -636,7 +637,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             else if (noOfNames == 1 && Utilities.GetNumberOfLines(newText) == 3 && Utilities.GetNumberOfLines(text) == 3)
             {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = "en" };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (dialogHelper.IsDialog(text.SplitToLines()))
                 {
                     if (removedInFirstLine)
@@ -784,10 +785,31 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return false;
         }
 
-        private static bool ShouldRemoveNarrator(string pre)
+        private static bool ShouldRemoveNarrator(string pre, string language)
         {
-            // Skip these: Barry, remember: She cannot; http://google.com; Improved by: ...
-            if (pre.IndexOfAny(new[] { "Previously on", "Improved by", "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (pre.Length > 30 || pre.IndexOfAny(new[] { "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+
+            if (language == "en" && pre.Length > 15 && pre.IndexOfAny(new[]
+                {
+                    "Previously on",
+                    "Improved by",
+                    " is ",
+                    " are ",
+                    " were ",
+                    " was ",
+                    " think ",
+                    " guess ",
+                    " will ",
+                    " believe ",
+                    " say ",
+                    " said ",
+                    " do ",
+                    " want ",
+                    "That's "
+                }, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return false;
             }
@@ -833,6 +855,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 pre = pre.Replace(Settings.CustomStart, string.Empty);
                 post = post.Replace(Settings.CustomEnd, string.Empty);
             }
+
+            // fix empty ending dialog line "-"
+            var inputLines = text.SplitToLines();
+            if (inputLines.Count == 2)
+            {
+                if (inputLines[0].HasSentenceEnding() && inputLines[1] == "-")
+                {
+                    text = inputLines[0].TrimStart('-').TrimStart();
+                }
+            }
+            else if (inputLines.Count == 3)
+            {
+                if (inputLines[1].HasSentenceEnding() && inputLines[2] == "-")
+                {
+                    text = inputLines[0] + Environment.NewLine + inputLines[1];
+                }
+            }
+
             var st = new StrippableText(text, pre, post);
             var sb = new StringBuilder();
             var parts = st.StrippedText.Trim().SplitToLines();
@@ -859,6 +899,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     string newText = stSub.StrippedText;
 
                     newText = RemoveHearImpairedTags(newText);
+                    if (newText.IsOnlyControlCharactersOrWhiteSpace())
+                    {
+                        newText = string.Empty;
+                    }
 
                     if (stSub.StrippedText.Length - newText.Length > 2)
                     {
@@ -1108,7 +1152,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text = Helper.FixHyphensRemoveForSingleLine(subtitle, text, index);
                 }
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
-                text = dialogHelper.FixDashesAndSpaces(text);
+                if (subtitle != null && index >= 0)
+                {
+                    var prev = subtitle.GetParagraphOrDefault(index - 1);
+                    text = dialogHelper.FixDashesAndSpaces(text, subtitle.Paragraphs[index], prev);
+                }
+                else
+                {
+                    text = dialogHelper.FixDashesAndSpaces(text);
+                }
             }
 
             text = text.Trim();

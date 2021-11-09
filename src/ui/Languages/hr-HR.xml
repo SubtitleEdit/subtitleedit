@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -197,9 +197,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <AutoBalanceErrorX>Auto ravnoteža: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes />
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer (Video projekcija)</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Promjena veličine slova</Title>
     <ChangeCasingTo>Promjena malih i velikih slova</ChangeCasingTo>
@@ -459,7 +456,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Center>Centar</Center>
     <BottomMargin>Donja granica</BottomMargin>
     <LeftRightMargin>Lijeva/desna margina</LeftRightMargin>
-    <SaveBluRraySupAs>Izaberite Blu-ray sup naziv</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Izaberite Blu-ray sup naziv</SaveBluRaySupAs>
     <SaveVobSubAs>Odaberite naziv datoteke VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Odaberite FAB image script naziv datoteke</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Odaberite DVD Studio Pro STL naziv datoteke</SaveDvdStudioProStlAs>
@@ -549,7 +546,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <BreakLongLines>Razdvoji duge linije</BreakLongLines>
     <RemoveLineBreaks>Ukloni redove u kratkim tekstovima (samo jedna rečenica)</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ukloni redove u kratkim tekstovima (sve osim dijaloga)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Ispravi veliko latinično slovo I nasred riječi</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Ispravi veliko latinično slovo I nasred riječi</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Promijeni dvostruke apostrofe u navodnike</FixDoubleApostrophes>
     <AddPeriods>Dodaj točku poslije linija gdje sljedeća počinje s velikim slovom</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Počni s velikim slovom poslije novog reda</StartWithUppercaseLetterAfterParagraph>
@@ -597,7 +594,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Zdravo ,  Amélie. → Zdravo, Amélie.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Zdravo!. → Zdravo!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Zdravo.Što radiš? → Zdravo. Što radiš?</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>VrIina. → Vrlina.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>VrIina. → Vrlina.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. → What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekst broj {0}: završno vrijeme se pojavljuje prije početnog: {4}{1} &gt;&gt; {2} {3}.</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ne mogu ispraviti tekst pod brojem {0}: završno vrijeme se pojavljuje prije početnog: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1174,7 +1171,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Posta&amp;vi kraj i idi na iduće</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Prilagođeno preko završnog vremena {0}</AdjustedViaEndTime>
       <SetEndTime>Po&amp;stavi završetak</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Pos&amp;tavi početak i pomakni</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Pos&amp;tavi početak i pomakni</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Pretraga teksta na mreži</SearchTextOnline>
       <GoogleTranslate>Pr&amp;evedi</GoogleTranslate>
       <GoogleIt>P&amp;retraži</GoogleIt>
@@ -1303,8 +1300,8 @@ koji bi trebao biti usklađen s video datotekom.
     <SpellCheck>Provjera pravopisa</SpellCheck>
     <BeforeSpellCheck>Prije provjere pravopisa</BeforeSpellCheck>
     <SpellCheckChangedXToY>Provjera pravopisa: „{0}“ je izmijenjen u „{1}“</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Dodano &lt;{0}&gt; oznaka</BeforeAddingTagX>
-    <TagXAdded>Dodano oznaka: &lt;{0}&gt;</TagXAdded>
+    <BeforeAddingTagX>Dodano '{0}' oznaka</BeforeAddingTagX>
+    <TagXAdded>Dodano oznaka: '{0}'</TagXAdded>
     <LineXOfY>Linija {0} od {1}</LineXOfY>
     <XLinesSavedAsY>{0} linija spremljeno kao {1}</XLinesSavedAsY>
     <XLinesDeleted>Obrisano linija: {0}</XLinesDeleted>
@@ -1518,8 +1515,8 @@ koji bi trebao biti usklađen s video datotekom.
     <EndsWith>Završava sa</EndsWith>
     <NoContains>Ne sadrži</NoContains>
     <RegEx>Normalan izraz</RegEx>
-    <UnequalLines>Neparne linije</UnequalLines>
-    <EqualLines>Parne linije</EqualLines>
+    <OddLines>Neparne linije</OddLines>
+    <EvenLines>Parne linije</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Višestruka zamjena</Title>
@@ -1703,7 +1700,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoDetectAnsiEncoding>Samoprepoznavanje kodiranja:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Najveća dužina podnaslova:</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks. znakova/sek</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maksimalno riječi/min</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maksimalno riječi/min</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>p&amp;relamaj pri tipkanju</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trajanje, milisekunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maks. trajanje, milisekunde</DurationMaximumMilliseconds>
@@ -1934,7 +1931,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewColumnInsert>Stup, umetnuti tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Stup, zalijepiti</ListViewColumnPaste>
     <ListViewGoToNextError>Idi na sljedeću pogrešku</ListViewGoToNextError>
-    <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dolje u novi redak podnaslova</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni prvu riječ u novi redak gore</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Izbor u mala slova</MainTextBoxSelectionToLower>
@@ -2150,7 +2146,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <MarginVertical>Vertikalna margina</MarginVertical>
     <Border>Granica</Border>
     <PlusShadow>+ Sjena</PlusShadow>
-    <OpaqueBox>Neprozirna kutija (koristi obris boje)</OpaqueBox>
+    <OpaqueBox>Neprozirna kutija</OpaqueBox>
     <Import>Uvoz...</Import>
     <Export>Izvezi...</Export>
     <Copy>Kopiraj</Copy>

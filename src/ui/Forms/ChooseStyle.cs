@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
@@ -46,6 +45,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+        private void ChooseStyle_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewStyles.AutoSizeLastColumn();
+        }
+
+        private void ChooseStyle_Shown(object sender, EventArgs e)
+        {
+            ChooseStyle_ResizeEnd(sender, e);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

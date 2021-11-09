@@ -96,41 +96,45 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string GetPositionInfoFromAssTag(Paragraph p)
         {
-            string positionInfo = string.Empty;
-
-            if (p.Text.StartsWith("{\\a", StringComparison.Ordinal))
+            string positionInfo;
+            if (p.Text.StartsWith("{\\an1", StringComparison.Ordinal))
             {
-                string position = null; // horizontal
-                if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    position = "20%"; //left
-                }
-                else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    position = "80%"; //right
-                }
-
-                string line = null;
-                if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    line = "20%"; //top
-                }
-                else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal)) // advanced sub station alpha
-                {
-                    line = "50%"; //middle
-                }
-
-                if (!string.IsNullOrEmpty(position))
-                {
-                    positionInfo = " position:" + position;
-                }
-                if (!string.IsNullOrEmpty(line))
-                {
-                    positionInfo += " line:" + line;
-                }
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn1;
+            }
+            else if (p.Text.StartsWith("{\\an3", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn3;
+            }
+            else if (p.Text.StartsWith("{\\an4", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn4;
+            }
+            else if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn5;
+            }
+            else if (p.Text.StartsWith("{\\an6", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn6;
+            }
+            else if (p.Text.StartsWith("{\\an7", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn7;
+            }
+            else if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn8;
+            }
+            else if (p.Text.StartsWith("{\\an9", StringComparison.Ordinal))
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn9;
+            }
+            else
+            {
+                positionInfo = Configuration.Settings.SubtitleSettings.WebVttCueAn2;
             }
 
-            return positionInfo;
+            return (" " + positionInfo).TrimEnd();
         }
 
         internal static string FormatText(Paragraph p)
@@ -325,6 +329,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
                 paragraph.Text = EscapeDecodeText(paragraph.Text);
+                paragraph.Text = RemoveWeirdReatingHeader(paragraph.Text);
                 paragraph.StartTime.TotalMilliseconds += addSeconds * 1000;
                 paragraph.EndTime.TotalMilliseconds += addSeconds * 1000;
             }
@@ -336,6 +341,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine)
                     .Trim();
             }
+        }
+
+        private string RemoveWeirdReatingHeader(string input)
+        {
+            var text = input;
+            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            if (text.Contains(Environment.NewLine + "WEBVTT"))
+            {
+                if (text.TrimEnd().EndsWith('}') && text.Contains("STYLE"))
+                {
+                    text = text.Remove(text.IndexOf(Environment.NewLine + "WEBVTT")).Trim();
+                }
+            }
+            else if (text.TrimEnd().EndsWith(Environment.NewLine + "WEBVTT", StringComparison.Ordinal))
+            {
+                text = text.Remove(text.LastIndexOf(Environment.NewLine + "WEBVTT")).Trim();
+            }
+            else if (text.Contains(Environment.NewLine + "STYLE" + Environment.NewLine))
+            {
+                if (text.TrimEnd().EndsWith("}"))
+                {
+                    text = text.Remove(text.IndexOf(Environment.NewLine + "STYLE" + Environment.NewLine)).Trim();
+                }
+            }
+
+            return text;
         }
 
         private static double GetXTimeStampSeconds(string input)
@@ -546,14 +578,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     text = System.Net.WebUtility.HtmlDecode(text);
 
-                    var match = regexWebVttColorMulti.Match(text);
+                    var match = regexWebVttColorMulti.Match(text);                    
                     while (match.Success)
                     {
                         var tag = match.Value.Substring(3, match.Value.Length - 4);
                         tag = FindBestColorTagOrDefault(tag);
                         if (tag == null)
                         {
-                            break;
+                            text = text.Replace(match.Value, string.Empty);
+                            text = text.Replace(match.Value.Insert(1, "/"), string.Empty);
+                            match = regexWebVttColorMulti.Match(text);
+                            continue;
                         }
                         var fontString = "<font color=\"" + tag + "\">";
                         fontString = fontString.Trim('"').Trim('\'');
@@ -563,7 +598,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
                         }
-                        match = RegexWebVttColor.Match(text);
+                        else
+                        {
+                            endIndex = text.IndexOf("</c.", match.Index, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex >= 0)
+                            {
+                                var endEndIndex = text.IndexOf('>', endIndex);
+                                if (endEndIndex > 0)
+                                {
+                                    text = text.Remove(endIndex, endEndIndex - endIndex).Insert(endIndex, "</font>");
+                                }
+                            }
+                        }
+                        match = regexWebVttColorMulti.Match(text);
                     }
 
                     text = RemoveTag("v", text);
@@ -629,6 +676,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (endIndex >= 0)
                     {
                         res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                    }
+                    else 
+                    {
+                        var findString = $"</c.{value}>";
+                        endIndex = res.IndexOf(findString, match.Index, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            res = res.Remove(endIndex, findString.Length).Insert(endIndex, "</font>");
+                        }
                     }
                 }
 

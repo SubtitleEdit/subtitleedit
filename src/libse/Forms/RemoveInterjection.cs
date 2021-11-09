@@ -398,12 +398,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             if (lines.Count == 2)
             {
-                if (string.IsNullOrWhiteSpace(lines[1].RemoveChar('.').RemoveChar('?').RemoveChar('!').RemoveChar('-').RemoveChar('—')))
+                if (string.IsNullOrWhiteSpace(lines[1].RemoveChar('.', '?', '!', '-', '—')))
                 {
                     text = lines[0];
                     lines = text.SplitToLines();
                 }
-                else if (string.IsNullOrWhiteSpace(lines[0].RemoveChar('.').RemoveChar('?').RemoveChar('!').RemoveChar('-').RemoveChar('—')))
+                else if (string.IsNullOrWhiteSpace(lines[0].RemoveChar('.', '?', '!', '-', '—')))
                 {
                     text = lines[1];
                     lines = text.SplitToLines();

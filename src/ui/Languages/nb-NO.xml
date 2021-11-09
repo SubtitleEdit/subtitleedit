@@ -2,7 +2,7 @@
 <Language Name="Norsk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Oversatt av Dandelion Sprout</TranslatedBy>
     <CultureName>nb-NO</CultureName>
     <HelpFile />
@@ -188,9 +188,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <MultipleReplaceErrorX>Erstatter flere: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Autobalanse: {0}</AutoBalanceErrorX>
   </BatchConvert>
-  <Beamer>
-    <Title>Prosjektering</Title>
-  </Beamer>
   <ChangeCasing>
     <Title>Endre bokstavkapitalisering</Title>
     <ChangeCasingTo>Endre bokstavkapitalisering til</ChangeCasingTo>
@@ -437,7 +434,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <Center>Center</Center>
     <BottomMargin>Bottom margin</BottomMargin>
     <LeftRightMargin>Left/right margin</LeftRightMargin>
-    <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Choose Blu-ray sup file name</SaveBluRaySupAs>
     <SaveVobSubAs>Choose VobSub file name</SaveVobSubAs>
     <SaveFabImageScriptAs>Choose FAB image script file name</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Choose DVD Studio Pro STL file name</SaveDvdStudioProStlAs>
@@ -527,7 +524,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
     <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start with uppercase letter after paragraph</StartWithUppercaseLetterAfterParagraph>
@@ -575,7 +572,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1138,7 +1135,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Sett &amp;sluttid &amp;&amp; hopp til neste</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Justert gjennom sluttiden {0}</AdjustedViaEndTime>
       <SetEndTime>Sett s&amp;luttid</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Sett sta&amp;rt and sett avvik til resten</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Sett sta&amp;rt and sett avvik til resten</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Søk opp tekst på nettet</SearchTextOnline>
       <GoogleTranslate>Google-oversett</GoogleTranslate>
       <GoogleIt>Google opp</GoogleIt>
@@ -1266,8 +1263,8 @@ Vil du fortsette?</SubtitleAppendPrompt>
     <SpellCheck>Stavesjekk</SpellCheck>
     <BeforeSpellCheck>Før stavesjekk</BeforeSpellCheck>
     <SpellCheckChangedXToY>Stavesjekk: Endret '{0}' til '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Før markering av &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; markeringer lagt til</TagXAdded>
+    <BeforeAddingTagX>Før markering av '{0}'</BeforeAddingTagX>
+    <TagXAdded>'{0}' markering lagt til</TagXAdded>
     <LineXOfY>linje {0} av {1}</LineXOfY>
     <XLinesSavedAsY>{0} linjer lagret som {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linjer slettet</XLinesDeleted>
@@ -1480,8 +1477,8 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <EndsWith>Slutter med</EndsWith>
     <NoContains>Inneholder ikke</NoContains>
     <RegEx>Vanlige uttrykk</RegEx>
-    <UnequalLines>Linjer med oddetall</UnequalLines>
-    <EqualLines>Linjer med partall</EqualLines>
+    <OddLines>Linjer med oddetall</OddLines>
+    <EvenLines>Linjer med partall</EvenLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Erstatt flere</Title>
@@ -1852,7 +1849,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <ListViewColumnInsert>Kolonne, sett inn tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Kolonne, lim inn</ListViewColumnPaste>
     <ListViewGoToNextError>Hopp til neste feil</ListViewGoToNextError>
-    <ShowBeamer>Start fullskjermsprosjektering av undertekst</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flytt siste ord ned til neste undertekstlinje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flytt opp første ord fra neste undertekstlinje</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Gjør utvalg til småbokstaver</MainTextBoxSelectionToLower>

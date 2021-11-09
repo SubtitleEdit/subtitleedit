@@ -2,7 +2,7 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -212,9 +212,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBalanceErrorX>تعادل خودکار: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>کدگذاری زمان افست</OffsetTimeCodes>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>ویرایش نشانک</EditBookmark>
     <AddBookmark>افزودن نشانک</AddBookmark>
@@ -484,7 +481,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CenterTopJustify>Center, top justify</CenterTopJustify>
     <BottomMargin>حاشیه پایین</BottomMargin>
     <LeftRightMargin>حاشیه چپ/راست</LeftRightMargin>
-    <SaveBluRraySupAs>نام پرونده Blu-ray را انتخاب کنید</SaveBluRraySupAs>
+    <SaveBluRaySupAs>نام پرونده Blu-ray را انتخاب کنید</SaveBluRaySupAs>
     <SaveVobSubAs>نام پرونده VobSub را انتخاب کنید</SaveVobSubAs>
     <SaveFabImageScriptAs>نام پرونده اسکریپت FAB را انتخاب کنید</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>نام پرونده را انتخاب کنید DVD Studio Pro</SaveDvdStudioProStlAs>
@@ -575,7 +572,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>شکستن خطوط طولانی</BreakLongLines>
     <RemoveLineBreaks>حذف پرش به خط بعد در متون کوتاه با تنها یک جمله</RemoveLineBreaks>
     <RemoveLineBreaksAll>گزارش پرش به خط بعد در متون کوتاه /همه به جز گفت وگو ها</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>"i" را در کلمات کوچک با حروف بزرگ حل کنید (خطای OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>"i" را در کلمات کوچک با حروف بزرگ حل کنید (خطای OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>جایگزین کردن دو علامت (') با یک علامت نقل قول (")</FixDoubleApostrophes>
     <AddPeriods>اضافه کردن مدت زمان اگر شروع خط بعدی با حرف بزرگ باشد</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>شروع با حرف بزرگ پس از یک پاراگراف</StartWithUppercaseLetterAfterParagraph>
@@ -621,7 +618,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>هی تو ، وجود دارد. -&gt; هی تو ، وجود دارد.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>هی تو!. -&gt; هی تو!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -- هی&gt;. شما.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>فیات زمین است. -&gt; زمین صاف است.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>فیات زمین است. -&gt; زمین صاف است.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>چه مراقبت می کنم. -&gt; چه کار کنم مراقبت.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1232,7 +1229,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>تنظیم و پایان و و رفتن به آینده</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
       <SetEndTime>نامه تنظیم و زمان دوم</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>تنظیم &amp;sta rt افست و استراحت</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>تنظیم &amp;sta rt افست و استراحت</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>جستجوی متن آنلاین</SearchTextOnline>
       <GoogleTranslate>مترجم گوگل</GoogleTranslate>
       <GoogleIt>گوگل آن را</GoogleIt>
@@ -1354,8 +1351,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>بررسی املا</SpellCheck>
     <BeforeSpellCheck>قبل از بررسی املا</BeforeSpellCheck>
     <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>قبل از اضافه کردن &lt;{0}&gt; برچسب</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; برچسب ها اضافه شده</TagXAdded>
+    <BeforeAddingTagX>قبل از اضافه کردن '{0}' برچسب</BeforeAddingTagX>
+    <TagXAdded>'{0}' برچسب ها اضافه شده</TagXAdded>
     <LineXOfY>خط {0} از {1}</LineXOfY>
     <XLinesSavedAsY>{0} خط ذخیره شده به عنوان {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} حذف خطوط</XLinesDeleted>
@@ -1571,8 +1568,8 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <EndsWith>پایان با</EndsWith>
     <NoContains>شامل نیست</NoContains>
     <RegEx>عبارات منظم</RegEx>
-    <UnequalLines>خطوط با شماره فرد</UnequalLines>
-    <EqualLines>خطوط با شماره زوج</EqualLines>
+    <OddLines>خطوط با شماره فرد</OddLines>
+    <EvenLines>خطوط با شماره زوج</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
   </ModifySelection>
@@ -1774,7 +1771,7 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <SubtitleLineMaximumLength>حداکثر طول یک خط</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal chars/sec</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>حداکثر کاراکتر/ثانیه</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>حداکثر کلمه/دقیقه</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>حداکثر کلمه/دقیقه</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>بسته بندی خودکار در حال تایپ</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>بیشترین.مدت،میلی ثانیه</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>بیشترین.مدت،میلی ثانیه</DurationMaximumMilliseconds>
@@ -2034,7 +2031,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <ListViewColumnTextUp>ستون ، متن بالا</ListViewColumnTextUp>
     <ListViewColumnTextDown>ستون ، متن پایین</ListViewColumnTextDown>
     <ListViewGoToNextError>رفتن به خطای بعدی</ListViewGoToNextError>
-    <ShowBeamer>beamer تمام صفحه زیرنویس را شروع کنید</ShowBeamer>
     <MainTextBoxMoveLastWordDown>انتقال آخرین کلمه به خط بعدی زیرنویس</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>انتقال اولین کلمه از زیرنویس بعدی به بالا</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
@@ -2265,7 +2261,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <MarginVertical>حاشیه عمودی</MarginVertical>
     <Border>مرز</Border>
     <PlusShadow>+ سایه</PlusShadow>
-    <OpaqueBox>جعبه مات (با استفاده از رنگ اصلی)</OpaqueBox>
+    <OpaqueBox>با استفاده از رنگ اصلی</OpaqueBox>
     <Import>واردات...</Import>
     <Export>صادرات...</Export>
     <Copy>کپی</Copy>

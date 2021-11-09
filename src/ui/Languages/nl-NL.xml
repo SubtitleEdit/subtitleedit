@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.18</Version>
+    <Version>3.6.2</Version>
     <TranslatedBy>Vertaald door Quetsbeek, minouhse, René Maassen en Flitskikker</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -233,9 +233,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <MkvLanguageStyleThreeLetter>Drieletterige taalcode</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Geen taalcode</MkvLanguageStyleEmpty>
   </BatchConvert>
-  <Beamer>
-    <Title>Beamer</Title>
-  </Beamer>
   <Bookmarks>
     <EditBookmark>Bladwĳzer bewerken</EditBookmark>
     <AddBookmark>Bladwĳzer toevoegen</AddBookmark>
@@ -505,7 +502,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <CenterTopJustify>Middenboven uitvullen</CenterTopJustify>
     <BottomMargin>Ondermarge</BottomMargin>
     <LeftRightMargin>Zĳmarge</LeftRightMargin>
-    <SaveBluRraySupAs>Blu-ray-SUP-bestand kiezen</SaveBluRraySupAs>
+    <SaveBluRaySupAs>Blu-ray-SUP-bestand kiezen</SaveBluRaySupAs>
     <SaveVobSubAs>VobSub-bestand kiezen</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB image script-bestand kiezen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL-bestand kiezen</SaveDvdStudioProStlAs>
@@ -598,7 +595,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
     <RemoveLineBreaks>Regeleinde in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
     <RemoveLineBreaksAll>Regeleinde in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Hoofdletter i in woorden in kleine letters (OCR-fout) corrigeren</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Hoofdletter i in woorden in kleine letters (OCR-fout) corrigeren</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Na een alinea met een hoofdletter beginnen</StartWithUppercaseLetterAfterParagraph>
@@ -647,7 +644,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey   you , there. ⇒ Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. ⇒ Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. ⇒ Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. ⇒ The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. ⇒ The earth is flat.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. ⇒ What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Titel {0}: Begintĳd is later dan eindtĳd: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Kan titel {0} niet corrigeren: begintĳd is later dan eindtĳd: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1269,7 +1266,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
       <SetEndTimeAndGoToNext>Eindtĳd instellen en naar volgende</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Gecorrigeerd via eindtĳd {0}</AdjustedViaEndTime>
       <SetEndTime>Eindtĳd instellen</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Begintĳd instellen en rest opschuiven</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Begintĳd instellen en rest opschuiven</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Tekst online zoeken</SearchTextOnline>
       <GoogleTranslate>Google vertalen</GoogleTranslate>
       <GoogleIt>Op Google zoeken</GoogleIt>
@@ -1395,8 +1392,8 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <SpellCheck>Spellingcontrole</SpellCheck>
     <BeforeSpellCheck>Vóór spellingcontrole</BeforeSpellCheck>
     <SpellCheckChangedXToY>Spellingcontrole: ‘{0}’ door ‘{1}’ vervangen</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Vóór toevoeging van &lt;{0}&gt;-tag</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt;-tags toegevoegd</TagXAdded>
+    <BeforeAddingTagX>Vóór toevoeging van '{0}'-tag</BeforeAddingTagX>
+    <TagXAdded>'{0}'-tag toegevoegd</TagXAdded>
     <LineXOfY>titel {0} van {1}</LineXOfY>
     <XLinesSavedAsY>{0} titels opgeslagen als {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} titels verwĳderd</XLinesDeleted>
@@ -1616,8 +1613,8 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <EndsWith>Eindigt met</EndsWith>
     <NoContains>Bevat niet</NoContains>
     <RegEx>Reguliere expressie</RegEx>
-    <UnequalLines>Oneven regelnummers</UnequalLines>
-    <EqualLines>Even regelnummers</EqualLines>
+    <OddLines>Oneven regelnummers</OddLines>
+    <EvenLines>Even regelnummers</EvenLines>
     <DurationLessThan>Tĳdsduur korter dan</DurationLessThan>
     <DurationGreaterThan>Tĳdsduur langer dan</DurationGreaterThan>
   </ModifySelection>
@@ -1822,7 +1819,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <SubtitleLineMaximumLength>Maximale lengte enkele regel</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimaal aantal tekens/sec.</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maximaal aantal tekens/sec.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maximaal aantal woorden/min.</MaximumWordssPerMinute>
+    <MaximumWordsPerMinute>Maximaal aantal woorden/min.</MaximumWordsPerMinute>
     <AutoWrapWhileTyping>Tekstomloop tĳdens het typen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. tĳdsduur in milliseconden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. tĳdsduur in milliseconden</DurationMaximumMilliseconds>
@@ -2119,7 +2116,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <ListViewColumnTextUp>Kolom, tekst omhoog</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolom, tekst omlaag</ListViewColumnTextDown>
     <ListViewGoToNextError>Naar volgende fout</ListViewGoToNextError>
-    <ShowBeamer>Ondertitelingbeamer voor volledig scherm starten</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Laatste woord naar volgende ondertitel verplaatsen</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Eerste woord uit volgende ondertitel halen</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Eerste woord uit volgende ondertitel halen (huidige ondertitel)</MainTextBoxMoveFirstWordUpCurrent>

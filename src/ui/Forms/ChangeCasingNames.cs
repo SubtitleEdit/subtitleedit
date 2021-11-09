@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -253,8 +252,15 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
+        private void ChangeCasingNames_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.AutoSizeLastColumn();
+            listViewNames.AutoSizeLastColumn();
+        }
+
         private void ChangeCasingNames_Shown(object sender, EventArgs e)
         {
+            ChangeCasingNames_ResizeEnd(sender, e);
             listViewNames.ItemChecked += ListViewNamesItemChecked;
         }
 

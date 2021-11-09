@@ -55,7 +55,8 @@
             // 
             // buttonOpenIfo
             // 
-            this.buttonOpenIfo.Location = new System.Drawing.Point(447, 32);
+            this.buttonOpenIfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOpenIfo.Location = new System.Drawing.Point(517, 32);
             this.buttonOpenIfo.Name = "buttonOpenIfo";
             this.buttonOpenIfo.Size = new System.Drawing.Size(29, 23);
             this.buttonOpenIfo.TabIndex = 1;
@@ -66,10 +67,12 @@
             // textBoxIfoFileName
             // 
             this.textBoxIfoFileName.AllowDrop = true;
+            this.textBoxIfoFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIfoFileName.Location = new System.Drawing.Point(6, 34);
             this.textBoxIfoFileName.Name = "textBoxIfoFileName";
             this.textBoxIfoFileName.ReadOnly = true;
-            this.textBoxIfoFileName.Size = new System.Drawing.Size(435, 21);
+            this.textBoxIfoFileName.Size = new System.Drawing.Size(505, 21);
             this.textBoxIfoFileName.TabIndex = 0;
             this.textBoxIfoFileName.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxIfoFileNameDragDrop);
             this.textBoxIfoFileName.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxIfoFileNameDragEnter);
@@ -102,14 +105,15 @@
             this.groupBoxDvd.Controls.Add(this.textBoxIfoFileName);
             this.groupBoxDvd.Location = new System.Drawing.Point(4, 4);
             this.groupBoxDvd.Name = "groupBoxDvd";
-            this.groupBoxDvd.Size = new System.Drawing.Size(544, 276);
+            this.groupBoxDvd.Size = new System.Drawing.Size(614, 276);
             this.groupBoxDvd.TabIndex = 3;
             this.groupBoxDvd.TabStop = false;
             this.groupBoxDvd.Text = "DVD files/info";
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(446, 133);
+            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClear.Location = new System.Drawing.Point(516, 133);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(92, 23);
             this.buttonClear.TabIndex = 9;
@@ -119,8 +123,7 @@
             // 
             // groupBoxLanguages
             // 
-            this.groupBoxLanguages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxLanguages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxLanguages.Controls.Add(this.comboBoxLanguages);
             this.groupBoxLanguages.Location = new System.Drawing.Point(6, 218);
             this.groupBoxLanguages.Name = "groupBoxLanguages";
@@ -146,7 +149,7 @@
             this.groupBoxPalNtsc.Controls.Add(this.radioButtonPal);
             this.groupBoxPalNtsc.Location = new System.Drawing.Point(254, 218);
             this.groupBoxPalNtsc.Name = "groupBoxPalNtsc";
-            this.groupBoxPalNtsc.Size = new System.Drawing.Size(284, 52);
+            this.groupBoxPalNtsc.Size = new System.Drawing.Size(354, 52);
             this.groupBoxPalNtsc.TabIndex = 20;
             this.groupBoxPalNtsc.TabStop = false;
             this.groupBoxPalNtsc.Text = "PAL/NTSC";
@@ -176,7 +179,8 @@
             // 
             // ButtonRemoveVob
             // 
-            this.ButtonRemoveVob.Location = new System.Drawing.Point(447, 105);
+            this.ButtonRemoveVob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonRemoveVob.Location = new System.Drawing.Point(517, 105);
             this.ButtonRemoveVob.Name = "ButtonRemoveVob";
             this.ButtonRemoveVob.Size = new System.Drawing.Size(91, 23);
             this.ButtonRemoveVob.TabIndex = 8;
@@ -186,7 +190,8 @@
             // 
             // ButtonMoveVobDown
             // 
-            this.ButtonMoveVobDown.Location = new System.Drawing.Point(446, 189);
+            this.ButtonMoveVobDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonMoveVobDown.Location = new System.Drawing.Point(516, 189);
             this.ButtonMoveVobDown.Name = "ButtonMoveVobDown";
             this.ButtonMoveVobDown.Size = new System.Drawing.Size(92, 23);
             this.ButtonMoveVobDown.TabIndex = 12;
@@ -196,7 +201,8 @@
             // 
             // ButtonMoveVobUp
             // 
-            this.ButtonMoveVobUp.Location = new System.Drawing.Point(447, 161);
+            this.ButtonMoveVobUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonMoveVobUp.Location = new System.Drawing.Point(517, 161);
             this.ButtonMoveVobUp.Name = "ButtonMoveVobUp";
             this.ButtonMoveVobUp.Size = new System.Drawing.Size(91, 23);
             this.ButtonMoveVobUp.TabIndex = 10;
@@ -206,7 +212,8 @@
             // 
             // buttonAddVobFile
             // 
-            this.buttonAddVobFile.Location = new System.Drawing.Point(447, 77);
+            this.buttonAddVobFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddVobFile.Location = new System.Drawing.Point(517, 77);
             this.buttonAddVobFile.Name = "buttonAddVobFile";
             this.buttonAddVobFile.Size = new System.Drawing.Size(91, 23);
             this.buttonAddVobFile.TabIndex = 5;
@@ -226,10 +233,13 @@
             // listBoxVobFiles
             // 
             this.listBoxVobFiles.AllowDrop = true;
+            this.listBoxVobFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxVobFiles.FormattingEnabled = true;
             this.listBoxVobFiles.Location = new System.Drawing.Point(6, 77);
             this.listBoxVobFiles.Name = "listBoxVobFiles";
-            this.listBoxVobFiles.Size = new System.Drawing.Size(435, 134);
+            this.listBoxVobFiles.Size = new System.Drawing.Size(505, 134);
             this.listBoxVobFiles.TabIndex = 3;
             this.listBoxVobFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListBoxVobFilesDragDrop);
             this.listBoxVobFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListBoxVobFilesDragEnter);
@@ -244,7 +254,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBarRip.Location = new System.Drawing.Point(133, 301);
             this.progressBarRip.Name = "progressBarRip";
-            this.progressBarRip.Size = new System.Drawing.Size(415, 15);
+            this.progressBarRip.Size = new System.Drawing.Size(485, 15);
             this.progressBarRip.TabIndex = 4;
             this.progressBarRip.Visible = false;
             // 
@@ -274,16 +284,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 326);
+            this.ClientSize = new System.Drawing.Size(624, 326);
             this.Controls.Add(this.progressBarRip);
             this.Controls.Add(this.buttonStartRipping);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxDvd);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(570, 365);
             this.Name = "DvdSubRip";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

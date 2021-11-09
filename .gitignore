@@ -9,8 +9,6 @@
 /SE*.zip
 /src/Win32Resources/Resources.aps
 /src/Win32Resources/Resources.rc
-/src/Languages/LanguageMaster.xml
-/src/Languages/XmlContentTranslator.exe
 /src/Properties/AssemblyInfo.cs
 /src/ui/Properties/AssemblyInfo.cs
 /src/libse/Properties/AssemblyInfo.cs
@@ -18,13 +16,12 @@
 /SubtitleEdit.lzma
 /SubtitleEdit.tar
 /SubtitleEdit.tgz
-/tabspace.exe
 bin/
 obj/
 SubtitleEdit-*-setup.exe
 SubtitleEdit-*.zip
 
-# Visual Studio 2015/2017 cache/options directory
+# Visual Studio cache/options directory
 .vs/
 *.ide
 

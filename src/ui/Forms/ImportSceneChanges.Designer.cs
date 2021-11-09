@@ -208,11 +208,11 @@
             this.groupBoxGenerateSceneChanges.TabStop = false;
             this.groupBoxGenerateSceneChanges.Text = "Generate scene changes";
             // 
-            // labelThressholdDescription
+            // labelThresholdDescription
             // 
             this.labelThresholdDescription.AutoSize = true;
             this.labelThresholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelThresholdDescription.Location = new System.Drawing.Point(115, 384);
+            this.labelThresholdDescription.Location = new System.Drawing.Point(6, 387);
             this.labelThresholdDescription.Name = "labelThresholdDescription";
             this.labelThresholdDescription.Size = new System.Drawing.Size(195, 13);
             this.labelThresholdDescription.TabIndex = 5;
@@ -226,7 +226,7 @@
             0,
             0,
             65536});
-            this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 382);
+            this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 364);
             this.numericUpDownThreshold.Maximum = new decimal(new int[] {
             9,
             0,
@@ -249,7 +249,7 @@
             // labelFfmpegThreshold
             // 
             this.labelFfmpegThreshold.AutoSize = true;
-            this.labelFfmpegThreshold.Location = new System.Drawing.Point(6, 384);
+            this.labelFfmpegThreshold.Location = new System.Drawing.Point(6, 366);
             this.labelFfmpegThreshold.Name = "labelFfmpegThreshold";
             this.labelFfmpegThreshold.Size = new System.Drawing.Size(54, 13);
             this.labelFfmpegThreshold.TabIndex = 3;
@@ -270,7 +270,7 @@
             // 
             this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 353);
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 330);
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
             this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(337, 23);
             this.buttonImportWithFfmpeg.TabIndex = 2;
@@ -290,7 +290,7 @@
             this.textBoxGenerate.Name = "textBoxGenerate";
             this.textBoxGenerate.ReadOnly = true;
             this.textBoxGenerate.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxGenerate.Size = new System.Drawing.Size(337, 299);
+            this.textBoxGenerate.Size = new System.Drawing.Size(337, 276);
             this.textBoxGenerate.TabIndex = 1;
             // 
             // progressBar1

@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -10,7 +10,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public abstract class SubtitleFormat
     {
+        public static bool SubtitleFormatsOrderChanged { get; set; }
+
         private static IList<SubtitleFormat> _allSubtitleFormats;
+        private static IList<SubtitleFormat> _subtitleFormatsWithDefaultOrder;
 
         protected static readonly char[] SplitCharColon = { ':' };
 
@@ -23,6 +26,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (_allSubtitleFormats != null)
                 {
+                    if (SubtitleFormatsOrderChanged)
+                    {
+                        SubtitleFormatsOrderChanged = false;
+                        _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);
+                    }
+
                     return _allSubtitleFormats;
                 }
 
@@ -39,7 +48,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),
                     new AvidCaption(),
+                    new AvidCaptionDropFrame(),
                     new AvidDvd(),
+                    new AvidLocationMarkers(),
                     new AwsTranscribeJson(),
                     new BelleNuitSubtitler(),
                     new Bilibili(),
@@ -60,6 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DCinemaSmpte2014(),
                     new DfxpBasic(),
                     new DigiBeta(),
+                    new Drtic(),
                     new DvdStudioPro(),
                     new DvdStudioProSpaceOne(),
                     new DvdStudioProSpaceOneSemicolon(),
@@ -81,6 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml(),
                     new FinalCutProXXml(),
                     new FinalCutProXmlGap(),
+                    new FinalCutProXmlName(),
                     new FinalCutProXCM(),
                     new FinalCutProXml13(),
                     new FinalCutProXml14(),
@@ -89,6 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml16(),
                     new FinalCutProXml17(),
                     new FinalCutProXml18(),
+                    new FinalCutProXml19(),
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
                     new FlashXml(),
@@ -103,6 +117,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new IssXml(),
                     new ItunesTimedText(),
                     new JacoSub(),
+                    new JsonAeneas(),
                     new JsonTed(),
                     new Json(),
                     new JsonType2(),
@@ -123,6 +138,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType16(),
                     new JsonType17(),
                     new JsonType18(),
+                    new JsonType19(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
@@ -320,6 +336,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle101(),
                     new UnknownSubtitle102(),
                     new UnknownSubtitle103(),
+                    new UnknownSubtitle104(),
                 };
 
                 string path = Configuration.PluginsDirectory;
@@ -352,6 +369,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
+
+                _subtitleFormatsWithDefaultOrder = new List<SubtitleFormat>(_allSubtitleFormats);
+                _allSubtitleFormats = GetOrderedFormatsList(_subtitleFormatsWithDefaultOrder);
 
                 return _allSubtitleFormats;
             }
@@ -627,6 +647,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new TranscriptiveJson(),
                 new KaraokeCdgCreatorText(),
                 new VidIcelandic(),
+                new JsonArchtime(),
+                new MacCaption10(),
+                new Rdf1(),
+                new CombinedXml(),
             };
         }
 
@@ -645,20 +669,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return defaultFormat;
         }
 
-        public static SubtitleFormat BinaryPersistableFromName(string formatName, bool batchMode)
+        private static IList<SubtitleFormat> GetOrderedFormatsList(IList<SubtitleFormat> unorderedFormatsList)
         {
-            string trimmedFormatName = formatName.Trim();
-            foreach (var format in GetBinaryFormats(batchMode))
+            IEnumerable<SubtitleFormat> newSelectedFormats = new[] { Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSubtitleFormat) };
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))
             {
-                if (format is IBinaryPersistableSubtitle &&
-                    format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
-                    format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return format;
-                }
+                newSelectedFormats = newSelectedFormats.Union(Configuration.Settings.General.FavoriteSubtitleFormats.Split(';').Select(formatName => Utilities.GetSubtitleFormatByFriendlyName(formatName)));
             }
 
-            return null;
+            return newSelectedFormats.Union(unorderedFormatsList).ToList();
         }
     }
 }

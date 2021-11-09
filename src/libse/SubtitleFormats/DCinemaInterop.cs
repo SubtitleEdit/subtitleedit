@@ -40,11 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             internal double GetVerticalPositionAsNumber()
             {
-                if (double.TryParse(VerticalPosition, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
-                {
-                    return d;
-                }
-                return 0;
+                return double.TryParse(VerticalPosition, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d) ? d : 0;
             }
         }
 
@@ -83,10 +79,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string languageEnglishName;
             try
             {
-                string languageShortName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                var languageShortName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
                 var ci = CultureInfo.CreateSpecificCulture(languageShortName);
                 languageEnglishName = ci.EnglishName;
-                int indexOfStartP = languageEnglishName.IndexOf('(');
+                var indexOfStartP = languageEnglishName.IndexOf('(');
                 if (indexOfStartP > 1)
                 {
                     languageEnglishName = languageEnglishName.Remove(indexOfStartP).Trim();
@@ -97,25 +93,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 languageEnglishName = "English";
             }
 
-            string hex = Guid.NewGuid().ToString().RemoveChar('-');
-            hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-
-            string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
-                                    "    <SubtitleID>" + hex.ToLowerInvariant() + "</SubtitleID>" + Environment.NewLine +
-                                    "    <MovieTitle></MovieTitle>" + Environment.NewLine +
-                                    "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
-                                    "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
-                                    "    <LoadFont URI=\"" + Configuration.Settings.SubtitleSettings.DCinemaFontFile + "\" Id=\"Font1\"/>" + Environment.NewLine +
-                                    "    <Font Id=\"Font1\" Color=\"FFFFFFFF\" Effect=\"border\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
-                                    "    </Font>" + Environment.NewLine +
-                                    "</DCSubtitle>";
+            var xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
+                               "    <SubtitleID>" + GenerateId() + "</SubtitleID>" + Environment.NewLine +
+                               "    <MovieTitle></MovieTitle>" + Environment.NewLine +
+                               "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                               "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
+                               "    <LoadFont URI=\"" + Configuration.Settings.SubtitleSettings.DCinemaFontFile + "\" Id=\"Font1\"/>" + Environment.NewLine +
+                               "    <Font Id=\"Font1\" Color=\"FFFFFFFF\" Effect=\"border\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
+                               "    </Font>" + Environment.NewLine +
+                               "</DCSubtitle>";
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             xml.PreserveWhitespace = true;
 
             var ss = Configuration.Settings.SubtitleSettings;
-            string loadedFontId = "Font1";
+            var loadedFontId = "Font1";
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontId))
             {
                 loadedFontId = ss.CurrentDCinemaFontId;
@@ -132,12 +125,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = ss.CurrentDCinemaMovieTitle;
-            xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId.Replace("urn:uuid:", string.Empty);
+
+            if (!ss.DCinemaAutoGenerateSubtitleId)
+            {
+                xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId.Replace("urn:uuid:", string.Empty);
+            }
+
             xml.DocumentElement.SelectSingleNode("ReelNumber").InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("Language").InnerText = ss.CurrentDCinemaLanguage;
             xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["URI"].InnerText = ss.CurrentDCinemaFontUri;
             xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["Id"].InnerText = loadedFontId;
-            int fontSize = ss.CurrentDCinemaFontSize;
+            var fontSize = ss.CurrentDCinemaFontSize;
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Id"].InnerText = loadedFontId;
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Color"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Effect"].InnerText = ss.CurrentDCinemaFontEffect;
@@ -145,8 +143,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Size"].InnerText = ss.CurrentDCinemaFontSize.ToString();
 
             var mainListFont = xml.DocumentElement.SelectSingleNode("Font");
-            int no = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            var no = 0;
+            foreach (var p in subtitle.Paragraphs)
             {
                 if (!string.IsNullOrEmpty(p.Text))
                 {
@@ -184,11 +182,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool alignVCenter = p.Text.StartsWith("{\\a9}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a10}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a11}", StringComparison.Ordinal) || // sub station alpha
                                         p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal); // advanced sub station alpha
 
-                    string text = Utilities.RemoveSsaTags(p.Text);
+                    var text = Utilities.RemoveSsaTags(p.Text);
 
                     var lines = text.SplitToLines();
                     int vPos;
-                    int vPosFactor = (int)Math.Round(fontSize / 7.4);
+                    var vPosFactor = (int)Math.Round(fontSize / 7.4);
                     if (alignVTop)
                     {
                         vPos = Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
@@ -202,10 +200,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         vPos = (lines.Count * vPosFactor) - vPosFactor + Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
                     }
 
-                    bool isItalic = false;
-                    int fontNo = 0;
+                    var isItalic = false;
+                    var fontNo = 0;
                     var fontColors = new Stack<string>();
-                    foreach (string line in lines)
+                    foreach (var line in lines)
                     {
                         var textNode = xml.CreateElement("Text");
 
@@ -256,7 +254,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         direction.InnerText = "horizontal";
                         textNode.Attributes.Append(direction);
 
-                        int i = 0;
+                        var i = 0;
                         var txt = new StringBuilder();
                         var html = new StringBuilder();
                         XmlNode nodeTemp = xml.CreateElement("temp");
@@ -308,14 +306,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else if (line.Substring(i).StartsWith("<font color=", StringComparison.Ordinal) && line.Substring(i + 3).Contains('>'))
                             {
-                                int endOfFont = line.IndexOf('>', i);
+                                var endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
                                 {
                                     nodeTemp.InnerText = txt.ToString();
                                     html.Append(nodeTemp.InnerXml);
                                     txt.Clear();
                                 }
-                                string c = GetDCinemaColorString(line.Substring(i + 12, endOfFont - (i + 12)));
+                                var c = GetDCinemaColorString(line.Substring(i + 12, endOfFont - (i + 12)));
                                 fontColors.Push(c);
                                 fontNo++;
                                 i = endOfFont;
@@ -444,6 +442,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                         textNode.InnerXml = html.ToString();
+                        if (html.Length == 0)
+                        {
+                            textNode.InnerText = " "; // We need to have at least a single space character on exporting empty subtitles, because otherwise I will get errors on import.ou need to have at least a single space character on exporting empty subtitles, otherwise we will get errors on import.
+                        }
 
                         subNode.AppendChild(textNode);
                         if (alignVTop)
@@ -460,7 +462,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     no++;
                 }
             }
-            string s = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
+
+            var s = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
             while (s.Contains("</Font>  ") || s.Contains("  <Font ") || s.Contains(Environment.NewLine + "<Font ") || s.Contains("</Font>" + Environment.NewLine))
             {
                 while (s.Contains("  Font"))
@@ -486,6 +489,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.Replace("horizontal\"> <Font", "horizontal\"><Font");
             }
             return s;
+        }
+
+        public static string GenerateId()
+        {
+            return Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-").ToLowerInvariant();
         }
 
         internal static string GetDCinemaColorString(string c)
@@ -573,7 +581,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (node.Attributes?["Color"] != null)
                     {
-                        ss.CurrentDCinemaFontColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["Color"].InnerText);
+                        ss.CurrentDCinemaFontColor = ColorTranslator.FromHtml("#" + node.Attributes["Color"].InnerText);
                     }
 
                     if (node.Attributes?["Effect"] != null)
@@ -599,14 +607,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var textLines = new List<SubtitleLine>();
                     var pText = new StringBuilder();
                     var vAlignment = string.Empty;
-                    string lastVPosition = string.Empty;
+                    var vPosition = string.Empty;
+                    var lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         if (innerNode.Name == "Text")
                         {
                             if (innerNode.Attributes["VPosition"] != null)
                             {
-                                string vPosition = innerNode.Attributes["VPosition"].InnerText;
+                                vPosition = innerNode.Attributes["VPosition"].InnerText;
                                 var vAlignmentNode = innerNode.Attributes["VAlign"];
                                 if (vAlignmentNode != null)
                                 {
@@ -746,6 +755,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                             }
                         }
+                        else if (innerNode.Name == "Font")
+                        {
+                            var italic = innerNode.Name == "Font" &&
+                                         innerNode.Attributes["Italic"] != null &&
+                                         innerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase);
+
+                            var pre = string.Empty;
+                            if (italic)
+                            {
+                                pre = "<i>";
+                            }
+
+                            foreach (XmlNode innerInnerNode in innerNode)
+                            {
+                                if (innerInnerNode.Attributes["VPosition"] != null)
+                                {
+                                    vPosition = innerInnerNode.Attributes["VPosition"].InnerText;
+                                    if (vPosition != lastVPosition)
+                                    {
+                                        if (pText.Length > 0 && lastVPosition.Length > 0)
+                                        {
+                                            pText.AppendLine();
+                                            pText.Append(pre);
+                                            pre = string.Empty;
+                                        }
+
+                                        lastVPosition = vPosition;
+                                    }
+                                }
+
+                                pText.Append(pre);
+                                pre = string.Empty;
+                                pText.Append(innerInnerNode.InnerText);
+                            }
+
+                            if (italic)
+                            {
+                                pText.Append("</i>");
+                            }
+                        }
                         else
                         {
                             pText.Append(innerNode.InnerText);
@@ -758,7 +807,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     string text;
-                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "bottom"))
+                    if (textLines.All(p => string.Equals(p.VerticalAlignment, "bottom", StringComparison.InvariantCultureIgnoreCase)))
                     {
                         text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
                     }
@@ -793,7 +842,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
+                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), HtmlUtil.FixInvalidItalicTags(text)));
                 }
                 catch (Exception ex)
                 {
@@ -818,13 +867,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var hex = s.TrimStart('#');
-            for (int i = s.Length - 1; i >= 0; i--)
+            for (var i = s.Length - 1; i >= 0; i--)
             {
                 if (!CharUtils.IsHexadecimal(s[i]))
                 {
                     return s;
                 }
             }
+
             return "#" + hex;
         }
 
@@ -832,7 +882,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var parts = s.Split(':', '.', ',');
 
-            int milliseconds = int.Parse(parts[3]) * 4; // 000 to 249
+            var milliseconds = int.Parse(parts[3]) * 4; // 000 to 249
             if (s.Contains('.'))
             {
                 milliseconds = int.Parse(parts[3].PadRight(3, '0'));
@@ -850,6 +900,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{time.Milliseconds / 4:000}";
         }
-
     }
 }

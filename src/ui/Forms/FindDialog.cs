@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -123,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled);
+                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)

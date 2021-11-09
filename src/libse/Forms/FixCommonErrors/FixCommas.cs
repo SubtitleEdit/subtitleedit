@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -92,6 +93,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return s;
         }
 
-        private static bool IsSentenceEndingChar(char ch) => ch == '.' || ch == '!' || ch == '?' || ch == ')' || ch == ']' || ch == ']' || ch == '؟';
+        private static bool IsSentenceEndingChar(char ch) => ch == '.' || ch == '!' || ch == '?' || ch == ')' || ch == ']' || ch == '؟';
     }
 }

@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             AutoScaleMode = AutoScaleMode.Dpi;
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _mainForm = mainForm;
             Icon = (Icon)mainForm.Icon.Clone();
             _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
@@ -51,6 +52,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _mainForm.MainKeyDown(sender, e);
             }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (_mainForm.ProcessCmdKeyFromChildForm(ref msg, keyData))
+            {
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

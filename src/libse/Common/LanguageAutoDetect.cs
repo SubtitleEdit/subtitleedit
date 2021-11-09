@@ -158,7 +158,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsBulgarian =
         {
-            "[Кк]акво", "тук", "може", "Как", "Да", "Ваше", "нещо", "беше", "Добре", "трябва", "става", "Джоузи", "Защо", "дяволите", "Сиянието", "Трябва", "години", "Стивън", "Благодаря"
+            "беше", "[Бб]лагодаря", "бързо", "вас", "[Вв]аше", "[Вв]ече", "[Вв]иждам", "време", "[Вв]сичк[ио]", "години", "Да", "[Дд]обре", "дяволите",
+            "за", "Защо", "защото", "[Зз]начи", "иска[мнш]", "[Кк]ак", "[Кк]акво", "като", "ко[еий]то", "малко", "много", "[Мм]оже[хш]?", "място",
+            "нас", "[Нн]е", "н[еи]що", "н[ия]кой", "[Нн]яма", "преди", "повече", "става", "така", "[Тт]ова", "[Тт]олкова", "[Тт]рябва", "тук",
+            "Хайде", "човек"
         };
 
         private static readonly string[] AutoDetectWordsUkrainian =
@@ -288,6 +291,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"
         };
 
+        private static readonly string[] AutoDetectWordsSlovenian =
+        {
+            "sem", "bom", "Zakaj", "lahko", "Kje", "Lahko", "Hvala", "Ampak", "nekaj", "Prosim", "prišla", "nisem", "denar", "ampak",
+            "všeč", "videti", "stanovanje", "službo", "prosim", "naredila", "moram", "domov", "Vrzi", "Povej", "številko", "zaporu",
+            "ugrabila", "ubila", "tvoja", "tudi", "tečna", "stvari", "rusko", "povedala", "obraz", "nalogo", "mislim", "govoriš",
+            "Seveda", "Razmišljam", "Potem", "Nič", "Nisem", "Mogoče", "žensko", "žalostna", "človek", "Čisto", "znaš",
+            "zlomi", "zgodilo", "zdaj", "zajtrk", "utrujena","ustrelila", "srečna", "čarovnik", "zaživeti"
+        };
+
         private static readonly string[] AutoDetectWordsLatvian =
         {
             "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt"
@@ -393,6 +405,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = GetCount(text, AutoDetectWordsPortuguese);
             if (count > bestCount)
             {
+                var slovenianCount = GetCount(text, AutoDetectWordsSlovenian);
+                if (slovenianCount > count)
+                {
+                    return "sl";
+                }
+
                 return "pt"; // Portuguese
             }
 
@@ -429,8 +447,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return "bg"; // Bulgarian
                 }
 
-                var ukranianCount = GetCount(text, AutoDetectWordsUkrainian);
-                if (ukranianCount > count)
+                var ukrainianCount = GetCount(text, AutoDetectWordsUkrainian);
+                if (ukrainianCount > count)
                 {
                     return "uk"; // Ukrainian
                 }
@@ -484,9 +502,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 int croatianCount = GetCount(text, AutoDetectWordsCroatian);
                 int serbianCount = GetCount(text, AutoDetectWordsSerbian);
+                var slovenianCount = GetCount(text, AutoDetectWordsSlovenian);
                 if (croatianCount > serbianCount)
                 {
+                    if (slovenianCount > croatianCount)
+                    {
+                        return "sl";
+                    }
+
                     return "hr"; // Croatian
+                }
+
+                if (slovenianCount > count)
+                {
+                    return "sl";
                 }
 
                 return "sr"; // Serbian
@@ -576,6 +605,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            count = GetCount(text, AutoDetectWordsSlovenian);
+            if (count > bestCount)
+            {
+                return "sl";
+            }
+
             count = GetCount(text, AutoDetectWordsLatvian);
             if (count > bestCount * 1.2)
             {
@@ -603,7 +638,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = GetCount(text, AutoDetectWordsSinhalese);
             if (count > bestCount)
             {
-                return "sl";
+                return "si";
             }
 
             count = GetCount(text, AutoDetectWordsMacedonian);
@@ -618,6 +653,43 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string AutoDetectGoogleLanguage(Subtitle subtitle)
         {
             return AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+        }
+
+        public static string AutoDetectGoogleLanguage(Subtitle subtitle, int maxNumberOfSubtitlesToCheck)
+        {
+            const int averageLength = 40;
+            int max = subtitle.Paragraphs.Count;
+            var sb = new StringBuilder(max * averageLength);
+            int index = 0;
+            int emptyLines = 0;
+            while (index < max && index < maxNumberOfSubtitlesToCheck + emptyLines)
+            {
+                var text = subtitle.Paragraphs[index].Text;
+                if (string.IsNullOrEmpty(text))
+                {
+                    emptyLines++;
+                }
+                else
+                {
+                    sb.AppendLine(text);
+                }
+
+                index++;
+            }
+
+            var allText = sb.ToString();
+            string languageId = AutoDetectGoogleLanguage(allText, maxNumberOfSubtitlesToCheck / 14);
+            if (string.IsNullOrEmpty(languageId))
+            {
+                languageId = GetEncodingViaLetter(allText);
+            }
+
+            if (string.IsNullOrEmpty(languageId))
+            {
+                return "en";
+            }
+
+            return languageId;
         }
 
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
@@ -979,8 +1051,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                             bestCount = count;
                         }
                         break;
-                    case "sl_sl": // Sinhalese
-                    case "sl":
+                    case "si_si": // Sinhalese
+                    case "si_lk": // Sinhala (Sri Lanka)
+                    case "si":
                         count = GetCount(text, AutoDetectWordsSinhalese);
                         if (count > bestCount)
                         {
@@ -1056,6 +1129,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     case "fa": // Farsi (Persian)
                     case "fa_ir":
                         count = GetCount(text, AutoDetectWordsFarsi);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "sl": // Slovenian
+                    case "sl_si":
+                        count = GetCount(text, AutoDetectWordsSlovenian);
                         if (count > bestCount)
                         {
                             languageName = shortName;
@@ -1238,6 +1320,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return Encoding.GetEncoding(1254); // prefer 1254 over 28599 
                 }
 
+                if (!Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
+                {
+                    // Use default ANSI encoding
+                    foreach (var enc in Configuration.AvailableEncodings)
+                    {
+                        if (Configuration.Settings.General.DefaultEncoding.StartsWith(enc.CodePage + ":", StringComparison.Ordinal))
+                        {
+                            return enc;
+                        }
+                    }
+                }
+
                 return encoding;
             }
             catch
@@ -1334,7 +1428,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         /// <summary>
         /// Will try to determine if buffer is utf-8 encoded or not.
-        /// If any non-utf8 sequences are found then false is returned, if no utf8 multibytes sequences are found then false is returned.
+        /// If any non-utf8 sequences are found then false is returned, if no utf8 multi bytes sequences are found then false is returned.
         /// </summary>
         private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
         {
@@ -1380,7 +1474,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        private static readonly char[] RightToLeftLetters = string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
+        private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
         public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
@@ -1465,7 +1559,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     count++;
                 }
             }
-            dictionary.Add("sl", count);
+            dictionary.Add("si", count);
 
             // Urdu
             count = 0;

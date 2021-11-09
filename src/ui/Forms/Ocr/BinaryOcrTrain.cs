@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
@@ -350,6 +349,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _autoDetectFontText = text;
         }
 
+        private void BinaryOcrTrain_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFonts.AutoSizeLastColumn();
+        }
+
         private void BinaryOcrTrain_Shown(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_autoDetectFontText))
@@ -357,7 +361,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            SelectAll_Click(null, null);
+            BinaryOcrTrain_ResizeEnd(sender, e);
+            SelectAll_Click(this, EventArgs.Empty);
             int numberOfCharactersLearned = 0;
             int numberOfCharactersSkipped = 0;
             foreach (ListViewItem fontItem in listViewFonts.CheckedItems)

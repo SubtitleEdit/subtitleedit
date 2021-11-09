@@ -25,14 +25,14 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 {
     public class ColorChangedEventArgs : EventArgs
     {
-        public ColorChangedEventArgs(ColorHandler.ARGB argb, ColorHandler.HSV hsv)
+        public ColorChangedEventArgs(ColorHandler.Argb argb, ColorHandler.Hsv hsv)
         {
             ARGB = argb;
             HSV = hsv;
         }
 
-        public ColorHandler.ARGB ARGB { get; private set; }
+        public ColorHandler.Argb ARGB { get; private set; }
 
-        public ColorHandler.HSV HSV { get; private set; }
+        public ColorHandler.Hsv HSV { get; private set; }
     }
 }

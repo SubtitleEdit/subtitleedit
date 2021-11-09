@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -90,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlStructure =
                 "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
-                "  <dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>" + Environment.NewLine +
+                "  <dcst:Id>" + DCinemaSmpte2007.GenerateId() + "</dcst:Id>" + Environment.NewLine +
                 "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
                 "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
                 "  <dcst:IssueDate>2012-06-26T12:33:59.000-00:00</dcst:IssueDate>" + Environment.NewLine +
@@ -128,7 +129,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ss.CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
             }
 
-            xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
+            if (!ss.DCinemaAutoGenerateSubtitleId)
+            {
+                xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
+            }
+
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
             if (string.IsNullOrEmpty(ss.CurrentDCinemaLanguage))
@@ -419,7 +424,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 italic.InnerText = "yes";
                                 fontNode.Attributes.Append(italic);
 
-                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(line);
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
                             }
                         }
@@ -432,6 +437,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                         textNode.InnerXml = html.ToString();
+                        if (html.Length == 0)
+                        {
+                            textNode.InnerText = " "; // We need to have at least a single space character on exporting empty subtitles, because otherwise I will get errors on import.ou need to have at least a single space character on exporting empty subtitles, otherwise we will get errors on import.
+                        }
 
                         subNode.AppendChild(textNode);
                         if (alignVTop)
@@ -443,6 +452,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             vPos -= vPosFactor;
                         }
                     }
+
                     if (subNode.InnerXml.Length == 0)
                     { // Empty text is just one space
                         XmlNode textNode = xml.CreateElement("dcst:Text", "dcst");
@@ -461,10 +471,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     no++;
                 }
             }
-            string result = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"").Replace(" xmlns:dcst=\"dcst\"", string.Empty);
+
+            var result = ToUtf8XmlString(xml)
+                .Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"")
+                .Replace(" xmlns:dcst=\"dcst\"", string.Empty)
+                .Replace("<dcst:", "<")
+                .Replace("</dcst:", "</")
+                .Replace("xmlns:dcst=\"http://www.smpte-ra.org/schemas/", "xmlns=\"http://www.smpte-ra.org/schemas/");
 
             const string res = "Nikse.SubtitleEdit.Resources.SMPTE-428-7-2014-DCST.xsd.gz";
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
             var stream = asm.GetManifestResourceStream(res);
             if (stream != null)
             {
@@ -639,7 +655,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
+                    var textLines = new List<DCinemaInterop.SubtitleLine>();
                     var pText = new StringBuilder();
+                    var vAlignment = string.Empty;
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
@@ -647,12 +665,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (innerNode.Attributes["Vposition"] != null)
                             {
+                                var vAlignmentNode = innerNode.Attributes["Valign"];
+                                if (vAlignmentNode != null)
+                                {
+                                    vAlignment = vAlignmentNode.InnerText;
+                                }
+
                                 string vPosition = innerNode.Attributes["Vposition"].InnerText;
                                 if (vPosition != lastVPosition)
                                 {
                                     if (pText.Length > 0 && lastVPosition.Length > 0)
                                     {
-                                        pText.AppendLine();
+                                        textLines.Add(new DCinemaInterop.SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
+                                        pText.Clear();
                                     }
 
                                     lastVPosition = vPosition;
@@ -785,13 +810,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             pText.Append(innerNode.InnerText);
                         }
                     }
+
+                    if (pText.Length > 0)
+                    {
+                        textLines.Add(new DCinemaInterop.SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
+                    }
+
+                    string text;
+                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "bottom"))
+                    {
+                        text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                    }
+                    else
+                    {
+                        text = string.Join(Environment.NewLine, textLines.OrderBy(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                    }
+
                     string start = node.Attributes["TimeIn"].InnerText;
                     string end = node.Attributes["TimeOut"].InnerText;
 
                     if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase) &&
                         !pText.ToString().Contains("<i>"))
                     {
-                        string text = pText.ToString();
                         if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6)
                         {
                             text = text.Insert(6, "<i>") + "</i>";
@@ -800,11 +840,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             text = "<i>" + text + "</i>";
                         }
-
-                        pText = new StringBuilder(text);
                     }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
+                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
                 }
                 catch (Exception ex)
                 {

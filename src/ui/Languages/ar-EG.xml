@@ -272,7 +272,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BreakLongLines>انقطاع أسطر طويلة</BreakLongLines>
     <RemoveLineBreaks>إزالة فواصل الأسطر في نصوص قصيرة مع جملة واحدة فقط</RemoveLineBreaks>
     <RemoveLineBreaksAll>(إزالة فواصل الأسطر في نصوص قصيرة (كافة باستثناء الحوارات</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>داخل عبارة صغيرة 'i' الإصلاح الكبيرة OCR الخطأ</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>داخل عبارة صغيرة 'i' الإصلاح الكبيرة OCR الخطأ</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>(") إصلاح الأحرف الفاصلة المزدوجة ('') لاقتباس واحد</FixDoubleApostrophes>
     <AddPeriods>إضافة فترة ما بعد خطوط السطر التالي حيث تبدأ بحرف كبير</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>تبدأ بالأحرف الكبيرة بعد الفقرة</StartWithUppercaseLetterAfterParagraph>
@@ -317,7 +317,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt;يا أنت، هناك.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt;! يا أنت</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt;يا أنت.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; ماذا يهمني.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>{رقم النص {0}: إبدأ الوقت التالي من وقت النهاية: {4}{1} -&gt; {2} {3</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>{غير قادر على إصلاح عدد النص {0}: وقت البدء والنهاية في وقت لاحق نهاية الوقت: {1</UnableToFixStartTimeLaterThanEndTime>
@@ -754,7 +754,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>تعيين وانتقل إلى نهاية التالى</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>{معدل عن طريق وقت النهاية {0</AdjustedViaEndTime>
       <SetEndTime>ضبط وقت النهاية</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>بدء تعيين وتعويض بقية</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>بدء تعيين وتعويض بقية</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>البحث عن النص على الانترنت</SearchTextOnline>
       <GoogleTranslate>ترجمة جوجل</GoogleTranslate>
       <GoogleIt>صفحة جوجل</GoogleIt>
@@ -872,8 +872,8 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheck>التدقيق الإملائي</SpellCheck>
     <BeforeSpellCheck>قبل التدقيق الإملائي</BeforeSpellCheck>
     <SpellCheckChangedXToY>{التدقيق الإملائي : تم تغيير '{0}' إلى '{1'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>قبل إضافة &lt;{0}&gt; العلامة</BeforeAddingTagX>
-    <TagXAdded>&lt;{0}&gt; العلامات إضيفت</TagXAdded>
+    <BeforeAddingTagX>قبل إضافة '{0}' العلامة</BeforeAddingTagX>
+    <TagXAdded>'{0}' العلامات إضيفت</TagXAdded>
     <LineXOfY>{السطر {0} من {1</LineXOfY>
     <XLinesDeleted>{0} الأسطر المحذوفة</XLinesDeleted>
     <BeforeDeletingXLines>قبل حذف {0} الأسطر</BeforeDeletingXLines>

@@ -429,6 +429,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AddWaveformBatch_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.AutoSizeLastColumn();
+        }
+
+        private void AddWaveformBatch_Shown(object sender, EventArgs e)
+        {
+            AddWaveformBatch_ResizeEnd(sender, e);
+        }
+
         private void contextMenuStripFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (listViewInputFiles.Items.Count == 0)

@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -106,11 +105,29 @@ namespace Nikse.SubtitleEdit.Forms
             var subtitles = new List<Subtitle>();
             for (int k = 0; k < _fileNamesToJoin.Count; k++)
             {
-                string fileName = _fileNamesToJoin[k];
+                var fileName = _fileNamesToJoin[k];
                 try
                 {
                     var sub = new Subtitle();
-                    SubtitleFormat format;
+                    SubtitleFormat format = null;
+
+                    if (fileName.EndsWith(".ismt", StringComparison.InvariantCultureIgnoreCase) ||
+                        fileName.EndsWith(".mp4", StringComparison.InvariantCultureIgnoreCase) ||
+                        fileName.EndsWith(".m4v", StringComparison.InvariantCultureIgnoreCase) ||
+                        fileName.EndsWith(".3gp", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        format = new IsmtDfxp();
+                        if (format.IsMine(null, fileName))
+                        {
+                            var s = new Subtitle();
+                            format.LoadSubtitle(s, null, fileName);
+                            if (s.Paragraphs.Count > 0)
+                            {
+                                lastFormat = format;
+                            }
+                        }
+                    }
+
                     var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
                     if (lastFormat != null && lastFormat.IsMine(lines, fileName))
                     {
@@ -118,14 +135,14 @@ namespace Nikse.SubtitleEdit.Forms
                         format.LoadSubtitle(sub, lines, fileName);
                     }
 
-                    format = sub.LoadSubtitle(fileName, out _, null);
-
-                    if (format == null)
+                    if (sub.Paragraphs.Count == 0 || format == null)
                     {
-                        if (lines.Count > 0 && lines.Count < 10 && lines[0].Trim() == "WEBVTT")
-                        {
-                            format = new WebVTT(); // empty WebVTT
-                        }
+                        format = sub.LoadSubtitle(fileName, out _, null);
+                    }
+
+                    if (format == null && lines.Count > 0 && lines.Count < 10 && lines[0].Trim() == "WEBVTT")
+                    {
+                        format = new WebVTT(); // empty WebVTT
                     }
 
                     if (format == null)
@@ -162,7 +179,54 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (sub.Header != null)
                     {
-                        header = sub.Header;
+                        if (format.Name == AdvancedSubStationAlpha.NameOfFormat && header != null)
+                        {
+                            var oldPlayResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", header);
+                            var oldPlayResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", header);
+                            var newPlayResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", sub.Header);
+                            var newPlayResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", sub.Header);
+
+                            var stylesInHeader = AdvancedSubStationAlpha.GetStylesFromHeader(header);
+                            var styles = new List<SsaStyle>();
+                            foreach (var styleName in stylesInHeader)
+                            {
+                                styles.Add(AdvancedSubStationAlpha.GetSsaStyle(styleName, header));
+                            }
+
+                            foreach (var newStyle in AdvancedSubStationAlpha.GetStylesFromHeader(sub.Header))
+                            {
+                                if (stylesInHeader.Any(p => p == newStyle))
+                                {
+                                    var styleToBeRenamed = AdvancedSubStationAlpha.GetSsaStyle(newStyle, sub.Header);
+                                    var newName = styleToBeRenamed.Name + "_" + Guid.NewGuid();
+                                    foreach (var p in sub.Paragraphs.Where(p=>p.Extra == styleToBeRenamed.Name))
+                                    {
+                                        p.Extra = newName;
+                                    }
+
+                                    styleToBeRenamed.Name = newName;
+                                    styles.Add(styleToBeRenamed);
+                                }
+                                else
+                                {
+                                    styles.Add(AdvancedSubStationAlpha.GetSsaStyle(newStyle, sub.Header));
+                                }
+                            }
+
+                            header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
+                            if (!string.IsNullOrEmpty(oldPlayResX) && string.IsNullOrEmpty(newPlayResX))
+                            {
+                                header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", oldPlayResX, "[Script Info]", header);
+                            }
+                            if (!string.IsNullOrEmpty(oldPlayResY) && string.IsNullOrEmpty(newPlayResY))
+                            {
+                                header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", oldPlayResY, "[Script Info]", header);
+                            }
+                        }
+                        else
+                        {
+                            header = sub.Header;
+                        }
                     }
 
                     lastFormat = lastFormat == null || lastFormat.FriendlyName == format.FriendlyName ? format : new SubRip();
@@ -188,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var b = subtitles[inner];
                         if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
                         {
-                            string t1 = _fileNamesToJoin[inner - 1];
+                            var t1 = _fileNamesToJoin[inner - 1];
                             _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
                             _fileNamesToJoin[inner] = t1;
 
@@ -203,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewParts.BeginUpdate();
             listViewParts.Items.Clear();
             int i = 0;
-            foreach (string fileName in _fileNamesToJoin)
+            foreach (var fileName in _fileNamesToJoin)
             {
                 var sub = subtitles[i];
                 var lvi = new ListViewItem($"{sub.Paragraphs.Count:#,###,###}");
@@ -244,6 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                     JoinedSubtitle.Paragraphs.Add(p);
                 }
             }
+
             JoinedSubtitle.Renumber();
             labelTotalLines.Text = string.Format(LanguageSettings.Current.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
@@ -324,7 +389,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void JoinSubtitles_Shown(object sender, EventArgs e)
         {
-            columnHeaderFileName.Width = -2;
+            JoinSubtitles_Resize(sender, e);
         }
 
         private void JoinSubtitles_FormClosing(object sender, FormClosingEventArgs e)

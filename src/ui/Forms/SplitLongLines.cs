@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -355,8 +354,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void SplitLongLines_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewFixes.AutoSizeLastColumn();
+        }
+
         private void SplitLongLines_Shown(object sender, EventArgs e)
         {
+            SplitLongLines_ResizeEnd(sender, e);
+
             GeneratePreview(true);
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)

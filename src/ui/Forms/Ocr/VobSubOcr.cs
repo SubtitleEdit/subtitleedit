@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
@@ -325,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract4Version = "5.00 Alpha 2020-11-27";
+        private string Tesseract5Version = "5.00 Alpha 2021-08-11";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -343,7 +342,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private NOcrThreadResult[] _nOcrThreadResults;
         private bool _ocrThreadStop;
 
-        private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+        private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
@@ -489,7 +488,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
             {
-                Tesseract4Version = "4";
+                Tesseract5Version = "4";
                 checkBoxTesseractMusicOn.Checked = false;
                 checkBoxTesseractMusicOn.Visible = false;
                 checkBoxTesseractFallback.Checked = false;
@@ -499,7 +498,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _ocrMethodTesseract302 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, "3.02"));
             }
-            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, Tesseract4Version));
+            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, Tesseract5Version));
             if (_modiEnabled)
             {
                 _ocrMethodModi = comboBoxOcrMethod.Items.Add(language.OcrViaModi);
@@ -556,6 +555,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             setItalicAngleToolStripMenuItem.Text = language.SetItalicAngle;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.Delete;
             imagePreprocessingToolStripMenuItem1.Text = language.ImagePreProcessing;
+            ImagePreProcessingToolStripMenuItem.Text = language.ImagePreProcessing;
+            autoTransparentBackgroundToolStripMenuItem.Text = language.AutoTransparentBackground;
             toolStripMenuItemSaveSubtitleAs.Text = LanguageSettings.Current.Main.SaveSubtitleAs;
             toolStripMenuItemExport.Text = LanguageSettings.Current.Main.Menu.File.Export;
             vobSubToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportVobSub;
@@ -1840,11 +1841,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrMethodIndex == _ocrMethodTesseract4 && !_fromMenuItem)
             {
                 var nb = new NikseBitmap(returnBmp);
+
+                if (_preprocessingSettings != null && _preprocessingSettings.CropTransparentColors)
+                {
+                    nb.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
+                    nb.CropTop(2, Color.FromArgb(0, 0, 0, 0));
+                    nb.CropSidesAndBottom(2, Color.Transparent, true);
+                    nb.CropTop(2, Color.Transparent);
+                }
+
                 nb.AddMargin(10);
+
                 if (_preprocessingSettings != null && _preprocessingSettings.InvertColors)
                 {
                     nb.InvertColors();
                 }
+
                 if (_preprocessingSettings != null && _preprocessingSettings.ScalingPercent > 100)
                 {
                     var bTemp = nb.GetBitmap();
@@ -1853,7 +1865,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     bTemp.Dispose();
                     nb = new NikseBitmap(b);
                 }
-                nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.White, Color.Black);
+
+                if (_preprocessingSettings != null && _preprocessingSettings.InvertColors)
+                {
+                    nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.Black, Color.White);
+                }
+                else
+                {
+                    nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.White, Color.Black);
+                }
+
                 returnBmp.Dispose();
                 return nb.GetBitmap();
             }
@@ -6881,12 +6902,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == UiUtil.HelpKeys)
+            if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
+            else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate))
             {
                 int selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
@@ -7227,10 +7248,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract 3.02");
                 if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract4Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show($"{LanguageSettings.Current.GetTesseractDictionaries.Download} Tesseract {Tesseract5Version}", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         comboBoxTesseractLanguages.Items.Clear();
-                        using (var form = new DownloadTesseract4(Tesseract4Version))
+                        using (var form = new DownloadTesseract5(Tesseract5Version))
                         {
                             if (form.ShowDialog(this) == DialogResult.OK)
                             {
@@ -7253,7 +7274,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract302";
                 comboBoxTesseractEngineMode.Visible = false;
                 labelTesseractEngineMode.Visible = false;
-                checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract " + Tesseract4Version);
+                checkBoxTesseractFallback.Text = string.Format(LanguageSettings.Current.VobSubOcr.FallbackToX, "Tesseract " + Tesseract5Version);
                 if (!File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")))
                 {
                     if (MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract 3.02", LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
@@ -8666,7 +8687,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
-                using (var form = new OcrPreprocessingT4(bmp, new PreprocessingSettings { BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
+                var ps = new PreprocessingSettings
+                {
+                    BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold,
+                    InvertColors = _preprocessingSettings != null ? _preprocessingSettings.InvertColors : false,
+                    CropTransparentColors = _preprocessingSettings != null ? _preprocessingSettings.CropTransparentColors : false,
+                };
+                using (var form = new OcrPreprocessingT4(bmp, ps))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
@@ -8851,7 +8878,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         return;
                     }
 
-                    s = s.RemoveChar('?').RemoveChar('/').RemoveChar('*').RemoveChar('\\');
+                    s = s.RemoveChar('?', '/', '*', '\\');
                     if (string.IsNullOrEmpty(s))
                     {
                         return;
@@ -9566,12 +9593,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 // If is dialog, only toggle/Untoggle line where caret/cursor is current at.
                 if (isDialog)
                 {
-                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag);
+                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag, false, false);
                     text = string.Join(Environment.NewLine, lines);
                 }
                 else
                 {
-                    text = HtmlUtil.ToggleTag(text, tag);
+                    text = HtmlUtil.ToggleTag(text, tag, false, false);
                 }
 
                 tb.Text = text;
@@ -9611,7 +9638,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                text = HtmlUtil.ToggleTag(text, tag);
+                text = HtmlUtil.ToggleTag(text, tag, false, false);
                 // Update text and maintain selection.
                 if (pre.Length > 0)
                 {
