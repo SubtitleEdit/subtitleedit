@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             int count = 0;
             bool removedInFirstLine = false;
             bool removedInSecondLine = false;
+            bool removedFirstLineNotStart = false;
             foreach (string line in lines)
             {
                 int indexOfColon = line.IndexOf(':');
@@ -262,6 +263,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (remove)
                                 {
                                     newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
+                                    if (count == 0 && removedInFirstLine && indexOfColon > 10)
+                                    {
+                                        removedFirstLineNotStart = true;
+                                    }
 
                                     if (remove)
                                     {
@@ -519,6 +524,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             insertDash = false;
                         }
+                    }
+
+                    if (insertDash && removedInFirstLine && !removedInSecondLine && !removedFirstLineNotStart &&
+                        !HtmlUtil.RemoveHtmlTags(arr[1], true).StartsWith("-"))
+                    {
+                        insertDash = false;
                     }
                 }
 
