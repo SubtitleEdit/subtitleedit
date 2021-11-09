@@ -1707,6 +1707,16 @@ namespace Test.Logic.Forms
             Assert.AreEqual("- Step out of here... Not world." + Environment.NewLine + "- It's a British record.", actual);
         }
 
+        public void RemoveColonNameStartFirstLineNonDialog()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.NameList.Add("JEREMY");
+            string actual = target.RemoveColon("- JOE: All right." + Environment.NewLine + "Sorry about that.");
+            Assert.AreEqual("All right." + Environment.NewLine + "Sorry about that.", actual);
+        }
+
         [TestMethod]
         public void RemoveNameAndCustom()
         {
