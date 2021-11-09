@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net6.0-windows</TargetFramework>
@@ -10,13 +9,11 @@
 		<StartupObject>Nikse.SubtitleEdit.Program</StartupObject>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath>bin\debug</OutputPath>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 	</ItemGroup>
@@ -48,7 +45,7 @@
 		<Reference Include="System.Windows.Forms" />
 		<Reference Include="System.Xml" />
 	</ItemGroup>
-		
+
 	<ItemGroup>
 		<BootstrapperPackage Include="Microsoft.Net.Client.3.5">
 			<Visible>False</Visible>
@@ -86,7 +83,6 @@
 			<Install>true</Install>
 		</BootstrapperPackage>
 	</ItemGroup>
-	<!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
 	<ItemGroup>
 		<HunspellAssemblies Include="Hunspellx64.dll">
 			<Visible>false</Visible>
@@ -98,5 +94,4 @@
 	<ItemGroup>
 		<ProjectReference Include="..\libse\LibSE.csproj" />
 	</ItemGroup>
-
 </Project>
