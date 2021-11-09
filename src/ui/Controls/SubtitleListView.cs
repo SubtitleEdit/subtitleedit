@@ -1509,7 +1509,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0 && !paragraph.StartTime.IsMaxTime)
             {
                 Paragraph next = paragraphs[i + 1];
-                if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                if (gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                 {
                     item.SubItems[ColumnIndexGap].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
