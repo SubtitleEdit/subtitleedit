@@ -1707,6 +1707,16 @@ namespace Test.Logic.Forms
             Assert.AreEqual("- Step out of here... Not world." + Environment.NewLine + "- It's a British record.", actual);
         }
 
+        public void RemoveColonNameStartFirstLineNonDialog()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.NameList.Add("JEREMY");
+            string actual = target.RemoveColon("- JOE: All right." + Environment.NewLine + "Sorry about that.");
+            Assert.AreEqual("All right." + Environment.NewLine + "Sorry about that.", actual);
+        }
+
         [TestMethod]
         public void RemoveNameAndCustom()
         {
@@ -2017,6 +2027,20 @@ namespace Test.Logic.Forms
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh!?", onlyInSeparatedLine: false));
             Assert.AreEqual("Hey!?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDualOh()
+        {
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Oh, what?" + Environment.NewLine + "- Oh.", onlyInSeparatedLine: false));
+            Assert.AreEqual("What?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsAllDualOhOnlySeparateLine()
+        {
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Oh, what?" + Environment.NewLine + "- Oh.", onlyInSeparatedLine: true));
+            Assert.AreEqual("Oh, what?", actual);
         }
     }
 }
