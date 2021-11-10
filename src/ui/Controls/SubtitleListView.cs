@@ -2072,7 +2072,15 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 if (ColumnIndexGap >= 0)
                 {
-                    item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
+                    var gapText = GetGap(paragraph, next);
+                    item.SubItems[ColumnIndexGap].Text = gapText;
+                    if (!string.IsNullOrEmpty(gapText))
+                    {
+                        var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                        item.SubItems[ColumnIndexGap].BackColor = gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines
+                            ? Configuration.Settings.Tools.ListViewSyntaxErrorColor
+                            : BackColor;
+                    }
                 }
             }
         }
