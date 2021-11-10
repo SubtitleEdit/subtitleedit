@@ -23,8 +23,8 @@
     <OpenVideoFileTitle>Otwórz plik wideo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nie wczytano wideo</NoVideoLoaded>
     <VideoInformation>Informacje o wideo</VideoInformation>
-    <StartTime>Czas rozpoczęcia</StartTime>
-    <EndTime>Czas zakończenia</EndTime>
+    <StartTime>Czas rozp.</StartTime>
+    <EndTime>Czas zak.</EndTime>
     <Duration>Czas trwania</Duration>
     <CharsPerSec>Znaków/sek.</CharsPerSec>
     <WordsPerMin>Słów/min.</WordsPerMin>
