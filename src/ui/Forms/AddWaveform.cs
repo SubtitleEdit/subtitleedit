@@ -50,7 +50,12 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.AddWaveform.Title;
             buttonRipWave.Text = LanguageSettings.Current.AddWaveform.GenerateWaveformData;
             labelPleaseWait.Text = LanguageSettings.Current.AddWaveform.PleaseWait;
-            labelVideoFileName.Text = videoFile;
+            SourceVideoFileName = videoFile;
+            using (var g = CreateGraphics())
+            {
+                labelVideoFileName.Text = PathHelper.ShortenPath(g, labelVideoFileName.Font, videoFile, Width - labelVideoFileName.Left - 20);
+            }
+
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             labelSourcevideoFile.Text = LanguageSettings.Current.AddWaveform.SourceVideoFile;
             _spectrogramDirectory = spectrogramDirectory;
@@ -120,7 +125,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonRipWave.Enabled = false;
             _cancel = false;
-            SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
             string targetDriveLetter = null;
             if (Configuration.IsRunningOnWindows)
@@ -342,14 +346,14 @@ namespace Nikse.SubtitleEdit.Forms
             _numberOfAudioTracks = 0;
             var audioTrackNames = new List<string>();
             var mkvAudioTrackNumbers = new Dictionary<int, int>();
-            if (labelVideoFileName.Text.Length > 1 && File.Exists(labelVideoFileName.Text))
+            if (SourceVideoFileName.Length > 1 && File.Exists(SourceVideoFileName))
             {
-                if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                if (SourceVideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 { // Choose for number of audio tracks in matroska files
                     MatroskaFile matroska = null;
                     try
                     {
-                        matroska = new MatroskaFile(labelVideoFileName.Text);
+                        matroska = new MatroskaFile(SourceVideoFileName);
                         if (matroska.IsValid)
                         {
                             foreach (var track in matroska.GetTracks())
@@ -376,11 +380,11 @@ namespace Nikse.SubtitleEdit.Forms
                         matroska?.Dispose();
                     }
                 }
-                else if (labelVideoFileName.Text.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || labelVideoFileName.Text.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
+                else if (SourceVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || SourceVideoFileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
                 { // Choose for number of audio tracks in mp4 files
                     try
                     {
-                        var mp4 = new MP4Parser(labelVideoFileName.Text);
+                        var mp4 = new MP4Parser(SourceVideoFileName);
                         var tracks = mp4.GetAudioTracks();
                         int i = 0;
                         foreach (var track in tracks)
@@ -418,8 +422,8 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 AudioTrackNumber = form.SelectedTrack;
 
-                                var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(labelVideoFileName.Text, form.SelectedTrack);
-                                var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(labelVideoFileName.Text, form.SelectedTrack);
+                                var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(SourceVideoFileName, form.SelectedTrack);
+                                var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(SourceVideoFileName, form.SelectedTrack);
                                 if (File.Exists(peakWaveFileName))
                                 {
                                     DialogResult = DialogResult.Cancel;
@@ -439,12 +443,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for delay in matroska files
-                if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                if (SourceVideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 {
                     MatroskaFile matroska = null;
                     try
                     {
-                        matroska = new MatroskaFile(labelVideoFileName.Text);
+                        matroska = new MatroskaFile(SourceVideoFileName);
                         if (matroska.IsValid)
                         {
                             _delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[AudioTrackNumber]);
@@ -452,7 +456,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (Exception exception)
                     {
-                        SeLogger.Error(exception, $"Error getting delay from mkv: {labelVideoFileName.Text}");
+                        SeLogger.Error(exception, $"Error getting delay from mkv: {SourceVideoFileName}");
                         _delayInMilliseconds = 0;
                     }
                     finally
