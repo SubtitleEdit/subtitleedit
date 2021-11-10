@@ -10238,6 +10238,18 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
 
+            //TODO: add these two to custom shortcuts
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Home)
+            {
+                SelectListViewIndexAndEnsureVisible(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.End)
+            {
+                SelectListViewIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1);
+                e.SuppressKeyPress = true;
+            }
+
             // last key down in text
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
 
@@ -26446,6 +26458,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4), true);
+                e.SuppressKeyPress = true;
+            }
+
+            //TODO: add these two to custom shortcuts
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Home)
+            {
+                SelectListViewIndexAndEnsureVisible(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.End)
+            {
+                SelectListViewIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1);
                 e.SuppressKeyPress = true;
             }
 
