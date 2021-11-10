@@ -7,6 +7,7 @@
    * New sub format - thx Leon
    * New sub format (json) - thx Cedric
    * Add read support for "combined ttml" files - thx Martin
+   * Add read support for Audacity label format - thx David
    * Save SMPTE video time mode for recent files - thx OmrSi
    * Prompt some TTML files regarding SMPTE time mode - thx uckthis
    * New shortcuts for merge - the Leon
@@ -46,6 +47,7 @@
    * Remove shortcut action limit for duration a few places - thx Leon
    * Update Tesseract 5 alpha 2021-08-11 to RC1 2021-10-30
    * Prefer FFmpeg over VLC for extracting audio - thx Jamakmake
+   * Include favorite formats in "reset"
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
@@ -58,7 +60,6 @@
    * Fix for PAC italic w missing space - thx Milenko
    * Fix switched total labels in RTL mode w original subtitle - thx OmrSi
    * Rollback max #lines enforce (now hidden setting) - thx pandalamp 
-   * Include favorite formats in "reset"
    * Take first audio track when loading wave form - thx Tuan-P
    * Fix issue with waveform original out of sync - thx Leon
    * Fix "Set start and set end of prev" when playing - thx Leon
@@ -68,6 +69,8 @@
    * Fix crash in "Batch convert - Auto balance"
    * Fix for recent files after convert format - thx Jamakmake
    * Fix for Blu-ray .sup noisy transparent border in VLC - thx shaino
+   * Fix gap syntax coloring issue - thx Leon
+   * Fix "Remove text for hi" issue with colon/dashes - thx Сергей
 
 
 3.6.2 (24th August 2021)
