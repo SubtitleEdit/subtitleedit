@@ -941,6 +941,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return $"#{c.R:x2}{c.G:x2}{c.B:x2}";
         }
 
+        public static string ColorToHexWithTransparency(Color c)
+        {
+            return $"#{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}";
+        }
+
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;

@@ -12826,7 +12826,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string color;
                 var formatType = GetCurrentSubtitleFormat().GetType();
-                if (formatType == typeof(Ebu))
+                if (formatType == typeof(AdvancedSubStationAlpha))
+                {
+                    using (var form = new ColorChooser { Color = Color.White })
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        color = Utilities.ColorToHexWithTransparency(form.Color);
+                    }
+                }
+                else if (formatType == typeof(Ebu))
                 {
                     using (var form = new EbuColorPicker(true))
                     {
@@ -12896,7 +12908,6 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-
                         if (isAssa)
                         {
                             if (!p.Text.Contains(assaColor, StringComparison.OrdinalIgnoreCase))
@@ -13023,7 +13034,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
-                        text = $"{{\\c{assaColor}&}}{text}{{\\c{AdvancedSubStationAlpha.GetSsaColorStringForEvent(style.Primary)}&}}";
+                        text = $"{{\\{assaColor}&}}{text}{{\\{AdvancedSubStationAlpha.GetSsaColorStringForEvent(style.Primary)}&}}";
                     }
                 }
 
@@ -13098,7 +13109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var c = ColorTranslator.FromHtml(color);
                     p.Text = RemoveAssaColor(p.Text);
-                    p.Text = "{\\c" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
+                    p.Text = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
                 }
                 catch
                 {
@@ -13153,6 +13164,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemoveAssaColor(string input)
         {
             var text = input;
+            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
             text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
             text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
             text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
@@ -24973,7 +24985,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string color;
             var formatType = GetCurrentSubtitleFormat().GetType();
-            if (formatType == typeof(Ebu))
+            if (formatType == typeof(AdvancedSubStationAlpha))
+            {
+                using (var form = new ColorChooser { Color = Color.White })
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    color = Utilities.ColorToHexWithTransparency(form.Color);
+                }
+            }
+            else if (formatType == typeof(Ebu))
             {
                 using (var form = new EbuColorPicker(true))
                 {
