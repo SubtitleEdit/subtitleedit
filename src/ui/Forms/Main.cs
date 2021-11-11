@@ -20735,6 +20735,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (movieFileName == null)
+            {
+                foreach (var extension in Utilities.AudioFileExtensions)
+                {
+                    var fileName = fileNameNoExtension + extension;
+                    if (File.Exists(fileName))
+                    {
+                        movieFileName = fileName;
+                        break;
+                    }
+                }
+            }
+
             if (movieFileName != null)
             {
                 OpenVideo(movieFileName);
@@ -31756,7 +31769,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     RestoreSubtitleListviewIndices();
- 
+
                     SetTitle();
                     SetEncoding(Encoding.UTF8);
                     if (!isOriginalVisible)
