@@ -104,9 +104,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Відеофайл:</SourceVideoFile>
     <GenerateWaveformData>Згенерувати аудіохвилі</GenerateWaveformData>
     <PleaseWait>Це може зайняти декілька хвилин - будь ласка, зачекайте</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Не знайдено медіапрогравач VLC</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit потребує медіапрогравач VLC 1.1.x або новішої версії для виокремлення аудіоданих.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Бажаєте завітати на домашню сторінку медіапрогравача VLC?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Генерування пікового файлу...</GeneratingPeakFile>
     <GeneratingSpectrogram>Створення спектрограми...</GeneratingSpectrogram>
     <ExtractingSeconds>Виокремлення аудіо: {0:0.0} секунд</ExtractingSeconds>

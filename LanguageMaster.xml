@@ -124,11 +124,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Source video file:</SourceVideoFile>
     <GenerateWaveformData>Generate waveform data</GenerateWaveformData>
     <PleaseWait>This may take a few minutes - please wait</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player not found</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit needs FFmpeg for extracting audio data to generate waveform.
+    <FfmpegNotFound>Subtitle Edit needs FFmpeg for extracting audio data to generate waveform.
 
-Do you want to download and use FFmpeg?</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Do you want to go to the VLC media player home page?</GoToVlcMediaPlayerHomePage>
+Do you want to download and use FFmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>

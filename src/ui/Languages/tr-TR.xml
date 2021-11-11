@@ -121,9 +121,6 @@ E-Posta: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Kaynak video dosyası:</SourceVideoFile>
     <GenerateWaveformData>Dalga formu verisi oluştur...</GenerateWaveformData>
     <PleaseWait>Bu işlem birkaç dakika sürebilir. Lütfen bekleyin.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Medya Oynatıcısı bulunamadı</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit ses verisini çıkartmak için; VLC medya oynatıcının v1.1.0 ya da daha yeni versiyonuna ihtiyaç duyar.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>VLC medya oynatıcı ana sayfasına gitmek ister misiniz?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Dalga formu dosyası oluşturuluyor...</GeneratingPeakFile>
     <GeneratingSpectrogram>Spektrogram oluşturuluyor...</GeneratingSpectrogram>
     <ExtractingSeconds>Ses çıkartılıyor: {0:0.0} saniye</ExtractingSeconds>

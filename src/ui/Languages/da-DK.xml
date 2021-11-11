@@ -124,9 +124,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Kilde video-fil:</SourceVideoFile>
     <GenerateWaveformData>Generer bølgeform data</GenerateWaveformData>
     <PleaseWait>Dette kan tage et par minutter - vent venligst</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player ikke fundet</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit behøver VLC media player 1.1.x eller nyere for kunne udpakke lyd data.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Ønsker du at gå til VLC media player hjemmeside?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Genererer peak-fil...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generer spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>

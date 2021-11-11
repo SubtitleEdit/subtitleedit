@@ -118,9 +118,6 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Iturburu bideo agiria:</SourceVideoFile>
     <GenerateWaveformData>Sortu uhinera datuak</GenerateWaveformData>
     <PleaseWait>Honek minutu gutxi batzuk hartu ditzake - mesedez itxaron</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC multimedia irakurgailua ez da aurkitu</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>SubtitleEdit-ek VLC multimedia irakurgailua 1.1.x edo berriago behar du audio datuak ateratzeko.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Nahi duzu VLC multimedia irakurgailua webgunera joatea?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Uhinera sortzen...</GeneratingPeakFile>
     <GeneratingSpectrogram>Argilitza sortzen...</GeneratingSpectrogram>
     <ExtractingSeconds>Audioa ateratzen: {0:0.0} segundu</ExtractingSeconds>

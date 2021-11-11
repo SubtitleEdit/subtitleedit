@@ -120,9 +120,6 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Lähdevideo:</SourceVideoFile>
     <GenerateWaveformData>Muodosta aaltomuoto tiedoista</GenerateWaveformData>
     <PleaseWait>Toiminto voi kestää muutamia minuutteja - odota</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Playeria ei löydy</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Äänien purkamiseksi tarvitaan VLC Media Player (1.1.x tai uudempi).</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Siirrytäänkö VLC Media Playerin kotisivulle?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Muodostetaan huippuarvotiedosto</GeneratingPeakFile>
     <GeneratingSpectrogram>Muodostetaan taajuusanalyysi</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan ääntä: {0:0.0} sekuntia</ExtractingSeconds>

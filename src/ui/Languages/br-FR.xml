@@ -107,9 +107,6 @@ Postel: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Restr video mammenn:</SourceVideoFile>
     <GenerateWaveformData>Genel stumm gwagenn adalek ar roadennoù</GenerateWaveformData>
     <PleaseWait>An dra-mañ a c'hall kemer un nebeut munutennoù - Gortozit mar plij...</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player digavus</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit en deus ezhomm eus VLC media player 1.1.x pe nevesoc'h evit eztennañ ar roadennoù klevel</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Ha fellout a ra deoc'h mont war lec'hienn VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Geneladur restr ar pikoù...</GeneratingPeakFile>
     <GeneratingSpectrogram>Krouadur ar spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Eztennadenn ar c'hlev: {0:0.0} eilenn</ExtractingSeconds>

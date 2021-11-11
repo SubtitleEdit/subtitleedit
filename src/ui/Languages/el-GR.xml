@@ -126,10 +126,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Πηγαίο αρχείο βίντεο:</SourceVideoFile>
     <GenerateWaveformData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveformData>
     <PleaseWait>Χρειάζεται λίγος χρόνος. Παρακαλώ, περιμένετε.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Δεν βρέθηκε το πρόγραμμα VLC</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Το Subtitle Edit χρειάζεται το FFmpeg για τη δημιουργία κυματομορφής.
-Λήψη και χρήση του FFmpeg;</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Μετάβαση στην αρχική σελίδα του VLC media player;</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Δημιουργία αρχείου αιχμής…</GeneratingPeakFile>
     <GeneratingSpectrogram>Δημιουργία φασματογραφήματος…</GeneratingSpectrogram>
     <ExtractingSeconds>Εξαγωγή ήχου: {0:0.0} δευτερόλεπτα</ExtractingSeconds>

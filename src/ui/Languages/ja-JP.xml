@@ -110,9 +110,6 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <SourceVideoFile>ソース ビデオ ファイル:</SourceVideoFile>
     <GenerateWaveformData>波形データの生成</GenerateWaveformData>
     <PleaseWait>これには数分かかる可能性があります - お待ちください</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLCメディアプレイヤー が見つかりません</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLCメディアプレイヤー 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>VLCメディアプレイヤー のホーム ページへ移動しますか？</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>ピーク ファイルを生成しています...</GeneratingPeakFile>
     <GeneratingSpectrogram>スペクトログラムを生成しています...</GeneratingSpectrogram>
     <ExtractingSeconds>オーディオの抽出中: {0:0.0} 秒</ExtractingSeconds>

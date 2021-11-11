@@ -124,9 +124,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SourceVideoFile>來源視訊檔案:</SourceVideoFile>
     <GenerateWaveformData>建立波形資料</GenerateWaveformData>
     <PleaseWait>這可能需要幾分鐘 - 請稍候</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>找不到 VLC 媒體播放器</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit 需要 VLC 媒體播放器 1.1.x 或更新版本來擷取音訊資料。</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>您想要前往 VLC 媒體播放器的首頁嗎？</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>正在建立峰值檔案...</GeneratingPeakFile>
     <GeneratingSpectrogram>正在建立頻譜圖...</GeneratingSpectrogram>
     <ExtractingSeconds>正在擷取音訊: {0:0.0} 秒</ExtractingSeconds>

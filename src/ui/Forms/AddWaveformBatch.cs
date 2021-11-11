@@ -270,15 +270,37 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (DllNotFoundException)
                     {
-                        if (MessageBox.Show(LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                            Environment.NewLine + LanguageSettings.Current.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                            LanguageSettings.Current.AddWaveform.VlcMediaPlayerNotFoundTitle,
-                                            MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+                        if (isFfmpegAvailable)
                         {
-                            UiUtil.OpenUrl("http://www.videolan.org/");
+                            Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                            process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
+                            labelInfo.Text = encoderName;
                         }
-                        buttonRipWave.Enabled = true;
-                        return;
+                        else
+                        {
+                            if (MessageBox.Show(LanguageSettings.Current.AddWaveform.FfmpegNotFound, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                            {
+                                buttonRipWave.Enabled = true;
+                                return;
+                            }
+
+                            using (var form = new DownloadFfmpeg())
+                            {
+                                if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                                {
+                                    Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                                    Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                                    process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
+                                    labelInfo.Text = encoderName;
+                                }
+                                else
+                                {
+                                    buttonRipWave.Enabled = true;
+                                    return;
+                                }
+                            }
+                        }
                     }
 
                     process.Start();

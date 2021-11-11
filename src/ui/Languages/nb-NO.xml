@@ -104,9 +104,6 @@ E-post for norsk oversettelse: mailto:imreeil42@gmail.com</AboutText1>
     <SourceVideoFile>Video-kildefil:</SourceVideoFile>
     <GenerateWaveformData>Generer bølgevisningsdata</GenerateWaveformData>
     <PleaseWait>Dette kan ta noen minutter — vennligst vent</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player ble ikke funnet</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit trenger VLC Media Player 1.1.x eller nyere for å ekstraktere lyddata.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Vil du gå til hjemmesiden til VLC Media Player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Genererer satsvis fil...</GeneratingPeakFile>
     <GeneratingSpectrogram>Genererer spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Ekstrakterer lyd: {0:0.0} seconds</ExtractingSeconds>
