@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.3 BETA (xth November 2021)
+3.6.3 (11th November 2021)
 * NEW:
    * Auto set ASSA resolution - thx Leon
    * Icon for plugin "ASSA Draw" - thx Leon
