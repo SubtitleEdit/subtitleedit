@@ -125,11 +125,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Ficheiro fonte de vídeo:</SourceVideoFile>
     <GenerateWaveformData>Gerar dados na forma de onda</GenerateWaveformData>
     <PleaseWait>Isto pode levar alguns minutos - por favor, aguarde</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player não foi encontrado</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>O Subtitle Edit necessita do FFmpeg para extrair dados de áudio para gerar a forma de onda.
-
-Deseja transferir e usar o FFmpeg</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Deseja visitar a página do VLC media player na Internet?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>A gerar o ficheiro de pico...</GeneratingPeakFile>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>

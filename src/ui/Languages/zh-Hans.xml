@@ -123,9 +123,6 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SourceVideoFile>视频源文件:</SourceVideoFile>
     <GenerateWaveformData>生成波形数据</GenerateWaveformData>
     <PleaseWait>这可能需要几分钟 - 请稍候</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>未找到 VLC 媒体播放器</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit 需要 FFmpeg 来提取音频数据并生成波形。 您想下载并使用FFmpeg吗？</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>您要访问 VLC 媒体播放器的主页吗？</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>正在生成波形缓冲文件...</GeneratingPeakFile>
     <GeneratingSpectrogram>正在生成频谱图...</GeneratingSpectrogram>
     <ExtractingSeconds>正在提取音频: {0:0.0} 秒</ExtractingSeconds>

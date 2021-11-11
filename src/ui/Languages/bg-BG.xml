@@ -123,9 +123,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <SourceVideoFile>Изходен видео файл:</SourceVideoFile>
     <GenerateWaveformData>Създ. форма на сигнала</GenerateWaveformData>
     <PleaseWait>Това ще отнеме няколко минути - моля, изчакайте!</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Не е намерен VLC media player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit се нуждае от VLC media player 1.1.x или по-нов за извличане на аудио данните.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Искате ли да отидете до официалния сайт на VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Създаване на файл с пикове...</GeneratingPeakFile>
     <GeneratingSpectrogram>Създаване на спектрограма...</GeneratingSpectrogram>
     <ExtractingSeconds>Извличане на аудио: {0:0.0} секунди</ExtractingSeconds>

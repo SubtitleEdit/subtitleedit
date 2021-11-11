@@ -222,12 +222,6 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AudioToText.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AudioToText.Designer.cs">
-      <DependentUpon>AudioToText.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\BookmarksGoTo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1361,9 +1355,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AudioToText.resx">
-      <DependentUpon>AudioToText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BookmarksGoTo.resx">
       <DependentUpon>BookmarksGoTo.cs</DependentUpon>

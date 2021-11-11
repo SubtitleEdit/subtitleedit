@@ -231,7 +231,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
             this.generateBlankVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateTextFromCurrentVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.showhideWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showhideVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2130,7 +2129,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
-            this.generateTextFromCurrentVideoToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveformToolStripMenuItem,
             this.showhideVideoToolStripMenuItem,
@@ -2239,13 +2237,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = "Generate video with hardcoded subtitle...";
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem.Click += new System.EventHandler(this.generateVideoWithHardcodedSubtitleToolStripMenuItem_Click);
-            // 
-            // generateTextFromCurrentVideoToolStripMenuItem
-            // 
-            this.generateTextFromCurrentVideoToolStripMenuItem.Name = "generateTextFromCurrentVideoToolStripMenuItem";
-            this.generateTextFromCurrentVideoToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.generateTextFromCurrentVideoToolStripMenuItem.Text = "Generate text from current video...";
-            this.generateTextFromCurrentVideoToolStripMenuItem.Click += new System.EventHandler(this.generateTextFromCurrentVideoToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -5902,7 +5893,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem smpteTimeModedropFrameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveTextUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveTextDownToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateTextFromCurrentVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSplitViaWaveform;
         private System.Windows.Forms.ToolStripMenuItem boxToolStripMenuItem;
         private System.Windows.Forms.ImageList imageListBookmarks;

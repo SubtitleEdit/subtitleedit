@@ -1654,7 +1654,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
             openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
-            generateTextFromCurrentVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateTextFromVideo;
             generateBlankVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateBlankVideo;
             generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithBurnedInSub;
 
@@ -26257,8 +26256,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemImportChapters.Visible = false;
             }
-
-            generateTextFromCurrentVideoToolStripMenuItem.Visible = Directory.Exists(Path.Combine(Configuration.DataDirectory, "pocketsphinx"));
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -30838,23 +30835,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.EnsureVisible(indices[0]);
             _subtitleListViewIndex = -1;
             SubtitleListview1_SelectedIndexChanged(null, null);
-        }
-
-        private void generateTextFromCurrentVideoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var form = new AudioToText(VideoFileName, _videoInfo))
-            {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    _subtitle.Paragraphs.Clear();
-                    _subtitle.Paragraphs.AddRange(form.Subtitle.Paragraphs);
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                    if (_subtitle.Paragraphs.Count > 1)
-                    {
-                        ToolStripMenuItemAutoMergeShortLinesClick(sender, e);
-                    }
-                }
-            }
         }
 
         private void boxToolStripMenuItem_Click(object sender, EventArgs e)

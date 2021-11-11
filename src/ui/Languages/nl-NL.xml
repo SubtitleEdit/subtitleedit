@@ -115,9 +115,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Bronvideobestand:</SourceVideoFile>
     <GenerateWaveformData>Golfvormgegevens genereren</GenerateWaveformData>
     <PleaseWait>Dit kan enkele minuten duren. Een ogenblik geduld.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player niet gevonden</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit heeft VLC media player 1.1.x of nieuwer nodig voor het uitpakken van audiogegevens.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Wilt u naar de startpagina van VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Piekbestand genereren...</GeneratingPeakFile>
     <GeneratingSpectrogram>Spectrogram genereren...</GeneratingSpectrogram>
     <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>

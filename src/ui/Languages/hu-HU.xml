@@ -124,9 +124,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Forrás videófájl:</SourceVideoFile>
     <GenerateWaveformData>Hullámforma létrehozása</GenerateWaveformData>
     <PleaseWait>Ez eltarthat pár percig - kis türelmet</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>A VLC médialejátszó nem található</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>A hangadatok kiemeléséhez a Subtitle Edit alkalmazás a VLC médialejátszó 1.1.x vagy újabb verzióját igényli.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Felkeresi a VLC médialejátszó weboldalát?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Csúcsérték fájl létrehozása...</GeneratingPeakFile>
     <GeneratingSpectrogram>Spektrogram létrehozása...</GeneratingSpectrogram>
     <ExtractingSeconds>Hangkiemelés: {0:0.0} másodperc</ExtractingSeconds>

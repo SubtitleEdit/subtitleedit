@@ -120,9 +120,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Zdrojový soubor videa:</SourceVideoFile>
     <GenerateWaveformData>Vytvořit křivku z dat</GenerateWaveformData>
     <PleaseWait>Může to trvat několik minut, čekejte.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player nebyl nalezen</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit potřebuje VLC media player 1.1.x nebo novější pro extrahování zvukových dat.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Chcete přejít na domovskou stránku VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Vytváření souboru špiček...</GeneratingPeakFile>
     <GeneratingSpectrogram>Vytváření spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahování zvuku: {0:0,0} sekund</ExtractingSeconds>

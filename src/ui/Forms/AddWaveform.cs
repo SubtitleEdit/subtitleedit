@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        throw new DllNotFoundException("NO_VLC");
+                        throw new DllNotFoundException("NO_FFMPEG");
                     }
                 }
             }
@@ -155,13 +155,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    if (MessageBox.Show(LanguageSettings.Current.AddWaveform.FfmpegNotFound, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         buttonRipWave.Enabled = true;
                         return;
                     }
 
-                    using (var form = new DownloadFfmpeg())
+                    using (var form = new DownloadFfmpeg { AutoClose = true })
                     {
                         if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
                         {

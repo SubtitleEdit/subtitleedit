@@ -103,9 +103,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Tập tin video nguồn:</SourceVideoFile>
     <GenerateWaveformData>Tạo ra dữ liệu dạng sóng:</GenerateWaveformData>
     <PleaseWait>Điều này có thể mất một vài phút - vui lòng chờ</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Không tìm thấy VLC media player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Chỉnh sửa phụ đề cần VLC media player 1.1.x hoặc phiên bản mới hơn cho việc giải nén dữ liệu âm thanh.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Bạn có muốn ghé thăm trang chủ VLC media player ?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Tạo ra tập tin đỉnh cao ...</GeneratingPeakFile>
     <GeneratingSpectrogram>Tạo ra ảnh quang phổ.</GeneratingSpectrogram>
     <ExtractingSeconds>Giải nén audio: {0:0.0}s</ExtractingSeconds>

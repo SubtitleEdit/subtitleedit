@@ -119,9 +119,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Źródłowy plik wideo:</SourceVideoFile>
     <GenerateWaveformData>Generowanie danych wykresu falowego</GenerateWaveformData>
     <PleaseWait>Może to zająć kilka minut - proszę czekać</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Nie znaleziono odtwarzacza multimedialnego VLC</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit do wyodrębnienia danych audio wymaga odtwarzacza multimedialnego VLC 1.1.x lub nowszego.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Chcesz przejść na stronę domową odtwarzacza multimedialnego VLC?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generowanie pliku wartości szczytowych...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnianie audio: {0:0.0} sek.</ExtractingSeconds>

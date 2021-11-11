@@ -261,11 +261,9 @@ namespace Nikse.SubtitleEdit.Logic
                 GenerateWaveformData = "Generate waveform data",
                 SourceVideoFile = "Source video file:",
                 PleaseWait = "This may take a few minutes - please wait",
-                VlcMediaPlayerNotFoundTitle = "VLC media player not found",
-                VlcMediaPlayerNotFound = "Subtitle Edit needs FFmpeg for extracting audio data to generate waveform." + Environment.NewLine +
+                FfmpegNotFound = "Subtitle Edit needs FFmpeg for extracting audio data to generate waveform." + Environment.NewLine +
                                          Environment.NewLine +
                                          "Do you want to download and use FFmpeg?",
-                GoToVlcMediaPlayerHomePage = "Do you want to go to the VLC media player home page?",
                 GeneratingPeakFile = "Generating peak file...",
                 GeneratingSpectrogram = "Generating spectrogram...",
                 ExtractingSeconds = "Extracting audio: {0:0.0} seconds",

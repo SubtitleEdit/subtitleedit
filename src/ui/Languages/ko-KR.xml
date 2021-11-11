@@ -120,9 +120,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SourceVideoFile>원본 비디오 파일:</SourceVideoFile>
     <GenerateWaveformData>파형 데이터 만들기</GenerateWaveformData>
     <PleaseWait>시간이 걸리는 작업입니다. 잠시만 기다려 주십시오!</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC 미디어 플레이어를 찾을 수 없습니다!</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit로 오디오 데이터를 추출하려면 VLC 미디어 플레이어 v1.1.x 이상이 필요합니다.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>VLC 미디어 플레이어 홈페이지로 이동하시겠습니까?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>파형 파일을 생성하는 중...</GeneratingPeakFile>
     <GeneratingSpectrogram>스펙트로그램을 생성하는 중...</GeneratingSpectrogram>
     <ExtractingSeconds>추출 시간: {0:0.0} 초</ExtractingSeconds>

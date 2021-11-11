@@ -107,9 +107,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <SourceVideoFile>Izvor video datoteke:</SourceVideoFile>
     <GenerateWaveformData>Izdelaj valovno obliko datoteke</GenerateWaveformData>
     <PleaseWait>Tole lahko traja nekaj minut - prosim počakajte</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Ne najdem VLC medijskega predvajalnika</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit potrebuje VLC medijski predvajalnik 1.1.x ali novejšega za izlužitev audio datoteke.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Želiš na domačo stran VLC medijskega predvajalnika?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Izdelujem vrhnjo datoteko...</GeneratingPeakFile>
     <GeneratingSpectrogram>Izdelujem spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Izlužujem audio audio: {0:0.0} sekund</ExtractingSeconds>

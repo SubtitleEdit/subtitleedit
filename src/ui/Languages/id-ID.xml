@@ -108,9 +108,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Sumber file video:</SourceVideoFile>
     <GenerateWaveformData>Hasilkan data waveform</GenerateWaveformData>
     <PleaseWait>Ini mungkin memerlukan waktu beberapa menit - harap tunggu</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Pemutar media VLC tidak ditemukan</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit membutuhkan pemutar media VLC 1.1.x atau yg terbaru untuk mengekstrak data audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Apakah Anda ingin pergi ke halaman beranda pemutar media VLC?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Menghasilkan file puncak...</GeneratingPeakFile>
     <GeneratingSpectrogram>Menghasilkan spektogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Mengekstrak audio: {0:0.0} detik</ExtractingSeconds>
