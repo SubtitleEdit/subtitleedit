@@ -48,6 +48,7 @@
    * Update Tesseract 5 alpha 2021-08-11 to RC1 2021-10-30
    * Prefer FFmpeg over VLC for extracting audio - thx Jamakmake
    * Include favorite formats in "reset"
+   * Auto-load audio files - thx Leon
 * FIXED:
    * Fix tag style converting from/to ASSA - thx von Suppé
    * Fix "Title bar text" when translating - thx Andrebavila
