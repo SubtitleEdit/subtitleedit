@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -163,13 +163,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Fixed>固定</Fixed>
     <Milliseconds>毫秒</Milliseconds>
     <ExtendOnly>僅延長</ExtendOnly>
-     </AdjustDisplayDuration>
+  </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>套用持續時間限制</Title>
     <FixesAvailable>可用修復: {0}</FixesAvailable>
     <UnableToFix>無法修復 {0}</UnableToFix>
   </ApplyDurationLimits>
-    <AssaAttachments>
+  <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
     <AttachFiles>Attach files...</AttachFiles>
     <FontsAndImages>Fonts and images</FontsAndImages>
@@ -1404,7 +1404,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <AutoContinueInXSeconds>{0} 秒後自動繼續</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>仍然鍵入... 自動繼續已停止</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>在視訊位置插入新的字幕(&amp;I)</InsertNewSubtitleAtVideoPosition>
-       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>自動</Auto>
       <PlayFromJustBeforeText>從文字前播放(&amp;T)</PlayFromJustBeforeText>
       <PlayFromBeginning>從影片開頭播放</PlayFromBeginning>
@@ -2157,7 +2157,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <WaveformShowWpm>顯示每分鐘單字</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>反轉滑鼠捲動方向</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>允許重疊 (當 移動/調整大小 時)</WaveformAllowOverlap>
-     <WaveformSetVideoPosMoveStartEnd>Set video position when moving start/end</WaveformSetVideoPosMoveStartEnd>
+    <WaveformSetVideoPosMoveStartEnd>Set video position when moving start/end</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>滑鼠移過後設定焦點</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>當滑鼠移過時將焦點設定到清單檢視</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Single click to select subtitles</WaveformSingleClickSelect>
@@ -2491,7 +2491,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <BDOpensInEdit>編輯</BDOpensInEdit>
   </Settings>
   <SettingsMpv>
-  <DownloadMpv>Download mpv lib</DownloadMpv>
+    <DownloadMpv>Download mpv lib</DownloadMpv>
     <DownloadMpvFailed>無法下載 mpv - 請稍後再試！</DownloadMpvFailed>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
@@ -2501,7 +2501,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <XDownloadOk>{0} 已完成下載並可開始使用。</XDownloadOk>
   </SettingsFfmpeg>
   <SetVideoOffset>
-  <Title>Set video offset</Title>
+    <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Relative to current video position</RelativeToCurrentVideoPosition>
     <KeepTimeCodes>Keep existing time codes (do not add video offset)</KeepTimeCodes>
@@ -2909,7 +2909,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <Title>新增資料夾</Title>
     <Message>新字元資料庫資料夾的名稱</Message>
   </VobSubOcrNewFolder>
-<VobSubOcrSetItalicAngle>
+  <VobSubOcrSetItalicAngle>
     <Title>設置斜體角度</Title>
     <Description>調整數值，直到字型變正常，而非斜體。注意：原始圖片應為斜體。</Description>
   </VobSubOcrSetItalicAngle>
