@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -110,9 +110,6 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Quellvideodatei:</SourceVideoFile>
     <GenerateWaveformData>Wellenformdaten generieren</GenerateWaveformData>
     <PleaseWait>Das könnte ein paar Minuten dauern - bitte warten</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player nicht gefunden</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit benötigt VLC media player 1.1.x oder höher um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Zur VLC media player Webseite wechseln?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Wellenformdatei wird erzeugt...</GeneratingPeakFile>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>

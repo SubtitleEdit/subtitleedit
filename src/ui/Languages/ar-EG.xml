@@ -87,9 +87,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>:مصدر ملف الفيديو</SourceVideoFile>
     <GenerateWaveformData>توليد بيانات الفيديو</GenerateWaveformData>
     <PleaseWait>هذا قد يستغرق بضع دقائق -- يرجى الانتظار</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC لم يتم العثور على ميديا بلاير</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>ميديا بلير أو أحدث لاستخراج البيانات الصوتية VLC 1.1.x يحتاج لبرنامج</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>ميديا بلير؟VLC هل تريد أن تذهب إلى تحميل برنامج</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>...توليد ملف الفيديو</GeneratingPeakFile>
     <GeneratingSpectrogram>...توليد صورة طيفية</GeneratingSpectrogram>
     <ExtractingSeconds>استخراج الصوت : {0:0.0} ثانية</ExtractingSeconds>

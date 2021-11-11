@@ -651,6 +651,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new MacCaption10(),
                 new Rdf1(),
                 new CombinedXml(),
+                new AudacityLabels(),
             };
         }
 

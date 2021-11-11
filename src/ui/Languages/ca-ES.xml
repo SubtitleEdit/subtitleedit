@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -115,9 +115,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Fitxer de vídeo d' origen:</SourceVideoFile>
     <GenerateWaveformData>Genera dades d'ona wave</GenerateWaveformData>
     <PleaseWait>Açò pot trigar uns minuts - espereu si us plau</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>No s'ha trobat VLC media player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit li cal VLC media player 1.1.x o superior per extreure dades d'audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>¿Voleu anar a la web de VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generant fitxer de pics...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generant espectrògrama...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraient audio: {0:0.0} segons</ExtractingSeconds>

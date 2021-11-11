@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>帮助文件</HelpFile>
@@ -123,9 +123,6 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SourceVideoFile>视频源文件:</SourceVideoFile>
     <GenerateWaveformData>生成波形数据</GenerateWaveformData>
     <PleaseWait>这可能需要几分钟 - 请稍候</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>未找到 VLC 媒体播放器</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit 需要 VLC 媒体播放器 1.1.x 或更新版本来提取音频数据。</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>您要访问 VLC 媒体播放器的主页吗？</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>正在生成波形缓冲文件...</GeneratingPeakFile>
     <GeneratingSpectrogram>正在生成频谱图...</GeneratingSpectrogram>
     <ExtractingSeconds>正在提取音频: {0:0.0} 秒</ExtractingSeconds>
@@ -207,7 +204,7 @@ Command line: {1} {2}
     <TakePosFromVideo>从视频中获取位置</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
-    <Title>更改脚本分辨率</Title>
+    <Title>更改 ASSA 脚本分辨率</Title>
     <SourceVideoRes>源视频分辨率</SourceVideoRes>
     <TargetVideoRes>目标视频分辨率</TargetVideoRes>
     <ChangeResolutionMargins>缩放边距</ChangeResolutionMargins>
@@ -1475,7 +1472,7 @@ Command line: {1} {2}
     <MatchFoundX>已找到匹配: {0}</MatchFoundX>
     <NoMatchFoundX>未找到匹配: {0}</NoMatchFoundX>
     <FoundNothingToReplace>未找到什么可替换的</FoundNothingToReplace>
-    <ReplaceCountX>替换数量: {0}</ReplaceCountX>
+    <ReplaceCountX>替换数量: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>找到匹配在行 {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>已进行一次替换。</OneReplacementMade>
     <BeforeChangesMadeInSourceView>在源视图中进行更改之前</BeforeChangesMadeInSourceView>
