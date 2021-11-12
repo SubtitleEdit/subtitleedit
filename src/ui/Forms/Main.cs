@@ -22564,6 +22564,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+                RefreshSelectedParagraph();
             }
         }
 
