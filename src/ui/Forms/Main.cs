@@ -24105,7 +24105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (string.IsNullOrEmpty(VideoFileName))
+                if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
                 {
                     buttonOpenVideo_Click(sender, e);
                     if (string.IsNullOrEmpty(VideoFileName))
