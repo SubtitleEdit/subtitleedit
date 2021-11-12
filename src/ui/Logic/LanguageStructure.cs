@@ -129,9 +129,7 @@
             public string SourceVideoFile { get; set; }
             public string GenerateWaveformData { get; set; }
             public string PleaseWait { get; set; }
-            public string VlcMediaPlayerNotFoundTitle { get; set; }
-            public string VlcMediaPlayerNotFound { get; set; }
-            public string GoToVlcMediaPlayerHomePage { get; set; }
+            public string FfmpegNotFound { get; set; }
             public string GeneratingPeakFile { get; set; }
             public string GeneratingSpectrogram { get; set; }
             public string ExtractingSeconds { get; set; }

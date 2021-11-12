@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -121,9 +121,6 @@ Email la: nikse.dk @gmail.com</AboutText1>
     <SourceVideoFile>Sursa fișierului video:</SourceVideoFile>
     <GenerateWaveformData>Generează datele audio</GenerateWaveformData>
     <PleaseWait>Poate dura câteva minute - te rog, așteaptă!</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Lipsă player-ul VLC</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>S.E. folosește player-ul VLC 1.1.x sau de versiune recentă ptr. extrag. datelor audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Accesezi pagina de descărcare a player-ului VLC?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generarea fișierului *.peak...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generarea spectrogramei...</GeneratingSpectrogram>
     <ExtractingSeconds>Extragere audio: {0:0.0} secunde</ExtractingSeconds>

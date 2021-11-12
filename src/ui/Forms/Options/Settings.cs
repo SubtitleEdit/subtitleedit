@@ -1284,10 +1284,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.GeneralToggleView));
             AddNode(generalNode, language.ToggleMode, nameof(Configuration.Settings.Shortcuts.GeneralToggleMode));
             AddNode(generalNode, language.TogglePreviewOnVideo, nameof(Configuration.Settings.Shortcuts.GeneralTogglePreviewOnVideo));
-            AddNode(generalNode, language.RemoveBlankLines, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveBlankLines));
-            AddNode(generalNode, language.ApplyAssaOverrideTags, nameof(Configuration.Settings.Shortcuts.ApplyAssaOverrideTags), true);
-            AddNode(generalNode, language.SetAssaPosition, nameof(Configuration.Settings.Shortcuts.SetAssaPosition), true);
-            AddNode(generalNode, language.SetAssaResolution, nameof(Configuration.Settings.Shortcuts.SetAssaResolution));
+            AddNode(generalNode, language.RemoveBlankLines, nameof(Configuration.Settings.Shortcuts.GeneralRemoveBlankLines));
+            AddNode(generalNode, language.ApplyAssaOverrideTags, nameof(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags), true);
+            AddNode(generalNode, language.SetAssaPosition, nameof(Configuration.Settings.Shortcuts.GeneralSetAssaPosition), true);
+            AddNode(generalNode, language.SetAssaResolution, nameof(Configuration.Settings.Shortcuts.GeneralSetAssaResolution));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
             _shortcuts.Nodes.Add(generalNode);
 
@@ -1390,7 +1390,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.PlayRateSlower, nameof(Configuration.Settings.Shortcuts.MainVideoSlower));
             AddNode(videoNode, language.PlayRateFaster, nameof(Configuration.Settings.Shortcuts.MainVideoFaster));
             AddNode(videoNode, language.VideoResetSpeedAndZoom, nameof(Configuration.Settings.Shortcuts.MainVideoReset));
-            AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainToggleVideoControls));
+            AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleControls));
             AddNode(videoNode, language.VideoToggleContrast, nameof(Configuration.Settings.Shortcuts.MainVideoToggleContrast));
             AddNode(videoNode, language.VideoToggleBrightness, nameof(Configuration.Settings.Shortcuts.MainVideoToggleBrightness));
             _shortcuts.Nodes.Add(videoNode);
@@ -1481,7 +1481,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var translateNode = new ShortcutNode(LanguageSettings.Current.Main.VideoControls.Translate);
             AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.GoogleIt, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleIt));
             AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.GoogleTranslate, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslateIt));
-            AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.AutoTranslate, nameof(Configuration.Settings.Shortcuts.MainAutoTranslate), true);
+            AddNode(translateNode, LanguageSettings.Current.Main.VideoControls.AutoTranslate, nameof(Configuration.Settings.Shortcuts.MainTranslateAuto), true);
             AddNode(translateNode, language.CustomSearch1, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
             AddNode(translateNode, language.CustomSearch2, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
             AddNode(translateNode, language.CustomSearch3, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));

@@ -2,7 +2,7 @@
 <Language Name="Македонски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Превод на македонски: Numberguy
 dzoole@hotmail.com</TranslatedBy>
     <CultureName>mk-MK</CultureName>
@@ -116,9 +116,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Изворен видео запис:</SourceVideoFile>
     <GenerateWaveformData>Создај брановиден облик</GenerateWaveformData>
     <PleaseWait>Ова ќе потрае неколку минути – ве молиме почекајте</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Не е пронајден VLC media player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>На Subtitle Edit потребен му е VLC media player 1.1.x или понова верзија за извлекување на аудио податоци.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Дали сакате да ја отворите веб страницата на VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Создавање на запис...</GeneratingPeakFile>
     <GeneratingSpectrogram>Создавање на спектограм...</GeneratingSpectrogram>
     <ExtractingSeconds>Извлекување на аудио: {0:0.0} секунди</ExtractingSeconds>

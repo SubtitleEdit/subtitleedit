@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -110,9 +110,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Videofilskälla:</SourceVideoFile>
     <GenerateWaveformData>Skapar vågformsdata</GenerateWaveformData>
     <PleaseWait>Detta kan ta några minuter - vänta</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Hittade in VLC-mediaspelaren</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit behöver VLC-mediaspelaren 1.1.x eller nyare för att extrahera ljuddata.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Vill du gå till VLC-mediaspelarens hemsida?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Skapar toppfil...</GeneratingPeakFile>
     <GeneratingSpectrogram>Skapar spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraherar ljud: {0:0.0} sekunder</ExtractingSeconds>

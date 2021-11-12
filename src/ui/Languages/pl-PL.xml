@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich (http://www.mm.pl/~fanpack/)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
@@ -23,8 +23,8 @@
     <OpenVideoFileTitle>Otwórz plik wideo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nie wczytano wideo</NoVideoLoaded>
     <VideoInformation>Informacje o wideo</VideoInformation>
-    <StartTime>Czas rozpoczęcia</StartTime>
-    <EndTime>Czas zakończenia</EndTime>
+    <StartTime>Czas rozp.</StartTime>
+    <EndTime>Czas zak.</EndTime>
     <Duration>Czas trwania</Duration>
     <CharsPerSec>Znaków/sek.</CharsPerSec>
     <WordsPerMin>Słów/min.</WordsPerMin>
@@ -119,9 +119,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Źródłowy plik wideo:</SourceVideoFile>
     <GenerateWaveformData>Generowanie danych wykresu falowego</GenerateWaveformData>
     <PleaseWait>Może to zająć kilka minut - proszę czekać</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Nie znaleziono odtwarzacza multimedialnego VLC</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit do wyodrębnienia danych audio wymaga odtwarzacza multimedialnego VLC 1.1.x lub nowszego.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Chcesz przejść na stronę domową odtwarzacza multimedialnego VLC?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generowanie pliku wartości szczytowych...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnianie audio: {0:0.0} sek.</ExtractingSeconds>
@@ -1939,7 +1936,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
   </SetSyncPoint>
   <Settings>
     <Title>Ustawienia</Title>
-    <General>Ogółne</General>
+    <General>Ogólne</General>
     <SubtitleFormats>Formaty napisów</SubtitleFormats>
     <Toolbar>Pasek narzędzi</Toolbar>
     <VideoPlayer>Odtwarzacz wideo</VideoPlayer>

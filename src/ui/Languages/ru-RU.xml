@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
 Последующие правки и дополнения перевода: Elheym (mailto:Subs.for.everybody@gmail.com)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
@@ -120,9 +120,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <SourceVideoFile>Исходный файл видео:</SourceVideoFile>
     <GenerateWaveformData>Создать форму(-ы) сигнала</GenerateWaveformData>
     <PleaseWait>Эта операция займет некоторое время - подождите...</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player не найден</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Для извлечения аудио данных редактору субтитров требуется VLC media player 1.1.x или новее.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Вы хотите перейти на домашнюю страницу VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Создание файла пиков...</GeneratingPeakFile>
     <GeneratingSpectrogram>Создание спектрограммы...</GeneratingSpectrogram>
     <ExtractingSeconds>Извлечение аудио: {0:0.0} с</ExtractingSeconds>

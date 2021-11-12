@@ -1654,7 +1654,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
             openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
-            generateTextFromCurrentVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateTextFromVideo;
             generateBlankVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateBlankVideo;
             generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithBurnedInSub;
 
@@ -5132,6 +5131,8 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxColorLongLines +
                                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap +
                                        Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorGap +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorWideLines +
                                        Configuration.Settings.General.MaxNumberOfLines +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
@@ -10236,6 +10237,18 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
 
+            //TODO: add these two to custom shortcuts
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Home)
+            {
+                SelectListViewIndexAndEnsureVisible(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.End)
+            {
+                SelectListViewIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1);
+                e.SuppressKeyPress = true;
+            }
+
             // last key down in text
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
 
@@ -12813,7 +12826,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string color;
                 var formatType = GetCurrentSubtitleFormat().GetType();
-                if (formatType == typeof(Ebu))
+                if (formatType == typeof(AdvancedSubStationAlpha))
+                {
+                    using (var form = new ColorChooser { Color = Color.White })
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        color = Utilities.ColorToHexWithTransparency(form.Color);
+                    }
+                }
+                else if (formatType == typeof(Ebu))
                 {
                     using (var form = new EbuColorPicker(true))
                     {
@@ -12883,7 +12908,6 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-
                         if (isAssa)
                         {
                             if (!p.Text.Contains(assaColor, StringComparison.OrdinalIgnoreCase))
@@ -13010,7 +13034,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
-                        text = $"{{\\c{assaColor}&}}{text}{{\\c{AdvancedSubStationAlpha.GetSsaColorStringForEvent(style.Primary)}&}}";
+                        text = $"{{\\{assaColor}&}}{text}{{\\{AdvancedSubStationAlpha.GetSsaColorStringForEvent(style.Primary)}&}}";
                     }
                 }
 
@@ -13085,7 +13109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var c = ColorTranslator.FromHtml(color);
                     p.Text = RemoveAssaColor(p.Text);
-                    p.Text = "{\\c" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
+                    p.Text = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(c) + "&}" + p.Text;
                 }
                 catch
                 {
@@ -13140,6 +13164,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemoveAssaColor(string input)
         {
             var text = input;
+            text = Regex.Replace(text, "\\\\alpha&H.{1,2}&\\\\", "\\");
             text = Regex.Replace(text, "{\\\\1c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
             text = Regex.Replace(text, "{\\\\c&[abcdefghABCDEFGH\\d]*&}", string.Empty);
             text = Regex.Replace(text, "\\\\c&[abcdefghABCDEFGH\\d]*&", string.Empty);
@@ -15366,8 +15391,9 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.SelectAll();
                     GotoSubtitleIndex(newIndex);
                     ShowSubtitle();
-                    e.SuppressKeyPress = true;
                 }
+
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGoToNextSubtitleAndFocusVideo == e.KeyData)
             {
@@ -15381,8 +15407,9 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.SelectAll();
                     GotoSubtitleIndex(newIndex);
                     ShowSubtitle();
-                    e.SuppressKeyPress = true;
                 }
+
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGoToNextSubtitleAndPlay == e.KeyData && mediaPlayer != null)
             {
@@ -20719,6 +20746,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (movieFileName == null)
+            {
+                foreach (var extension in Utilities.AudioFileExtensions)
+                {
+                    var fileName = fileNameNoExtension + extension;
+                    if (File.Exists(fileName))
+                    {
+                        movieFileName = fileName;
+                        break;
+                    }
+                }
+            }
+
             if (movieFileName != null)
             {
                 OpenVideo(movieFileName);
@@ -22487,17 +22527,23 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _subtitle.Paragraphs[index].StartTime = new TimeCode(_subtitle.Paragraphs[index].StartTime.TotalMilliseconds - offset);
                 _subtitle.Paragraphs[index].EndTime = new TimeCode(_subtitle.Paragraphs[index].EndTime.TotalMilliseconds - offset);
-                SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
 
+                SubtitleListview1.BeginUpdate();
                 for (int i = index + 1; i < lastLineNumber; i++)
                 {
                     if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
                     {
                         _subtitle.Paragraphs[i].StartTime = new TimeCode(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds - offset);
                         _subtitle.Paragraphs[i].EndTime = new TimeCode(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds - offset);
-                        SubtitleListview1.SetStartTimeAndDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
+
+                        SubtitleListview1.SetStartTimeAndEndTimeSameDuration(i, _subtitle.Paragraphs[i]);
                     }
                 }
+
+                SubtitleListview1.SetStartTimeAndDuration(index - 1, _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 2));
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index - 1, _subtitle.GetParagraphOrDefault(index - 1));
+                SubtitleListview1.EndUpdate();
+                UpdateSourceView();
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
@@ -22516,7 +22562,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                UpdateSourceView();
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             }
@@ -22577,15 +22622,17 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
                 RefreshSelectedParagraph();
 
+                SubtitleListview1.BeginUpdate();
                 for (int i = index + 1; i < lastLineNumber; i++)
                 {
                     if (!_subtitle.Paragraphs[i].StartTime.IsMaxTime)
                     {
                         _subtitle.Paragraphs[i].StartTime = new TimeCode(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds + offset);
                         _subtitle.Paragraphs[i].EndTime = new TimeCode(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds + offset);
-                        SubtitleListview1.SetDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1));
+                        SubtitleListview1.SetStartTimeAndEndTimeSameDuration(i, _subtitle.Paragraphs[i]);
                     }
                 }
+                SubtitleListview1.EndUpdate();
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
@@ -23166,9 +23213,9 @@ namespace Nikse.SubtitleEdit.Forms
             moveTextUpToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextUp);
             moveTextDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextDown);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-            translateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAutoTranslate);
-            applyCustomStylesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.ApplyAssaOverrideTags);
-            setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.SetAssaPosition);
+            translateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAuto);
+            applyCustomStylesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags);
+            setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaPosition);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             audioVisualizer.Move100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsLeft);
@@ -23691,11 +23738,15 @@ namespace Nikse.SubtitleEdit.Forms
                         f.LoadSubtitle(s, lines, null);
 
                         // we only update selected lines
-                        int i = 0;
                         foreach (int index in SubtitleListview1.SelectedIndices)
                         {
-                            _subtitle.Paragraphs[index] = s.Paragraphs[i];
-                            i++;
+                            var currentP = _subtitle.Paragraphs[index];
+                            var translatedP = s.Paragraphs.FirstOrDefault(p => Math.Abs(p.StartTime.TotalMilliseconds - currentP.StartTime.TotalMilliseconds) < 0.001 &&
+                                                                               Math.Abs(p.EndTime.TotalMilliseconds - currentP.EndTime.TotalMilliseconds) < 0.001);
+                            if (translatedP != null)
+                            {
+                                currentP.Text = translatedP.Text;
+                            }
                         }
 
                         UpdateSourceView();
@@ -24934,7 +24985,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string color;
             var formatType = GetCurrentSubtitleFormat().GetType();
-            if (formatType == typeof(Ebu))
+            if (formatType == typeof(AdvancedSubStationAlpha))
+            {
+                using (var form = new ColorChooser { Color = Color.White })
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    color = Utilities.ColorToHexWithTransparency(form.Color);
+                }
+            }
+            else if (formatType == typeof(Ebu))
             {
                 using (var form = new EbuColorPicker(true))
                 {
@@ -26217,8 +26280,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemImportChapters.Visible = false;
             }
-
-            generateTextFromCurrentVideoToolStripMenuItem.Visible = Directory.Exists(Path.Combine(Configuration.DataDirectory, "pocketsphinx"));
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -26431,6 +26492,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4), true);
+                e.SuppressKeyPress = true;
+            }
+
+            //TODO: add these two to custom shortcuts
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Home)
+            {
+                SelectListViewIndexAndEnsureVisible(0);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.End)
+            {
+                SelectListViewIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1);
                 e.SuppressKeyPress = true;
             }
 
@@ -26652,8 +26725,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateOriginalTimeCodes(oldParagraph, oldNextParagraph);
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
-            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index - 2), _subtitle.GetParagraphOrDefault(index));
-            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index + 1));
+            SubtitleListview1.SetStartTimeAndDuration(index - 1, _subtitle.GetParagraphOrDefault(index - 1), _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index - 2));
+            SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.GetParagraphOrDefault(index), _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            SubtitleListview1.SetStartTimeAndDuration(index + 1, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index + 2), _subtitle.GetParagraphOrDefault(index));
             RefreshSelectedParagraph();
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
@@ -30787,23 +30861,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
-        private void generateTextFromCurrentVideoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var form = new AudioToText(VideoFileName, _videoInfo))
-            {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    _subtitle.Paragraphs.Clear();
-                    _subtitle.Paragraphs.AddRange(form.Subtitle.Paragraphs);
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                    if (_subtitle.Paragraphs.Count > 1)
-                    {
-                        ToolStripMenuItemAutoMergeShortLinesClick(sender, e);
-                    }
-                }
-            }
-        }
-
         private void boxToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListViewToggleTag("box");
@@ -31712,10 +31769,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ResetHistory();
                         _fileName = translateDialog.GetFileNameWithTargetLanguage(oldFileName, VideoFileName, _subtitleOriginal, GetCurrentSubtitleFormat());
+                        _converted = true;
                     }
 
                     RestoreSubtitleListviewIndices();
-                    _converted = true;
+
                     SetTitle();
                     SetEncoding(Encoding.UTF8);
                     if (!isOriginalVisible)

@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -101,9 +101,6 @@
     <SourceVideoFile>ไฟล์วิดีโอต้นฉบับ:</SourceVideoFile>
     <GenerateWaveformData>สร้างข้อมูลเวฟฟอร์ม</GenerateWaveformData>
     <PleaseWait>อาจต้องใช้เวลาสักครู่ - โปรดรอ</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>ไม่พบโปรแกรม VLC Media Player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit ต้องใช้กับ VLC media player 1.1.x หรือใหม่กว่าเพื่อแยกข้อมูลออดิโอ</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>คุณอยากไปที่โฮมเพจของ VLC media player หรือไม่</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>กำลังสร้างไฟล์พีค...</GeneratingPeakFile>
     <GeneratingSpectrogram>กำลังสร้างสเปกโตแกรม...</GeneratingSpectrogram>
     <ExtractingSeconds>กำลังแยกออดิโอ: {0:0.0} วินาที</ExtractingSeconds>

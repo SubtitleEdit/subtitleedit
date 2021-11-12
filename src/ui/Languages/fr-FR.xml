@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated by 21/09/07)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -124,9 +124,6 @@ Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions pour le français
     <SourceVideoFile>Fichier vidéo source :</SourceVideoFile>
     <GenerateWaveformData>Générer les données de l'onde</GenerateWaveformData>
     <PleaseWait>Ceci peut prendre quelques minutes - Patientez</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player introuvable</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC Media Player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC Media Player ?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Génération du fichier des crêtes ...</GeneratingPeakFile>
     <GeneratingSpectrogram>Création du spectrogramme ...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio : {0:0.0} secondes</ExtractingSeconds>

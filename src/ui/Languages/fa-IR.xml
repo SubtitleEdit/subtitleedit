@@ -2,7 +2,7 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -110,9 +110,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>منبع فایل تصویری :</SourceVideoFile>
     <GenerateWaveformData>ساخت موج از اطلاعات</GenerateWaveformData>
     <PleaseWait>این کار ممکن است چند دقیقه طول بكشد - لطفا صبر کنید</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>وی ال سی مدیا پلیر پیدا نشد</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>برنامه به وی ال سی مدیا پلیر 1.1 برای استخراج داده های صوتی احتیاج دارد.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>رفتن به صفحه خانگي وي ال سي مديا پلير</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>تولید فایل اوج</GeneratingPeakFile>
     <GeneratingSpectrogram>مولد طیف نگار</GeneratingSpectrogram>
     <ExtractingSeconds>استخراج صدا: {0:0.0} ثانیه</ExtractingSeconds>

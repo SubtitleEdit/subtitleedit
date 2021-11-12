@@ -1509,7 +1509,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (_settings.Tools.ListViewSyntaxColorGap && i >= 0 && i < paragraphs.Count - 1 && ColumnIndexGap >= 0 && !paragraph.StartTime.IsMaxTime)
             {
                 Paragraph next = paragraphs[i + 1];
-                if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                if (gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                 {
                     item.SubItems[ColumnIndexGap].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
@@ -2001,6 +2002,28 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public void SetStartTimeAndEndTimeSameDuration(int index, Paragraph paragraph)
+        {
+            if (paragraph == null)
+            {
+                return;
+            }
+
+            if (IsValidIndex(index))
+            {
+                ListViewItem item = Items[index];
+                if (ColumnIndexStart >= 0)
+                {
+                    item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
+                }
+
+                if (ColumnIndexEnd >= 0)
+                {
+                    item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
+                }
+            }
+        }
+
         public void SetStartTimeAndDuration(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
         {
             if (paragraph == null)
@@ -2033,6 +2056,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 UpdateCpsAndWpm(item, paragraph);
             }
+
             SetGap(index - 1, prev, paragraph);
         }
 
@@ -2048,7 +2072,15 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 if (ColumnIndexGap >= 0)
                 {
-                    item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
+                    var gapText = GetGap(paragraph, next);
+                    item.SubItems[ColumnIndexGap].Text = gapText;
+                    if (!string.IsNullOrEmpty(gapText))
+                    {
+                        var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
+                        item.SubItems[ColumnIndexGap].BackColor = gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines
+                            ? Configuration.Settings.Tools.ListViewSyntaxErrorColor
+                            : BackColor;
+                    }
                 }
             }
         }

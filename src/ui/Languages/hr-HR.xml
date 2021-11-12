@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -109,9 +109,6 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Izvor video datoteka:</SourceVideoFile>
     <GenerateWaveformData>Generiraj valne podatke</GenerateWaveformData>
     <PleaseWait>To može potrajati nekoliko minuta - molimo pričekajte</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player nije pronađen</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit treba VLC media player 1.1.x ili noviji za vađenje audio podataka.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Želite li otići na VLC media player početnu stranicu?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generiranje vrha datoteke...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generiranje spektrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Vađenje zvuka: {0:0.0} sekundi</ExtractingSeconds>

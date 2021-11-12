@@ -2,7 +2,7 @@
 <Language Name="Español (Argentina)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Traducido por Marcelo1ar y paconaranjo, correcciones por walterh78</TranslatedBy>
     <CultureName>es-AR</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -118,9 +118,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Archivo de Origen de Video:</SourceVideoFile>
     <GenerateWaveformData>Generar datos de forma de onda</GenerateWaveformData>
     <PleaseWait>Puede tardar unos minutos - Por favor, espere</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>No se encuentra VLC media player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit necesita VLC media player 1.1.x o superior para extraer audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>¿Quiere ir a la web de VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generando Archivo de Picos...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generando Espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrayendo audio: {0:0.0} segundos</ExtractingSeconds>

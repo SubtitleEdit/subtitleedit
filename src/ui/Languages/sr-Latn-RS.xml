@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -113,9 +113,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Izvorna Video datoteka:</SourceVideoFile>
     <GenerateWaveformData>Kreiranje Audio datoteke</GenerateWaveformData>
     <PleaseWait>Ova radnja može potrajati, molim vas sačekajte.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player nije pronađen</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit zahteva VLC media player 1.1.x ili noviji za vađenje Audio zapisa.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Želite li da posetite VLC media player internet stranicu?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Kreiranje audio radne datoteke...</GeneratingPeakFile>
     <GeneratingSpectrogram>Kreiranje Spektrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Vađenje zvuka: {0:0.0} seconds</ExtractingSeconds>

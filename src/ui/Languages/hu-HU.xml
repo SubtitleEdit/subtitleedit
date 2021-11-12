@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.2</Version>
+    <Version>3.6.3</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -124,9 +124,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Forrás videófájl:</SourceVideoFile>
     <GenerateWaveformData>Hullámforma létrehozása</GenerateWaveformData>
     <PleaseWait>Ez eltarthat pár percig - kis türelmet</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>A VLC médialejátszó nem található</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>A hangadatok kiemeléséhez a Subtitle Edit alkalmazás a VLC médialejátszó 1.1.x vagy újabb verzióját igényli.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Felkeresi a VLC médialejátszó weboldalát?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Csúcsérték fájl létrehozása...</GeneratingPeakFile>
     <GeneratingSpectrogram>Spektrogram létrehozása...</GeneratingSpectrogram>
     <ExtractingSeconds>Hangkiemelés: {0:0.0} másodperc</ExtractingSeconds>
