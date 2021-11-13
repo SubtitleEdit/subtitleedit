@@ -356,7 +356,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             openFileDialog1.Title = LanguageSettings.Current.Main.Menu.File.Open.RemoveChar('&');
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass;" + SubStationAlpha.NameOfFormat + "|*.ssa;";
+            openFileDialog1.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + SubStationAlpha.NameOfFormat + "|*.ssa;";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.Multiselect = false;
             var result = openFileDialog1.ShowDialog(this);
