@@ -3,15 +3,19 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.3</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [25-08-2021]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [12-11-2021]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>Peruuta</Cancel>
     <Apply>Käytä</Apply>
+    <ApplyTo>Käytä kohteeseen
+</ApplyTo>
     <None>Ei mitään</None>
     <All>Kaikki</All>
     <Preview>Esikatselu</Preview>
+    <ShowPreview>Näytä esikatselu</ShowPreview>
+    <HidePreview>Piilota esikatselu</HidePreview>
     <SubtitleFiles>Tekstitystiedostot</SubtitleFiles>
     <AllFiles>Kaikki tiedostot</AllFiles>
     <VideoFiles>Videotiedostot</VideoFiles>
@@ -120,6 +124,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Lähdevideo:</SourceVideoFile>
     <GenerateWaveformData>Muodosta aaltomuoto tiedoista</GenerateWaveformData>
     <PleaseWait>Toiminto voi kestää muutamia minuutteja - odota</PleaseWait>
+    <FfmpegNotFound>Aaltomuodon muodostamiseksi tarvitaan FFmpeg. Ladataanko se netistä ja otetaanko käytöön?</FfmpegNotFound>
     <GeneratingPeakFile>Muodostetaan huippuarvotiedosto</GeneratingPeakFile>
     <GeneratingSpectrogram>Muodostetaan taajuusanalyysi</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan ääntä: {0:0.0} sekuntia</ExtractingSeconds>
@@ -216,6 +221,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <SetPosInfo>Napsauta videota paikan asettamiseksi/siirtämiseksi</SetPosInfo>
     <Clipboard>Leikepöytä</Clipboard>
     <ResolutionMissing>ToistoResoX/ToistoResoY ei ole asetettu - asetaanko tarkkuus nyt?</ResolutionMissing>
+    <RotateXAxis>Kierrä {0}-akselia</RotateXAxis>
+    <DistortX>Vääristä {0}</DistortX>
   </AssaSetPosition>
   <AudioToText>
     <Title>Ääni tekstiksi</Title>
@@ -266,6 +273,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <BridgeGaps>Yhdistä välit</BridgeGaps>
     <PlainText>Pelkkä teksti</PlainText>
     <Ocr>Tekstintunnistus</Ocr>
+    <AddFiles>Lisää tiedostoja...</AddFiles>
     <Filter>Suodatin</Filter>
     <FilterSkipped>Suodattamatta</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip -tiedostosta puuttuu UTF-9 BOM -otsikko</FilterSrtNoUtf8BOM>
@@ -442,6 +450,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <ZPositionHelp>Positiiviset luvut loitontavat tekstiä, negatiiviset lähentävät. Arvolla 0 teksti on 2D.</ZPositionHelp>
     <ChooseColor>Valitse väri</ChooseColor>
     <Generate>Luo</Generate>
+    <GenerateNewIdOnSave>Luo tallennettaessa uusi tunniste</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Siltaa kestojen pienet aikavälit</Title>
@@ -789,8 +798,24 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Luo video kiinteästi upotetulla tekstityksellä</Title>
-    <Info>Luodaan video kiinteästi upotetulla tekstityksellä. HUOM! Tukee Advanced Substation Alphaa</Info>
+    <InfoAssaOff>Huom! Advanced Substation Alpha -tyylit ovat käytettävissä.</InfoAssaOff>
+    <InfoAssaOn>Huom! Advanced Substation Alpha -tyylit ovat käytössä : )</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" luotu kiinteällä tekstityksellä.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Jäljellä: {0} minuuttia</TimeRemainingMinutes>
+    <TimeRemainingSeconds>Jäljellä: {0} sekuntia</TimeRemainingSeconds>
+    <TimeRemainingMinutesAndSeconds>Jäljellä: {0} minuuttia ja {1} sekuntia</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Kohdetiedosto: {0}</TargetFileName>
+    <TargetFileSize>Kohdetiedoston koko (vaatii kaksivaiheisen koodauksen)</TargetFileSize>
+    <FileSizeMb>Tiedostokoko (Mt)</FileSizeMb>
+    <PassX>Vaihe {0}</PassX>
+    <Encoding>Koodaus</Encoding>
+    <BitRate>Bittinopeus</BitRate>
+    <SampleRate>Näytteenottotaajuus</SampleRate>
+    <Stereo>Stereo</Stereo>
+    <Preset>Esiasetus</Preset>
+    <Crf>Vakionopeus (CRF)</Crf>
+    <TuneFor>Virityksen kohde</TuneFor>
+    <AlignRight>Tasaus oikealle</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Sanastojen lataustarve</Title>
@@ -1253,6 +1278,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <Help>Ohje</Help>
         <ShowHideWaveform>Näytä/piilota aaltomuoto</ShowHideWaveform>
         <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
+        <AssaDraw>Advanced Sub Station Alpha piirto</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Sovita sarakkeet</SizeAllColumnsToFit>
@@ -1275,6 +1301,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <SplitLineAtCursorAndWaveformPosition>Katkaise rivi kursorin/videon kohdasta</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automaattinen kesto (nykyinen rivi)</AutoDurationCurrentLine>
         <SelectAll>Valitse kaikki</SelectAll>
+        <Insert>Lisää</Insert>
         <InsertFirstLine>Lisää rivi</InsertFirstLine>
         <InsertBefore>Lisää ennen</InsertBefore>
         <InsertAfter>Lisää jälkeen</InsertAfter>
@@ -1319,6 +1346,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <ShowSelectedLinesEarlierLater>Näytä valitut rivit aikaisemmin/myöhemmin</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Valittujen rivien visuaalinen tahdistus</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft-käännös alkuperäiselle riville</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>Valitut rivit</SelectedLines>
         <TranslateSelectedLines>Käännä valitut rivit</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Säädä valittujen rivien kestot</AdjustDisplayDurationForSelectedLines>
         <ApplyDurationLimitsForSelectedLines>Aseta valittuille riveille kestorajat</ApplyDurationLimitsForSelectedLines>
@@ -1935,6 +1963,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <RemoveTextIfAllUppercase>Poista rivi, jos ISOILLA kirjaimilla</RemoveTextIfAllUppercase>
     <RemoveInterjections>Poista huudahdukset (shh, hmm jne.)</RemoveInterjections>
     <EditInterjections>Muokkaa</EditInterjections>
+    <Apply>Käytä</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Korvaa</Title>
@@ -2265,6 +2294,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustExtendPreviousLineEndToCurrentStart>Laajenna edellisen rivin loppu nykyisen alkuun</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Laajenna seuraavan rivin alku nykyisen loppuun</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Laske uudelleen nykyisen tekstityksen kesto</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Laske uudelleen nykyisen tekstityksen kesto (perustuen optimaaliseen lukunopeuteen)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>Luo uusi alasnuolella, aseta loppuaika ylösnuolella</MainCreateStartDownEndUp>
     <MergeDialog>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialog>
     <GoToNext>Siirry seuraavalle riville</GoToNext>
@@ -2382,6 +2412,10 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SwitchOriginalAndTranslation>Vaihda alkuperäinen ja käännös</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Yhdistä alkuperäinen ja käännös</MergeOriginalAndTranslation>
     <MergeWithNext>Yhdistä seuraavaan</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Yhdistä edelliseen ja eheytä</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Yhdistä seuraavaan ja eheytä</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Yhdistä edelliseen ja eheytä</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Yhdistä seuraavaan ja eheytä</MergeWithNextAndBreak>
     <MergeWithPrevious>Yhdistä edelliseen</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Pikanäppäin on jo määritelty: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Vaihda esikatselussa käännös ja alkuperäinen kuva/ääni</ToggleTranslationAndOriginalInPreviews>
@@ -2439,6 +2473,10 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <MinFrameGap>Kehysten minimiväli</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} kehystä nopeudella {1} vastaa {2} millisekuntia.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Käytetäänkö kehysten uutena minimivälinä "{0}" millisekuntia?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml avataan kohteessa</BDOpensIn>
+    <BDOpensInOcr>Tekstintunnistus</BDOpensInOcr>
+    <BDOpensInEdit>Muokkaa</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Pikavalinnat: Salli yksittäinen kirjain/numero tekstilaatikossa</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Lataa mpv lib</DownloadMpv>
@@ -2713,6 +2751,13 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Info>Yksi tahdistuspiste muuttaa paikkaa, kaksi tai useampi tahdistuspiste säätää paikan ja nopeuden</Info>
     <ApplySync>Käytä</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE-aikakoodaus</Title>
+    <UseSmpteTiming>Käytetäänkö nykyiseen tekstitykseen SMPTE-aikakoodausta?</UseSmpteTiming>
+    <SmpteTimingInfo>Huom! SMPTE-ajoitusta voidaan säätää Video-valikossa</SmpteTimingInfo>
+    <YesAlways>Kyllä, aina ei-kokonaisluvullisille ruudunpäivitysnopeuksille</YesAlways>
+    <NoNever>Ei koskaan</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Siirtovirtauksen valinta - {0}</Title>
     <PidLineImage>Kuvien siirtovirtaustunniste (PID) = {0}, kieli= {1}, tekstityksiä = {2}</PidLineImage>
