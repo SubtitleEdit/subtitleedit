@@ -164,6 +164,54 @@ namespace Nikse.SubtitleEdit.Core.Common
             return lines;
         }
 
+        public static List<string> SplitToLines(this string s, int maxCount)
+        {
+            var lines = new List<string>();
+            int start = 0;
+            int max = Math.Min(maxCount, s.Length);
+            int i = 0;
+            while (i < max)
+            {
+                var ch = s[i];
+                if (ch == '\r')
+                {
+                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    {
+                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        i += 3;
+                        start = i;
+                        continue;
+                    }
+
+                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
+                    {
+                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        i += 2;
+                        start = i;
+                        continue;
+                    }
+
+                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    i++;
+                    start = i;
+                    continue;
+                }
+
+                if (ch == '\n' || ch == '\u2028')
+                {
+                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    i++;
+                    start = i;
+                    continue;
+                }
+
+                i++;
+            }
+
+            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+            return lines;
+        }
+
         public static int CountWords(this string source)
         {
             return HtmlUtil.RemoveHtmlTags(source, true).Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;

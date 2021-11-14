@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var sub = new Subtitle();
-                    var mdatLines = xmlAsString.SplitToLines();
+                    var mdatLines = xmlAsString.SplitToLines(25_000);
                     format = sub.ReloadLoadSubtitle(mdatLines, null, format);
                     if (sub.Paragraphs.Count == 0)
                     {
