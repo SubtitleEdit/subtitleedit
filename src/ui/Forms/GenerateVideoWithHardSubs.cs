@@ -719,7 +719,8 @@ namespace Nikse.SubtitleEdit.Forms
                                (int)numericUpDownHeight.Value,
                                Color.Black,
                                true,
-                               25);
+                               25,
+                               null);
                 process.Start();
                 while (!process.HasExited)
                 {
