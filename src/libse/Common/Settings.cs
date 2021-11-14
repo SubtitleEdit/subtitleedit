@@ -2168,6 +2168,7 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextUp { get; set; }
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewGoToNextError { get; set; }
+        public string MainListViewListErrors { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -2336,6 +2337,7 @@ $HorzAlign          =   Center
             MainVideoGoToStartCurrent = "F6";
             MainVideo3000MsLeft = "F7";
             MainListViewGoToNextError = "F8";
+            MainListViewListErrors = "Control+F8";
             MainCreateSetStart = "F11";
             MainCreateSetEnd = "F12";
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
@@ -8044,6 +8046,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewGoToNextError = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewListErrors");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewListErrors = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralRemoveBlankLines");
                 if (subNode != null)
                 {
@@ -9784,6 +9792,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnTextUp", shortcuts.MainListViewColumnTextUp);
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
+            textWriter.WriteElementString("MainListViewListErrors", shortcuts.MainListViewListErrors);
             textWriter.WriteElementString("GeneralRemoveBlankLines", shortcuts.GeneralRemoveBlankLines);
             textWriter.WriteElementString("GeneralApplyAssaOverrideTags", shortcuts.GeneralApplyAssaOverrideTags);
             textWriter.WriteElementString("GeneralSetAssaPosition", shortcuts.GeneralSetAssaPosition);
