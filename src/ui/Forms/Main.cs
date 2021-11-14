@@ -16609,6 +16609,11 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewListErrors)
+            {
+                ListSyntaxErrors();
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainListViewRemoveBlankLines)
             {
                 if (_subtitle != null && _subtitle.Paragraphs.Any(p => string.IsNullOrWhiteSpace(p.Text)))
@@ -19327,6 +19332,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+            }
+        }
+
+        private void ListSyntaxErrors()
+        {
+            using (var form = new ErrorsGoTo(_subtitle))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    SelectListViewIndexAndEnsureVisible(form.ErrorIndex);
+                    if (mediaPlayer.VideoPlayer != null)
+                    {
+                        mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[form.ErrorIndex].StartTime.TotalSeconds;
+                    }
+                }
             }
         }
 
