@@ -30,11 +30,12 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.listViewBookmarks = new System.Windows.Forms.ListView();
+            this.listViewErrors = new System.Windows.Forms.ListView();
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStartTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonExport = new System.Windows.Forms.Button();
+            this.labelCount = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -63,23 +64,23 @@
             // 
             // listViewBookmarks
             // 
-            this.listViewBookmarks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewBookmarks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewErrors.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderNumber,
             this.columnHeaderStartTime,
             this.columnHeaderText});
-            this.listViewBookmarks.FullRowSelect = true;
-            this.listViewBookmarks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listViewBookmarks.HideSelection = false;
-            this.listViewBookmarks.Location = new System.Drawing.Point(13, 12);
-            this.listViewBookmarks.Name = "listViewBookmarks";
-            this.listViewBookmarks.Size = new System.Drawing.Size(768, 576);
-            this.listViewBookmarks.TabIndex = 0;
-            this.listViewBookmarks.UseCompatibleStateImageBehavior = false;
-            this.listViewBookmarks.View = System.Windows.Forms.View.Details;
-            this.listViewBookmarks.DoubleClick += new System.EventHandler(this.listViewErrors_DoubleClick);
+            this.listViewErrors.FullRowSelect = true;
+            this.listViewErrors.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listViewErrors.HideSelection = false;
+            this.listViewErrors.Location = new System.Drawing.Point(13, 12);
+            this.listViewErrors.Name = "listViewBookmarks";
+            this.listViewErrors.Size = new System.Drawing.Size(768, 576);
+            this.listViewErrors.TabIndex = 0;
+            this.listViewErrors.UseCompatibleStateImageBehavior = false;
+            this.listViewErrors.View = System.Windows.Forms.View.Details;
+            this.listViewErrors.DoubleClick += new System.EventHandler(this.listViewErrors_DoubleClick);
             // 
             // columnHeaderNumber
             // 
@@ -105,13 +106,24 @@
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
+            // labelCount
+            // 
+            this.labelCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelCount.AutoSize = true;
+            this.labelCount.Location = new System.Drawing.Point(10, 600);
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(55, 13);
+            this.labelCount.TabIndex = 31;
+            this.labelCount.Text = "Count: {0}";
+            // 
             // ErrorsGoTo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 628);
+            this.Controls.Add(this.labelCount);
             this.Controls.Add(this.buttonExport);
-            this.Controls.Add(this.listViewBookmarks);
+            this.Controls.Add(this.listViewErrors);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
@@ -127,6 +139,7 @@
             this.ResizeEnd += new System.EventHandler(this.ErrorsGoTo_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ErrorsGoTo_KeyDown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -134,10 +147,11 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.ListView listViewBookmarks;
+        private System.Windows.Forms.ListView listViewErrors;
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
         private System.Windows.Forms.ColumnHeader columnHeaderStartTime;
         private System.Windows.Forms.ColumnHeader columnHeaderText;
         private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.Label labelCount;
     }
 }

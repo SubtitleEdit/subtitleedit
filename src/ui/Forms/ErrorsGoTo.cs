@@ -38,9 +38,11 @@ namespace Nikse.SubtitleEdit.Forms
                     ListViewItem item = new ListViewItem("#" + p.Number) { Tag = p };
                     item.SubItems.Add(p.StartTime.ToShortDisplayString());
                     item.SubItems.Add(p.Bookmark);
-                    listViewBookmarks.Items.Add(item);
+                    listViewErrors.Items.Add(item);
                 }
             }
+
+            labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewErrors.Items.Count}";
         }
 
         private List<string> GetErrors(Paragraph paragraph, int i, List<Paragraph> paragraphs)
@@ -133,9 +135,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewErrors_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewBookmarks.SelectedItems.Count > 0)
+            if (listViewErrors.SelectedItems.Count > 0)
             {
-                var p = (Paragraph)listViewBookmarks.SelectedItems[0].Tag;
+                var p = (Paragraph)listViewErrors.SelectedItems[0].Tag;
                 ErrorIndex = _subtitle.Paragraphs.IndexOf(p);
                 DialogResult = DialogResult.OK;
             }
@@ -143,9 +145,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (listViewBookmarks.SelectedItems.Count > 0)
+            if (listViewErrors.SelectedItems.Count > 0)
             {
-                var p = (Paragraph)listViewBookmarks.SelectedItems[0].Tag;
+                var p = (Paragraph)listViewErrors.SelectedItems[0].Tag;
                 ErrorIndex = _subtitle.Paragraphs.IndexOf(p);
                 DialogResult = DialogResult.OK;
             }
@@ -153,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ErrorsGoTo_KeyDown(object sender, KeyEventArgs e)
         {
-            if (listViewBookmarks.Focused && e.KeyCode == Keys.Enter)
+            if (listViewErrors.Focused && e.KeyCode == Keys.Enter)
             {
                 buttonOK_Click(sender, e);
             }
@@ -170,13 +172,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ErrorsGoTo_ResizeEnd(object sender, EventArgs e)
         {
-            listViewBookmarks.AutoSizeLastColumn();
+            listViewErrors.AutoSizeLastColumn();
         }
 
         private void ErrorsGoTo_Shown(object sender, EventArgs e)
         {
             ErrorsGoTo_ResizeEnd(sender, e);
-            listViewBookmarks.Focus();
+            listViewErrors.Focus();
         }
 
         private void buttonExport_Click(object sender, EventArgs e)

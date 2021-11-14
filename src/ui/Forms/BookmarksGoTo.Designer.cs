@@ -76,10 +76,11 @@
             // 
             // labelCount
             // 
+            this.labelCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelCount.AutoSize = true;
             this.labelCount.Location = new System.Drawing.Point(13, 310);
             this.labelCount.Name = "labelCount";
-            this.labelCount.Size = new System.Drawing.Size(50, 13);
+            this.labelCount.Size = new System.Drawing.Size(55, 13);
             this.labelCount.TabIndex = 10;
             this.labelCount.Text = "Count: {0}";
             // 
@@ -138,6 +139,7 @@
             this.ResizeEnd += new System.EventHandler(this.BookmarksGoTo_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BookmarksGoTo_KeyDown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
