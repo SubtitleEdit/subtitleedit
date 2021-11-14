@@ -60,6 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
             buttonVideoChooseStandardRes.Left = numericUpDownHeight.Left + numericUpDownHeight.Width + 9;
             comboBoxFrameRate.Left = left;
+            radioButtonImage.Text = LanguageSettings.Current.VobSubEditCharacters.Image;
+            buttonChooseImageFile.Left = radioButtonImage.Left + radioButtonImage.Width + 9;
 
             comboBoxFrameRate.Items.Clear();
             comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
