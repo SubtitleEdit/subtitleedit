@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -11,13 +12,13 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GenerateVideo : Form
     {
-
         public string VideoFileName { get; private set; }
         private bool _abort;
         private long _processedFrames;
         private long _startTicks;
         private long _totalFrames;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
+        private Bitmap _backgroundImage;
 
         public GenerateVideo(Subtitle subtitle)
         {
@@ -49,9 +50,11 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
+            labelImageFileName.Text = string.Empty;
 
             var left = Math.Max(labelResolution.Left + labelResolution.Width, labelDuration.Left + labelDuration.Width) + 5;
             numericUpDownDurationMinutes.Left = left;
+            buttonChooseDuration.Left = numericUpDownDurationMinutes.Left + numericUpDownDurationMinutes.Width + 9;
             numericUpDownWidth.Left = left;
             labelX.Left = numericUpDownWidth.Left + numericUpDownWidth.Width + 3;
             numericUpDownHeight.Left = labelX.Left + labelX.Width + 3;
@@ -107,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             EnableDisableControls(false);
-            var fileName = radioButtonColor.Checked ? "blank_video_solid" : "blank_video_checkered";
+            var fileName = radioButtonColor.Checked ? "blank_video_solid" : (radioButtonCheckeredImage.Checked ? "blank_video_checkered" : "blank_video_image");
             using (var saveDialog = new SaveFileDialog { FileName = fileName, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
@@ -134,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
                 panelColor.BackColor,
                 radioButtonCheckeredImage.Checked,
                 decimal.Parse(comboBoxFrameRate.Text),
+                radioButtonImage.Checked ? _backgroundImage : null,
                 OutputHandler);
 
             process.Start();
@@ -198,6 +202,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BlankVideoUseCheckeredImage = radioButtonCheckeredImage.Checked;
             Configuration.Settings.Tools.BlankVideoMinutes = (int)numericUpDownDurationMinutes.Value;
             Configuration.Settings.Tools.BlankVideoFrameRate = Convert.ToDecimal(comboBoxFrameRate.Text, CultureInfo.CurrentCulture);
+
+            _backgroundImage?.Dispose();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -254,6 +260,57 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
             contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
+        }
+
+        private void buttonChooseImageFile_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = "Open...";
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = "Images|*.png;*.jpg;*.jpeg;*.gif;*.tiff;*.bmp";
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    _backgroundImage?.Dispose();
+                    _backgroundImage = (Bitmap)Bitmap.FromFile(openFileDialog1.FileName);
+                    labelImageFileName.Text = openFileDialog1.FileName;
+                    numericUpDownWidth.Value = _backgroundImage.Width;
+                    numericUpDownHeight.Value = _backgroundImage.Height;
+                    radioButtonImage.Checked = true;
+                }
+            }
+        }
+
+        private void radioButtonImage_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonImage.Checked && _backgroundImage == null)
+            {
+                buttonChooseImageFile_Click(null, null);
+            }
+        }
+
+        private void buttonChooseDuration_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    if (info != null && info.Success && info.TotalSeconds > 0)
+                    {
+                        numericUpDownDurationMinutes.Value = (decimal)(info.TotalSeconds / 60.0);
+                    }
+                }
+            }
+        }
+
+        private void GenerateVideo_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

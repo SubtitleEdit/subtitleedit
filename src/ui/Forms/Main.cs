@@ -32020,6 +32020,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateBlankVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            {
+                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
+            }
+
             if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
             {
                 if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -32106,6 +32112,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
                 return;
+            }
+
+            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            {
+                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
             }
 
             if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
