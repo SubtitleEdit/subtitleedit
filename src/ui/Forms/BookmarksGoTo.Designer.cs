@@ -30,11 +30,12 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.labelCount = new System.Windows.Forms.Label();
             this.listViewBookmarks = new System.Windows.Forms.ListView();
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStartTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buttonExport = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -45,7 +46,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(555, 308);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 30;
+            this.buttonCancel.TabIndex = 40;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -56,10 +57,31 @@
             this.buttonOK.Location = new System.Drawing.Point(474, 308);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 20;
+            this.buttonOK.TabIndex = 30;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonExport.Location = new System.Drawing.Point(371, 308);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(97, 23);
+            this.buttonExport.TabIndex = 20;
+            this.buttonExport.Text = "Export...";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
+            // labelCount
+            // 
+            this.labelCount.AutoSize = true;
+            this.labelCount.Location = new System.Drawing.Point(13, 310);
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(50, 13);
+            this.labelCount.TabIndex = 10;
+            this.labelCount.Text = "Count: {0}";
             // 
             // listViewBookmarks
             // 
@@ -93,23 +115,12 @@
             // 
             this.columnHeaderText.Width = 480;
             // 
-            // buttonExport
-            // 
-            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(371, 308);
-            this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(97, 23);
-            this.buttonExport.TabIndex = 10;
-            this.buttonExport.Text = "Export...";
-            this.buttonExport.UseVisualStyleBackColor = true;
-            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
-            // 
             // BookmarksGoTo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(642, 341);
+            this.Controls.Add(this.labelCount);
             this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.listViewBookmarks);
             this.Controls.Add(this.buttonOK);
@@ -134,10 +145,11 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.Label labelCount;
         private System.Windows.Forms.ListView listViewBookmarks;
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
         private System.Windows.Forms.ColumnHeader columnHeaderStartTime;
         private System.Windows.Forms.ColumnHeader columnHeaderText;
-        private System.Windows.Forms.Button buttonExport;
     }
 }
