@@ -19925,7 +19925,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!Configuration.Settings.General.DisableVideoAutoLoading)
                             {
-                                OpenVideo(importText.VideoFileName);
+                                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName));
                             }
 
                             _fileName = importText.VideoFileName;
