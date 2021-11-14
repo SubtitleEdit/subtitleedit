@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
             this.buttonChooseDuration = new System.Windows.Forms.Button();
+            this.toolStripMenuItemResBrowse = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.groupBoxBackground.SuspendLayout();
@@ -364,9 +365,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.pAL720x576ToolStripMenuItem,
             this.nTSC720x480ToolStripMenuItem,
             this.x352ToolStripMenuItem,
-            this.x272ToolStripMenuItem});
+            this.x272ToolStripMenuItem,
+            this.toolStripMenuItemResBrowse});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 312);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 356);
             // 
             // x2160ToolStripMenuItem
             // 
@@ -486,6 +488,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonChooseDuration.UseVisualStyleBackColor = true;
             this.buttonChooseDuration.Click += new System.EventHandler(this.buttonChooseDuration_Click);
             // 
+            // toolStripMenuItemResBrowse
+            // 
+            this.toolStripMenuItemResBrowse.Name = "toolStripMenuItemResBrowse";
+            this.toolStripMenuItemResBrowse.Size = new System.Drawing.Size(203, 22);
+            this.toolStripMenuItemResBrowse.Text = "...";
+            this.toolStripMenuItemResBrowse.Click += new System.EventHandler(this.toolStripMenuItemResBrowse_Click);
+            // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -516,7 +525,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "GenerateVideo";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideo_FormClosing);
-            this.Load += new System.EventHandler(this.GenerateVideo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             this.groupBoxBackground.ResumeLayout(false);
@@ -568,5 +576,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonChooseImageFile;
         private System.Windows.Forms.RadioButton radioButtonImage;
         private System.Windows.Forms.Button buttonChooseDuration;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemResBrowse;
     }
 }

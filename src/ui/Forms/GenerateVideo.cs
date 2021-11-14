@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private Bitmap _backgroundImage;
 
-        public GenerateVideo(Subtitle subtitle)
+        public GenerateVideo(Subtitle subtitle, VideoInfo videoInfo)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -81,7 +81,13 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
             }
+
+            if (videoInfo != null && videoInfo.Success && videoInfo.TotalSeconds > 0)
+            {
+                numericUpDownDurationMinutes.Value = (decimal)(videoInfo.TotalSeconds / 60.0);
+            }
         }
+
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             if (string.IsNullOrWhiteSpace(outLine.Data))
@@ -308,9 +314,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GenerateVideo_Load(object sender, EventArgs e)
+        private void toolStripMenuItemResBrowse_Click(object sender, EventArgs e)
         {
-
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                    if (info != null && info.Success && info.Width > 0 && info.Height > 0)
+                    {
+                        numericUpDownWidth.Value = info.Width;
+                        numericUpDownHeight.Value = info.Height;
+                    }
+                }
+            }
         }
     }
 }
