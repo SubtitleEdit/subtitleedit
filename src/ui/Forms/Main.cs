@@ -32047,7 +32047,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var form = new GenerateVideo(_subtitle))
+            using (var form = new GenerateVideo(_subtitle, _videoInfo))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
