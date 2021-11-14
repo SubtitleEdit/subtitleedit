@@ -14517,7 +14517,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (mp4SubtitleTracks.Count > 0)
                     {
                         ImportSubtitleFromMp4(fileName);
-                        return;
+                        if (_subtitle.Paragraphs.Count > 0)
+                        {
+                            return;
+                        }
                     }
 
                     var f = new IsmtDfxp();
