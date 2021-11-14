@@ -25,7 +25,6 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
             columnHeaderText.Text = LanguageSettings.Current.General.Text;
 
-
             _subtitle = subtitle;
             foreach (var p in subtitle.Paragraphs)
             {
@@ -37,6 +36,8 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewBookmarks.Items.Add(item);
                 }
             }
+
+            labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewBookmarks.Items.Count}";
         }
 
         public int BookmarkIndex { get; private set; }
