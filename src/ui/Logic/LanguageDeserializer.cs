@@ -3700,6 +3700,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DarkThemeRestart":
                     language.Main.DarkThemeRestart = reader.Value;
                     break;
+                case "Main/VideoFromUrlRequirements":
+                    language.Main.VideoFromUrlRequirements = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -6856,8 +6859,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SettingsMpv/DownloadMpvOk":
                     language.SettingsMpv.DownloadMpvOk = reader.Value;
                     break;
-                case "SettingsFfmpeg/Title":
-                    language.SettingsFfmpeg.Title = reader.Value;
+                case "SettingsFfmpeg/XDownload":
+                    language.SettingsFfmpeg.XDownload = reader.Value;
                     break;
                 case "SettingsFfmpeg/XDownloadFailed":
                     language.SettingsFfmpeg.XDownloadFailed = reader.Value;
