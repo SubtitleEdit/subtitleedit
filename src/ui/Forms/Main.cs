@@ -30354,7 +30354,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var form = new SetVideoOffset())
             {
-                form.VideoOffset = new TimeCode(10, 0, 0, 0);
+                form.VideoOffset = TimeCode.FromSeconds(Configuration.Settings.General.DefaultVideoOffsetInMs / 1000.0);
                 if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
                 {
                     form.VideoOffset = new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs);
@@ -30372,6 +30372,11 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         Configuration.Settings.General.CurrentVideoOffsetInMs = (long)(Math.Round(form.VideoOffset.TotalSeconds * 1000.0));
+                    }
+
+                    if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+                    {
+                        Configuration.Settings.General.DefaultVideoOffsetInMs = Configuration.Settings.General.CurrentVideoOffsetInMs;
                     }
 
                     if (form.DoNotaddVideoOffsetToTimeCodes)

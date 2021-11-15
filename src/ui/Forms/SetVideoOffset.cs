@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -37,7 +39,42 @@ namespace Nikse.SubtitleEdit.Forms
             buttonReset.Text = LanguageSettings.Current.SetVideoOffset.Reset;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            FillDefaultOffsets();
             UiUtil.FixLargeFonts(this, buttonOK);
+        }
+
+        private void FillDefaultOffsets()
+        {
+            var secondsList = new List<long>();
+            foreach (var ms in Configuration.Settings.General.DefaultVideoOffsetInSecondsList.Split(';'))
+            {
+                if (long.TryParse(ms, out var l))
+                {
+                    secondsList.Add(l);
+                }
+            }
+
+            if (secondsList.Count == 0)
+            {
+                secondsList.Add(1 * 60 * 60);
+                secondsList.Add(10 * 60 * 60);
+            }
+
+            foreach (var secs in secondsList.OrderBy(p => p))
+            {
+                var displayText = TimeCode.FromSeconds(secs).ToDisplayString();
+                var item = new ToolStripMenuItem() { Text = displayText, Tag = secs };
+                item.Click += Item_Click;
+                contextMenuStripDefaultOffsets.Items.Add(item);
+            }
+        }
+
+        private void Item_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem item)
+            {
+                VideoOffset = TimeCode.FromSeconds((long)item.Tag);
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -64,6 +101,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetVideoOffset_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.VideoOffsetKeepTimeCodes = checkBoxKeepTimeCodes.Checked;
+        }
+
+        private void buttonPickOffset_Click(object sender, EventArgs e)
+        {
+            var coordinates = buttonPickOffset.PointToClient(Cursor.Position);
+            contextMenuStripDefaultOffsets.Show(buttonPickOffset, coordinates);
         }
     }
 }

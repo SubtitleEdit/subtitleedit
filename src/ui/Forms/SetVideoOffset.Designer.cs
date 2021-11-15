@@ -30,7 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            TimeCode timeCode1 = new TimeCode();
+            this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelDescription = new System.Windows.Forms.Label();
@@ -38,6 +39,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonReset = new System.Windows.Forms.Button();
             this.checkBoxKeepTimeCodes = new System.Windows.Forms.CheckBox();
+            this.buttonPickOffset = new System.Windows.Forms.Button();
+            this.contextMenuStripDefaultOffsets = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -92,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(13, 39);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPosition.TabIndex = 1;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
@@ -126,11 +129,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxKeepTimeCodes.Text = "Keep existing time codes (do not add video offset)";
             this.checkBoxKeepTimeCodes.UseVisualStyleBackColor = true;
             // 
+            // buttonPickOffset
+            // 
+            this.buttonPickOffset.Location = new System.Drawing.Point(131, 42);
+            this.buttonPickOffset.Name = "buttonPickOffset";
+            this.buttonPickOffset.Size = new System.Drawing.Size(25, 23);
+            this.buttonPickOffset.TabIndex = 7;
+            this.buttonPickOffset.Text = "...";
+            this.buttonPickOffset.UseVisualStyleBackColor = true;
+            this.buttonPickOffset.Click += new System.EventHandler(this.buttonPickOffset_Click);
+            // 
+            // contextMenuStripDefaultOffsets
+            // 
+            this.contextMenuStripDefaultOffsets.Name = "contextMenuStripRes";
+            this.contextMenuStripDefaultOffsets.Size = new System.Drawing.Size(61, 4);
+            // 
             // SetVideoOffset
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(473, 162);
+            this.Controls.Add(this.buttonPickOffset);
             this.Controls.Add(this.checkBoxKeepTimeCodes);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.checkBoxFromCurrentPosition);
@@ -161,5 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxFromCurrentPosition;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.CheckBox checkBoxKeepTimeCodes;
+        private System.Windows.Forms.Button buttonPickOffset;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripDefaultOffsets;
     }
 }
