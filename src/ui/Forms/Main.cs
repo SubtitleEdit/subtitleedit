@@ -4478,27 +4478,16 @@ namespace Nikse.SubtitleEdit.Forms
                             _fileName += format.Extension;
                         }
 
+                        if (oldFormat.GetType() != format.GetType())
+                        {
+                            SetCurrentFormat(format);
+                        }
+
                         _saveAsCalled = true;
+                        var oldConverted = _converted;
+                        _converted = false;
                         if (SaveSubtitle(format) == DialogResult.OK)
                         {
-                            if (oldFormat.GetType() != format.GetType())
-                            {
-                                oldFormat.RemoveNativeFormatting(_subtitle, format);
-
-                                if (format.GetType() == typeof(AdvancedSubStationAlpha))
-                                {
-                                    foreach (var p in _subtitle.Paragraphs)
-                                    {
-                                        var text = p.Text.Replace(Environment.NewLine, "\\N");
-                                        p.Text = AdvancedSubStationAlpha.FormatText(text);
-                                    }
-
-                                    SaveSubtitleListviewIndices();
-                                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                                    RestoreSubtitleListviewIndices();
-                                }
-                            }
-
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
                             SetCurrentFormat(format);
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
@@ -4506,7 +4495,12 @@ namespace Nikse.SubtitleEdit.Forms
                             UpdateRecentFilesUI();
                             _changeSubtitleHash = GetFastSubtitleHash();
                         }
+                        else if (oldFormat != null)
+                        {
+                            SetCurrentFormat(oldFormat);
+                        }
 
+                        _converted = oldConverted;
                         break;
                     }
 
