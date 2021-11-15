@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Forms.FormatProperties;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
@@ -26189,10 +26190,6 @@ namespace Nikse.SubtitleEdit.Forms
                 smpteTimeModedropFrameToolStripMenuItem.Checked = Configuration.Settings.General.CurrentVideoIsSmpte;
             }
 
-            toolStripMenuItemOpenVideoFromUrl.Enabled = Configuration.Settings.General.VideoPlayer.Trim().Equals("MPV", StringComparison.OrdinalIgnoreCase) &&
-                                                        LibMpvDynamic.IsInstalled &&
-                                                        File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
-
             toolStripMenuItemSetAudioTrack.Visible = false;
             openSecondSubtitleToolStripMenuItem.Visible = false;
             if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
@@ -30740,6 +30737,51 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemOpenVideoFromUrl_Click(object sender, EventArgs e)
         {
+            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            {
+                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
+            }
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var isMpvAvailable = LibMpvDynamic.IsInstalled;
+                var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
+                var allOk = isYouTubeDlInstalled && isMpvAvailable;
+
+                if (!allOk)
+                {
+                    if (MessageBox.Show(_language.VideoFromUrlRequirements, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+
+                    if (!isMpvAvailable)
+                    {
+                        using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                        {
+                            if (form.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+
+                            Configuration.Settings.General.VideoPlayer = "MPV";
+                        }
+                    }
+
+                    if (!isYouTubeDlInstalled)
+                    {
+                        using (var form = new DownloadYouTubeDl())
+                        {
+                            if (form.ShowDialog(this) != DialogResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
             using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, "Url", string.Empty))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)

@@ -1607,6 +1607,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NoSupportHereDivx = "DivX files are not supported here.",
                 NoChapters = "No chapters found in the video.",
                 DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
+                VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -2834,7 +2835,7 @@ can edit in same subtitle file (collaboration)",
 
             SettingsFfmpeg = new LanguageStructure.SettingsFfmpeg
             {
-                Title = "Download FFmpeg",
+                XDownload = "Download {0}",
                 XDownloadFailed = "Unable to download {0} - please re-try later!",
                 XDownloadOk = "{0} was downloaded and is ready for use.",
             };

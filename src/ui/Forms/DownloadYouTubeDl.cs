@@ -1,24 +1,25 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class DownloadFfmpeg : Form
+    public sealed partial class DownloadYouTubeDl : Form
     {
-        public string FFmpegPath { get; internal set; }
+        public const string Url = "https://github.com/ytdl-org/youtube-dl/releases/download/2021.06.06/youtube-dl.exe";
+        public const string Sha512Hash = "78c009f4cf8ae56db150800d55faaac97c127c76c89715b23fe406d85c3c0628";
         public bool AutoClose { get; internal set; }
 
-        public DownloadFfmpeg()
+        public DownloadYouTubeDl()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownload, "FFmpeg");
+            Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownload, "youtube-dl");
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -50,7 +51,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                string url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
 
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
-                wc.DownloadDataAsync(new Uri(url));
+                wc.DownloadDataAsync(new Uri(Url));
             }
             catch (Exception exception)
             {
@@ -73,37 +73,26 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.Error != null)
             {
-                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "ffmpeg");
+                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "youtube-dl");
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 return;
             }
 
-            string folder = Path.Combine(Configuration.DataDirectory, "ffmpeg");
+            string folder = Path.Combine(Configuration.DataDirectory);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            using (var ms = new MemoryStream(e.Result))
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
+            var hash = GetSha256Hash(e.Result);
+            if (hash != Sha512Hash)
             {
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-                foreach (ZipExtractor.ZipFileEntry entry in dir)
-                {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
-                    if (fileName != null)
-                    {
-                        string path = Path.Combine(folder, fileName);
-                        if (fileName.EndsWith("ffmpeg.exe", StringComparison.OrdinalIgnoreCase))
-                        {
-                            FFmpegPath = path;
-                        }
-
-                        zip.ExtractFile(entry, path);
-                    }
-                }
+                MessageBox.Show("youtube-dl SHA2-512 hash does not match!");
+                return;
             }
+
+            File.WriteAllBytes(Path.Combine(folder, "youtube-dl.exe"), e.Result);
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
@@ -115,7 +104,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonOK.Enabled = true;
-            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "ffmpeg");
+            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "youtube-dl");
+        }
+
+        private static string GetSha256Hash(byte[] buffer)
+        {
+            using (var ms = new MemoryStream(buffer))
+            using (var bs = new BufferedStream(ms))
+            {
+                using (var sha256 = new SHA256Managed())
+                {
+                    byte[] hash = sha256.ComputeHash(bs);
+                    string hashString = string.Empty;
+                    foreach (byte x in hash)
+                    {
+                        hashString += string.Format("{0:x2}", x);
+                    }
+
+                    return hashString.ToString().ToLower();
+                }
+            }
         }
     }
 }

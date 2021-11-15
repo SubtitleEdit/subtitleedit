@@ -1459,6 +1459,7 @@
             public string NoSupportHereDivx { get; set; }
             public string NoChapters { get; set; }
             public string DarkThemeRestart { get; set; }
+            public string VideoFromUrlRequirements { get; set; }
 
             public class MainMenu
             {
@@ -2683,7 +2684,7 @@
 
         public class SettingsFfmpeg
         {
-            public string Title { get; set; }
+            public string XDownload { get; set; }
             public string XDownloadFailed { get; set; }
             public string XDownloadOk { get; set; }
         }

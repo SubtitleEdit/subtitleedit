@@ -222,6 +222,12 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DownloadYouTubeDl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DownloadYouTubeDl.Designer.cs">
+      <DependentUpon>DownloadYouTubeDl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ErrorsGoTo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1361,6 +1367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DownloadYouTubeDl.resx">
+      <DependentUpon>DownloadYouTubeDl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ErrorsGoTo.resx">
       <DependentUpon>ErrorsGoTo.cs</DependentUpon>
