@@ -1330,25 +1330,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _makeHistoryPaused = true;
 
                     MovePrevNext(e, beforeParagraph, index);
-                    SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index, paragraph);
-                    if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
-                    {
-                        var next = _subtitle.GetParagraphOrDefault(index + 1);
-                        if (next != null)
-                        {
-                            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index + 1, next);
-                        }
-                    }
-
-                    if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
-                    {
-                        var prev = _subtitle.GetParagraphOrDefault(index - 1);
-                        if (prev != null)
-                        {
-                            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index - 1, prev);
-                        }
-                    }
-
                     if (_subtitleOriginal != null)
                     {
                         var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleOriginal.Paragraphs);
@@ -1374,6 +1355,8 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.CurrentPosition = e.Seconds;
             }
 
+            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index, paragraph);
+            SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index + 1, _subtitle.GetParagraphOrDefault(index + 1));
             UpdateSourceView();
         }
 
