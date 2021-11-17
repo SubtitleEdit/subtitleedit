@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private readonly string _videoFileName;
         private readonly Subtitle _subtitle;
 
-        public ResolutionResampler(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
+        public ResolutionResampler(Subtitle subtitle, string videoFileName, VideoInfo videoInfo, bool showNeverButton)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -57,6 +57,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 numericUpDownTargetWidth.Value = videoInfo1.Width;
                 numericUpDownTargetHeight.Value = videoInfo1.Height;
             }
+
+            buttonNever.Text = LanguageSettings.Current.TimedTextSmpteTiming.NoNever;
+            buttonNever.Visible = showNeverButton;
         }
 
         private void buttonSourceRes_Click(object sender, EventArgs e)
@@ -205,6 +208,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void buttonNever_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.SubtitleSettings.AssaResolutionAutoNew = false;
+            DialogResult = DialogResult.Cancel;
         }
     }
 }
