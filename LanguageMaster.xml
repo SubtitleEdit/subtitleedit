@@ -1706,6 +1706,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoChapters>No chapters found in the video.</NoChapters>
     <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
     <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl - download and continue?</VideoFromUrlRequirements>
+    <Errors>Errors</Errors>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2441,6 +2442,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
+    <ListViewListErrors>List errors</ListViewListErrors>
     <ShowStyleManager>Show style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>

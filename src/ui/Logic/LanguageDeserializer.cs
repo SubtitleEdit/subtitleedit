@@ -3703,6 +3703,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/VideoFromUrlRequirements":
                     language.Main.VideoFromUrlRequirements = reader.Value;
                     break;
+                case "Main/Errors":
+                    language.Main.Errors = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -6696,6 +6699,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;
+                    break;
+                case "Settings/ListViewListErrors":
+                    language.Settings.ListViewListErrors = reader.Value;
                     break;
                 case "Settings/ShowStyleManager":
                     language.Settings.ShowStyleManager = reader.Value;
