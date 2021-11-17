@@ -1272,7 +1272,7 @@ $HorzAlign          =   Center
         public bool ShowNegativeDurationInfoOnSave { get; set; }
         public bool ShowFormatRequiresUtf8Warning { get; set; }
         public long DefaultVideoOffsetInMs { get; set; }
-        public string DefaultVideoOffsetInSecondsList { get; set; }
+        public string DefaultVideoOffsetInMsList { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public bool CurrentVideoIsSmpte { get; set; }
         public bool AutoSetVideoSmpteForTtml { get; set; }
@@ -1417,7 +1417,7 @@ $HorzAlign          =   Center
             ShowNegativeDurationInfoOnSave = true;
             ShowFormatRequiresUtf8Warning = true;
             DefaultVideoOffsetInMs = 10 * 60 * 60 * 1000;
-            DefaultVideoOffsetInSecondsList = "36000;3600";
+            DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
             UseDarkTheme = false;
@@ -3840,10 +3840,10 @@ $HorzAlign          =   Center
                 settings.General.DefaultVideoOffsetInMs = Convert.ToInt64(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("DefaultVideoOffsetInSecondsList");
+            subNode = node.SelectSingleNode("DefaultVideoOffsetInMsList");
             if (subNode != null)
             {
-                settings.General.DefaultVideoOffsetInSecondsList = subNode.InnerText;
+                settings.General.DefaultVideoOffsetInMsList = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("AutoSetVideoSmpteForTtml");
@@ -8999,7 +8999,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DefaultVideoOffsetInMs", settings.General.DefaultVideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("DefaultVideoOffsetInSecondsList", settings.General.DefaultVideoOffsetInSecondsList);
+                textWriter.WriteElementString("DefaultVideoOffsetInMsList", settings.General.DefaultVideoOffsetInMsList);
                 textWriter.WriteElementString("AutoSetVideoSmpteForTtml", settings.General.AutoSetVideoSmpteForTtml.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoSetVideoSmpteForTtmlPrompt", settings.General.AutoSetVideoSmpteForTtmlPrompt.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TitleBarAsterisk", settings.General.TitleBarAsterisk);
