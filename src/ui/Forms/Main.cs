@@ -20582,7 +20582,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(_subtitle.Header, styles);
                 }
-
                 else if (Configuration.Settings.SubtitleSettings.AssaResolutionPromptChange)
                 {
                     if (_subtitle.Paragraphs.Count == 0 && int.TryParse(oldPlayResX, out var sourceWidth) && int.TryParse(oldPlayResX, out var sourceHeight))
@@ -20599,7 +20598,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        videoResolutionResamplerToolStripMenuItem_Click(null, null);
+                        ShowAssaResolutionChanger(true);
                     }
                 }
             }
@@ -32259,7 +32258,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void videoResolutionResamplerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new ResolutionResampler(_subtitle, VideoFileName, _videoInfo))
+            ShowAssaResolutionChanger(false);
+        }
+
+        private void ShowAssaResolutionChanger(bool showNeverButton)
+        {
+            using (var form = new ResolutionResampler(_subtitle, VideoFileName, _videoInfo, showNeverButton))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
