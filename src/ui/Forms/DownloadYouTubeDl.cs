@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class DownloadYouTubeDl : Form
     {
         public const string Url = "https://github.com/ytdl-org/youtube-dl/releases/download/2021.06.06/youtube-dl.exe";
-        public const string Sha512Hash = "78c009f4cf8ae56db150800d55faaac97c127c76c89715b23fe406d85c3c0628";
+        public const string Sha512Hash = "8f0fd27419ef340d64bff928567b0e4b03d47ca19094b409605ad71ec2b5293a79f814dd2cd4591719a7e386b4041973353fbe90124dbfd4d004b19ea31457ed";
         public bool AutoClose { get; internal set; }
 
         public DownloadYouTubeDl()
@@ -85,10 +85,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(folder);
             }
 
-            var hash = GetSha256Hash(e.Result);
+            var hash = GetSha512Hash(e.Result);
             if (hash != Sha512Hash)
             {
-                MessageBox.Show("youtube-dl SHA2-512 hash does not match!");
+                MessageBox.Show("youtube-dl SHA-512 hash does not match!");
                 return;
             }
 
@@ -107,14 +107,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "youtube-dl");
         }
 
-        private static string GetSha256Hash(byte[] buffer)
+        private static string GetSha512Hash(byte[] buffer)
         {
             using (var ms = new MemoryStream(buffer))
             using (var bs = new BufferedStream(ms))
             {
-                using (var sha256 = new SHA256Managed())
+                using (var sha512 = new SHA512Managed())
                 {
-                    byte[] hash = sha256.ComputeHash(bs);
+                    byte[] hash = sha512.ComputeHash(bs);
                     string hashString = string.Empty;
                     foreach (byte x in hash)
                     {
