@@ -31656,6 +31656,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _textHeightResize = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
             }
+
+            MainResize();
         }
 
         private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
