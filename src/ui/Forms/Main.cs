@@ -21911,6 +21911,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOpenVideo_Click(object sender, EventArgs e)
         {
+            OpenVideoDialog();
+        }
+
+        private bool OpenVideoDialog()
+        {
             if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_fileName))
             {
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
@@ -21925,7 +21930,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (openFileDialog1.FileName == VideoFileName)
                 {
-                    return;
+                    return false;
                 }
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
@@ -21935,7 +21940,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 OpenVideo(openFileDialog1.FileName);
+                return true;
             }
+
+            return false;
         }
 
         private void toolStripButtonToggleVideo_Click(object sender, EventArgs e)
@@ -24101,7 +24109,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
                 {
-                    buttonOpenVideo_Click(sender, e);
+                    if (!OpenVideoDialog())
+                    {
+                        return;
+                    }
+
                     if (string.IsNullOrEmpty(VideoFileName))
                     {
                         return;
