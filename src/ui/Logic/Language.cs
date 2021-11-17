@@ -1608,6 +1608,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NoChapters = "No chapters found in the video.",
                 DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
                 VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
+                Errors = "Errors",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -2768,6 +2769,7 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnTextUp = "Column, text up",
                 ListViewColumnTextDown = "Column, text down",
                 ListViewGoToNextError = "Go to next error",
+                ListViewListErrors = "List errors",
                 ShowStyleManager = "Show style manager",
                 MainTextBoxMoveLastWordDown = "Move last word to next subtitle",
                 MainTextBoxMoveFirstWordFromNextUp = "Fetch first word from next subtitle",

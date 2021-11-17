@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = "Errors";
+            Text = LanguageSettings.Current.Main.Errors;
             buttonExport.Text = LanguageSettings.Current.MultipleReplace.Export;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             columnHeaderNumber.Text = LanguageSettings.Current.General.NumberSymbol;
             columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
-            columnHeaderText.Text = "Errors";
+            columnHeaderText.Text = LanguageSettings.Current.Main.Errors;
 
             _subtitle = new Subtitle(subtitle);
             foreach (var p in _subtitle.Paragraphs)

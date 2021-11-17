@@ -62,7 +62,7 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // listViewBookmarks
+            // listViewErrors
             // 
             this.listViewErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -75,7 +75,7 @@
             this.listViewErrors.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewErrors.HideSelection = false;
             this.listViewErrors.Location = new System.Drawing.Point(13, 12);
-            this.listViewErrors.Name = "listViewBookmarks";
+            this.listViewErrors.Name = "listViewErrors";
             this.listViewErrors.Size = new System.Drawing.Size(768, 576);
             this.listViewErrors.TabIndex = 0;
             this.listViewErrors.UseCompatibleStateImageBehavior = false;
@@ -134,7 +134,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "BookmarksGoTo";
+            this.Text = "Error list";
             this.Shown += new System.EventHandler(this.ErrorsGoTo_Shown);
             this.ResizeEnd += new System.EventHandler(this.ErrorsGoTo_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ErrorsGoTo_KeyDown);
