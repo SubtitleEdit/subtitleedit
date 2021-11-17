@@ -108,6 +108,5 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }
