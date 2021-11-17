@@ -1150,7 +1150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName = VideoFileName.Remove(VideoFileName.Length - 3);
             }
 
-            foreach (var ext in Utilities.VideoFileExtensions)
+            foreach (var ext in Utilities.VideoFileExtensions.Concat(Utilities.AudioFileExtensions))
             {
                 if (File.Exists(VideoFileName + ext))
                 {
