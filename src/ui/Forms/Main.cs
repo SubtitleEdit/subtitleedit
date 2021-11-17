@@ -19927,7 +19927,7 @@ namespace Nikse.SubtitleEdit.Forms
                             TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName));
                         }
 
-                        _fileName = importText.VideoFileName;
+                        _fileName = Path.GetFileNameWithoutExtension(importText.VideoFileName);
                         _converted = true;
                         SetTitle();
 
