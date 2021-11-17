@@ -1,7 +1,5 @@
 ﻿Subtitle Edit Changelog
 
-Subtitle Edit Changelog
-
 3.6.4 BETA (xth December 2021)
 * NEW:
    * Allow permanently dismiss of ASSA change res - thx Ricky
