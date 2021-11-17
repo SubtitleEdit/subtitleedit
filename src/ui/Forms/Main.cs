@@ -19922,17 +19922,14 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(_language.BeforeImportText);
 
                         ResetSubtitle();
-                        if (!string.IsNullOrEmpty(importText.VideoFileName))
+                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
                         {
-                            if (!Configuration.Settings.General.DisableVideoAutoLoading)
-                            {
-                                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName));
-                            }
-
-                            _fileName = importText.VideoFileName;
-                            _converted = true;
-                            SetTitle();
+                            TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(importText.VideoFileName ?? fileName));
                         }
+
+                        _fileName = importText.VideoFileName;
+                        _converted = true;
+                        SetTitle();
 
                         _subtitleListViewIndex = -1;
                         if (importText.Format != null)
@@ -20724,9 +20721,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TryToFindAndOpenVideoFile(string fileNameNoExtension)
         {
+            if (string.IsNullOrEmpty(fileNameNoExtension))
+            {
+                return;
+            }
+
             string movieFileName = null;
 
-            foreach (var extension in Utilities.VideoFileExtensions)
+            foreach (var extension in Utilities.VideoFileExtensions.Concat(Utilities.AudioFileExtensions))
             {
                 var fileName = fileNameNoExtension + extension;
                 if (File.Exists(fileName))
@@ -20739,19 +20741,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     if (!skipLoad)
-                    {
-                        movieFileName = fileName;
-                        break;
-                    }
-                }
-            }
-
-            if (movieFileName == null)
-            {
-                foreach (var extension in Utilities.AudioFileExtensions)
-                {
-                    var fileName = fileNameNoExtension + extension;
-                    if (File.Exists(fileName))
                     {
                         movieFileName = fileName;
                         break;
