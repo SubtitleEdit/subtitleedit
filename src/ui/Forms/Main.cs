@@ -21965,6 +21965,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.ShowVideoPlayer = toolStripButtonToggleVideo.Checked;
             if (!_loading)
             {
+                MainResize();
                 Refresh();
             }
         }
@@ -21995,7 +21996,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Configuration.Settings.General.ShowAudioVisualizer = toolStripButtonToggleWaveform.Checked;
-            Refresh();
+            if (!_loading)
+            {
+                MainResize();
+                Refresh();
+            }
         }
 
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
