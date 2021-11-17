@@ -1357,7 +1357,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
         <SetPosition>Set position...</SetPosition>
         <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
-        <AssaResolutionChanger>Change script resolution...</AssaResolutionChanger>
+        <AssaResolutionChanger>Change ASSA script resolution...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>

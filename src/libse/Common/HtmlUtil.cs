@@ -897,11 +897,25 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             text = text.Replace("<i></i>", string.Empty);
             text = text.Replace("</i><i>", string.Empty);
-            text = text.Replace("</i> <i>", " ");
-            text = text.Replace("<i> </i>", " ");
-            text = text.Replace("<i>  </i>", " ");
-            text = text.Replace("  ", " ");
-            text = text.Replace("  ", " ");
+            if (!text.Contains('@'))
+            {
+                text = text.Replace("</i> <i>", "@");
+                text = text.Replace("<i> </i>", "@");
+                text = text.Replace("<i>  </i>", "@");
+                text = text.Replace("@ ", " ");
+                text = text.Replace("@ ", " ");
+                text = text.Replace(" @", " ");
+                text = text.Replace(" @", " ");
+                text = text.Replace("@", " ");
+            }
+            else
+            {
+                text = text.Replace("</i> <i>", " ");
+                text = text.Replace("<i> </i>", " ");
+                text = text.Replace("<i>  </i>", " ");
+                text = text.Replace("  ", " ");
+                text = text.Replace("  ", " ");
+            }
 
             return preTags + text;
         }

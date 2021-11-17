@@ -1899,7 +1899,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ApplyCustomOverrideTag = "Apply custom override tags...",
                         SetPosition = "Set position...",
                         GenerateProgressBar = "Generate progress bar...",
-                        AssaResolutionChanger = "Change script resolution...",
+                        AssaResolutionChanger = "Change ASSA script resolution...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
