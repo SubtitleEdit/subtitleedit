@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonPickOffset
             // 
-            this.buttonPickOffset.Location = new System.Drawing.Point(131, 42);
+            this.buttonPickOffset.Location = new System.Drawing.Point(131, 40);
             this.buttonPickOffset.Name = "buttonPickOffset";
             this.buttonPickOffset.Size = new System.Drawing.Size(25, 23);
             this.buttonPickOffset.TabIndex = 7;
