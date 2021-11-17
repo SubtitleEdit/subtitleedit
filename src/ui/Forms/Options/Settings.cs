@@ -1455,6 +1455,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewNode, language.ListViewColumnTextUp, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextUp), true);
             AddNode(listViewNode, language.ListViewColumnTextDown, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextDown), true);
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
+            AddNode(listViewNode, language.ListViewListErrors, nameof(Configuration.Settings.Shortcuts.MainListViewListErrors));
             _shortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new ShortcutNode(language.TextBox);
