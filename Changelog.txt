@@ -6,6 +6,8 @@
    * Add "image" option for "gen blank video" - thx Thomas
    * Allow alpha when chosing text color for ASSA in main window
    * List errors based on current profile (Ctrl+F8)
+   * Apply SMPTE timing to shot changes - thx kmekme/OmrSi
+   * Allow add empty waveform for online videos
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Finish translation - thx Teijo
