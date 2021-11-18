@@ -341,6 +341,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _wavePeaks = new WavePeakData(_wavePeaks.SampleRate, list);
+
+                if (_sceneChanges?.Count > 0)
+                {
+                    _sceneChanges = _sceneChanges.Select(sc => sc /= 1.001).ToList();
+                }
             }
         }
 
