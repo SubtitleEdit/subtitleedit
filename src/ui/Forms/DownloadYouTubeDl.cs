@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class DownloadYouTubeDl : Form
     {
-        public const string Url = "https://github.com/ytdl-org/youtube-dl/releases/download/2021.06.06/youtube-dl.exe";
-        public const string Sha512Hash = "8f0fd27419ef340d64bff928567b0e4b03d47ca19094b409605ad71ec2b5293a79f814dd2cd4591719a7e386b4041973353fbe90124dbfd4d004b19ea31457ed";
+        public const string Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2021.11.10.1/yt-dlp.exe";
+        public const string Sha512Hash = "44f992ebd88859e772bd4d555b5d87f8fa1d89a0aabf638cfe331e2330a0786ebec7093a2bbc9f38de3fdfecb12a38b2171d2eec29dd51bbd2e171a3cd734c01";
         public bool AutoClose { get; internal set; }
 
         public DownloadYouTubeDl()
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             var hash = GetSha512Hash(e.Result);
             if (hash != Sha512Hash)
             {
-                MessageBox.Show("youtube-dl SHA-512 hash does not match!");
+                MessageBox.Show("yt-dlp SHA-512 hash does not match!");
                 return;
             }
 
