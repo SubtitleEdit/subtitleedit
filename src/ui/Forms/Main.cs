@@ -4451,6 +4451,14 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.FileName = saveFileDialog1.FileName + currentFormat.Extension;
             }
 
+            if (saveFileDialog1.FileName != null &&
+                (saveFileDialog1.FileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                 saveFileDialog1.FileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+            {
+                saveFileDialog1.FileName = string.Empty;
+                saveFileDialog1.InitialDirectory = string.Empty;
+            }
+
             var result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
@@ -24120,8 +24128,6 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-(double)numericUpDownSecAdjust2.Value);
         }
 
-
-
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks == null)
@@ -24129,6 +24135,22 @@ namespace Nikse.SubtitleEdit.Forms
                 if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                                               VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
                 {
+                    if (mediaPlayer.Duration > 0)
+                    {
+                        ShowStatus(LanguageSettings.Current.AddWaveform.GeneratingPeakFile, false);
+                        var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
+                        audioVisualizer.ZoomFactor = 1.0;
+                        audioVisualizer.VerticalZoomFactor = 1.0;
+                        SelectZoomTextInComboBox();
+                        audioVisualizer.WavePeaks = WavePeakGenerator.GenerateEmptyPeaks(peakWaveFileName, (int)mediaPlayer.Duration);
+                        if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                        {
+                            audioVisualizer.UseSmpteDropFrameTime();
+                        }
+
+                        timerWaveform.Start();
+                    }
+
                     return;
                 }
 
