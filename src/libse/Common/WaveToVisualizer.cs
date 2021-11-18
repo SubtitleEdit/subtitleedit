@@ -347,6 +347,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetPeakWaveFileName(string videoFileName, int trackNumber = 0)
         {
+            if (videoFileName != null && (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                          videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+            {
+                return MovieHasher.GenerateHashFromString(videoFileName);
+            }
+
             var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
             {
