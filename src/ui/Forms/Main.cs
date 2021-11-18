@@ -9051,7 +9051,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!string.IsNullOrEmpty(_cutText))
                 {
-                    Clipboard.SetText(_cutText);
+                    ClipboardSetText(_cutText);
                     _cutText = string.Empty;
                 }
 
@@ -10965,7 +10965,13 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 }
 
-                SubtitleListview1.SelectIndexAndEnsureVisible(Configuration.Settings.General.SplitBehavior == 0 ? firstSelectedIndex + 1 : firstSelectedIndex, true);
+                var index = firstSelectedIndex;
+                if (Configuration.Settings.General.SplitBehavior != 2 || !mediaPlayer.IsPaused)
+                {
+                    index++;
+                }
+
+                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                 UpdateSourceView();
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
@@ -18815,6 +18821,25 @@ namespace Nikse.SubtitleEdit.Forms
             Text = text + " - " + Title;
         }
 
+        private void ClipboardSetText(string text)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    Clipboard.Clear();
+                    Clipboard.SetText(text);
+                    return;
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
+
+            MessageBox.Show("Unable to set clipboard text - some other application might have locked the clipboard.");
+        }
+
         private void SubtitleListview1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control) //Ctrl+c = Copy to clipboard
@@ -18836,7 +18861,7 @@ namespace Nikse.SubtitleEdit.Forms
                         tmp.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
                     }
 
-                    Clipboard.SetText(tmp.ToText(new SubRip()).TrimEnd());
+                    ClipboardSetText(tmp.ToText(new SubRip()).TrimEnd());
                 }
 
                 e.SuppressKeyPress = true;
@@ -18855,7 +18880,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (sb.ToString().TrimEnd().Length > 0)
                 {
-                    Clipboard.SetText(sb.ToString().TrimEnd());
+                    ClipboardSetText(sb.ToString().TrimEnd());
                 }
 
                 e.SuppressKeyPress = true;
@@ -26662,7 +26687,7 @@ namespace Nikse.SubtitleEdit.Forms
                 selectedLines.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
 
-            Clipboard.SetText(selectedLines.ToText(GetCurrentSubtitleFormat()).TrimEnd());
+            ClipboardSetText(selectedLines.ToText(GetCurrentSubtitleFormat()).TrimEnd());
         }
 
         public void PlayPause()

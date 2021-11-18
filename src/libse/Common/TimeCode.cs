@@ -135,6 +135,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     return new TimeSpan();
                 }
+
                 return TimeSpan.FromMilliseconds(TotalMilliseconds);
             }
             set => TotalMilliseconds = value.TotalMilliseconds;
