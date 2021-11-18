@@ -262,6 +262,11 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
+            if (!_abort && !File.Exists(VideoFileName))
+            {
+                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log?.ToString());
+            }
+
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
         }
 
