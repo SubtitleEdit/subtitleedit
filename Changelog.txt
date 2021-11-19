@@ -29,6 +29,7 @@
    * Fix error gen waveform when media file delete/renamed - thx Leon
    * Fix textbox width issue in translation mode - thx Leon
    * Minor fix for toggle casing for seletion - thx Leon
+   * Fix crash when drop wav file on waveform - thx  Apocalypse612
 
 
 3.6.3 (11th November 2021)

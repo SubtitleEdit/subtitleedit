@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
             _numberOfAudioTracks = 0;
             var audioTrackNames = new List<string>();
             var mkvAudioTrackNumbers = new Dictionary<int, int>();
-            if (SourceVideoFileName.Length > 1 && File.Exists(SourceVideoFileName))
+            if (SourceVideoFileName?.Length > 1 && File.Exists(SourceVideoFileName))
             {
                 if (SourceVideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 { // Choose for number of audio tracks in matroska files
