@@ -10974,7 +10974,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var index = firstSelectedIndex;
-                if (Configuration.Settings.General.SplitBehavior != 2 || !mediaPlayer.IsPaused)
+                if (Configuration.Settings.General.SplitBehavior == 0 || !mediaPlayer.IsPaused)
                 {
                     index++;
                 }
