@@ -10351,18 +10351,19 @@ namespace Nikse.SubtitleEdit.Forms
             for (var i = 0; i < text.Length; i++)
             {
                 var ch = text[i];
+                if (char.IsNumber(ch))
+                {
+                    continue;
+                }
 
                 if (!containsLowercase && char.IsLower(ch))
                 {
                     containsLowercase = true;
                 }
-
-                if (!containsUppercase && char.IsUpper(ch))
+                else if (!containsUppercase && char.IsUpper(ch))
                 {
                     containsUppercase = true;
                 }
-
-                i++;
             }
 
             if (containsUppercase && containsLowercase)
