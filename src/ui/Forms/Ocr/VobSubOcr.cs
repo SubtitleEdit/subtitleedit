@@ -2134,7 +2134,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 width = bmp.Width;
                 bmp.Dispose();
                 left = item.PcsObjects.Min(p => p.Origin.X);
-                top = item.PcsObjects.Max(p => p.Origin.Y);
+                top = item.PcsObjects.Min(p => p.Origin.Y);
                 return;
             }
 
