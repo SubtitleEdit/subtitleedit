@@ -1218,7 +1218,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
+        <RemoveOrExportSceneChanges>Remove/export scene changes...</RemoveOrExportSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -2360,6 +2360,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>Remove/export scene changes</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>Auto adjust start via volume/scene change</WaveformGuessStart>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>

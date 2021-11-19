@@ -1644,7 +1644,7 @@ namespace Nikse.SubtitleEdit.Forms
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
             toolStripMenuItemImportChapters.Text = _language.Menu.Video.ImportChaptersFromVideo;
             toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.GenerateImportSceneChanges;
-            toolStripMenuItemRemoveSceneChanges.Text = _language.Menu.Video.RemoveSceneChanges;
+            toolStripMenuItemListSceneChanges.Text = _language.Menu.Video.RemoveOrExportSceneChanges;
 
             toolStripMenuItemAddWaveformBatch.Text = _language.Menu.Video.WaveformBatchGenerate;
 
@@ -23213,6 +23213,7 @@ namespace Nikse.SubtitleEdit.Forms
             closeVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoClose);
             showhideVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             showhideWaveformToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowWaveform);
+            toolStripMenuItemListSceneChanges.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListSceneChanges);
             toolStripMenuItemBookmark.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
             toolStripMenuItemGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             toolStripMenuItemEmptyGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
@@ -26314,12 +26315,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.VideoPlayer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.Peaks.Count > 0)
             {
                 toolStripMenuItemImportSceneChanges.Visible = true;
-                toolStripMenuItemRemoveSceneChanges.Visible = audioVisualizer.SceneChanges.Count > 0;
+                toolStripMenuItemListSceneChanges.Visible = audioVisualizer.SceneChanges.Count > 0;
             }
             else
             {
                 toolStripMenuItemImportSceneChanges.Visible = false;
-                toolStripMenuItemRemoveSceneChanges.Visible = false;
+                toolStripMenuItemListSceneChanges.Visible = false;
             }
 
             if (mediaPlayer.VideoPlayer != null && VideoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
@@ -30026,12 +30027,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemRemoveSceneChanges_Click(object sender, EventArgs e)
+        private void toolStripMenuItemListSceneChanges_Click(object sender, EventArgs e)
         {
-            if (audioVisualizer.SceneChanges != null)
+            using (var form = new SceneChangesList(_fileName, audioVisualizer.SceneChanges))
             {
-                audioVisualizer.SceneChanges = new List<double>();
-                SceneChangeHelper.DeleteSceneChanges(VideoFileName);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    audioVisualizer.SceneChanges = form.SceneChanges;
+                    SceneChangeHelper.SaveSceneChanges(VideoFileName, audioVisualizer.SceneChanges);
+                    if (mediaPlayer.VideoPlayer != null && form.SceneChangeSeconds >= 0)
+                    {
+                        mediaPlayer.VideoPlayer.CurrentPosition = form.SceneChangeSeconds;
+                    }
+                }
             }
         }
 

@@ -4063,8 +4063,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateImportSceneChanges":
                     language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
                     break;
-                case "Main/Menu/Video/RemoveSceneChanges":
-                    language.Main.Menu.Video.RemoveSceneChanges = reader.Value;
+                case "Main/Menu/Video/RemoveOrExportSceneChanges":
+                    language.Main.Menu.Video.RemoveOrExportSceneChanges = reader.Value;
                     break;
                 case "Main/Menu/Video/WaveformBatchGenerate":
                     language.Main.Menu.Video.WaveformBatchGenerate = reader.Value;
@@ -6453,6 +6453,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/WaveformToggleSceneChange":
                     language.Settings.WaveformToggleSceneChange = reader.Value;
+                    break;
+                case "Settings/WaveformRemoveOrExportSceneChanges":
+                    language.Settings.WaveformRemoveOrExportSceneChanges = reader.Value;
                     break;
                 case "Settings/WaveformGuessStart":
                     language.Settings.WaveformGuessStart = reader.Value;
