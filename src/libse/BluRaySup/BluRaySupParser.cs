@@ -68,7 +68,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 // also all entries must be fully transparent after initialization
 
                 bool fadeOut = false;
-                for (int j = 0; j < paletteInfos.Count; j++)
+
+                //TODO: always use last palette or is some clear missing?
+                for (int j = Math.Max(0, paletteInfos.Count - 1); j < paletteInfos.Count; j++)
                 {
                     var p = paletteInfos[j];
                     int index = 0;
