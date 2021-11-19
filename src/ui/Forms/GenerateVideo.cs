@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -27,6 +28,16 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             numericUpDownDurationMinutes.Value = Configuration.Settings.Tools.BlankVideoMinutes;
+            var maxTimeP = subtitle?.Paragraphs.Where(p => !p.EndTime.IsMaxTime).Max(p => p.EndTime.TotalMilliseconds);
+            if (maxTimeP.HasValue && maxTimeP.Value / 1000 > 120)
+            {
+                var minutes = (int)maxTimeP.Value / 1000 / 60 + 1;
+                if (minutes < 300)
+                {
+                    numericUpDownDurationMinutes.Value = minutes;
+                }
+            }
+
             panelColor.BackColor = Configuration.Settings.Tools.BlankVideoColor;
             if (Configuration.Settings.Tools.BlankVideoUseCheckeredImage)
             {
