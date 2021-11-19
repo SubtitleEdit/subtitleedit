@@ -2269,6 +2269,7 @@ $HorzAlign          =   Center
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
+        public string WaveformListSceneChanges { get; set; }
         public string WaveformGuessStart { get; set; }
         public string Waveform100MsLeft { get; set; }
         public string Waveform100MsRight { get; set; }
@@ -8680,6 +8681,12 @@ $HorzAlign          =   Center
                     shortcuts.WaveformToggleSceneChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformListSceneChanges");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformListSceneChanges = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformGuessStart");
                 if (subNode != null)
                 {
@@ -9913,6 +9920,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("WaveformGoToPreviousSceneChange", shortcuts.WaveformGoToPreviousSceneChange);
             textWriter.WriteElementString("WaveformGoToNextSceneChange", shortcuts.WaveformGoToNextSceneChange);
             textWriter.WriteElementString("WaveformToggleSceneChange", shortcuts.WaveformToggleSceneChange);
+            textWriter.WriteElementString("WaveformListSceneChanges", shortcuts.WaveformListSceneChanges);
             textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
             textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);
             textWriter.WriteElementString("Waveform100MsRight", shortcuts.Waveform100MsRight);

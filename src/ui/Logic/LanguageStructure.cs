@@ -1594,7 +1594,7 @@
                     public string GenerateVideoWithBurnedInSub { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
-                    public string RemoveSceneChanges { get; set; }
+                    public string RemoveOrExportSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -2540,6 +2540,7 @@
             public string WaveformGoToPreviousSceneChange { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }
+            public string WaveformRemoveOrExportSceneChanges { get; set; }
             public string WaveformGuessStart { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }

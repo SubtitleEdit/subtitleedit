@@ -206,6 +206,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformGoToPreviousSceneChange { get; set; }
         public Keys WaveformGoToNextSceneChange { get; set; }
         public Keys WaveformToggleSceneChange { get; set; }
+        public Keys WaveformListSceneChanges { get; set; }
         public Keys WaveformGuessStart { get; set; }
         public Keys MainTranslateGoogleIt { get; set; }
         public Keys MainTranslateGoogleTranslateIt { get; set; }
@@ -418,6 +419,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
             WaveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
             WaveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
+            WaveformListSceneChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListSceneChanges);
             WaveformGuessStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGuessStart);
             MainTranslateGoogleIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleIt);
             MainTranslateGoogleTranslateIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslateIt);

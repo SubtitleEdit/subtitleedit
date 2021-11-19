@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.smpteTimeModedropFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportChapters = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemListSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
             this.generateBlankVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2125,7 +2125,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.smpteTimeModedropFrameToolStripMenuItem,
             this.toolStripMenuItemImportChapters,
             this.toolStripMenuItemImportSceneChanges,
-            this.toolStripMenuItemRemoveSceneChanges,
+            this.toolStripMenuItemListSceneChanges,
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
@@ -2210,12 +2210,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
             this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
             // 
-            // toolStripMenuItemRemoveSceneChanges
+            // toolStripMenuItemListSceneChanges
             // 
-            this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
-            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(295, 22);
-            this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
-            this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
+            this.toolStripMenuItemListSceneChanges.Name = "toolStripMenuItemListSceneChanges";
+            this.toolStripMenuItemListSceneChanges.Size = new System.Drawing.Size(295, 22);
+            this.toolStripMenuItemListSceneChanges.Text = "List scene changes";
+            this.toolStripMenuItemListSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemListSceneChanges_Click);
             // 
             // toolStripMenuItemAddWaveformBatch
             // 
@@ -5854,7 +5854,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportChapters;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemListSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubtitlesBridgeGaps;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenDvd;
         private System.Windows.Forms.ToolStripMenuItem styleToolStripMenuItem;
