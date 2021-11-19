@@ -1007,27 +1007,27 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var binaryParagraphs = new List<IBinaryParagraph>();
-                    SubtitleFormat format = null;
+                    SubtitleFormat fromFormat = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
                     if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
                     {
-                        format = sub.LoadSubtitle(fileName, out _, null);
+                        fromFormat = sub.LoadSubtitle(fileName, out _, null);
 
-                        if (format == null)
+                        if (fromFormat == null)
                         {
                             foreach (var f in SubtitleFormat.GetBinaryFormats(true))
                             {
                                 if (f.IsMine(null, fileName))
                                 {
                                     f.LoadSubtitle(sub, null, fileName);
-                                    format = f;
+                                    fromFormat = f;
                                     break;
                                 }
                             }
                         }
 
-                        if (format == null)
+                        if (fromFormat == null)
                         {
                             var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                             var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
@@ -1036,13 +1036,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (f.IsMine(lines, fileName))
                                 {
                                     f.LoadSubtitle(sub, lines, fileName);
-                                    format = f;
+                                    fromFormat = f;
                                     break;
                                 }
                             }
                         }
 
-                        if (format == null)
+                        if (fromFormat == null)
                         {
                             var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
                             var s = File.ReadAllText(fileName, enc);
@@ -1060,11 +1060,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (genericParseSubtitle.Paragraphs.Count > 1)
                             {
                                 sub = genericParseSubtitle;
-                                format = new SubRip();
+                                fromFormat = new SubRip();
                             }
                         }
 
-                        if (format != null && format.GetType() == typeof(MicroDvd))
+                        if (fromFormat != null && fromFormat.GetType() == typeof(MicroDvd))
                         {
                             if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
                             {
@@ -1082,20 +1082,20 @@ namespace Nikse.SubtitleEdit.Forms
                     bool isVobSub = false;
                     bool isMatroska = false;
                     bool isTs = false;
-                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
+                    if (fromFormat == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
                         bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
                     }
-                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtil.IsVobSub(fileName))
+                    else if (fromFormat == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtil.IsVobSub(fileName))
                     {
                         isVobSub = true;
                     }
-                    else if (format == null && (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Matroska", StringComparison.Ordinal))
+                    else if (fromFormat == null && (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Matroska", StringComparison.Ordinal))
                     {
                         isMatroska = true;
                     }
-                    else if (format == null &&
+                    else if (fromFormat == null &&
                              (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) ||
                               fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) ||
                               fileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase) ||
@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isTs = true;
                     }
-                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs)
+                    if (fromFormat == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs)
                     {
                         IncrementAndShowProgress();
                     }
@@ -1214,6 +1214,20 @@ namespace Nikse.SubtitleEdit.Forms
                                                 {
                                                     fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + "mkv";
                                                 }
+
+                                                if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    fromFormat = new SubRip();
+                                                }
+                                                else if (track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    fromFormat = new SubStationAlpha();
+                                                }
+                                                else if (track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    fromFormat = new AdvancedSubStationAlpha();
+                                                }
+
                                                 mkvFileNames.Add(fileName);
                                                 break;
                                             }
@@ -1354,7 +1368,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             Configuration.Settings.Tools.BatchConvertLanguage,
                                             fileName,
                                             toFormat,
-                                            format,
+                                            fromFormat,
                                             binaryParagraphs);
                                         ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
 
@@ -1393,7 +1407,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         Configuration.Settings.Tools.BatchConvertLanguage,
                                         fileName,
                                         toFormat,
-                                        format,
+                                        fromFormat,
                                         binaryParagraphs);
                                     ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
 
@@ -1423,7 +1437,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        bool skip = CheckSkipFilter(fileName, format, sub);
+                        bool skip = CheckSkipFilter(fileName, fromFormat, sub);
                         if (skip)
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.FilterSkipped;
@@ -1452,7 +1466,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Configuration.Settings.Tools.BatchConvertLanguage,
                                 fileName,
                                 toFormat,
-                                format,
+                                fromFormat,
                                 binaryParagraphs);
 
                             if (!worker1.IsBusy)
