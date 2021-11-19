@@ -28,6 +28,7 @@
    * Fix ASSA Importing attachments crash - thx Leon
    * Fix error gen waveform when media file delete/renamed - thx Leon
    * Fix textbox width issue in translation mode - thx Leon
+   * Minor fix for toggle casing for seletion - thx Leon
 
 
 3.6.3 (11th November 2021)
