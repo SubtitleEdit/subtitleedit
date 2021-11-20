@@ -45,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="UTF.Unknown" Version="2.5.0" />
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.5" />
   </ItemGroup>  

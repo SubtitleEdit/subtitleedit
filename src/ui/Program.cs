@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -27,6 +28,7 @@ namespace Nikse.SubtitleEdit
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Application.Run(new Main());
         }
 
