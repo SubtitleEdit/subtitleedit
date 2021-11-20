@@ -24144,7 +24144,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (mediaPlayer.Duration > 0)
                     {
-                        ShowStatus(LanguageSettings.Current.AddWaveform.GeneratingPeakFile, false);
+                        ShowStatus(LanguageSettings.Current.AddWaveform.GeneratingPeakFile);
                         var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
                         audioVisualizer.ZoomFactor = 1.0;
                         audioVisualizer.VerticalZoomFactor = 1.0;
@@ -24252,6 +24252,33 @@ namespace Nikse.SubtitleEdit.Forms
                 audioTrackNumber -= 1;
             }
 
+            if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                          VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+            {
+                if (mediaPlayer.Duration > 0)
+                {
+                    ShowStatus(LanguageSettings.Current.AddWaveform.GeneratingPeakFile);
+                    var peakWaveFileName1 = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
+                    audioVisualizer.ZoomFactor = 1.0;
+                    audioVisualizer.VerticalZoomFactor = 1.0;
+                    SelectZoomTextInComboBox();
+                    audioVisualizer.WavePeaks = WavePeakGenerator.GenerateEmptyPeaks(peakWaveFileName1, (int)mediaPlayer.Duration);
+                    if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                    {
+                        audioVisualizer.UseSmpteDropFrameTime();
+                    }
+
+                    timerWaveform.Start();
+                }
+
+                return;
+            }
+
+            if (!File.Exists(VideoFileName))
+            {
+                return;
+            }
+        
             var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName, audioTrackNumber);
             var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName, audioTrackNumber);
 
@@ -32197,6 +32224,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
             {
                 MessageBox.Show(_language.NoSubtitlesFound);
+                return;
+            }
+
+            if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                          VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show(LanguageSettings.Current.General.OnlineVideoFeatureNotAvailable);
                 return;
             }
 

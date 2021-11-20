@@ -29,6 +29,7 @@
             public string OpenVideoFile { get; set; }
             public string OpenVideoFileTitle { get; set; }
             public string NoVideoLoaded { get; set; }
+            public string OnlineVideoFeatureNotAvailable { get; set; }
             public string VideoInformation { get; set; }
             public string StartTime { get; set; }
             public string EndTime { get; set; }
