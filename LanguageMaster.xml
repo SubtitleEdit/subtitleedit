@@ -1218,7 +1218,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
+        <RemoveOrExportSceneChanges>Remove/export scene changes...</RemoveOrExportSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -1357,7 +1357,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <ApplyCustomOverrideTag>Apply custom override tags...</ApplyCustomOverrideTag>
         <SetPosition>Set position...</SetPosition>
         <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
-        <AssaResolutionChanger>Change script resolution...</AssaResolutionChanger>
+        <AssaResolutionChanger>Change ASSA script resolution...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -1705,6 +1705,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
     <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
+    <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl - download and continue?</VideoFromUrlRequirements>
+    <Errors>Errors</Errors>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2358,6 +2360,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>Remove/export scene changes</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>Auto adjust start via volume/scene change</WaveformGuessStart>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
@@ -2440,6 +2443,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
+    <ListViewListErrors>List errors</ListViewListErrors>
     <ShowStyleManager>Show style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>
@@ -2502,7 +2506,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Download FFmpeg</Title>
+    <XDownload>Download {0}</XDownload>
     <XDownloadFailed>Unable to download {0} - please re-try later!</XDownloadFailed>
     <XDownloadOk>{0} was downloaded and is ready for use.</XDownloadOk>
   </SettingsFfmpeg>

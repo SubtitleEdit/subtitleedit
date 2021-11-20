@@ -1713,29 +1713,26 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             SelectNone();
+            var currentItem = Items[index];
             if (TopItem.Index <= beforeIndex && bottomIndex > afterIndex)
             {
-                Items[index].Selected = true;
-                Items[index].EnsureVisible();
+                EnsureVisible(index);
+                currentItem.Selected = true;
                 if (focus)
                 {
-                    Items[index].Focused = true;
+                    currentItem.Focused = true;
                 }
-                EnsureVisible(index);
+
                 return;
             }
 
-            Items[beforeIndex].EnsureVisible();
             EnsureVisible(beforeIndex);
-            Items[afterIndex].EnsureVisible();
             EnsureVisible(afterIndex);
-            Items[index].Selected = true;
-            Items[index].EnsureVisible();
+            currentItem.Selected = true;
             if (focus)
             {
-                Items[index].Focused = true;
+                currentItem.Focused = true;
             }
-            EnsureVisible(index);
         }
 
         public void SelectIndexAndEnsureVisible(int index)

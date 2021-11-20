@@ -1459,6 +1459,8 @@
             public string NoSupportHereDivx { get; set; }
             public string NoChapters { get; set; }
             public string DarkThemeRestart { get; set; }
+            public string VideoFromUrlRequirements { get; set; }
+            public string Errors { get; set; }
 
             public class MainMenu
             {
@@ -1592,7 +1594,7 @@
                     public string GenerateVideoWithBurnedInSub { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
-                    public string RemoveSceneChanges { get; set; }
+                    public string RemoveOrExportSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -2538,6 +2540,7 @@
             public string WaveformGoToPreviousSceneChange { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }
+            public string WaveformRemoveOrExportSceneChanges { get; set; }
             public string WaveformGuessStart { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
@@ -2621,6 +2624,7 @@
             public string ListViewColumnTextUp { get; set; }
             public string ListViewColumnTextDown { get; set; }
             public string ListViewGoToNextError { get; set; }
+            public string ListViewListErrors { get; set; }
             public string ShowStyleManager { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
@@ -2683,7 +2687,7 @@
 
         public class SettingsFfmpeg
         {
-            public string Title { get; set; }
+            public string XDownload { get; set; }
             public string XDownloadFailed { get; set; }
             public string XDownloadOk { get; set; }
         }

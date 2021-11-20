@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.smpteTimeModedropFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportChapters = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemListSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
             this.generateBlankVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -278,10 +278,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSetLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWebVTT = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPreview = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertBefore = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertAfter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertSubtitle = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCopySourceText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.columnDeleteTextOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2125,7 +2125,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.smpteTimeModedropFrameToolStripMenuItem,
             this.toolStripMenuItemImportChapters,
             this.toolStripMenuItemImportSceneChanges,
-            this.toolStripMenuItemRemoveSceneChanges,
+            this.toolStripMenuItemListSceneChanges,
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
@@ -2210,12 +2210,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
             this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
             // 
-            // toolStripMenuItemRemoveSceneChanges
+            // toolStripMenuItemListSceneChanges
             // 
-            this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
-            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(295, 22);
-            this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
-            this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
+            this.toolStripMenuItemListSceneChanges.Name = "toolStripMenuItemListSceneChanges";
+            this.toolStripMenuItemListSceneChanges.Size = new System.Drawing.Size(295, 22);
+            this.toolStripMenuItemListSceneChanges.Text = "List scene changes";
+            this.toolStripMenuItemListSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemListSceneChanges_Click);
             // 
             // toolStripMenuItemAddWaveformBatch
             // 
@@ -2536,7 +2536,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 798);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 776);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2629,6 +2629,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemPreview.Text = "WebVTT browser preview";
             this.toolStripMenuItemPreview.Click += new System.EventHandler(this.toolStripMenuItemPreview_Click);
             // 
+            // toolStripMenuItemDelete
+            // 
+            this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
+            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemDelete.Text = "Delete";
+            this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDeleteClick);
+            // 
             // toolStripMenuItemInsertBefore
             // 
             this.toolStripMenuItemInsertBefore.Name = "toolStripMenuItemInsertBefore";
@@ -2649,13 +2656,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemInsertSubtitle.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemInsertSubtitle.Text = "Insert subtitle file after this line...";
             this.toolStripMenuItemInsertSubtitle.Click += new System.EventHandler(this.ToolStripMenuItemInsertSubtitleClick);
-            // 
-            // toolStripMenuItemDelete
-            // 
-            this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
-            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemDelete.Text = "Delete";
-            this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDeleteClick);
             // 
             // toolStripMenuItemCopySourceText
             // 
@@ -5854,7 +5854,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportChapters;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemListSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubtitlesBridgeGaps;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenDvd;
         private System.Windows.Forms.ToolStripMenuItem styleToolStripMenuItem;

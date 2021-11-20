@@ -3,10 +3,9 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.3</Version>
-    <TranslatedBy>Превод на български: KalinM, Ivo Ivanov и JJD</TranslatedBy>
+    <TranslatedBy>Превод на български: KalinM, Ivo Ivanov, JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Отказ</Cancel>
     <Apply>Приложи</Apply>
@@ -123,6 +122,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <SourceVideoFile>Изходен видео файл:</SourceVideoFile>
     <GenerateWaveformData>Създ. форма на сигнала</GenerateWaveformData>
     <PleaseWait>Това ще отнеме няколко минути - моля, изчакайте!</PleaseWait>
+    <FfmpegNotFound>Subtitle Edit се нуждае от FFmpeg за извличане на аудио данни за генериране на вълнова Wav форма на звуковия сигнал.
+
+Искате ли да изтеглите и използвате FFmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>Създаване на файл с пикове...</GeneratingPeakFile>
     <GeneratingSpectrogram>Създаване на спектрограма...</GeneratingSpectrogram>
     <ExtractingSeconds>Извличане на аудио: {0:0.0} секунди</ExtractingSeconds>
@@ -422,8 +424,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CannotCompareWithImageBasedSubtitles>Не може да сравни със субтитрите в изображението</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
-    <Title>Д-Кино стойности (interop)</Title>
-    <TitleSmpte>Д-Кино стойности (SMPTE)</TitleSmpte>
+    <Title>D-Cinema свойства (interop)</Title>
+    <TitleSmpte>D-Cinema свойства (SMPTE)</TitleSmpte>
     <SubtitleId>ID на Субтитрите</SubtitleId>
     <GenerateId>Генерирай ID</GenerateId>
     <MovieTitle>Заглавие на филм</MovieTitle>
@@ -447,6 +449,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ZPositionHelp>Положителните стойности изместват текста напред, отрицателните - назад. Ако Z-позицията е нула, то вида на текста е 2D</ZPositionHelp>
     <ChooseColor>Избор на цвят...</ChooseColor>
     <Generate>Генериране</Generate>
+    <GenerateNewIdOnSave>Генериране на нов ID при записване</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Преодоляване на различия във времетраенето чрез удължаване на малките времетраения</Title>
@@ -793,12 +796,24 @@ https://github.com/SubtitleEdit/subtitleedit
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Генериране на видео със записани субтитри</Title>
-    <Info>Генерира видеофайл със записани субтитри.
-
-Забележка: Настройка Substation Alpha поддръжка.</Info>
+    <InfoAssaOff>Забележка: Поддържа се Advanced SubStation Alpha (ASS) стил [Разширен SubStation Alpha (SSA)].</InfoAssaOff>
+    <InfoAssaOn>Забележка: Ще се използва стилът Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>„{0}“, генерирано със записани субтитри.</XGeneratedWithBurnedInSubs>
+    <TimeRemainingMinutes>Оставащо време: {0} минути</TimeRemainingMinutes>
     <TimeRemainingSeconds>Оставащо време: {0} секунди</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Оставащо време: {0} минути и {1} секунди</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>Име на целевия файл: {0}</TargetFileName>
+    <TargetFileSize>Целевият размер на файла (изисква кодиране в 2 паса)</TargetFileSize>
+    <FileSizeMb>Размер на файла в MB</FileSizeMb>
+    <PassX>Пас {0}</PassX>
+    <Encoding>Кодиране</Encoding>
+    <BitRate>Битрейт</BitRate>
+    <SampleRate>Честота на дискретизация</SampleRate>
+    <Stereo>Стерео</Stereo>
+    <Preset>Предварителна настройка</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>Настройка за</TuneFor>
+    <AlignRight>Подравняване вдясно</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
@@ -1195,7 +1210,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <CloseVideo>Затвори видео файла</CloseVideo>
         <OpenSecondSubtitle>Отваряне на втори файл със субтитри...</OpenSecondSubtitle>
         <SetVideoOffset>Задаване на видео отместване...</SetVideoOffset>
-        <SmptTimeMode>SMPTE тайминг (избиране кадър)</SmptTimeMode>
+        <SmptTimeMode>SMPTE тайминг (избиране не цяло число кадрова честота)</SmptTimeMode>
         <GenerateTextFromVideo>Генериране на текст от видео...</GenerateTextFromVideo>
         <GenerateBlankVideo>Генериране на празно видео...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео със записани субтитри...</GenerateVideoWithBurnedInSub>
@@ -1691,6 +1706,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <NoSupportHereDivx>Тук не се поддържат DivX файлове</NoSupportHereDivx>
     <NoChapters>Няма намерени глави във видеото.</NoChapters>
     <DarkThemeRestart>Рестартирайте Subtitle Edit, за да влязат в сила промените в тъмната тема.</DarkThemeRestart>
+    <VideoFromUrlRequirements>Отварянето на видео от url изисква mpv и youtube-dl - изтегляне и продължаване?</VideoFromUrlRequirements>
+    <Errors>Грешки</Errors>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -1964,6 +1981,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveTextIfAllUppercase>Премахване на ред, ако е С ГЛАВНИ БУКВИ</RemoveTextIfAllUppercase>
     <RemoveInterjections>Премахване на възклицания</RemoveInterjections>
     <EditInterjections>Редактиране...</EditInterjections>
+    <Apply>Приложи</Apply>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Замяна на дума (израз)</Title>
@@ -2123,7 +2141,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
-    <MpvPlayerDescription>https://mpv.io/ - безплатен плеър с открит изходен код</MpvPlayerDescription>
+    <MpvPlayerDescription>https://mpv.io/ - безплатен плеър с отворен изходен код</MpvPlayerDescription>
     <MpvHandlesPreviewText>mpv предварително ще обработи и прегледа текста</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll от VLC media player 1.1.0 или по-нова</VlcMediaPlayerDescription>
@@ -2294,6 +2312,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustExtendPreviousLineEndToCurrentStart>Удължаване края на предишния ред до текущото начало</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Удължаване началото на следващия ред до текущия край</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущия субтитър</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Преизчисляване на продължителността на текущия субтитър (въз основа на оптималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>Създаване на ново - стрелка НАДОЛУ, задаване крайно време - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Обединяване диалога (вмъкване на тирета)</MergeDialog>
     <GoToNext>Преминаване на следващия ред</GoToNext>
@@ -2411,6 +2430,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <SwitchOriginalAndTranslation>Превключване оригинален/преведен</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Обединяване на оригинален и преводен</MergeOriginalAndTranslation>
     <MergeWithNext>Обединяване със следващия</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>Обединяване с предишния и неразделен</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>Обединяване със следващия и неразделен</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>Обединяване с предишния и авт. разделяне</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>Обединяване със следващия и авт. разделяне</MergeWithNextAndBreak>
     <MergeWithPrevious>Обединяване с предишния</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Прекият път вече е зададен:
 {0}</ShortcutIsAlreadyDefinedX>
@@ -2422,6 +2445,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ListViewColumnTextUp>Колона, текста нагоре</ListViewColumnTextUp>
     <ListViewColumnTextDown>Колона, текста надолу</ListViewColumnTextDown>
     <ListViewGoToNextError>Преминаване към следващата грешка</ListViewGoToNextError>
+    <ListViewListErrors>Списък с грешки</ListViewListErrors>
     <ShowStyleManager>Показване мениджър на стилове</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Преместване последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Преместване първата дума от следващият субтитърен ред нагоре</MainTextBoxMoveFirstWordFromNextUp>
@@ -2473,6 +2497,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <MinFrameGap>Мин. разлика в кадрите</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} кадрите със скорост на кадър от {1} дава {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml се отваря в</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>Редактиране</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Преки пътища: Разрешава единична буква/цифра в текстовото поле</ShortcutsAllowSingleLetterOrNumberInTextBox>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Изтегляне на mpv</DownloadMpv>
@@ -2480,7 +2508,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DownloadMpvOk>mpv беше зареден и е готов за употреба.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Изтегляне на FFmpeg</Title>
+    <XDownload>Изтегляне {0}</XDownload>
     <XDownloadFailed>Не може да се изтегли {0} - опитайте по-късно!</XDownloadFailed>
     <XDownloadOk>{0} беше зареден и е готов за употреба.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2747,6 +2775,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <Info>Една синхро точка ще настрои позицията, а две или повече - позицията и скоростта</Info>
     <ApplySync>Приложи</ApplySync>
   </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>SMPTE тайминг</Title>
+    <UseSmpteTiming>Да се ​​използва ли синхронизация на SMPTE за текущите субтитри?</UseSmpteTiming>
+    <SmpteTimingInfo>Забележка: Времето на SMPTE може да бъде променено по-късно в меню "Видео"</SmpteTimingInfo>
+    <YesAlways>Да, винаги за честота на кадрите, която не е цяло число</YesAlways>
+    <NoNever>Не, никога</NoNever>
+  </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
     <Title>Избран поток със субтитри - {0}</Title>
     <PidLineImage>Изображения - Пакетен идентификатор на потока (PID) = {0}, език = {1}, брой субтитри = {2}</PidLineImage>
@@ -2923,7 +2958,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ErrorUnicodeEncodingOnly>Водния знак работи само с Unicode кодиране на файловете.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
-    <AddWaveformAndSpectrogram>Добавяне Wav форма на вълната/спектрограма</AddWaveformAndSpectrogram>
+    <AddWaveformAndSpectrogram>Добавяне Wav вълнова форма/спектрограма</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Щракнете тук за добавяне вълнова форма на звуковия сигнал (извличане *.Wav файл)</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Щракнете, за да добавите форма на зв. сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунди</Seconds>

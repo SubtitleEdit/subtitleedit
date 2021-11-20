@@ -3700,6 +3700,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DarkThemeRestart":
                     language.Main.DarkThemeRestart = reader.Value;
                     break;
+                case "Main/VideoFromUrlRequirements":
+                    language.Main.VideoFromUrlRequirements = reader.Value;
+                    break;
+                case "Main/Errors":
+                    language.Main.Errors = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -4057,8 +4063,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateImportSceneChanges":
                     language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
                     break;
-                case "Main/Menu/Video/RemoveSceneChanges":
-                    language.Main.Menu.Video.RemoveSceneChanges = reader.Value;
+                case "Main/Menu/Video/RemoveOrExportSceneChanges":
+                    language.Main.Menu.Video.RemoveOrExportSceneChanges = reader.Value;
                     break;
                 case "Main/Menu/Video/WaveformBatchGenerate":
                     language.Main.Menu.Video.WaveformBatchGenerate = reader.Value;
@@ -6448,6 +6454,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformToggleSceneChange":
                     language.Settings.WaveformToggleSceneChange = reader.Value;
                     break;
+                case "Settings/WaveformRemoveOrExportSceneChanges":
+                    language.Settings.WaveformRemoveOrExportSceneChanges = reader.Value;
+                    break;
                 case "Settings/WaveformGuessStart":
                     language.Settings.WaveformGuessStart = reader.Value;
                     break;
@@ -6694,6 +6703,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;
                     break;
+                case "Settings/ListViewListErrors":
+                    language.Settings.ListViewListErrors = reader.Value;
+                    break;
                 case "Settings/ShowStyleManager":
                     language.Settings.ShowStyleManager = reader.Value;
                     break;
@@ -6856,8 +6868,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SettingsMpv/DownloadMpvOk":
                     language.SettingsMpv.DownloadMpvOk = reader.Value;
                     break;
-                case "SettingsFfmpeg/Title":
-                    language.SettingsFfmpeg.Title = reader.Value;
+                case "SettingsFfmpeg/XDownload":
+                    language.SettingsFfmpeg.XDownload = reader.Value;
                     break;
                 case "SettingsFfmpeg/XDownloadFailed":
                     language.SettingsFfmpeg.XDownloadFailed = reader.Value;

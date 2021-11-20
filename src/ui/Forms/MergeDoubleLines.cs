@@ -119,7 +119,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Subtitle MergeLinesWithSameTextInSubtitle(Subtitle subtitle, out int numberOfMerges, bool clearFixes, bool fixIncrementing, bool lineAfterNext, int maxMsBetween)
         {
-            _fixItems = new List<FixListItem>();
             var mergedIndexes = new List<int>();
             var removed = new HashSet<int>();
             if (!_loading)
@@ -130,6 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (clearFixes)
             {
                 listViewFixes.Items.Clear();
+                _fixItems = new List<FixListItem>();
             }
 
             numberOfMerges = 0;

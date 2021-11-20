@@ -15,6 +15,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             return ToHexadecimal(ComputeMovieHash(videoFileName));
         }
 
+        public static string GenerateHashFromString(string s)
+        {
+            byte[] result;
+            using (Stream input = new MemoryStream(Encoding.UTF8.GetBytes(s)))
+            {
+                result = ComputeMovieHash(input);
+            }
+
+            return ToHexadecimal(result);
+        }
+
         private static byte[] ComputeMovieHash(string videoFileName)
         {
             byte[] result;

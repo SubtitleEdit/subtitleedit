@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxFontSize = new System.Windows.Forms.CheckBox();
             this.checkBoxPosition = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawing = new System.Windows.Forms.CheckBox();
+            this.buttonNever = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSourceHeight)).BeginInit();
@@ -180,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(371, 189);
+            this.buttonCancel.Location = new System.Drawing.Point(381, 205);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 1;
@@ -192,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(290, 189);
+            this.buttonOK.Location = new System.Drawing.Point(300, 205);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 0;
@@ -246,11 +247,24 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxDrawing.Text = "Change resolution for drawing";
             this.checkBoxDrawing.UseVisualStyleBackColor = true;
             // 
+            // buttonNever
+            // 
+            this.buttonNever.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNever.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonNever.Location = new System.Drawing.Point(166, 205);
+            this.buttonNever.Name = "buttonNever";
+            this.buttonNever.Size = new System.Drawing.Size(128, 23);
+            this.buttonNever.TabIndex = 16;
+            this.buttonNever.Text = "No, never";
+            this.buttonNever.UseVisualStyleBackColor = true;
+            this.buttonNever.Click += new System.EventHandler(this.buttonNever_Click);
+            // 
             // ResolutionResampler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(458, 224);
+            this.ClientSize = new System.Drawing.Size(468, 240);
+            this.Controls.Add(this.buttonNever);
             this.Controls.Add(this.checkBoxDrawing);
             this.Controls.Add(this.checkBoxPosition);
             this.Controls.Add(this.checkBoxFontSize);
@@ -304,5 +318,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.CheckBox checkBoxFontSize;
         private System.Windows.Forms.CheckBox checkBoxPosition;
         private System.Windows.Forms.CheckBox checkBoxDrawing;
+        private System.Windows.Forms.Button buttonNever;
     }
 }

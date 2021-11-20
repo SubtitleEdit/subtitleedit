@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownFontSize.Value = fontSize.Value;
                 }
 
-                checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && 
+                checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode &&
                                               LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
             }
             else
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = false;
             numericUpDownFontSize.Enabled = false;
 
-            using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
+            using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", AddExtension = true })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
@@ -262,6 +262,11 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
+            if (!_abort && !File.Exists(VideoFileName))
+            {
+                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log?.ToString());
+            }
+
             DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
         }
 
@@ -286,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
                 fileName += ".x264";
             }
 
-            return fileName;
+            return fileName.Replace(".", "_") + ".mp4";
         }
 
         private void FixRightToLeft(Subtitle subtitle)
@@ -719,7 +724,8 @@ namespace Nikse.SubtitleEdit.Forms
                                (int)numericUpDownHeight.Value,
                                Color.Black,
                                true,
-                               25);
+                               25,
+                               null);
                 process.Start();
                 while (!process.HasExited)
                 {
@@ -801,7 +807,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxBox.Checked)
             {
                 style.BorderStyle = "4"; // box - multi line
-                style.ShadowWidth = 5;                
+                style.ShadowWidth = 5;
             }
 
             sub.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header, new System.Collections.Generic.List<SsaStyle>() { style });

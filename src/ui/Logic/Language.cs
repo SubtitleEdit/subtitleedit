@@ -1607,6 +1607,8 @@ namespace Nikse.SubtitleEdit.Logic
                 NoSupportHereDivx = "DivX files are not supported here.",
                 NoChapters = "No chapters found in the video.",
                 DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
+                VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
+                Errors = "Errors",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1743,7 +1745,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in sub...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
-                        RemoveSceneChanges = "Remove scene changes",
+                        RemoveOrExportSceneChanges = "Remove/export scene changes...",
                         WaveformBatchGenerate = "Batch generate waveforms...",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveform = "Show/hide waveform",
@@ -1898,7 +1900,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ApplyCustomOverrideTag = "Apply custom override tags...",
                         SetPosition = "Set position...",
                         GenerateProgressBar = "Generate progress bar...",
-                        AssaResolutionChanger = "Change script resolution...",
+                        AssaResolutionChanger = "Change ASSA script resolution...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
@@ -2690,6 +2692,7 @@ can edit in same subtitle file (collaboration)",
                 WaveformGoToPreviousSceneChange = "Go to previous scene change",
                 WaveformGoToNextSceneChange = "Go to next scene change",
                 WaveformToggleSceneChange = "Toggle scene change",
+                WaveformRemoveOrExportSceneChanges = "Remove/export scene changes",
                 WaveformGuessStart = "Auto adjust start via volume/scene change",
                 GoBack1Frame = "One frame back",
                 GoForward1Frame = "One frame forward",
@@ -2767,6 +2770,7 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnTextUp = "Column, text up",
                 ListViewColumnTextDown = "Column, text down",
                 ListViewGoToNextError = "Go to next error",
+                ListViewListErrors = "List errors",
                 ShowStyleManager = "Show style manager",
                 MainTextBoxMoveLastWordDown = "Move last word to next subtitle",
                 MainTextBoxMoveFirstWordFromNextUp = "Fetch first word from next subtitle",
@@ -2834,7 +2838,7 @@ can edit in same subtitle file (collaboration)",
 
             SettingsFfmpeg = new LanguageStructure.SettingsFfmpeg
             {
-                Title = "Download FFmpeg",
+                XDownload = "Download {0}",
                 XDownloadFailed = "Unable to download {0} - please re-try later!",
                 XDownloadOk = "{0} was downloaded and is ready for use.",
             };

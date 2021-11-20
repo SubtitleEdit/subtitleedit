@@ -1271,6 +1271,8 @@ $HorzAlign          =   Center
         public bool ShowProgress { get; set; }
         public bool ShowNegativeDurationInfoOnSave { get; set; }
         public bool ShowFormatRequiresUtf8Warning { get; set; }
+        public long DefaultVideoOffsetInMs { get; set; }
+        public string DefaultVideoOffsetInMsList { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public bool CurrentVideoIsSmpte { get; set; }
         public bool AutoSetVideoSmpteForTtml { get; set; }
@@ -1414,6 +1416,8 @@ $HorzAlign          =   Center
             ShowProgress = false;
             ShowNegativeDurationInfoOnSave = true;
             ShowFormatRequiresUtf8Warning = true;
+            DefaultVideoOffsetInMs = 10 * 60 * 60 * 1000;
+            DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
             UseDarkTheme = false;
@@ -2168,6 +2172,7 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextUp { get; set; }
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewGoToNextError { get; set; }
+        public string MainListViewListErrors { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -2264,6 +2269,7 @@ $HorzAlign          =   Center
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
+        public string WaveformListSceneChanges { get; set; }
         public string WaveformGuessStart { get; set; }
         public string Waveform100MsLeft { get; set; }
         public string Waveform100MsRight { get; set; }
@@ -2336,6 +2342,7 @@ $HorzAlign          =   Center
             MainVideoGoToStartCurrent = "F6";
             MainVideo3000MsLeft = "F7";
             MainListViewGoToNextError = "F8";
+            MainListViewListErrors = "Control+F8";
             MainCreateSetStart = "F11";
             MainCreateSetEnd = "F12";
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
@@ -3826,6 +3833,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowFormatRequiresUtf8Warning = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DefaultVideoOffsetInMs");
+            if (subNode != null)
+            {
+                settings.General.DefaultVideoOffsetInMs = Convert.ToInt64(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DefaultVideoOffsetInMsList");
+            if (subNode != null)
+            {
+                settings.General.DefaultVideoOffsetInMsList = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("AutoSetVideoSmpteForTtml");
@@ -8044,6 +8063,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewGoToNextError = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewListErrors");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewListErrors = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralRemoveBlankLines");
                 if (subNode != null)
                 {
@@ -8656,6 +8681,12 @@ $HorzAlign          =   Center
                     shortcuts.WaveformToggleSceneChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformListSceneChanges");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformListSceneChanges = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformGuessStart");
                 if (subNode != null)
                 {
@@ -8974,6 +9005,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DefaultVideoOffsetInMs", settings.General.DefaultVideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DefaultVideoOffsetInMsList", settings.General.DefaultVideoOffsetInMsList);
                 textWriter.WriteElementString("AutoSetVideoSmpteForTtml", settings.General.AutoSetVideoSmpteForTtml.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoSetVideoSmpteForTtmlPrompt", settings.General.AutoSetVideoSmpteForTtmlPrompt.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TitleBarAsterisk", settings.General.TitleBarAsterisk);
@@ -9784,6 +9817,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnTextUp", shortcuts.MainListViewColumnTextUp);
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
+            textWriter.WriteElementString("MainListViewListErrors", shortcuts.MainListViewListErrors);
             textWriter.WriteElementString("GeneralRemoveBlankLines", shortcuts.GeneralRemoveBlankLines);
             textWriter.WriteElementString("GeneralApplyAssaOverrideTags", shortcuts.GeneralApplyAssaOverrideTags);
             textWriter.WriteElementString("GeneralSetAssaPosition", shortcuts.GeneralSetAssaPosition);
@@ -9886,6 +9920,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("WaveformGoToPreviousSceneChange", shortcuts.WaveformGoToPreviousSceneChange);
             textWriter.WriteElementString("WaveformGoToNextSceneChange", shortcuts.WaveformGoToNextSceneChange);
             textWriter.WriteElementString("WaveformToggleSceneChange", shortcuts.WaveformToggleSceneChange);
+            textWriter.WriteElementString("WaveformListSceneChanges", shortcuts.WaveformListSceneChanges);
             textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
             textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);
             textWriter.WriteElementString("Waveform100MsRight", shortcuts.Waveform100MsRight);

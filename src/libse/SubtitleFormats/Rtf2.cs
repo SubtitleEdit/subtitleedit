@@ -100,7 +100,7 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
                 subtitle.Paragraphs.Add(p);
             }
 
-            if (subtitle.Paragraphs.Count > 0)
+            if (subtitle.Paragraphs.Count > 0 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Duration.TotalMilliseconds < 0.01)
             {
                 p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
@@ -108,6 +108,5 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }
