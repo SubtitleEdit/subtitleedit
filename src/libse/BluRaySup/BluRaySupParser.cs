@@ -67,48 +67,52 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 // by definition, index 0xff is always completely transparent
                 // also all entries must be fully transparent after initialization
 
-                bool fadeOut = false;
-
-                //TODO: always use last palette or is some clear missing?
-                for (int j = Math.Max(0, paletteInfos.Count - 1); j < paletteInfos.Count; j++)
+                if (paletteInfos.Count == 0)
                 {
-                    var p = paletteInfos[j];
-                    int index = 0;
-
-                    for (int i = 0; i < p.PaletteSize; i++)
-                    {
-                        // each palette entry consists of 5 bytes
-                        int palIndex = p.PaletteBuffer[index];
-                        int y = p.PaletteBuffer[++index];
-                        int cr = p.PaletteBuffer[++index];
-                        int cb = p.PaletteBuffer[++index];
-                        int alpha = p.PaletteBuffer[++index];
-
-                        int alphaOld = palette.GetAlpha(palIndex);
-                        // avoid fading out
-                        if (alpha >= alphaOld)
-                        {
-                            if (alpha < AlphaCrop)
-                            {// to not mess with scaling algorithms, make transparent color black
-                                y = 16;
-                                cr = 128;
-                                cb = 128;
-                            }
-                            palette.SetAlpha(palIndex, alpha);
-                        }
-                        else
-                        {
-                            fadeOut = true;
-                        }
-
-                        palette.SetYCbCr(palIndex, y, cb, cr);
-                        index++;
-                    }
+                    return palette;
                 }
+
+                // always use last palette
+                var p = paletteInfos[paletteInfos.Count - 1];
+
+                var fadeOut = false;
+                var index = 0;
+                for (var i = 0; i < p.PaletteSize; i++)
+                {
+                    // each palette entry consists of 5 bytes
+                    var palIndex = p.PaletteBuffer[index];
+                    var y = p.PaletteBuffer[++index];
+                    var cr = p.PaletteBuffer[++index];
+                    var cb = p.PaletteBuffer[++index];
+                    var alpha = p.PaletteBuffer[++index];
+                    var alphaOld = palette.GetAlpha(palIndex);
+
+                    // avoid fading out
+                    if (alpha >= alphaOld)
+                    {
+                        if (alpha < AlphaCrop)
+                        {// to not mess with scaling algorithms, make transparent color black
+                            y = 16;
+                            cr = 128;
+                            cb = 128;
+                        }
+
+                        palette.SetAlpha(palIndex, alpha);
+                    }
+                    else
+                    {
+                        fadeOut = true;
+                    }
+
+                    palette.SetYCbCr(palIndex, y, cb, cr);
+                    index++;
+                }
+
                 if (fadeOut)
                 {
                     System.Diagnostics.Debug.Print("fade out detected -> patched palette\n");
                 }
+
                 return palette;
             }
 
