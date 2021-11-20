@@ -2,11 +2,11 @@
 
 3.6.4 BETA (xth December 2021)
 * NEW:
-   * Allow permanently dismiss of ASSA change res - thx Ricky
-   * Add "image" option for "gen blank video" - thx Thomas
-   * Allow alpha when chosing text color for ASSA in main window
    * List errors based on current profile (Ctrl+F8)
+   * Add "image" option for "gen blank video" - thx Thomas
    * Apply SMPTE timing to shot changes - thx kmekme/OmrSi
+   * Allow permanently dismiss of ASSA change res - thx Ricky
+   * Allow alpha when chosing text color for ASSA in main window
    * Allow add empty waveform for online videos
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
@@ -16,20 +16,21 @@
    * Add "Count" label in "Go to bookmark" - thx OmrSi
    * Speed up slow loading mp4 without subs as sub - thx Leon
    * Auto-load audio file after import plain text - thx Leon
-   * "Remove scene changes" now has overview window w export - thx Marek
+   * "Remove scene changes" now has overview window w export - thx Marek/PM
 * FIXED:
    * Fix selected line in "set start and offset the rest" - thx Janusz/Tom
+   * Fix waveform syntax coloring after move - thx Leon
+   * Fix ASSA Importing attachments crash - thx Leon
+   * Fix sometimes bad palette for bdsup - thx Master Yoda
+   * Fix crash when drop wav file on waveform - thx  Apocalypse612
    * Fix issue with "Fix invalid italic tags" - thx Charvelx04
    * Fix crash in "merge lines with same text" - thx gantangpedia
    * Minor fix for save as from ASSA to SRT
-   * Fix waveform syntax coloring after move - thx Leon
    * Another fix for ismt drag'n'drop
    * Fix crash in nOCR - thx signedout
-   * Fix ASSA Importing attachments crash - thx Leon
-   * Fix error gen waveform when media file delete/renamed - thx Leon
    * Fix textbox width issue in translation mode - thx Leon
    * Minor fix for toggle casing for seletion - thx Leon
-   * Fix crash when drop wav file on waveform - thx  Apocalypse612
+   * Fix error gen waveform when media file delete/renamed - thx Leon
 
 
 3.6.3 (11th November 2021)
