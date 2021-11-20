@@ -152,6 +152,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OpenVideoFile = "Open video file...",
                 OpenVideoFileTitle = "Open video file...",
                 NoVideoLoaded = "No video loaded",
+                OnlineVideoFeatureNotAvailable = "Feature not available for online video",
                 VideoInformation = "Video info",
                 StartTime = "Start time",
                 EndTime = "End time",
