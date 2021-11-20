@@ -130,6 +130,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/NoVideoLoaded":
                     language.General.NoVideoLoaded = reader.Value;
                     break;
+                case "General/OnlineVideoFeatureNotAvailable":
+                    language.General.OnlineVideoFeatureNotAvailable = reader.Value;
+                    break;
                 case "General/VideoInformation":
                     language.General.VideoInformation = reader.Value;
                     break;
