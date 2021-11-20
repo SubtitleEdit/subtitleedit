@@ -11,6 +11,7 @@
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Finish translation - thx Teijo
+   * Update Portuguese translation - thx hugok79
    * Video from url - try to make it easier to use (auto dl youtube-dl/ffmpeg)
    * Remember last chosen video offset - thx OmrSi
    * Add "Count" label in "Go to bookmark" - thx OmrSi
