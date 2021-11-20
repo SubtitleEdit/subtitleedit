@@ -2180,7 +2180,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = new Regex(@"([0456789]) (th)\b").Replace(text, "$1$2");
             }
 
-            if ("en-da-es-sv-de-nb-cz".Contains(language) && text.ContainsNumber())
+            if (language != null && "en-da-es-sv-de-nb-cz".Contains(language) && text.ContainsNumber())
             {
                 text = RegexNumberSpacePeriod.Replace(text, "$1$2");
             }
