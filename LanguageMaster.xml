@@ -25,6 +25,7 @@
     <OpenVideoFile>Open video file...</OpenVideoFile>
     <OpenVideoFileTitle>Open video file...</OpenVideoFileTitle>
     <NoVideoLoaded>No video loaded</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Feature not available for online video</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Video info</VideoInformation>
     <StartTime>Start time</StartTime>
     <EndTime>End time</EndTime>
