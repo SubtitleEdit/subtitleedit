@@ -26250,6 +26250,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.SetSpectrogram(null);
             audioVisualizer.SceneChanges = new List<double>();
             audioVisualizer.Chapters = new List<MatroskaChapter>();
+            trackBarWaveformPosition.Value = 0;
             timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
             timeUpDownVideoPositionAdjust.Enabled = false;
             timeUpDownVideoPosition.TimeCode = new TimeCode();
