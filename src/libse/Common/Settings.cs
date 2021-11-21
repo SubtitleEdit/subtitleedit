@@ -1123,6 +1123,7 @@ $HorzAlign          =   Center
         public bool ShowWaveform { get; set; }
         public bool ShowSpectrogram { get; set; }
         public bool ShowFrameRate { get; set; }
+        public bool ShowVideoControls { get; set; }
         public double DefaultFrameRate { get; set; }
         public double CurrentFrameRate { get; set; }
         public string DefaultSubtitleFormat { get; set; }
@@ -1310,6 +1311,7 @@ $HorzAlign          =   Center
             ShowWaveform = true;
             ShowSpectrogram = true;
             ShowFrameRate = false;
+            ShowVideoControls = true;
             DefaultFrameRate = 23.976;
             CurrentFrameRate = DefaultFrameRate;
             SubtitleFontName = "Tahoma";
@@ -2940,6 +2942,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowFrameRate = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowVideoControls");
+            if (subNode != null)
+            {
+                settings.General.ShowVideoControls = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowVideoPlayer");
@@ -8858,6 +8866,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
