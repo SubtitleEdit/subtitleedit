@@ -89,9 +89,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph next = paragraphs[i + 1];
                     var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
-                    if (gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    if (gapMilliseconds < 0)
                     {
                         errors.Add("Overlap with next");
+                    }
+                    else if (gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    {
+                        errors.Add($"Gap to next too small ({gapMilliseconds} < {Configuration.Settings.General.MinimumMillisecondsBetweenLines})");
                     }
                 }
             }
@@ -150,6 +154,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = (Paragraph)listViewErrors.SelectedItems[0].Tag;
                 ErrorIndex = _subtitle.Paragraphs.IndexOf(p);
                 DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                DialogResult = DialogResult.Cancel;
             }
         }
 
