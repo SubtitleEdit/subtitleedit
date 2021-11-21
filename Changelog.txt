@@ -18,6 +18,7 @@
    * Speed up slow loading mp4 without subs as sub - thx Leon
    * Auto-load audio file after import plain text - thx Leon
    * "Remove scene changes" now has overview window w export - thx Marek/PM
+   * Remember "show video controls" + context menu - thx Leon
 * FIXED:
    * Fix selected line in "set start and offset the rest" - thx Janusz/Tom
    * Fix waveform syntax coloring after move - thx Leon
