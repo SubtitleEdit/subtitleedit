@@ -9754,7 +9754,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
                         if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
                         {
-                            buttonSplitLine.Visible = true;
+                            buttonSplitLine.Visible = buttonAutoBreak.Visible;
                         }
                     }
                 }
@@ -9779,7 +9779,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength) &&
                     !textBoxListViewTextOriginal.Visible)
                 {
-                    buttonSplitLine.Visible = true;
+                    buttonSplitLine.Visible = buttonAutoBreak.Visible;
                 }
             }
 
@@ -24278,7 +24278,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
-        
+
             var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName, audioTrackNumber);
             var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(VideoFileName, audioTrackNumber);
 
