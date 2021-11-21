@@ -1610,6 +1610,8 @@ namespace Nikse.SubtitleEdit.Logic
                 DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
                 VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
                 Errors = "Errors",
+                ShowVideoControls = "Show video controls",
+                HideVideoControls = "Hide video controls",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {

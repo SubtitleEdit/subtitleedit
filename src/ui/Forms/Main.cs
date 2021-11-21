@@ -1873,6 +1873,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogleIt.Text = _language.VideoControls.GoogleIt;
             buttonGoogleTranslateIt.Text = _language.VideoControls.GoogleTranslate;
             labelTranslateTip.Text = _language.VideoControls.TranslateTip;
+            contextMenuStripHideVideoControls.Text = _language.HideVideoControls;
+            contextMenuStripShowVideoControls.Text = _language.ShowVideoControls;
 
             buttonInsertNewText.Text = _language.VideoControls.InsertNewSubtitleAtVideoPosition;
             buttonBeforeText.Text = _language.VideoControls.PlayFromJustBeforeText;
@@ -16960,7 +16962,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            groupBoxVideo.SuspendLayout();
+            groupBoxVideo.SuspendLayout();            
             tabControlModes.Visible = on;
             var left = 5;
             if (on)
@@ -22953,6 +22955,9 @@ namespace Nikse.SubtitleEdit.Forms
             SetTitle();
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             RemoveNotExistingFilesFromRecentFilesUI();
+
+            groupBoxVideo.MouseClick += GroupBoxVideo_MouseClick;
+
             ShowSubtitleTimer.Start();
             textBoxSource.SelectionLength = 0;
             _timerSlow.Interval = 150;
@@ -32408,6 +32413,37 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _listViewMouseDown = false;
             SubtitleListview1_SelectedIndexChanged(null, null);
+        }
+
+        private void hideVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.ShowVideoControls = false;
+            ToggleVideoControlsOnOff(Configuration.Settings.General.ShowVideoControls);
+        }
+
+        private void toolStripMenuItemShowVideoControls_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.ShowVideoControls = true;
+            ToggleVideoControlsOnOff(Configuration.Settings.General.ShowVideoControls);
+        }
+
+        private void GroupBoxVideo_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var coordinates = groupBoxVideo.PointToClient(Cursor.Position);
+                if (coordinates.X < 15)
+                {
+                    if (Configuration.Settings.General.ShowVideoControls)
+                    { 
+                        contextMenuStripHideVideoControls.Show(groupBoxVideo, coordinates);
+                    }
+                    else
+                    {
+                        contextMenuStripShowVideoControls.Show(groupBoxVideo, coordinates);
+                    }
+                }
+            }
         }
     }
 }
