@@ -15182,7 +15182,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainToggleVideoControls)
             {
-                ToggleVideoControlsOnOff();
+                Configuration.Settings.General.ShowVideoControls = !Configuration.Settings.General.ShowVideoControls;
+                ToggleVideoControlsOnOff(Configuration.Settings.General.ShowVideoControls);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.VideoPlayFirstSelected && !string.IsNullOrEmpty(VideoFileName))
@@ -16952,7 +16953,7 @@ namespace Nikse.SubtitleEdit.Forms
             // put new entries above tabs
         }
 
-        private void ToggleVideoControlsOnOff()
+        private void ToggleVideoControlsOnOff(bool on)
         {
             if (_isVideoControlsUndocked)
             {
@@ -16960,9 +16961,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             groupBoxVideo.SuspendLayout();
-            tabControlModes.Visible = !tabControlModes.Visible;
+            tabControlModes.Visible = on;
             var left = 5;
-            if (tabControlModes.Visible)
+            if (on)
             {
                 left = tabControlModes.Width + 10;
             }
@@ -21094,26 +21095,31 @@ namespace Nikse.SubtitleEdit.Forms
                     MoveVideoDown();
                 }
 
+                tabControlModes.Visible = Configuration.Settings.General.ShowVideoControls;
+                var left = 5;
+                if (Configuration.Settings.General.ShowVideoControls)
+                {
+                    left = tabControlModes.Left + tabControlModes.Width + 5;
+                }
                 splitContainerMain.Panel2Collapsed = false;
                 if (toolStripButtonToggleVideo.Checked)
                 {
                     if (audioVisualizer.Visible)
                     {
-                        audioVisualizer.Left = tabControlModes.Left + tabControlModes.Width + 5;
+                        audioVisualizer.Left = left;
                     }
                     else
                     {
-                        panelVideoPlayer.Left = tabControlModes.Left + tabControlModes.Width + 5;
+                        panelVideoPlayer.Left = left;
                     }
                 }
                 else if (audioVisualizer.Visible)
                 {
-                    audioVisualizer.Left = tabControlModes.Left + tabControlModes.Width + 5;
+                    audioVisualizer.Left = left;
                 }
 
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = left;
                 audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
-
-                checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlModes.Left + tabControlModes.Width + 5;
                 panelWaveformControls.Left = audioVisualizer.Left;
                 trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
                 trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
