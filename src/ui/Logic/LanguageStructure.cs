@@ -1462,6 +1462,8 @@
             public string DarkThemeRestart { get; set; }
             public string VideoFromUrlRequirements { get; set; }
             public string Errors { get; set; }
+            public string ShowVideoControls { get; set; }
+            public string HideVideoControls { get; set; }
 
             public class MainMenu
             {

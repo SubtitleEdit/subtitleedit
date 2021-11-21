@@ -1708,6 +1708,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
     <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl - download and continue?</VideoFromUrlRequirements>
     <Errors>Errors</Errors>
+    <ShowVideoControls>Show video controls</ShowVideoControls>
+    <HideVideoControls>Hide video controls</HideVideoControls>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>

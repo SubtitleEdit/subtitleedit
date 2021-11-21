@@ -3709,6 +3709,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Errors":
                     language.Main.Errors = reader.Value;
                     break;
+                case "Main/ShowVideoControls":
+                    language.Main.ShowVideoControls = reader.Value;
+                    break;
+                case "Main/HideVideoControls":
+                    language.Main.HideVideoControls = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
