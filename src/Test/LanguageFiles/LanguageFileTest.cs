@@ -11,7 +11,9 @@ namespace Test.Logic.Dictionaries
         [TestMethod]
         public void TestLanguageFiles()
         {
-            var languageDir = Path.Combine(Environment.CurrentDirectory, "Languages");
+            var idx = Environment.CurrentDirectory.IndexOf(Path.DirectorySeparatorChar + "subtitleedit" + Path.DirectorySeparatorChar);
+            var baseDir = Environment.CurrentDirectory.Substring(0, idx);
+            var languageDir = Path.Combine(baseDir, "subtitleedit", "src", "ui", "Languages");
             var files = Directory.GetFiles(languageDir, "*.xml");
 
             foreach (var fileName in files)
