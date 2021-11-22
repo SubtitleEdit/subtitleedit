@@ -127,7 +127,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseWait>Isto pode levar alguns minutos - por favor, aguarde</PleaseWait>
     <FfmpegNotFound>O Subtitle Edit necessita do FFmpeg para extrair dados de áudio para gerar a forma de onda.
 
-Deseja transferir e usar o FFmpeg</VlcMediaPlayerNotFound>
+Deseja transferir e usar o FFmpeg</FfmpegNotFound>
     <GeneratingPeakFile>A gerar o ficheiro de pico...</GeneratingPeakFile>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
