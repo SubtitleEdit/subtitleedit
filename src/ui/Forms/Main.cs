@@ -9834,14 +9834,14 @@ namespace Nikse.SubtitleEdit.Forms
         private int _lastNumberOfNewLines = -1;
         private int _lastNumberOfNewLinesOriginal = -1;
 
-        private static void FixVerticalScrollBars(SETextBox tb, ref int lastNumberOfNewLines)
+        private void FixVerticalScrollBars(SETextBox tb, ref int lastNumberOfNewLines)
         {
             if (!tb.Visible)
             {
                 return;
             }
 
-            var noOfNewLines = Utilities.GetNumberOfLines(tb.Text);
+            var noOfNewLines = Utilities.GetNumberOfLines(tb.Text.TrimEnd());
             if (noOfNewLines == lastNumberOfNewLines)
             {
                 return;
@@ -9850,14 +9850,18 @@ namespace Nikse.SubtitleEdit.Forms
             lastNumberOfNewLines = noOfNewLines;
             try
             {
-                if (noOfNewLines <= 1 && tb.Text.Length <= 300 ||
-                    TextRenderer.MeasureText(tb.Text, tb.Font).Height + (tb.Font.Bold ? 17 : 5) < tb.Height)
+                if (noOfNewLines <= 1 && tb.Text.Length <= 200 && tb.Font.Size < 15)
                 {
                     tb.ScrollBars = RichTextBoxScrollBars.None;
                 }
                 else
                 {
-                    tb.ScrollBars = RichTextBoxScrollBars.Vertical;
+                    var calculatedHeight = TextRenderer.MeasureText(
+                         tb.Text,
+                         tb.Font,
+                         new Size(tb.Width, 1000),
+                         TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
+                    tb.ScrollBars = calculatedHeight > tb.Height ? RichTextBoxScrollBars.Vertical : RichTextBoxScrollBars.None;
                 }
             }
             catch

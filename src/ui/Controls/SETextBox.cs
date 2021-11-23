@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Controls
                 textBox.Font = gs.SubtitleTextBoxFontBold ? new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold) : new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
                 textBox.ForeColor = gs.SubtitleFontColor;
                 textBox.BackColor = gs.SubtitleBackgroundColor;
+                Font = textBox.Font;
             }
             catch
             {
