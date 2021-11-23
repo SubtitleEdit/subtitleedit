@@ -92,6 +92,7 @@
     <Compile Include="Logic\Ocr\MatchesToItalicStringConverterTest.cs" />
     <Compile Include="Logic\SplitLongLinesHelperTest.cs" />
     <Compile Include="Logic\SubtitleFormats\Cea708Test.cs" />
+    <Compile Include="Logic\SubtitleFormats\SubtitleFormatFunctionsTest.cs" />
     <Compile Include="Logic\TarFileTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />

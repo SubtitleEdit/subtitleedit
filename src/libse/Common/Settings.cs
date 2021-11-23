@@ -1124,6 +1124,7 @@ $HorzAlign          =   Center
         public bool ShowSpectrogram { get; set; }
         public bool ShowFrameRate { get; set; }
         public bool ShowVideoControls { get; set; }
+        public bool TextAndOrigianlTextBoxesSwitched { get; set; }
         public double DefaultFrameRate { get; set; }
         public double CurrentFrameRate { get; set; }
         public string DefaultSubtitleFormat { get; set; }
@@ -1992,6 +1993,7 @@ $HorzAlign          =   Center
         public string GeneralMergeOriginalAndTranslation { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
+        public string GeneralSwitchOriginalAndTranslationTextBoxes { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
@@ -2948,6 +2950,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowVideoControls = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TextAndOrigianlTextBoxesSwitched");
+            if (subNode != null)
+            {
+                settings.General.TextAndOrigianlTextBoxesSwitched = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowVideoPlayer");
@@ -7105,6 +7113,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralSwitchOriginalAndTranslation = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralSwitchOriginalAndTranslationTextBoxes");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
                 {
@@ -8867,7 +8881,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowVideoControls", settings.General.ShowVideoControls.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TextAndOrigianlTextBoxesSwitched", settings.General.TextAndOrigianlTextBoxesSwitched.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString(CultureInfo.InvariantCulture));
@@ -9666,6 +9681,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralMergeWithNextAndBreak", shortcuts.GeneralMergeWithNextAndBreak);
             textWriter.WriteElementString("GeneralToggleTranslationMode", shortcuts.GeneralToggleTranslationMode);
             textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", shortcuts.GeneralSwitchOriginalAndTranslation);
+            textWriter.WriteElementString("GeneralSwitchOriginalAndTranslationTextBoxes", shortcuts.GeneralSwitchOriginalAndTranslationTextBoxes);
             textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("GeneralGoToNextSubtitle", shortcuts.GeneralGoToNextSubtitle);
             textWriter.WriteElementString("GeneralGoToNextSubtitlePlayTranslate", shortcuts.GeneralGoToNextSubtitlePlayTranslate);

@@ -2611,6 +2611,7 @@
             public string SplitSelectedLineBilingual { get; set; }
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
+            public string SwitchOriginalAndTranslationTextBoxes { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
             public string MergeWithNext { get; set; }
             public string MergeWithPreviousAndUnbreak { get; set; }
