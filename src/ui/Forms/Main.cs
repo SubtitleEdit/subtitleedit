@@ -30509,12 +30509,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (form.DoNotaddVideoOffsetToTimeCodes)
                     {
-                        if (form.Reset)
-                        {
-                            _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(oldVideoOffset));
-                            _subtitleOriginal?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(oldVideoOffset));
-                        }
-                        else
+                        // reset
+                        _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(oldVideoOffset));
+                        _subtitleOriginal?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(oldVideoOffset));
+
+                        if (!form.Reset)
                         {
                             _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                             _subtitleOriginal?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
