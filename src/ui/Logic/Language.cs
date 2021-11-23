@@ -1619,8 +1619,8 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "&File",
                         New = "&New",
-                        Open = "&Open",
-                        OpenKeepVideo = "Open (keep video)",
+                        Open = "&Open...",
+                        OpenKeepVideo = "Open (keep video)...",
                         Reopen = "&Reopen",
                         Save = "&Save",
                         SaveAs = "Save &as...",
