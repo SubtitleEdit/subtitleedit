@@ -1096,8 +1096,8 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <File>
         <Title>&amp;File</Title>
         <New>&amp;New</New>
-        <Open>&amp;Open</Open>
-        <OpenKeepVideo>Open (keep video)</OpenKeepVideo>
+        <Open>&amp;Open...</Open>
+        <OpenKeepVideo>Open (keep video)...</OpenKeepVideo>
         <Reopen>&amp;Reopen</Reopen>
         <Save>&amp;Save</Save>
         <SaveAs>Save &amp;as...</SaveAs>
