@@ -5047,7 +5047,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldFormat = _currentSubtitleFormat;
                 _currentSubtitleFormat = newFormat;
                 MakeFormatChange(newFormat, oldFormat);
-                _converted = _currentSubtitleFormat != null;
+                _converted = _currentSubtitleFormat != null; 
+                if (_converted && _subtitle.OriginalFormat == newFormat && File.Exists(_fileName))
+                {
+                    _converted = false;
+                };
+
                 _formatManuallyChanged = _converted;
             }
         }

@@ -12,13 +12,15 @@
    * Update Bulgarian translation - thx Калин
    * Update Finish translation - thx Teijo
    * Update Portuguese translation - thx hugok79
+   * Update Chinese translation - thx nkh0472
+   * Update Hungarian translation - thx Zityi
    * Video from url - try to make it easier to use (auto dl youtube-dl/ffmpeg)
    * Remember last chosen video offset - thx OmrSi
    * Add "Count" label in "Go to bookmark" - thx OmrSi
    * Speed up slow loading mp4 without subs as sub - thx Leon
    * Auto-load audio file after import plain text - thx Leon
    * "Remove scene changes" now has overview window w export - thx Marek/PM
-   * Remember "show video controls" + context menu - thx Leon
+   * Remember "show video controls" + toggle context menu item - thx Leon
 * FIXED:
    * Fix selected line in "set start and offset the rest" - thx Janusz/Tom
    * Fix waveform syntax coloring after move - thx Leon
