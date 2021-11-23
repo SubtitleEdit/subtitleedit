@@ -12768,6 +12768,8 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxSource.Focus();
                 }
 
+                textBoxSource.SelectionLength = 0;
+
                 // go to correct line in source view
                 if (SubtitleListview1.SelectedItems.Count > 0)
                 {
