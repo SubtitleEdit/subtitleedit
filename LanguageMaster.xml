@@ -1182,11 +1182,12 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SplitLongLines>Break/split long lines...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Apply minimum gap between subtitles...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sort by</SortBy>
-        <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
         <Number>Number</Number>
         <StartTime>Start time</StartTime>
         <EndTime>End time</EndTime>
         <Duration>Duration</Duration>
+        <ListErrors>List errors...</ListErrors>
+        <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
         <TextAlphabetically>Text - alphabetically</TextAlphabetically>
         <TextSingleLineMaximumLength>Text - single line max. length</TextSingleLineMaximumLength>
         <TextTotalLength>Text - total length</TextTotalLength>
