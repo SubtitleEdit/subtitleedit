@@ -849,22 +849,27 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
                 UiUtil.ShowHelp("#fixcommonerrors");
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Enter && buttonNextFinish.Text == _language.Next)
             {
                 ButtonFixClick(null, null);
+                e.SuppressKeyPress = true;
             }
             else if (subtitleListView1.Visible && subtitleListView1.Items.Count > 0 && e.KeyData == _goToLine)
             {
                 GoToLineNumber();
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _preview && listViewFixes.Items.Count > 0)
             {
                 GenerateDiff();
+                e.SuppressKeyPress = true;
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
@@ -874,7 +879,9 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
                     selectedIndex++;
                 }
+
                 subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                e.SuppressKeyPress = true;
             }
             else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
@@ -884,7 +891,9 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
                     selectedIndex--;
                 }
+
                 subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                e.SuppressKeyPress = true;
             }
             else if (_mainListViewGoToNextError == e.KeyData)
             {

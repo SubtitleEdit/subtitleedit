@@ -3967,9 +3967,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Tools/SortBy":
                     language.Main.Menu.Tools.SortBy = reader.Value;
                     break;
-                case "Main/Menu/Tools/NetflixQualityCheck":
-                    language.Main.Menu.Tools.NetflixQualityCheck = reader.Value;
-                    break;
                 case "Main/Menu/Tools/Number":
                     language.Main.Menu.Tools.Number = reader.Value;
                     break;
@@ -3981,6 +3978,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Tools/Duration":
                     language.Main.Menu.Tools.Duration = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ListErrors":
+                    language.Main.Menu.Tools.ListErrors = reader.Value;
+                    break;
+                case "Main/Menu/Tools/NetflixQualityCheck":
+                    language.Main.Menu.Tools.NetflixQualityCheck = reader.Value;
                     break;
                 case "Main/Menu/Tools/TextAlphabetically":
                     language.Main.Menu.Tools.TextAlphabetically = reader.Value;
