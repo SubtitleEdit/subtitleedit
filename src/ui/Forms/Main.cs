@@ -15575,7 +15575,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainGeneralToggleMode == e.KeyData)
+            else if (_shortcuts.MainGeneralToggleMode == e.KeyData && Configuration.Settings.General.ShowVideoControls)
             {
                 var nextModeIndex = tabControlModes.SelectedIndex + 1;
                 if (nextModeIndex == tabControlModes.TabCount)
@@ -15585,6 +15585,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 tabControlModes.SelectedIndex = nextModeIndex;
                 tabControlModes.Focus();
+
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralTogglePreviewOnVideo == e.KeyData)
