@@ -26,6 +26,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <OpenVideoFile>Abrir ficheiro de vídeo...</OpenVideoFile>
     <OpenVideoFileTitle>Abrir ficheiro de vídeo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nenhum vídeo activo</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Funcionalidade não disponível para vídeo online</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Informações do vídeo</VideoInformation>
     <StartTime>Tempo inicial</StartTime>
     <EndTime>Tempo final</EndTime>
@@ -890,7 +891,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <RemoveAll>Remover tudo</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>Gerar/Importar mudanças de cena</Title>
+    <Title>Gerar/importar mudanças de cena</Title>
     <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
     <Generate>Gerar mudanças de cena</Generate>
     <Import>Importar mudanças de cena</Import>
@@ -899,9 +900,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milissegundos</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Gerar as alterações de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Gerar as mudanças de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
     <Sensitivity>Sensibilidade</Sensitivity>
-    <SensitivityDescription>Um valor mais baixo oferece mais alterações de cena</SensitivityDescription>
+    <SensitivityDescription>Um valor mais baixo oferece mais mudanças de cena</SensitivityDescription>
     <NoSceneChangesFound>Nenhuma mudança de cena foi encontrada.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
@@ -1358,7 +1359,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <ApplyCustomOverrideTag>Aplicar etiquetas de substituição personalizadas...</ApplyCustomOverrideTag>
         <SetPosition>Definir posição...</SetPosition>
         <GenerateProgressBar>Gerar barra de progressão...</GenerateProgressBar>
-        <AssaResolutionChanger>Alterar a resolução do script...</AssaResolutionChanger>
+        <AssaResolutionChanger>Alterar a resolução do script ASSA...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
@@ -1708,6 +1709,8 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <DarkThemeRestart>Reiniciar o Subtitle Edit para que as mudanças do tema escuro produzam efeito.</DarkThemeRestart>
     <VideoFromUrlRequirements>Abrir vídeo do url requer o mpv e o youtube-dl - transferir e continuar?</VideoFromUrlRequirements>
     <Errors>Erros</Errors>
+    <ShowVideoControls>Mostrar controlos de vídeo</ShowVideoControls>
+    <HideVideoControls>Ocultar controlos de vídeo</HideVideoControls>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -2426,7 +2429,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MergeSelectedLinesBilingual>Combinar as linhas seleccionadas bilingue</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Dividir linha seleccionada bilingue</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Alternar o modo de tradutor</ToggleTranslationMode>
-    <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslation>Mudar entre o original e a tradução</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Mudar entre as caixas de texto do original e da tradução</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
     <MergeWithNext>Combinar com a próxima</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Combinar com a anterior e eliminar quebra de linha</MergeWithPreviousAndUnbreak>
@@ -2503,13 +2507,13 @@ Continuar?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
-    <DownloadMpvFailed>Não é possível transferir o mpv - por favor, tente novamente mais tarde!</DownloadMpvFailed>
-    <DownloadMpvOk>O mpv lib foi transferido e está disponível para ser usado.</DownloadMpvOk>
+    <DownloadMpvFailed>Não é possível transferir o mpv - tente novamente mais tarde!</DownloadMpvFailed>
+    <DownloadMpvOk>O mpv lib foi transferido e está pronto para ser utilizado.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Transferir FFmpeg</Title>
-    <XDownloadFailed>Não é possível transferir {0} - volte a tentar mais tarde!</XDownloadFailed>
-    <XDownloadOk>{0} foi transferido e está pronto para utilização.</XDownloadOk>
+    <XDownload>Transferir o {0}</XDownload>
+    <XDownloadFailed>Não é possível transferir o {0} - tente novamente mais tarde!</XDownloadFailed>
+    <XDownloadOk>O {0} foi transferido e está pronto para ser utilizado.</XDownloadOk>
   </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Definir o deslocamento do vídeo</Title>
@@ -2982,7 +2986,7 @@ Manter as alterações?</KeepChangesMessage>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
     <AddSceneChange>Adicionar mudança de cena</AddSceneChange>
     <RemoveSceneChange>Remover mudança de cena</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Remover mudanças de cena da seleção</RemoveSceneChangesFromSelection>
+    <RemoveSceneChangesFromSelection>Remover mudanças de cena da selecção</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
     <InsertSubtitleHere>Inserir legendagem aqui...</InsertSubtitleHere>
