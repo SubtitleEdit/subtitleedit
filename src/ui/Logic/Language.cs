@@ -1714,6 +1714,7 @@ namespace Nikse.SubtitleEdit.Logic
                         StartTime = "Start time",
                         EndTime = "End time",
                         Duration = "Duration",
+                        ListErrors = "List errors...",
                         TextAlphabetically = "Text - alphabetically",
                         TextSingleLineMaximumLength = "Text - single line max. length",
                         TextTotalLength = "Text - total length",

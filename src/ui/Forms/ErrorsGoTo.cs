@@ -27,6 +27,16 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderText.Text = LanguageSettings.Current.Main.Errors;
 
             _subtitle = new Subtitle(subtitle);
+
+            ListErrors(subtitle);
+
+            UiUtil.FixLargeFonts(this, buttonOK);
+        }
+
+        private void ListErrors(Subtitle subtitle)
+        {
+            listViewErrors.BeginUpdate();
+            listViewErrors.Items.Clear();
             foreach (var p in _subtitle.Paragraphs)
             {
                 var errors = GetErrors(p, _subtitle.Paragraphs.IndexOf(p), subtitle.Paragraphs);
@@ -41,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewErrors.Items.Add(item);
                 }
             }
+
+            listViewErrors.EndUpdate();
 
             labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewErrors.Items.Count}";
         }

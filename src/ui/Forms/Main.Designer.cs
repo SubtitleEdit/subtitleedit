@@ -558,6 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.listErrorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1750,6 +1751,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemMergeLinesWithSameTimeCodes,
             this.toolStripMenuItemAutoSplitLongLines,
             this.toolStripMenuItemSortBy,
+            this.listErrorsToolStripMenuItem,
             this.netflixQualityCheckToolStripMenuItem,
             this.toolStripSeparator22,
             this.toolStripMenuItemMakeEmptyFromCurrent,
@@ -4042,12 +4044,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripHideVideoControls.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hideVideoControlsToolStripMenuItem});
             this.contextMenuStripHideVideoControls.Name = "contextMenuStripVideoControls";
-            this.contextMenuStripHideVideoControls.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripHideVideoControls.Size = new System.Drawing.Size(178, 26);
             // 
             // hideVideoControlsToolStripMenuItem
             // 
             this.hideVideoControlsToolStripMenuItem.Name = "hideVideoControlsToolStripMenuItem";
-            this.hideVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hideVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.hideVideoControlsToolStripMenuItem.Text = "Hide video controls";
             this.hideVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.hideVideoControlsToolStripMenuItem_Click);
             // 
@@ -5423,6 +5425,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
             // 
+            // listErrorsToolStripMenuItem
+            // 
+            this.listErrorsToolStripMenuItem.Name = "listErrorsToolStripMenuItem";
+            this.listErrorsToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
+            this.listErrorsToolStripMenuItem.Text = "List errors...";
+            this.listErrorsToolStripMenuItem.Click += new System.EventHandler(this.listErrorsToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6024,5 +6033,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem hideVideoControlsToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripShowVideoControls;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowVideoControls;
+        private System.Windows.Forms.ToolStripMenuItem listErrorsToolStripMenuItem;
     }
 }

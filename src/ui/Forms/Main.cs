@@ -1601,6 +1601,7 @@ namespace Nikse.SubtitleEdit.Forms
             mergeSentencesToolStripMenuItem.Text = _language.MergeSentences;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItemSortBy.Text = _language.Menu.Tools.SortBy;
+            listErrorsToolStripMenuItem.Text = _language.Menu.Tools.ListErrors;
             netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
             toolStripButtonNetflixQualityCheck.Text = _language.Menu.Tools.NetflixQualityCheck;
 
@@ -5047,7 +5048,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldFormat = _currentSubtitleFormat;
                 _currentSubtitleFormat = newFormat;
                 MakeFormatChange(newFormat, oldFormat);
-                _converted = _currentSubtitleFormat != null; 
+                _converted = _currentSubtitleFormat != null;
                 if (_converted && _subtitle.OriginalFormat == newFormat && File.Exists(_fileName))
                 {
                     _converted = false;
@@ -16048,6 +16049,11 @@ namespace Nikse.SubtitleEdit.Forms
                      _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 && _networkSession == null)
             { // switch original/current
                 int firstIndex = FirstSelectedIndex;
+                if (firstIndex == -1)
+                {
+                    firstIndex = _subtitleListViewIndex;
+                }
+
                 double firstMs = -1;
                 if (firstIndex >= 0)
                 {
@@ -16069,14 +16075,12 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
 
                 _subtitleListViewIndex = -1;
-                if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && Math.Abs(_subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds - firstMs) < 0.01)
+                if (firstIndex == -1 && _subtitle?.Paragraphs?.Count > 0)
                 {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                    firstIndex = 0;
                 }
-                else
-                {
-                    RefreshSelectedParagraph();
-                }
+
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
 
                 SetTitle();
                 _fileDateTime = new DateTime();
@@ -16977,7 +16981,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            groupBoxVideo.SuspendLayout();            
+            groupBoxVideo.SuspendLayout();
             tabControlModes.Visible = on;
             var left = 5;
             if (on)
@@ -32457,7 +32461,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (coordinates.X < 15)
                 {
                     if (Configuration.Settings.General.ShowVideoControls)
-                    { 
+                    {
                         contextMenuStripHideVideoControls.Show(groupBoxVideo, coordinates);
                     }
                     else
@@ -32466,6 +32470,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void listErrorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListSyntaxErrors();
         }
     }
 }
