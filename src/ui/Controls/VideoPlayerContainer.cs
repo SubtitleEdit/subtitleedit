@@ -594,9 +594,11 @@ namespace Nikse.SubtitleEdit.Controls
                 int letterCount = 0;
                 var fontColorLookups = new Dictionary<Point, Color>();
                 var styleLookups = new Dictionary<int, FontStyle>(text.Length);
+                var defaultFontStyle = Configuration.Settings.General.VideoPlayerPreviewFontBold ? FontStyle.Bold : FontStyle.Regular;
+                var inlineFontStyles = false;
                 for (int j = 0; j < text.Length; j++)
                 {
-                    styleLookups.Add(j, Configuration.Settings.General.VideoPlayerPreviewFontBold ? FontStyle.Bold : FontStyle.Regular);
+                    styleLookups.Add(j, defaultFontStyle);
                 }
 
                 Color fontColor = Color.White;
@@ -758,6 +760,11 @@ namespace Nikse.SubtitleEdit.Controls
                             styleLookups[idx] |= FontStyle.Underline;
                         }
 
+                        if (defaultFontStyle != styleLookups[idx])
+                        {
+                            inlineFontStyles = true;
+                        }
+
                         sb.Append(text[i]);
                         letterCount++;
                     }
@@ -782,11 +789,20 @@ namespace Nikse.SubtitleEdit.Controls
                 TextBox.DeselectAll();
 
                 Font currentFont = TextBox.SelectionFont;
-                for (int k = 0; k < TextBox.TextLength; k++)
+                if (inlineFontStyles && TextBox.TextLength < 200)
                 {
-                    TextBox.SelectionStart = k;
-                    TextBox.SelectionLength = 1;
-                    TextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, styleLookups[k]);
+                    for (int k = 0; k < TextBox.TextLength; k++)
+                    {
+                        TextBox.SelectionStart = k;
+                        TextBox.SelectionLength = 1;
+                        TextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, styleLookups[k]);
+                        TextBox.DeselectAll();
+                    }
+                }
+                else
+                {
+                    TextBox.SelectAll();
+                    TextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, defaultFontStyle);
                     TextBox.DeselectAll();
                 }
 
