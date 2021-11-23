@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 Paragraph p = subtitle.Paragraphs[index];
                 var next = subtitle.GetParagraphOrDefault(index + 1);
-                if (next != null && SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds + twoFramesGap) > SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds) && !p.StartTime.IsMaxTime)
+                if (next != null && SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 2 && !p.StartTime.IsMaxTime)
                 {
                     var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
                     string comment;
