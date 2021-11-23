@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
 
-            int halfSecGapInFrames = (int)Math.Round(_frameRate / 2);
+            int halfSecGapInFrames = (int)Math.Round(_frameRate / 2, MidpointRounding.AwayFromZero);
             checkBoxGapBridge.Text = $"Frame gap: 3 to {halfSecGapInFrames - 1} frames => 2 frames";
 
             var sceneChangesExist = false;
