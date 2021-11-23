@@ -6664,6 +6664,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/SwitchOriginalAndTranslation":
                     language.Settings.SwitchOriginalAndTranslation = reader.Value;
                     break;
+                case "Settings/SwitchOriginalAndTranslationTextBoxes":
+                    language.Settings.SwitchOriginalAndTranslationTextBoxes = reader.Value;
+                    break;
                 case "Settings/MergeOriginalAndTranslation":
                     language.Settings.MergeOriginalAndTranslation = reader.Value;
                     break;

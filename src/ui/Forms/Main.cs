@@ -16082,6 +16082,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileDateTime = new DateTime();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralSwitchTranslationAndOriginalTextBoxes == e.KeyData &&
+                     _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+            { // switch original/current text boxes
+                Configuration.Settings.General.TextAndOrigianlTextBoxesSwitched = !Configuration.Settings.General.TextAndOrigianlTextBoxesSwitched;
+                MainResize();
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
             {
                 if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 && _networkSession == null)
@@ -21412,7 +21420,13 @@ namespace Nikse.SubtitleEdit.Forms
             lbTextOriginal.Left = firstLeft;
             tbText.Width = groupBoxEdit.Width - (tbText.Left + 10 + (groupBoxEdit.Width - buttonUnBreak.Left));
 
-            if (Configuration.Settings.General.RightToLeftMode && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+            bool switchTextBoxes = Configuration.Settings.General.RightToLeftMode && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0;
+            if (Configuration.Settings.General.TextAndOrigianlTextBoxesSwitched)
+            {
+                switchTextBoxes = !switchTextBoxes;
+            }
+
+            if (switchTextBoxes)
             {
                 tbText = textBoxListViewTextOriginal;
                 tbOriginal = textBoxListViewText;
