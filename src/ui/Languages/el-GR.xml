@@ -25,6 +25,7 @@
     <OpenVideoFile>Άνοιγμα αρχείου βίντεο…</OpenVideoFile>
     <OpenVideoFileTitle>Άνοιγμα αρχείου βίντεο…</OpenVideoFileTitle>
     <NoVideoLoaded>Μη φορτωμένο βίντεο</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Μη διαθέσιμο χαρακτηριστικό για βίντεο διαδικτύου</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Πληροφορίες βίντεο</VideoInformation>
     <StartTime>Έναρξη</StartTime>
     <EndTime>Λήξη</EndTime>
@@ -126,6 +127,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Πηγαίο αρχείο βίντεο:</SourceVideoFile>
     <GenerateWaveformData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveformData>
     <PleaseWait>Χρειάζεται λίγος χρόνος. Παρακαλώ, περιμένετε.</PleaseWait>
+    <FfmpegNotFound>Το Subtitle Edit χρειάζεται το FFmpeg, για την εξαγωγή δεδομένων ήχου και τη δημιουργία κυματομορφής.
+Λήψη και χρήση FFmpeg;</FfmpegNotFound>
     <GeneratingPeakFile>Δημιουργία αρχείου αιχμής…</GeneratingPeakFile>
     <GeneratingSpectrogram>Δημιουργία φασματογραφήματος…</GeneratingSpectrogram>
     <ExtractingSeconds>Εξαγωγή ήχου: {0:0.0} δευτερόλεπτα</ExtractingSeconds>
@@ -204,9 +207,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TakePosFromVideo>Λήψη θέσης βίντεο</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
-    <Title>Αλλαγή ανάλυσης κειμένου</Title>
+    <Title>Αλλαγή ανάλυσης κειμένου ASSA</Title>
     <SourceVideoRes>Ανάλυση αρχικού βίντεο</SourceVideoRes>
-    <TargetVideoRes>Υιοθέτηση ανάλυσης βίντεο</TargetVideoRes>
+    <TargetVideoRes>Καθορισμός ανάλυσης βίντεο</TargetVideoRes>
     <ChangeResolutionMargins>Αλλαγή ανάλυσης για περιθώριο</ChangeResolutionMargins>
     <ChangeResolutionFontSize>Αλλαγή ανάλυσης για μέγεθος γραμματοσειράς</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Αλλαγή ανάλυσης για θέση</ChangeResolutionPositions>
@@ -1088,8 +1091,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <File>
         <Title>&amp;Αρχείο</Title>
         <New>&amp;Νέο</New>
-        <Open>Ά&amp;νοιγμα</Open>
-        <OpenKeepVideo>Άνοιγμα (κράτηση βίντεο)</OpenKeepVideo>
+        <Open>Ά&amp;νοιγμα…</Open>
+        <OpenKeepVideo>Άνοιγμα (κράτηση βίντεο)…</OpenKeepVideo>
         <Reopen>Άνοιγμα &amp;ξανά</Reopen>
         <Save>Α&amp;ποθήκευση</Save>
         <SaveAs>Αποθήκευση &amp;ως…</SaveAs>
@@ -1174,11 +1177,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SplitLongLines>Διαχωρισμός μεγάλων γραμμών…</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Ελάχιστος χρόνος εμφάνισης μεταξύ υποτίτλων…</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ταξινόμηση</SortBy>
-        <NetflixQualityCheck>Έλεγχος ποιότητας Netflix…</NetflixQualityCheck>
         <Number>Αριθμός</Number>
         <StartTime>Έναρξη</StartTime>
         <EndTime>Λήξη</EndTime>
         <Duration>Διάρκεια</Duration>
+        <ListErrors>Λίστα σφαλμάτων…</ListErrors>
+        <NetflixQualityCheck>Έλεγχος ποιότητας Netflix…</NetflixQualityCheck>
         <TextAlphabetically>Κείμενο - αλφαβητικά</TextAlphabetically>
         <TextSingleLineMaximumLength>Κείμενο - μέγιστο μήκος γραμμής</TextSingleLineMaximumLength>
         <TextTotalLength>Κείμενο - συνολικό μήκος</TextTotalLength>
@@ -1211,7 +1215,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GenerateVideoWithBurnedInSub>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους…</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Εισαγωγή κεφαλαίων από βίντεο</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Δημιουργία/εισαγωγή αλλαγών σκηνών…</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Αφαίρεση σκηνών αλλαγής</RemoveSceneChanges>
+        <RemoveOrExportSceneChanges>Αφαίρεση/εξαγωγή αλλαγών σκηνής…</RemoveOrExportSceneChanges>
         <WaveformBatchGenerate>Ομαδική δημιουργία κυματομορφών…</WaveformBatchGenerate>
         <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
         <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
@@ -1300,9 +1304,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SelectAll>Επιλογή όλων</SelectAll>
         <Insert>Εισαγωγή</Insert>
         <InsertFirstLine>Εισαγωγή γραμμής</InsertFirstLine>
-        <InsertBefore>Πριν</InsertBefore>
-        <InsertAfter>Μετά</InsertAfter>
-        <InsertSubtitleAfter>Υποτίτλου μετά τη γραμμή…</InsertSubtitleAfter>
+        <InsertBefore>Εισαγωγή πριν</InsertBefore>
+        <InsertAfter>Εισαγωγή μετά</InsertAfter>
+        <InsertSubtitleAfter>Εισαγωγή υποτίτλου μετά τη γραμμή…</InsertSubtitleAfter>
         <CopyToClipboard>Αντιγραφή κειμένου στο πρόχειρο</CopyToClipboard>
         <Column>Στήλη</Column>
         <ColumnDeleteText>Διαγραφή κειμένου</ColumnDeleteText>
@@ -1697,6 +1701,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoSupportHereDivx>Τα αρχεία Divx δεν υποστηρίζονται.</NoSupportHereDivx>
     <NoChapters>Αδυναμία εύρεσης κεφαλαίων βίντεο.</NoChapters>
     <DarkThemeRestart>Επανεκκινήστε το Subtitle Edit για τη χρήση του σκούρου θέματος.</DarkThemeRestart>
+    <VideoFromUrlRequirements>Το άνοιγμα βίντεο από διεύθυνση απαιτεί mpv και youtube-dl. Λήψη και συνέχιση;</VideoFromUrlRequirements>
+    <Errors>Σφάλματα</Errors>
+    <ShowVideoControls>Εμφάνιση ελέγχων βίντεο</ShowVideoControls>
+    <HideVideoControls>Απόκρυψη ελέγχων βίντεο</HideVideoControls>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υποτίτλου από αρχείο Matroska</Title>
@@ -2351,6 +2359,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformGoToPreviousSceneChange>Μετάβαση σε προηγούμενη αλλαγή σκηνής</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Μετάβαση σε επόμενη αλλαγή σκηνής</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Εναλλαγή αλλαγή σκηνής</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>Αφαίρεση/εξαγωγή αλλαγών σκηνής</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>Αυτόματη προσαρμογή έναρξης μέσω έντασης/αλλαγή σκηνής</WaveformGuessStart>
     <GoBack1Frame>Πίσω ένα καρέ</GoBack1Frame>
     <GoForward1Frame>Μπροστά ένα καρέ</GoForward1Frame>
@@ -2416,7 +2425,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeSelectedLinesBilingual>Συγχώνευση γραμμών δίγλωσσα</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Διαχωρισμός γραμμής δίγλωσσα</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Εναλλαγή τρόπου μετάφρασης</ToggleTranslationMode>
-    <SwitchOriginalAndTranslation>Εναλλαγή αρχικού και μετάφρασης</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslation>Αλλαγή αρχικού και μετάφρασης</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Αλλαγή αρχικού πλαισίου κειμένου και μετάφρασης</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Συγχώνευση αρχικού και μετάφρασης</MergeOriginalAndTranslation>
     <MergeWithNext>Συγχώνευση με επόμενη</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Συγχώνευση με προηγούμενη και συνένωση</MergeWithPreviousAndUnbreak>
@@ -2433,6 +2443,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextUp>Στήλη, κείμενο προς τα πάνω</ListViewColumnTextUp>
     <ListViewColumnTextDown>Στήλη, κείμενο προς τα κάτω</ListViewColumnTextDown>
     <ListViewGoToNextError>Μετάβαση σε επόμενο σφάλμα</ListViewGoToNextError>
+    <ListViewListErrors>Λίστα σφαλμάτων</ListViewListErrors>
     <ShowStyleManager>Προβολή διαχείρισης στυλ</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Μετακίνηση πρώτης λέξης από την επόμενη γραμμή επάνω</MainTextBoxMoveFirstWordFromNextUp>
@@ -2492,7 +2503,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DownloadMpvOk>Ολοκλήρωση λήψης mpv lib και έτοιμο προς χρήση.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Λήψη FFmpeg</Title>
+    <XDownload>Λήψη {0}</XDownload>
     <XDownloadFailed>Αδυναμία λήψης {0}. Παρακαλώ, προσπαθήστε αργότερα.</XDownloadFailed>
     <XDownloadOk>Λήψη {0} και έτοιμο προς χρήση.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2663,7 +2674,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UpdatedBy>Ενημερωμένο από</UpdatedBy>
     <UpdateDetails>Λεπτομέρειες ενημέρωσης</UpdateDetails>
     <Resolution>Ανάλυση</Resolution>
-    <VideoResolution>Ανάλυση βίντεοVideo resolution</VideoResolution>
+    <VideoResolution>Ανάλυση βίντεο</VideoResolution>
     <FromCurrentVideo>Από το τρέχων βίντεο</FromCurrentVideo>
     <Options>Επιλογές</Options>
     <WrapStyle>Στυλ αναδίπλωσης</WrapStyle>
