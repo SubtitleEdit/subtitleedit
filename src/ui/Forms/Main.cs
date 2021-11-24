@@ -9567,7 +9567,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
-                    FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
+                    FixVerticalScrollBars(textBoxListViewText);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                     {
@@ -9831,10 +9831,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
-        private int _lastNumberOfNewLines = -1;
-        private int _lastNumberOfNewLinesOriginal = -1;
-
-        private void FixVerticalScrollBars(SETextBox tb, ref int lastNumberOfNewLines)
+        private void FixVerticalScrollBars(SETextBox tb)
         {
             if (!tb.Visible)
             {
@@ -9842,17 +9839,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var noOfNewLines = Utilities.GetNumberOfLines(tb.Text.TrimEnd());
-            if (noOfNewLines == lastNumberOfNewLines)
-            {
-                return;
-            }
-
-            lastNumberOfNewLines = noOfNewLines;
             try
             {
-                if (noOfNewLines <= 1 && tb.Text.Length <= 200 && tb.Font.Size < 15)
+                if (noOfNewLines <= 2 && tb.Text.Length <= 70 && tb.Font.Size < 15 && tb.Width > 300)
                 {
                     tb.ScrollBars = RichTextBoxScrollBars.None;
+                }
+                else if (noOfNewLines > 20 || tb.Text.Length > 999)
+                {
+                    tb.ScrollBars = RichTextBoxScrollBars.Vertical;
                 }
                 else
                 {
@@ -9920,7 +9915,7 @@ namespace Nikse.SubtitleEdit.Forms
             _listViewTextUndoIndex = _subtitleListViewIndex;
 
             StartUpdateListSyntaxColoring();
-            FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
+            FixVerticalScrollBars(textBoxListViewText);
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
         }
 
@@ -10006,7 +10001,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Empty;
 
                 StartUpdateListSyntaxColoring();
-                FixVerticalScrollBars(textBoxListViewTextOriginal, ref _lastNumberOfNewLinesOriginal);
+                FixVerticalScrollBars(textBoxListViewTextOriginal);
             }
         }
 
@@ -23112,8 +23107,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewText_SizeChanged(object sender, EventArgs e)
         {
-            _lastNumberOfNewLines = -1;
-            FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
+            FixVerticalScrollBars(textBoxListViewText);
         }
 
         private void InitializePlayRateDropDown()
@@ -26445,7 +26439,7 @@ namespace Nikse.SubtitleEdit.Forms
                     original.Text = text;
                     UpdateListViewTextInfo(labelTextOriginalLineLengths, labelOriginalSingleLine, labelOriginalSingleLinePixels, labelTextOriginalLineTotal, labelOriginalCharactersPerSecond, original, textBoxListViewTextOriginal);
                     SubtitleListview1.SetOriginalText(_subtitleListViewIndex, text);
-                    FixVerticalScrollBars(textBoxListViewTextOriginal, ref _lastNumberOfNewLinesOriginal);
+                    FixVerticalScrollBars(textBoxListViewTextOriginal);
                 }
             }
         }
