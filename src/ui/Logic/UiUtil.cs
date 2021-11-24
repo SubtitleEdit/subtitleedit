@@ -1361,5 +1361,17 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public static string DecimalSeparator => CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+
+        public static Control FindFocusedControl(Control control)
+        {
+            var container = control as ContainerControl;
+            while (container != null)
+            {
+                control = container.ActiveControl;
+                container = control as ContainerControl;
+            }
+
+            return control;
+        }
     }
 }
