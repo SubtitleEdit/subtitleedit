@@ -846,6 +846,28 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormFixKeyDown(object sender, KeyEventArgs e)
         {
+            var fc = UiUtil.FindFocusedControl(this);
+            if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
+            {
+                var typeName = fc.GetType().Name;
+
+                // do not check for shortcuts if text is being entered and a textbox is focused
+                var textBoxTypes = new List<string> { "AdvancedTextBox", "SimpleTextBox", "SETextBox", "TextBox", "RichTextBox" };
+                if (textBoxTypes.Contains(typeName) &&
+                    ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash) || e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 || e.KeyValue >= 48 && e.KeyValue <= 57) &&
+                    !Configuration.Settings.General.AllowLetterShortcutsInTextBox)
+                {
+                    return;
+                }
+
+                // do not check for shortcuts if a number is being entered and a time box is focused
+                if (typeName == "UpDownEdit" &&
+                    (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 || e.KeyValue >= 48 && e.KeyValue <= 57))
+                {
+                    return;
+                }
+            }
+
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;

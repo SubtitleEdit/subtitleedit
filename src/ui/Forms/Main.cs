@@ -15075,18 +15075,6 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshSelectedParagraph();
         }
 
-        public static Control FindFocusedControl(Control control)
-        {
-            var container = control as ContainerControl;
-            while (container != null)
-            {
-                control = container.ActiveControl;
-                container = control as ContainerControl;
-            }
-
-            return control;
-        }
-
         internal void MainKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LWin)
@@ -15126,7 +15114,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var fc = FindFocusedControl(this);
+            var fc = UiUtil.FindFocusedControl(this);
             if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
                 var typeName = fc.GetType().Name;
