@@ -9853,7 +9853,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var calculatedHeight = TextRenderer.MeasureText(
                          tb.Text,
-                         tb.Font,
+                         new Font(Configuration.Settings.General.SubtitleFontName, Configuration.Settings.General.SubtitleTextBoxFontSize),
                          new Size(tb.Width, 1000),
                          TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
                     tb.ScrollBars = calculatedHeight > tb.Height ? RichTextBoxScrollBars.Vertical : RichTextBoxScrollBars.None;
