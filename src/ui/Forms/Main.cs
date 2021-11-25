@@ -9841,7 +9841,7 @@ namespace Nikse.SubtitleEdit.Forms
             var noOfNewLines = Utilities.GetNumberOfLines(tb.Text.TrimEnd());
             try
             {
-                if (noOfNewLines <= 2 && tb.Text.Length <= 70 && tb.Font.Size < 15 && tb.Width > 300)
+                if (noOfNewLines <= 2 && tb.Text.Length <= 70 && tb.TextBoxFont.Size < 15 && tb.Width > 300)
                 {
                     tb.ScrollBars = RichTextBoxScrollBars.None;
                 }
@@ -9853,7 +9853,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var calculatedHeight = TextRenderer.MeasureText(
                          tb.Text,
-                         tb.Font,
+                         tb.TextBoxFont,
                          new Size(tb.Width, 1000),
                          TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
                     tb.ScrollBars = calculatedHeight > tb.Height ? RichTextBoxScrollBars.Vertical : RichTextBoxScrollBars.None;

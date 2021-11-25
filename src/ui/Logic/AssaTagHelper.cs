@@ -371,7 +371,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            IntellisenseItem.IntellisenseItemEdit.Font = textBox.Font;
+            IntellisenseItem.IntellisenseItemEdit.Font = textBox.TextBoxFont;
             listBox.Items.Add(IntellisenseItem.IntellisenseItemEdit);
 
             if (Configuration.Settings.General.UseDarkTheme)
