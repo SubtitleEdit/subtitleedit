@@ -1,201 +1,63 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Test</AssemblyName>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <FileAlignment>512</FileAlignment>
-    <OutputType>Library</OutputType>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}</ProjectGuid>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <RootNamespace>Test</RootNamespace>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DebugType>pdbonly</DebugType>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
+    <PackageReference Include="coverlet.collector" Version="3.1.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
-    <Compile Include="Assa\ResamplerTest.cs" />
-    <Compile Include="LanguageFiles\LanguageFileTest.cs" />
-    <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
-    <Compile Include="Core\UUEncodingTest.cs" />
-    <Compile Include="Core\CharUtilsTest.cs" />
-    <Compile Include="Core\DialogTypeTest.cs" />
-    <Compile Include="Core\SeJsonParserTest.cs" />
-    <Compile Include="Core\FixCasingTest.cs" />
-    <Compile Include="Core\LanguageAutoDetectTest.cs" />
-    <Compile Include="Core\PlainTextImporterTest.cs" />
-    <Compile Include="Core\StringExtensionsTest.cs" />
-    <Compile Include="Core\NikseBitmapTest.cs" />
-    <Compile Include="Core\SubtitleFormatTest.cs" />
-    <Compile Include="Core\SubtitleTest.cs" />
-    <Compile Include="Core\RichTextToPlainTextTest.cs" />
-    <Compile Include="Logic\BridgeGapsTest.cs" />
-    <Compile Include="Logic\Forms\MoveWordUpDownTest.cs" />
-    <Compile Include="Logic\NetflixQualityCheckTest.cs" />
-    <Compile Include="Logic\Ocr\BinaryOcrTest.cs" />
-    <Compile Include="Core\HtmlUtilTest.cs" />
-    <Compile Include="FixCommonErrors\FixCommonErrorsTest.cs" />
-    <Compile Include="Logic\LanguageTest.cs" />
-    <Compile Include="Logic\BluRaySup\BluRaySupParserTest.cs" />
-    <Compile Include="Logic\BluRaySup\ToolBoxTest.cs" />
-    <Compile Include="Logic\Dictionaries\NamesListTest.cs" />
-    <Compile Include="Logic\Dictionaries\OcrFixReplaceListTest.cs" />
-    <Compile Include="Logic\Mp4\Mp4Test.cs" />
-    <Compile Include="Logic\Ocr\MatchesToItalicStringConverterTest.cs" />
-    <Compile Include="Logic\SplitLongLinesHelperTest.cs" />
-    <Compile Include="Logic\SubtitleFormats\Cea708Test.cs" />
-    <Compile Include="Logic\SubtitleFormats\SubtitleFormatFunctionsTest.cs" />
-    <Compile Include="Logic\TarFileTest.cs" />
-    <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
-    <Compile Include="Logic\ParagraphTest.cs" />
-    <Compile Include="Logic\StrippableTextTest.cs" />
-    <Compile Include="Logic\TimeCodeTest.cs" />
-    <Compile Include="Logic\UknownFormatImporterJsonTest.cs" />
-    <Compile Include="Logic\ContinuationUtilitiesTest.cs" />
-    <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
-    <Compile Include="Logic\VobSub\VobSubTest.cs" />
-    <Compile Include="Logic\Ocr\NOcrTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Logic\Forms\RemoveTextForHearImpairedTest.cs" />
-    <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
-    <Compile Include="Logic\UtilitiesTest.cs" />
-    <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
-    <Compile Include="SETextBoxControl\SeTextBoxTests.cs" />
+    <ProjectReference Include="..\libse\LibSE.csproj" />
+    <ProjectReference Include="..\ui\SubtitleEdit.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Dictionaries\en_US.aff" />
-    <EmbeddedResource Include="Dictionaries\en_US.dic" />
+    <None Update="Files\auto_detect_Danish.srt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\auto_detect_Russian.srt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\auto_detect_windows-1250.srt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\auto_detect_windows-1251.srt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample.tar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_BDSUP_multi_image.sup">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_MKV_delayed.mkv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_MKV_SRT.mkv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_MKV_VobSub_PGS.mkv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_MP4_SRT.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_TS_with_graphics.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\sample_TS_with_teletext.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Dictionaries\names.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\sample.tar">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\sample_MKV_delayed.mkv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Files\sample_MKV_SRT.mkv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Files\sample_MKV_VobSub_PGS.mkv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Files\sample_TS_with_graphics.ts">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\sample_MP4_SRT.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\sample_BDSUP_multi_image.sup">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\auto_detect_Danish.srt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\auto_detect_Russian.srt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\auto_detect_windows-1250.srt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Files\auto_detect_windows-1251.srt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\sample_TS_with_teletext.ts">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\libse\LibSE.csproj">
-      <Project>{d6f64cd3-c3ea-4b36-b575-9b3b8a3ca13f}</Project>
-      <Name>LibSE</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ui\SubtitleEdit.csproj">
-      <Project>{511a5b59-1c35-4719-8536-23b19af9b21a}</Project>
-      <Name>SubtitleEdit</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

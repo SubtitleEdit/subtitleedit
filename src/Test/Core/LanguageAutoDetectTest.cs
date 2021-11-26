@@ -33,6 +33,7 @@ namespace Test.Core
 
         private static Encoding DetectAnsiEncoding(string fileName)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             fileName = Path.Combine(Directory.GetCurrentDirectory(), fileName);
             return LanguageAutoDetect.DetectAnsiEncoding(FileUtil.ReadAllBytesShared(fileName));
         }
@@ -40,6 +41,7 @@ namespace Test.Core
         [TestMethod]
         public void AutoDetectCodePage1250()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var encoding = DetectAnsiEncoding("auto_detect_windows-1250.srt");
             Assert.AreEqual(1250, encoding.CodePage);
         }
@@ -47,6 +49,7 @@ namespace Test.Core
         [TestMethod]
         public void AutoDetectCodePage1251()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var encoding = DetectAnsiEncoding("auto_detect_windows-1251.srt");
             Assert.AreEqual(1251, encoding.CodePage);
         }
