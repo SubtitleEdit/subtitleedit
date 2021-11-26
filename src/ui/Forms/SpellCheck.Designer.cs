@@ -58,7 +58,7 @@
             // 
             this.buttonAddToDictionary.Location = new System.Drawing.Point(6, 134);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
-            this.buttonAddToDictionary.Size = new System.Drawing.Size(280, 23);
+            this.buttonAddToDictionary.Size = new System.Drawing.Size(346, 23);
             this.buttonAddToDictionary.TabIndex = 6;
             this.buttonAddToDictionary.Text = "Add to user dictionary (not case sensitive)";
             this.buttonAddToDictionary.UseVisualStyleBackColor = true;
@@ -70,7 +70,7 @@
             // 
             this.buttonSkipOnce.Location = new System.Drawing.Point(6, 76);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
-            this.buttonSkipOnce.Size = new System.Drawing.Size(136, 23);
+            this.buttonSkipOnce.Size = new System.Drawing.Size(170, 23);
             this.buttonSkipOnce.TabIndex = 3;
             this.buttonSkipOnce.Text = "Skip &once";
             this.buttonSkipOnce.UseVisualStyleBackColor = true;
@@ -82,7 +82,7 @@
             // 
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(393, 34);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(386, 34);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(245, 21);
             this.comboBoxDictionaries.TabIndex = 8;
@@ -91,7 +91,7 @@
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(390, 14);
+            this.labelLanguage.Location = new System.Drawing.Point(383, 14);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(54, 13);
             this.labelLanguage.TabIndex = 7;
@@ -101,7 +101,6 @@
             // 
             this.richTextBoxParagraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBoxParagraph.ContextMenuStrip = this.contextMenuStrip1;
-            this.richTextBoxParagraph.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxParagraph.Location = new System.Drawing.Point(11, 33);
             this.richTextBoxParagraph.Name = "richTextBoxParagraph";
             this.richTextBoxParagraph.ReadOnly = true;
@@ -155,7 +154,7 @@
             this.listBoxSuggestions.ItemHeight = 16;
             this.listBoxSuggestions.Location = new System.Drawing.Point(8, 47);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 180);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 146);
             this.listBoxSuggestions.TabIndex = 2;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
@@ -170,10 +169,9 @@
             // 
             // textBoxWord
             // 
-            this.textBoxWord.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWord.Location = new System.Drawing.Point(6, 20);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(280, 21);
+            this.textBoxWord.Size = new System.Drawing.Size(346, 21);
             this.textBoxWord.TabIndex = 0;
             this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             // 
@@ -190,9 +188,9 @@
             // 
             // buttonSkipAll
             // 
-            this.buttonSkipAll.Location = new System.Drawing.Point(147, 76);
+            this.buttonSkipAll.Location = new System.Drawing.Point(182, 76);
             this.buttonSkipAll.Name = "buttonSkipAll";
-            this.buttonSkipAll.Size = new System.Drawing.Size(138, 23);
+            this.buttonSkipAll.Size = new System.Drawing.Size(170, 23);
             this.buttonSkipAll.TabIndex = 4;
             this.buttonSkipAll.Text = "&Skip all";
             this.buttonSkipAll.UseVisualStyleBackColor = true;
@@ -204,7 +202,7 @@
             // 
             this.buttonChange.Location = new System.Drawing.Point(6, 47);
             this.buttonChange.Name = "buttonChange";
-            this.buttonChange.Size = new System.Drawing.Size(136, 23);
+            this.buttonChange.Size = new System.Drawing.Size(170, 23);
             this.buttonChange.TabIndex = 1;
             this.buttonChange.Text = "Change";
             this.buttonChange.UseVisualStyleBackColor = true;
@@ -224,9 +222,9 @@
             // 
             // buttonChangeAll
             // 
-            this.buttonChangeAll.Location = new System.Drawing.Point(148, 47);
+            this.buttonChangeAll.Location = new System.Drawing.Point(182, 47);
             this.buttonChangeAll.Name = "buttonChangeAll";
-            this.buttonChangeAll.Size = new System.Drawing.Size(138, 23);
+            this.buttonChangeAll.Size = new System.Drawing.Size(170, 23);
             this.buttonChangeAll.TabIndex = 2;
             this.buttonChangeAll.Text = "Change all";
             this.buttonChangeAll.UseVisualStyleBackColor = true;
@@ -246,9 +244,9 @@
             // 
             // buttonAddToNames
             // 
-            this.buttonAddToNames.Location = new System.Drawing.Point(5, 105);
+            this.buttonAddToNames.Location = new System.Drawing.Point(6, 105);
             this.buttonAddToNames.Name = "buttonAddToNames";
-            this.buttonAddToNames.Size = new System.Drawing.Size(280, 23);
+            this.buttonAddToNames.Size = new System.Drawing.Size(346, 23);
             this.buttonAddToNames.TabIndex = 5;
             this.buttonAddToNames.Text = "Add to names/noise list (case sensitive)";
             this.buttonAddToNames.UseVisualStyleBackColor = true;
@@ -271,7 +269,7 @@
             this.groupBoxWordNotFound.Controls.Add(this.buttonChange);
             this.groupBoxWordNotFound.Location = new System.Drawing.Point(11, 165);
             this.groupBoxWordNotFound.Name = "groupBoxWordNotFound";
-            this.groupBoxWordNotFound.Size = new System.Drawing.Size(358, 218);
+            this.groupBoxWordNotFound.Size = new System.Drawing.Size(358, 222);
             this.groupBoxWordNotFound.TabIndex = 0;
             this.groupBoxWordNotFound.TabStop = false;
             this.groupBoxWordNotFound.Text = "Word not found";
@@ -280,7 +278,7 @@
             // 
             this.buttonGoogleIt.Location = new System.Drawing.Point(6, 163);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
-            this.buttonGoogleIt.Size = new System.Drawing.Size(280, 23);
+            this.buttonGoogleIt.Size = new System.Drawing.Size(346, 23);
             this.buttonGoogleIt.TabIndex = 7;
             this.buttonGoogleIt.Text = "&Google it";
             this.buttonGoogleIt.UseVisualStyleBackColor = true;
@@ -290,7 +288,7 @@
             // 
             this.buttonUndo.Location = new System.Drawing.Point(6, 192);
             this.buttonUndo.Name = "buttonUndo";
-            this.buttonUndo.Size = new System.Drawing.Size(280, 23);
+            this.buttonUndo.Size = new System.Drawing.Size(346, 23);
             this.buttonUndo.TabIndex = 8;
             this.buttonUndo.Text = "Undo: skip all \'A\'";
             this.buttonUndo.UseVisualStyleBackColor = true;
@@ -305,9 +303,9 @@
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.checkBoxAutoChangeNames);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
-            this.groupBoxSuggestions.Location = new System.Drawing.Point(393, 73);
+            this.groupBoxSuggestions.Location = new System.Drawing.Point(386, 165);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 271);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 222);
             this.groupBoxSuggestions.TabIndex = 1;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -316,7 +314,7 @@
             // 
             this.checkBoxAutoChangeNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoChangeNames.AutoSize = true;
-            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 247);
+            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 192);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
             this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(221, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
@@ -368,7 +366,7 @@
             // 
             // textBoxWholeText
             // 
-            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
             this.textBoxWholeText.Multiline = true;
             this.textBoxWholeText.Name = "textBoxWholeText";
@@ -388,7 +386,7 @@
             // buttonSpellCheckDownload
             // 
             this.buttonSpellCheckDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSpellCheckDownload.Location = new System.Drawing.Point(644, 32);
+            this.buttonSpellCheckDownload.Location = new System.Drawing.Point(637, 32);
             this.buttonSpellCheckDownload.Name = "buttonSpellCheckDownload";
             this.buttonSpellCheckDownload.Size = new System.Drawing.Size(28, 23);
             this.buttonSpellCheckDownload.TabIndex = 9;
