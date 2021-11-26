@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
-        internal static string FixFrenchLApostrophe(string input, string tag, string lastLine)
+        public static string FixFrenchLApostrophe(string input, string tag, string lastLine)
         {
             var text = input;
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||

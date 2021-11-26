@@ -33,19 +33,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public void Save()
         {
-            using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
+            if (File.Exists(FileName))
+            {
+                File.Delete(FileName);
+            }
+
+            using (Stream stream = new FileStream(FileName, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
             {
                 var versionBuffer = Encoding.ASCII.GetBytes(Version);
-                gz.Write(versionBuffer, 0, versionBuffer.Length);
+                stream.Write(versionBuffer, 0, versionBuffer.Length);
 
                 foreach (var ocrChar in OcrCharacters)
                 {
-                    ocrChar.Save(gz);
+                    ocrChar.Save(stream);
                 }
 
                 foreach (var ocrChar in OcrCharactersExpanded)
                 {
-                    ocrChar.Save(gz);
+                    ocrChar.Save(stream);
                 }
             }
         }
@@ -63,24 +68,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             bool isVersion2;
-            using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+            using (Stream stream = GetOpenStream())
             {
                 var versionBuffer = new byte[Version.Length];
-                gz.Read(versionBuffer, 0, versionBuffer.Length);
+                stream.Read(versionBuffer, 0, versionBuffer.Length);
                 isVersion2 = Encoding.ASCII.GetString(versionBuffer) == Version;
             }
 
-            using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+            using (Stream stream = GetOpenStream())
             {
                 bool done = false;
                 if (isVersion2)
                 {
                     var versionBuffer = new byte[Version.Length];
-                    gz.Read(versionBuffer, 0, versionBuffer.Length);
+                    stream.Read(versionBuffer, 0, versionBuffer.Length);
                 }
                 while (!done)
                 {
-                    var ocrChar = new NOcrChar(gz, isVersion2);
+                    var ocrChar = new NOcrChar(stream, isVersion2);
                     if (ocrChar.LoadedOk)
                     {
                         if (ocrChar.ExpandCount > 0)
@@ -98,8 +103,23 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                 }
             }
+
             OcrCharacters = list;
             OcrCharactersExpanded = listExpanded;
+        }
+
+        private Stream GetOpenStream()
+        {
+            var bytes = FileUtil.ReadBytesShared(FileName, 2);
+            var isVersion2Plain = Encoding.ASCII.GetString(bytes) == Version;
+            if (isVersion2Plain)
+            {
+                return new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }
+            else
+            {
+                return new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress);
+            }
         }
 
         public void Add(NOcrChar ocrChar)
