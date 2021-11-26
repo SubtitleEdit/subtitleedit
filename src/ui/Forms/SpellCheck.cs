@@ -114,6 +114,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
+
+            if (Configuration.Settings.General.SpellCheckFontBold)
+            {
+                richTextBoxParagraph.Font = new Font(richTextBoxParagraph.Font.FontFamily, 9.75F, FontStyle.Bold);
+                textBoxWholeText.Font = new Font(textBoxWholeText.Font, FontStyle.Bold);
+            }
+
             UiUtil.FixLargeFonts(this, buttonAbort);
             richTextBoxParagraph.DetectUrls = false;
         }
