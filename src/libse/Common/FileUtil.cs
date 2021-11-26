@@ -50,6 +50,35 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static byte[] ReadBytesShared(string path, int bytesToRead)
+        {
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var index = 0;
+                var fileLength = fs.Length;
+                if (fileLength > int.MaxValue)
+                {
+                    throw new IOException("File too long");
+                }
+
+                var count = Math.Min(bytesToRead, (int)fileLength);
+                var bytes = new byte[count];
+                while (count > 0)
+                {
+                    var n = fs.Read(bytes, index, count);
+                    if (n == 0)
+                    {
+                        throw new InvalidOperationException("End of file reached before expected");
+                    }
+
+                    index += n;
+                    count -= n;
+                }
+
+                return bytes;
+            }
+        }
+
         public static List<string> ReadAllLinesShared(string path, Encoding encoding)
         {
             return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
@@ -77,6 +106,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     && buffer[3] == 0x04; // (EOT)
             }
         }
+
         public static bool Is7Zip(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
