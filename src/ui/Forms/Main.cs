@@ -21410,7 +21410,19 @@ namespace Nikse.SubtitleEdit.Forms
             bool switchTextBoxes = Configuration.Settings.General.RightToLeftMode && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0;
             if (Configuration.Settings.General.TextAndOrigianlTextBoxesSwitched)
             {
+                if (SubtitleListview1.ColumnIndexText < SubtitleListview1.ColumnIndexTextOriginal)
+                {
+                    SubtitleListview1.SwapTextAndOriginalText(_subtitle, _subtitleOriginal);
+                }
+
                 switchTextBoxes = !switchTextBoxes;
+            }
+            else
+            {
+                if (SubtitleListview1.ColumnIndexText > SubtitleListview1.ColumnIndexTextOriginal)
+                {
+                    SubtitleListview1.SwapTextAndOriginalText(_subtitle, _subtitleOriginal);
+                }
             }
 
             if (switchTextBoxes)
