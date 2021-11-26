@@ -14,7 +14,7 @@
     <All>Όλα</All>
     <Preview>Προεπισκόπηση</Preview>
     <ShowPreview>Εμφάνιση προεπισκόπησης</ShowPreview>
-    <HidePreview>Κρύψιμο προεπισκόπησης</HidePreview>
+    <HidePreview>Απόκρυψη προεπισκόπησης</HidePreview>
     <SubtitleFiles>Αρχεία υποτίτλου</SubtitleFiles>
     <AllFiles>Όλα τα αρχεία</AllFiles>
     <VideoFiles>Αρχεία βίντεο</VideoFiles>
@@ -644,7 +644,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeAllLines>Συγχώνευση όλων των γραμμών</MergeAllLines>
     <UnbreakLines>Συνένωση γραμμών</UnbreakLines>
     <RemoveStyling>Αφαίρεση στυλ</RemoveStyling>
-    <ShowLineNumbers>Προβολή αριθμών γραμμής</ShowLineNumbers>
+    <ShowLineNumbers>Εμφάνιση αριθμών γραμμής</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Προσθήκη νέας γραμμής μετά του αριθμού</AddNewLineAfterLineNumber>
     <ShowTimeCode>Εμφάνιση κωδικοποίησης χρόνου</ShowTimeCode>
     <AddNewLineAfterTimeCode>Προσθήκη νέας γραμμής μετά την κωδικοποίηση χρόνου</AddNewLineAfterTimeCode>
@@ -1156,7 +1156,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FixRtlViaUnicodeControlCharacters>Διόρθωση RTL μέσω χαρακτήρων ελέγχου Unicode</FixRtlViaUnicodeControlCharacters>
         <RemoveUnicodeControlCharacters>Αφαίρεση χαρακτήρων ελέγχου Unicode</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Αντιστροφή έναρξης/λήξης του RTL</ReverseRightToLeftStartEnd>
-        <ShowOriginalTextInAudioAndVideoPreview>Προβολή αρχικού κειμένου στις προεπισκοπήσεις ήχου/βίντεο</ShowOriginalTextInAudioAndVideoPreview>
+        <ShowOriginalTextInAudioAndVideoPreview>Εμφάνιση αρχικού κειμένου στις προεπισκοπήσεις ήχου/βίντεο</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Επεξεργασία επιλογής…</ModifySelection>
         <InverseSelection>Αντιστροφή</InverseSelection>
       </Edit>
@@ -1253,7 +1253,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Δίκτυο</Title>
         <StartNewSession>Έναρξη νέας συνεδρίας</StartNewSession>
         <JoinSession>Συμμετοχή</JoinSession>
-        <ShowSessionInfoAndLog>Προβολή πληροφοριών και αρχείου καταγραφής</ShowSessionInfoAndLog>
+        <ShowSessionInfoAndLog>Εμφάνιση πληροφοριών και αρχείου καταγραφής</ShowSessionInfoAndLog>
         <Chat>Συνομιλία</Chat>
         <LeaveSession>Έξοδος</LeaveSession>
       </Networking>
@@ -1483,7 +1483,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReplaceCountX>Αριθμός αντικαταστάσεων: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>Εύρεση αντιστοιχίας στη γραμμή {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Αντικατάσταση ενός.</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>Πριν των αλλαγν στην προβολή πηγής</BeforeChangesMadeInSourceView>
+    <BeforeChangesMadeInSourceView>Πριν των αλλαγών στην προβολή πηγής</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Αδυναμία ανάλυσης κειμένου στην προβολή πηγής.</UnableToParseSourceView>
     <GoToLineNumberX>Μετάβαση στη γραμμή με αριθμό {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Δημιουργία/προσαρμογή γραμμών εφαρμοσμένων αλλαγών</CreateAdjustChangesApplied>
@@ -2102,8 +2102,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAssaResolution>Ορισμός ανάλυσης ASSA (διαστάσεις αναπαραγωγής Χ και Υ)</SetAssaResolution>
     <ShowLineBreaksAs>Εμφάνιση διασπάσεων σε προβολή λίστας ως</ShowLineBreaksAs>
     <SaveAsFileNameFrom>Η "Αποθήκευση ως…" έχει το όνομα από</SaveAsFileNameFrom>
-    <MainListViewDoubleClickAction>Ενέργεια διπλού κλικ σε γραμμή στο κύριο παράθυρο προβολής λίστας</MainListViewDoubleClickAction>
-    <MainListViewColumnsInfo>Επιλογή ορατής λίστας προβολής στηλών</MainListViewColumnsInfo>
+    <MainListViewDoubleClickAction>Διπλό κλικ σε γραμμή στο κύριο παράθυρο προβολής λίστας</MainListViewDoubleClickAction>
+    <MainListViewColumnsInfo>Επιλογή ορατών στηλών λίστας προβολής</MainListViewColumnsInfo>
     <MainListViewNothing>Τίποτα</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Μετάβαση σε θέση βίντεο και παύση</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Μετάβαση σε θέση βίντεο και αναπαραγωγή</MainListViewVideoGoToPositionAndPlay>
@@ -2147,15 +2147,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowStopButton>Εμφάνιση κουμπιού διακοπής</ShowStopButton>
     <ShowMuteButton>Εμφάνιση κουμπιού σίγασης</ShowMuteButton>
     <ShowFullscreenButton>Εμφάνιση κουμπιού πλήρους οθόνης</ShowFullscreenButton>
-    <PreviewFontName>Γραμματοσειρά προεπισκόπισης</PreviewFontName>
+    <PreviewFontName>Γραμματοσειρά προεπισκόπησης</PreviewFontName>
     <PreviewFontSize>Μέγεθος γραμματοσειράς</PreviewFontSize>
     <MainWindowVideoControls>Στοιχεία ελέγχου βίντεο κύριου παραθύρου</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Προσαρμοσμένη αναζήτηση κειμένου και διεύθυνσης URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Εμφάνιση κυματομορφής</WaveformAppearance>
     <WaveformGridColor>Χρώμα πλέγματος</WaveformGridColor>
-    <WaveformShowGridLines>Προβολή πλέγματος</WaveformShowGridLines>
-    <WaveformShowCps>Προβολή χαρακτήρων/δευτερόλεπτο</WaveformShowCps>
-    <WaveformShowWpm>Προβολή λέξεων/λεπτό</WaveformShowWpm>
+    <WaveformShowGridLines>Εμφάνιση πλέγματος</WaveformShowGridLines>
+    <WaveformShowCps>Εμφάνιση χαρακτήρων/δευτερόλεπτο</WaveformShowCps>
+    <WaveformShowWpm>Εμφάνιση λέξεων/λεπτό</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Εναλλαγή κατεύθυνσης κύλισης με τη ρόδα του ποντικιού</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Να επιτρέπεται η επικάλυψη (κατά τη μετακίνηση/αλλαγή μεγέθους)</WaveformAllowOverlap>
     <WaveformSetVideoPosMoveStartEnd>Καθορισμός θέσης βίντεο κατά τη μετακίνηση έναρξης/λήξης</WaveformSetVideoPosMoveStartEnd>
@@ -2424,9 +2424,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeSelectedLinesOnlyFirstText>Συγχώνευση επιλεγμένων γραμμών, κράτημα μόνο του πρώτου κειμένου</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Συγχώνευση γραμμών δίγλωσσα</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Διαχωρισμός γραμμής δίγλωσσα</SplitSelectedLineBilingual>
-    <ToggleTranslationMode>Εναλλαγή τρόπου μετάφρασης</ToggleTranslationMode>
+    <ToggleTranslationMode>Εναλλαγή λειτουργίας μετάφρασης</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Αλλαγή αρχικού και μετάφρασης</SwitchOriginalAndTranslation>
-    <SwitchOriginalAndTranslationTextBoxes>Αλλαγή αρχικού πλαισίου κειμένου και μετάφρασης</SwitchOriginalAndTranslationTextBoxes>
+    <SwitchOriginalAndTranslationTextBoxes>Αλλαγή αρχικού πλαισίου κειμένου και μετάφρασης/στηλών προβολής λίστας</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Συγχώνευση αρχικού και μετάφρασης</MergeOriginalAndTranslation>
     <MergeWithNext>Συγχώνευση με επόμενη</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Συγχώνευση με προηγούμενη και συνένωση</MergeWithPreviousAndUnbreak>
@@ -2444,7 +2444,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnTextDown>Στήλη, κείμενο προς τα κάτω</ListViewColumnTextDown>
     <ListViewGoToNextError>Μετάβαση σε επόμενο σφάλμα</ListViewGoToNextError>
     <ListViewListErrors>Λίστα σφαλμάτων</ListViewListErrors>
-    <ShowStyleManager>Προβολή διαχείρισης στυλ</ShowStyleManager>
+    <ShowStyleManager>Εμφάνιση διαχείρισης στυλ</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Μετακίνηση τελευταίας λέξης στην επόμενη γραμμή</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Μετακίνηση πρώτης λέξης από την επόμενη γραμμή επάνω</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Μετακίνηση πρώτης λέξης της κάτω γραμμής πάνω</MainTextBoxMoveFirstWordUpCurrent>
@@ -2460,7 +2460,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Διάσπαση σε κενό από τη θέση δείκτη και μετάβαση σε επόμενο</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Συνένωση κειμένου</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Συνένωση χωρίς κενό (CJK)</MainTextBoxUnbreakNoSpace>
-    <MainTextBoxAssaIntellisense>Προβολή ευφυΐας ολοκλήρωσης ASSA</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaIntellisense>Εμφάνιση βοηθού ετικετών ASSA</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>Αφαίρεση ετικέτας ASSA στον δείκτη</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Αποθήκευση όλων</MainFileSaveAll>
     <Miscellaneous>Διάφορα</Miscellaneous>
