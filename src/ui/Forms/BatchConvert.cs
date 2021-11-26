@@ -633,6 +633,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
+
             try
             {
                 foreach (ListViewItem lvi in listViewInputFiles.Items)
@@ -816,6 +817,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UpdateNumberOfFiles();
+            _listViewItemBeforeSearch = null;
         }
 
         private static string MakeMkvTrackInfoString(MatroskaTrackInfo track)
@@ -2446,6 +2448,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInputFiles.Items.Clear();
             UpdateNumberOfFiles();
             UpdateTransportStreamSettings();
+            _listViewItemBeforeSearch = null;
         }
 
         private void RemoveSelectedFiles()
@@ -2481,6 +2484,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateNumberOfFiles();
             UpdateTransportStreamSettings();
+            _listViewItemBeforeSearch = null;
         }
 
         private void RemoveToolStripMenuItemClick(object sender, EventArgs e)
@@ -2831,6 +2835,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4 || comboBoxFilter.SelectedIndex == 5;
         }
 
+        private List<ListViewItem> _listViewItemBeforeSearch;
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
             if (listViewInputFiles.Items.Count == 0)
@@ -2840,15 +2845,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (comboBoxFilter.SelectedIndex == 5)
             {
-                var listViewItems = new List<ListViewItem>();
-                foreach (ListViewItem item in listViewInputFiles.Items)
+                if (_listViewItemBeforeSearch == null)
                 {
-                    listViewItems.Add(item);
+                    var listViewItems = new List<ListViewItem>();
+                    foreach (ListViewItem item in listViewInputFiles.Items)
+                    {
+                        listViewItems.Add(item);
+                    }
+
+                    _listViewItemBeforeSearch = listViewItems;
                 }
 
                 listViewInputFiles.BeginUpdate();
                 listViewInputFiles.Items.Clear();
-                listViewInputFiles.Items.AddRange(listViewItems.FindAll(item => item.SubItems[2].Text.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase)).ToArray());
+                listViewInputFiles.Items.AddRange(_listViewItemBeforeSearch.FindAll(item => item.SubItems[2].Text.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase)).ToArray());
                 listViewInputFiles.EndUpdate();
                 UpdateNumberOfFiles();
             }

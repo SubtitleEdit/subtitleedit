@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/10/ttaf1");
 
                 string text = p.Text.Replace(Environment.NewLine, "\n").Replace("\n", "@iNEWLINE__");
-                text = HtmlUtil.RemoveHtmlTags(text);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = paragraph.InnerXml.Replace("@iNEWLINE__", "<br />");
 

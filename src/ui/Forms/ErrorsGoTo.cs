@@ -27,6 +27,16 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderText.Text = LanguageSettings.Current.Main.Errors;
 
             _subtitle = new Subtitle(subtitle);
+
+            ListErrors(subtitle);
+
+            UiUtil.FixLargeFonts(this, buttonOK);
+        }
+
+        private void ListErrors(Subtitle subtitle)
+        {
+            listViewErrors.BeginUpdate();
+            listViewErrors.Items.Clear();
             foreach (var p in _subtitle.Paragraphs)
             {
                 var errors = GetErrors(p, _subtitle.Paragraphs.IndexOf(p), subtitle.Paragraphs);
@@ -41,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewErrors.Items.Add(item);
                 }
             }
+
+            listViewErrors.EndUpdate();
 
             labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewErrors.Items.Count}";
         }
@@ -89,9 +101,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph next = paragraphs[i + 1];
                     var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
-                    if (gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    if (gapMilliseconds < 0)
                     {
                         errors.Add("Overlap with next");
+                    }
+                    else if (gapMilliseconds < Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    {
+                        errors.Add($"Gap to next too small ({gapMilliseconds} < {Configuration.Settings.General.MinimumMillisecondsBetweenLines})");
                     }
                 }
             }
@@ -150,6 +166,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = (Paragraph)listViewErrors.SelectedItems[0].Tag;
                 ErrorIndex = _subtitle.Paragraphs.IndexOf(p);
                 DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                DialogResult = DialogResult.Cancel;
             }
         }
 

@@ -6,17 +6,24 @@
    * Add "image" option for "gen blank video" - thx Thomas
    * Apply SMPTE timing to shot changes - thx kmekme/OmrSi
    * Allow permanently dismiss of ASSA change res - thx Ricky
-   * Allow alpha when chosing text color for ASSA in main window
+   * Allow alpha when choosing text color for ASSA in main window
    * Allow add empty waveform for online videos
+   * Switch positions of textboxes shortcut - thx Leon/darnn
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Finish translation - thx Teijo
+   * Update Portuguese translation - thx hugok79
+   * Update Chinese translation - thx nkh0472
+   * Update Hungarian translation - thx Zityi
    * Video from url - try to make it easier to use (auto dl youtube-dl/ffmpeg)
    * Remember last chosen video offset - thx OmrSi
    * Add "Count" label in "Go to bookmark" - thx OmrSi
    * Speed up slow loading mp4 without subs as sub - thx Leon
    * Auto-load audio file after import plain text - thx Leon
    * "Remove scene changes" now has overview window w export - thx Marek/PM
+   * Remember "show video controls" + toggle context menu item - thx Leon
+   * Improve rounding for frames in NQC - thx OmrSi
+   * Do not select all text when switching to source view - thx Leon
 * FIXED:
    * Fix selected line in "set start and offset the rest" - thx Janusz/Tom
    * Fix waveform syntax coloring after move - thx Leon
@@ -31,6 +38,8 @@
    * Fix textbox width issue in translation mode - thx Leon
    * Minor fix for toggle casing for seletion - thx Leon
    * Fix error gen waveform when media file delete/renamed - thx Leon
+   * Fix issue with setting video offset more than once - thx musicadi
+   * Fix dots for "file-open" text - thx PM
 
 
 3.6.3 (11th November 2021)

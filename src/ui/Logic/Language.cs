@@ -152,6 +152,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OpenVideoFile = "Open video file...",
                 OpenVideoFileTitle = "Open video file...",
                 NoVideoLoaded = "No video loaded",
+                OnlineVideoFeatureNotAvailable = "Feature not available for online video",
                 VideoInformation = "Video info",
                 StartTime = "Start time",
                 EndTime = "End time",
@@ -1609,6 +1610,8 @@ namespace Nikse.SubtitleEdit.Logic
                 DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
                 VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
                 Errors = "Errors",
+                ShowVideoControls = "Show video controls",
+                HideVideoControls = "Hide video controls",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1616,8 +1619,8 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "&File",
                         New = "&New",
-                        Open = "&Open",
-                        OpenKeepVideo = "Open (keep video)",
+                        Open = "&Open...",
+                        OpenKeepVideo = "Open (keep video)...",
                         Reopen = "&Reopen",
                         Save = "&Save",
                         SaveAs = "Save &as...",
@@ -1711,6 +1714,7 @@ namespace Nikse.SubtitleEdit.Logic
                         StartTime = "Start time",
                         EndTime = "End time",
                         Duration = "Duration",
+                        ListErrors = "List errors...",
                         TextAlphabetically = "Text - alphabetically",
                         TextSingleLineMaximumLength = "Text - single line max. length",
                         TextTotalLength = "Text - total length",
@@ -2754,6 +2758,7 @@ can edit in same subtitle file (collaboration)",
                 SplitSelectedLineBilingual = "Split selected line bilingual",
                 ToggleTranslationMode = "Toggle translator mode",
                 SwitchOriginalAndTranslation = "Switch original and translation",
+                SwitchOriginalAndTranslationTextBoxes = "Switch original and translation text boxes/list view columns",
                 MergeOriginalAndTranslation = "Merge original and translation",
                 MergeWithNext = "Merge with next",
                 MergeWithPrevious = "Merge with previous",

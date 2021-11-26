@@ -130,6 +130,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/NoVideoLoaded":
                     language.General.NoVideoLoaded = reader.Value;
                     break;
+                case "General/OnlineVideoFeatureNotAvailable":
+                    language.General.OnlineVideoFeatureNotAvailable = reader.Value;
+                    break;
                 case "General/VideoInformation":
                     language.General.VideoInformation = reader.Value;
                     break;
@@ -3706,6 +3709,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Errors":
                     language.Main.Errors = reader.Value;
                     break;
+                case "Main/ShowVideoControls":
+                    language.Main.ShowVideoControls = reader.Value;
+                    break;
+                case "Main/HideVideoControls":
+                    language.Main.HideVideoControls = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -3958,9 +3967,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Tools/SortBy":
                     language.Main.Menu.Tools.SortBy = reader.Value;
                     break;
-                case "Main/Menu/Tools/NetflixQualityCheck":
-                    language.Main.Menu.Tools.NetflixQualityCheck = reader.Value;
-                    break;
                 case "Main/Menu/Tools/Number":
                     language.Main.Menu.Tools.Number = reader.Value;
                     break;
@@ -3972,6 +3978,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Tools/Duration":
                     language.Main.Menu.Tools.Duration = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ListErrors":
+                    language.Main.Menu.Tools.ListErrors = reader.Value;
+                    break;
+                case "Main/Menu/Tools/NetflixQualityCheck":
+                    language.Main.Menu.Tools.NetflixQualityCheck = reader.Value;
                     break;
                 case "Main/Menu/Tools/TextAlphabetically":
                     language.Main.Menu.Tools.TextAlphabetically = reader.Value;
@@ -6654,6 +6666,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/SwitchOriginalAndTranslation":
                     language.Settings.SwitchOriginalAndTranslation = reader.Value;
+                    break;
+                case "Settings/SwitchOriginalAndTranslationTextBoxes":
+                    language.Settings.SwitchOriginalAndTranslationTextBoxes = reader.Value;
                     break;
                 case "Settings/MergeOriginalAndTranslation":
                     language.Settings.MergeOriginalAndTranslation = reader.Value;

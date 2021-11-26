@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 return;
             }
 
-            int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2);
+            int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
             double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     double nearestStartNextSceneChange = nextStartSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
                     var gapToSceneChange = SubtitleFormat.MillisecondsToFrames(nearestStartNextSceneChange * 1000 - p.StartTime.TotalMilliseconds);
-                    var threshold = (int)Math.Round(halfSecGapInFrames * 0.75);
+                    var threshold = (int)Math.Round(halfSecGapInFrames * 0.75, MidpointRounding.AwayFromZero);
                     if (gapToSceneChange < halfSecGapInFrames)
                     {
                         if (gapToSceneChange < threshold)

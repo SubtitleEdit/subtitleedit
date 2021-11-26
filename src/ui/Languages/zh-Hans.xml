@@ -25,6 +25,7 @@
     <OpenVideoFile>打开视频文件...</OpenVideoFile>
     <OpenVideoFileTitle>打开视频文件...</OpenVideoFileTitle>
     <NoVideoLoaded>未加载视频</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>该功能不适用于在线视频</OnlineVideoFeatureNotAvailable>
     <VideoInformation>视频信息</VideoInformation>
     <StartTime>起始时间</StartTime>
     <EndTime>结束时间</EndTime>
@@ -123,6 +124,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SourceVideoFile>视频源文件:</SourceVideoFile>
     <GenerateWaveformData>生成波形数据</GenerateWaveformData>
     <PleaseWait>这可能需要几分钟 - 请稍候</PleaseWait>
+    <FfmpegNotFound>Subtitle Edit 需要 FFmpeg 来提取音频数据并生成波形。
+
+您想下载并使用FFmpeg吗？</FfmpegNotFound>
     <GeneratingPeakFile>正在生成波形缓冲文件...</GeneratingPeakFile>
     <GeneratingSpectrogram>正在生成频谱图...</GeneratingSpectrogram>
     <ExtractingSeconds>正在提取音频: {0:0.0} 秒</ExtractingSeconds>
@@ -881,7 +885,7 @@ Command line: {1} {2}
     <RemoveAll>全部移除</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>导入场景变更</Title>
+    <Title>导入场景切换</Title>
     <OpenTextFile>打开文本文件...</OpenTextFile>
     <Generate>生成场景切换</Generate>
     <Import>导入场景切换</Import>
@@ -890,9 +894,9 @@ Command line: {1} {2}
     <Frames>帧</Frames>
     <Seconds>秒</Seconds>
     <Milliseconds>毫秒</Milliseconds>
-    <GetSceneChangesWithFfmpeg>使用 FFmpeg 获取场景变化</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>使用 FFmpeg 获取场景切换</GetSceneChangesWithFfmpeg>
     <Sensitivity>敏感度</Sensitivity>
-    <SensitivityDescription>较低的值将产生较多的 场景切换</SensitivityDescription>
+    <SensitivityDescription>较低的值将产生较多的场景切换</SensitivityDescription>
     <NoSceneChangesFound>未找到场景切换</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
@@ -1210,7 +1214,7 @@ Command line: {1} {2}
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>生成/导入场景切换...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
+        <RemoveOrExportSceneChanges>删除/导出场景切换...</RemoveOrExportSceneChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
         <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
         <ShowHideWaveform>显示/隐藏波形</ShowHideWaveform>
@@ -1349,7 +1353,7 @@ Command line: {1} {2}
         <ApplyCustomOverrideTag>应用自定义覆盖标签...</ApplyCustomOverrideTag>
         <SetPosition>设置位置...</SetPosition>
         <GenerateProgressBar>生成进度条...</GenerateProgressBar>
-        <AssaResolutionChanger>更改脚本分辨率...</AssaResolutionChanger>
+        <AssaResolutionChanger>更改ASSA脚本分辨率...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -1662,7 +1666,7 @@ Command line: {1} {2}
     <BeforeDisplaySubtitleJoin>合并字幕之前</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>字幕已合并</SubtitlesJoined>
     <StatusLog>状态记录</StatusLog>
-    <XSceneChangesImported>已导入 {0} 个场景变更</XSceneChangesImported>
+    <XSceneChangesImported>已导入 {0} 个场景切换</XSceneChangesImported>
     <PluginXExecuted>插件 '{0}' 已执行。</PluginXExecuted>
     <NotAValidXSubFile>不是有效的 XSub 文件!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>在合并相同文本行之前</BeforeMergeLinesWithSameText>
@@ -1694,6 +1698,10 @@ Command line: {1} {2}
     <NoSupportHereDivx>此处不支持 Divx 文件。</NoSupportHereDivx>
     <NoChapters>视频中未找到章节。</NoChapters>
     <DarkThemeRestart>重启 Subtitle Edit 使暗色主题设置生效。</DarkThemeRestart>
+    <VideoFromUrlRequirements>从 url 打开视频需要 mpv 和 youtube-dl - 下载并继续吗？</VideoFromUrlRequirements>
+    <Errors>错误</Errors>
+    <ShowVideoControls>显示视频控件</ShowVideoControls>
+    <HideVideoControls>隐藏视频控件</HideVideoControls>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2148,7 +2156,7 @@ Command line: {1} {2}
     <WaveformFocusMouseEnter>鼠标滑过后设置焦点</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>单击以选中字幕</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>吸附到场景变化点 (按住Shift键可临时禁用)</WaveformSnapToSceneChanges>
+    <WaveformSnapToSceneChanges>吸附到场景切换点 (按住Shift键可临时禁用)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
     <WaveformColor>颜色</WaveformColor>
@@ -2281,7 +2289,7 @@ Command line: {1} {2}
     <AdjustSetStartAndOffsetTheWholeSubtitle>设置开始时间，偏移所有字幕</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>将选定行的开始时间设为下一个场景变化处</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChange>将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextSceneChange>
     <AdjustSnapStartToNextSceneChangeWithGap>以最小间隔将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextSceneChangeWithGap>
     <AdjustSnapEndToPreviousSceneChange>将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousSceneChange>
     <AdjustSnapEndToPreviousSceneChangeWithGap>以最小间隔将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousSceneChangeWithGap>
@@ -2342,9 +2350,10 @@ Command line: {1} {2}
     <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>播放选中内容的末尾</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>转到下一个场景变化点</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>转到下一处场景变动</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>切换场景变动</WaveformToggleSceneChange>
+    <WaveformGoToPreviousSceneChange>转到下一个场景切换点</WaveformGoToPreviousSceneChange>
+    <WaveformGoToNextSceneChange>转到下一处场景切换</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>切换场景切换</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>删除/导出场景切换</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>根据音量/场景切换点调节起始点</WaveformGuessStart>
     <GoBack1Frame>回退一帧</GoBack1Frame>
     <GoForward1Frame>前进一帧</GoForward1Frame>
@@ -2428,6 +2437,7 @@ Command line: {1} {2}
     <ListViewColumnTextUp>列，文本上移</ListViewColumnTextUp>
     <ListViewColumnTextDown>列，文本下移</ListViewColumnTextDown>
     <ListViewGoToNextError>转到下一处错误</ListViewGoToNextError>
+    <ListViewListErrors>列出错误</ListViewListErrors>
     <ShowStyleManager>显示样式管理器</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
@@ -2488,7 +2498,7 @@ Command line: {1} {2}
     <DownloadMpvOk>mpv 库下载完成，等待启用。</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>下载FFmpeg</Title>
+    <XDownload>下载{0}</XDownload>
     <XDownloadFailed>无法下载{0} - 请稍后再试！</XDownloadFailed>
     <XDownloadOk>{0}已下载完成并准备使用</XDownloadOk>
   </SettingsFfmpeg>
@@ -2959,9 +2969,9 @@ Command line: {1} {2}
     <ShowWaveformAndSpectrogram>保存波形和频谱图</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>仅显示波形</ShowWaveformOnly>
     <ShowSpectrogramOnly>仅显示频谱图</ShowSpectrogramOnly>
-    <AddSceneChange>添加场景变动</AddSceneChange>
-    <RemoveSceneChange>移除场景变动</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>从所选中移除场景变动</RemoveSceneChangesFromSelection>
+    <AddSceneChange>添加场景切换</AddSceneChange>
+    <RemoveSceneChange>移除场景切换</RemoveSceneChange>
+    <RemoveSceneChangesFromSelection>从所选中移除场景切换</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
     <InsertSubtitleHere>在这里插入字幕...</InsertSubtitleHere>

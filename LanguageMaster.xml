@@ -25,6 +25,7 @@
     <OpenVideoFile>Open video file...</OpenVideoFile>
     <OpenVideoFileTitle>Open video file...</OpenVideoFileTitle>
     <NoVideoLoaded>No video loaded</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Feature not available for online video</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Video info</VideoInformation>
     <StartTime>Start time</StartTime>
     <EndTime>End time</EndTime>
@@ -1095,8 +1096,8 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <File>
         <Title>&amp;File</Title>
         <New>&amp;New</New>
-        <Open>&amp;Open</Open>
-        <OpenKeepVideo>Open (keep video)</OpenKeepVideo>
+        <Open>&amp;Open...</Open>
+        <OpenKeepVideo>Open (keep video)...</OpenKeepVideo>
         <Reopen>&amp;Reopen</Reopen>
         <Save>&amp;Save</Save>
         <SaveAs>Save &amp;as...</SaveAs>
@@ -1181,11 +1182,12 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SplitLongLines>Break/split long lines...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Apply minimum gap between subtitles...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sort by</SortBy>
-        <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
         <Number>Number</Number>
         <StartTime>Start time</StartTime>
         <EndTime>End time</EndTime>
         <Duration>Duration</Duration>
+        <ListErrors>List errors...</ListErrors>
+        <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
         <TextAlphabetically>Text - alphabetically</TextAlphabetically>
         <TextSingleLineMaximumLength>Text - single line max. length</TextSingleLineMaximumLength>
         <TextTotalLength>Text - total length</TextTotalLength>
@@ -1707,6 +1709,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
     <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl - download and continue?</VideoFromUrlRequirements>
     <Errors>Errors</Errors>
+    <ShowVideoControls>Show video controls</ShowVideoControls>
+    <HideVideoControls>Hide video controls</HideVideoControls>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2427,6 +2431,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SplitSelectedLineBilingual>Split selected line bilingual</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle translator mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Switch original and translation text boxes/list view columns</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
     <MergeWithNext>Merge with next</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Merge with previous and unbreak</MergeWithPreviousAndUnbreak>

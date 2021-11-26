@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
     <Compile Include="Assa\ResamplerTest.cs" />
+    <Compile Include="LanguageFiles\LanguageFileTest.cs" />
     <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
     <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Logic\Ocr\MatchesToItalicStringConverterTest.cs" />
     <Compile Include="Logic\SplitLongLinesHelperTest.cs" />
     <Compile Include="Logic\SubtitleFormats\Cea708Test.cs" />
+    <Compile Include="Logic\SubtitleFormats\SubtitleFormatFunctionsTest.cs" />
     <Compile Include="Logic\TarFileTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />

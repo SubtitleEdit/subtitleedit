@@ -29,6 +29,7 @@
             public string OpenVideoFile { get; set; }
             public string OpenVideoFileTitle { get; set; }
             public string NoVideoLoaded { get; set; }
+            public string OnlineVideoFeatureNotAvailable { get; set; }
             public string VideoInformation { get; set; }
             public string StartTime { get; set; }
             public string EndTime { get; set; }
@@ -1461,6 +1462,8 @@
             public string DarkThemeRestart { get; set; }
             public string VideoFromUrlRequirements { get; set; }
             public string Errors { get; set; }
+            public string ShowVideoControls { get; set; }
+            public string HideVideoControls { get; set; }
 
             public class MainMenu
             {
@@ -1556,11 +1559,12 @@
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
-                    public string NetflixQualityCheck { get; set; }
                     public string Number { get; set; }
                     public string StartTime { get; set; }
                     public string EndTime { get; set; }
                     public string Duration { get; set; }
+                    public string ListErrors { get; set; }
+                    public string NetflixQualityCheck { get; set; }
                     public string TextAlphabetically { get; set; }
                     public string TextSingleLineMaximumLength { get; set; }
                     public string TextTotalLength { get; set; }
@@ -2608,6 +2612,7 @@
             public string SplitSelectedLineBilingual { get; set; }
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
+            public string SwitchOriginalAndTranslationTextBoxes { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
             public string MergeWithNext { get; set; }
             public string MergeWithPreviousAndUnbreak { get; set; }
