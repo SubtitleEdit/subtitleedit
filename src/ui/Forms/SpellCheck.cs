@@ -115,11 +115,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
 
-            if (Configuration.Settings.General.SpellCheckFontBold)
-            {
-                richTextBoxParagraph.Font = new Font(richTextBoxParagraph.Font.FontFamily, 9.75F, FontStyle.Bold);
-                textBoxWholeText.Font = new Font(textBoxWholeText.Font, FontStyle.Bold);
-            }
+            var gs = Configuration.Settings.General;
+            var textBoxFont = gs.SubtitleTextBoxFontBold ? new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold) : new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
+            richTextBoxParagraph.Font = textBoxFont;
+            textBoxWholeText.Font = textBoxFont;
 
             UiUtil.FixLargeFonts(this, buttonAbort);
             richTextBoxParagraph.DetectUrls = false;
