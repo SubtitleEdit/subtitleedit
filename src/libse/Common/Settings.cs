@@ -1186,7 +1186,6 @@ $HorzAlign          =   Center
         public bool FixContinuationStyleHideContinuationCandidatesWithoutName { get; set; }
         public bool FixContinuationStyleIgnoreLyrics { get; set; }
         public string SpellCheckLanguage { get; set; }
-        public bool SpellCheckFontBold { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
         public string VideoPlayerPreviewFontName { get; set; }
@@ -1361,7 +1360,6 @@ $HorzAlign          =   Center
             FixContinuationStyleHideContinuationCandidatesWithoutName = true;
             FixContinuationStyleIgnoreLyrics = true;
             SpellCheckLanguage = null;
-            SpellCheckFontBold = false;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
             VideoPlayerPreviewFontName = "Tahoma";
@@ -3342,12 +3340,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.SpellCheckLanguage = subNode.InnerText;
-            }
-
-            subNode = node.SelectSingleNode("SpellCheckFontBold");
-            if (subNode != null)
-            {
-                settings.General.SpellCheckFontBold = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("VideoPlayer");
@@ -8952,7 +8944,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleHideContinuationCandidatesWithoutName", settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
-                textWriter.WriteElementString("SpellCheckFontBold", settings.General.SpellCheckFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VideoPlayerPreviewFontName", settings.General.VideoPlayerPreviewFontName);
