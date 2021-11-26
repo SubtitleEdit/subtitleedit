@@ -2262,5 +2262,43 @@ namespace Nikse.SubtitleEdit.Controls
             SelectedIndices.CopyTo(selectedIndices, 0);
             return selectedIndices;
         }
+
+        public void SwapTextAndOriginalText(Subtitle subtitle, Subtitle subtitleOriginal)
+        {
+            if (ColumnIndexTextOriginal == -1 || ColumnIndexText == -1)
+            {
+                return;
+            }
+
+            var tempText = Columns[ColumnIndexTextOriginal].Text;
+            Columns[ColumnIndexTextOriginal].Text = Columns[ColumnIndexText].Text;
+            Columns[ColumnIndexText].Text = tempText;
+
+            var tempColumn = SubtitleColumns[ColumnIndexTextOriginal];
+            SubtitleColumns[ColumnIndexTextOriginal] = SubtitleColumns[ColumnIndexText];
+            SubtitleColumns[ColumnIndexText] = tempColumn;
+            UpdateColumnIndexes();
+
+            BeginUpdate();
+            int i = 0;
+            foreach (ListViewItem item in Items)
+            {
+                var p = subtitle.GetParagraphOrDefault(i);
+                if (p != null)
+                {
+                    item.SubItems[ColumnIndexText].Text = p.Text.Replace(Environment.NewLine, _lineSeparatorString);
+                }
+
+                var original = Utilities.GetOriginalParagraph(i, p, subtitleOriginal.Paragraphs);
+                if (original != null)
+                {
+                    item.SubItems[ColumnIndexTextOriginal].Text = original.Text.Replace(Environment.NewLine, _lineSeparatorString);
+                }
+
+                i++;
+            }
+
+            EndUpdate();
+        }
     }
 }
