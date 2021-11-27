@@ -1334,10 +1334,5 @@ namespace Nikse.SubtitleEdit.Forms
                 DoAction(SpellCheckAction.DeleteLine);
             }
         }
-
-        private void SpellCheck_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

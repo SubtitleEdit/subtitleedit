@@ -420,7 +420,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Spell check";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SpellCheck_FormClosing);
-            this.Load += new System.EventHandler(this.SpellCheck_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSpellCheck_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxWordNotFound.ResumeLayout(false);
@@ -431,7 +430,6 @@
             this.groupBoxEditWholeText.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
