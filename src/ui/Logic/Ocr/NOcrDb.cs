@@ -38,7 +38,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 File.Delete(FileName);
             }
 
-            using (Stream stream = new FileStream(FileName, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
+            //using (Stream stream = new FileStream(FileName, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
+            using (Stream stream = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
                 var versionBuffer = Encoding.ASCII.GetBytes(Version);
                 stream.Write(versionBuffer, 0, versionBuffer.Length);
