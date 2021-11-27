@@ -305,9 +305,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleEmpty>Няма езиков код</MkvLanguageStyleEmpty>
   </BatchConvert>
   <BinEdit>
-    <ImportImage>Импорт на изображение...</ImportImage>
-    <ExportImage>Експорт на изображение...</ExportImage>
-    <SetText>Задаване на текст...</SetText>
+    <ImportImage>Импорт изобр...</ImportImage>
+    <ExportImage>Експорт изобр...</ExportImage>
+    <SetText>Задаване текст...</SetText>
     <QuickOcr>Бързи OCR текстове (само за преглед)</QuickOcr>
     <ResizeBitmaps>Преоразмеряване на изображения...</ResizeBitmaps>
     <ChangeBrightness>Регулиране на яркостта...</ChangeBrightness>
@@ -1355,7 +1355,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ApplyCustomOverrideTag>Прилагане на персонализирани тагове за предефиниране...</ApplyCustomOverrideTag>
         <SetPosition>Задай позиция...</SetPosition>
         <GenerateProgressBar>Генериране на лента за напредък...</GenerateProgressBar>
-        <AssaResolutionChanger>Промяна резолюцията на скрипта...</AssaResolutionChanger>
+        <AssaResolutionChanger>Промяна резолюцията на скрипт ASSA...</AssaResolutionChanger>
         <FixCommonErrorsInSelectedLines>Поправяне на грешки в избраните редове...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Промяна големината на буквите в избраните редове...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Запис на избраните редове като...</SaveSelectedLines>
@@ -2548,8 +2548,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SkipOnce>Пропусни една</SkipOnce>
     <SkipAll>Пропусни всички</SkipAll>
     <AddToUserDictionary>Добави към потребителския речник</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Добави към списъка с думи (с отчитане ГЛАВНИ и малки букви)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Добави няколко в OCR списъка за замяна</AddToOcrReplaceList>
+    <AddToNamesAndIgnoreList>Доб.ВсписъкСдуми(отчет ГЛ./м букви)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Доб.няколко в OCR списъкаЗАзамяна</AddToOcrReplaceList>
     <Abort>Прекрати</Abort>
     <Use>Използвай</Use>
     <UseAlways>Изпол. винаги</UseAlways>
@@ -2818,14 +2818,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextAssociatedWithImage>Текст асоцииран с изображението</TextAssociatedWithImage>
     <IsItalic>Наклонен</IsItalic>
     <Update>Обнови</Update>
-    <Delete>Изтриване</Delete>
-    <ImageDoubleSize>Двоен размер на изображението</ImageDoubleSize>
+    <Delete>Изтрий</Delete>
+    <ImageDoubleSize>Уголемен ДВОЕН размер на изображението</ImageDoubleSize>
     <ImageFileNotFound>Файлът с изображение не е намерен</ImageFileNotFound>
     <Image>Изображение</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Внасяне на OCR VobSub (sub/idx) субтитри</Title>
-    <TitleBluRay>Внасяне/OCR Blu-ray (.sup) субтитри</TitleBluRay>
+    <TitleBluRay>Внасяне на OCR Blu-ray (.sup) субтитри</TitleBluRay>
     <OcrMethod>OCR метод</OcrMethod>
     <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR чрез сравняване на изображение</OcrViaImageCompare>
@@ -2842,9 +2842,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <MaxErrorPercent>Макс. грешки%</MaxErrorPercent>
     <New>Нов</New>
     <Edit>Редакция</Edit>
-    <StartOcr>Стартиране на OCR</StartOcr>
+    <StartOcr>Старт на OCR</StartOcr>
     <Stop>Стоп</Stop>
-    <StartOcrFrom>Стартиране на OCR от субтитри №:</StartOcrFrom>
+    <StartOcrFrom>Старт на OCR от субтитри №:</StartOcrFrom>
     <LoadingVobSubImages>Зареждане на VobSub изображения...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Зареждане на сравнителна база данни за изображенията</LoadingImageCompareDatabase>
     <ConvertingImageCompareDatabase>Конвертиране базата данни за изображения в нов формат (images.db/images.xml)</ConvertingImageCompareDatabase>
@@ -2903,14 +2903,14 @@ https://github.com/SubtitleEdit/subtitleedit
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub – Ръчно изображение към текст</Title>
-    <ShrinkSelection>Сгъване на избраното</ShrinkSelection>
-    <ExpandSelection>Разгъване на избраното</ExpandSelection>
+    <ShrinkSelection>Свий избраното</ShrinkSelection>
+    <ExpandSelection>Разшири избора</ExpandSelection>
     <SubtitleImage>Изображение със субтитри</SubtitleImage>
     <Characters>Символ(и)</Characters>
     <CharactersAsText>Символ(и) като текст</CharactersAsText>
     <Italic>Наклонен</Italic>
-    <Abort>Прекратяване</Abort>
-    <Skip>Пропускане</Skip>
+    <Abort>Прекрати</Abort>
+    <Skip>Пропусни</Skip>
     <Nordic>Скандинавски</Nordic>
     <Spanish>Испански</Spanish>
     <German>Немски</German>
