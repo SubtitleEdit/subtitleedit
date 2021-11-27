@@ -1271,7 +1271,12 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
                 {
-                    Process.Start(item);
+                    var startInfo = new ProcessStartInfo(item)
+                    {
+                        UseShellExecute = true
+                    };
+
+                    Process.Start(startInfo);
                 }
                 else if (Configuration.IsRunningOnLinux)
                 {
