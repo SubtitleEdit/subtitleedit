@@ -157,6 +157,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
 
+            if (startIndex + 3 +  tag.Length > s.Length)
+            {
+                return null;
+            }
+
             var res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
             if (res.StartsWith('"'))
             { // text
