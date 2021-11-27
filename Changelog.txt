@@ -9,6 +9,7 @@
    * Allow alpha when choosing text color for ASSA in main window
    * Allow add empty waveform for online videos
    * Switch positions of textboxes shortcut - thx Leon/darnn
+   * New subtitle format (json, read only) - thx Dvid
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Finish translation - thx Teijo
