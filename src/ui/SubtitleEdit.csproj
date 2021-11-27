@@ -15,6 +15,15 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Resources\HunspellBackupDictionaries.xml.gz" />
+	  <None Remove="Resources\HunspellDictionaries.xml.gz" />
+	  <None Remove="Resources\nOCR_TesseractHelper.xml.gz" />
+	  <None Remove="Resources\SMPTE-428-7-2007-DCST.xsd.gz" />
+	  <None Remove="Resources\SMPTE-428-7-2010-DCST.xsd.gz" />
+	  <None Remove="Resources\SMPTE-428-7-2014-DCST.xsd.gz" />
+	  <None Remove="Resources\TesseractDictionaries.xml.gz" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
 	</ItemGroup>
@@ -83,6 +92,16 @@
 			<ProductName>Windows Installer 3.1</ProductName>
 			<Install>true</Install>
 		</BootstrapperPackage>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
+	  <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
+	  <EmbeddedResource Include="Resources\nOCR_TesseractHelper.xml.gz" />
+	  <EmbeddedResource Include="Resources\SMPTE-428-7-2007-DCST.xsd.gz" />
+	  <EmbeddedResource Include="Resources\SMPTE-428-7-2010-DCST.xsd.gz" />
+	  <EmbeddedResource Include="Resources\SMPTE-428-7-2014-DCST.xsd.gz" />
+	  <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
 	</ItemGroup>
 	<ItemGroup>
 		<HunspellAssemblies Include="Hunspellx64.dll">
