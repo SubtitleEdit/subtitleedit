@@ -70,7 +70,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 process.StartInfo = new ProcessStartInfo(dir + "tesseract.exe")
                 {
                     UseShellExecute = true,
-                    Arguments = "\"" + inputFileName + "\" \"" + outputFileName + "\" -l " + languageCode
+                    Arguments = "\"" + inputFileName + "\" \"" + outputFileName + "\" -l " + languageCode,
+                    CreateNoWindow = true,
                 };
 
                 if (!string.IsNullOrEmpty(psmMode))
