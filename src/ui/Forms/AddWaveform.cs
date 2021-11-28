@@ -118,7 +118,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
             }
-            return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
+
+            return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
         }
 
         private void buttonRipWave_Click(object sender, EventArgs e)
