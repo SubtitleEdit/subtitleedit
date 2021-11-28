@@ -38,7 +38,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 {
                     UseShellExecute = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}"
+                    Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}",
+                    CreateNoWindow = true,
                 };
 
                 if (!string.IsNullOrEmpty(psmMode))
