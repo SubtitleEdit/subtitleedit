@@ -76,12 +76,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 return;
             }
 
-            using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+            using (var stream = new MemoryStream())
             {
+                using (var gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+                {
+                    gz.CopyTo(stream);
+                }
+
+                stream.Position = 0;
                 bool done = false;
                 while (!done)
                 {
-                    var bob = new BinaryOcrBitmap(gz);
+                    var bob = new BinaryOcrBitmap(stream);
                     if (bob.LoadedOk)
                     {
                         if (bob.ExpandCount > 0)
@@ -90,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                             bob.ExpandedList = new List<BinaryOcrBitmap>();
                             for (int i = 1; i < bob.ExpandCount; i++)
                             {
-                                var expandedBob = new BinaryOcrBitmap(gz);
+                                var expandedBob = new BinaryOcrBitmap(stream);
                                 if (expandedBob.LoadedOk)
                                 {
                                     if (expandedBob.Text != null)
@@ -116,9 +122,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                         done = true;
                     }
                 }
+
+                CompareImages = list;
+                CompareImagesExpanded = expandList;
             }
-            CompareImages = list;
-            CompareImagesExpanded = expandList;
         }
 
         private static int MaxCommaQuoteTopDiff = 15;
