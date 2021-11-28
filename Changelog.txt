@@ -10,6 +10,7 @@
    * Allow add empty waveform for online videos
    * Switch positions of textboxes shortcut - thx Leon/darnn
    * New subtitle format (json, read only) - thx Dvid
+   * New subtitle format (json, read only) - thx Filip
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Finish translation - thx Teijo
