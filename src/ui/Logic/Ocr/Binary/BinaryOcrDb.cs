@@ -29,6 +29,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
         public void Save()
         {
+            if (File.Exists(FileName))
+            {
+                File.Delete(FileName);
+            }
+
             using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
                 foreach (var bob in CompareImages)
