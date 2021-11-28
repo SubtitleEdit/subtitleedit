@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 File.Delete(FileName);
             }
 
-            using (Stream stream = new FileStream(FileName, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
+            using (Stream stream = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
                 var versionBuffer = Encoding.ASCII.GetBytes(Version);
                 stream.Write(versionBuffer, 0, versionBuffer.Length);
@@ -67,20 +67,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return;
             }
 
-            bool isVersion2;
-            using (Stream stream = GetOpenStream())
+            using (var stream = new MemoryStream())
             {
+                using (var gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+                {
+                    gz.CopyTo(stream);
+                }
+
+                stream.Position = 0;
+                bool isVersion2;
                 var versionBuffer = new byte[Version.Length];
                 stream.Read(versionBuffer, 0, versionBuffer.Length);
                 isVersion2 = Encoding.ASCII.GetString(versionBuffer) == Version;
-            }
-
-            using (Stream stream = GetOpenStream())
-            {
+                stream.Position = 0;
                 bool done = false;
                 if (isVersion2)
                 {
-                    var versionBuffer = new byte[Version.Length];
                     stream.Read(versionBuffer, 0, versionBuffer.Length);
                 }
                 while (!done)
@@ -106,20 +108,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             OcrCharacters = list;
             OcrCharactersExpanded = listExpanded;
-        }
-
-        private Stream GetOpenStream()
-        {
-            var bytes = FileUtil.ReadBytesShared(FileName, 2);
-            var isVersion2Plain = Encoding.ASCII.GetString(bytes) == Version;
-            if (isVersion2Plain)
-            {
-                return new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            }
-            else
-            {
-                return new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress);
-            }
         }
 
         public void Add(NOcrChar ocrChar)
