@@ -1097,8 +1097,8 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <File>
         <Title>&amp;Ficheiro</Title>
         <New>&amp;Novo</New>
-        <Open>&amp;Abrir</Open>
-        <OpenKeepVideo>Abrir (manter vídeo)</OpenKeepVideo>
+        <Open>&amp;Abrir...</Open>
+        <OpenKeepVideo>Abrir (manter vídeo)...</OpenKeepVideo>
         <Reopen>&amp;Reabrir</Reopen>
         <Save>&amp;Guardar</Save>
         <SaveAs>Guardar &amp;como...</SaveAs>
@@ -1183,11 +1183,12 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SplitLongLines>Quebrar/Dividir as linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Aplicar intervalo mínimo entre linhas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
-        <NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
         <Number>Ordem numérica</Number>
         <StartTime>Tempo inicial</StartTime>
         <EndTime>Tempo final</EndTime>
-        <Duration>Duração da exposição da linha</Duration>
+        <Duration>Duração</Duration>
+        <ListErrors>Listar erros...</ListErrors>
+        <NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
         <TextAlphabetically>Texto - ordem alfabética</TextAlphabetically>
         <TextSingleLineMaximumLength>Texto - comprimento máximo da linha individual</TextSingleLineMaximumLength>
         <TextTotalLength>Texto - comprimento total</TextTotalLength>
@@ -2430,7 +2431,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SplitSelectedLineBilingual>Dividir linha seleccionada bilingue</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Alternar o modo de tradutor</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre o original e a tradução</SwitchOriginalAndTranslation>
-    <SwitchOriginalAndTranslationTextBoxes>Mudar entre as caixas de texto do original e da tradução</SwitchOriginalAndTranslationTextBoxes>
+    <SwitchOriginalAndTranslationTextBoxes>Mudar entre as caixas de texto/colunas de lista do original e da tradução</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
     <MergeWithNext>Combinar com a próxima</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Combinar com a anterior e eliminar quebra de linha</MergeWithPreviousAndUnbreak>
