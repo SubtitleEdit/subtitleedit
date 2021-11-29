@@ -968,9 +968,9 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.CurrentPosition = e.Seconds;
 
             int index = -1;
-            if (SubtitleListview1.SelectedItems.Count > 0)
+            if (SubtitleListview1.SelectedIndices.Count > 0)
             {
-                index = SubtitleListview1.SelectedItems[0].Index;
+                index = SubtitleListview1.SelectedIndices[0];
             }
 
             SetWaveformPosition(audioVisualizer.StartPositionSeconds, e.Seconds, index);
@@ -2344,7 +2344,7 @@ namespace Nikse.SubtitleEdit.Forms
             _oldSubtitleFormat = oldFormat;
         }
 
-        private int FirstSelectedIndex => SubtitleListview1.SelectedItems.Count == 0 ? -1 : SubtitleListview1.SelectedItems[0].Index;
+        private int FirstSelectedIndex => SubtitleListview1.SelectedIndices.Count == 0 ? -1 : SubtitleListview1.SelectedIndices[0];
 
         private int FirstVisibleIndex =>
             SubtitleListview1.Items.Count == 0 || SubtitleListview1.TopItem == null ? -1 : SubtitleListview1.TopItem.Index;
@@ -9505,9 +9505,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0)
             {
                 int firstSelectedIndex = 0;
-                if (SubtitleListview1.SelectedItems.Count > 0)
+                if (SubtitleListview1.SelectedIndices.Count > 0)
                 {
-                    firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
                 }
 
                 if (_subtitleListViewIndex >= 0)
@@ -9815,9 +9815,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             var temp = firstSelectedIndex;
-            if (SubtitleListview1.SelectedItems.Count > 0)
+            if (SubtitleListview1.SelectedIndices.Count > 0)
             {
-                firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
             }
 
             firstSelectedIndex = temp == 0 ? firstSelectedIndex + 1 : firstSelectedIndex - 1;
@@ -10562,12 +10562,12 @@ namespace Nikse.SubtitleEdit.Forms
                 textIndex = null;
             }
 
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedIndices.Count > 0)
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(_language.BeforeSplitLine);
 
-                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                int firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
 
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 var newParagraph = new Paragraph(currentParagraph) { NewSection = false };
@@ -11802,9 +11802,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string startTimeWarning = string.Empty;
             string durationWarning = string.Empty;
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0 && startTime != null)
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedIndices.Count > 0 && startTime != null)
             {
-                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                int firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
 
                 var prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
                 if (prevParagraph != null && !prevParagraph.EndTime.IsMaxTime && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
@@ -11888,7 +11888,7 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
                     _skipDurationChangedEvent = false;
 
-                    int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    int firstSelectedIndex = FirstSelectedIndex;
                     var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                     if (currentParagraph != null)
                     {
@@ -11936,10 +11936,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _durationIsDirty = true;
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedIndices.Count > 0)
             {
                 labelStatus.Text = string.Empty;
-                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                int firstSelectedIndex = SubtitleListview1.SelectedIndices[0];
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
@@ -20665,9 +20665,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
             {
                 int index = -1;
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle.Paragraphs.Count > 0)
+                if (SubtitleListview1.SelectedIndices.Count > 0 && _subtitle.Paragraphs.Count > 0)
                 {
-                    int i = SubtitleListview1.SelectedItems[0].Index;
+                    int i = SubtitleListview1.SelectedIndices[0];
                     var p = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                     index = _subtitleOriginal.GetIndex(p);
                 }
@@ -23087,13 +23087,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _updateSelectedCountStatusBar = false;
-                if (SubtitleListview1.SelectedItems.Count == 1)
+                var selectedCount = SubtitleListview1.SelectedIndices.Count;
+                if (selectedCount == 1)
                 {
-                    toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
+                    toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedIndices[0] + 1, _subtitle.Paragraphs.Count);
                 }
                 else
                 {
-                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
+                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, selectedCount);
                 }
             }
 
@@ -24336,9 +24337,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (audioVisualizer.Visible && mediaPlayer.VideoPlayer != null && audioVisualizer.WavePeaks != null)
             {
                 int index = -1;
-                if (SubtitleListview1.SelectedItems.Count > 0)
+                if (SubtitleListview1.SelectedIndices.Count > 0)
                 {
-                    index = SubtitleListview1.SelectedItems[0].Index;
+                    index = SubtitleListview1.SelectedIndices[0];
                 }
 
                 if (audioVisualizer.Locked)
