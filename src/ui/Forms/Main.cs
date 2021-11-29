@@ -9948,12 +9948,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Environment.NewLine == "\n")
             {
-                return s.Contains('\r');
+                return s.IndexOf('\r') >= 0;
             }
             else
             {
                 s = s.Replace(Environment.NewLine, string.Empty);
-                return s.Contains('\n') || s.Contains('\r');
+                return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
             }
         }
 
@@ -21014,7 +21014,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AddTitleBarChangeAsterisk(currentChanged, originalChanged, originalActive);
                 AutoSave();
             }
-            else if (Text.Contains('*'))
+            else if (Text.IndexOf('*') >= 0)
             {
                 Text = Text.RemoveChar('*').TrimEnd();
             }
@@ -21033,7 +21033,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.TitleBarAsterisk.Equals("before", StringComparison.Ordinal))
             {
-                if (!Text.Contains('*'))
+                if (Text.IndexOf('*') < 0)
                 {
                     Text = "*" + Text;
                 }

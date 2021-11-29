@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 foreach (var inner in dic.Value)
                 {
-                    foreach (var p in inner.Value.Where(p => p.Text.Trim().Contains('<')))
+                    foreach (var p in inner.Value.Where(p => p.Text.IndexOf('<') >= 0))
                     {
                         var sb = new StringBuilder();
                         foreach (var line in p.Text.SplitToLines())

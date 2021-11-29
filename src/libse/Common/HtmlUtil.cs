@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = Utilities.RemoveSsaTags(s);
             }
 
-            if (!s.Contains('<'))
+            if (s.IndexOf('<') < 0)
             {
                 return s;
             }
@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static bool IsUrl(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains('.') || text.Contains(' '))
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || text.IndexOf('.') < 0 || text.IndexOf(' ') >= 0)
             {
                 return false;
             }
@@ -552,7 +552,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string FixUpperTags(string input)
         {
-            if (string.IsNullOrEmpty(input) || !input.Contains('<'))
+            if (string.IsNullOrEmpty(input) || input.IndexOf('<') < 0)
             {
                 return input;
             }
@@ -897,7 +897,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             text = text.Replace("<i></i>", string.Empty);
             text = text.Replace("</i><i>", string.Empty);
-            if (!text.Contains('@'))
+            if (text.IndexOf('@') < 0)
             {
                 text = text.Replace("</i> <i>", "@");
                 text = text.Replace("<i> </i>", "@");

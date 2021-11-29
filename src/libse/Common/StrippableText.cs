@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                     lastWasBreak = true;
                                 }
                             }
-                            else if (s == ']' && idx == -1 && Pre.Contains('['))
+                            else if (s == ']' && idx == -1 && Pre.IndexOf('[') >= 0)
                             { // [ Motor roaring ] Hallo!
                                 lastWasBreak = true;
                             }
@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 }
                             }
                         }
-                        else if (s == '-' && Pre.Contains('-'))
+                        else if (s == '-' && Pre.IndexOf('-') >= 0)
                         {
                             if (sb.ToString().EndsWith(Environment.NewLine + "-"))
                             {

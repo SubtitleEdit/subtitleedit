@@ -489,13 +489,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var text = input.Replace('\u00a0', ' '); // replace non-break-space (160 decimal) ascii char with normal space
-            if (!(text.Contains(' ') || text.Contains('\n')))
+            if (!(text.IndexOf(' ') >= 0 || text.IndexOf('\n') >= 0))
             {
                 return input;
             }
 
             // do not auto break dialogs or music symbol
-            if (text.Contains(Environment.NewLine) && (text.Contains('-') || text.Contains('♪')))
+            if (text.Contains(Environment.NewLine) && (text.IndexOf('-') >= 0 || text.IndexOf('♪') >= 0))
             {
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
                 if (noTagLines.Count == 2)
@@ -756,7 +756,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var s = input;
 
-            if (s.Contains('{') && s.Contains('}'))
+            if (s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
             {
                 var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
                 var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
@@ -796,9 +796,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 k = s.IndexOf('{', k);
             }
 
-            s = s.Replace("\\n", Environment.NewLine); // Soft line break
-            s = s.Replace("\\N", Environment.NewLine); // Hard line break
-            s = s.Replace("\\h", " "); // Hard space
+            if (s.IndexOf('\\') >= 0)
+            {
+                s = s.Replace("\\n", Environment.NewLine); // Soft line break
+                s = s.Replace("\\N", Environment.NewLine); // Hard line break
+                s = s.Replace("\\h", " "); // Hard space
+            }
 
             if (s.StartsWith("m ", StringComparison.Ordinal))
             {
