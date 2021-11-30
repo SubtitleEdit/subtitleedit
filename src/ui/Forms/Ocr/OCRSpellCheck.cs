@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 richTextBoxParagraph.SelectionLength = word.Length;
                                 while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
                                 {
-                                    richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                                    richTextBoxParagraph.SelectionStart--;
                                     richTextBoxParagraph.SelectionLength = word.Length;
                                 }
                                 if (richTextBoxParagraph.SelectedText == word)

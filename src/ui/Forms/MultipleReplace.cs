@@ -772,7 +772,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var enabledNode = groupNode.SelectSingleNode(GroupEnabled);
 
                     group.Name = nameNode != null ? nameNode.InnerText : "Untitled";
-                    group.Enabled = enabledNode != null ? Convert.ToBoolean(enabledNode.InnerText) : false;
+                    group.Enabled = enabledNode != null && Convert.ToBoolean(enabledNode.InnerText);
 
                     group.Rules = new List<MultipleSearchAndReplaceSetting>();
                     list.Add(group);
@@ -959,8 +959,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewGroups_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            var group = e.Item.Tag as MultipleSearchAndReplaceGroup;
-            if (group == null)
+            if (!(e.Item.Tag is MultipleSearchAndReplaceGroup group))
             {
                 return;
             }

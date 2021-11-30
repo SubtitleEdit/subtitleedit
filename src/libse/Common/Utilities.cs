@@ -1226,7 +1226,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (index >= 0)
             {
                 count++;
-                index = index + tag.Length;
+                index += tag.Length;
                 if (index >= text.Length)
                 {
                     return count;

@@ -271,8 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     LinesChanged++;
-                    var p = item.Tag as Paragraph;
-                    if (p != null)
+                    if (item.Tag is Paragraph p)
                     {
                         p.Text = UiUtil.GetStringFromListViewText(item.SubItems[3].Text);
                     }
