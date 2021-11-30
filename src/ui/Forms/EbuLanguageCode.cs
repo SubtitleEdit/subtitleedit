@@ -120,8 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var item = listBoxLanguages.Items[selectedIndex] as LanguageItem;
-            if (item == null)
+            if (!(listBoxLanguages.Items[selectedIndex] is LanguageItem item))
             {
                 return;
             }

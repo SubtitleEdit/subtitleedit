@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool UseSyntaxColoring { get; set; }
         private Settings _settings;
         private bool _saveColumnWidthChanges;
-        private Timer _setLastColumnWidthTimer;
+        private readonly Timer _setLastColumnWidthTimer;
 
         public class SyntaxColorLineParameter
         {
@@ -670,7 +670,7 @@ namespace Nikse.SubtitleEdit.Controls
             int lengthAvailable = Width - w;
             if (ColumnIndexTextOriginal >= 0)
             {
-                lengthAvailable = lengthAvailable / 2;
+                lengthAvailable /= 2;
                 Columns[ColumnIndexTextOriginal].Width = lengthAvailable;
                 Columns[ColumnIndexTextOriginal].Width = lengthAvailable;
                 Columns[ColumnIndexTextOriginal].Width = lengthAvailable;
@@ -782,7 +782,7 @@ namespace Nikse.SubtitleEdit.Controls
             int lengthAvailable = Width - w;
             if (ColumnIndexTextOriginal >= 0 && Columns.Count > ColumnIndexTextOriginal)
             {
-                lengthAvailable = lengthAvailable / 2;
+                lengthAvailable /= 2;
                 Columns[ColumnIndexTextOriginal].Width = lengthAvailable;
                 Columns[ColumnIndexTextOriginal].Width = lengthAvailable;
                 Columns[ColumnIndexTextOriginal].Width = lengthAvailable;

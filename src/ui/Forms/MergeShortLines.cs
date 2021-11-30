@@ -272,8 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
             NumberOfMerges = 0;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            int count;
-            MergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
+            MergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out int count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)

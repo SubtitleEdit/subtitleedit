@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                                 var name = reader.ReadElementContentAsString().Trim();
                                 if (name.Length > 0)
                                 {
-                                    if (name.Contains(' '))
+                                    if (name.IndexOf(' ') >= 0)
                                     {
                                         _namesMultiList.Add(name);
                                     }
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-            if (name.Contains(' '))
+            if (name.IndexOf(' ') >= 0)
             {
                 if (!_namesMultiList.Contains(name))
                 {
@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-            foreach (var n in name.Contains(' ') ? _namesMultiList : _namesList)
+            foreach (var n in name.IndexOf(' ') >= 0 ? _namesMultiList : _namesList)
             {
                 if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
                 {

@@ -185,8 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-                double d;
-                if (double.TryParse(comboBoxFrameRate.SelectedItem.ToString(), out d))
+                if (double.TryParse(comboBoxFrameRate.SelectedItem.ToString(), out double d))
                 {
                     Configuration.Settings.General.CurrentFrameRate = d;
                 }
@@ -197,8 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 format.DefaultStyle.FontFace = GetFontFace();
                 format.DefaultStyle.Alignment = comboBoxHAlign.SelectedItem.ToString();
                 format.DefaultStyle.Baseline = int.Parse(comboBoxBaseline.SelectedItem.ToString());
-                int height, width;
-                GetResolution(out width, out height);
+                GetResolution(out int width, out int height);
                 format.DefaultStyle.Width = width;
                 format.DefaultStyle.Height = height;
 
