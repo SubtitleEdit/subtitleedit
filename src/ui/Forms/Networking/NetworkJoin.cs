@@ -62,8 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Networking
 
             try
             {
-                string message;
-                _networkSession.Join(comboBoxWebServiceUrl.Text, textBoxUserName.Text, textBoxSessionKey.Text, out message);
+                _networkSession.Join(comboBoxWebServiceUrl.Text, textBoxUserName.Text, textBoxSessionKey.Text, out string message);
                 if (message == "OK")
                 {
                     DialogResult = DialogResult.OK;

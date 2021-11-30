@@ -49,8 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaSubtitleId))
             {
                 textBoxSubtitleID.Text = ss.CurrentDCinemaSubtitleId;
-                int number;
-                if (int.TryParse(ss.CurrentDCinemaReelNumber, out number) &&
+                if (int.TryParse(ss.CurrentDCinemaReelNumber, out int number) &&
                     numericUpDownReelNumber.Minimum <= number && numericUpDownReelNumber.Maximum >= number)
                 {
                     numericUpDownReelNumber.Value = number;

@@ -100,8 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (pictureBox2.Image != null)
             {
-                Bitmap bmp = pictureBox2.Image as Bitmap;
-                if (bmp != null)
+                if (pictureBox2.Image is Bitmap bmp)
                 {
                     pictureBoxCustomColor.BackColor = bmp.GetPixel(e.X, e.Y);
                     SetCustumRGB();
@@ -111,8 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void pictureBox2_Paint(object sender, PaintEventArgs e)
         {
-            Bitmap bmp = pictureBox2.Image as Bitmap;
-            if (bmp != null)
+            if (pictureBox2.Image is Bitmap bmp)
             {
                 using (Pen p = new Pen(Brushes.Red))
                 {

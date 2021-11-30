@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class GenerateVideoWithHardSubs : Form
     {
         private bool _abort;
-        private Subtitle _assaSubtitle;
+        private readonly Subtitle _assaSubtitle;
         private readonly VideoInfo _videoInfo;
         private readonly string _inputVideoFileName;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _startTicks;
         private long _totalFrames;
         private StringBuilder _log;
-        private bool _isAssa;
+        private readonly bool _isAssa;
         public string VideoFileName { get; private set; }
 
         public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize)

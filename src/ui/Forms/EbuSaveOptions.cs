@@ -245,8 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.TimeCode = new TimeCode();
             }
 
-            int number;
-            if (int.TryParse(header.RevisionNumber, out number))
+            if (int.TryParse(header.RevisionNumber, out int number))
             {
                 numericUpDownRevisionNumber.Value = number;
             }

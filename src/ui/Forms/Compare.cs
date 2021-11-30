@@ -995,22 +995,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VerifyDragDrop(ListView listView, DragEventArgs e)
         {
-            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (files == null)
+            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] files))
             {
                 return;
             }
+
             if (files.Length > 1)
             {
-                MessageBox.Show(LanguageSettings.Current.Main.DropOnlyOneFile,
-                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LanguageSettings.Current.Main.DropOnlyOneFile, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
             string filePath = files[0];
             if (FileUtil.IsDirectory(filePath))
             {
-                MessageBox.Show(LanguageSettings.Current.Main.ErrorDirectoryDropNotAllowed,
-                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LanguageSettings.Current.Main.ErrorDirectoryDropNotAllowed, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1022,6 +1021,7 @@ namespace Nikse.SubtitleEdit.Forms
                     listExt.Add(s.Trim(';'));
                 }
             }
+
             if (!listExt.Contains(Path.GetExtension(filePath)))
             {
                 return;
@@ -1144,9 +1144,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine("    </tr>");
                     for (int i = 0; i < subtitleListView1.Items.Count; i++)
                     {
-                        var itemLeft = subtitleListView1.Items[i].Tag as Paragraph;
-                        var itemRight = subtitleListView2.Items[i].Tag as Paragraph;
-                        if (itemLeft != null && itemRight != null)
+                        if (subtitleListView1.Items[i].Tag is Paragraph itemLeft && subtitleListView2.Items[i].Tag is Paragraph itemRight)
                         {
                             sb.AppendLine("    <tr>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");

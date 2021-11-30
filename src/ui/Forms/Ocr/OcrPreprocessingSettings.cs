@@ -128,8 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void pictureBoxSubtitleImage_Click(object sender, EventArgs e)
         {
             var p = pictureBoxSubtitleImage.PointToClient(MousePosition);
-            var bmp = pictureBoxSubtitleImage.Image as Bitmap;
-            if (bmp == null || p.X >= bmp.Width || p.Y>= bmp.Height)
+            if (!(pictureBoxSubtitleImage.Image is Bitmap bmp) || p.X >= bmp.Width || p.Y >= bmp.Height)
             {
                 return;
             }

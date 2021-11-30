@@ -370,8 +370,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetIntFromNumericUpDown(object sender)
         {
-            var numericUpDown = sender as NumericUpDown;
-            if (numericUpDown != null)
+            if (sender is NumericUpDown numericUpDown)
             {
                 return (int)numericUpDown.Value;
             }
@@ -688,8 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddSubtitleContent(TextST.SubtitleRegionContent newContent, string title)
         {
-            var content = _currentNode.Tag as TextST.SubtitleRegionContent;
-            if (content != null)
+            if (_currentNode.Tag is TextST.SubtitleRegionContent content)
             {
                 var list = GetContentList(content);
                 if (list != null)
@@ -741,8 +739,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var content = _currentNode.Tag as TextST.SubtitleRegionContent;
-            if (content != null)
+            if (_currentNode.Tag is TextST.SubtitleRegionContent content)
             {
                 var list = GetContentList(content);
                 if (list != null)
@@ -755,8 +752,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddSubtitleContentFromRoot(TextST.SubtitleRegionContent newContent, string title)
         {
-            var region = _currentNode.Tag as TextST.SubtitleRegion;
-            if (region != null)
+            if (_currentNode.Tag is TextST.SubtitleRegion region)
             {
                 var list = region.Content;
                 if (list != null)
@@ -806,8 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemDuplicateRegionStyle_Click(object sender, EventArgs e)
         {
-            var regionStyle = _currentNode.Tag as TextST.RegionStyle;
-            if (regionStyle != null)
+            if (_currentNode.Tag is TextST.RegionStyle regionStyle)
             {
                 int regionStyleId = 0;
                 foreach (var rs in _textST.StyleSegment.RegionStyles)
