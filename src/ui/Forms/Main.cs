@@ -24806,11 +24806,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     UpdateSourceView();
-                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     _subtitleListViewIndex = -1;
-                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-
+                    RefreshSelectedParagraph();
                     _fileName = Path.ChangeExtension(fileName, GetCurrentSubtitleFormat().Extension);
                     SetTitle();
                     _converted = true;
