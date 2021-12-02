@@ -26,6 +26,7 @@
    * Remember "show video controls" + toggle context menu item - thx Leon
    * Improve rounding for frames in NQC - thx OmrSi
    * Do not select all text when switching to source view - thx Leon
+   * Update Tesseract 5 alpha 2021-08-11 to 5.00 final - thx techguro
 * FIXED:
    * Fix selected line in "set start and offset the rest" - thx Janusz/Tom
    * Fix waveform syntax coloring after move - thx Leon
