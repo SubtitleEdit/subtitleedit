@@ -16972,7 +16972,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
-            var oldCurrent = new Paragraph(current);
+            var oldCurrent = new Paragraph(current, false);
             current.StartTime.TotalMilliseconds = positionInSeconds * 1_000.0;
             UpdateOriginalTimeCodes(oldCurrent);
             if (oldCurrent.EndTime.IsMaxTime)
