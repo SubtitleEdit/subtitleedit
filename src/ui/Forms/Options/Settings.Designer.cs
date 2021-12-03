@@ -244,6 +244,7 @@
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.panelTools = new System.Windows.Forms.Panel();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox = new System.Windows.Forms.CheckBox();
             this.comboBoxBDOpensIn = new System.Windows.Forms.ComboBox();
             this.labelBDOpensIn = new System.Windows.Forms.Label();
             this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
@@ -413,7 +414,7 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox = new System.Windows.Forms.CheckBox();
+            this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -2787,6 +2788,7 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformAutoGen);
             this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.buttonWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToSceneChanges);
@@ -2864,7 +2866,7 @@
             // checkBoxWaveformShowWpm
             // 
             this.checkBoxWaveformShowWpm.AutoSize = true;
-            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 256);
+            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 249);
             this.checkBoxWaveformShowWpm.Name = "checkBoxWaveformShowWpm";
             this.checkBoxWaveformShowWpm.Size = new System.Drawing.Size(104, 17);
             this.checkBoxWaveformShowWpm.TabIndex = 8;
@@ -2874,7 +2876,7 @@
             // checkBoxWaveformShowCps
             // 
             this.checkBoxWaveformShowCps.AutoSize = true;
-            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 233);
+            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 226);
             this.checkBoxWaveformShowCps.Name = "checkBoxWaveformShowCps";
             this.checkBoxWaveformShowCps.Size = new System.Drawing.Size(96, 17);
             this.checkBoxWaveformShowCps.TabIndex = 7;
@@ -2894,7 +2896,7 @@
             // labelWaveformTextSize
             // 
             this.labelWaveformTextSize.AutoSize = true;
-            this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 194);
+            this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 220);
             this.labelWaveformTextSize.Name = "labelWaveformTextSize";
             this.labelWaveformTextSize.Size = new System.Drawing.Size(73, 13);
             this.labelWaveformTextSize.TabIndex = 27;
@@ -2903,7 +2905,7 @@
             // checkBoxWaveformTextBold
             // 
             this.checkBoxWaveformTextBold.AutoSize = true;
-            this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 195);
+            this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 221);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
             this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxWaveformTextBold.TabIndex = 29;
@@ -2929,7 +2931,7 @@
             "18",
             "19",
             "20"});
-            this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 191);
+            this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 217);
             this.comboBoxWaveformTextSize.Name = "comboBoxWaveformTextSize";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxWaveformTextSize.TabIndex = 28;
@@ -2958,7 +2960,7 @@
             // labelWaveformBorderHitMs2
             // 
             this.labelWaveformBorderHitMs2.AutoSize = true;
-            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 224);
+            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 250);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
             this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
             this.labelWaveformBorderHitMs2.TabIndex = 32;
@@ -2966,7 +2968,7 @@
             // 
             // numericUpDownWaveformBorderHitMs
             // 
-            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 222);
+            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 248);
             this.numericUpDownWaveformBorderHitMs.Minimum = new decimal(new int[] {
             10,
             0,
@@ -2984,7 +2986,7 @@
             // labelWaveformBorderHitMs1
             // 
             this.labelWaveformBorderHitMs1.AutoSize = true;
-            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 224);
+            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 250);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
             this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
             this.labelWaveformBorderHitMs1.TabIndex = 30;
@@ -3142,6 +3144,16 @@
             this.groupBoxToolsMisc.TabIndex = 33;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
+            // 
+            // checkBoxShortcutsAllowLetterOrNumberInTextBox
+            // 
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.AutoSize = true;
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Location = new System.Drawing.Point(8, 65);
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Name = "checkBoxShortcutsAllowLetterOrNumberInTextBox";
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.TabIndex = 61;
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Text = "Allow letter/number shortcuts in text box";
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.UseVisualStyleBackColor = true;
             // 
             // comboBoxBDOpensIn
             // 
@@ -4953,21 +4965,22 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // checkBoxShortcutsAllowLetterOrNumberInTextBox
+            // checkBoxWaveformAutoGen
             // 
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.AutoSize = true;
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Location = new System.Drawing.Point(8, 65);
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Name = "checkBoxShortcutsAllowLetterOrNumberInTextBox";
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Size = new System.Drawing.Size(223, 17);
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.TabIndex = 61;
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Text = "Allow letter/number shortcuts in text box";
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.UseVisualStyleBackColor = true;
+            this.checkBoxWaveformAutoGen.AutoSize = true;
+            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 188);
+            this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
+            this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
+            this.checkBoxWaveformAutoGen.TabIndex = 35;
+            this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
+            this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
@@ -4977,7 +4990,6 @@
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
@@ -5493,5 +5505,6 @@
         private System.Windows.Forms.ComboBox comboBoxBDOpensIn;
         private System.Windows.Forms.Label labelBDOpensIn;
         private System.Windows.Forms.CheckBox checkBoxShortcutsAllowLetterOrNumberInTextBox;
+        private System.Windows.Forms.CheckBox checkBoxWaveformAutoGen;
     }
 }

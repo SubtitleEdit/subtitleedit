@@ -20600,7 +20600,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus("Generating waveform in background..."));
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus(_language.GeneratingWaveformInBackground));
                         var bw = new BackgroundWorker();
                         bw.DoWork += (sender, args) =>
                         {
@@ -20692,8 +20692,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         audioVisualizer.UseSmpteDropFrameTime();
                                     }
-
-                                    ShowStatus("Waveform loaded");
                                 }
                             }
                             else
