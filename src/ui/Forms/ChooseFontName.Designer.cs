@@ -167,13 +167,11 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ChooseFontName";
-            this.Load += new System.EventHandler(this.ChooseFontName_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChooseFontName_KeyDown);
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
