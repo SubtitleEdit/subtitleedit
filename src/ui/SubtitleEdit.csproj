@@ -9,6 +9,7 @@
 		<StartupObject>Nikse.SubtitleEdit.Program</StartupObject>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<ApplicationIcon>SE2.ico</ApplicationIcon>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath>bin\debug</OutputPath>
