@@ -56,9 +56,27 @@ namespace Nikse.SubtitleEdit.Forms
             labelPreview1.Text = FontName;
             labelPreview2.Text = FontName;
             labelPreview3.Text = FontName;
-            labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size);
-            labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size);
-            labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size);
+            try
+            {
+                labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size);
+                labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size);
+                labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size);
+            }
+            catch
+            {
+                try
+                {
+                    labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size, FontStyle.Bold);
+                    labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size, FontStyle.Bold);
+                    labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size, FontStyle.Bold);
+                }
+                catch
+                {
+                    labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size, FontStyle.Italic);
+                    labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size, FontStyle.Italic);
+                    labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size, FontStyle.Italic);
+                }
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -77,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBox1.Items.Clear();
             foreach (var fn in _fontNames)
             {
-                if (textBoxSearch.Text.Length < 2 ||
+                if (textBoxSearch.Text.Length < 1 ||
                     fn.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase))
                 {
                     listBox1.Items.Add(fn);
@@ -86,10 +104,6 @@ namespace Nikse.SubtitleEdit.Forms
             listBox1.EndUpdate();
             buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
             listView1_SelectedIndexChanged(null, null);
-        }
-
-        private void ChooseFontName_Load(object sender, EventArgs e)
-        {
         }
 
         private void buttonSearchClear_Click(object sender, EventArgs e)

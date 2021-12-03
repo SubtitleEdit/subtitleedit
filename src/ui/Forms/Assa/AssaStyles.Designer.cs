@@ -426,7 +426,7 @@
             // 
             this.buttonAddStyleToStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAddStyleToStorage.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddStyleToStorage.Location = new System.Drawing.Point(280, 275);
+            this.buttonAddStyleToStorage.Location = new System.Drawing.Point(290, 275);
             this.buttonAddStyleToStorage.Name = "buttonAddStyleToStorage";
             this.buttonAddStyleToStorage.Size = new System.Drawing.Size(163, 52);
             this.buttonAddStyleToStorage.TabIndex = 4;
@@ -476,7 +476,7 @@
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemoveAll.Location = new System.Drawing.Point(182, 304);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
+            this.buttonRemoveAll.Size = new System.Drawing.Size(102, 23);
             this.buttonRemoveAll.TabIndex = 7;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
@@ -500,7 +500,7 @@
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemove.Location = new System.Drawing.Point(182, 275);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonRemove.Size = new System.Drawing.Size(102, 23);
             this.buttonRemove.TabIndex = 3;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -1230,7 +1230,7 @@
             // 
             this.buttonAddToFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAddToFile.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddToFile.Location = new System.Drawing.Point(280, 271);
+            this.buttonAddToFile.Location = new System.Drawing.Point(290, 271);
             this.buttonAddToFile.Name = "buttonAddToFile";
             this.buttonAddToFile.Size = new System.Drawing.Size(163, 52);
             this.buttonAddToFile.TabIndex = 10;
@@ -1280,7 +1280,7 @@
             this.buttonStorageRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStorageRemoveAll.Location = new System.Drawing.Point(182, 300);
             this.buttonStorageRemoveAll.Name = "buttonStorageRemoveAll";
-            this.buttonStorageRemoveAll.Size = new System.Drawing.Size(92, 23);
+            this.buttonStorageRemoveAll.Size = new System.Drawing.Size(102, 23);
             this.buttonStorageRemoveAll.TabIndex = 13;
             this.buttonStorageRemoveAll.Text = "Remove all";
             this.buttonStorageRemoveAll.UseVisualStyleBackColor = true;
@@ -1304,7 +1304,7 @@
             this.buttonStorageRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStorageRemove.Location = new System.Drawing.Point(182, 271);
             this.buttonStorageRemove.Name = "buttonStorageRemove";
-            this.buttonStorageRemove.Size = new System.Drawing.Size(92, 23);
+            this.buttonStorageRemove.Size = new System.Drawing.Size(102, 23);
             this.buttonStorageRemove.TabIndex = 9;
             this.buttonStorageRemove.Text = "Remove";
             this.buttonStorageRemove.UseVisualStyleBackColor = true;

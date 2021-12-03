@@ -5103,8 +5103,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                var bmp = pictureBox1.Image as Bitmap;
-                if (bmp == null)
+                if (!(pictureBox1.Image is Bitmap bmp))
                 {
                     MessageBox.Show("No image!");
                     return;
