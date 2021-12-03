@@ -1612,6 +1612,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Errors = "Errors",
                 ShowVideoControls = "Show video controls",
                 HideVideoControls = "Hide video controls",
+                GeneratingWaveformInBackground = "Generating waveform in background...",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -2497,6 +2498,7 @@ can edit in same subtitle file (collaboration)",
                 WaveformListViewFocusMouseEnter = "Also set list view focus on mouse enter in list view",
                 WaveformSingleClickSelect = "Single click to select subtitles",
                 WaveformSnapToSceneChanges = "Snap to scene changes (hold Shift to override)",
+                WaveformAutoGen = "Auto generate waveform when opening video",
                 WaveformBorderHitMs1 = "Border marker hit must be within",
                 WaveformBorderHitMs2 = "milliseconds",
                 WaveformColor = "Color",

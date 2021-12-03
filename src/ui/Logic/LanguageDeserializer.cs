@@ -3715,6 +3715,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/HideVideoControls":
                     language.Main.HideVideoControls = reader.Value;
                     break;
+                case "Main/GeneratingWaveformInBackground":
+                    language.Main.GeneratingWaveformInBackground = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -5877,6 +5880,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/WaveformSnapToSceneChanges":
                     language.Settings.WaveformSnapToSceneChanges = reader.Value;
+                    break;
+                case "Settings/WaveformAutoGen":
+                    language.Settings.WaveformAutoGen = reader.Value;
                     break;
                 case "Settings/WaveformBorderHitMs1":
                     language.Settings.WaveformBorderHitMs1 = reader.Value;
