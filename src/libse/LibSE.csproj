@@ -15,8 +15,8 @@
     <Authors>Nikolaj Olsson</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>SE 3.6.0
-- faster bd sup writing
+    <PackageReleaseNotes>SE 3.6.4
+- fix bd sup palette issue
 - new subtitle formats</PackageReleaseNotes>
   </PropertyGroup>
 

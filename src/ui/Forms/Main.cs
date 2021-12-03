@@ -10740,6 +10740,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FixSplitItalicTag(currentParagraph, newParagraph);
                 FixSplitFontTag(currentParagraph, newParagraph);
+                FixSplitBoxTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
@@ -10927,6 +10928,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleOriginal.Renumber();
                         FixSplitItalicTag(originalCurrent, originalNew);
                         FixSplitFontTag(originalCurrent, originalNew);
+                        FixSplitBoxTag(currentParagraph, newParagraph);
                     }
                 }
 
@@ -10990,6 +10992,47 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     currentParagraph.Text = pre + currentParagraph.Text + "</i>";
+                    nextParagraph.Text = pre + fontTag + nextParagraph.Text;
+                }
+            }
+            else if (currentParagraph.Text.StartsWith("{\\", StringComparison.Ordinal))
+            {
+                var endIdx = currentParagraph.Text.IndexOf('}', 2);
+                if (endIdx > 2)
+                {
+                    pre = currentParagraph.Text.Substring(0, endIdx + 1);
+                    nextParagraph.Text = pre + nextParagraph.Text;
+                }
+            }
+        }
+
+        private void FixSplitBoxTag(Paragraph currentParagraph, Paragraph nextParagraph)
+        {
+            if (currentParagraph == null || nextParagraph == null)
+            {
+                return;
+            }
+
+            var startIdx = currentParagraph.Text.LastIndexOf("<box>", StringComparison.OrdinalIgnoreCase);
+
+            string pre;
+            if (startIdx >= 0 &&
+                !currentParagraph.Text.Contains("</box>", StringComparison.OrdinalIgnoreCase) &&
+                nextParagraph.Text.Contains("</box>", StringComparison.OrdinalIgnoreCase))
+            {
+                var endIdx = currentParagraph.Text.IndexOf('>', startIdx);
+                if (endIdx >= 0)
+                {
+                    var fontTag = currentParagraph.Text.Substring(startIdx, endIdx - startIdx + 1);
+                    pre = string.Empty;
+                    if (currentParagraph.Text.StartsWith('{') && currentParagraph.Text.IndexOf('}') > 0)
+                    {
+                        var i = currentParagraph.Text.IndexOf('}');
+                        pre = currentParagraph.Text.Substring(0, i + 1);
+                        currentParagraph.Text = currentParagraph.Text.Remove(0, i + 1);
+                    }
+
+                    currentParagraph.Text = pre + currentParagraph.Text + "</box>";
                     nextParagraph.Text = pre + fontTag + nextParagraph.Text;
                 }
             }
@@ -11599,6 +11642,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
                                 original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
                                 original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
+                                original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "box");
 
                                 if (string.IsNullOrWhiteSpace(old1))
                                 {
@@ -11659,6 +11703,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "i");
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "b");
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "u");
+                    currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "box");
 
                     if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
@@ -20541,7 +20586,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.UseSmpteDropFrameTime();
                 }
             }
-            else 
+            else
             {
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
@@ -20555,7 +20600,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus("Generating waveform in background..."));                      
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus("Generating waveform in background..."));
                         var bw = new BackgroundWorker();
                         bw.DoWork += (sender, args) =>
                         {
