@@ -1464,6 +1464,7 @@
             public string Errors { get; set; }
             public string ShowVideoControls { get; set; }
             public string HideVideoControls { get; set; }
+            public string GeneratingWaveformInBackground { get; set; }
 
             public class MainMenu
             {
@@ -2346,6 +2347,7 @@
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformSingleClickSelect { get; set; }
             public string WaveformSnapToSceneChanges { get; set; }
+            public string WaveformAutoGen { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
             public string WaveformColor { get; set; }

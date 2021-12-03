@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.4 BETA (xth December 2021)
+3.6.4 (3rd December 2021)
 * NEW:
    * List errors based on current profile (Ctrl+F8)
    * Add "image" option for "gen blank video" - thx Thomas
@@ -43,6 +43,7 @@
    * Fix error gen waveform when media file delete/renamed - thx Leon
    * Fix issue with setting video offset more than once - thx musicadi
    * Fix dots for "file-open" text - thx PM
+   * Fix translation mode sync issue - thx Leon
 
 
 3.6.3 (11th November 2021)
@@ -79,7 +80,7 @@
    * Add "Clear" key to list of available shortcut keys - thx OmrSi
    * Refresh text in mpv when changing RTL mode
    * Improve detect of video info - thx Janjens
-   * Improve read of PNS format - thx Milenko
+   * Improve read of PNS format - thx Enzo
    * Improve split with ASSA tags - thx Leon
    * Improve drag'n'drop to list view with istm format - thx Zivko
    * Ignore text between {} when spell checking ASSA/SSA - thx Omair
@@ -103,7 +104,7 @@
    * Fix waveform multiple select crash - thx darbor87
    * Fix broken "Duplicate line" shortcut - thx Kelvets/OmrSi
    * Fix crash in reading .ismt - thx DarkHorse-APP2
-   * Fix for PAC italic w missing space - thx Milenko
+   * Fix for PAC italic w missing space - thx Enzo
    * Fix switched total labels in RTL mode w original subtitle - thx OmrSi
    * Rollback max #lines enforce (now hidden setting) - thx pandalamp 
    * Take first audio track when loading wave form - thx Tuan-P
@@ -226,7 +227,7 @@
    * Make bd sup edit work better with full frame images - thx peter-qgd
    * Point sync now also works on original subtitle - thx Rene
    * Keep Text box height when resizing - thx AbsenceJam/darnn
-   * Add "Slovenian" to language auto detect - thx Milenko
+   * Add "Slovenian" to language auto detect - thx Enzo
    * Update Tesseract 5 Alpha to "2021-05-06" - thx iGom
    * Add French letters in OCR char inspect - thx tormento
    * Handle Unicode control char in "Remove empty lines" - thx igenaya
@@ -235,7 +236,7 @@
    * Fix for reading bdsup position - thx akaicat
    * Fix a few crashes in translation engine - thx howblast/Laís
    * Fix mpv dll loading from a folder with e.g. cyrillic chars - thx Zoran
-   * Fix for EBU time code writing - thx milenko
+   * Fix for EBU time code writing - thx Enzo
    * Fix show (correct) EBU properties for current file - thx Emilien
    * Fix non-ASCII chars when enc 20269 is unavailable (Linux) - thx jason
    * Fix a crash in RTL when activating syntax coloring - thx OmrSi
@@ -255,7 +256,7 @@
    * Add internal store for ASSA styles - thx Leon/z3us
    * Add dark theme - thx OmrSi/dvjrickkraft/MuhammadiJK
    * Add copy-paste translate
-   * Add "Delete lines" to "Batch convert" - thx Milenko
+   * Add "Delete lines" to "Batch convert" - thx Enzo
    * Add two new sub formats - thx Matthew
    * Add new ttml/dfxp variant - thx Mikhail
    * Add shortcut "Set start and set end of previous" - thx Jeff
@@ -384,7 +385,7 @@
    * Add new sub format (rtf) - thx m0ck69
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
    * Add shortcuts for "Merge line with same text/time-code" - thx Mike
-   * Add shortcuts "Set end and pause" + "Export to PAC" - thx Milenko
+   * Add shortcuts "Set end and pause" + "Export to PAC" - thx Enzo
    * Add shortcut for File - Compare
    * Add shortcut for "Ext sel lines to next sc - gap" - thx m0ck69/OmrSi
    * Add shortcuts for "move selected lines" - thx OmrSi
@@ -667,7 +668,7 @@
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix Microsoft Translator API for non-English - thx Ed
-   * Fix time code in format .sif - thx Milenko
+   * Fix time code in format .sif - thx Enzo
    * Fix FCE short gap without time codes - thx OmrSi
    * Fix crash when opening translation only from blank - thx OmrSi
    * Fix wrong filename after teletext import - thx beeeeswax
@@ -739,7 +740,7 @@
    * Fix "Fix OCR errors" in "Fix common errors" via "Batch convert" - thx  JySzE
    * Fix issue with PAC reading - thx s3ncha
    * Fix possible crash when going from src view to list view
-   * Fix "Save selected lines as..." issues - thx Milenko
+   * Fix "Save selected lines as..." issues - thx Enzo
    * Fix OcrFixReplaceLst_User issues - thx Maitch/xylographe
    * Fix crash in cmd line FixCommonErrors - thx Rouzax
    * Fix crash when deleting last line in FCE - thx sir qrcz
@@ -808,7 +809,7 @@
    * Skip small/short images when importing vobsub from mkv - thx Maitch
    * Fix for reading mkv on Linux - thx JGoutin
    * Exclude html/ass tags in line lengths (Statistics) - thx AlexandreMT
-   * Fix PAC reading issues - thx Milenko
+   * Fix PAC reading issues - thx Enzo
    * Fix remove text for HI issue - thx teodargent
    * Fix time code for bluray sup in m2ts - thx Jack1789
    * Fix "Find next" in "Replace dialog" - thx Maiki0
@@ -831,7 +832,7 @@
    * Add new sub format - thx thehulk
    * Add "remove formatting" via command line - thx JySzE
    * Allow binary formats in compare
-   * Add download link to Slovenian spell check dictionary - thx Milenko
+   * Add download link to Slovenian spell check dictionary - thx Enzo
    * Add some support for remove spaces and 3 lines - thx James
 * IMPROVED:
    * Update Portuguese translation - thx moob
@@ -954,7 +955,7 @@
    * Add new subtitle formats
    * Add some image pre-processing for OCR
    * Add "DVD Studio Pro" file properties - thx Daniel
-   * Add ebu stl boxing - thx Milenko
+   * Add ebu stl boxing - thx Enzo
    * Add "Fix RTL" to batch convert - thx OmrSi/MosDos96/ghost
    * Add new shortcuts (mostly related to alignment)
 * IMPROVED:
@@ -1141,7 +1142,7 @@
    * Fix issue regarding "Binary image compare OCR ext. matches" - thx SimplyTheBOSS
    * Fix issue regarding "Bridge gaps"/selected line - thx btsix
    * Fix new-line char in "Replace -> Replace with" text box - thx Leon
-   * Fix missing char "î" for EBU STL - thx Milenko
+   * Fix missing char "î" for EBU STL - thx Enzo
    * Fix missing color tag for EBU STL - thx Tom
    * Fix for null terminated text from mkv - thx taxen/mkver
    * Fix focus after Alt+3/4 (previous/next) - thx Jamakmake
