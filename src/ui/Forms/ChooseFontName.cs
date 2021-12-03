@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBox1.Items.Clear();
             foreach (var fn in _fontNames)
             {
-                if (textBoxSearch.Text.Length < 2 ||
+                if (textBoxSearch.Text.Length < 1 ||
                     fn.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase))
                 {
                     listBox1.Items.Add(fn);
@@ -86,10 +86,6 @@ namespace Nikse.SubtitleEdit.Forms
             listBox1.EndUpdate();
             buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
             listView1_SelectedIndexChanged(null, null);
-        }
-
-        private void ChooseFontName_Load(object sender, EventArgs e)
-        {
         }
 
         private void buttonSearchClear_Click(object sender, EventArgs e)
