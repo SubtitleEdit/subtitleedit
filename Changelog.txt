@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.4 BETA (xth December 2021)
+3.6.4 (3rd December 2021)
 * NEW:
    * List errors based on current profile (Ctrl+F8)
    * Add "image" option for "gen blank video" - thx Thomas
@@ -43,6 +43,7 @@
    * Fix error gen waveform when media file delete/renamed - thx Leon
    * Fix issue with setting video offset more than once - thx musicadi
    * Fix dots for "file-open" text - thx PM
+   * Fix translation mode sync issue - thx Leon
 
 
 3.6.3 (11th November 2021)
