@@ -27,6 +27,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -20539,12 +20540,128 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.UseSmpteDropFrameTime();
                 }
             }
-            else if (audioVisualizer.WavePeaks != null)
+            else 
             {
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.SceneChanges = new List<double>();
                 audioVisualizer.Chapters = new List<MatroskaChapter>();
+
+                if (Configuration.Settings.General.WaveformAutoGenWhenOpeningVideo)
+                {
+                    string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+                    Process process;
+                    try
+                    {
+                        process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus("Generating waveform in background..."));                      
+                        var bw = new BackgroundWorker();
+                        bw.DoWork += (sender, args) =>
+                        {
+                            var p = (Process)args.Argument;
+                            process.Start();
+                            while (!process.HasExited)
+                            {
+                                Application.DoEvents();
+                            }
+
+                            // check for delay in matroska files
+                            var delayInMilliseconds = 0;
+                            var audioTrackNames = new List<string>();
+                            var mkvAudioTrackNumbers = new Dictionary<int, int>();
+                            if (fileName.ToLowerInvariant().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                            {
+                                try
+                                {
+                                    using (var matroska = new MatroskaFile(fileName))
+                                    {
+                                        if (matroska.IsValid)
+                                        {
+                                            foreach (var track in matroska.GetTracks())
+                                            {
+                                                if (track.IsAudio)
+                                                {
+                                                    if (track.CodecId != null && track.Language != null)
+                                                    {
+                                                        audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                                    }
+                                                    else
+                                                    {
+                                                        audioTrackNames.Add("#" + track.TrackNumber);
+                                                    }
+
+                                                    mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
+                                                }
+                                            }
+                                            if (mkvAudioTrackNumbers.Count > 0)
+                                            {
+                                                delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[0]);
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception exception)
+                                {
+                                    SeLogger.Error(exception, $"Error getting delay from mkv: {fileName}");
+                                }
+                            }
+
+                            if (File.Exists(targetFile))
+                            {
+                                using (var waveFile = new WavePeakGenerator(targetFile))
+                                {
+                                    if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+                                    {
+                                        waveFile.GeneratePeaks(delayInMilliseconds, WavePeakGenerator.GetPeakWaveFileName(fileName));
+                                        if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+                                        {
+                                            waveFile.GenerateSpectrogram(delayInMilliseconds, WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName));
+                                        }
+                                    }
+                                }
+                            }
+                        };
+                        bw.RunWorkerCompleted += (sender, args) =>
+                        {
+                            if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
+                            {
+                                return;
+                            }
+
+                            var newPeakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
+                            if (File.Exists(peakWaveFileName))
+                            {
+                                if (peakWaveFileName == newPeakWaveFileName)
+                                {
+                                    audioVisualizer.ZoomFactor = 1.0;
+                                    audioVisualizer.VerticalZoomFactor = 1.0;
+                                    SelectZoomTextInComboBox();
+                                    audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
+                                    audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(spectrogramFolder));
+                                    audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(VideoFileName);
+                                    SetWaveformPosition(0, 0, 0);
+                                    timerWaveform.Start();
+
+                                    if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                                    {
+                                        audioVisualizer.UseSmpteDropFrameTime();
+                                    }
+
+                                    ShowStatus("Waveform loaded");
+                                }
+                            }
+                            else
+                            {
+                                ShowStatus("Waveform load failed - install ffmpeg in Options - Settings - Waveform");
+                            }
+                        };
+                        bw.RunWorkerAsync(process);
+                    }
+                    catch (DllNotFoundException)
+                    {
+                        //TODO: display message
+                    }
+                }
             }
 
             Cursor = Cursors.Default;

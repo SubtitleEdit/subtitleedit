@@ -424,7 +424,6 @@ namespace Nikse.SubtitleEdit.Forms
             using (var waveFile = new WavePeakGenerator(targetFile))
             {
                 waveFile.GeneratePeaks(delayInMilliseconds, WavePeakGenerator.GetPeakWaveFileName(videoFileName));
-
                 if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 {
                     waveFile.GenerateSpectrogram(delayInMilliseconds, WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(videoFileName));
