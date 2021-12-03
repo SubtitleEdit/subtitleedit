@@ -56,9 +56,27 @@ namespace Nikse.SubtitleEdit.Forms
             labelPreview1.Text = FontName;
             labelPreview2.Text = FontName;
             labelPreview3.Text = FontName;
-            labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size);
-            labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size);
-            labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size);
+            try
+            {
+                labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size);
+                labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size);
+                labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size);
+            }
+            catch
+            {
+                try
+                {
+                    labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size, FontStyle.Bold);
+                    labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size, FontStyle.Bold);
+                    labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size, FontStyle.Bold);
+                }
+                catch
+                {
+                    labelPreview1.Font = new Font(new FontFamily(FontName), labelPreview1.Font.Size, FontStyle.Italic);
+                    labelPreview2.Font = new Font(new FontFamily(FontName), labelPreview2.Font.Size, FontStyle.Italic);
+                    labelPreview3.Font = new Font(new FontFamily(FontName), labelPreview3.Font.Size, FontStyle.Italic);
+                }
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
