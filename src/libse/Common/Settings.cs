@@ -1217,6 +1217,7 @@ $HorzAlign          =   Center
         public string UndockedWaveformPosition { get; set; }
         public string UndockedVideoControlsPosition { get; set; }
         public bool WaveformCenter { get; set; }
+        public bool WaveformAutoGenWhenOpeningVideo { get; set; }
         public int WaveformUpdateIntervalMs { get; set; }
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
@@ -3526,6 +3527,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.WaveformCenter = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WaveformAutoGenWhenOpeningVideo");
+            if (subNode != null)
+            {
+                settings.General.WaveformAutoGenWhenOpeningVideo = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("WaveformUpdateIntervalMs");
@@ -8975,6 +8982,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
                 textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
                 textWriter.WriteElementString("WaveformCenter", settings.General.WaveformCenter.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformAutoGenWhenOpeningVideo", settings.General.WaveformAutoGenWhenOpeningVideo.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformUpdateIntervalMs", settings.General.WaveformUpdateIntervalMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
