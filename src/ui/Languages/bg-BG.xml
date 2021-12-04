@@ -25,6 +25,7 @@
     <OpenVideoFile>Отваряне видео файл...</OpenVideoFile>
     <OpenVideoFileTitle>Отваряне на видео файл...</OpenVideoFileTitle>
     <NoVideoLoaded>Няма заредено видео</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Функцията не е налична за онлайн видео</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Информация за видеото (Видео файла)</VideoInformation>
     <StartTime>Начално време</StartTime>
     <EndTime>Крайно време</EndTime>
@@ -118,7 +119,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Description>Добави дума към потребителския речник (без отчитане на ГЛАВНИ и малки букви)</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Създаване на данни за Wav форма на звуковия сигнал</Title>
+    <Title>Създаване на данни за вълнова Wav форма на звуковия сигнал</Title>
     <SourceVideoFile>Изходен видео файл:</SourceVideoFile>
     <GenerateWaveformData>Създ. форма на сигнала</GenerateWaveformData>
     <PleaseWait>Това ще отнеме няколко минути - моля, изчакайте!</PleaseWait>
@@ -129,11 +130,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <GeneratingSpectrogram>Създаване на спектрограма...</GeneratingSpectrogram>
     <ExtractingSeconds>Извличане на аудио: {0:0.0} секунди</ExtractingSeconds>
     <ExtractingMinutes>Извличане на аудио: {0}:{1:00} минути</ExtractingMinutes>
-    <WaveFileNotFound>Не е открита извлечена Wav форма на зв. сигнал (Wav файл)!
+    <WaveFileNotFound>Не е открита извлечена вълнова Wav форма на зв. сигнал (Wav файл)!
 Тази функция изисква VLC media player 1.1.x или по-нова ({0}-bit).
 
 Конзолна команда: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} не можа да извлече Wav форма на зв. сигнал от аудио файла!
+    <WaveFileMalformed>{0} не можа да извлече вълнова Wav форма на зв. сигнал от аудио файла!
 
 Конзолна команда: {1} {2} Забележка: Проверете за свободно дисково пространство</WaveFileMalformed>
     <LowDiskSpace>НЕДОСТАТЪЧНО ДИСКОВО ПРОСТРАНСТВО!</LowDiskSpace>
@@ -1179,11 +1180,12 @@ https://github.com/SubtitleEdit/subtitleedit
         <SplitLongLines>Разделяне на дълги редове...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Мин. интервал от време за показване между субтитрите...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Сортиране на редовете по</SortBy>
-        <NetflixQualityCheck>Проверка за качеството на Netflix...</NetflixQualityCheck>
         <Number>Номер</Number>
         <StartTime>Начално време</StartTime>
         <EndTime>Крайно време</EndTime>
         <Duration>Продължителност</Duration>
+        <ListErrors>Списък с грешки...</ListErrors>
+        <NetflixQualityCheck>Проверка за качеството на Netflix...</NetflixQualityCheck>
         <TextAlphabetically>Текст – по азбучен ред</TextAlphabetically>
         <TextSingleLineMaximumLength>Текст – по макс.дължина на ред</TextSingleLineMaximumLength>
         <TextTotalLength>Текст – по обща дължина</TextTotalLength>
@@ -1215,14 +1217,14 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateBlankVideo>Генериране на празно видео...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео със записани субтитри...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Импорт на глави от видео</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Създаване/импортиране на промени в сцени...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Премахване на промени в сцени</RemoveSceneChanges>
-        <WaveformBatchGenerate>Пакетно генериране Wav форма на сигнала...</WaveformBatchGenerate>
+        <GenerateImportSceneChanges>Създаване/импортиране на промените в сцената...</GenerateImportSceneChanges>
+        <RemoveOrExportSceneChanges>Премахване/експортиране на промените в сцената...</RemoveOrExportSceneChanges>
+        <WaveformBatchGenerate>Пакетно генериране вълнова Wav форма на звуковия сигнал...</WaveformBatchGenerate>
         <ShowHideVideo>Покажи/скрий видео</ShowHideVideo>
-        <ShowHideWaveform>Покажи/скрий формата на звуковия сигнал</ShowHideWaveform>
+        <ShowHideWaveform>Покажи/скрий вълновата форма на звуковия сигнал</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Покажи/скрий формата на звуковия сигнал и спектрограмата</ShowHideWaveformAndSpectrogram>
-        <UnDockVideoControls>Покажи видео регулаторите в отделни прозорци</UnDockVideoControls>
-        <ReDockVideoControls>Покажи видео регулаторите вградени в осн. интерфейс</ReDockVideoControls>
+        <UnDockVideoControls>Покажи видео управлението в отделни прозорци</UnDockVideoControls>
+        <ReDockVideoControls>Покажи видео управлението вградено в осн. интерфейс</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Правопис</Title>
@@ -1278,7 +1280,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <NetflixQualityCheck>Проверка на качеството Netflix</NetflixQualityCheck>
         <Settings>Настройки</Settings>
         <Help>Помощ</Help>
-        <ShowHideWaveform>Покажи/скрий формата на звуковия сигнал</ShowHideWaveform>
+        <ShowHideWaveform>Покажи/скрий вълновата форма на звуковия сигнал</ShowHideWaveform>
         <ShowHideVideo>Покажи/скрий видео</ShowHideVideo>
         <AssaDraw>Настройка на Sub Station Alpha draw</AssaDraw>
       </ToolBar>
@@ -1683,7 +1685,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ParsingTransportStream>Анализ на транспортния поток - изчакайте...</ParsingTransportStream>
     <XPercentCompleted>{0}% завършени</XPercentCompleted>
     <NextX>Следните: {0}</NextX>
-    <PromptInsertSubtitleOverlap>Поставянето на субтитри в позицията на формата на звуковия сигнал ще доведе до припокриване!
+    <PromptInsertSubtitleOverlap>Поставянето на субтитри в позицията на вълновата форма на зв. сигнал ще доведе до припокриване!
 
 Продължавате ли все пак?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>Субтитрите съдържат отрицателна продължителност в ред(ове): {0}</SubtitleContainsNegativeDurationsX>
@@ -1708,6 +1710,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <DarkThemeRestart>Рестартирайте Subtitle Edit, за да влязат в сила промените в тъмната тема.</DarkThemeRestart>
     <VideoFromUrlRequirements>Отварянето на видео от url изисква mpv и youtube-dl - изтегляне и продължаване?</VideoFromUrlRequirements>
     <Errors>Грешки</Errors>
+    <ShowVideoControls>Показване на видео управлението</ShowVideoControls>
+    <HideVideoControls>Скриване на видео управлението</HideVideoControls>
+    <GeneratingWaveformInBackground>Генериране вълнова форма на зв. сигнал във фонов режим...</GeneratingWaveformInBackground>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -2151,9 +2156,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowFullscreenButton>Показване на бутон «На цял екран»</ShowFullscreenButton>
     <PreviewFontName>Име на шрифта за преглед на субтитрите</PreviewFontName>
     <PreviewFontSize>Размер на шрифта за преглед на субтитрите</PreviewFontSize>
-    <MainWindowVideoControls>Бутон за търсене на текст в Интернет при превод</MainWindowVideoControls>
+    <MainWindowVideoControls>Главен прозорец за видео управление</MainWindowVideoControls>
     <CustomSearchTextAndUrl>URL адрес за търсене на текст</CustomSearchTextAndUrl>
-    <WaveformAppearance>Изглед на формата на звуковия сигнал</WaveformAppearance>
+    <WaveformAppearance>Изглед на вълновата форма на звуковия сигнал</WaveformAppearance>
     <WaveformGridColor>Цвят на мрежата</WaveformGridColor>
     <WaveformShowGridLines>Показване линиите на мрежата (като решетка)</WaveformShowGridLines>
     <WaveformShowCps>Показване симв./сек.</WaveformShowCps>
@@ -2165,6 +2170,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformListViewFocusMouseEnter>Задаване фокуса върху списъка по курсора при кликване с мишката</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Еднократно щракване за избиране на субтитри</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>Преминаване към промените на сцената (задръжте Shift за отмяна)</WaveformSnapToSceneChanges>
+    <WaveformAutoGen>Авт. генериране вълнова Wav форма на зв. сигнал при отваряне на видео</WaveformAutoGen>
     <WaveformBorderHitMs1>Граница на ограждащият маркер</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>милисек.</WaveformBorderHitMs2>
     <WaveformColor>Цвят на сигнала</WaveformColor>
@@ -2266,7 +2272,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DarkThemeShowGridViewLines>Показване на решетка в изгледа на списъка</DarkThemeShowGridViewLines>
     <UpdateShortcut>Обнови</UpdateShortcut>
     <FoucsSetVideoPosition>Задаване на фокус позицията на видеото</FoucsSetVideoPosition>
-    <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
+    <ToggleDockUndockOfVideoControls>Превключване положението на видео управлението</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задаване край, добавяне нов и преминаване към него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Регулиране чрез крайно положение</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Задаване крайно време в позицията на курсора и преминаване на следващия субтитър</AdjustViaEndAutoStartAndGoToNext>
@@ -2362,6 +2368,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformGoToPreviousSceneChange>Преминаване към предишната промяна на сцената</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Преминаване към следващата промяна на сцена</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Превключване промяна на сцените</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>Премахване/експортиране на промените в сцената</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>Авт. настройване на старта чрез промяна силата на звука/сцената</WaveformGuessStart>
     <GoBack1Frame>1 кадър назад</GoBack1Frame>
     <GoForward1Frame>1 кадър напред</GoForward1Frame>
@@ -2394,7 +2401,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <PlayRateSlower>По-бавно възпроизвеждане</PlayRateSlower>
     <PlayRateFaster>По-бързо възпроизвеждане</PlayRateFaster>
     <VideoResetSpeedAndZoom>Нулиране на скорост/увеличение</VideoResetSpeedAndZoom>
-    <MainToggleVideoControls>Превключване на видео контрол</MainToggleVideoControls>
+    <MainToggleVideoControls>Превключване на видео управлението</MainToggleVideoControls>
     <VideoToggleContrast>Превключване на контраста (само за mpv)</VideoToggleContrast>
     <VideoToggleBrightness>Превключване на яркостта (само за mpv)</VideoToggleBrightness>
     <CustomSearch1>Превод, лично търсене 1</CustomSearch1>
@@ -2427,8 +2434,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeSelectedLinesBilingual>Обединяване на избраните двуезични редове</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Разделяне на избрания двуезичен ред</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Превключване режима на превода Вкл/Изкл</ToggleTranslationMode>
-    <SwitchOriginalAndTranslation>Превключване оригинален/преведен</SwitchOriginalAndTranslation>
-    <MergeOriginalAndTranslation>Обединяване на оригинален и преводен</MergeOriginalAndTranslation>
+    <SwitchOriginalAndTranslation>Превключване на оригинален и преведен</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Превключване оригинални и преведени текстови полета/колони за преглед на списък</SwitchOriginalAndTranslationTextBoxes>
+    <MergeOriginalAndTranslation>Обединяване на оригинален и преведен</MergeOriginalAndTranslation>
     <MergeWithNext>Обединяване със следващия</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Обединяване с предишния и неразделен</MergeWithPreviousAndUnbreak>
     <MergeWithNextAndUnbreak>Обединяване със следващия и неразделен</MergeWithNextAndUnbreak>
@@ -2960,7 +2968,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <Waveform>
     <AddWaveformAndSpectrogram>Добавяне Wav вълнова форма/спектрограма</AddWaveformAndSpectrogram>
     <ClickToAddWaveform>Щракнете тук за добавяне вълнова форма на звуковия сигнал (извличане *.Wav файл)</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Щракнете, за да добавите форма на зв. сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveformAndSpectrogram>Щракнете, за да добавите вълнова форма на зв. сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунди</Seconds>
     <ZoomIn>Увеличаване</ZoomIn>
     <ZoomOut>Намаляване</ZoomOut>
@@ -2978,8 +2986,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ExtendToPrevious>Удължаване до предишния</ExtendToPrevious>
     <ExtendToNext>Удължаване до следващия</ExtendToNext>
     <PlaySelection>Възпроизведи избрания ред</PlaySelection>
-    <ShowWaveformAndSpectrogram>Покажи формата на звуковия сигнал и спектрограмата</ShowWaveformAndSpectrogram>
-    <ShowWaveformOnly>Покажи само формата на звуковия сигнал</ShowWaveformOnly>
+    <ShowWaveformAndSpectrogram>Покажи вълновата форма на зв. сигнал и спектрограмата</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Покажи само вълновата форма на зв. сигнал</ShowWaveformOnly>
     <ShowSpectrogramOnly>Покажи само спектрограмата</ShowSpectrogramOnly>
     <AddSceneChange>Добави промяна на сцената</AddSceneChange>
     <RemoveSceneChange>Премахване променена сцена</RemoveSceneChange>
