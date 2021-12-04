@@ -23253,12 +23253,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            //if (_videoInfo != null && mediaPlayer.VideoWidth == 0 && _videoInfo.Width > 0)
-            //{
-            //    mediaPlayer.VideoWidth = _videoInfo.Width;
-            //    mediaPlayer.VideoHeight = _videoInfo.Height;
-            //}
-
             _timerSlow.Start();
         }
 
