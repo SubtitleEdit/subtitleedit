@@ -395,7 +395,7 @@ pt.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.7.2. Por favor
 pt.msg_DeleteSettings=Deseja remover as definições do Subtitle Edit e quaisquer alterações feitas nos dicionários?%n%nSe planeia reinstalar o Subtitle Edit não necessita de remover estes itens.
 pt.msg_OptimizingPerformance=A optimizar o desempenho...
 pt.run_VisitWebsite=Visitar o site do Subtitle Edit
-pt.sm_com_Changelog=Relatório de alterações do Subtitle Edit
+pt.sm_com_Changelog=Registo de alterações do Subtitle Edit
 pt.tsk_AllUsers=Todos os utilizadores
 pt.tsk_CurrentUser=Utilizador atual
 pt.tsk_Other=Outro:
@@ -403,7 +403,11 @@ pt.tsk_ResetDictionaries=Repor os Dicionários e remover quaisquer nomes persona
 pt.tsk_ResetSettings=Repor as definições do Subtitle Edit
 pt.tsk_SetFileTypes=Associar os ficheiros de texto SubRip (.srt) ao Subtitle Edit
 pt.types_custom=Instalação personalizada
-pt.types_default=Instalação padrão
+pt.types_default=Instalação predefinida
+pt. AppSetup=Configuração
+pt.HelpAndSupport=Ajuda e Suporte
+pt.AppChangelog=Registo de alterações
+pt.OnlineHelp=Ajuda Online
 
 
 ; Portuguese (Brazil)
