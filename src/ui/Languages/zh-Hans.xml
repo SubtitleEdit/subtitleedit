@@ -1177,11 +1177,12 @@ Command line: {1} {2}
         <SplitLongLines>分割长行...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>段落间最小显示时间...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>排序方式</SortBy>
-        <NetflixQualityCheck>Netflix质量检查...</NetflixQualityCheck>
         <Number>编号</Number>
         <StartTime>开始时间</StartTime>
         <EndTime>结束时间</EndTime>
         <Duration>时长</Duration>
+        <ListErrors>列出错误...</ListErrors>
+        <NetflixQualityCheck>Netflix质量检查...</NetflixQualityCheck>
         <TextAlphabetically>文字 - 按字母顺序</TextAlphabetically>
         <TextSingleLineMaximumLength>文字 - 单行最大长度</TextSingleLineMaximumLength>
         <TextTotalLength>文字 - 总长度</TextTotalLength>
@@ -1702,6 +1703,7 @@ Command line: {1} {2}
     <Errors>错误</Errors>
     <ShowVideoControls>显示视频控件</ShowVideoControls>
     <HideVideoControls>隐藏视频控件</HideVideoControls>
+    <GeneratingWaveformInBackground>在后台生成波形...</GeneratingWaveformInBackground>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2157,6 +2159,7 @@ Command line: {1} {2}
     <WaveformListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>单击以选中字幕</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>吸附到场景切换点 (按住Shift键可临时禁用)</WaveformSnapToSceneChanges>
+    <WaveformAutoGen>打开视频时自动生成波形</WaveformAutoGen>
     <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
     <WaveformColor>颜色</WaveformColor>
@@ -2420,6 +2423,7 @@ Command line: {1} {2}
     <SplitSelectedLineBilingual>拆分双语字幕</SplitSelectedLineBilingual>
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>切换原文和翻译文本框/列表视图列</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
     <MergeWithNext>合并到下一行</MergeWithNext>
     <MergeWithPreviousAndUnbreak>合并到上一行，且断行</MergeWithPreviousAndUnbreak>
