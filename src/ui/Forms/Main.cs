@@ -1791,6 +1791,9 @@ namespace Nikse.SubtitleEdit.Forms
             changeCasingForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.ChangeCasingForSelectedLines;
             toolStripMenuItemSaveSelectedLines.Text = _language.Menu.ContextMenu.SaveSelectedLines;
 
+            hideVideoControlsToolStripMenuItem.Text = _language.HideVideoControls;
+            toolStripMenuItemShowVideoControls.Text = _language.ShowVideoControls;
+
             // textbox context menu
             cutToolStripMenuItem.Text = _language.Menu.ContextMenu.Cut;
             copyToolStripMenuItem.Text = _language.Menu.ContextMenu.Copy;
