@@ -95,6 +95,9 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public string VideoFileName { get; set; }
+        public bool VideoFileNameIsUrl => VideoFileName != null &&
+                                          (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                           VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
 
         private DateTime _fileDateTime;
         private string _title;
@@ -4700,7 +4703,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrWhiteSpace(allText))
                     {
-                        MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
                     }
 
@@ -5313,7 +5316,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldFavoriteFormats != Configuration.Settings.General.FavoriteSubtitleFormats)
             {
-                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, String.Empty);
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, string.Empty);
             }
 
             SetLanguage(Configuration.Settings.General.Language);
@@ -20879,6 +20882,35 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowStatus(_language.Menu.Video.SmptTimeMode);
                 }
             }
+
+            if (VideoFileNameIsUrl)
+            {
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(2000), () => LoadVideoInfoAfterVideoFromUrlLoad());
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(5000), () => LoadVideoInfoAfterVideoFromUrlLoad());
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10000), () => LoadVideoInfoAfterVideoFromUrlLoad());
+            }
+        }
+
+        private void LoadVideoInfoAfterVideoFromUrlLoad()
+        {
+            if (VideoFileNameIsUrl && _videoInfo == null && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv && libMpv.VideoWidth > 0)
+            {
+                _videoInfo = new VideoInfo()
+                {
+                    Width = libMpv.VideoWidth,
+                    Height = libMpv.VideoHeight,
+                    TotalSeconds = libMpv.Duration,
+                    TotalMilliseconds = libMpv.Duration * 1000.0,
+                    FramesPerSecond = libMpv.VideoTotalFrames,
+                    TotalFrames = libMpv.VideoFps,
+                    Success = true,
+                };
+                mediaPlayer.VideoWidth = _videoInfo.Width;
+                mediaPlayer.VideoHeight = _videoInfo.Height;
+                mediaPlayer.SetSubtitleText(string.Empty, new Paragraph(), new Subtitle(), GetCurrentSubtitleFormat());
+                UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
+                AddEmptyWaveform();
+            }
         }
 
         private void VideoEnded(object sender, EventArgs e)
@@ -23221,6 +23253,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            //if (_videoInfo != null && mediaPlayer.VideoWidth == 0 && _videoInfo.Width > 0)
+            //{
+            //    mediaPlayer.VideoWidth = _videoInfo.Width;
+            //    mediaPlayer.VideoHeight = _videoInfo.Height;
+            //}
+
             _timerSlow.Start();
         }
 
@@ -24294,25 +24332,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (audioVisualizer.WavePeaks == null)
             {
-                if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                                              VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                if (VideoFileNameIsUrl)
                 {
-                    if (mediaPlayer.Duration > 0)
-                    {
-                        ShowStatus(LanguageSettings.Current.AddWaveform.GeneratingPeakFile);
-                        var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
-                        audioVisualizer.ZoomFactor = 1.0;
-                        audioVisualizer.VerticalZoomFactor = 1.0;
-                        SelectZoomTextInComboBox();
-                        audioVisualizer.WavePeaks = WavePeakGenerator.GenerateEmptyPeaks(peakWaveFileName, (int)mediaPlayer.Duration);
-                        if (smpteTimeModedropFrameToolStripMenuItem.Checked)
-                        {
-                            audioVisualizer.UseSmpteDropFrameTime();
-                        }
-
-                        timerWaveform.Start();
-                    }
-
+                    AddEmptyWaveform();
                     return;
                 }
 
@@ -24392,6 +24414,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AddEmptyWaveform()
+        {
+            if (mediaPlayer.Duration > 0)
+            {
+                var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(VideoFileName);
+                audioVisualizer.ZoomFactor = 1.0;
+                audioVisualizer.VerticalZoomFactor = 1.0;
+                SelectZoomTextInComboBox();
+                audioVisualizer.WavePeaks = WavePeakGenerator.GenerateEmptyPeaks(peakWaveFileName, (int)mediaPlayer.Duration);
+                if (smpteTimeModedropFrameToolStripMenuItem.Checked)
+                {
+                    audioVisualizer.UseSmpteDropFrameTime();
+                }
+
+                timerWaveform.Start();
+            }
+        }
+
         private void ReloadWaveform(string fileName, int audioTrackNumber)
         {
             if (audioVisualizer.WavePeaks != null)
@@ -24407,8 +24447,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioTrackNumber -= 1;
             }
 
-            if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                                          VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+            if (VideoFileNameIsUrl)
             {
                 if (mediaPlayer.Duration > 0)
                 {
@@ -28564,7 +28603,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
                 // refresh mpv text
-                mediaPlayer.SetSubtitleText("", new Paragraph(), new Subtitle(), GetCurrentSubtitleFormat());
+                mediaPlayer.SetSubtitleText(string.Empty, new Paragraph(), new Subtitle(), GetCurrentSubtitleFormat());
                 UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
             }
         }
@@ -31029,7 +31068,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, "Url", string.Empty))
+            using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, "Url", string.Empty, 500))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -32381,8 +32420,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (VideoFileName != null && (VideoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                                          VideoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+            if (VideoFileNameIsUrl)
             {
                 MessageBox.Show(LanguageSettings.Current.General.OnlineVideoFeatureNotAvailable);
                 return;

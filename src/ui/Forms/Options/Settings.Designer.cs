@@ -214,6 +214,7 @@
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
+            this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
             this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
             this.checkBoxWaveformSnapToSceneChanges = new System.Windows.Forms.CheckBox();
@@ -414,7 +415,6 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -2824,6 +2824,16 @@
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
             // 
+            // checkBoxWaveformAutoGen
+            // 
+            this.checkBoxWaveformAutoGen.AutoSize = true;
+            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 186);
+            this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
+            this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
+            this.checkBoxWaveformAutoGen.TabIndex = 35;
+            this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
+            this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
+            // 
             // panelWaveformCursorColor
             // 
             this.panelWaveformCursorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -4964,16 +4974,6 @@
             this.toolTipContinuationPreview.AutoPopDelay = 60000;
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
-            // 
-            // checkBoxWaveformAutoGen
-            // 
-            this.checkBoxWaveformAutoGen.AutoSize = true;
-            this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 188);
-            this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
-            this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
-            this.checkBoxWaveformAutoGen.TabIndex = 35;
-            this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
-            this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
