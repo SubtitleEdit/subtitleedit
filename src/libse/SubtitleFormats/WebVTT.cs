@@ -164,13 +164,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var header = new StringBuilder();
             header.AppendLine("WEBVTT");
             header.AppendLine();
+
             for (var index = 0; index < lines.Count; index++)
             {
-                string line = lines[index];
-                string next = string.Empty;
+                var line = lines[index];
+                var next = string.Empty;
+                var isNextTimeCode = false;
                 if (index < lines.Count - 1)
                 {
                     next = lines[index + 1];
+                    isNextTimeCode = next.Contains("-->");
                 }
 
                 if (index == 0 && line.StartsWith("WEBVTT", StringComparison.Ordinal))
@@ -248,7 +251,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = "00:" + s.Replace("--> ", "--> 00:");
                 }
 
-                if (index == 1 && s.StartsWith("X-TIMESTAMP-MAP=", StringComparison.OrdinalIgnoreCase) &&
+                if (isNextTimeCode && Utilities.IsNumber(s) && p?.Text.Length > 0)
+                {
+                    numbers++;
+                }
+                else if (index == 1 && s.StartsWith("X-TIMESTAMP-MAP=", StringComparison.OrdinalIgnoreCase) &&
                     s.IndexOf("MPEGTS:", StringComparison.OrdinalIgnoreCase) > 0)
                 {
                     addSeconds = GetXTimeStampSeconds(s);
@@ -316,7 +323,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
             }
 
-            if (subtitle.Paragraphs.Count > 5 &&
+            if (subtitle.Paragraphs.Count > 3 &&
                 numbers >= subtitle.Paragraphs.Count - 1 &&
                 lines[0] == "WEBVTT FILE")
             {
