@@ -14822,10 +14822,11 @@ namespace Nikse.SubtitleEdit.Forms
                 changeFrameRate.Initialize(CurrentFrameRate.ToString());
                 if (changeFrameRate.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeChangeFrameRate);
-
                     double oldFrameRate = changeFrameRate.OldFrameRate;
                     double newFrameRate = changeFrameRate.NewFrameRate;
+
+                    MakeHistoryForUndo(_language.BeforeChangeFrameRate + $" ({oldFrameRate} -> {newFrameRate})");
+
                     _subtitle.ChangeFrameRate(oldFrameRate, newFrameRate);
 
                     ShowStatus(string.Format(_language.FrameRateChangedFromXToY, oldFrameRate, newFrameRate));
@@ -29854,7 +29855,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeAdjustSpeedInPercent);
+                    MakeHistoryForUndo(_language.BeforeAdjustSpeedInPercent + $" ({form.Percentage})");
                     SaveSubtitleListviewIndices();
                     if (form.AdjustAllLines)
                     {

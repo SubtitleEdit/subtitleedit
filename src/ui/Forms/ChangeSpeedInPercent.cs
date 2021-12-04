@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public double AdjustFactor { get; private set; }
         public bool AdjustAllLines { get; private set; }
+        public decimal Percentage { get; private set; }
 
         public ChangeSpeedInPercent(int numberOfSelectedLines)
         {
@@ -88,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            Percentage = numericUpDownPercent.Value;
             AdjustFactor = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
             AdjustAllLines = radioButtonAllLines.Checked;
             DialogResult = DialogResult.OK;
