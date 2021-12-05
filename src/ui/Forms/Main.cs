@@ -364,6 +364,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoInfo.Text = string.Empty;
                 labelSingleLine.Text = string.Empty;
                 labelSingleLinePixels.Text = string.Empty;
+                labelTextOriginalLineTotal.Text = string.Empty;
                 Text = Title;
                 timeUpDownStartTime.TimeCode = new TimeCode();
                 timeUpDownStartTime.UseVideoOffset = true;
