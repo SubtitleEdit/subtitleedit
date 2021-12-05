@@ -38,7 +38,10 @@ en.tsk_ResetSettings=Reset Subtitle Edit's settings
 en.tsk_SetFileTypes=Associate SubRip (.srt) files with Subtitle Edit
 en.types_custom=Custom installation
 en.types_default=Default installation
-
+en.AppSetup=Setup
+en.HelpAndSupport=Help and Support
+en.AppChangelog=Changelog
+en.OnlineHelp=Online Help
 
 #ifdef localize
 ; Arabic
@@ -294,7 +297,10 @@ it.tsk_ResetSettings=Ripristina le impostazioni di Subtitle Edit
 it.tsk_SetFileTypes=Associa file SubRip (.srt) con Subtitle Edit
 it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
-
+it.AppSetup=Installazione
+it.HelpAndSupport=Aiuto e supporto
+it.AppChangelog=Novità programma
+it.OnlineHelp=Guida online
 
 ; Japanese
 ja.comp_translations=翻訳
