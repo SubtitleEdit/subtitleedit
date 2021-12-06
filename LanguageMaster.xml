@@ -1725,6 +1725,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ConvertTo>Convert to</ConvertTo>
     <CopyToClipboard>Copy to clipboard</CopyToClipboard>
     <CloseOnInsert>Close on insert</CloseOnInsert>
+    <Insert>Insert</Insert>
     <Length>Length</Length>
     <Mass>Mass</Mass>
     <Volume>Volume</Volume>

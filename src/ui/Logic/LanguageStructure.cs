@@ -1864,6 +1864,7 @@
             public string ConvertTo { get; set; }
             public string CopyToClipboard { get; set; }
             public string CloseOnInsert { get; set; }
+            public string Insert { get; set; }
             public string Length { get; set; }
             public string Mass { get; set; }
             public string Volume { get; set; }

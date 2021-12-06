@@ -141,6 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelConvertFrom.Text = l.ConvertFrom;
             labelConvertTo.Text = l.ConvertTo;
             linkLabel1.Text = l.CopyToClipboard;
+            buttonInsert.Text = l.Insert;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             checkBoxCloseOnInsert.Text = l.CloseOnInsert;
             checkBoxCloseOnInsert.Checked = Configuration.Settings.General.MeasurementConverterCloseOnInsert;

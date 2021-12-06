@@ -2002,6 +2002,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ConvertTo = "Convert to",
                 CopyToClipboard = "Copy to clipboard",
                 CloseOnInsert = "Close on insert",
+                Insert = "Insert",
 
                 Length = "Length",
                 Mass = "Mass",
