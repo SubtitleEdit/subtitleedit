@@ -20898,7 +20898,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadVideoInfoAfterVideoFromUrlLoad()
         {
-            if (VideoFileNameIsUrl && _videoInfo == null && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv && libMpv.VideoWidth > 0)
+            if (VideoFileNameIsUrl && _videoInfo == null && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv && libMpv.Duration > 0)
             {
                 _videoInfo = new VideoInfo()
                 {
@@ -20914,7 +20914,11 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.VideoHeight = _videoInfo.Height;
                 mediaPlayer.SetSubtitleText(string.Empty, new Paragraph(), new Subtitle(), GetCurrentSubtitleFormat());
                 UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
-                AddEmptyWaveform();
+
+                if (Configuration.Settings.General.WaveformAutoGenWhenOpeningVideo)
+                {
+                    AddEmptyWaveform();
+                }
             }
         }
 
