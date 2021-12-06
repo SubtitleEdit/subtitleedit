@@ -155,8 +155,8 @@ Name: "zhTW"; MessagesFile: "Languages\ChineseTraditional.isl"
 
 [Messages]
 ;BeveledLabel=Subtitle Edit {#app_ver} by Nikse
-SetupAppTitle={cm:AppSetup} - Subtitle Edit
-SetupWindowTitle={cm:AppSetup} - Subtitle Edit {#app_ver}
+SetupAppTitle=Subtitle Edit
+SetupWindowTitle=Subtitle Edit {#app_ver}
 
 
 [Types]
@@ -306,11 +306,11 @@ Source: ..\Tesseract302\msvcr90.dll;                 DestDir: {app}\Tesseract302
 
 
 [Icons]
-Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\{cm:HelpAndSupport}\{cm:AppChangelog}; Filename: {app}\Changelog.txt; WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\{cm:HelpAndSupport}\{cm:OnlineHelp}; Filename: https://www.nikse.dk/SubtitleEdit/Help
 Name: {group}\{cm:HelpAndSupport}\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: https://www.nikse.dk/SubtitleEdit/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
-Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};                     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
+Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
 
 Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
 Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
