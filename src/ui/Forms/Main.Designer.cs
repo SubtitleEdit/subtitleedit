@@ -5254,7 +5254,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewTextOriginal.SelectionStart = 0;
             this.textBoxListViewTextOriginal.Size = new System.Drawing.Size(16, 84);
             this.textBoxListViewTextOriginal.TabIndex = 33;
-            this.textBoxListViewTextOriginal.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxListViewTextOriginal.Visible = false;
             this.textBoxListViewTextOriginal.TextChanged += new System.EventHandler(this.textBoxListViewTextOriginal_TextChanged);
             this.textBoxListViewTextOriginal.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextOriginalKeyDown);
@@ -5311,7 +5310,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.SelectionStart = 0;
             this.textBoxListViewText.Size = new System.Drawing.Size(378, 84);
             this.textBoxListViewText.TabIndex = 5;
-            this.textBoxListViewText.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
             this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
