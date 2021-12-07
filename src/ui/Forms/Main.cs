@@ -1936,14 +1936,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonWaveformZoomOut.ToolTipText = languageWaveform.ZoomOut;
             toolStripButtonWaveformZoomIn.ToolTipText = languageWaveform.ZoomIn;
 
-            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
-            {
-                audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveformAndSpectrogram;
-            }
-            else
-            {
-                audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveform;
-            }
+            SetWaveFormNotLoadedText(languageWaveform);
 
             FormatLanguage.LineNumberXErrorReadingFromSourceLineY = LanguageSettings.Current.Main.LineNumberXErrorReadingFromSourceLineY;
             FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY = LanguageSettings.Current.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY;
@@ -2100,6 +2093,18 @@ namespace Nikse.SubtitleEdit.Forms
                 { "zu", LanguageSettings.Current.LanguageNames.zuName },
             };
             DvdSubtitleLanguage.Initialize();
+        }
+
+        private void SetWaveFormNotLoadedText(LanguageStructure.Waveform languageWaveform)
+        {
+            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+            {
+                audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveformAndSpectrogram;
+            }
+            else
+            {
+                audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveform;
+            }
         }
 
         private void SetFormatTo(string formatName)
@@ -4964,6 +4969,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Value = 0;
                 timeUpDownStartTime.TimeCode = new TimeCode();
                 numericUpDownDuration.Value = 0;
+                SetWaveFormNotLoadedText(LanguageSettings.Current.Waveform);
             }
 
             _sourceViewChange = false;
@@ -20608,7 +20614,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
-                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus(_language.GeneratingWaveformInBackground));
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => ShowStatus(_language.GeneratingWaveformInBackground, true, 10_000));
                         var bw = new BackgroundWorker();
                         bw.DoWork += (sender, args) =>
                         {
@@ -20677,6 +20683,7 @@ namespace Nikse.SubtitleEdit.Forms
                         };
                         bw.RunWorkerCompleted += (sender, args) =>
                         {
+                            ShowStatus(string.Empty, false);
                             if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
                             {
                                 return;
@@ -20708,10 +20715,15 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         };
                         bw.RunWorkerAsync(process);
+
+                        audioVisualizer.WaveformNotLoadedText = _language.GeneratingWaveformInBackground;
+                        audioVisualizer.Invalidate();
                     }
                     catch (DllNotFoundException)
                     {
                         //TODO: display message
+                        ShowStatus(string.Empty);
+                        SetWaveFormNotLoadedText(LanguageSettings.Current.Waveform);
                     }
                 }
             }
@@ -24333,6 +24345,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
+            if (audioVisualizer.WaveformNotLoadedText == _language.GeneratingWaveformInBackground)
+            {
+                return;
+            }
+
             if (audioVisualizer.WavePeaks == null)
             {
                 if (VideoFileNameIsUrl)
