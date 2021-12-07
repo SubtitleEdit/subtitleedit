@@ -1041,7 +1041,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // paragraph text
-                if (n > 80)
+                if (n > 50)
                 {
                     string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                     if (Configuration.Settings.VideoControls.WaveformUnwrapText)
@@ -1920,12 +1920,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool IsParagraphBorderStartHit(double milliseconds, double startMs)
         {
-            return Math.Abs(milliseconds - (startMs - 5)) - 10 <= ClosenessForBorderSelection;
+            return Math.Abs(milliseconds - (startMs - 5)) - 10 <= ClosenessForBorderSelection / ZoomFactor;
         }
 
         private bool IsParagraphBorderEndHit(double milliseconds, double endMs)
         {
-            return Math.Abs(milliseconds - (endMs - 22)) - 7 <= ClosenessForBorderSelection;
+            return Math.Abs(milliseconds - (endMs - 22)) - 7 <= ClosenessForBorderSelection / ZoomFactor;
         }
 
         private void WaveformMouseUp(object sender, MouseEventArgs e)
