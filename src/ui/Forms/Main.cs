@@ -268,6 +268,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(tabControlModes, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
             UiUtil.InitializeSubtitleFont(textBoxSource);
+            UiUtil.InitializeSubtitleFont(textBoxListViewText);
+            UiUtil.InitializeSubtitleFont(textBoxListViewTextOriginal);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
             using (var graphics = CreateGraphics())
