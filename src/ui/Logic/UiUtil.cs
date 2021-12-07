@@ -504,7 +504,11 @@ namespace Nikse.SubtitleEdit.Logic
                         control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize);
                     }
                 }
-                else if (control is SETextBox || control is TextBox)
+                else if (control is SETextBox seTextBox)
+                {
+                    seTextBox.UpdateFontAndColors(seTextBox);
+                }
+                else if (control is TextBox)
                 {
                     if (gs.SubtitleTextBoxFontBold)
                     {
