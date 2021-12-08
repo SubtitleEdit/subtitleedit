@@ -1041,7 +1041,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // paragraph text
-                if (n > 50)
+                if (n > 20)
                 {
                     string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                     if (Configuration.Settings.VideoControls.WaveformUnwrapText)
@@ -1053,7 +1053,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // paragraph number
-                if (n > 25)
+                if (n > 15)
                 {
                     string text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortDisplayString();
                     if (n <= 51 || graphics.MeasureString(text, font).Width >= currentRegionWidth - padding - 1)
