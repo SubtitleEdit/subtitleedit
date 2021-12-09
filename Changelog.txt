@@ -1,11 +1,11 @@
 ﻿Subtitle Edit Changelog
 
-3.6.4 (xth February 2022) BETA
+3.6.5 (xth February 2022) BETA
 * NEW:
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
-   * Update Italian translation - thx NAMP
+   * Update Italian translation - thx NAMP/bovirus
    * Update Brazil translation - thx Igor
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
