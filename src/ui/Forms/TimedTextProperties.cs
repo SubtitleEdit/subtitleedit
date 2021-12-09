@@ -310,7 +310,21 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Header = _xml.OuterXml;
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
-            Configuration.Settings.SubtitleSettings.TimedText10FileExtension= comboBoxFileExtensions.SelectedItem.ToString();
+
+            var currentTimedTextExt = Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
+            var newTimedTextExt = comboBoxFileExtensions.SelectedItem.ToString();
+            if (currentTimedTextExt != newTimedTextExt)
+            {
+                var favoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats;
+                var currentTimedTextWithExt = $"Timed Text 1.0 ({currentTimedTextExt})";
+                var newTimedTextWithExt = $"Timed Text 1.0 ({newTimedTextExt})";
+                if (favoriteFormats.Contains(currentTimedTextWithExt))
+                {
+                    Configuration.Settings.General.FavoriteSubtitleFormats = favoriteFormats.Replace(currentTimedTextWithExt, newTimedTextWithExt);
+                }
+
+                Configuration.Settings.SubtitleSettings.TimedText10FileExtension = newTimedTextExt;
+            }
 
             DialogResult = DialogResult.OK;
         }
