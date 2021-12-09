@@ -5,7 +5,7 @@
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
-   * Update Italian translation - thx NAMP/bovirus  
+   * Update Italian translation - thx NAMP/bovirus
    * Update Brazil translation - thx Igor
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
@@ -18,6 +18,8 @@
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
+   * Fix typo for middle/center in WebVTT properties form defaults - thx koitsu
+   * Fix issue with TTML 1.0 + favorite + ext change - thx OmrSi
 
 
 3.6.4 (3rd December 2021)
