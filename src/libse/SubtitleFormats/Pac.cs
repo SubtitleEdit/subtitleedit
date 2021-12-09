@@ -1226,9 +1226,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static void WriteTimeCode(Stream fs, TimeCode timeCode)
         {
             // write four bytes time code
-            string highPart = $"{timeCode.Hours:00}{timeCode.Minutes:00}";
-            byte frames = (byte)MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds);
-            string lowPart = $"{timeCode.Seconds:00}{frames:00}";
+            var hours = Math.Max(0, timeCode.Hours);
+            var minutes = Math.Max(0, timeCode.Minutes);
+            var seconds = Math.Max(0, timeCode.Seconds);
+            var milliseconds = Math.Max(0, timeCode.Milliseconds);
+
+            string highPart = $"{hours:00}{minutes:00}";
+            byte frames = (byte)MillisecondsToFramesMaxFrameRate(milliseconds);
+            string lowPart = $"{seconds:00}{frames:00}";
 
             int high = int.Parse(highPart);
             if (high < 256)
