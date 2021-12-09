@@ -1,5 +1,25 @@
 ﻿Subtitle Edit Changelog
 
+3.6.4 (xth February 2022) BETA
+* NEW:
+   * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
+* IMPROVED:
+   * Update Bulgarian translation - thx Калин
+   * Update Italian translation - thx NAMP
+   * Update Brazil translation - thx Igor
+   * Update Portuguese translation - thx hugok79
+   * Update Polish translation - thx admas
+   * Update Chinese translation - thx nkh0472
+   * Update Finnish translation - thx Teijo S
+   * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
+   * Improve VTT parsing of malformed files - thx Leon
+   * Handle merge/split better with "box" tag
+   * Improve zoom-in for waveform a little - thx vitacon
+* FIXED:
+   * Fix for generating empty waveform for online videos - thx OmrSi
+   * Fix for finding frame rate in some mp4 files - thx OmrSi
+
+
 3.6.4 (3rd December 2021)
 * NEW:
    * List errors based on current profile (Ctrl+F8)
