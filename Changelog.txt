@@ -5,7 +5,7 @@
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
-   * Update Italian translation - thx NAMP/bovirus
+   * Update Italian translation - thx NAMP/bovirus  
    * Update Brazil translation - thx Igor
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
