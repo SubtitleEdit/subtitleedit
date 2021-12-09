@@ -1725,10 +1725,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <ConvertFrom>Конвертиране от</ConvertFrom>
     <ConvertTo>Конвертиране към</ConvertTo>
     <CopyToClipboard>Копиране в клипборда</CopyToClipboard>
-    <CloseOnInsert>Затвори при вмъкване</CloseOnInsert>
+    <CloseOnInsert>Затв. при вмъкване</CloseOnInsert>
+    <Insert>Вмъкни</Insert>
     <Length>Дължина</Length>
     <Mass>Тегло</Mass>
-    <Volume>Сила на звука</Volume>
+    <Volume>Обем</Volume>
     <Area>Площ</Area>
     <Time>Време</Time>
     <Temperature>Температура</Temperature>
