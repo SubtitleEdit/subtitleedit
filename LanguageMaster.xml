@@ -1506,8 +1506,7 @@ Would you like to start from the top of the document and continue search and rep
     <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed: One line</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed: {0} lines</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Subtitle was split</SubtitleSplitted>
-    <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should
-already be in sync with video file.
+    <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should already be in sync with video file.
 
 Continue?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Append subtitle</SubtitleAppendPromptTitle>
