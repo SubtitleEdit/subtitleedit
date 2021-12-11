@@ -97,6 +97,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         stream.Read(buffer, 0, buffer.Length);
                         Text = System.Text.Encoding.UTF8.GetString(buffer);
                     }
+                    else
+                    {
+                        Text = string.Empty;
+                    }
 
                     if (isShort)
                     {
@@ -109,7 +113,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         LinesBackground = ReadPoints(stream);
                     }
 
-                    LoadedOk = true;
+                    if (Width >= 0 && Height >= 0 && Width <= 1920 && Height <= 1080 && Text.IndexOf('\0') < 0)
+                    {
+                        LoadedOk = true;
+                    }
+                    else
+                    {
+                        LoadedOk = false;
+                    }
                 }
                 else
                 {
@@ -137,10 +148,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         stream.Read(buffer, 0, buffer.Length);
                         Text = System.Text.Encoding.UTF8.GetString(buffer);
                     }
+                    else
+                    {
+                        Text = string.Empty;
+                    }
+
                     LinesForeground = ReadPoints(stream);
                     LinesBackground = ReadPoints(stream);
 
-                    LoadedOk = true;
+                    if (Width >= 0 && Height >= 0 && Width <= 1920 && Height <= 1080 && Text.IndexOf('\0') < 0)
+                    {
+                        LoadedOk = true;
+                    }
+                    else
+                    {
+                        LoadedOk = false;
+                    }
                 }
             }
             catch
