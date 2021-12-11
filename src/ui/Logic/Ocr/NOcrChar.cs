@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         LinesBackground = ReadPoints(stream);
                     }
 
-                    if (Width >= 0 && Height >= 0 && Width <= 1920 && Height <= 1080 && Text.IndexOf('\0') < 0)
+                    if (Width > 0 && Height > 0 && Width <= 1920 && Height <= 1080 && Text.IndexOf('\0') < 0)
                     {
                         LoadedOk = true;
                     }
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     LinesForeground = ReadPoints(stream);
                     LinesBackground = ReadPoints(stream);
 
-                    if (Width >= 0 && Height >= 0 && Width <= 1920 && Height <= 1080 && Text.IndexOf('\0') < 0)
+                    if (Width > 0 && Height > 0 && Width <= 1920 && Height <= 1080 && Text.IndexOf('\0') < 0)
                     {
                         LoadedOk = true;
                     }
