@@ -1693,7 +1693,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            int bottomIndex = TopItem.Index + (Height - 25) / 16;
+            int bottomIndex = TopItem.Index + (Height - 30) / GetItemRect(0).Height;
             int itemsBeforeAfterCount = (bottomIndex - TopItem.Index) / 2 - 1;
             if (itemsBeforeAfterCount < 0)
             {
