@@ -1498,8 +1498,7 @@ Command line: {1} {2}
     <TextingForHearingImpairedRemovedOneLine>已删除听障辅助文本: 1 行</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>已删除听障辅助文本: {0} 行</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>字幕已分割</SubtitleSplitted>
-    <SubtitleAppendPrompt>这将追加一个已有的字幕到当前加载的字幕中，它应当
-已与视频文件同步。
+    <SubtitleAppendPrompt>这将追加一个已有的字幕到当前加载的字幕中，它应当已与视频文件同步。
 
 您要继续吗？</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>追加字幕</SubtitleAppendPromptTitle>
