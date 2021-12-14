@@ -1507,12 +1507,11 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <TextingForHearingImpairedRemovedOneLine>Removidas as mensagens de texto para deficientes auditivos: Uma linha</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Removidas as mensagens de texto para deficientes auditivos: {0} linhas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Legenda foi dividida</SubtitleSplitted>
-    <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
-já estar em sincronia com o vídeo.
+    <SubtitleAppendPrompt>Isto irá anexar uma legenda existente à legenda já carregada que deve já estar em sincronia com o vídeo.
 
 Continuar?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Anexar legenda</SubtitleAppendPromptTitle>
-    <OpenSubtitleToAppend>Abrir legenda para anexar...</OpenSubtitleToAppend>
+    <OpenSubtitleToAppend>Abrir legenda a anexar...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Sincronia visual - anexar a segunda parte da legenda</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>Anexar esta legenda sincronizada?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Antes de anexar</BeforeAppend>
@@ -1524,11 +1523,11 @@ Continuar?</SubtitleAppendPrompt>
     <SelectedLinesTranslated>Linhas seleccionadas traduzidas</SelectedLinesTranslated>
     <SubtitleTranslated>Legenda traduzida</SubtitleTranslated>
     <TranslateSwedishToDanish>Traduzir legenda carregada de Sueco para Dinamarquês</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>Traduzir a legenda actualmente carregada de SUECO para Dinamarquês?</TranslateSwedishToDanishWarning>
+    <TranslateSwedishToDanishWarning>Traduzir a legenda actualmente carregada de SUECO (tem a certeza de que é Sueco?) para Dinamarquês?</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>Tradução através de www.nikse.dk/mt...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>Antes de traduzir de Sueco para Dinamarquês</BeforeSwedishToDanishTranslation>
-    <TranslationFromSwedishToDanishComplete>Tradução de Sueco para Dinamarquês completa</TranslationFromSwedishToDanishComplete>
-    <TranslationFromSwedishToDanishFailed>Falhou a tradução de Sueco para Dinamarquês</TranslationFromSwedishToDanishFailed>
+    <TranslationFromSwedishToDanishComplete>Tradução de Sueco para Dinamarquês concluída</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>Falha ao traduzir de Sueco para Dinamarquês</TranslationFromSwedishToDanishFailed>
     <UndoPerformed>Anular aplicado</UndoPerformed>
     <RedoPerformed>Refazer aplicado</RedoPerformed>
     <NothingToUndo>Nada para anular</NothingToUndo>
