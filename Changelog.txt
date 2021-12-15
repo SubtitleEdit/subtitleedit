@@ -15,6 +15,7 @@
    * Improve VTT parsing of malformed files - thx Leon
    * Handle merge/split better with "box" tag
    * Improve zoom-in for waveform a little - thx vitacon
+   * Trying to make nOCR work better with corrupted files - thx k7Up
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
