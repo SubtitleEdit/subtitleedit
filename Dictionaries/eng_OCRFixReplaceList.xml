@@ -849,8 +849,6 @@
     <Word from="hearyou" to="hear you" />
     <Word from="hearyour" to="hear your" />
     <Word from="Hefell" to="He fell" />
-    <Word from="he'II" to="he'll" />
-    <Word from="He'II" to="He'll" />
     <Word from="HeII0" to="Hello" />
     <Word from="He'Il" to="He'll" />
     <Word from="Hejust" to="He just" />
@@ -1165,10 +1163,6 @@
     <Word from="Ithoguht" to="I thought" />
     <Word from="Ithought" to="I thought" />
     <Word from="Ithoughtl" to="I thought I" />
-    <Word from="it'II" to="it'll" />
-    <Word from="It'II" to="It'll" />
-    <Word from="it'Il" to="it'll" />
-    <Word from="It'Il" to="It'll" />
     <Word from="itin" to="it in" />
     <Word from="itis" to="it is" />
     <Word from="Itis" to="It is" />
@@ -1490,7 +1484,6 @@
     <Word from="mi//ion" to="million" />
     <Word from="midenticard" to="...identicard" />
     <Word from="mighfve" to="might've" />
-    <Word from="military'II" to="military'll" />
     <Word from="militaryjuntas" to="military juntas" />
     <Word from="mindboggling" to="mind boggling" />
     <Word from="mineforthe" to="mine for the" />
@@ -1931,7 +1924,6 @@
     <Word from="rightdown" to="right down" />
     <Word from="rightsto" to="rights to" />
     <Word from="rne" to="me" />
-    <Word from="road'II" to="road'll" />
     <Word from="roadyou" to="road you" />
     <Word from="rolLs" to="rolls" />
     <Word from="RUMBUNG" to="RUMBLING" />
@@ -1973,8 +1965,6 @@
     <Word from="Shdsjust" to="She's just" />
     <Word from="She`s" to="She's" />
     <Word from="She‘II" to="She'll" />
-    <Word from="She'II" to="She'll" />
-    <Word from="she'II" to="she'll" />
     <Word from="she'Il" to="she'll" />
     <Word from="Shejust" to="She just" />
     <Word from="she'lI" to="she'll" />
@@ -2115,8 +2105,6 @@
     <Word from="thatconverts" to="that converts" />
     <Word from="thatflinty" to="that flinty" />
     <Word from="thatgoes" to="that goes" />
-    <Word from="that'II" to="that'll" />
-    <Word from="That'II" to="That'll" />
     <Word from="thatJack" to="that Jack" />
     <Word from="thatJack's" to="that Jack's" />
     <Word from="thatjob" to="that job" />
@@ -2165,7 +2153,6 @@
     <Word from="Therds" to="There's" />
     <Word from="there,s" to="there's" />
     <Word from="There,s" to="There's" />
-    <Word from="There'II" to="There'll" />
     <Word from="There'Il" to="There'll" />
     <Word from="There'lI" to="There'll" />
     <Word from="therell" to="there'll" />
@@ -2189,8 +2176,6 @@
     <Word from="Theyd" to="They'd" />
     <Word from="theyd" to="they'd" />
     <Word from="theyhad" to="they had" />
-    <Word from="They'II" to="They'll" />
-    <Word from="they'II" to="they'll" />
     <Word from="they'Il" to="they'll" />
     <Word from="Theyjust" to="They just" />
     <Word from="theyjust" to="they just" />
@@ -2205,7 +2190,6 @@
     <Word from="theysay" to="they say" />
     <Word from="theyve" to="they've" />
     <Word from="Theyve" to="They've" />
-    <Word from="thing'II" to="thing'll" />
     <Word from="Thinkbackto" to="Think back to" />
     <Word from="thinkl" to="think l" />
     <Word from="thinkofafew" to="think of a few" />
@@ -2396,8 +2380,6 @@
     <Word from="Wefl" to="Well" />
     <Word from="Wégymxa" to="Wayne" />
     <Word from="weii" to="well" />
-    <Word from="We'II" to="We'll" />
-    <Word from="we'II" to="we'll" />
     <Word from="we'Il" to="we'll" />
     <Word from="We'Il" to="We'll" />
     <Word from="wejust" to="we just" />
@@ -2439,8 +2421,6 @@
     <Word from="Whatevefs" to="Whatever's" />
     <Word from="Whateverwe" to="Whatever we" />
     <Word from="whateveryou" to="whatever you" />
-    <Word from="What'II" to="What'll" />
-    <Word from="what'II" to="what'll" />
     <Word from="Whatis" to="What is" />
     <Word from="whatJuma's" to="what Juma's" />
     <Word from="whatjust" to="what just" />
@@ -2558,8 +2538,6 @@
     <Word from="you`re" to="you're" />
     <Word from="youd" to="you'd" />
     <Word from="Youd" to="You'd" />
-    <Word from="You'II" to="You'll" />
-    <Word from="you'II" to="you'll" />
     <Word from="You'Il" to="You'll" />
     <Word from="youjack" to="you jack" />
     <Word from="youjean" to="you Jean" />
@@ -3380,5 +3358,6 @@
     <RegEx find="\bl\b" replaceWith="I" />
     <RegEx find="\. lt\b" replaceWith=". It" />
     <RegEx find="\. lf\b" replaceWith=". If" />
+    <RegEx find="(\p{Ll})('II)([ \r\n])" replaceWith="$1'll$3" />
   </RegularExpressions>
 </OCRFixReplaceList>
