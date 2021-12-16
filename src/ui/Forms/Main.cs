@@ -20870,13 +20870,14 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxSource.SelectionLength = 0;
 
             if (!_loading &&
-                _videoInfo != null &&
-                 ((decimal)_videoInfo.FramesPerSecond) % 1 != 0m &&
+                Configuration.Settings.General.AutoSetVideoSmpteForTtml &&
+                !Configuration.Settings.General.CurrentVideoIsSmpte &&
                 _subtitle.Header != null &&
                 _subtitle.Header.Contains("frameRateMultiplier=\"1000 1001\"", StringComparison.OrdinalIgnoreCase) &&
                 _subtitle.Header.Contains("timeBase=\"smpte\"", StringComparison.OrdinalIgnoreCase) &&
-                Configuration.Settings.General.AutoSetVideoSmpteForTtml &&
-                !Configuration.Settings.General.CurrentVideoIsSmpte &&
+                _videoInfo != null &&
+                !double.IsNaN(_videoInfo.FramesPerSecond) &&
+                 ((decimal)_videoInfo.FramesPerSecond) % 1 != 0m &&
                 (_currentSubtitleFormat?.Name == TimedText10.NameOfFormat ||
                 _currentSubtitleFormat?.Name == NetflixTimedText.NameOfFormat ||
                 _currentSubtitleFormat?.Name == ItunesTimedText.NameOfFormat))
