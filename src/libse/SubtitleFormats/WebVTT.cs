@@ -340,7 +340,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.StartTime.TotalMilliseconds += addSeconds * 1000;
                 paragraph.EndTime.TotalMilliseconds += addSeconds * 1000;
             }
-            subtitle.Renumber();
+
+            var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 1);
+            subtitle.Paragraphs.Clear();
+            subtitle.Paragraphs.AddRange(merged.Paragraphs);
+
             if (header.Length > 0)
             {
                 subtitle.Header = header
@@ -585,7 +589,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     text = System.Net.WebUtility.HtmlDecode(text);
 
-                    var match = regexWebVttColorMulti.Match(text);                    
+                    var match = regexWebVttColorMulti.Match(text);
                     while (match.Success)
                     {
                         var tag = match.Value.Substring(3, match.Value.Length - 4);
@@ -684,7 +688,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
                     }
-                    else 
+                    else
                     {
                         var findString = $"</c.{value}>";
                         endIndex = res.IndexOf(findString, match.Index, StringComparison.OrdinalIgnoreCase);
