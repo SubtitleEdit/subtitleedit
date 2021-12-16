@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class VidIcelandic : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes = new Regex(@"^#S\d{14}$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^#[ST]\d{14}$", RegexOptions.Compiled);
 
         public override string Extension => ".vid";
 
@@ -44,6 +44,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (line.Length > 11 && p != null && line.StartsWith('B'))
                 {
                     p.Text = (p.Text.TrimEnd() + Environment.NewLine + line.Remove(0, 11).Trim()).Trim();
+                }
+                else if (line.Length > 9 && line.StartsWith("DG @015 A"))
+                {
+                    p.Text = (p.Text.TrimEnd() + Environment.NewLine + line.Remove(0, 9).Trim()).Trim();
                 }
                 else
                 {
