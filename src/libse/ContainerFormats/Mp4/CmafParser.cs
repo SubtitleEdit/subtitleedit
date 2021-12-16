@@ -118,8 +118,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     }
                 }
             }
+
             Subtitle.Renumber();
         }
-
     }
 }

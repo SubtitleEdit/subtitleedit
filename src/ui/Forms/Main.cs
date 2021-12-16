@@ -2884,7 +2884,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 2000)
+            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".cmaf") && file.Length > 2000)
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
@@ -14237,6 +14237,23 @@ namespace Nikse.SubtitleEdit.Forms
             var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
             if (mp4SubtitleTracks.Count == 0)
             {
+                if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+                    _subtitleListViewIndex = -1;
+                    FileNew();
+                    _subtitle = mp4Parser.VttcSubtitle;
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                    _converted = true;
+                    SetTitle();
+                    return true;
+                }
+
                 MessageBox.Show(_language.NoSubtitlesFound);
                 return false;
             }
@@ -14541,7 +14558,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
+                if (ext == ".ismt" || ext == ".mp4" || ext == ".m4v" || ext == ".3gp" || ext == ".cmaf")
                 {
                     var mp4Parser = new MP4Parser(fileName);
                     var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
@@ -14572,6 +14589,23 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleListViewIndex = -1;
                         SubtitleListview1.FirstVisibleIndex = -1;
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                        return;
+                    }
+
+                    if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
+                    {
+                        MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+                        _subtitleListViewIndex = -1;
+                        FileNew();
+                        _subtitle = mp4Parser.VttcSubtitle;
+                        UpdateSourceView();
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.FirstVisibleIndex = -1;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                        _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                        _converted = true;
+                        SetTitle();
                         return;
                     }
 

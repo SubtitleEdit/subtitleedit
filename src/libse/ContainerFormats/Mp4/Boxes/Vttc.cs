@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
+
             if (count == 0)
             {
                 Payload.Add(null);

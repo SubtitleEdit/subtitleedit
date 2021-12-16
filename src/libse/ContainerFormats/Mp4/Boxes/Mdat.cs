@@ -23,11 +23,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 if (Name == "vttc")
                 {
                     var vttc = new Vttc(fs, Position);
-                    if (vttc.Payload != null)
-                    {
-                        Payloads.AddRange(vttc.Payload);
-                    }
+                    Payloads.AddRange(vttc.Payload);
                 }
+                else if (Name == "vtte")
+                {
+                    Payloads.Add(null);
+                }
+
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }

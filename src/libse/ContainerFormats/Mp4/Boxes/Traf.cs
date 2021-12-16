@@ -25,13 +25,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     Trun = new Trun(fs, Position);
                 }
-                else if (Name == "tfdt")
-                {
-                    Tfdt = new Tfdt(fs, Size);
-                }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
+
             if (Trun?.Samples != null && Tfdt != null)
             {
                 foreach (var timeSegment in Trun.Samples)
