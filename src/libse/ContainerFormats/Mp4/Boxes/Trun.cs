@@ -21,11 +21,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             Buffer = new byte[maximumLength - 4];
             var readCount = fs.Read(Buffer, 0, Buffer.Length);
-            if (readCount < (int)maximumLength - 4)
-            {
-                return;
-            }
-
             var versionAndFlags = GetUInt(0);
             var version = versionAndFlags >> 24;
             var flags = versionAndFlags & 0xFFFFFF;

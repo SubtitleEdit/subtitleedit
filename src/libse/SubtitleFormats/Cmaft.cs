@@ -45,6 +45,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             subtitle.Paragraphs.AddRange(parser.Subtitle.Paragraphs);
         }
-
     }
 }
