@@ -234,9 +234,12 @@ namespace Nikse.SubtitleEdit.Forms
             File.WriteAllText(assaTempFileName, format.ToText(_assaSubtitle, null));
 
             groupBoxSettings.Enabled = false;
-            progressBar1.Maximum = (int)_videoInfo.TotalFrames;
-            progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
+            if (_videoInfo.TotalFrames > 0)
+            {
+                progressBar1.Maximum = (int)_videoInfo.TotalFrames;
+                progressBar1.Visible = true;
+            }
 
             if (checkBoxTargetFileSize.Checked)
             {
