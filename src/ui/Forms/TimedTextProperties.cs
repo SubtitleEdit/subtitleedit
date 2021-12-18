@@ -10,10 +10,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class TimedTextProperties : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
-        private XmlDocument _xml;
-        private XmlNamespaceManager _nsmgr;
-        private string _NA;
+        private readonly Subtitle _subtitle;
+        private readonly XmlDocument _xml;
+        private readonly XmlNamespaceManager _nsmgr;
+        private readonly string _NA;
 
         public TimedTextProperties(Subtitle subtitle)
         {
@@ -40,7 +40,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _xml.LoadXml(subtitle.Header); // load default xml
             }
             _nsmgr = new XmlNamespaceManager(_xml.NameTable);
-            _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+            _nsmgr.AddNamespace("ttml", TimedText10.TtmlNamespace);
+            _nsmgr.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
+            _nsmgr.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
+            _nsmgr.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
             if (node != null)
@@ -310,7 +313,21 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Header = _xml.OuterXml;
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
-            Configuration.Settings.SubtitleSettings.TimedText10FileExtension= comboBoxFileExtensions.SelectedItem.ToString();
+
+            var currentTimedTextExt = Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
+            var newTimedTextExt = comboBoxFileExtensions.SelectedItem.ToString();
+            if (currentTimedTextExt != newTimedTextExt)
+            {
+                var favoriteFormats = Configuration.Settings.General.FavoriteSubtitleFormats;
+                var currentTimedTextWithExt = $"Timed Text 1.0 ({currentTimedTextExt})";
+                var newTimedTextWithExt = $"Timed Text 1.0 ({newTimedTextExt})";
+                if (favoriteFormats.Contains(currentTimedTextWithExt))
+                {
+                    Configuration.Settings.General.FavoriteSubtitleFormats = favoriteFormats.Replace(currentTimedTextWithExt, newTimedTextWithExt);
+                }
+
+                Configuration.Settings.SubtitleSettings.TimedText10FileExtension = newTimedTextExt;
+            }
 
             DialogResult = DialogResult.OK;
         }

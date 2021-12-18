@@ -41,7 +41,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         timeScale = Mdhd.TimeScale;
                     }
 
-                    Minf = new Minf(fs, Position, timeScale, HandlerType, this);
+                    var tempMinf = new Minf(fs, Position, timeScale, HandlerType, this);
+                    if (tempMinf.Stbl != null)
+                    {
+                        Minf = tempMinf;
+                    }
                 }
                 else if (Name == "hdlr")
                 {

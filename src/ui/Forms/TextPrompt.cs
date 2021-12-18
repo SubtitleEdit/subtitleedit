@@ -8,11 +8,12 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string InputText { get; set; }
 
-        public TextPrompt(string title, string label, string initialText)
+        public TextPrompt(string title, string label, string initialText, int width = 275)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            Width = width; 
             Text = title;
             labelDescription.Text = label;
             buttonOK.Text = LanguageSettings.Current.General.Ok;

@@ -10,10 +10,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class TimedTextPropertiesItunes : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
-        private XmlDocument _xml;
-        private XmlNamespaceManager _nsmgr;
-        private string _NA;
+        private readonly Subtitle _subtitle;
+        private readonly XmlDocument _xml;
+        private readonly XmlNamespaceManager _nsmgr;
+        private readonly string _NA;
 
         public TimedTextPropertiesItunes(Subtitle subtitle)
         {
@@ -40,7 +40,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _xml.LoadXml(subtitle.Header); // load default xml
             }
             _nsmgr = new XmlNamespaceManager(_xml.NameTable);
-            _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+            _nsmgr.AddNamespace("ttml", TimedText10.TtmlNamespace);
+            _nsmgr.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
+            _nsmgr.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
+            _nsmgr.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
             if (node != null)

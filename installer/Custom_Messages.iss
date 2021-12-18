@@ -35,7 +35,7 @@ en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
 en.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
-en.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+en.tsk_SetFileTypes=Associate SubRip (.srt) files with Subtitle Edit
 en.types_custom=Custom installation
 en.types_default=Default installation
 
@@ -281,17 +281,17 @@ hr.types_default=Default installation
 
 ; Italian
 it.comp_translations=Traduzioni
-it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.7.2. Per favore scarica e installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.7.2 adesso?
-it.msg_DeleteSettings=Vuoi anche cancellare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi non farlo.
-it.msg_OptimizingPerformance=Ottimizzazione prestazioni in corso...
+it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 4.7.2.%nScarica ed installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 4.7.2 adesso?
+it.msg_DeleteSettings=Vuoi anche eliminare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi non farlo.
+it.msg_OptimizingPerformance=Ottimizzazione prestazioni...
 it.run_VisitWebsite=Visita il sito di Subtitle Edit
-it.sm_com_Changelog=Lista delle novità di Subtitle Edit
+it.sm_com_Changelog=Elenco novità di Subtitle Edit
 it.tsk_AllUsers=Per tutti gli utenti
-it.tsk_CurrentUser=Solo per l'utente corrente
-it.tsk_Other=Other:
-it.tsk_ResetDictionaries=Ripristina i dizionari e cancella i nomi personali
+it.tsk_CurrentUser=Solo per l'utente attuale
+it.tsk_Other=Altra:
+it.tsk_ResetDictionaries=Ripristina i dizionari ed elimina i nomi personali
 it.tsk_ResetSettings=Ripristina le impostazioni di Subtitle Edit
-it.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+it.tsk_SetFileTypes=Associa file SubRip (.srt) con Subtitle Edit
 it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
 

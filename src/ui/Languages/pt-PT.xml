@@ -1507,12 +1507,11 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <TextingForHearingImpairedRemovedOneLine>Removidas as mensagens de texto para deficientes auditivos: Uma linha</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Removidas as mensagens de texto para deficientes auditivos: {0} linhas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Legenda foi dividida</SubtitleSplitted>
-    <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
-já estar em sincronia com o vídeo.
+    <SubtitleAppendPrompt>Isto irá anexar uma legenda existente à legenda já carregada que deve já estar em sincronia com o vídeo.
 
 Continuar?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Anexar legenda</SubtitleAppendPromptTitle>
-    <OpenSubtitleToAppend>Abrir legenda para anexar...</OpenSubtitleToAppend>
+    <OpenSubtitleToAppend>Abrir legenda a anexar...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Sincronia visual - anexar a segunda parte da legenda</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>Anexar esta legenda sincronizada?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Antes de anexar</BeforeAppend>
@@ -1524,11 +1523,11 @@ Continuar?</SubtitleAppendPrompt>
     <SelectedLinesTranslated>Linhas seleccionadas traduzidas</SelectedLinesTranslated>
     <SubtitleTranslated>Legenda traduzida</SubtitleTranslated>
     <TranslateSwedishToDanish>Traduzir legenda carregada de Sueco para Dinamarquês</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>Traduzir a legenda actualmente carregada de SUECO para Dinamarquês?</TranslateSwedishToDanishWarning>
+    <TranslateSwedishToDanishWarning>Traduzir a legenda actualmente carregada de SUECO (tem a certeza de que é Sueco?) para Dinamarquês?</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>Tradução através de www.nikse.dk/mt...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>Antes de traduzir de Sueco para Dinamarquês</BeforeSwedishToDanishTranslation>
-    <TranslationFromSwedishToDanishComplete>Tradução de Sueco para Dinamarquês completa</TranslationFromSwedishToDanishComplete>
-    <TranslationFromSwedishToDanishFailed>Falhou a tradução de Sueco para Dinamarquês</TranslationFromSwedishToDanishFailed>
+    <TranslationFromSwedishToDanishComplete>Tradução de Sueco para Dinamarquês concluída</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>Falha ao traduzir de Sueco para Dinamarquês</TranslationFromSwedishToDanishFailed>
     <UndoPerformed>Anular aplicado</UndoPerformed>
     <RedoPerformed>Refazer aplicado</RedoPerformed>
     <NothingToUndo>Nada para anular</NothingToUndo>
@@ -1712,6 +1711,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <Errors>Erros</Errors>
     <ShowVideoControls>Mostrar controlos de vídeo</ShowVideoControls>
     <HideVideoControls>Ocultar controlos de vídeo</HideVideoControls>
+    <GeneratingWaveformInBackground>A gerar forma de onda em segundo plano...</GeneratingWaveformInBackground>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -1725,6 +1725,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <ConvertTo>Converter para</ConvertTo>
     <CopyToClipboard>Copiar</CopyToClipboard>
     <CloseOnInsert>Fechar ao inserir</CloseOnInsert>
+    <Insert>Inserir</Insert>
     <Length>Comprimento</Length>
     <Mass>Massa</Mass>
     <Volume>Volume</Volume>
@@ -2169,6 +2170,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Apenas um clique para seleccionar linhas</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>Encaixar para mudar de cena (premir Shift para substituir)</WaveformSnapToSceneChanges>
+    <WaveformAutoGen>Gerar automaticamente a forma de onda ao abrir o vídeo</WaveformAutoGen>
     <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
     <WaveformColor>Cor</WaveformColor>

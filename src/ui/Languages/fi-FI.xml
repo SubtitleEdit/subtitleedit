@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.4</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [12-11-2021]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [07-12-2021]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -27,6 +27,7 @@
     <OpenVideoFile>Avaa videotiedosto</OpenVideoFile>
     <OpenVideoFileTitle>Avaa videotiedosto</OpenVideoFileTitle>
     <NoVideoLoaded>Videota ei ole ladattu</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Toiminto ei ole käytettävissä verkossa olevalle videolle</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Videon tiedot</VideoInformation>
     <StartTime>Aloitusaika</StartTime>
     <EndTime>Päättymisaika</EndTime>
@@ -1177,11 +1178,12 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <SplitLongLines>Katkaise pitkiä rivejä</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Aseta pienin kappaleiden välinen näyttöaika</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Lajitteluperuste</SortBy>
-        <NetflixQualityCheck>Netflix-laadun tarkistus</NetflixQualityCheck>
         <Number>Nro.</Number>
         <StartTime>Aloitusaika</StartTime>
         <EndTime>Päättymisaika</EndTime>
         <Duration>Kesto</Duration>
+        <ListErrors>Luetteloi virheet..</ListErrors>
+        <NetflixQualityCheck>Netflix-laadun tarkistus</NetflixQualityCheck>
         <TextAlphabetically>Teksti - aakkosjärjestyksessä</TextAlphabetically>
         <TextSingleLineMaximumLength>Teksti - suurin yhden rivin pituus</TextSingleLineMaximumLength>
         <TextTotalLength>Teksti - pituus yhteensä</TextTotalLength>
@@ -1214,7 +1216,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <GenerateVideoWithBurnedInSub>Luo video kiinteästi upotetullla tekstityksellä...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Tuo kappaleet videosta</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Luo tai tuo kohtaustenvaihtoja</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Poista kohtaustenvaihtoja</RemoveSceneChanges>
+        <RemoveOrExportSceneChanges>Poista tai vie kohtaustenvaihtoja</RemoveOrExportSceneChanges>
         <WaveformBatchGenerate>Luo aaltomuodot eräajona</WaveformBatchGenerate>
         <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
         <ShowHideWaveform>Näytä/piilota aaltomuoto</ShowHideWaveform>
@@ -1692,6 +1694,11 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <NoSupportHereDivx>Toiminto ei toteutettavissa DivX-tiedostoille.</NoSupportHereDivx>
     <NoChapters>Videosta ei löydy lukuja.</NoChapters>
     <DarkThemeRestart>Uudelleenkäynnistä sovellus jotta tumma teema otetaan käyttöön</DarkThemeRestart>
+    <VideoFromUrlRequirements>Videon avaamiseen verkosta tarvitaan mpv:n ja youtube-dl. Öadataanko ne ja jatketaanko?</VideoFromUrlRequirements>
+    <Errors>Virheitä</Errors>
+    <ShowVideoControls>Näytä videon hallintapainikkeet</ShowVideoControls>
+    <HideVideoControls>Piilota videon hallintapainikkeet</HideVideoControls>
+    <GeneratingWaveformInBackground>Luodaan taustalla aaltomuotoa...</GeneratingWaveformInBackground>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Valitse tekstitys Matroska-tiedostosta</Title>
@@ -1705,6 +1712,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ConvertTo>Muunna muotoon</ConvertTo>
     <CopyToClipboard>Kopioi leikepöydälle</CopyToClipboard>
     <CloseOnInsert>Sulje lisättäessä</CloseOnInsert>
+    <Insert>Lisäys</Insert>
     <Length>Kesto</Length>
     <Mass>Paino</Mass>
     <Volume>Osa</Volume>
@@ -2147,6 +2155,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformListViewFocusMouseEnter>Valitse luettelosta hiirellä</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Yksi napsautus tekstityksen valitsemiseksi</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>Tahdista kohtausten vaihtoihin (Pidä Vaihtonäppäin painettuna korvataksesi)</WaveformSnapToSceneChanges>
+    <WaveformAutoGen>Luo aaltomuoto automaattisesti videota avattaessa</WaveformAutoGen>
     <WaveformBorderHitMs1>Reunaviivojen näyttöaika</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekuntia</WaveformBorderHitMs2>
     <WaveformColor>Väri</WaveformColor>
@@ -2344,6 +2353,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformGoToPreviousSceneChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>Poista/vie kohtauksenvaihdot</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>Säädä aloitusta kohtauksen vaihtuessa</WaveformGuessStart>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
     <GoForward1Frame>Yksi kehys eteenpäin</GoForward1Frame>
@@ -2410,6 +2420,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SplitSelectedLineBilingual>Erota valitut rivit kaksikielisinä</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Vaihda käännöksen tila</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Vaihda alkuperäinen ja käännös</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Vaihda alkuperäinen ja käännös tekstilaatikot/liuettelonäkymäsarakkeet</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Yhdistä alkuperäinen ja käännös</MergeOriginalAndTranslation>
     <MergeWithNext>Yhdistä seuraavaan</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Yhdistä edelliseen ja eheytä</MergeWithPreviousAndUnbreak>
@@ -2426,6 +2437,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListViewColumnTextUp>Sarake, teksti ylös</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sarake, teksti alas</ListViewColumnTextDown>
     <ListViewGoToNextError>Siirry seuraavaan virheeseen</ListViewGoToNextError>
+    <ListViewListErrors>Luetteloi virheeet</ListViewListErrors>
     <ShowStyleManager>Käynnistä tyylinhallinta</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Siirrä viimeinen sana seuraavalle riville</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Siirrä seuraavan tekstityksen ensimmäinen sana edelliselle</MainTextBoxMoveFirstWordFromNextUp>
@@ -2484,7 +2496,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <DownloadMpvOk>mpv:n lataaminen onnistui ja se on käytettävissä.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Lataa FFmpeg</Title>
+    <XDownload>Lataa {0}</XDownload>
     <XDownloadFailed>{0} lataaminen epäonnistui, yritä myöhemmin uudelleen.</XDownloadFailed>
     <XDownloadOk>{0} lataaminen onnistui ja se on käytettävissä.</XDownloadOk>
   </SettingsFfmpeg>

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,11 +9,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
     /// <summary>
     /// http://wiki.multimedia.cx/index.php?title=QuickTime_container
+    /// https://gpac.github.io/mp4box.js/test/filereader.html
     /// </summary>
     public class MP4Parser : Box
     {
         public string FileName { get; }
         public Moov Moov { get; private set; }
+        internal Moof Moof { get; private set; }
+        public Subtitle VttcSubtitle { get; private set; }
 
         public List<Trak> GetSubtitleTracks()
         {
@@ -23,10 +27,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 {
                     if (trak.Mdia != null && (trak.Mdia.IsTextSubtitle || trak.Mdia.IsVobSubSubtitle || trak.Mdia.IsClosedCaption) && trak.Mdia.Minf?.Stbl != null)
                     {
-                        list.Add(trak);
+                        if (trak.Mdia.Minf.Stbl.GetParagraphs().Count > 0)
+                        {
+                            list.Add(trak);
+                        }
                     }
                 }
             }
+
             return list;
         }
 
@@ -128,6 +136,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             Position = 0;
             fs.Seek(0, SeekOrigin.Begin);
             bool moreBytes = true;
+            var timeTotalMs = 0d;
             while (moreBytes)
             {
                 moreBytes = InitializeSizeAndName(fs);
@@ -140,9 +149,46 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 {
                     Moov = new Moov(fs, Position); // only scan first "moov" element
                 }
+                else if (Name == "moof")
+                {
+                    Moof = new Moof(fs, Position);
+                }
+                else if (Name == "mdat" && Moof != null && Moof?.Traf?.Trun?.Samples?.Count > 0)
+                {
+                    var mdat = new Mdat(fs, Position);
+                    if (mdat.Payloads.Count > 0)
+                    {
+                        if (Moof.Traf?.Trun?.Samples.Count > 0 && Moof?.Traf?.Trun?.Samples.Count >= mdat.Payloads.Count)
+                        {
+                            if (VttcSubtitle == null)
+                            {
+                                VttcSubtitle = new Subtitle();
+                            }
+
+                            var timeScale = (double)(Moov?.Mvhd?.TimeScale ?? 1000.0);
+                            var sampleIdx = 0;
+                            foreach (var payload in mdat.Payloads)
+                            {
+                                var presentation = Moof.Traf.Trun.Samples[sampleIdx];
+                                if (presentation.Duration.HasValue)
+                                {
+                                    var before = timeTotalMs;
+                                    timeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
+                                    sampleIdx++;
+                                    if (payload != null)
+                                    {
+                                        VttcSubtitle.Paragraphs.Add(new Paragraph(payload, before, timeTotalMs));
+                                    }
+                                }
+                            }
+                        }
+
+                        Moof = null;
+                    }
+                }
 
                 count++;
-                if (count > 100)
+                if (count > 1000)
                 {
                     break;
                 }
@@ -154,7 +200,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
+
             fs.Close();
+
+            if (VttcSubtitle != null)
+            {
+                var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(VttcSubtitle, false, 250);
+                VttcSubtitle = merged;
+            }
         }
 
         internal double FrameRate
@@ -172,6 +225,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         return sampleCount / (duration / Moov.Mvhd.TimeScale);
                     }
                 }
+
                 return 0;
             }
         }
@@ -215,6 +269,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
             return list;
         }
-
     }
 }

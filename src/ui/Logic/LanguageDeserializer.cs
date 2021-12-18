@@ -4669,6 +4669,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "MeasurementConverter/CloseOnInsert":
                     language.MeasurementConverter.CloseOnInsert = reader.Value;
                     break;
+                case "MeasurementConverter/Insert":
+                    language.MeasurementConverter.Insert = reader.Value;
+                    break;
                 case "MeasurementConverter/Length":
                     language.MeasurementConverter.Length = reader.Value;
                     break;

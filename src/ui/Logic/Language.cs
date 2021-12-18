@@ -1409,8 +1409,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TextingForHearingImpairedRemovedOneLine = "Texting for hearing impaired removed: One line",
                 TextingForHearingImpairedRemovedXLines = "Texting for hearing impaired removed: {0} lines",
                 SubtitleSplitted = "Subtitle was split",
-                SubtitleAppendPrompt = "This will append an existing subtitle to the currently loaded subtitle which should" + Environment.NewLine +
-                                    "already be in sync with video file." + Environment.NewLine +
+                SubtitleAppendPrompt = "This will append an existing subtitle to the currently loaded subtitle which should already be in sync with video file." + Environment.NewLine +
                                     Environment.NewLine +
                                     "Continue?",
                 SubtitleAppendPromptTitle = "Append subtitle",
@@ -2002,6 +2001,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ConvertTo = "Convert to",
                 CopyToClipboard = "Copy to clipboard",
                 CloseOnInsert = "Close on insert",
+                Insert = "Insert",
 
                 Length = "Length",
                 Mass = "Mass",

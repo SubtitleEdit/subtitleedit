@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static void Post(this SynchronizationContext context, TimeSpan delay, Action action)
         {
-            var timer = new System.Windows.Forms.Timer { Interval = delay.Milliseconds };
+            var timer = new System.Windows.Forms.Timer { Interval = (int)delay.TotalMilliseconds };
             timer.Tick += delegate
             {
                 action.Invoke();

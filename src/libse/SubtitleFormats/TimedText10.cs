@@ -1355,6 +1355,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                 XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                if (head == null)
+                {
+                    head = xml.DocumentElement.SelectSingleNode("head", nsmgr);
+                }
+
+                if (head == null)
+                {
+                    return list;
+                }
+
                 foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
                 {
                     if (node.Attributes["xml:id"] != null)
@@ -1369,7 +1379,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
+                // Ignore
             }
+
             return list;
         }
 

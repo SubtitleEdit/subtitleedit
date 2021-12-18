@@ -63,11 +63,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool hadEmptyLine = false;
             for (var index = 0; index < lines.Count; index++)
             {
-                string line = lines[index];
-                string next = string.Empty;
+                var line = lines[index];
+                var next = string.Empty;
+                var isNextTimeCode = false;
                 if (index < lines.Count - 1)
                 {
                     next = lines[index + 1];
+                    isNextTimeCode = next.Contains("-->");
                 }
 
                 string s = line;
@@ -82,7 +84,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = "00:" + s.Replace("--> ", "--> 00:");
                 }
 
-                if (isTimeCode && RegexTimeCodes.IsMatch(s))
+
+                if (isNextTimeCode && Utilities.IsNumber(s) && p?.Text.Length > 0)
+                {
+                    // skip number
+                }
+                else if (isTimeCode && RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null)
                     {
@@ -164,6 +171,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             new WebVTT().RemoveNativeFormatting(subtitle, newFormat);
         }
-
     }
 }

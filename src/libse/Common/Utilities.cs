@@ -66,9 +66,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
+            if (friendlyName.IndexOf('(') > 0)
+            {
+                friendlyName = friendlyName.Substring(0, friendlyName.IndexOf('(')).TrimEnd();
+            }
+
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.FriendlyName == friendlyName || format.Name == friendlyName)
+                if (format.Name == friendlyName)
                 {
                     return format;
                 }

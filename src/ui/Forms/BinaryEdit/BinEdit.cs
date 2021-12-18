@@ -318,6 +318,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 CleanUp();
                 var log = new StringBuilder();
                 var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+                FixShortDisplayTimes(bluRaySubtitles);
                 _subtitle = new Subtitle();
                 _extra = new List<Extra>();
                 bool first = true;
@@ -400,6 +401,26 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             _lastSaveHash = GetStateHash();
             Text = Path.GetFileName(fileName) + " - " + LanguageSettings.Current.General.Title;
+        }
+
+        private void FixShortDisplayTimes(List<BluRaySupParser.PcsData> bluRaySubtitles)
+        {
+            for (int i = 0; i < bluRaySubtitles.Count; i++)
+            {
+                var p = bluRaySubtitles[i];
+                if (p.EndTime <= p.StartTime)
+                {
+                    var newEndTime = p.StartTimeCode.TotalMilliseconds + Configuration.Settings.VobSubOcr.DefaultMillisecondsForUnknownDurations;
+                    if (i >= bluRaySubtitles.Count - 1 || bluRaySubtitles[i + 1].StartTimeCode.TotalMilliseconds < newEndTime)
+                    {
+                        p.EndTime = (long)Math.Round(newEndTime * 90.0, MidpointRounding.AwayFromZero);
+                    }
+                    else
+                    {
+                        p.EndTime = bluRaySubtitles[i + 1].StartTime + 90;
+                    }
+                }
+            }
         }
 
         private void FillListView(Subtitle subtitle)
