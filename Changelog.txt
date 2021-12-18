@@ -3,6 +3,7 @@
 3.6.5 (xth February 2022) BETA
 * NEW:
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
+   * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
