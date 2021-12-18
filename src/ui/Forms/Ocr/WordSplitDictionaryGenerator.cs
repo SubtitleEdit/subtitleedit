@@ -24,8 +24,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
             FillSpellCheckDictionaries();
             _subtitleList = new List<Subtitle>();
-            comboBoxMinOccurrences.SelectedIndex = 13;
-            comboBoxMinOccurrencesLongWords.SelectedIndex = 5;
+            comboBoxMinOccurrences.SelectedIndex = 8;
+            comboBoxMinOccurrencesLongWords.SelectedIndex = 3;
             listViewInputFiles.AutoSizeLastColumn();
             labelStatus.Text = string.Empty;
         }
@@ -192,20 +192,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    var list = new List<string>();
+                    var list = new Dictionary<string, int>();
                     foreach (var word in wordDictionary)
                     {
                         if (word.Key.Length < 5 && word.Value >= minUseCountSmall ||
                             word.Key.Length >= 5 && word.Value >= minUseCountLarge)
                         {
-                            list.Add(word.Key);
+                            list.Add(word.Key, word.Value);
                         }
                     }
 
                     var sb = new StringBuilder();
-                    foreach (var word in list.OrderByDescending(prop => prop.Length))
+                    foreach (var word in list.OrderByDescending(p => p.Key.Length).ThenByDescending(p => p.Value))
                     {
-                        sb.AppendLine(word);
+                        sb.AppendLine(word.Key);
                     }
 
                     File.WriteAllText(saveFileDialog.FileName, sb.ToString());
