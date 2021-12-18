@@ -24,6 +24,7 @@
    * Fix WebVTT browser preview - thx Jeremy
    * Fix crash in PAC when saving with negative values - thx sandrickn
    * Fix frame Rate/Multiplier/dropMode in TimedText properties - thx OmrSi
+   * Fix unwanted lowercase for ASSA properties window when reopen - thx Thomas
 
 
 3.6.4 (3rd December 2021)
