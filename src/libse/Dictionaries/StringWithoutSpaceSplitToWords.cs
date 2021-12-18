@@ -8,6 +8,27 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
     {
         public static string SplitWord(string[] words, string input)
         {
+            var usedWords = new List<string>();
+            var result = SplitWord(words, input, string.Empty, usedWords);
+            if (result != input)
+            {
+                return result;
+            }
+
+            foreach (var usedWord in usedWords)
+            {
+                result = SplitWord(words, input, usedWord, new List<string>());
+                if (result != input)
+                {
+                    return result;
+                }
+            }
+
+            return input;
+        }
+
+        public static string SplitWord(string[] words, string input, string ignoreWord, List<string> usedWords)
+        {
             var s = input;
             var check = s;
             var spaces = new List<int>();
@@ -15,8 +36,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 var w = words[i];
                 var idx = check.IndexOf(w, StringComparison.Ordinal);
-                while (idx != -1)
+                while (idx != -1 && w != ignoreWord)
                 {
+                    usedWords.Add(w);
                     spaces.Add(idx);
                     spaces.Add(idx + w.Length);
                     check = check.Remove(idx, w.Length).Insert(idx, string.Empty.PadLeft(w.Length, '¤'));
@@ -39,5 +61,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             return check.Trim('¤', ' ').Length == 0 ? s.Trim() : input;
         }
+
     }
 }

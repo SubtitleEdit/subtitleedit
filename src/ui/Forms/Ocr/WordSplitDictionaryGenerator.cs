@@ -195,8 +195,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var list = new List<string>();
                     foreach (var word in wordDictionary)
                     {
-                        if (word.Key.Length < 7 && word.Value >= minUseCountSmall ||
-                            word.Key.Length >= 7 && word.Value >= minUseCountLarge)
+                        if (word.Key.Length < 5 && word.Value >= minUseCountSmall ||
+                            word.Key.Length >= 5 && word.Value >= minUseCountLarge)
                         {
                             list.Add(word.Key);
                         }

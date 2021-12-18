@@ -186,7 +186,7 @@
             this.labelMinOccurSmall.Name = "labelMinOccurSmall";
             this.labelMinOccurSmall.Size = new System.Drawing.Size(124, 13);
             this.labelMinOccurSmall.TabIndex = 50;
-            this.labelMinOccurSmall.Text = "Min occurrences, len < 7";
+            this.labelMinOccurSmall.Text = "Min occurrences, len < 5";
             // 
             // comboBoxMinOccurrencesLongWords
             // 
@@ -246,7 +246,7 @@
             this.labelMinOccurLarge.Name = "labelMinOccurLarge";
             this.labelMinOccurLarge.Size = new System.Drawing.Size(130, 13);
             this.labelMinOccurLarge.TabIndex = 52;
-            this.labelMinOccurLarge.Text = "Min occurrences, len >= 7";
+            this.labelMinOccurLarge.Text = "Min occurrences, len >= 5";
             // 
             // WordSplitDictionaryGenerator
             // 
