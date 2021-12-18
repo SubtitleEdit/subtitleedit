@@ -15,7 +15,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -75,6 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
         private readonly HashSet<string> _wordSpellOkList = new HashSet<string>();
+        private string[] _wordSplitList;
         private Hunspell _hunspell;
         private Dictionary<string, string> _changeAllDictionary;
         private SpellCheckWordLists _spellCheckWordLists;
@@ -302,6 +302,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _nameListWithApostrophe = new HashSet<string>();
             var nameListWithPeriods = new List<string>();
             _abbreviationList = new HashSet<string>();
+            _wordSplitList = LoadWordSplitList(threeLetterIsoLanguageName);
 
             bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
             foreach (string name in _nameList)
@@ -401,6 +402,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _changeAllDictionary = _spellCheckWordLists.GetUseAlwaysList();
                 }
             }
+        }
+
+        private string[] LoadWordSplitList(string threeLetterIsoLanguageName)
+        {
+            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
+            if (!File.Exists(fileName))
+            {
+                return Array.Empty<string>();
+            }
+
+            var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToArray();
+            return wordList;
         }
 
         public string SpellCheckDictionaryName
@@ -1556,6 +1569,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 }
 
                                 guesses.Add(wordWithVerticalLine);
+                            }
+
+                            if (word.Length > 4)
+                            {
+                                var splitWords = StringWithoutSpaceSplitToWords.SplitWord(_wordSplitList, word);
+                                if (splitWords != word)
+                                {
+                                    guesses.Add(splitWords);
+                                }
                             }
 
                             if (word.Length > 4 && autoGuess == AutoGuessLevel.Aggressive)

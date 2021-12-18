@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
     /// <summary>
     /// http://wiki.multimedia.cx/index.php?title=QuickTime_container
+    /// https://gpac.github.io/mp4box.js/test/filereader.html
     /// </summary>
     public class MP4Parser : Box
     {

@@ -17014,6 +17014,11 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
             // put new entries above tabs
+
+            if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.F12)
+            {
+                new WordSplitDictionaryGenerator().ShowDialog(this);
+            }
         }
 
         private void ToggleVideoControlsOnOff(bool on)
