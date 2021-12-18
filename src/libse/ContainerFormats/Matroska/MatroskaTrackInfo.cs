@@ -32,17 +32,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public int ContentEncodingType { get; set; }
         public uint ContentEncodingScope { get; set; }
 
-        internal static void CopyStream(Stream input, Stream output)
-        {
-            var buffer = new byte[128 * 1024];
-            int len;
-            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, len);
-            }
-            output.Flush();
-        }
-
         public string GetCodecPrivate()
         {
             if (CodecPrivateRaw == null || CodecPrivateRaw.Length == 0)
@@ -55,15 +44,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 CodecPrivateRaw.Length > 2)
             {
                 var outStream = new MemoryStream();
+                var reader = new StreamReader(outStream);
+#if NET6_0
+                var outZStream = new System.IO.Compression.ZLibStream(outStream, System.IO.Compression.CompressionMode.Decompress);
+#else
                 var outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
-                var inStream = new MemoryStream(CodecPrivateRaw);
+#endif
                 try
                 {
-                    CopyStream(inStream, outZStream);
-                    var buffer = new byte[outZStream.TotalOut];
+                    outZStream.Write(CodecPrivateRaw, 0, CodecPrivateRaw.Length);
+                    outZStream.Flush();
                     outStream.Position = 0;
-                    outStream.Read(buffer, 0, buffer.Length);
-                    return Encoding.UTF8.GetString(buffer).TrimEnd('\0');
+                    return reader.ReadToEnd().TrimEnd('\0');
                 }
                 catch
                 {
@@ -71,8 +63,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 }
                 finally
                 {
+                    outStream.Close();
+                    reader.Close();
                     outZStream.Close();
-                    inStream.Close();
                 }
             }
 

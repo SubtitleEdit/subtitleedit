@@ -31,20 +31,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
 
             var outStream = new MemoryStream();
+#if NET6_0
+            var outZStream = new System.IO.Compression.ZLibStream(outStream, System.IO.Compression.CompressionMode.Decompress);
+#else
             var outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
-            var inStream = new MemoryStream(Data);
+#endif
             byte[] buffer;
             try
             {
-                MatroskaTrackInfo.CopyStream(inStream, outZStream);
-                buffer = new byte[outZStream.TotalOut];
-                outStream.Position = 0;
-                outStream.Read(buffer, 0, buffer.Length);
+                outZStream.Write(Data, 0, Data.Length);
+                outZStream.Flush();
+                return outStream.ToArray();
             }
             finally
             {
+                outStream.Close();
                 outZStream.Close();
-                inStream.Close();
             }
             return buffer;
         }
