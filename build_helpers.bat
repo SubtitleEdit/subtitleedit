@@ -5,7 +5,6 @@ SET "ConfigurationName=%~2"
 
 ECHO %cd%
 
-IF /I "%~1" == "rsrc" GOTO UpdateResourceScript
 IF /I "%~1" == "lang" GOTO UpdateLanguageFiles
 IF /I "%~1" == "rev"  GOTO UpdateAssemblyInfo
 
@@ -13,22 +12,6 @@ IF /I "%~1" == "rev"  GOTO UpdateAssemblyInfo
 POPD
 ENDLOCAL
 EXIT /B
-
-
-:UpdateResourceScript
-SET "ToolPath=src\UpdateResourceScript\bin\%ConfigurationName%\UpdateResourceScript.exe"
-IF NOT EXIST "%ToolPath%" (
-  ECHO Compile Subtitle Edit first!
-  GOTO END
-)
-
-"%ToolPath%" "src\Win32Resources\Resources.rc.template" "src\ui\bin\%ConfigurationName%\SubtitleEdit.exe"
-
-IF %ERRORLEVEL% NEQ 0 (
-  ECHO ERROR: Something went wrong when generating the resource script...
-)
-GOTO END
-
 
 :UpdateLanguageFiles
 SET "ToolPath=src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe"

@@ -45,7 +45,6 @@
 #define VerRevision
 
 #define bindir "..\src\ui\bin\Release"
-#define bindirres "..\src\Win32Resources\bin\Release"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
