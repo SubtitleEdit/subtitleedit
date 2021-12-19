@@ -7,8 +7,6 @@
 *.vspx
 /cov-int/
 /SE*.zip
-/src/Win32Resources/Resources.aps
-/src/Win32Resources/Resources.rc
 /src/Properties/AssemblyInfo.cs
 /src/ui/Properties/AssemblyInfo.cs
 /src/libse/Properties/AssemblyInfo.cs

@@ -644,7 +644,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WebVttCueAn7 { get; set; }
         public string WebVttCueAn8 { get; set; }
         public string WebVttCueAn9 { get; set; }
-
+        public string MPlayer2Extension { get; set; }
         public bool TeletextItalicFix { get; set; }
         public bool MccDebug { get; set; }
 
@@ -722,6 +722,8 @@ $HorzAlign          =   Center
             WebVttCueAn7 = "position:20% line:20%";
             WebVttCueAn8 = "line:20%";
             WebVttCueAn9 = "position:80% line:20%";
+
+            MPlayer2Extension = ".txt";
 
             TeletextItalicFix = true;
         }
@@ -5932,6 +5934,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.WebVttCueAn9 = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MPlayer2Extension");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.MPlayer2Extension = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("TeletextItalicFix");
                 if (subNode != null)
                 {
@@ -9430,6 +9438,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WebVttCueAn7", settings.SubtitleSettings.WebVttCueAn7);
                 textWriter.WriteElementString("WebVttCueAn8", settings.SubtitleSettings.WebVttCueAn8);
                 textWriter.WriteElementString("WebVttCueAn9", settings.SubtitleSettings.WebVttCueAn9);
+                textWriter.WriteElementString("MPlayer2Extension", settings.SubtitleSettings.MPlayer2Extension);
                 textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));

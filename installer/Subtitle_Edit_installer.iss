@@ -45,7 +45,6 @@
 #define VerRevision
 
 #define bindir "..\src\ui\bin\Release"
-#define bindirres "..\src\Win32Resources\bin\Release"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
@@ -177,8 +176,7 @@ Name: desktopicon\common; Description: {cm:tsk_AllUsers};          GroupDescript
 Name: quicklaunchicon;    Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked;             OnlyBelowVersion: 6.01
 Name: reset_dictionaries; Description: {cm:tsk_ResetDictionaries}; GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: DictionariesExist()
 Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: SettingsExist()
-Name: associate_srt;      Description: {cm:tsk_SetFileTypes};      GroupDescription: {cm:tsk_Other};       Flags: unchecked
-
+Name: associate_common;   Description: {cm:tsk_SetFileTypes};      GroupDescription: {cm:tsk_Other};
 
 [Files]
 Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
@@ -238,7 +236,16 @@ Source: ..\Ocr\Latin.nocr;                         DestDir: {userappdata}\Subtit
 
 Source: ..\preview.mkv;                            DestDir: {userappdata}\Subtitle Edit;              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 
-
+Source: ..\Icons\ass.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\dfxp.ico;                         DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\sbv.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\srt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\ssa.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\stl.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\sub.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\sup.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+  
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -282,7 +289,6 @@ Source: {#bindir}\Languages\zh-TW.xml;             DestDir: {app}\Languages;    
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindirres}\SubtitleEdit.resources.dll;   DestDir: {app};                                    Flags: ignoreversion; Components: main; AfterInstall: ClearMUICache
 Source: {#bindir}\Hunspellx64.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\libse.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -429,60 +435,81 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 
 
 [Registry]
-#include bindirres + "\Resources.h"
-#define rcicon(id) "{app}\SubtitleEdit.resources.dll,-" + Str(id)
-#define rctext(id) "@{app}\SubtitleEdit.resources.dll,-" + Str(id)
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""
+Root: HKA ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.EXE,0";
 
-Root: HKLM; Subkey: "{#keyAppPaths}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyAppPaths}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{#SetupSetting('AppName')} {#app_ver_full}"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "{#rctext(RC_APPNAME)}"; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "{#rctext(RC_APPNAME)}"; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keySE}"; ValueType: string; ValueName: ""; ValueData: "{#SetupSetting('AppName')}"; Flags: deletekey uninsdeletekey
-Root: HKLM; Subkey: "{#keySE}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{#rctext(RC_APPDESC)}"
-Root: HKLM; Subkey: "{#keySE}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#rctext(RC_APPNAME)}"
-Root: HKLM; Subkey: "{#keyRegApps}"; ValueType: string; ValueName: "SubtitleEdit"; ValueData: "{#keySE}\Capabilities"; Flags: uninsdeletevalue; Check: HklmKeyExists('{#keyRegApps}')
-; Add .srt to the SE-supported file types
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SRT_DEFAULT}"; Flags: deletekey uninsdeletekey
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SRT)}"
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#rcicon(RCICON_SRT)}"
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell"; ValueType: string; ValueName: ""; ValueData: "open"
-Root: HKLM; Subkey: "{#keyCl}\.srt\OpenWithProgids"; ValueType: none; ValueName: "SubtitleEdit.srt"; Flags: dontcreatekey deletevalue
-Root: HKLM; Subkey: "{#keyCl}\.srt\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.srt"; ValueData: ""; Flags: uninsdeletevalue; OnlyBelowVersion: 6.0
-Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "Content Type"; ValueData: "application/x-subrip"
-Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedType"; ValueData: "text"
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".srt"; ValueData: "SubtitleEdit.srt"
-; Associate .srt file type with SE (only if requested by user)
-Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Check: DoSystemAssoc('srt')
-; Add .sup to the SE-supported file types
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SUP_DEFAULT}"; Flags: deletekey uninsdeletekey
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SUP)}"
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#rcicon(RCICON_SUP)}"
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup\shell"; ValueType: string; ValueName: ""; ValueData: "open"
-Root: HKLM; Subkey: "{#keyCl}\.sup\OpenWithProgids"; ValueType: none; ValueName: "SubtitleEdit.sup"; Flags: dontcreatekey deletevalue
-Root: HKLM; Subkey: "{#keyCl}\.sup\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.sup"; ValueData: ""; Flags: uninsdeletevalue; OnlyBelowVersion: 6.0
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sup"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".sup"; ValueData: "SubtitleEdit.sup"
-; Add .sub to the SE-supported file types
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SUB_DEFAULT}"; Flags: deletekey uninsdeletekey
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SUB)}"
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#rcicon(RCICON_SUB)}"
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub\shell"; ValueType: string; ValueName: ""; ValueData: "open"
-Root: HKLM; Subkey: "{#keyCl}\.sub\OpenWithProgids"; ValueType: none; ValueName: "SubtitleEdit.sub"; Flags: dontcreatekey deletevalue
-Root: HKLM; Subkey: "{#keyCl}\.sub\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.sub"; ValueData: ""; Flags: uninsdeletevalue; OnlyBelowVersion: 6.0
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sub"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".sub"; ValueData: "SubtitleEdit.sub"
-; Add .ssa (SubStation Alpha) to the SE-supported file types
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ssa"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKA ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}.ass"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKA ; Subkey: "Software\Classes\.dfxp"; ValueData: "{#SetupSetting('AppName')}.dfxp"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\dfxp.ico"; Check: DoSystemAssoc('dfxp')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKA ; Subkey: "Software\Classes\.sbv"; ValueData: "{#SetupSetting('AppName')}.sbv"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sbv.ico"; Check: DoSystemAssoc('sbv')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKA ; Subkey: "Software\Classes\.srt"; ValueData: "{#SetupSetting('AppName')}.srt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\srt.ico"; Check: DoSystemAssoc('srt')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKA ; Subkey: "Software\Classes\.ssa"; ValueData: "{#SetupSetting('AppName')}.ssa"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ssa.ico"; Check: DoSystemAssoc('ssa')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKA ; Subkey: "Software\Classes\.stl"; ValueData: "{#SetupSetting('AppName')}.stl"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\stl.ico"; Check: DoSystemAssoc('stl')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKA ; Subkey: "Software\Classes\.sub"; ValueData: "{#SetupSetting('AppName')}.sub"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sub.ico"; Check: DoSystemAssoc('sub')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKA ; Subkey: "Software\Classes\.sup"; ValueData: "{#SetupSetting('AppName')}.sup"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sup.ico"; Check: DoSystemAssoc('sup')
+
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKA ; Subkey: "Software\Classes\.vtt"; ValueData: "{#SetupSetting('AppName')}.vtt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
+
 ; Add .ass (Advanced SubStation Alpha) to the SE-supported file types
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ass"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .dfxp to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".dfxp"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .sbv to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sbv"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .srt (SubRip) to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .ssa (SubStation Alpha) to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ssa"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .sub to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sub"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .sup (Blu-ray sup) to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sup"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+; Add .vtt (Web VTT) to the SE-supported file types
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".vtt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+
+
 ; Add video files to the SE-supported file types
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".m2ts"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".mp4";  ValueData: ""; Check: HklmKeyExists('{#keyApps}')
@@ -535,7 +562,7 @@ begin
     if CompareText(CurrentProgId, MyProgId) = 0 then
       RegWriteStringValue(HKEY_LOCAL_MACHINE, KeyName, '', '');
   end;
-  Result := IsTaskSelected('associate_' + FileType);
+  Result := IsTaskSelected('associate_common');
 end;
 
 
@@ -635,6 +662,17 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\Latin.db'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\Latin.nocr'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\preview.mkv'));
+  DeleteFile(ExpandConstant('{app}\Icons\ass.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\dfxp.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\sbv.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\srt.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\ssa.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\stl.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\sub.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\sup.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\vtt.ico'));
+  DelTree(ExpandConstant('{app}\Icons'), True, True, True);
+  RemoveDir(ExpandConstant('{app}\Icons'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\*.*'), False, True, False);
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Ocr'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Plugins\*.*'), False, True, False);

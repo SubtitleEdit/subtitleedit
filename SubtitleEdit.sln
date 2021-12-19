@@ -11,12 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLanguageFiles", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateResourceScript", "src\UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Resources", "src\Win32Resources\Win32Resources.vcxproj", "{905ACC84-B353-4313-BFE5-CCF460B959AF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{511A5B59-1C35-4719-8536-23B19AF9B21A} = {511A5B59-1C35-4719-8536-23B19AF9B21A}
-		{2CB9698C-F0A8-42FF-8938-DE047292D5FE} = {2CB9698C-F0A8-42FF-8938-DE047292D5FE}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}"
 	ProjectSection(SolutionItems) = preProject
 		build.bat = build.bat

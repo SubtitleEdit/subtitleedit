@@ -61,5 +61,8 @@
   <EndLines />
   <RegularExpressions>
     <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="([\p{Ll},] )(I)([oai][, \.])" replaceWith="$1l$3" />
+    <RegEx find="\b(I)([àì]|'[ \r\n])\b" replaceWith="l$2" />
+    <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />  
   </RegularExpressions>
 </OCRFixReplaceList>
