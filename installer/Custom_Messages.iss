@@ -35,7 +35,7 @@ en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
 en.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
-en.tsk_SetFileTypes=Associate SubRip (.srt) files with Subtitle Edit
+en.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 en.types_custom=Custom installation
 en.types_default=Default installation
 
@@ -53,7 +53,7 @@ ar.tsk_CurrentUser=For the current user only
 ar.tsk_Other=Other:
 ar.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ar.tsk_ResetSettings=Reset Subtitle Edit's settings
-ar.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+ar.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 ar.types_custom=Custom installation
 ar.types_default=Default installation
 
@@ -70,7 +70,7 @@ bg.tsk_CurrentUser=For the current user only
 bg.tsk_Other=Other:
 bg.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 bg.tsk_ResetSettings=Reset Subtitle Edit's settings
-bg.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+bg.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 bg.types_custom=Custom installation
 bg.types_default=Default installation
 
@@ -87,7 +87,7 @@ ca.tsk_CurrentUser=Només per a l'usuari actual
 ca.tsk_Other=Altre:
 ca.tsk_ResetDictionaries=Restableix els diccionaris i suprimeix qualsevol noms personalitzat
 ca.tsk_ResetSettings=Restableix la configuració de Subtitle Edit
-ca.tsk_SetFileTypes=Associa fitxerd SubRip Text (.srt) amb Subtitle Edit
+ca.tsk_SetFileTypes=Associa fitxers de subtítols comuns amb Subtitle Edit
 ca.types_custom=Instal·lació personalitzada
 ca.types_default=Instal·lació predeterminada
 
@@ -104,7 +104,7 @@ cs.tsk_CurrentUser=Pouze pro aktuálního uživatele
 cs.tsk_Other=Ostatní:
 cs.tsk_ResetDictionaries=Obnovit slovníky a odstranit všechna vlastní jména
 cs.tsk_ResetSettings=Obnovit nastavení Subtitle Edit
-cs.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+cs.tsk_SetFileTypes=Přidružte běžné soubory titulků k úpravě titulků
 cs.types_custom=Vlastní instalace
 cs.types_default=Výchozí instalace
 
@@ -121,7 +121,7 @@ da.tsk_CurrentUser=Kun for aktulle bruger
 da.tsk_Other=Andre:
 da.tsk_ResetDictionaries=Nulstil ordbøger og slet bruger ordlister
 da.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
-da.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+da.tsk_SetFileTypes=Associer almindelige undertekstfiler til Subtitle Edit
 da.types_custom=Brugerdefineret installation
 da.types_default=Default installation
 
@@ -138,7 +138,7 @@ de.tsk_CurrentUser=Nur für mich
 de.tsk_Other=Andere:
 de.tsk_ResetDictionaries=Wörterbücher zurücksetzen und sonstige Namen löschen
 de.tsk_ResetSettings=Subtitle Edit Einstellungen zurücksetzen
-de.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+de.tsk_SetFileTypes=Verknüpfen Sie gängige Untertiteldateien mit Subtitle Edit
 de.types_custom=Benutzerdefinierte Installation
 de.types_default=Standardinstallation
 
@@ -172,7 +172,7 @@ es.tsk_CurrentUser=Para el usuario actual
 es.tsk_Other=Otro:
 es.tsk_ResetDictionaries=Reestablecer Diccionarios y borrar nombres personalizados
 es.tsk_ResetSettings=Reestablecer ajustes de Subtitle Edit
-es.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+es.tsk_SetFileTypes=Asociar archivos de subtítulos comunes con Subtitle Edit
 es.types_custom=Instalacion personalizada
 es.types_default=Instalacion predefinida
 
@@ -189,7 +189,7 @@ eu.tsk_CurrentUser=Uneko erabiltzailearentzat bakarrik
 eu.tsk_Other=Besterik:
 eu.tsk_ResetDictionaries=Berrezarri Hiztegiak eta ezabatu norbere izena
 eu.tsk_ResetSettings=Berrezarri Subtitle Edit ezarpenak
-eu.tsk_SetFileTypes=Elkartu SubRip Text (.srt) agiriak Subtitle Edit-ekin
+eu.tsk_SetFileTypes=Lotu azpititulu-fitxategi arruntak Subtitle Edit-ekin
 eu.types_custom=Norbere ezarpena
 eu.types_default=Berezko ezarpena
 
@@ -206,7 +206,7 @@ fa.tsk_CurrentUser=فقط برای کاربر جاری
 fa.tsk_Other=دیگر:
 fa.tsk_ResetDictionaries=ریست دیکشنری و حذف تمامی نام های معمولی
 fa.tsk_ResetSettings=ریست تنظیمات ویرایشگر زیرنویس
-fa.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+fa.tsk_SetFileTypes=فایل‌های زیرنویس رایج را با Subtitle Edit مرتبط کنید
 fa.types_custom=نصب دستی
 fa.types_default=نصب پیشفرض
 
@@ -223,7 +223,7 @@ fi.tsk_CurrentUser=Vain nykyiselle käyttäjälle
 fi.tsk_Other=Muuta:
 fi.tsk_ResetDictionaries=Tyhjennä sanakirjat ja poista kaikki mukautetut nimet
 fi.tsk_ResetSettings=Palauta Subtitle Edit'n asetukset
-fi.tsk_SetFileTypes=Liitä SubRip Text (.srt) - tiedostot Subtitle Edit:iin
+fi.tsk_SetFileTypes=Yhdistä yleiset tekstitystiedostot kohteeseen Subtitle Edit:iin
 fi.types_custom=Mukautettu asennus
 fi.types_default=Oletusasennus
 
@@ -240,7 +240,7 @@ fr.tsk_CurrentUser=Uniquement pour l'utilisateur actuel
 fr.tsk_Other=Autre :
 fr.tsk_ResetDictionaries=Rétablir les Dictionnaires originaux
 fr.tsk_ResetSettings=Rétablir les réglages de Subtitle Edit
-fr.tsk_SetFileTypes=Associer les fichiers SubRip Text (.srt) à Subtitle Edit
+fr.tsk_SetFileTypes=Associer des fichiers de sous-titres communs à Subtitle Edit
 fr.types_custom=Installation personnalisée
 fr.types_default=Installation par défaut
 
@@ -257,7 +257,7 @@ hr.tsk_CurrentUser=For the current user only
 hr.tsk_Other=Other:
 hr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 hr.tsk_ResetSettings=Reset Subtitle Edit's settings
-hr.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+hr.tsk_SetFileTypes=Povežite uobičajene datoteke titlova s ​​Subtitle Edit
 hr.types_custom=Custom installation
 hr.types_default=Default installation
 
@@ -291,7 +291,7 @@ it.tsk_CurrentUser=Solo per l'utente attuale
 it.tsk_Other=Altra:
 it.tsk_ResetDictionaries=Ripristina i dizionari ed elimina i nomi personali
 it.tsk_ResetSettings=Ripristina le impostazioni di Subtitle Edit
-it.tsk_SetFileTypes=Associa file SubRip (.srt) con Subtitle Edit
+it.tsk_SetFileTypes=Associa file di sottotitoli comuni a Subtitle Edit
 it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
 
@@ -308,7 +308,7 @@ ja.tsk_CurrentUser=このユーザーのみ
 ja.tsk_Other=その他:
 ja.tsk_ResetDictionaries=辞書をリセットしてカスタム名を削除する
 ja.tsk_ResetSettings=Subtitle Editの設定をリセットする
-ja.tsk_SetFileTypes=SubRip Text (.srt)ファイルをSubtitle Editに関連付ける
+ja.tsk_SetFileTypes=一般的な字幕ファイルをSubtitle Editに関連付ける 
 ja.types_custom=カスタムインストール
 ja.types_default=デフォルトインストール
 
@@ -325,7 +325,7 @@ ko.tsk_CurrentUser=현재 사용자
 ko.tsk_Other=기타:
 ko.tsk_ResetDictionaries=사전 초기화 및 모든 사용자 이름 삭제
 ko.tsk_ResetSettings=Subtitle Edit 설정 초기화
-ko.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+ko.tsk_SetFileTypes=일반 자막 파일을 Subtitle Edit와 연결 
 ko.types_custom=사용자 지정 설치
 ko.types_default=기본 설치
 
@@ -342,7 +342,7 @@ mk.tsk_CurrentUser=Само за моменталниот корисник
 mk.tsk_Other=Друго:
 mk.tsk_ResetDictionaries=Ресетирај речници и избриши додадени називи по избор
 mk.tsk_ResetSettings=Ресетирај поставки на Subtitle Edit
-mk.tsk_SetFileTypes=Постави го Subtitle edit како стандарден програм за SubRip Text (.srt) записи
+mk.tsk_SetFileTypes=Поврзете ги вообичаените датотеки со титл со Subtitle Edit 
 mk.types_custom=Инсталиција по избор
 mk.types_default=Стандардна инсталација
 
@@ -359,7 +359,7 @@ nl.tsk_CurrentUser=Alleen voor huidige gebruiker
 nl.tsk_Other=Anders:
 nl.tsk_ResetDictionaries=Herstel woordenboeken en verwijder elke persoonlijke toevoeging
 nl.tsk_ResetSettings=Herstel Subtitle Edit settings
-nl.tsk_SetFileTypes=Koppel SubRip Text (.srt) bestanden aan Subtitle Edit
+nl.tsk_SetFileTypes=Koppel veelgebruikte ondertitelbestanden aan Subtitle Edit
 nl.types_custom=Gebruiker specifieke installatie
 nl.types_default=Standaard installatie
 
@@ -376,7 +376,7 @@ pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
 pl.tsk_Other=Inne:
 pl.tsk_ResetDictionaries=Resetuj słowniki i usuń wszelkie niestandardowe nazwy
 pl.tsk_ResetSettings=Resetuj ustawienia Subtitle Edit
-pl.tsk_SetFileTypes=Skojarz z Subtitle Edit pliki w formacie SubRip Text (.srt)
+pl.tsk_SetFileTypes=Powiąż popularne pliki napisów z Subtitle Edit
 pl.types_custom=Instalacja użytkownika
 pl.types_default=Instalacja domyślna
 
@@ -410,7 +410,7 @@ ptBR.tsk_CurrentUser=Usuário atual
 ptBR.tsk_Other=Outro:
 ptBR.tsk_ResetDictionaries=Resetar Dicionários e deletar quaisquer nomes personalizados
 ptBR.tsk_ResetSettings=Resetar configurações do  Subtitle Edit
-ptBR.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+ptBR.tsk_SetFileTypes=Associe arquivos de legenda comuns a Subtitle Edit
 ptBR.types_custom=Instalação personalizada
 ptBR.types_default=Instalação padrão
 
@@ -427,7 +427,7 @@ ro.tsk_CurrentUser=Pentru utilizatorul curent
 ro.tsk_Other=Altele:
 ro.tsk_ResetDictionaries=Resetează Dicționarele și șterge toate numele personalizate
 ro.tsk_ResetSettings=Resetează configurarea programului Subtitle Edit
-ro.tsk_SetFileTypes=Asociezi fișierele SubRip Text (.srt) cu Subtitle Edit
+ro.tsk_SetFileTypes=Asociați fișierele de subtitrare comune cu Subtitle Edit
 ro.types_custom=Instalare personalizată
 ro.types_default=Instalare predefinită
 
@@ -444,7 +444,7 @@ ru.tsk_CurrentUser=Только для текущего пользователя
 ru.tsk_Other=Другие задачи:
 ru.tsk_ResetDictionaries=Сброс и удаление пользовательских словарей
 ru.tsk_ResetSettings=Сброс настроек программы
-ru.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+ru.tsk_SetFileTypes=Свяжите общие файлы субтитров с Subtitle Edit
 ru.types_custom=Выборочная установка
 ru.types_default=Обычная установка
 
@@ -461,7 +461,7 @@ sl.tsk_CurrentUser=For the current user only
 sl.tsk_Other=Other:
 sl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 sl.tsk_ResetSettings=Reset Subtitle Edit's settings
-sl.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+sl.tsk_SetFileTypes=Povežite običajne datoteke s podnapisi z Subtitle Edit
 sl.types_custom=Custom installation
 sl.types_default=Default installation
 
@@ -512,7 +512,7 @@ sv.tsk_CurrentUser=For the current user only
 sv.tsk_Other=Other:
 sv.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 sv.tsk_ResetSettings=Reset Subtitle Edit's settings
-sv.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+sv.tsk_SetFileTypes=Koppla vanliga undertextfiler till Subtitle Edit
 sv.types_custom=Custom installation
 sv.types_default=Default installation
 
@@ -529,7 +529,7 @@ th.tsk_CurrentUser=For the current user only
 th.tsk_Other=Other:
 th.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 th.tsk_ResetSettings=Reset Subtitle Edit's settings
-th.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+th.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 th.types_custom=Custom installation
 th.types_default=Default installation
 
@@ -546,7 +546,7 @@ tr.tsk_CurrentUser=For the current user only
 tr.tsk_Other=Other:
 tr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 tr.tsk_ResetSettings=Reset Subtitle Edit's settings
-tr.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+tr.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 tr.types_custom=Custom installation
 tr.types_default=Default installation
 
@@ -563,7 +563,7 @@ uk.tsk_CurrentUser=Тільки для поточного користувача
 uk.tsk_Other=Інше:
 uk.tsk_ResetDictionaries=Скинути словники та видалити усі користувацькі імена
 uk.tsk_ResetSettings=Скинути налаштування Subtitle Edit
-uk.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+uk.tsk_SetFileTypes=Пов’яжіть поширені файли субтитрів із Subtitle Edit
 uk.types_custom=Налаштовуване встановлення
 uk.types_default=Типове встановлення
 
@@ -580,7 +580,7 @@ vi.tsk_CurrentUser=For the current user only
 vi.tsk_Other=Other:
 vi.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 vi.tsk_ResetSettings=Reset Subtitle Edit's settings
-vi.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+vi.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 vi.types_custom=Custom installation
 vi.types_default=Default installation
 
@@ -597,7 +597,7 @@ zh.tsk_CurrentUser=For the current user only
 zh.tsk_Other=Other:
 zh.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 zh.tsk_ResetSettings=Reset Subtitle Edit's settings
-zh.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+zh.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 zh.types_custom=Custom installation
 zh.types_default=Default installation
 
@@ -614,7 +614,7 @@ zhTW.tsk_CurrentUser=僅目前使用者
 zhTW.tsk_Other=其他：
 zhTW.tsk_ResetDictionaries=重設字典並刪除所有自訂名稱
 zhTW.tsk_ResetSettings=重置 Subtitle Edit 的設定
-zhTW.tsk_SetFileTypes=將 SubRip Text (.srt) 檔案與 Subtitle Edit 關聯
+zhTW.tsk_SetFileTypes=將常用字幕文件與 Subtitle Edit 關聯
 zhTW.types_custom=自訂安裝
 zhTW.types_default=預設安裝
 
