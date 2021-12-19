@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexMPlayer2Line = new Regex(@"^\[-?\d+]\[-?\d+].*$", RegexOptions.Compiled);
 
-        public override string Extension => ".mpl";
+        public override string Extension => Configuration.Settings.SubtitleSettings.MPlayer2Extension;
 
         public override string Name => "MPlayer2";
 
