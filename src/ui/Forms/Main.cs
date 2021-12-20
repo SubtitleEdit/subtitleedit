@@ -23202,11 +23202,21 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxVideo.MouseClick += GroupBoxVideo_MouseClick;
 
+            textBoxListViewText.MouseDown += TextBoxListViewText_MouseDown;
+
             ShowSubtitleTimer.Start();
             textBoxSource.SelectionLength = 0;
             _timerSlow.Interval = 150;
             _timerSlow.Tick += _timerSlow_Tick;
             _timerSlow.Start();
+        }
+
+        private void TextBoxListViewText_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!textBoxListViewText.Enabled)
+            {
+                InsertLineToolStripMenuItemClick(null, null);
+            }
         }
 
         private bool _updateShowEarlier;
