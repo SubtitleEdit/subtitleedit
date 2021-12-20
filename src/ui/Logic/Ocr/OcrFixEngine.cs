@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
             wordList.AddRange(nameList.GetNames().Where(p => p.Length > 4));
-            return wordList.ToArray();
+            return wordList.OrderByDescending(p => p.Length).ToArray();
         }
 
         public string SpellCheckDictionaryName
@@ -1921,7 +1921,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             foreach (string s in word.Split(' '))
             {
-                if (!DoSpell(s))
+                if (!DoSpell(s) && !_nameList.Contains(s))
                 {
                     if (IsWordKnownOrNumber(word, word))
                     {
@@ -1955,9 +1955,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                         }
                     }
+
                     return false;
                 }
             }
+
             return true;
         }
 
