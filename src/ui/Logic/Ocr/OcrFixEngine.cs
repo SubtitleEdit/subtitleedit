@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
             wordList.AddRange(nameList.GetNames().Where(p => p.Length > 4));
-            return wordList.ToArray();
+            return wordList.OrderByDescending(p => p.Length).ToArray();
         }
 
         public string SpellCheckDictionaryName
@@ -1574,10 +1574,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                             if (word.Length > 4)
                             {
-                                var splitWords = StringWithoutSpaceSplitToWords.SplitWord(_wordSplitList, word);
-                                if (splitWords != word)
+                                if (_threeLetterIsoLanguageName == "eng" && 
+                                    word.EndsWith("in", StringComparison.Ordinal) && 
+                                    line.Contains(word + "'") &&
+                                    DoSpell(word + "g"))
                                 {
-                                    guesses.Add(splitWords);
+                                    // avoid words like "workin'" or "holdin'"
+                                }
+                                else
+                                {
+                                    var splitWords = StringWithoutSpaceSplitToWords.SplitWord(_wordSplitList, word);
+                                    if (splitWords != word)
+                                    {
+                                        guesses.Add(splitWords);
+                                    }
                                 }
                             }
 
@@ -1921,13 +1931,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             foreach (string s in word.Split(' '))
             {
-                if (!DoSpell(s))
+                if (!DoSpell(s) && 
+                    !_nameList.Contains(s) && 
+                    !_userWordList.Contains(s) &&
+                    !IsWordKnownOrNumber(s, word))
                 {
-                    if (IsWordKnownOrNumber(word, word))
-                    {
-                        return true;
-                    }
-
                     if (s.Length > 10 && s.Contains('/'))
                     {
                         string[] ar = s.Split('/');
@@ -1950,14 +1958,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if ((DoSpell(a) || IsWordKnownOrNumber(a, word)) &&
                                     (DoSpell(b) || IsWordKnownOrNumber(b, word)))
                                 {
-                                    return true;
+                                    continue;
                                 }
                             }
                         }
                     }
+
                     return false;
                 }
             }
+
             return true;
         }
 

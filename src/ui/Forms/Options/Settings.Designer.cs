@@ -4555,7 +4555,29 @@
             "17",
             "18",
             "19",
-            "20"});
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "50",
+            "60"});
             this.comboBoxSubtitleListViewFontSize.Location = new System.Drawing.Point(16, 38);
             this.comboBoxSubtitleListViewFontSize.Name = "comboBoxSubtitleListViewFontSize";
             this.comboBoxSubtitleListViewFontSize.Size = new System.Drawing.Size(73, 21);
@@ -4688,7 +4710,19 @@
             "27",
             "28",
             "29",
-            "30"});
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "50",
+            "60"});
             this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(21, 35);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(73, 21);
@@ -4980,12 +5014,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
