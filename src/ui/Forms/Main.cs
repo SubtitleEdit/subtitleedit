@@ -17826,7 +17826,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetListViewStateImages()
         {
-            var oldStaeImageList = SubtitleListview1.StateImageList;
+            var oldStateImageList = SubtitleListview1.StateImageList;
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
             if (SubtitleListview1.StateImageList == null)
             {
@@ -17837,7 +17837,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + LanguageSettings.Current.General.NumberSymbol;
             }
 
-            if (oldStaeImageList == SubtitleListview1.StateImageList)
+            if (oldStateImageList == SubtitleListview1.StateImageList)
             {
                 return;
             }
