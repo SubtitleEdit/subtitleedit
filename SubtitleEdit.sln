@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
 		build.bat = build.bat
 		build_beta.bat = build_beta.bat
 		build_helpers.bat = build_helpers.bat
