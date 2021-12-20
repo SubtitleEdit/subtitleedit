@@ -18,7 +18,8 @@
    * Handle merge/split better with "box" tag
    * Improve zoom-in for waveform a little - thx vitacon
    * Trying to make nOCR work better with corrupted files - thx k7Up
-   * Improve English OCR rule a little - thx tormento
+   * Improve English/Italian OCR rules a little - thx tormento
+   * Allow higher font size in list view / text box - thx OmrSi
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
@@ -29,6 +30,7 @@
    * Fix frame Rate/Multiplier/dropMode in TimedText properties - thx OmrSi
    * Fix unwanted lowercase for ASSA properties window when reopen - thx Thomas
    * Fix crash when opening an mp4 video in rare cases - thx jupester
+   * Fix issue with bookmarks + not opened files - thx OmrSi
 
 
 3.6.4 (3rd December 2021)
