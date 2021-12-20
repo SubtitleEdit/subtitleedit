@@ -12260,7 +12260,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (SubtitleListview1.ColumnIndexNumber >= 0)
                 {
-                    Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
+                    var fileHasBookmarkedLines = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null);
+                    var columnIndexNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
+                    Configuration.Settings.General.ListViewNumberWidth = fileHasBookmarkedLines ? columnIndexNumberWidth - 18 : columnIndexNumberWidth;
                 }
 
                 if (SubtitleListview1.ColumnIndexStart >= 0)
@@ -17824,7 +17826,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetListViewStateImages()
         {
-            var oldStaeImageList = SubtitleListview1.StateImageList;
+            var oldStateImageList = SubtitleListview1.StateImageList;
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
             if (SubtitleListview1.StateImageList == null)
             {
@@ -17835,7 +17837,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + LanguageSettings.Current.General.NumberSymbol;
             }
 
-            if (oldStaeImageList == SubtitleListview1.StateImageList)
+            if (oldStateImageList == SubtitleListview1.StateImageList)
             {
                 return;
             }
@@ -23032,6 +23034,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
             SetListViewStateImages();
+            if (_subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null))
+            {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width + 18;
+            }
 
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
