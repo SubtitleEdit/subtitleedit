@@ -2369,6 +2369,7 @@ can edit in same subtitle file (collaboration)",
                 WordLists = "Word lists",
                 SsaStyle = "ASS/SSA Style",
                 Network = "Network",
+                FileTypeAssociations = "File type associations",
                 Rules = "Rules",
                 NetworkSessionSettings = "Network session settings",
                 NetworkSessionNewSound = "Play sound file when new message arrives",
@@ -2833,6 +2834,8 @@ can edit in same subtitle file (collaboration)",
                 BDOpensInOcr = "OCR",
                 BDOpensInEdit = "Edit",
                 ShortcutsAllowSingleLetterOrNumberInTextBox = "Shortcuts: Allow single letter/number in text box",
+                UpdateFileTypeAssociations = "Update file type associations",
+                FileTypeAssociationsUpdated = "File type associations updated",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

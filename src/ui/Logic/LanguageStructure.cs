@@ -2218,6 +2218,7 @@
             public string WordLists { get; set; }
             public string SsaStyle { get; set; }
             public string Network { get; set; }
+            public string FileTypeAssociations { get; set; }
             public string Rules { get; set; }
             public string ShowToolBarButtons { get; set; }
             public string New { get; set; }
@@ -2684,6 +2685,8 @@
             public string BDOpensInOcr { get; set; }
             public string BDOpensInEdit { get; set; }
             public string ShortcutsAllowSingleLetterOrNumberInTextBox { get; set; }
+            public string UpdateFileTypeAssociations { get; set; }
+            public string FileTypeAssociationsUpdated { get; set; }
         }
 
         public class SettingsMpv

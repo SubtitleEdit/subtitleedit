@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private const int ToolbarSection = 8;
         private const int AppearanceSection = 9;
         private const int NetworkSection = 10;
+        private const int FileTypeAssociationSection = 11;
 
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
@@ -46,6 +47,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
+
+        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
 
         private class ComboBoxLanguage
         {
@@ -115,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             Init();
+            FillFileTypeAssociationsListView();
         }
 
         public void Init()
@@ -343,6 +347,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
             listBoxSection.Items[AppearanceSection] = language.Appearance;
             listBoxSection.Items[NetworkSection] = language.Network;
+            listBoxSection.Items[FileTypeAssociationSection] = language.FileTypeAssociations;
 
             Text = language.Title;
             panelGeneral.Text = language.General;
@@ -1152,6 +1157,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+
+            buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
+            labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
         }
 
         private void SetDialogStyle(DialogType dialogStyle)
@@ -2634,6 +2642,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelToolBar.Visible = false;
             panelFont.Visible = false;
             panelNetwork.Visible = false;
+            panelFileTypeAssociations.Visible = false;
 
             var section = panelGeneral;
             switch (listBoxSection.SelectedIndex)
@@ -2667,6 +2676,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case NetworkSection:
                     section = panelNetwork;
+                    break;
+                case FileTypeAssociationSection:
+                    section = panelFileTypeAssociations;
                     break;
             }
 
@@ -3955,6 +3967,50 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxFavoriteSubtitleFormats.SetSelected(listBoxFavoriteSubtitleFormats.Items.Count - 1, true);
         }
 
-        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+        private void FillFileTypeAssociationsListView()
+        {
+            var iconDir = Path.Combine(Configuration.BaseDirectory, "Icons");
+            if (!Directory.Exists(iconDir))
+            {
+                return;
+            }
+
+            var iconFileNames = Directory.GetFiles(iconDir, "*.ico");
+            listViewFileTypeAssociations.LargeImageList = imageListFileTypeAssociations;
+            foreach (var iconFileName in iconFileNames)
+            {
+                var friendlyName = "." + Path.GetFileNameWithoutExtension(iconFileName).ToUpperInvariant();
+                var icon = new Icon(iconFileName);
+                imageListFileTypeAssociations.Images.Add(icon);
+                var item = new ListViewItem(friendlyName);
+                item.ImageIndex = imageListFileTypeAssociations.Images.Count - 1;
+                item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "Subtitle Edit");
+                item.Tag = iconFileName;
+                listViewFileTypeAssociations.Items.Add(item);
+            }
+            listViewFileTypeAssociations.Refresh();
+        }
+
+        private void buttonUpdateFileTypeAssociations_Click(object sender, EventArgs e)
+        {
+            var exeFileName = Assembly.GetEntryAssembly().Location;
+            foreach (ListViewItem item in listViewFileTypeAssociations.Items)
+            {
+                var ext = item.Text.ToLowerInvariant();
+                if (item.Checked)
+                {
+                    var iconFileName = (string)item.Tag;
+                    FileTypeAssociations.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "Subtitle Edit");
+                }
+                else
+                {
+                    FileTypeAssociations.DeleteFileAssociationViaRegistry(ext, "Subtitle Edit");
+                }
+            }
+
+            labelUpdateFileTypeAssociationsStatus.Text = LanguageSettings.Current.Settings.FileTypeAssociationsUpdated;
+            FileTypeAssociations.Refresh();
+            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
+        }
     }
 }
