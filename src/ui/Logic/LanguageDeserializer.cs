@@ -5503,6 +5503,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/Network":
                     language.Settings.Network = reader.Value;
                     break;
+                case "Settings/FileTypeAssociations":
+                    language.Settings.FileTypeAssociations = reader.Value;
+                    break;
                 case "Settings/Rules":
                     language.Settings.Rules = reader.Value;
                     break;
@@ -6882,6 +6885,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ShortcutsAllowSingleLetterOrNumberInTextBox":
                     language.Settings.ShortcutsAllowSingleLetterOrNumberInTextBox = reader.Value;
+                    break;
+                case "Settings/UpdateFileTypeAssociations":
+                    language.Settings.UpdateFileTypeAssociations = reader.Value;
+                    break;
+                case "Settings/FileTypeAssociationsUpdated":
+                    language.Settings.FileTypeAssociationsUpdated = reader.Value;
                     break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;

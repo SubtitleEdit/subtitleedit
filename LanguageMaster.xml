@@ -2042,6 +2042,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WordLists>Word lists</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
     <Network>Network</Network>
+    <FileTypeAssociations>File type associations</FileTypeAssociations>
     <Rules>Rules</Rules>
     <ShowToolBarButtons>Show tool bar buttons</ShowToolBarButtons>
     <New>New</New>
@@ -2506,6 +2507,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edit</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Shortcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <UpdateFileTypeAssociations>Update file type associations</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>File type associations updated</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
