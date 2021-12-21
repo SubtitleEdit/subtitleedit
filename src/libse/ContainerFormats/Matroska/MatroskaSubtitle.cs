@@ -34,7 +34,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var inStream = new MemoryStream(Data, 0, Data.Length, false, true);
             var outStream = new MemoryStream();
             var decompressStream = new ZLibStream(inStream, CompressionMode.Decompress);
-            byte[] buffer;
             try
             {
                 decompressStream.CopyTo(outStream);
@@ -46,7 +45,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 outStream.Close();
                 decompressStream.Close();
             }
-            return buffer;
         }
 
         public MatroskaSubtitle(byte[] data, long start)
