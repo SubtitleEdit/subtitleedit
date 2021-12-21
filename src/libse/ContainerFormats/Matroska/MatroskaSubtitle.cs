@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.IO;
+using System.IO.Compression;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
@@ -30,21 +31,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 return Data;
             }
 
+            var inStream = new MemoryStream(Data, 0, Data.Length, false, true);
             var outStream = new MemoryStream();
-            var outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
-            var inStream = new MemoryStream(Data);
+            var decompressStream = new ZLibStream(inStream, CompressionMode.Decompress);
             byte[] buffer;
             try
             {
-                MatroskaTrackInfo.CopyStream(inStream, outZStream);
-                buffer = new byte[outZStream.TotalOut];
-                outStream.Position = 0;
-                outStream.Read(buffer, 0, buffer.Length);
+                decompressStream.CopyTo(outStream);
+                return outStream.ToArray();
             }
             finally
             {
-                outZStream.Close();
                 inStream.Close();
+                outStream.Close();
+                decompressStream.Close();
             }
             return buffer;
         }

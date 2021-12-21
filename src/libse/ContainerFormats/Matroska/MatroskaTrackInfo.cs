@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
@@ -32,17 +33,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public int ContentEncodingType { get; set; }
         public uint ContentEncodingScope { get; set; }
 
-        internal static void CopyStream(Stream input, Stream output)
-        {
-            var buffer = new byte[128 * 1024];
-            int len;
-            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, len);
-            }
-            output.Flush();
-        }
-
         public string GetCodecPrivate()
         {
             if (CodecPrivateRaw == null || CodecPrivateRaw.Length == 0)
@@ -54,16 +44,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 (ContentEncodingScope & ContentEncodingScopePrivateDate) > 0 && // second bit set = private data encoded
                 CodecPrivateRaw.Length > 2)
             {
+                var inStream = new MemoryStream(CodecPrivateRaw, 0, CodecPrivateRaw.Length, false, true);
                 var outStream = new MemoryStream();
-                var outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
-                var inStream = new MemoryStream(CodecPrivateRaw);
+                var reader = new StreamReader(outStream);
+                var decompressStream = new ZLibStream(inStream, CompressionMode.Decompress);
                 try
                 {
-                    CopyStream(inStream, outZStream);
-                    var buffer = new byte[outZStream.TotalOut];
+                    decompressStream.CopyTo(outStream);
                     outStream.Position = 0;
-                    outStream.Read(buffer, 0, buffer.Length);
-                    return Encoding.UTF8.GetString(buffer).TrimEnd('\0');
+                    return reader.ReadToEnd().TrimEnd('\0');
                 }
                 catch
                 {
@@ -71,8 +60,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 }
                 finally
                 {
-                    outZStream.Close();
                     inStream.Close();
+                    outStream.Close();
+                    reader.Close();
+                    decompressStream.Close();
                 }
             }
 
