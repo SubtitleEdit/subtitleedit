@@ -245,6 +245,8 @@ Source: ..\Icons\stl.ico;                          DestDir: {app}\Icons;        
 Source: ..\Icons\sub.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Icons\sup.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\smi.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\itt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
   
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -485,6 +487,16 @@ Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\shell\open
 Root: HKCU ; Subkey: "Software\Classes\.vtt"; ValueData: "{#SetupSetting('AppName')}.vtt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
 Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
 
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\.smi"; ValueData: "{#SetupSetting('AppName')}.smi"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\smi.ico"; Check: DoSystemAssoc('smi')
+
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\.itt"; ValueData: "{#SetupSetting('AppName')}.itt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\itt.ico"; Check: DoSystemAssoc('itt')
+
 ; Add .ass (Advanced SubStation Alpha) to the SE-supported file types
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ass"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
 
@@ -671,6 +683,8 @@ begin
   DeleteFile(ExpandConstant('{app}\Icons\sub.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\sup.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\vtt.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\smi.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\itt.ico'));
   DelTree(ExpandConstant('{app}\Icons'), True, True, True);
   RemoveDir(ExpandConstant('{app}\Icons'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\*.*'), False, True, False);
