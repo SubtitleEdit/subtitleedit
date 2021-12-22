@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append("\"from\":" + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
                 sb.Append("\"to\":" + p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + ", ");
                 sb.Append("\"location\": 2, ");
-                sb.Append("\"content\":\"" + Json.EncodeJsonText(p.Text) + "\"");
+                sb.Append("\"content\":\"" + Json.EncodeJsonText(p.Text.Replace(Environment.NewLine, "\\n")) + "\"");
                 sb.Append(" }");
                 count++;
             }
@@ -78,11 +78,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        var p = new Paragraph(texts[0], startTime, endTime);
+                        var pText = texts[0].Replace("\\n", Environment.NewLine);
+                        var p = new Paragraph(pText, startTime, endTime);
                         subtitle.Paragraphs.Add(p);
                     }
                 }
             }
+
             subtitle.Renumber();
         }
 
