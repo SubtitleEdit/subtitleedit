@@ -420,6 +420,7 @@
             this.buttonUpdateFileTypeAssociations = new System.Windows.Forms.Button();
             this.listViewFileTypeAssociations = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -5030,16 +5031,16 @@
             // labelUpdateFileTypeAssociationsStatus
             // 
             this.labelUpdateFileTypeAssociationsStatus.AutoSize = true;
-            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(16, 294);
+            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(433, 503);
             this.labelUpdateFileTypeAssociationsStatus.Name = "labelUpdateFileTypeAssociationsStatus";
-            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(35, 13);
+            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(38, 13);
             this.labelUpdateFileTypeAssociationsStatus.TabIndex = 24;
-            this.labelUpdateFileTypeAssociationsStatus.Text = "label2";
+            this.labelUpdateFileTypeAssociationsStatus.Text = "Status";
             // 
             // buttonUpdateFileTypeAssociations
             // 
             this.buttonUpdateFileTypeAssociations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUpdateFileTypeAssociations.Location = new System.Drawing.Point(16, 260);
+            this.buttonUpdateFileTypeAssociations.Location = new System.Drawing.Point(209, 497);
             this.buttonUpdateFileTypeAssociations.Name = "buttonUpdateFileTypeAssociations";
             this.buttonUpdateFileTypeAssociations.Size = new System.Drawing.Size(218, 23);
             this.buttonUpdateFileTypeAssociations.TabIndex = 23;
@@ -5051,13 +5052,15 @@
             // 
             this.listViewFileTypeAssociations.CheckBoxes = true;
             this.listViewFileTypeAssociations.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
+            this.columnHeader1,
+            this.columnHeader2});
             this.listViewFileTypeAssociations.HideSelection = false;
             this.listViewFileTypeAssociations.Location = new System.Drawing.Point(0, 4);
             this.listViewFileTypeAssociations.Name = "listViewFileTypeAssociations";
-            this.listViewFileTypeAssociations.Size = new System.Drawing.Size(849, 241);
+            this.listViewFileTypeAssociations.Size = new System.Drawing.Size(199, 516);
             this.listViewFileTypeAssociations.TabIndex = 22;
             this.listViewFileTypeAssociations.UseCompatibleStateImageBehavior = false;
+            this.listViewFileTypeAssociations.View = System.Windows.Forms.View.Details;
             // 
             // imageListFileTypeAssociations
             // 
@@ -5605,5 +5608,6 @@
         private System.Windows.Forms.ImageList imageListFileTypeAssociations;
         private System.Windows.Forms.Button buttonUpdateFileTypeAssociations;
         private System.Windows.Forms.Label labelUpdateFileTypeAssociationsStatus;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
     }
 }
