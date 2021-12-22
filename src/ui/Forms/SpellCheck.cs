@@ -524,8 +524,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_wordsIndex + 1 < _words.Count)
                 {
                     _wordsIndex++;
-                    _currentWord = _words[_wordsIndex].Text;
                     _currentSpellCheckWord = _words[_wordsIndex];
+                    _currentWord = _currentSpellCheckWord.Text;
                 }
                 else
                 {
@@ -627,12 +627,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
-                    else if (_changeAllDictionary.ContainsKey(_currentWord))
+                    else if (_changeAllDictionary.ContainsKey(_currentWord) && NotSameSpecialEnding(_currentSpellCheckWord, _changeAllDictionary[_currentWord]))
                     {
                         _noOfChangedWords++;
                         _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord, ref _firstChange, -1);
                     }
-                    else if (_changeAllDictionary.ContainsKey(_currentWord.Trim('\'')))
+                    else if (_currentWord.EndsWith('\'') && _changeAllDictionary.ContainsKey(_currentWord.Trim('\'')))
                     {
                         _noOfChangedWords++;
                         _mainWindow.CorrectWord(_changeAllDictionary[_currentWord.Trim('\'')], _currentParagraph, _currentWord.Trim('\''), ref _firstChange, -1);
@@ -896,6 +896,29 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Do not allow changing "Who is lookin' at X" with "lokin" word to "lokin'" via repalce word.
+        /// </summary>
+        private bool NotSameSpecialEnding(SpellCheckWord spellCheckWord, string replaceWord)
+        {
+            if (spellCheckWord.Index + spellCheckWord.Length +1 >= _currentParagraph.Text.Length)
+            {
+                return true;
+            }
+
+            var wordPlusOne = _currentParagraph.Text.Substring(spellCheckWord.Index, spellCheckWord.Length + 1).TrimStart();
+            if (replaceWord.EndsWith('\'') && !replaceWord.EndsWith("''", StringComparison.Ordinal) && wordPlusOne == replaceWord)
+            {
+                return false;
+            }
+            else if (replaceWord.EndsWith('"') && !replaceWord.EndsWith("\"\"", StringComparison.Ordinal) && wordPlusOne == replaceWord)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static bool IsBetweenActiveAssaTags(int currentIndex, Paragraph currentParagraph, SubtitleFormat subtitleFormat)

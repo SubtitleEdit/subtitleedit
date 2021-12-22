@@ -7987,16 +7987,26 @@ namespace Nikse.SubtitleEdit.Forms
                     if (startOk)
                     {
                         int end = startIndex + oldWord.Length;
-                        if (end <= p.Text.Length && end == p.Text.Length ||
+                        if (end == p.Text.Length ||
                             "«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0\u200B\uFEFF".Contains(p.Text[end]) ||
                             char.IsPunctuation(p.Text[end]))
                         {
-                            var lengthBefore = p.Text.Length;
-                            p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
-                            var lengthAfter = p.Text.Length;
-                            if (lengthAfter > lengthBefore)
+                            var endOk = true;
+
+                            if (changeWord.EndsWith('\'') && p.Text[end] == '\'')
                             {
-                                startIndex += (lengthAfter - lengthBefore);
+                                endOk = false;
+                            }
+
+                            if (endOk)
+                            {
+                                var lengthBefore = p.Text.Length;
+                                p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
+                                var lengthAfter = p.Text.Length;
+                                if (lengthAfter > lengthBefore)
+                                {
+                                    startIndex += (lengthAfter - lengthBefore);
+                                }
                             }
                         }
                     }
