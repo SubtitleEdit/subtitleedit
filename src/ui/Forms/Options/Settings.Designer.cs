@@ -5020,7 +5020,6 @@
             // 
             // panelFileTypeAssociations
             // 
-            this.panelFileTypeAssociations.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.panelFileTypeAssociations.Controls.Add(this.buttonUpdateFileTypeAssociations);
             this.panelFileTypeAssociations.Controls.Add(this.listViewFileTypeAssociations);
             this.panelFileTypeAssociations.Location = new System.Drawing.Point(230, 6);
@@ -5031,7 +5030,7 @@
             // labelUpdateFileTypeAssociationsStatus
             // 
             this.labelUpdateFileTypeAssociationsStatus.AutoSize = true;
-            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(433, 503);
+            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(439, 531);
             this.labelUpdateFileTypeAssociationsStatus.Name = "labelUpdateFileTypeAssociationsStatus";
             this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(38, 13);
             this.labelUpdateFileTypeAssociationsStatus.TabIndex = 24;
@@ -5073,6 +5072,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelWaveform);
@@ -5208,7 +5208,6 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
-            this.panelFileTypeAssociations.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
