@@ -114,11 +114,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
         public Settings()
         {
             UiUtil.PreInitialize(this);
-            InitializeComponent();
+            InitializeComponent();          
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             Init();
-            FillFileTypeAssociationsListView();
         }
 
         public void Init()
@@ -2679,6 +2678,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case FileTypeAssociationSection:
                     section = panelFileTypeAssociations;
+                    if (listViewFileTypeAssociations.Items.Count == 0)
+                    {
+                        FillFileTypeAssociationsListView();
+                    }
+                    
                     break;
             }
 
@@ -3976,19 +3980,25 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             var iconFileNames = Directory.GetFiles(iconDir, "*.ico");
-            listViewFileTypeAssociations.LargeImageList = imageListFileTypeAssociations;
+            imageListFileTypeAssociations.Images.Clear();
+            listViewFileTypeAssociations.HeaderStyle = ColumnHeaderStyle.None;
+            //listViewFileTypeAssociations.LargeImageList = imageListFileTypeAssociations;
+            listViewFileTypeAssociations.SmallImageList = imageListFileTypeAssociations;
+            listViewFileTypeAssociations.BeginUpdate();
+            listViewFileTypeAssociations.Items.Clear();
             foreach (var iconFileName in iconFileNames)
             {
                 var friendlyName = "." + Path.GetFileNameWithoutExtension(iconFileName).ToUpperInvariant();
                 var icon = new Icon(iconFileName);
                 imageListFileTypeAssociations.Images.Add(icon);
-                var item = new ListViewItem(friendlyName);
+                var item = new ListViewItem(string.Empty);
+                item.SubItems.Add(friendlyName);
                 item.ImageIndex = imageListFileTypeAssociations.Images.Count - 1;
                 item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "Subtitle Edit");
                 item.Tag = iconFileName;
                 listViewFileTypeAssociations.Items.Add(item);
             }
-            listViewFileTypeAssociations.Refresh();
+            listViewFileTypeAssociations.EndUpdate();
         }
 
         private void buttonUpdateFileTypeAssociations_Click(object sender, EventArgs e)
