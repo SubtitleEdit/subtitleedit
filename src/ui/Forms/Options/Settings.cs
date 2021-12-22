@@ -4006,7 +4006,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var exeFileName = Assembly.GetEntryAssembly().Location;
             foreach (ListViewItem item in listViewFileTypeAssociations.Items)
             {
-                var ext = item.Text.ToLowerInvariant();
+                var ext = item.SubItems[1].Text.ToLowerInvariant();
                 if (item.Checked)
                 {
                     var iconFileName = (string)item.Tag;
