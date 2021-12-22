@@ -141,7 +141,7 @@ Linha de comandos: {1} {2}</WaveFileNotFound>
 
 Linha de comandos: {1} {2}
 
-Nota: Verifique o espaço em disco.</WaveFileMalformed>
+Nota: verifique o espaço em disco.</WaveFileMalformed>
     <LowDiskSpace>ESPAÇO INSUFICIENTE EM DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} livre</FreeDiskSpace>
     <NoAudioTracksFoundGenerateEmptyWaveform>Não foi encontrado áudio! Gerar forma de onda vazia?</NoAudioTracksFoundGenerateEmptyWaveform>
@@ -161,7 +161,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Recalculate>Recalcular</Recalculate>
     <AddSeconds>Adicionar segundos</AddSeconds>
     <SetAsPercent>Definir a percentagem de duração</SetAsPercent>
-    <Note>Nota: A duração não pode sobrepor o tempo de início do texto seguinte</Note>
+    <Note>Nota: a duração não pode sobrepor o tempo de início do texto seguinte</Note>
     <Fixed>Corrigido</Fixed>
     <Milliseconds>Milissegundos</Milliseconds>
     <ExtendOnly>Apenas aumentar</ExtendOnly>
@@ -801,8 +801,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Gerar vídeo com legenda embutida</Title>
-    <InfoAssaOff>Nota: Suporta o estilo de Advanced Substation Alpha.</InfoAssaOff>
-    <InfoAssaOn>Nota: O estilo de Advanced Substation Alpha será usado :)</InfoAssaOn>
+    <InfoAssaOff>Nota: suporta o estilo de Advanced Substation Alpha.</InfoAssaOff>
+    <InfoAssaOn>Nota: o estilo de Advanced Substation Alpha será usado :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" gerado com legenda embutida.</XGeneratedWithBurnedInSubs>
     <TimeRemainingMinutes>Tempo restante: {0} minutos</TimeRemainingMinutes>
     <TimeRemainingSeconds>Tempo restante: {0} segundos</TimeRemainingSeconds>
@@ -2043,6 +2043,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WordLists>Listas de palavras</WordLists>
     <SsaStyle>Estilo SSA/ASS</SsaStyle>
     <Network>Rede</Network>
+    <FileTypeAssociations>Associações de tipo de ficheiro</FileTypeAssociations>
     <Rules>Regras</Rules>
     <ShowToolBarButtons>Mostrar botões da barra de ferramentas</ShowToolBarButtons>
     <New>Novo</New>
@@ -2264,23 +2265,23 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListView>Exibição de lista</ListView>
     <TextBox>Caixa de texto</TextBox>
     <UseSyntaxColoring>Usar coloração sintáctica</UseSyntaxColoring>
-    <HtmlColor>Html cor</HtmlColor>
-    <AssaColor>ASSA cor</AssaColor>
+    <HtmlColor>Cor Html</HtmlColor>
+    <AssaColor>Cor ASSA</AssaColor>
     <DarkTheme>Tema escuro</DarkTheme>
-    <DarkThemeEnabled>Activar Tema escuro</DarkThemeEnabled>
+    <DarkThemeEnabled>Activar tema escuro</DarkThemeEnabled>
     <DarkThemeShowGridViewLines>Mostrar grelha na Lista</DarkThemeShowGridViewLines>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <FoucsSetVideoPosition>Evidenciar controlo posição do vídeo</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustar através da posição final</AdjustViaEndAutoStart>
-    <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para a seguinte</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere>Definir fim sem intervalo, ir para o próxima e começar aqui</AdjustSetEndMinusGapAndStartNextHere>
-    <AdjustSetEndTimeAndGoToNext>Definir fim e ir para a seguinte</AdjustSetEndTimeAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>Definir fim sem intervalo, ir para o seguinte e começar aqui</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndTimeAndGoToNext>Definir fim e ir para o seguinte</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Definir fim e pausar</AdjustSetEndTimeAndPause>
-    <AdjustSetStartAutoDurationAndGoToNext>Início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Definir início, duração automática e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Definir fim, a seguir início e ir para o seguinte</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir fim e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSetStartAndEndOfPrevious>Definir início e fim da anterior (menos o intervalo)</AdjustSetStartAndEndOfPrevious>
     <AdjustSetStartAndEndOfPreviousAndGoToNext>Definir início e fim da anterior e ir para o seguinte (menos o intervalo)</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Adiantar linhas seleccionadas 100 ms</AdjustSelected100MsForward>
@@ -2335,6 +2336,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleFocusWaveform>Alternar o enfoque entre a lista e forma de onda/espectrograma</ToggleFocusWaveform>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleQuotes>Alternar aspas</ToggleQuotes>
+    <ToggleHiTags>Alternar etiquetas de Deficientes Auditivos</ToggleHiTags>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
@@ -2472,7 +2474,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
     <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Utilizar uma lista que não tenha uma quebra de linha após a mesma</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Utilizar lista de não-quebrar-após</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Quebrar linha no penúltimo ponto (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Quebrar linha pela largura do pixel</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Preferir tamanho desproporcional</BreakPreferBottomHeavy>
@@ -2484,10 +2486,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Terminal Token</MicrosoftTranslateTokenEndpoint>
-    <FontNote>Nota: Estas definições do tipo de letra são apenas para a Interface da edição de legendas.
-Definir um tipo de letra para uma legenda normalmente é feito no leitor de vídeo,
-mas também pode ser feito ao usar um formato de legenda com informações do tipo de letra incorporadas
-como "Advanced Sub Station Alpha" ou por via de exportação para formatos baseados em imagens.</FontNote>
+    <FontNote>Nota: estas definições do tipo de letra são apenas para a Interface da edição de legendas.
+Definir um tipo de letra para uma legenda normalmente é feito no leitor de vídeo, mas também pode ser feito ao usar um formato de legenda com 
+informação do tipo de letra embutida como o "Advanced Sub Station Alpha" ou via exportação para formatos baseados em imagens.</FontNote>
     <RestoreDefaultSettings>Repor as predefinições</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Todas as definições serão repostas para os valores predefinidos
 
@@ -2507,6 +2508,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Editar</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Atalhos: Permitir uma única letra/número na caixa de texto</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <UpdateFileTypeAssociations>Actualizar associações de tipo de ficheiro</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>Associações de tipo de ficheiro actualizadas</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
@@ -2747,7 +2750,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <StyleStorage>Estilos guardados</StyleStorage>
     <StyleCurrentFile>Estilos no ficheiro</StyleCurrentFile>
     <OverwriteX>Substituir {0}?</OverwriteX>
-    <CategoryNote>Nota: Os estilos na categoria predefinida (a verde) serão aplicados aos novos ficheiros ASSA</CategoryNote>
+    <CategoryNote>Nota: os estilos na categoria predefinida (a verde) serão aplicados aos novos ficheiros ASSA</CategoryNote>
     <CategoriesManage>Gerir</CategoriesManage>
     <MoveToCategory>Mover estilos seleccionados para categoria...</MoveToCategory>
     <ScaleX>EscalaX</ScaleX>
@@ -2784,7 +2787,7 @@ Continuar?</RestoreDefaultSettingsMsg>
   <TimedTextSmpteTiming>
     <Title>SMPTE temporização</Title>
     <UseSmpteTiming>Usar o SMPTE temporização para a legenda actual?</UseSmpteTiming>
-    <SmpteTimingInfo>Nota: O SMPTE temporização pode ser alterado mais tarde no "Menu de Vídeo"</SmpteTimingInfo>
+    <SmpteTimingInfo>Nota: o SMPTE temporização pode ser alterado mais tarde no "Menu de Vídeo"</SmpteTimingInfo>
     <YesAlways>Sim, sempre para taxas de fotogramas sem números inteiros</YesAlways>
     <NoNever>Não, nunca</NoNever>
   </TimedTextSmpteTiming>
