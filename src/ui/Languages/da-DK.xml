@@ -2850,7 +2850,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AllFixes>Alle rettelser</AllFixes>
     <GuessesUsed>Gæt brugt</GuessesUsed>
     <UnknownWords>Ukendte ord</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList.xml' på linjen: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList/WordSplitList' på linjen: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Ret OCR-fejl</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer tekst med matchende tidskoder...</ImportTextWithMatchingTimeCodes>

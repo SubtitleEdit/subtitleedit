@@ -2598,7 +2598,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Arregla-ho tot</AllFixes>
     <GuessesUsed>Endevinades</GuessesUsed>
     <UnknownWords>Mots desconeguts</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} mitjantçant 'OCRFixReplaceList.xml' en línia: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} mitjantçant 'OCRFixReplaceList/WordSplitList' en línia: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Auto correcció/corrector ortogràfic d'OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Arregla errors d'OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa text amb codi de temps coincident...</ImportTextWithMatchingTimeCodes>

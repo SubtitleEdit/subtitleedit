@@ -2838,7 +2838,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <AllFixes>Tous les correctifs</AllFixes>
     <GuessesUsed>Suppositions utilisées</GuessesUsed>
     <UnknownWords>Mots inconnus</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList.xml' ligne : {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList/WordSplitList' ligne : {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Auto-correction OCR / Vérification orthographique</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corriger les erreurs OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer du texte à horodatages correspondants ...</ImportTextWithMatchingTimeCodes>

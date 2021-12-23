@@ -2875,7 +2875,7 @@ Manter as alterações?</KeepChangesMessage>
     <AllFixes>Corrigir tudo</AllFixes>
     <GuessesUsed>Suposições usadas</GuessesUsed>
     <UnknownWords>Palavras desconhecidas</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} através da 'OCRFixReplaceList.xml' na linha: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} através da 'OCRFixReplaceList/WordSplitList' na linha: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com tempos correspondente...</ImportTextWithMatchingTimeCodes>

@@ -2870,7 +2870,7 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <AllFixes>Corregir todo</AllFixes>
     <GuessesUsed>Utilizar suposiciones</GuessesUsed>
     <UnknownWords>Palabras desconocidas</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} mediante 'OCRFixReplaceList.xml' en la línea: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} mediante 'OCRFixReplaceList/WordSplitList' en la línea: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR autocorrección / revisión ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corregir errores de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto con código de tiempo coincidente...</ImportTextWithMatchingTimeCodes>

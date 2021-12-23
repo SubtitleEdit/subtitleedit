@@ -2814,7 +2814,7 @@ Zachovat změny?</KeepChangesMessage>
     <AllFixes>Všechny opravy</AllFixes>
     <GuessesUsed>Použité odhady</GuessesUsed>
     <UnknownWords>Neznámá slova</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} pomocí 'OCRFixReplaceList.xml' v řádku: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} pomocí 'OCRFixReplaceList/WordSplitList' v řádku: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Automatická oprava a kontrola pravopisu OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Opravit chyby OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importovat text s odpovídajícími časovými kódy...</ImportTextWithMatchingTimeCodes>

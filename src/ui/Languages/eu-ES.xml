@@ -2709,7 +2709,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <AllFixes>Zuzenketa denak</AllFixes>
     <GuessesUsed>Erabilitako adiera asmatuak</GuessesUsed>
     <UnknownWords>Hitz ezezagunak</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} honen bidez: 'OCRFixReplaceList.xml' lerro honetan: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} honen bidez: 'OCRFixReplaceList/WordSplitList' lerro honetan: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR berez zuzenketa / idaz egiaztapena</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Zuzendu OCR akatsak</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Inportatu idatzia bat datozen denbora kodeekin...</ImportTextWithMatchingTimeCodes>

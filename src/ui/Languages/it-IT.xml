@@ -2872,7 +2872,7 @@ Mantieni le modifiche?</KeepChangesMessage>
     <AllFixes>Tutte le correzioni</AllFixes>
     <GuessesUsed>Indovina</GuessesUsed>
     <UnknownWords>Parole sconosciute</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} tramite 'OCRFixReplaceList.xml' in riga: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} tramite 'OCRFixReplaceList/WordSplitList' in riga: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Correzione automatica OCR / ortografia</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Correggi errori OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa testo con Codici Temporali corrispondenti...</ImportTextWithMatchingTimeCodes>

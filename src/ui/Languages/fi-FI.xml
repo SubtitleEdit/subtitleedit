@@ -2852,7 +2852,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AllFixes>Kaikki korjaukset</AllFixes>
     <GuessesUsed>Arvaukset</GuessesUsed>
     <UnknownWords>Tuntemattomat sanat</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} tiedostossa 'OCRFixReplaceList.xml' rivillä: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} tiedostossa 'OCRFixReplaceList/WordSplitList' rivillä: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Tekstintunnistuksen automaattinen korjaus ja oikoluku</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Korjaa tekstintunnistusvirheet</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Tuo tekstit, joissa on yhtenevät aikaleimat</ImportTextWithMatchingTimeCodes>
