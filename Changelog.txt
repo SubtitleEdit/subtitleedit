@@ -5,6 +5,7 @@
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
    * Add "File type associations" in Options - Settings
+   * Add shorcuts for Tools - Sort By - thx Jolana
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
@@ -14,7 +15,7 @@
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
-   * Updated file association icons (so nice) in installer - thx Leon
+   * Update file association icons (so nice) in installer - thx Leon
    * Improve VTT parsing of malformed files - thx Leon
    * Handle merge/split better with "box" tag
    * Improve zoom-in for waveform a little - thx vitacon

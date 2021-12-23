@@ -2184,8 +2184,14 @@ $HorzAlign          =   Center
         public string MainListViewSortByStartTime { get; set; }
         public string MainListViewSortByEndTime { get; set; }
         public string MainListViewSortByDuration { get; set; }
+        public string MainListViewSortByText { get; set; }
+        public string MainListViewSortBySingleLineMaxLen { get; set; }
+        public string MainListViewSortByTextTotalLength { get; set; }
         public string MainListViewSortByCps { get; set; }
+        public string MainListViewSortByWpm { get; set; }
         public string MainListViewSortByNumberOfLines { get; set; }
+        public string MainListViewSortByActor { get; set; }
+        public string MainListViewSortByStyle { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -8136,16 +8142,52 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewSortByDuration = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewSortByText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortBySingleLineMaxLen");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortBySingleLineMaxLen = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByTextTotalLength");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByTextTotalLength = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewSortByCps");
                 if (subNode != null)
                 {
                     shortcuts.MainListViewSortByCps = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewSortByWpm");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByWpm = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewSortByNumberOfLines");
                 if (subNode != null)
                 {
                     shortcuts.MainListViewSortByNumberOfLines = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByActor");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByActor = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByStyle");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByStyle = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("GeneralRemoveBlankLines");
@@ -9906,8 +9948,14 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewSortByStartTime", shortcuts.MainListViewSortByStartTime);
             textWriter.WriteElementString("MainListViewSortByEndTime", shortcuts.MainListViewSortByEndTime);
             textWriter.WriteElementString("MainListViewSortByDuration", shortcuts.MainListViewSortByDuration);
+            textWriter.WriteElementString("MainListViewSortByText", shortcuts.MainListViewSortByText);
+            textWriter.WriteElementString("MainListViewSortBySingleLineMaxLen", shortcuts.MainListViewSortBySingleLineMaxLen);
+            textWriter.WriteElementString("MainListViewSortByTextTotalLength", shortcuts.MainListViewSortByTextTotalLength);
             textWriter.WriteElementString("MainListViewSortByCps", shortcuts.MainListViewSortByCps);
+            textWriter.WriteElementString("MainListViewSortByWpm", shortcuts.MainListViewSortByWpm);
             textWriter.WriteElementString("MainListViewSortByNumberOfLines", shortcuts.MainListViewSortByNumberOfLines);
+            textWriter.WriteElementString("MainListViewSortByActor", shortcuts.MainListViewSortByActor);
+            textWriter.WriteElementString("MainListViewSortByStyle", shortcuts.MainListViewSortByStyle);
             textWriter.WriteElementString("GeneralRemoveBlankLines", shortcuts.GeneralRemoveBlankLines);
             textWriter.WriteElementString("GeneralApplyAssaOverrideTags", shortcuts.GeneralApplyAssaOverrideTags);
             textWriter.WriteElementString("GeneralSetAssaPosition", shortcuts.GeneralSetAssaPosition);
