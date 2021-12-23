@@ -2634,6 +2634,7 @@
             public string ListViewColumnTextDown { get; set; }
             public string ListViewGoToNextError { get; set; }
             public string ListViewListErrors { get; set; }
+            public string ListViewListSortByX { get; set; }
             public string ShowStyleManager { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

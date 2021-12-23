@@ -6733,6 +6733,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ListViewListErrors":
                     language.Settings.ListViewListErrors = reader.Value;
                     break;
+                case "Settings/ListViewListSortByX":
+                    language.Settings.ListViewListSortByX = reader.Value;
+                    break;
                 case "Settings/ShowStyleManager":
                     language.Settings.ShowStyleManager = reader.Value;
                     break;
