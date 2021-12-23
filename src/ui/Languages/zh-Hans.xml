@@ -2858,7 +2858,7 @@ Command line: {1} {2}
     <AllFixes>全部修复</AllFixes>
     <GuessesUsed>已用猜测</GuessesUsed>
     <UnknownWords>未知词</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} 依据 'OCRFixReplaceList.xml', 行号: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} 依据 'OCRFixReplaceList/WordSplitList', 行号: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR 自动修正/拼写检查</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>修正 OCR 错误</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>通过匹配时间码导入文本...</ImportTextWithMatchingTimeCodes>

@@ -2539,7 +2539,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AllFixes>Все исправления</AllFixes>
     <GuessesUsed>Предположения</GuessesUsed>
     <UnknownWords>Неизвестные слова</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} через 'OCRFixReplaceList.xml' в строке: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} через 'OCRFixReplaceList/WordSplitList' в строке: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Коррекция OCR / Орфография</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Исправить OCR ошибки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Добавление текста с подбором временных меток...</ImportTextWithMatchingTimeCodes>

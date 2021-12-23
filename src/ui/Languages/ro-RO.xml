@@ -2747,7 +2747,7 @@ Reții schimbările?</KeepChangesMessage>
     <AllFixes>Toate reparările</AllFixes>
     <GuessesUsed>Estimări folosite</GuessesUsed>
     <UnknownWords>Cuvinte necunoscute</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} prin 'OCRFixReplaceList.xml' din linia: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} prin 'OCRFixReplaceList/WordSplitList' din linia: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Repară automat OCR/verifică ortografia</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Repară erorile OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importă text cu coduri potrivite de timp...</ImportTextWithMatchingTimeCodes>

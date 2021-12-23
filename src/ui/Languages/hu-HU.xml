@@ -2867,7 +2867,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <AllFixes>Összes javítás</AllFixes>
     <GuessesUsed>Használt becslések</GuessesUsed>
     <UnknownWords>Ismeretlen szavak</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} 'OCRFixReplaceList.xml' fájlon keresztül a következő sorban: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} 'OCRFixReplaceList/WordSplitList' fájlon keresztül a következő sorban: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR automatikus javítás / helyesírás-ellenőrzés</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR hibák javítása</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Egyező időkódú szöveg importálása...</ImportTextWithMatchingTimeCodes>
