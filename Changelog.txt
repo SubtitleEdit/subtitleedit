@@ -22,6 +22,7 @@
    * Trying to make nOCR work better with corrupted files - thx k7Up
    * Improve English/Italian OCR rules a little - thx tormento
    * Allow higher font size in list view / text box - thx OmrSi
+   * Improve list-view/text-box color dialog - thx Majid
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
