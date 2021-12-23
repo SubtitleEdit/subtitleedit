@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -17,6 +19,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private List<UndoObject> _undoList = new List<UndoObject>();
         private List<string> _suggestions;
+        private string _wordSplitListLanguage;
+        private string[] _wordSplitList;
         private string _currentAction;
         public SpellCheckAction Action { get; set; } = SpellCheckAction.Skip;
         public string ChangeWord
@@ -139,6 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listBoxSuggestions.Items.Add(suggestion);
             }
+
             if (listBoxSuggestions.Items.Count > 0)
             {
                 listBoxSuggestions.SelectedIndex = 0;
@@ -150,6 +155,37 @@ namespace Nikse.SubtitleEdit.Forms
             ShowActiveWordWithColor(word);
             Action = SpellCheckAction.Skip;
             DialogResult = DialogResult.None;
+        }
+
+        private string[] LoadWordSplitList(string languageName)
+        {
+            if (languageName == null)
+            {
+                return Array.Empty<string>(); 
+            }
+
+            var twoLetterLanguageName = languageName.Trim('[');
+            if (twoLetterLanguageName == null || twoLetterLanguageName.Length < 2)
+            {
+                return Array.Empty<string>();
+            }
+
+            twoLetterLanguageName = twoLetterLanguageName.Substring(0,2);   
+            if (_wordSplitListLanguage == languageName)
+            {
+                return _wordSplitList;
+            }
+
+            _wordSplitListLanguage = languageName;
+            var threeLetterIsoLanguageName  = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageName);
+            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
+            if (!File.Exists(fileName))
+            {
+                return Array.Empty<string>();
+            }
+
+            var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
+            return wordList.ToArray();
         }
 
         private void FillSpellCheckDictionaries(string languageName)
@@ -827,9 +863,20 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                if (_wordSplitList == null)
+                                {
+                                    _wordSplitList = LoadWordSplitList(_languageName);
+                                }
+
+                                var splitWords = StringWithoutSpaceSplitToWords.SplitWord(_wordSplitList, _currentWord);
+                                if (splitWords != _currentWord)
+                                {
+                                    suggestions.Add(splitWords);
+                                }
+
                                 if (_currentWord.ToUpperInvariant() != "LT'S" && _currentWord.ToUpperInvariant() != "SOX'S" && !_currentWord.ToUpperInvariant().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
                                 {
-                                    suggestions = DoSuggest(_currentWord); // TODO: 0.9.6 fails on "Lt'S"
+                                    suggestions.AddRange(DoSuggest(_currentWord)); // TODO: 0.9.6 fails on "Lt'S"
                                 }
 
                                 if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
@@ -857,6 +904,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 suggestions.Remove("I");
                                 suggestions.Insert(0, "I");
                             }
+
+                            suggestions = suggestions.Distinct().ToList();  
 
                             if (DoAutoFixNames(_currentWord, suggestions))
                             {
