@@ -1339,6 +1339,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _shortcuts.Nodes.Add(editNode);
 
             var toolsNode = new ShortcutNode(LanguageSettings.Current.Main.Menu.Tools.Title);
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.AdjustDisplayDuration, nameof(Configuration.Settings.Shortcuts.MainToolsAdjustDuration), true);
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.ApplyDurationLimits.Trim('.'), nameof(Configuration.Settings.Shortcuts.MainToolsAdjustDurationLimits), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.SubtitlesBridgeGaps, nameof(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MinimumDisplayTimeBetweenParagraphs, nameof(Configuration.Settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.FixCommonErrors, nameof(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors), true);
