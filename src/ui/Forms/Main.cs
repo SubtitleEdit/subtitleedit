@@ -23492,6 +23492,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemInverseSelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditInverseSelection);
             toolStripMenuItemModifySelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
 
+            adjustDisplayTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAdjustDuration);
+            toolStripMenuItemApplyDurationLimits.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAdjustDurationLimits);
             fixToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
             toolStripMenuItemAutoMergeShortLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
             toolStripMenuItemMergeDuplicateText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeDuplicateText);

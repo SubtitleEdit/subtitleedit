@@ -2067,6 +2067,8 @@ $HorzAlign          =   Center
         public string MainEditModifySelection { get; set; }
 
         // Tools
+        public string MainToolsAdjustDuration { get; set; }
+        public string MainToolsAdjustDurationLimits { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsMergeShortLines { get; set; }
@@ -7470,6 +7472,18 @@ $HorzAlign          =   Center
                     shortcuts.MainEditRightToLeft = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsAdjustDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsAdjustDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsAdjustDurationLimits");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsAdjustDurationLimits = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
                 {
@@ -9837,6 +9851,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainEditMultipleReplace", shortcuts.MainEditMultipleReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainEditRightToLeft", shortcuts.MainEditRightToLeft);
+            textWriter.WriteElementString("MainToolsAdjustDuration", shortcuts.MainToolsAdjustDuration);
+            textWriter.WriteElementString("MainToolsAdjustDurationLimits", shortcuts.MainToolsAdjustDurationLimits);
             textWriter.WriteElementString("MainToolsFixCommonErrors", shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", shortcuts.MainToolsFixCommonErrorsPreview);
             textWriter.WriteElementString("MainToolsMergeShortLines", shortcuts.MainToolsMergeShortLines);
