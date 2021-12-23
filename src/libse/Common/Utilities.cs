@@ -1783,6 +1783,43 @@ namespace Nikse.SubtitleEdit.Core.Common
             return text.Replace("\"\"", "\"");
         }
 
+        public static Color GetColorFromAssa(string text, Color defaultColor)
+        {
+            var start = text.IndexOf(@"\c");
+            if (start < 0)
+            {
+                start = text.IndexOf(@"\1c");
+            }
+
+            if (start < 0 || text.Substring(start).StartsWith(@"\clip", StringComparison.Ordinal))
+            {
+                return defaultColor;
+            }
+
+            var end = text.IndexOf('}', start);
+            if (end < 0)
+            {
+                return defaultColor;
+            }
+
+            var nextTagIdx = text.IndexOf('\\', start + 2);
+            if (nextTagIdx > 0 && nextTagIdx < end)
+            {
+                end = nextTagIdx;
+            }
+
+            if (end > 0)
+            {
+                var color = text.Substring(start, end - start).TrimStart('\\').TrimStart('1').TrimStart('c');
+                color = color.RemoveChar('&').TrimStart('H');
+                color = color.PadLeft(6, '0');
+                return AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
+                //TODO: alpha
+            }
+
+            return defaultColor;
+        }
+
         public static Color GetColorFromFontString(string text, Color defaultColor)
         {
             string s = text.TrimEnd();

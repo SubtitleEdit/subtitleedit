@@ -12870,7 +12870,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var formatType = GetCurrentSubtitleFormat().GetType();
                 if (formatType == typeof(AdvancedSubStationAlpha))
                 {
-                    using (var form = new ColorChooser { Color = Color.White })
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White) })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -12906,19 +12906,40 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (colorDialog1.ShowDialog(this) != DialogResult.OK)
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White) })
                     {
-                        return;
-                    }
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
 
-                    color = Utilities.ColorToHex(colorDialog1.Color);
+                        color = Utilities.ColorToHex(colorDialog1.Color);
+                    }
                 }
 
-                SetColor(color);
+                SetColor(color, false, false);
             }
         }
 
-        private void SetColor(string color, bool selectedText = false)
+        private Color GetColorFromFirstLine(Color defaultColor)
+        {
+            var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+            if (p != null)
+            {
+                if (p.Text.IndexOf("<font ") >= 0)
+                {
+                    return Utilities.GetColorFromFontString(p.Text, defaultColor);
+                }
+                else
+                {
+                    return Utilities.GetColorFromAssa(p.Text, defaultColor);
+                }
+            }
+
+            return defaultColor;
+        }
+
+        private void SetColor(string color, bool selectedText = false, bool allowRemove = true)
         {
             var isAssa = IsAssa();
             if (selectedText)
@@ -12928,8 +12949,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 MakeHistoryForUndo(_language.BeforeSettingColor);
-                var remove = true;
-                var removeOriginal = true;
+                var remove = allowRemove;
+                var removeOriginal = allowRemove;
 
                 var assaColor = string.Empty;
                 if (isAssa)
@@ -23500,6 +23521,12 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             toolStripMenuItemEmptyGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             toolStripMenuItemGoToListView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
+            sortNumberToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByNumber);
+            sortStartTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByStartTime);
+            sortEndTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByEndTime);
+            sortDisplayTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByDuration);
+            textCharssecToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByCps);
+            sortTextNumberOfLinesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByNumberOfLines);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
