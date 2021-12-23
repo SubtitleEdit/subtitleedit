@@ -12906,14 +12906,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White) })
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White), ShowAlpha = false })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
                             return;
                         }
 
-                        color = Utilities.ColorToHex(colorDialog1.Color);
+                        color = Utilities.ColorToHex(form.Color);
                     }
                 }
 
@@ -25425,12 +25425,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (colorDialog1.ShowDialog(this) != DialogResult.OK)
+                using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White), ShowAlpha = false })
                 {
-                    return;
-                }
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
 
-                color = Utilities.ColorToHex(colorDialog1.Color);
+                    color = Utilities.ColorToHex(form.Color);
+                }
             }
 
             SetSelectedTextColor(color);
