@@ -7987,16 +7987,26 @@ namespace Nikse.SubtitleEdit.Forms
                     if (startOk)
                     {
                         int end = startIndex + oldWord.Length;
-                        if (end <= p.Text.Length && end == p.Text.Length ||
+                        if (end == p.Text.Length ||
                             "«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0\u200B\uFEFF".Contains(p.Text[end]) ||
                             char.IsPunctuation(p.Text[end]))
                         {
-                            var lengthBefore = p.Text.Length;
-                            p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
-                            var lengthAfter = p.Text.Length;
-                            if (lengthAfter > lengthBefore)
+                            var endOk = true;
+
+                            if (changeWord.EndsWith('\'') && p.Text[end] == '\'')
                             {
-                                startIndex += (lengthAfter - lengthBefore);
+                                endOk = false;
+                            }
+
+                            if (endOk)
+                            {
+                                var lengthBefore = p.Text.Length;
+                                p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
+                                var lengthAfter = p.Text.Length;
+                                if (lengthAfter > lengthBefore)
+                                {
+                                    startIndex += (lengthAfter - lengthBefore);
+                                }
                             }
                         }
                     }
@@ -12860,7 +12870,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var formatType = GetCurrentSubtitleFormat().GetType();
                 if (formatType == typeof(AdvancedSubStationAlpha))
                 {
-                    using (var form = new ColorChooser { Color = Color.White })
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White) })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -12896,19 +12906,40 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (colorDialog1.ShowDialog(this) != DialogResult.OK)
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White), ShowAlpha = false })
                     {
-                        return;
-                    }
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
 
-                    color = Utilities.ColorToHex(colorDialog1.Color);
+                        color = Utilities.ColorToHex(form.Color);
+                    }
                 }
 
-                SetColor(color);
+                SetColor(color, false, false);
             }
         }
 
-        private void SetColor(string color, bool selectedText = false)
+        private Color GetColorFromFirstLine(Color defaultColor)
+        {
+            var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+            if (p != null)
+            {
+                if (p.Text.IndexOf("<font ") >= 0)
+                {
+                    return Utilities.GetColorFromFontString(p.Text, defaultColor);
+                }
+                else
+                {
+                    return Utilities.GetColorFromAssa(p.Text, defaultColor);
+                }
+            }
+
+            return defaultColor;
+        }
+
+        private void SetColor(string color, bool selectedText = false, bool allowRemove = true)
         {
             var isAssa = IsAssa();
             if (selectedText)
@@ -12918,8 +12949,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 MakeHistoryForUndo(_language.BeforeSettingColor);
-                var remove = true;
-                var removeOriginal = true;
+                var remove = allowRemove;
+                var removeOriginal = allowRemove;
 
                 var assaColor = string.Empty;
                 if (isAssa)
@@ -23202,11 +23233,21 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxVideo.MouseClick += GroupBoxVideo_MouseClick;
 
+            textBoxListViewText.MouseDown += TextBoxListViewText_MouseDown;
+
             ShowSubtitleTimer.Start();
             textBoxSource.SelectionLength = 0;
             _timerSlow.Interval = 150;
             _timerSlow.Tick += _timerSlow_Tick;
             _timerSlow.Start();
+        }
+
+        private void TextBoxListViewText_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!textBoxListViewText.Enabled)
+            {
+                InsertLineToolStripMenuItemClick(null, null);
+            }
         }
 
         private bool _updateShowEarlier;
@@ -23451,6 +23492,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemInverseSelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditInverseSelection);
             toolStripMenuItemModifySelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
 
+            adjustDisplayTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAdjustDuration);
+            toolStripMenuItemApplyDurationLimits.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAdjustDurationLimits);
             fixToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
             toolStripMenuItemAutoMergeShortLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
             toolStripMenuItemMergeDuplicateText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeDuplicateText);
@@ -23480,6 +23523,18 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             toolStripMenuItemEmptyGoToSourceView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
             toolStripMenuItemGoToListView.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleView);
+            sortNumberToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByNumber);
+            sortStartTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByStartTime);
+            sortEndTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByEndTime);
+            sortDisplayTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByDuration);
+            sortTextAlphabeticallytoolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByText);
+            sortTextMaxLineLengthToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortBySingleLineMaxLen);
+            sortTextTotalLengthToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByTextTotalLength);
+            textCharssecToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByCps);
+            textWordsPerMinutewpmToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByWpm);
+            sortTextNumberOfLinesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByNumberOfLines);
+            actorToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByActor);
+            styleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByStyle);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
@@ -25372,12 +25427,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (colorDialog1.ShowDialog(this) != DialogResult.OK)
+                using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White), ShowAlpha = false })
                 {
-                    return;
-                }
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
 
-                color = Utilities.ColorToHex(colorDialog1.Color);
+                    color = Utilities.ColorToHex(form.Color);
+                }
             }
 
             SetSelectedTextColor(color);

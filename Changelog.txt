@@ -4,6 +4,8 @@
 * NEW:
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
+   * Add "File type associations" in Options - Settings
+   * Add shorcuts for Tools - Sort By - thx Jolana
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
@@ -13,12 +15,14 @@
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
-   * Updated file association icons (so nice) in installer - thx Leon
+   * Update file association icons (so nice) in installer - thx Leon
    * Improve VTT parsing of malformed files - thx Leon
    * Handle merge/split better with "box" tag
    * Improve zoom-in for waveform a little - thx vitacon
    * Trying to make nOCR work better with corrupted files - thx k7Up
-   * Improve English OCR rule a little - thx tormento
+   * Improve English/Italian OCR rules a little - thx tormento
+   * Allow higher font size in list view / text box - thx OmrSi
+   * Improve list-view/text-box color dialog - thx Majid
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
@@ -29,6 +33,9 @@
    * Fix frame Rate/Multiplier/dropMode in TimedText properties - thx OmrSi
    * Fix unwanted lowercase for ASSA properties window when reopen - thx Thomas
    * Fix crash when opening an mp4 video in rare cases - thx jupester
+   * Fix issue with bookmarks + not opened files - thx OmrSi
+   * Fix spell check "change word" issue with apostrophe (') - thx Jim
+   * Fix new-line-char in Bilibili format - thx Kuju29
 
 
 3.6.4 (3rd December 2021)

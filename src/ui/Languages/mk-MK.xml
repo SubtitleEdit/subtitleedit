@@ -2502,7 +2502,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Сите поправки</AllFixes>
     <GuessesUsed>Употребени претпоставки</GuessesUsed>
     <UnknownWords>Непознати зборови</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} преку 'OCRFixReplaceList.xml' in line: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} преку 'OCRFixReplaceList/WordSplitList' in line: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR авто корекција / поправка на правопис</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Поправи OCR грешки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Внеси текст со одговарачки временски кодови...</ImportTextWithMatchingTimeCodes>

@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private const int ToolbarSection = 8;
         private const int AppearanceSection = 9;
         private const int NetworkSection = 10;
+        private const int FileTypeAssociationSection = 11;
 
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
@@ -46,6 +47,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
+
+        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
 
         private class ComboBoxLanguage
         {
@@ -111,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         public Settings()
         {
             UiUtil.PreInitialize(this);
-            InitializeComponent();
+            InitializeComponent();          
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             Init();
@@ -343,6 +346,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
             listBoxSection.Items[AppearanceSection] = language.Appearance;
             listBoxSection.Items[NetworkSection] = language.Network;
+            listBoxSection.Items[FileTypeAssociationSection] = language.FileTypeAssociations;
 
             Text = language.Title;
             panelGeneral.Text = language.General;
@@ -1152,6 +1156,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+
+            buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
+            labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
         }
 
         private void SetDialogStyle(DialogType dialogStyle)
@@ -1332,6 +1339,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _shortcuts.Nodes.Add(editNode);
 
             var toolsNode = new ShortcutNode(LanguageSettings.Current.Main.Menu.Tools.Title);
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.AdjustDisplayDuration, nameof(Configuration.Settings.Shortcuts.MainToolsAdjustDuration), true);
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.ApplyDurationLimits.Trim('.'), nameof(Configuration.Settings.Shortcuts.MainToolsAdjustDurationLimits), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.SubtitlesBridgeGaps, nameof(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MinimumDisplayTimeBetweenParagraphs, nameof(Configuration.Settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.FixCommonErrors, nameof(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors), true);
@@ -1459,6 +1468,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewNode, language.ListViewColumnTextDown, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextDown), true);
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
             AddNode(listViewNode, language.ListViewListErrors, nameof(Configuration.Settings.Shortcuts.MainListViewListErrors), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.Number), nameof(Configuration.Settings.Shortcuts.MainListViewSortByNumber), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.StartTime), nameof(Configuration.Settings.Shortcuts.MainListViewSortByStartTime), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.EndTime), nameof(Configuration.Settings.Shortcuts.MainListViewSortByEndTime), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.Duration), nameof(Configuration.Settings.Shortcuts.MainListViewSortByDuration), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextAlphabetically), nameof(Configuration.Settings.Shortcuts.MainListViewSortByText), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextSingleLineMaximumLength), nameof(Configuration.Settings.Shortcuts.MainListViewSortBySingleLineMaxLen), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextTotalLength), nameof(Configuration.Settings.Shortcuts.MainListViewSortByTextTotalLength), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.CharsPerSec), nameof(Configuration.Settings.Shortcuts.MainListViewSortByCps), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.WordsPerMin), nameof(Configuration.Settings.Shortcuts.MainListViewSortByWpm), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextNumberOfLines), nameof(Configuration.Settings.Shortcuts.MainListViewSortByNumberOfLines), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.Style), nameof(Configuration.Settings.Shortcuts.MainListViewSortByStyle), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.Actor), nameof(Configuration.Settings.Shortcuts.MainListViewSortByActor), true);
             _shortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new ShortcutNode(language.TextBox);
@@ -2634,6 +2655,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelToolBar.Visible = false;
             panelFont.Visible = false;
             panelNetwork.Visible = false;
+            panelFileTypeAssociations.Visible = false;
 
             var section = panelGeneral;
             switch (listBoxSection.SelectedIndex)
@@ -2667,6 +2689,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case NetworkSection:
                     section = panelNetwork;
+                    break;
+                case FileTypeAssociationSection:
+                    section = panelFileTypeAssociations;
+                    if (listViewFileTypeAssociations.Items.Count == 0)
+                    {
+                        FillFileTypeAssociationsListView();
+                    }
+                    
                     break;
             }
 
@@ -3955,6 +3985,56 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxFavoriteSubtitleFormats.SetSelected(listBoxFavoriteSubtitleFormats.Items.Count - 1, true);
         }
 
-        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+        private void FillFileTypeAssociationsListView()
+        {
+            var iconDir = Path.Combine(Configuration.BaseDirectory, "Icons");
+            if (!Directory.Exists(iconDir))
+            {
+                return;
+            }
+
+            var iconFileNames = Directory.GetFiles(iconDir, "*.ico");
+            imageListFileTypeAssociations.Images.Clear();
+            listViewFileTypeAssociations.HeaderStyle = ColumnHeaderStyle.None;
+            //listViewFileTypeAssociations.LargeImageList = imageListFileTypeAssociations;
+            listViewFileTypeAssociations.SmallImageList = imageListFileTypeAssociations;
+            listViewFileTypeAssociations.BeginUpdate();
+            listViewFileTypeAssociations.Items.Clear();
+            foreach (var iconFileName in iconFileNames)
+            {
+                var friendlyName = "." + Path.GetFileNameWithoutExtension(iconFileName).ToUpperInvariant();
+                var icon = new Icon(iconFileName);
+                imageListFileTypeAssociations.Images.Add(icon);
+                var item = new ListViewItem(string.Empty);
+                item.SubItems.Add(friendlyName);
+                item.ImageIndex = imageListFileTypeAssociations.Images.Count - 1;
+                item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "Subtitle Edit");
+                item.Tag = iconFileName;
+                listViewFileTypeAssociations.Items.Add(item);
+            }
+            listViewFileTypeAssociations.EndUpdate();
+        }
+
+        private void buttonUpdateFileTypeAssociations_Click(object sender, EventArgs e)
+        {
+            var exeFileName = Assembly.GetEntryAssembly().Location;
+            foreach (ListViewItem item in listViewFileTypeAssociations.Items)
+            {
+                var ext = item.SubItems[1].Text.ToLowerInvariant();
+                if (item.Checked)
+                {
+                    var iconFileName = (string)item.Tag;
+                    FileTypeAssociations.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "Subtitle Edit");
+                }
+                else
+                {
+                    FileTypeAssociations.DeleteFileAssociationViaRegistry(ext, "Subtitle Edit");
+                }
+            }
+
+            labelUpdateFileTypeAssociationsStatus.Text = LanguageSettings.Current.Settings.FileTypeAssociationsUpdated;
+            FileTypeAssociations.Refresh();
+            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
+        }
     }
 }

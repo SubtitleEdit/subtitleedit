@@ -230,6 +230,13 @@ Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\dan_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\eng_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\fra_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\ita_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\pol_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\spa_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+
 
 Source: ..\Ocr\Latin.db;                           DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Ocr\Latin.nocr;                         DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
@@ -245,6 +252,8 @@ Source: ..\Icons\stl.ico;                          DestDir: {app}\Icons;        
 Source: ..\Icons\sub.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Icons\sup.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\smi.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\itt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
   
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -348,6 +357,14 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml;             Check: Is
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml;  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\names.xml;                  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\no_names.xml;               Check: IsUpgrade()
+
+Type: files;      Name: {app}\Dictionaries\dan_WordSplitList.txt;      Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\eng_WordSplitList.txt;      Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\fra_WordSplitList.txt;      Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\ita_WordSplitList.txt;      Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\pol_WordSplitList.txt;      Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\spa_WordSplitList.txt;      Check: IsUpgrade()
+
 Type: dirifempty; Name: {app}\Dictionaries;                            Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                 Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.freq-dawg;                  Check: IsUpgrade()
@@ -435,55 +452,65 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 
 
 [Registry]
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""
-Root: HKA ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.EXE,0";
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""
+Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.EXE,0";
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKA ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}.ass"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}.ass"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKA ; Subkey: "Software\Classes\.dfxp"; ValueData: "{#SetupSetting('AppName')}.dfxp"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\dfxp.ico"; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\.dfxp"; ValueData: "{#SetupSetting('AppName')}.dfxp"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\dfxp.ico"; Check: DoSystemAssoc('dfxp')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKA ; Subkey: "Software\Classes\.sbv"; ValueData: "{#SetupSetting('AppName')}.sbv"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sbv.ico"; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\.sbv"; ValueData: "{#SetupSetting('AppName')}.sbv"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sbv.ico"; Check: DoSystemAssoc('sbv')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKA ; Subkey: "Software\Classes\.srt"; ValueData: "{#SetupSetting('AppName')}.srt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\srt.ico"; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\.srt"; ValueData: "{#SetupSetting('AppName')}.srt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\srt.ico"; Check: DoSystemAssoc('srt')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKA ; Subkey: "Software\Classes\.ssa"; ValueData: "{#SetupSetting('AppName')}.ssa"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ssa.ico"; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\.ssa"; ValueData: "{#SetupSetting('AppName')}.ssa"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ssa.ico"; Check: DoSystemAssoc('ssa')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKA ; Subkey: "Software\Classes\.stl"; ValueData: "{#SetupSetting('AppName')}.stl"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\stl.ico"; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\.stl"; ValueData: "{#SetupSetting('AppName')}.stl"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\stl.ico"; Check: DoSystemAssoc('stl')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKA ; Subkey: "Software\Classes\.sub"; ValueData: "{#SetupSetting('AppName')}.sub"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sub.ico"; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\.sub"; ValueData: "{#SetupSetting('AppName')}.sub"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sub.ico"; Check: DoSystemAssoc('sub')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKA ; Subkey: "Software\Classes\.sup"; ValueData: "{#SetupSetting('AppName')}.sup"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sup.ico"; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\.sup"; ValueData: "{#SetupSetting('AppName')}.sup"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sup.ico"; Check: DoSystemAssoc('sup')
 
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKA ; Subkey: "Software\Classes\.vtt"; ValueData: "{#SetupSetting('AppName')}.vtt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKA ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\.vtt"; ValueData: "{#SetupSetting('AppName')}.vtt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
+
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\.smi"; ValueData: "{#SetupSetting('AppName')}.smi"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\smi.ico"; Check: DoSystemAssoc('smi')
+
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\.itt"; ValueData: "{#SetupSetting('AppName')}.itt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\itt.ico"; Check: DoSystemAssoc('itt')
 
 ; Add .ass (Advanced SubStation Alpha) to the SE-supported file types
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ass"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
@@ -556,11 +583,11 @@ var
   CurrentProgId, MyProgId, KeyName: String;
 begin
   KeyName := '{#keyCl}\.' + FileType;
-  if RegQueryStringValue(HKEY_LOCAL_MACHINE, KeyName, '', CurrentProgId) then
+  if RegQueryStringValue(HKEY_CURRENT_USER, KeyName, '', CurrentProgId) then
   begin
     MyProgId := 'SubtitleEdit.' + FileType;
     if CompareText(CurrentProgId, MyProgId) = 0 then
-      RegWriteStringValue(HKEY_LOCAL_MACHINE, KeyName, '', '');
+      RegWriteStringValue(HKEY_CURRENT_USER, KeyName, '', '');
   end;
   Result := IsTaskSelected('associate_common');
 end;
@@ -671,6 +698,8 @@ begin
   DeleteFile(ExpandConstant('{app}\Icons\sub.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\sup.ico'));
   DeleteFile(ExpandConstant('{app}\Icons\vtt.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\smi.ico'));
+  DeleteFile(ExpandConstant('{app}\Icons\itt.ico'));
   DelTree(ExpandConstant('{app}\Icons'), True, True, True);
   RemoveDir(ExpandConstant('{app}\Icons'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Ocr\*.*'), False, True, False);

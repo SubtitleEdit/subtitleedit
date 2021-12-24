@@ -415,6 +415,13 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.panelFileTypeAssociations = new System.Windows.Forms.Panel();
+            this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
+            this.buttonUpdateFileTypeAssociations = new System.Windows.Forms.Button();
+            this.listViewFileTypeAssociations = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -487,6 +494,7 @@
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
+            this.panelFileTypeAssociations.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -529,7 +537,8 @@
             "Wordlists",
             "Toolbar",
             "Font",
-            "Network"});
+            "Network",
+            "File type associations"});
             this.listBoxSection.Location = new System.Drawing.Point(10, 10);
             this.listBoxSection.Name = "listBoxSection";
             this.listBoxSection.Size = new System.Drawing.Size(214, 516);
@@ -5009,11 +5018,62 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // panelFileTypeAssociations
+            // 
+            this.panelFileTypeAssociations.Controls.Add(this.buttonUpdateFileTypeAssociations);
+            this.panelFileTypeAssociations.Controls.Add(this.listViewFileTypeAssociations);
+            this.panelFileTypeAssociations.Location = new System.Drawing.Point(230, 6);
+            this.panelFileTypeAssociations.Name = "panelFileTypeAssociations";
+            this.panelFileTypeAssociations.Size = new System.Drawing.Size(852, 521);
+            this.panelFileTypeAssociations.TabIndex = 16;
+            // 
+            // labelUpdateFileTypeAssociationsStatus
+            // 
+            this.labelUpdateFileTypeAssociationsStatus.AutoSize = true;
+            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(439, 531);
+            this.labelUpdateFileTypeAssociationsStatus.Name = "labelUpdateFileTypeAssociationsStatus";
+            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(38, 13);
+            this.labelUpdateFileTypeAssociationsStatus.TabIndex = 24;
+            this.labelUpdateFileTypeAssociationsStatus.Text = "Status";
+            // 
+            // buttonUpdateFileTypeAssociations
+            // 
+            this.buttonUpdateFileTypeAssociations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUpdateFileTypeAssociations.Location = new System.Drawing.Point(209, 497);
+            this.buttonUpdateFileTypeAssociations.Name = "buttonUpdateFileTypeAssociations";
+            this.buttonUpdateFileTypeAssociations.Size = new System.Drawing.Size(218, 23);
+            this.buttonUpdateFileTypeAssociations.TabIndex = 23;
+            this.buttonUpdateFileTypeAssociations.Text = "Update file type associations";
+            this.buttonUpdateFileTypeAssociations.UseVisualStyleBackColor = true;
+            this.buttonUpdateFileTypeAssociations.Click += new System.EventHandler(this.buttonUpdateFileTypeAssociations_Click);
+            // 
+            // listViewFileTypeAssociations
+            // 
+            this.listViewFileTypeAssociations.CheckBoxes = true;
+            this.listViewFileTypeAssociations.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listViewFileTypeAssociations.HideSelection = false;
+            this.listViewFileTypeAssociations.Location = new System.Drawing.Point(0, 4);
+            this.listViewFileTypeAssociations.Name = "listViewFileTypeAssociations";
+            this.listViewFileTypeAssociations.Size = new System.Drawing.Size(199, 516);
+            this.listViewFileTypeAssociations.TabIndex = 22;
+            this.listViewFileTypeAssociations.UseCompatibleStateImageBehavior = false;
+            this.listViewFileTypeAssociations.View = System.Windows.Forms.View.Details;
+            // 
+            // imageListFileTypeAssociations
+            // 
+            this.imageListFileTypeAssociations.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageListFileTypeAssociations.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageListFileTypeAssociations.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
+            this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelTools);
@@ -5147,6 +5207,7 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
+            this.panelFileTypeAssociations.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5540,5 +5601,12 @@
         private System.Windows.Forms.Label labelBDOpensIn;
         private System.Windows.Forms.CheckBox checkBoxShortcutsAllowLetterOrNumberInTextBox;
         private System.Windows.Forms.CheckBox checkBoxWaveformAutoGen;
+        private System.Windows.Forms.Panel panelFileTypeAssociations;
+        private System.Windows.Forms.ListView listViewFileTypeAssociations;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ImageList imageListFileTypeAssociations;
+        private System.Windows.Forms.Button buttonUpdateFileTypeAssociations;
+        private System.Windows.Forms.Label labelUpdateFileTypeAssociationsStatus;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
     }
 }

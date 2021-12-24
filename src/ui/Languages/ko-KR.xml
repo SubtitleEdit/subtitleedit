@@ -2852,7 +2852,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AllFixes>수정 목록</AllFixes>
     <GuessesUsed>추측 사용</GuessesUsed>
     <UnknownWords>알 수 없는 단어</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1}, {2}행의 'OCRFixReplaceList.xml'을 통해</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1}, {2}행의 'OCRFixReplaceList/WordSplitList'을 통해</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR 오류 수정</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>타임코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>

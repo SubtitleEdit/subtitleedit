@@ -2042,6 +2042,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WordLists>Word lists</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
     <Network>Network</Network>
+    <FileTypeAssociations>File type associations</FileTypeAssociations>
     <Rules>Rules</Rules>
     <ShowToolBarButtons>Show tool bar buttons</ShowToolBarButtons>
     <New>New</New>
@@ -2451,6 +2452,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ListViewListErrors>List errors</ListViewListErrors>
+    <ListViewListSortByX>Sort by {0}</ListViewListSortByX>
     <ShowStyleManager>Show style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>
@@ -2506,6 +2508,8 @@ Continue?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edit</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Shortcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <UpdateFileTypeAssociations>Update file type associations</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>File type associations updated</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
@@ -2871,7 +2875,7 @@ Keep changes?</KeepChangesMessage>
     <AllFixes>All fixes</AllFixes>
     <GuessesUsed>Guesses used</GuessesUsed>
     <UnknownWords>Unknown words</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList.xml' in line: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList/WordSplitList' in line: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR auto correction / spell checking</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Fix OCR errors</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Import text with matching time codes...</ImportTextWithMatchingTimeCodes>

@@ -2067,6 +2067,8 @@ $HorzAlign          =   Center
         public string MainEditModifySelection { get; set; }
 
         // Tools
+        public string MainToolsAdjustDuration { get; set; }
+        public string MainToolsAdjustDurationLimits { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsMergeShortLines { get; set; }
@@ -2180,6 +2182,18 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewGoToNextError { get; set; }
         public string MainListViewListErrors { get; set; }
+        public string MainListViewSortByNumber { get; set; }
+        public string MainListViewSortByStartTime { get; set; }
+        public string MainListViewSortByEndTime { get; set; }
+        public string MainListViewSortByDuration { get; set; }
+        public string MainListViewSortByText { get; set; }
+        public string MainListViewSortBySingleLineMaxLen { get; set; }
+        public string MainListViewSortByTextTotalLength { get; set; }
+        public string MainListViewSortByCps { get; set; }
+        public string MainListViewSortByWpm { get; set; }
+        public string MainListViewSortByNumberOfLines { get; set; }
+        public string MainListViewSortByActor { get; set; }
+        public string MainListViewSortByStyle { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -7458,6 +7472,18 @@ $HorzAlign          =   Center
                     shortcuts.MainEditRightToLeft = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsAdjustDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsAdjustDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsAdjustDurationLimits");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsAdjustDurationLimits = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
                 {
@@ -8104,6 +8130,78 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainListViewListErrors = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByNumber");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByNumber = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByStartTime");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByStartTime = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByEndTime");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByEndTime = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByDuration");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByDuration = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortBySingleLineMaxLen");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortBySingleLineMaxLen = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByTextTotalLength");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByTextTotalLength = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByCps");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByCps = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByWpm");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByWpm = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByNumberOfLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByNumberOfLines = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByActor");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByActor = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewSortByStyle");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByStyle = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("GeneralRemoveBlankLines");
@@ -9753,6 +9851,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainEditMultipleReplace", shortcuts.MainEditMultipleReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainEditRightToLeft", shortcuts.MainEditRightToLeft);
+            textWriter.WriteElementString("MainToolsAdjustDuration", shortcuts.MainToolsAdjustDuration);
+            textWriter.WriteElementString("MainToolsAdjustDurationLimits", shortcuts.MainToolsAdjustDurationLimits);
             textWriter.WriteElementString("MainToolsFixCommonErrors", shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", shortcuts.MainToolsFixCommonErrorsPreview);
             textWriter.WriteElementString("MainToolsMergeShortLines", shortcuts.MainToolsMergeShortLines);
@@ -9860,6 +9960,18 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColumnTextDown", shortcuts.MainListViewColumnTextDown);
             textWriter.WriteElementString("MainListViewGoToNextError", shortcuts.MainListViewGoToNextError);
             textWriter.WriteElementString("MainListViewListErrors", shortcuts.MainListViewListErrors);
+            textWriter.WriteElementString("MainListViewSortByNumber", shortcuts.MainListViewSortByNumber);
+            textWriter.WriteElementString("MainListViewSortByStartTime", shortcuts.MainListViewSortByStartTime);
+            textWriter.WriteElementString("MainListViewSortByEndTime", shortcuts.MainListViewSortByEndTime);
+            textWriter.WriteElementString("MainListViewSortByDuration", shortcuts.MainListViewSortByDuration);
+            textWriter.WriteElementString("MainListViewSortByText", shortcuts.MainListViewSortByText);
+            textWriter.WriteElementString("MainListViewSortBySingleLineMaxLen", shortcuts.MainListViewSortBySingleLineMaxLen);
+            textWriter.WriteElementString("MainListViewSortByTextTotalLength", shortcuts.MainListViewSortByTextTotalLength);
+            textWriter.WriteElementString("MainListViewSortByCps", shortcuts.MainListViewSortByCps);
+            textWriter.WriteElementString("MainListViewSortByWpm", shortcuts.MainListViewSortByWpm);
+            textWriter.WriteElementString("MainListViewSortByNumberOfLines", shortcuts.MainListViewSortByNumberOfLines);
+            textWriter.WriteElementString("MainListViewSortByActor", shortcuts.MainListViewSortByActor);
+            textWriter.WriteElementString("MainListViewSortByStyle", shortcuts.MainListViewSortByStyle);
             textWriter.WriteElementString("GeneralRemoveBlankLines", shortcuts.GeneralRemoveBlankLines);
             textWriter.WriteElementString("GeneralApplyAssaOverrideTags", shortcuts.GeneralApplyAssaOverrideTags);
             textWriter.WriteElementString("GeneralSetAssaPosition", shortcuts.GeneralSetAssaPosition);
