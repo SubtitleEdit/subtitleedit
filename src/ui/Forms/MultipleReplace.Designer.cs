@@ -37,6 +37,7 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
             this.labelDescription = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
@@ -155,7 +156,8 @@
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader7,
-            this.columnHeader8});
+            this.columnHeader8,
+            this.columnHeader10});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(8, 21);
@@ -185,7 +187,12 @@
             // columnHeader8
             // 
             this.columnHeader8.Text = "After";
-            this.columnHeader8.Width = 440;
+            this.columnHeader8.Width = 330;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "Rule";
+            this.columnHeader10.Width = 110;
             // 
             // groupBoxReplaces
             // 
@@ -776,6 +783,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.GroupBox groupBoxReplaces;
         private System.Windows.Forms.ListView listViewRules;
         private System.Windows.Forms.ColumnHeader columnHeader1;
