@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[1].Text = LanguageSettings.Current.General.LineNumber;
             listViewFixes.Columns[2].Text = LanguageSettings.Current.General.Before;
             listViewFixes.Columns[3].Text = LanguageSettings.Current.General.After;
+            listViewFixes.Columns[4].Text = LanguageSettings.Current.MultipleReplace.RuleInfo;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
             toolStripMenuItemRemoveAll.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
             toolStripMenuItemImport.Text = LanguageSettings.Current.MultipleReplace.Import;
@@ -261,7 +262,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 string replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
                                 findWhat = RegexUtils.FixNewLine(findWhat);
                                 string searchType = rule.SearchType;
-                                var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
+                                var ruleInfo = string.IsNullOrEmpty(rule.Description) ? $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule)}" : $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule)}. {rule.Description}";
+                                var mpi = new ReplaceExpression(findWhat, replaceWith, searchType, ruleInfo);
                                 replaceExpressions.Add(mpi);
                                 if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                                 {
@@ -279,6 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 bool hit = false;
                 string newText = p.Text;
+                string ruleInfo = string.Empty;
                 foreach (ReplaceExpression item in replaceExpressions)
                 {
                     if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
@@ -286,6 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (newText.Contains(item.FindWhat))
                         {
                             hit = true;
+                            ruleInfo = item.RuleInfo;
                             newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                         }
                     }
@@ -295,6 +299,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (r.IsMatch(newText))
                         {
                             hit = true;
+                            ruleInfo = item.RuleInfo;
                             newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                         }
                     }
@@ -304,6 +309,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (index >= 0)
                         {
                             hit = true;
+                            ruleInfo = item.RuleInfo;
                             do
                             {
                                 newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
@@ -316,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (hit && newText != p.Text)
                 {
                     fixedLines++;
-                    fixes.Add(MakePreviewListItem(p, newText));
+                    fixes.Add(MakePreviewListItem(p, newText, ruleInfo));
                     FixedSubtitle.Paragraphs[i].Text = newText;
                 }
             }
@@ -337,12 +343,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Items.Add(item);
         }
 
-        private ListViewItem MakePreviewListItem(Paragraph p, string newText)
+        private ListViewItem MakePreviewListItem(Paragraph p, string newText, string ruleInfo)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(ruleInfo));
             return item;
         }
 
