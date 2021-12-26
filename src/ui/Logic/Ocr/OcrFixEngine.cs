@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// <param name="threeLetterIsoLanguageName">E.g. eng for English</param>
         /// <param name="hunspellName">Name of hunspell dictionary</param>
         /// <param name="parentForm">Used for centering/show spell check dialog</param>
-        /// <param name="isBinaryImageCompare">Calling from OCR via "Image compare"</param>
+        /// <param name="isBinaryImageCompareOrNOcr">Calling from OCR via "Image compare"</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompareOrNOcr = false)
         {
             if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
