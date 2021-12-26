@@ -2792,6 +2792,7 @@
 		<Word from="gota" to="got a" />
 		<Word from="ismy" to="is my" />
 		<Word from="bea" to="be a" />
+		<Word from="youa" to="you a" />
 	</WholeWords>
 	<PartialWordsAlways>
 		<!-- Will be replaced always -->
