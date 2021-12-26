@@ -35,6 +35,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             for (int i = 0; i < words.Length; i++)
             {
                 var w = words[i];
+                if (w.Length >= input.Length)
+                {
+                    continue;
+                }
+
                 var idx = check.IndexOf(w, StringComparison.Ordinal);
                 while (idx != -1 && w != ignoreWord)
                 {
@@ -44,6 +49,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     check = check.Remove(idx, w.Length).Insert(idx, string.Empty.PadLeft(w.Length, '¤'));
                     idx = check.IndexOf(w, idx + w.Length - 1);
                 }
+            }
+
+            if (check.Trim('¤', ' ').Length > 0)
+            {
+                return input;
             }
 
             var last = -1;
@@ -59,8 +69,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 last = idx;
             }
 
-            return check.Trim('¤', ' ').Length == 0 ? s.Trim() : input;
+            return s.Trim();
         }
-
     }
 }
