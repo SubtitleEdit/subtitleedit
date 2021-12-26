@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     spaces.Add(idx);
                     spaces.Add(idx + w.Length);
                     check = check.Remove(idx, w.Length).Insert(idx, string.Empty.PadLeft(w.Length, '¤'));
-                    idx = check.IndexOf(w, idx + w.Length - 1);
+                    idx = check.IndexOf(w, idx + w.Length - 1, StringComparison.Ordinal);
                 }
             }
 
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             var last = -1;
             spaces = spaces.OrderBy(p => p).ToList();
-            for (int i = spaces.Count - 1; i >= 0; i--)
+            for (var i = spaces.Count - 1; i >= 0; i--)
             {
                 var idx = spaces[i];
                 if (idx != last)
