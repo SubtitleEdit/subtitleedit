@@ -2453,6 +2453,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
     <ListViewGoToNextError>Ir para o erro seguinte</ListViewGoToNextError>
     <ListViewListErrors>Listar erros</ListViewListErrors>
+    <ListViewListSortByX>Ordenar por {0}</ListViewListSortByX>
     <ShowStyleManager>Mostrar gestor de estilo</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Mover a última palavra até à próxima linha da legenda</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima linha da legenda</MainTextBoxMoveFirstWordFromNextUp>
