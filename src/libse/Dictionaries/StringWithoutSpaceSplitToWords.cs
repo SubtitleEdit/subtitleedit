@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
 {
@@ -8,6 +9,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
     {
         public static string SplitWord(string[] words, string input)
         {
+            if (!Configuration.Settings.Tools.OcrUseWordSplitList)
+            {
+                return input;
+            }
+
             var usedWords = new List<string>();
             var result = SplitWord(words, input, string.Empty, usedWords);
             if (result != input)
