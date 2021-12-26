@@ -559,6 +559,10 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveform_OnDoubleClickNonParagraph;
                 audioVisualizer.OnPositionSelected += AudioWaveform_OnPositionSelected;
                 audioVisualizer.OnTimeChanged += AudioWaveform_OnTimeChanged; // start and/or end position of paragraph changed
+                audioVisualizer.MouseUp += (sender, args) =>
+                {
+                    _lastMultiMoveHash = -1;
+                };
                 audioVisualizer.OnStartTimeChanged += AudioWaveform_OnStartTimeChanged;
                 audioVisualizer.OnNewSelectionRightClicked += AudioWaveform_OnNewSelectionRightClicked;
                 audioVisualizer.OnParagraphRightClicked += AudioWaveform_OnParagraphRightClicked;
@@ -1196,22 +1200,13 @@ namespace Nikse.SubtitleEdit.Forms
             int selectedIndex = FirstSelectedIndex;
             int index = _subtitle.Paragraphs.IndexOf(paragraph);
 
-            // TODO: Moving selected lines
-            // current idx must also be selected
-            //if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Whole && SubtitleListview1.SelectedIndices.Count > 1)
-            //{
-            //    foreach (int idx in SubtitleListview1.SelectedIndices)
-            //    {
-            //        var p = _subtitle.Paragraphs[idx];
-            //        if (p != paragraph)
-            //        {
-            //            var dur = p.Duration.TotalMilliseconds;
-            //            p.StartTime.TotalMilliseconds += e.AdjustMs;
-            //            p.EndTime.TotalMilliseconds += e.AdjustMs;
-            //            SubtitleListview1.SetStartTimeAndDuration(idx, p);
-            //        }
-            //    }
-            //}
+            var selectedIndices = SubtitleListview1.GetSelectedIndices();
+            if (index >= 0 && e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Whole && selectedIndices.Length > 1 &&
+                selectedIndices.Contains(index) && ModifierKeys.HasFlag(Keys.Control) && Utilities.HasNoGaps(selectedIndices))
+            {
+                MoveSelectedLines(e, paragraph, index, selectedIndices);
+                return;
+            }
 
             if (index == _subtitleListViewIndex && _subtitleListViewIndex != -1)
             {
@@ -1366,6 +1361,61 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index, paragraph);
             SubtitleListview1.SyntaxColorLineBackground(_subtitle.Paragraphs, index + 1, _subtitle.GetParagraphOrDefault(index + 1));
             UpdateSourceView();
+        }
+
+        private int _lastMultiMoveHash = -1;
+        private void MoveSelectedLines(AudioVisualizer.ParagraphEventArgs e, Paragraph paragraph, int index, int[] selectedIndices)
+        {
+            // calculate move min/max values related to current idx
+            var newMultiMoveHash = paragraph.Duration.TotalMilliseconds.GetHashCode() + index.GetHashCode() + selectedIndices.Length.GetHashCode();
+            if (newMultiMoveHash != _lastMultiMoveHash)
+            {
+                var currentStart = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds;
+                var currentEnd = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                var min = selectedIndices.Min();
+                var max = selectedIndices.Max();
+                var minStart = _subtitle.Paragraphs[min].StartTime.TotalMilliseconds;
+                var maxEnd = _subtitle.Paragraphs[max].EndTime.TotalMilliseconds;
+                var minBefore = _subtitle.GetParagraphOrDefault(min - 1);
+                var maxAfter = _subtitle.GetParagraphOrDefault(max + 1);
+                var minDiff = currentStart - minStart;
+                var maxDiff = maxEnd - currentEnd;
+                audioVisualizer.SetMinAndMax(minBefore == null ? 0 : (minBefore.EndTime.TotalMilliseconds + minDiff + Configuration.Settings.General.MinimumMillisecondsBetweenLines),
+                    maxAfter == null ? double.MaxValue : (maxAfter.StartTime.TotalMilliseconds - maxDiff - Configuration.Settings.General.MinimumMillisecondsBetweenLines));
+                _lastMultiMoveHash = newMultiMoveHash;
+            }
+
+            MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+
+            if (_subtitleListViewIndex != -1 && selectedIndices.Contains(_subtitleListViewIndex))
+            {
+                timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
+                timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[_subtitleListViewIndex].StartTime;
+                timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+            }
+
+            foreach (int idx in selectedIndices)
+            {
+                var p = _subtitle.Paragraphs[idx];
+                if (p != paragraph)
+                {
+                    var oldParagraph = new Paragraph(p, false);
+                    var dur = p.Duration.TotalMilliseconds;
+                    p.StartTime.TotalMilliseconds += e.AdjustMs;
+                    p.EndTime.TotalMilliseconds += e.AdjustMs;
+                    SubtitleListview1.SetStartTimeAndDurationBackground(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
+
+                    if (_subtitleOriginal != null)
+                    {
+                        var original = Utilities.GetOriginalParagraph(idx, oldParagraph, _subtitleOriginal.Paragraphs);
+                        if (original != null)
+                        {
+                            original.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                            original.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                        }
+                    }
+                }
+            }
         }
 
         private void MovePrevNext(AudioVisualizer.ParagraphEventArgs e, Paragraph beforeParagraph, int index)

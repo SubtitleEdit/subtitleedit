@@ -2961,5 +2961,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("\u202E", string.Empty)
                 .Replace("\u00A0", " "); // no break space
         }
+
+        public static bool HasNoGaps(int[] array)
+        {
+            if (array.Length == 0)
+            {
+                return false;
+            }
+
+            var numbers = array.OrderBy(p => p).ToList();
+            var current = numbers[0];
+            foreach (var n in numbers)
+            {
+                if (n != current)
+                {
+                    return false;
+                }
+
+                current++;
+            }
+
+            return true;
+        }
     }
 }
