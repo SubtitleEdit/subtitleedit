@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (newText.Contains(item.FindWhat))
                         {
                             hit = true;
-                            ruleInfo = item.RuleInfo;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
                             newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                         }
                     }
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (r.IsMatch(newText))
                         {
                             hit = true;
-                            ruleInfo = item.RuleInfo;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
                             newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                         }
                     }
@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (index >= 0)
                         {
                             hit = true;
-                            ruleInfo = item.RuleInfo;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
                             do
                             {
                                 newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
