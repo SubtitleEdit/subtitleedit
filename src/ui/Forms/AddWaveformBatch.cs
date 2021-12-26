@@ -42,7 +42,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
             checkBoxGenerateSceneChanges.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             checkBoxGenerateSceneChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateSceneChanges.Width;
-            checkBoxGenerateSceneChanges.Visible = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+            checkBoxGenerateSceneChanges.Visible = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation) && Configuration.Settings.General.UseFFmpegForWaveExtraction == false;
+            if (checkBoxGenerateSceneChanges.Visible)
+            {
+                checkBoxGenerateSceneChanges.Checked = true;
+            }
+
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
             removeAllToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.RemoveAll;
             UiUtil.FixLargeFonts(this, buttonDone);
@@ -231,6 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(LanguageSettings.Current.BatchConvert.NothingToConvert);
                 return;
             }
+
             _converting = true;
             buttonRipWave.Enabled = false;
             progressBar1.Style = ProgressBarStyle.Blocks;
