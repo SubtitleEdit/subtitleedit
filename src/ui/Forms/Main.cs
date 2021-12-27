@@ -27745,7 +27745,7 @@ namespace Nikse.SubtitleEdit.Forms
             actorToolStripMenuItem.Visible = formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha);
         }
 
-        private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripWaveformOpening(object sender, CancelEventArgs e)
         {
             if (audioVisualizer.IsSpectrogramAvailable)
             {
