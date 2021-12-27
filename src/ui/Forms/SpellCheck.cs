@@ -209,6 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             richTextBoxParagraph.SelectAll();
             richTextBoxParagraph.SelectionColor = Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.General.DarkThemeForeColor : Color.Black;
+            richTextBoxParagraph.SelectionFont = textBoxWholeText.Font;
             richTextBoxParagraph.SelectionLength = 0;
 
             for (int i = 0; i < 10; i++)
