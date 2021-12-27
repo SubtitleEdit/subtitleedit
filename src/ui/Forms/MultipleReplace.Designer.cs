@@ -96,6 +96,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripListViewFixes = new System.Windows.Forms.ContextMenuStrip();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxReplaces.SuspendLayout();
             this.contextMenuStripRules.SuspendLayout();
@@ -105,6 +106,7 @@
             this.splitContainer1.SuspendLayout();
             this.groupBoxGroups.SuspendLayout();
             this.contextMenuStripGroups.SuspendLayout();
+            this.contextMenuStripListViewFixes.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxLinesFound
@@ -146,18 +148,24 @@
             this.buttonReplacesSelectAll.UseVisualStyleBackColor = true;
             this.buttonReplacesSelectAll.Click += new System.EventHandler(this.buttonReplacesSelectAll_Click);
             // 
+            // contextMenuStripListViewFixes
+            // 
+            this.contextMenuStripListViewFixes.Name = "contextMenuStripListViewFixes";
+            this.contextMenuStripListViewFixes.Size = new System.Drawing.Size(285, 776);
+            this.contextMenuStripListViewFixes.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewFixesOpening);
+            // 
             // listViewFixes
             // 
             this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
+            this.listViewFixes.ContextMenuStrip = this.contextMenuStripListViewFixes;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader7,
-            this.columnHeader8,
-            this.columnHeader10});
+            this.columnHeader8});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(8, 21);
@@ -187,7 +195,7 @@
             // columnHeader8
             // 
             this.columnHeader8.Text = "After";
-            this.columnHeader8.Width = 330;
+            this.columnHeader8.Width = 440;
             // 
             // columnHeader10
             // 
@@ -771,6 +779,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.groupBoxGroups.ResumeLayout(false);
             this.contextMenuStripGroups.ResumeLayout(false);
+            this.contextMenuStripListViewFixes.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -844,5 +853,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem inverseSelectionToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListViewFixes;
     }
 }
