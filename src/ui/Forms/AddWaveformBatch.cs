@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var idx = listViewInputFiles.SelectedIndices[0];
             listViewInputFiles.BeginUpdate();
-            for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
+            for (var i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
             }
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                foreach (string fileName in openFileDialog1.FileNames)
+                foreach (var fileName in openFileDialog1.FileNames.OrderBy(Path.GetFileName))
                 {
                     AddInputFile(fileName);
                 }
@@ -148,26 +148,28 @@ namespace Nikse.SubtitleEdit.Forms
                 folderBrowserDialog1.SelectedPath = Configuration.Settings.Tools.WaveformBatchLastFolder;
             }
 
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            if (folderBrowserDialog1.ShowDialog() != DialogResult.OK)
             {
-                listViewInputFiles.BeginUpdate();
-                buttonRipWave.Enabled = false;
-                progressBar1.Style = ProgressBarStyle.Marquee;
-                progressBar1.Visible = true;
-                buttonInputBrowse.Enabled = false;
-                buttonSearchFolder.Enabled = false;
-                _abort = false;
-
-                SearchFolder(folderBrowserDialog1.SelectedPath);
-
-                buttonRipWave.Enabled = true;
-                progressBar1.Style = ProgressBarStyle.Continuous;
-                progressBar1.Visible = true;
-                buttonInputBrowse.Enabled = true;
-                buttonSearchFolder.Enabled = true;
-                listViewInputFiles.EndUpdate();
-                Configuration.Settings.Tools.WaveformBatchLastFolder = folderBrowserDialog1.SelectedPath;
+                return;
             }
+
+            listViewInputFiles.BeginUpdate();
+            buttonRipWave.Enabled = false;
+            progressBar1.Style = ProgressBarStyle.Marquee;
+            progressBar1.Visible = true;
+            buttonInputBrowse.Enabled = false;
+            buttonSearchFolder.Enabled = false;
+            _abort = false;
+
+            SearchFolder(folderBrowserDialog1.SelectedPath);
+
+            buttonRipWave.Enabled = true;
+            progressBar1.Style = ProgressBarStyle.Continuous;
+            progressBar1.Visible = true;
+            buttonInputBrowse.Enabled = true;
+            buttonSearchFolder.Enabled = true;
+            listViewInputFiles.EndUpdate();
+            Configuration.Settings.Tools.WaveformBatchLastFolder = folderBrowserDialog1.SelectedPath;
         }
 
         private void SearchFolder(string path)
@@ -184,11 +186,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ScanFiles(IEnumerable<string> fileNames)
         {
-            foreach (string fileName in fileNames)
+            foreach (var fileName in fileNames.OrderBy(Path.GetFileName))
             {
                 try
                 {
-                    string ext = Path.GetExtension(fileName);
+                    var ext = Path.GetExtension(fileName);
                     if (ext != null && (Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()) || Utilities.AudioFileExtensions.Contains(ext.ToLowerInvariant())))
                     {
                         var fi = new FileInfo(fileName);
@@ -200,6 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             AddFromSearch(fileName, fi, ext.Remove(0, 1));
                         }
+
                         progressBar1.Refresh();
                         Application.DoEvents();
                         if (_abort)
@@ -254,20 +257,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewInputFiles.EndUpdate();
             Refresh();
-            int index = 0;
+            var index = 0;
             while (index < listViewInputFiles.Items.Count && _abort == false)
             {
                 var item = listViewInputFiles.Items[index];
-                Action<string> updateStatus = status =>
+
+                void UpdateStatus(string status)
                 {
                     item.SubItems[3].Text = status;
                     Refresh();
-                };
-                updateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingAudio);
-                string fileName = item.Text;
+                }
+
+                UpdateStatus(LanguageSettings.Current.AddWaveformBatch.ExtractingAudio);
+                var fileName = item.Text;
                 try
                 {
-                    string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+                    var targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
                     Process process;
                     try
                     {
@@ -356,7 +361,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    updateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
+                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
                     if (checkBoxGenerateSceneChanges.Visible && checkBoxGenerateSceneChanges.Checked)
@@ -376,13 +381,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     IncrementAndShowProgress();
 
-                    updateStatus(LanguageSettings.Current.AddWaveformBatch.Done);
+                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Done);
                 }
                 catch
                 {
                     IncrementAndShowProgress();
 
-                    updateStatus(LanguageSettings.Current.AddWaveformBatch.Error);
+                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Error);
                 }
                 index++;
             }
@@ -499,7 +504,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             listViewInputFiles.BeginUpdate();
-            foreach (string fileName in fileNames)
+            foreach (var fileName in fileNames)
             {
                 if (File.Exists(fileName))
                 {
