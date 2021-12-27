@@ -15369,6 +15369,34 @@ namespace Nikse.SubtitleEdit.Forms
                 MergeDialogs();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainMergeDialogWithNext == e.KeyData && InListView)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                    {
+                        SelectListViewIndexAndEnsureVisible(idx);
+                        MergeWithLineAfter(true);
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainMergeDialogWithPrevious == e.KeyData && InListView)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx > 0)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
+                        MergeWithLineAfter(true);
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainListViewToggleDashes == e.KeyData && InListView)
             {
                 if (textBoxListViewText.Focused)

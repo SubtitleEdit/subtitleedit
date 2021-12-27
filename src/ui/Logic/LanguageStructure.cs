@@ -2501,6 +2501,8 @@
             public string RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
+            public string MergeDialogWithNext { get; set; }
+            public string MergeDialogWithPrevious { get; set; }
             public string GoToNext { get; set; }
             public string GoToNextPlayTranslate { get; set; }
             public string GoToNextCursorAtEnd { get; set; }
