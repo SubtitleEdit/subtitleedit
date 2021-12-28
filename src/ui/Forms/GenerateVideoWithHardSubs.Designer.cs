@@ -237,6 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPreviewPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPreviewPleaseWait.TabIndex = 7;
             this.labelPreviewPleaseWait.Text = "Please wait...";
+            this.labelPreviewPleaseWait.Click += new System.EventHandler(this.labelPreviewPleaseWait_Click);
             // 
             // checkBoxAlignRight
             // 
