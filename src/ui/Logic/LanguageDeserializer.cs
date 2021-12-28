@@ -6340,6 +6340,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MergeDialog":
                     language.Settings.MergeDialog = reader.Value;
                     break;
+                case "Settings/MergeDialogWithNext":
+                    language.Settings.MergeDialogWithNext = reader.Value;
+                    break;
+                case "Settings/MergeDialogWithPrevious":
+                    language.Settings.MergeDialogWithPrevious = reader.Value;
+                    break;
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
                     break;
