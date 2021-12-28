@@ -1574,8 +1574,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                             if (word.Length > 4)
                             {
-                                if (_threeLetterIsoLanguageName == "eng" && 
-                                    word.EndsWith("in", StringComparison.Ordinal) && 
+                                if (_threeLetterIsoLanguageName == "eng" &&
+                                    word.EndsWith("in", StringComparison.Ordinal) &&
                                     line.Contains(word + "'") &&
                                     DoSpell(word + "g"))
                                 {
@@ -1931,8 +1931,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             foreach (string s in word.Split(' '))
             {
-                if (!DoSpell(s) && 
-                    !_nameList.Contains(s) && 
+                if (!DoSpell(s) &&
+                    !_nameList.Contains(s) &&
                     !_userWordList.Contains(s) &&
                     !IsWordKnownOrNumber(s, word))
                 {
@@ -1973,7 +1973,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public bool IsWordKnownOrNumber(string word, string line)
         {
-            if (double.TryParse(word.TrimStart('\'').Replace("$", string.Empty).Replace("£", string.Empty).Replace("¢", string.Empty), out _))
+            if (double.TryParse(word.TrimStart('\'').RemoveChar('$', '£', '¥', '¢'), out _))
             {
                 return true;
             }

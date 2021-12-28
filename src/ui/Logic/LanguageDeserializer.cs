@@ -5173,6 +5173,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "MultipleReplace/NothingToImport":
                     language.MultipleReplace.NothingToImport = reader.Value;
                     break;
+                case "MultipleReplace/RuleInfo":
+                    language.MultipleReplace.RuleInfo = reader.Value;
+                    break;
                 case "NetworkChat/Title":
                     language.NetworkChat.Title = reader.Value;
                     break;
@@ -6336,6 +6339,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/MergeDialog":
                     language.Settings.MergeDialog = reader.Value;
+                    break;
+                case "Settings/MergeDialogWithNext":
+                    language.Settings.MergeDialogWithNext = reader.Value;
+                    break;
+                case "Settings/MergeDialogWithPrevious":
+                    language.Settings.MergeDialogWithPrevious = reader.Value;
                     break;
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
