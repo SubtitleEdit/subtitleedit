@@ -2275,6 +2275,8 @@ $HorzAlign          =   Center
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainMergeDialog { get; set; }
+        public string MainMergeDialogWithNext { get; set; }
+        public string MainMergeDialogWithPrevious { get; set; }
         public string MainToggleFocus { get; set; }
         public string MainToggleFocusWaveform { get; set; }
         public string WaveformAdd { get; set; }
@@ -8723,6 +8725,18 @@ $HorzAlign          =   Center
                     shortcuts.MainMergeDialog = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainMergeDialogWithNext");
+                if (subNode != null)
+                {
+                    shortcuts.MainMergeDialogWithNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainMergeDialogWithPrevious");
+                if (subNode != null)
+                {
+                    shortcuts.MainMergeDialogWithPrevious = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToggleFocus");
                 if (subNode != null)
                 {
@@ -10073,6 +10087,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", shortcuts.MainWaveformInsertAtCurrentPosition);
             textWriter.WriteElementString("MainInsertBefore", shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
+            textWriter.WriteElementString("MainMergeDialogWithNext", shortcuts.MainMergeDialogWithNext);
+            textWriter.WriteElementString("MainMergeDialogWithPrevious", shortcuts.MainMergeDialogWithPrevious);
             textWriter.WriteElementString("MainToggleFocus", shortcuts.MainToggleFocus);
             textWriter.WriteElementString("MainToggleFocusWaveform", shortcuts.MainToggleFocusWaveform);
             textWriter.WriteElementString("WaveformAdd", shortcuts.WaveformAdd);
