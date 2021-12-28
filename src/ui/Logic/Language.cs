@@ -2200,7 +2200,8 @@ namespace Nikse.SubtitleEdit.Logic
                 RenameGroup = "Rename group...",
                 RulesForGroupX = "Rules for group \"{0}\"",
                 NewGroup = "New group...",
-                NothingToImport = "Nothing to import"
+                NothingToImport = "Nothing to import",
+                RuleInfo = "Rule information"
             };
 
             NetworkChat = new LanguageStructure.NetworkChat
@@ -2647,6 +2648,8 @@ can edit in same subtitle file (collaboration)",
                 RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed = "Re-calculate duration of current subtitle (based on optimal reading speed)",
                 MainCreateStartDownEndUp = "Insert new subtitle at key-down, set end time at key-up",
                 MergeDialog = "Merge dialog (insert dashes)",
+                MergeDialogWithNext = "Merge dialog with next (insert dashes)",
+                MergeDialogWithPrevious = "Merge dialog with previous (insert dashes)",
                 GoToNext = "Go to next line",
                 GoToNextPlayTranslate = "Go to next line (and play in 'Translate mode')",
                 GoToNextCursorAtEnd = "Go to next line and set cursor at end",
