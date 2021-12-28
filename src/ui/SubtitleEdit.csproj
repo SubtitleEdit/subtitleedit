@@ -132,6 +132,12 @@
     <Compile Include="Forms\Assa\ResolutionResampler.Designer.cs">
       <DependentUpon>ResolutionResampler.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\AssSetBackground.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\AssSetBackground.Designer.cs">
+      <DependentUpon>AssSetBackground.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\SetPosition.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1335,6 +1341,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\ResolutionResampler.resx">
       <DependentUpon>ResolutionResampler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\AssSetBackground.resx">
+      <DependentUpon>AssSetBackground.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\SetPosition.resx">
       <DependentUpon>SetPosition.cs</DependentUpon>
