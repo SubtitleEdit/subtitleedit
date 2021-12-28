@@ -504,7 +504,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             listViewInputFiles.BeginUpdate();
-            foreach (var fileName in fileNames)
+            foreach (var fileName in fileNames.OrderBy(Path.GetFileName))
             {
                 if (File.Exists(fileName))
                 {
