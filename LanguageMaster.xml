@@ -1902,6 +1902,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <RenameGroup>Rename group...</RenameGroup>
     <NewGroup>New group...</NewGroup>
     <NothingToImport>Nothing to import</NothingToImport>
+    <RuleInfo>Rule information</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
