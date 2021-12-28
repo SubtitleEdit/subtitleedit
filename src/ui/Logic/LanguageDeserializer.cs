@@ -5173,6 +5173,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "MultipleReplace/NothingToImport":
                     language.MultipleReplace.NothingToImport = reader.Value;
                     break;
+                case "MultipleReplace/RuleInfo":
+                    language.MultipleReplace.RuleInfo = reader.Value;
+                    break;
                 case "NetworkChat/Title":
                     language.NetworkChat.Title = reader.Value;
                     break;

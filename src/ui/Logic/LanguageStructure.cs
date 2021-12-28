@@ -2052,6 +2052,7 @@
             public string RenameGroup { get; set; }
             public string NewGroup { get; set; }
             public string NothingToImport { get; set; }
+            public string RuleInfo { get; set; }
         }
 
         public class NetworkChat
