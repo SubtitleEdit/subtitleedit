@@ -1894,6 +1894,7 @@ Command line: {1} {2}
     <RenameGroup>重命名组...</RenameGroup>
     <NewGroup>新建组...</NewGroup>
     <NothingToImport>无导入内容</NothingToImport>
+    <RuleInfo>规则信息</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>聊天</Title>
@@ -2032,6 +2033,7 @@ Command line: {1} {2}
     <WordLists>词汇表</WordLists>
     <SsaStyle>SSA 样式</SsaStyle>
     <Network>网络</Network>
+    <FileTypeAssociations>文件类型关联</FileTypeAssociations>
     <Rules>规则</Rules>
     <ShowToolBarButtons>显示工具栏按钮</ShowToolBarButtons>
     <New>新建</New>
@@ -2309,6 +2311,8 @@ Command line: {1} {2}
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>重新计算当前字幕时长（基于最优阅读速度）</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
+    <MergeDialogWithNext>与下一条合并对话 (插入破折号)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>与上一条合并对话 (插入破折号)</MergeDialogWithPrevious>
     <GoToNext>转到下一行</GoToNext>
     <GoToNextPlayTranslate>转到下一行（并以“翻译模式”播放）</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>转到下一行并将光标置于末尾</GoToNextCursorAtEnd>
@@ -2442,6 +2446,7 @@ Command line: {1} {2}
     <ListViewColumnTextDown>列，文本下移</ListViewColumnTextDown>
     <ListViewGoToNextError>转到下一处错误</ListViewGoToNextError>
     <ListViewListErrors>列出错误</ListViewListErrors>
+    <ListViewListSortByX>按{0}排序</ListViewListSortByX>
     <ShowStyleManager>显示样式管理器</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
@@ -2495,6 +2500,8 @@ Command line: {1} {2}
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>编辑</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>快捷方式：在文本框中允许单个字母/数字</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <UpdateFileTypeAssociations>更新文件类型关联</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>文件类型关联已更新</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
@@ -2858,7 +2865,7 @@ Command line: {1} {2}
     <AllFixes>全部修复</AllFixes>
     <GuessesUsed>已用猜测</GuessesUsed>
     <UnknownWords>未知词</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} 依据 'OCRFixReplaceList/WordSplitList', 行号: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} 依据 'OCRFixReplaceList.xml', 行号: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR 自动修正/拼写检查</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>修正 OCR 错误</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>通过匹配时间码导入文本...</ImportTextWithMatchingTimeCodes>
