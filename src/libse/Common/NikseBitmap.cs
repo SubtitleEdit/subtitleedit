@@ -886,29 +886,86 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newTop;
         }
 
-        public int CalcBottomCropping(Color transparentColor)
+        public int CalcTopCropping(Color color)
         {
-            int y = Height - 1;
-            int cropping = 0;
-            while (y > 0)
+            var y = 0;
+            for (; y < Height; y++)
             {
-                int x = 0;
-                while (x < Width)
+                if (!IsHorizontalLineColor(y, color))
                 {
-                    var c = GetPixel(x, y);
-                    if (c != transparentColor && c.A != 0)
-                    {
-                        return cropping;
-                    }
-
-                    x++;
+                    break;
                 }
-
-                y--;
-                cropping++;
             }
 
-            return cropping;
+            return y;
+        }
+
+        public int CalcBottomCropping(Color color)
+        {
+            var y = Height - 1;
+            for (; y > 0; y--)
+            {
+                if (!IsHorizontalLineColor(y, color))
+                {
+                    break;
+                }
+            }
+
+            return Height - y;
+        }
+
+        public int CalcLeftCropping(Color color)
+        {
+            var x = 0;
+            for (; x < Width; x++)
+            {
+                if (!IsVerticalLineColor(x, color))
+                {
+                    break;
+                }
+            }
+
+            return x;
+        }
+
+        public int CalcRightCropping(Color color)
+        {
+            var x = Width - 1;
+            for (; x > 0; x--)
+            {
+                if (!IsVerticalLineColor(x, color))
+                {
+                    break;
+                }
+            }
+
+            return Width - x;
+        }
+
+        public bool IsVerticalLineColor(int x, Color color)
+        {
+            for (var y = 0; y < Height; y++)
+            {
+                if (!IsColorClose(GetPixel(x, y), color, 9))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool IsHorizontalLineColor(int y, Color color)
+        {
+            for (var x = 0; x < Width; x++)
+            {
+                if (!IsColorClose(GetPixel(x, y), color, 9))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void Fill(Color color)

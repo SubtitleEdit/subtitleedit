@@ -24,17 +24,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private string _mpvTextFileName;
         private bool _closing;
         private bool _videoLoaded;
-        private int _x = -1;
-        private int _y = -1;
-        private int _tempX;
-        private int _tempY;
-        private bool _updatePos = true;
+        private bool _updatePreview = true;
         private readonly string _videoFileName;
         private readonly VideoInfo _videoInfo;
-        private bool _positionChanged;
         private bool _loading = true;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private long _processedFrames;
+        private string _assaBox;
+
+        private int _top;
+        private int _bottom;
+        private int _left;
+        private int _right;
+        private Color _boxColor;
+        private Color _boxShadowColor;
+        private Color _boxOutlineColor;
+
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
         {
@@ -56,13 +61,21 @@ namespace Nikse.SubtitleEdit.Forms.Assa
            // Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
             
-            comboBoxProgressBarEdge.Items.Clear();
-            comboBoxProgressBarEdge.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.SquareCorners);
-            comboBoxProgressBarEdge.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
+            comboBoxBoxStyle.Items.Clear();
+            comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.SquareCorners);
+            comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
+            comboBoxBoxStyle.SelectedIndex = 0;
+            
+            panelPrimaryColor.BackColor = Color.Black;
+            _boxColor = panelPrimaryColor.BackColor;
+            panelOutlineColor.BackColor = Color.Gray;
+            _boxOutlineColor = panelOutlineColor.BackColor;
+            panelShadowColor.BackColor = Color.Black;
+            _boxShadowColor = panelShadowColor.BackColor;
 
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -93,49 +106,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            _subtitle.Header = _subtitleWithNewHeader.Header;
-            if (_positionChanged)
-            {
-                ApplyOverrideTags(_subtitle);
-            }
-
             DialogResult = DialogResult.OK;
-        }
-
-        private void ApplyOverrideTags(Subtitle subtitle)
-        {
-            var styleToApply = $"{{\\pos({_x},{_y})}}";
-
-
-            UpdatedSubtitle = new Subtitle(subtitle, false);
-            var indices = GetIndices();
-
-            for (int i = 0; i < UpdatedSubtitle.Paragraphs.Count; i++)
-            {
-                if (!indices.Contains(i))
-                {
-                    continue;
-                }
-
-                var p = UpdatedSubtitle.Paragraphs[i];
-
-                RemoveOldPosTags(p);
-
-                if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && styleToApply.EndsWith('}'))
-                {
-                    p.Text = styleToApply.TrimEnd('}') + p.Text.Remove(0, 1);
-                }
-                else
-                {
-                    p.Text = styleToApply + p.Text;
-                }
-            }
-        }
-
-        private static void RemoveOldPosTags(Paragraph p)
-        {
-            p.Text = Regex.Replace(p.Text, @"{\\pos\([\d,\.-]*\)}", string.Empty);
-            p.Text = Regex.Replace(p.Text, @"\\pos\([\d,\.-]*\)", string.Empty);
         }
 
         private int[] GetIndices()
@@ -223,13 +194,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var format = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
             var indices = GetIndices();
-            var styleToApply = $"{{\\pos({_x},{_y})}}";
+            var styleToApply = string.Empty; // $"{{\\pos({_x},{_y})}}";
 
             var p = indices.Length > 0 ?
                 new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
                 new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
-
-            RemoveOldPosTags(p);
 
             // remove fade tags 
             p.Text = Regex.Replace(p.Text, @"{\\fad\([\d\.,]*\)}", string.Empty);
@@ -240,7 +209,40 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             p.Text = styleToApply + p.Text;
             subtitle.Paragraphs.Add(p);
 
+            // box
+            //Build box + gen preview via mpv
+            _assaBox = GenerateBackgroundBox(
+                _left - (int)numericUpDownMarginLeft.Value,
+                _top - (int)numericUpDownMarginTop.Value,
+                _right + (int)numericUpDownMarginRight.Value,
+                _bottom + (int)numericUpDownMarginBottom.Value);
+
+            var p2 = new Paragraph(_assaBox?? string.Empty, 0, 1000);
+            p2.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+            p2.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+            p2.Layer = (int)numericUpDownBoxLayer.Value;
+            p2.Style = "SE-progress-bar-bg";
+            p2.Extra = "SE-progress-bar-bg";
+            subtitle.Paragraphs.Add(p2);
+
             subtitle.Header = _subtitleWithNewHeader.Header ?? AdvancedSubStationAlpha.DefaultHeader;
+            var style = new SsaStyle
+            {
+                Alignment = "7",
+                Name = "SE-progress-bar-bg",
+                MarginLeft = 0,
+                MarginRight = 0,
+                MarginVertical = 0,
+                Primary = _boxColor,
+                Secondary = _boxShadowColor,
+                Tertiary = _boxShadowColor,
+                Background = _boxShadowColor,
+                Outline = _boxOutlineColor,
+                ShadowWidth = numericUpDownShadowWidth.Value,
+                OutlineWidth = numericUpDownOutlineWidth.Value,
+            };
+            subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, style);
+
             var text = subtitle.ToText(format);
             _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
             File.WriteAllText(_mpvTextFileName, text);
@@ -257,8 +259,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        
-        
         private void ApplyCustomStyles_FormClosing(object sender, FormClosingEventArgs e)
         {
             _closing = true;
@@ -272,19 +272,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            if (_updatePos && (_x != _tempX || _y != _tempY))
+            if (_updatePreview)
             {
-                _x = _tempX;
-                _y = _tempY;
                 VideoLoaded(null, null);
+                _updatePreview = false;
             }
         }
 
         private void SetPosition_Shown(object sender, EventArgs e)
         {
-            ShowStyleAlignment();
-            ShowCurrentPosition();
-
             var playResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", _subtitleWithNewHeader.Header);
             var playResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitleWithNewHeader.Header);
             if (string.IsNullOrEmpty(playResX) || string.IsNullOrEmpty(playResY))
@@ -302,170 +298,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 }
             }
 
+            buttonPreview_Click(null, null);
             GeneratePreviewViaMpv();
             _loading = false;
         }
 
-        private void ShowCurrentPosition()
-        {
-            var indices = GetIndices();
-            if (indices.Length == 0)
-            {
-                return;
-            }
-
-            var p = _subtitleWithNewHeader.Paragraphs[indices[0]];
-            var match = Regex.Match(p.Text, @"\\pos\([\d\.,-]*");
-            if (match.Success)
-            {
-                var arr = match.Value.Split('(', ')', ',');
-                if (arr.Length > 2)
-                {
-                    if (int.TryParse(arr[1], out var x) && int.TryParse(arr[2], out var y))
-                    {
-                        _x = x;
-                        _y = y;
-                        _updatePos = false;
-                       // labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
-                    }
-                }
-            }
-
-            match = Regex.Match(p.Text, @"\\frx[\d\.-]*");
-            if (match.Success)
-            {
-                var arr = match.Value.Split('x', '\\', '}');
-                if (arr.Length > 2)
-                {
-                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
-                    {
-                        try
-                        {
-                            numericUpDownRotateX.Value = x;
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                    }
-                }
-            }
-
-            match = Regex.Match(p.Text, @"\\fry[\d\.-]*");
-            if (match.Success)
-            {
-                var arr = match.Value.Split('y', '\\', '}');
-                if (arr.Length > 2)
-                {
-                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
-                    {
-                        try
-                        {
-                            numericUpDownRotateY.Value = x;
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                    }
-                }
-            }
-
-            match = Regex.Match(p.Text, @"\\frz[\d\.-]*");
-            if (match.Success)
-            {
-                var arr = match.Value.Split('z', '\\', '}');
-                if (arr.Length > 2)
-                {
-                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
-                    {
-                        try
-                        {
-                          //  numericUpDownRotateZ.Value = x;
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                    }
-                }
-            }
-
-            match = Regex.Match(p.Text, @"\\fax[\d\.-]*");
-            if (match.Success)
-            {
-                var arr = match.Value.Split('x', '\\', '}');
-                if (arr.Length > 2)
-                {
-                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
-                    {
-                        try
-                        {
-                           // numericUpDownDistortX.Value = x;
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                    }
-                }
-            }
-
-            match = Regex.Match(p.Text, @"\\fay[\d\.-]*");
-            if (match.Success)
-            {
-                var arr = match.Value.Split('y', '\\', '}');
-                if (arr.Length > 2)
-                {
-                    if (decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x))
-                    {
-                        try
-                        {
-                            // numericUpDownDistortY.Value = x;
-                        }
-                        catch
-                        {
-                            // ignore
-                        }
-                    }
-                }
-            }
-        }
-
-        private void ShowStyleAlignment()
-        {
-            var indices = GetIndices();
-            if (indices.Length == 0)
-            {
-                // labelStyleAlignment.Text = string.Format(LanguageSettings.Current.AssaSetPosition.StyleAlignmentX, "{\\an2}");
-
-                return;
-            }
-
-            var p = _subtitleWithNewHeader.Paragraphs[indices[0]];
-            var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitleWithNewHeader.Header);
-            //.Text = string.Format(LanguageSettings.Current.AssaSetPosition.StyleAlignmentX, "{\\an" + style.Alignment + "} (" + p.Extra + ")");
-        }
-
         private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
-            _x = _tempX;
-            _y = _tempY;
-            //    labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, $"{_x},{_y}");
-            _updatePos = !_updatePos;
             VideoLoaded(null, null);
-            _positionChanged = true;
-        }
-
-        private void pictureBoxPreview_MouseMove(object sender, MouseEventArgs e)
-        {
-            var xAspectRatio = (double)_videoInfo.Width / pictureBoxPreview.Width;
-            _tempX = (int)Math.Round(e.Location.X * xAspectRatio);
-
-            var yAspectRatio = (double)_videoInfo.Height / pictureBoxPreview.Height;
-            _tempY = (int)Math.Round(e.Location.Y * yAspectRatio);
-
-            // labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, $"{_tempX},{_tempY}");
         }
 
         private void SetPosition_ResizeEnd(object sender, EventArgs e)
@@ -482,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            _positionChanged = true;
+            _updatePreview = true;
             VideoLoaded(null, null);
         }
 
@@ -490,8 +330,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             try
             {
-                buttonPreview.Enabled = false;
-                labelPreviewPleaseWait.Visible = true;
                 Cursor = Cursors.WaitCursor;
 
                 // generate blank video
@@ -519,8 +357,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 sub.Paragraphs.Add(new Paragraph(GetPreviewParagraph()));
                 File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
 
-                // hardcode subtitle
-                var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mp4");
+                // hard code subtitle
+                var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
                 process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
                 process.Start();
                 process.BeginOutputReadLine();
@@ -535,13 +373,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, "00:00:01");
                 using (var bmp = new Bitmap(bmpFileName))
                 {
-                    using (var form = new ExportPngXmlPreview(bmp))
-                    {
-                        form.AllowNext = false;
-                        form.AllowPrevious = false;
-                        labelPreviewPleaseWait.Visible = false;
-                        form.ShowDialog(this);
-                    }
+                    var nBmp = new NikseBitmap(bmp);
+                    _top = nBmp.CalcTopCropping(Color.Cyan);
+                    _bottom = nBmp.Height - nBmp.CalcBottomCropping(Color.Cyan);
+                    _left = nBmp.CalcLeftCropping(Color.Cyan);
+                    _right = nBmp.Width - nBmp.CalcRightCropping(Color.Cyan);
+
+                    _updatePreview = true;
                 }
 
                 try
@@ -559,9 +397,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             finally
             {
                 Cursor = Cursors.Default;
-                buttonPreview.Enabled = true;
-                labelPreviewPleaseWait.Visible = false;
             }
+        }
+
+        private string GenerateBackgroundBox(int x, int y, int right, int bottom)
+        {
+            if (comboBoxBoxStyle.SelectedIndex == 1) // rounded corners
+            {
+                //var barEnd = x + width;
+                //return $@"{{m {x} {y} b {x} {y} {x} {height} {height} {height} l {barEnd} {height} b {width} {height} {width} {y} {barEnd} {y} l  {barEnd} {y} {height} {y}{{\p0}}";
+                //m top-left - x top - right - x LINE top-right - y maxX height x left height
+            }
+
+            return $"{{\\p1}}m {x} {y} l {right} {y} {right} {bottom} {x} {bottom}{{\\p0}}";
         }
 
         private Paragraph GetPreviewParagraph()
@@ -610,8 +458,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-          //  _log?.AppendLine(outLine.Data);
-
             var match = FrameFinderRegex.Match(outLine.Data);
             if (!match.Success)
             {
@@ -628,6 +474,67 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 _processedFrames = f;
             }
+        }
+
+        private void PreviewValueChanged(object sender, EventArgs e)
+        {
+            _updatePreview = true;
+        }
+
+        private void AssSetBackground_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void buttonPrimaryColor_Click(object sender, EventArgs e)
+        {
+            var colorDialog = new ColorChooser();
+            colorDialog.Color = panelPrimaryColor.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                _boxColor = colorDialog.Color;
+                _updatePreview = true;
+                panelPrimaryColor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void panelPrimaryColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonPrimaryColor_Click(null, null);
+        }
+
+        private void buttonShadowColor_Click(object sender, EventArgs e)
+        {
+            var colorDialog = new ColorChooser();
+            colorDialog.Color = panelShadowColor.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                _boxShadowColor = colorDialog.Color;
+                _updatePreview = true;
+                panelShadowColor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void panelShadowColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonShadowColor_Click(null, null);
+        }
+
+        private void buttonOutlineColor_Click(object sender, EventArgs e)
+        {
+            var colorDialog = new ColorChooser();
+            colorDialog.Color = panelOutlineColor.BackColor;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                _boxOutlineColor = colorDialog.Color;
+                _updatePreview = true;
+                panelOutlineColor.BackColor = colorDialog.Color;
+            }
+        }
+
+        private void panelOutlineColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            buttonOutlineColor_Click(null, null);
         }
     }
 }

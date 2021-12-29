@@ -1035,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // header
             stream.WriteByte(1);
-            for (int i = 1; i < 23; i++)
+            for (var i = 1; i < 23; i++)
             {
                 stream.WriteByte(0);
             }
@@ -1043,23 +1043,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             stream.WriteByte(0x60);
 
             // paragraphs
-            int number = 0;
-            foreach (var p in subtitle.Paragraphs)
+            var number = 1;
+            var firstParagraph = subtitle.Paragraphs.FirstOrDefault();
+            if (firstParagraph != null &&
+                Math.Abs(firstParagraph.StartTime.TotalMilliseconds) < 0.001 &&
+                firstParagraph.EndTime.TotalMilliseconds < 350)
             {
-                WriteParagraph(stream, p, number, number + 1 == subtitle.Paragraphs.Count);
+                number = 0;
+            }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var p = subtitle.Paragraphs[index];
+                WriteParagraph(stream, p, number, index + 1 == subtitle.Paragraphs.Count);
                 number++;
             }
 
             // footer
             stream.WriteByte(0xff);
-            for (int i = 0; i < 11; i++)
+            for (var i = 0; i < 11; i++)
             {
                 stream.WriteByte(0);
             }
 
             stream.WriteByte(0x11);
             stream.WriteByte(0);
-            byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
+            var footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
             stream.Write(footerBuffer, 0, footerBuffer.Length);
             return true;
         }
@@ -1176,8 +1185,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!isLast)
             {
                 fs.WriteByte(0);
-                fs.WriteByte((byte)((number + 1) % 256));
-                fs.WriteByte((byte)((number + 1) / 256));
+                fs.WriteByte((byte)(number % 256));
+                fs.WriteByte((byte)(number / 256));
                 fs.WriteByte(0x60);
             }
         }
