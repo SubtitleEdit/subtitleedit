@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -31,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private long _processedFrames;
         private string _assaBox;
+        private readonly Random _random = new Random();
 
         private int _top;
         private int _bottom;
@@ -39,7 +41,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Color _boxColor;
         private Color _boxShadowColor;
         private Color _boxOutlineColor;
-
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
         {
@@ -58,23 +59,43 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             _selectedIndices = selectedIndices;
-           // Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
+            // Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
-            
+
             comboBoxBoxStyle.Items.Clear();
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.SquareCorners);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
+            comboBoxBoxStyle.Items.Add("Spikes");
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            comboBoxBoxStyle.SelectedIndex = 0;
-            
-            panelPrimaryColor.BackColor = Color.Black;
+
+            if (Configuration.Settings.Tools.AssaBgBoxStyle == "spikes")
+            {
+                comboBoxBoxStyle.SelectedIndex = 2;
+            }
+            else if (Configuration.Settings.Tools.AssaBgBoxStyle == "rounded")
+            {
+                comboBoxBoxStyle.SelectedIndex = 1;
+            }
+            else
+            {
+                comboBoxBoxStyle.SelectedIndex = 0;
+            }
+
+            numericUpDownPaddingLeft.Value = Configuration.Settings.Tools.AssaBgBoxPaddingLeft;
+            numericUpDownPaddingRight.Value = Configuration.Settings.Tools.AssaBgBoxPaddingRight;
+            numericUpDownPaddingTop.Value = Configuration.Settings.Tools.AssaBgBoxPaddingTop;
+            numericUpDownPaddingBottom.Value = Configuration.Settings.Tools.AssaBgBoxPaddingBottom;
+            panelPrimaryColor.BackColor = Configuration.Settings.Tools.AssaBgBoxColor;
+            panelOutlineColor.BackColor = Configuration.Settings.Tools.AssaBgBoxOutlineColor;
+            panelShadowColor.BackColor = Configuration.Settings.Tools.AssaBgBoxShadowColor;
+            numericUpDownRadius.Value = Configuration.Settings.Tools.AssaBgBoxStyleRadius;
+            numericUpDownOutlineWidth.Value = Configuration.Settings.Tools.AssaBgBoxOutlineWidth;
+
             _boxColor = panelPrimaryColor.BackColor;
-            panelOutlineColor.BackColor = Color.Gray;
             _boxOutlineColor = panelOutlineColor.BackColor;
-            panelShadowColor.BackColor = Color.Black;
             _boxShadowColor = panelShadowColor.BackColor;
 
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -84,6 +105,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _videoInfo = UiUtil.GetVideoInfo(_videoFileName);
             }
 
+            comboBoxBoxStyle_SelectedIndexChanged(null, null);
             SetPosition_ResizeEnd(null, null);
         }
 
@@ -209,15 +231,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             p.Text = styleToApply + p.Text;
             subtitle.Paragraphs.Add(p);
 
-            // box
             //Build box + gen preview via mpv
-            _assaBox = GenerateBackgroundBox(
-                _left - (int)numericUpDownMarginLeft.Value,
-                _top - (int)numericUpDownMarginTop.Value,
-                _right + (int)numericUpDownMarginRight.Value,
-                _bottom + (int)numericUpDownMarginBottom.Value);
+            var x = _left - (int)numericUpDownPaddingLeft.Value;
+            var right = _right + (int)numericUpDownPaddingRight.Value;
+            if (checkBoxFillWidth.Checked)
+            {
+                x = (int)numericUpDownFillWidthMarginLeft.Value;
+                right = _videoInfo.Width - (int)numericUpDownFillWidthMarginRight.Value;
+            }
 
-            var p2 = new Paragraph(_assaBox?? string.Empty, 0, 1000);
+            _assaBox = GenerateBackgroundBox(
+                x,
+                _top - (int)numericUpDownPaddingTop.Value,
+                right,
+                _bottom + (int)numericUpDownPaddingBottom.Value);
+
+            var p2 = new Paragraph(_assaBox ?? string.Empty, 0, 1000);
             p2.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
             p2.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
             p2.Layer = (int)numericUpDownBoxLayer.Value;
@@ -263,20 +292,40 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             _closing = true;
             _mpv?.Dispose();
+
+            if (comboBoxBoxStyle.SelectedIndex == 2)
+            {
+                Configuration.Settings.Tools.AssaBgBoxStyle = "spikes";
+            }
+            else if (comboBoxBoxStyle.SelectedIndex == 1)
+            {
+                Configuration.Settings.Tools.AssaBgBoxStyle = "rounded";
+            }
+            else
+            {
+                Configuration.Settings.Tools.AssaBgBoxStyle = "square";
+            }
+
+            Configuration.Settings.Tools.AssaBgBoxStyleRadius = (int)numericUpDownRadius.Value;
+            Configuration.Settings.Tools.AssaBgBoxOutlineWidth = (int)numericUpDownOutlineWidth.Value;
+            Configuration.Settings.Tools.AssaBgBoxPaddingLeft = (int)numericUpDownPaddingLeft.Value;
+            Configuration.Settings.Tools.AssaBgBoxPaddingRight = (int)numericUpDownPaddingRight.Value;
+            Configuration.Settings.Tools.AssaBgBoxPaddingTop = (int)numericUpDownPaddingTop.Value;
+            Configuration.Settings.Tools.AssaBgBoxPaddingBottom = (int)numericUpDownPaddingBottom.Value;
+            Configuration.Settings.Tools.AssaBgBoxColor = panelPrimaryColor.BackColor;
+            Configuration.Settings.Tools.AssaBgBoxOutlineColor = panelOutlineColor.BackColor;
+            Configuration.Settings.Tools.AssaBgBoxShadowColor = panelShadowColor.BackColor;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (_mpv == null || _closing)
+            if (_mpv == null || _closing || !_updatePreview)
             {
                 return;
             }
 
-            if (_updatePreview)
-            {
-                VideoLoaded(null, null);
-                _updatePreview = false;
-            }
+            VideoLoaded(null, null);
+            _updatePreview = false;
         }
 
         private void SetPosition_Shown(object sender, EventArgs e)
@@ -402,11 +451,46 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private string GenerateBackgroundBox(int x, int y, int right, int bottom)
         {
+            if (comboBoxBoxStyle.SelectedIndex == 2) // test
+            {
+                var sb = new StringBuilder();
+                sb.Append($"{{\\p1}}m {x} {y} l ");
+                var step = 4;
+                var maxSpike = 80;
+                for (var i = x; i <= right; i += step)
+                {
+                    sb.Append($"{i + (step / 2)} {y - _random.Next(10, maxSpike)} ");
+                    sb.Append($"{i + step} {y} ");
+                }
+
+                for (var i = y; i <= bottom; i += step)
+                {
+                    sb.Append($"{right + _random.Next(10, maxSpike)} {i + (step / 2)} ");
+                    sb.Append($"{right} {i + step} ");
+                }
+
+                for (var i = right; i >= x; i -= step)
+                {
+                        sb.Append($"{i - (step / 2)} {bottom + _random.Next(10, maxSpike)} ");
+                    sb.Append($"{i - step} {bottom} ");
+                    //sb.Append($"{i + (step / 2)} {bottom + r.Next(10, 30)} "); // direction
+                    //sb.Append($"{i + step} {bottom} ");
+                }
+
+                for (var i = bottom; i >= y; i -= step)
+                {
+                    sb.Append($"{x - _random.Next(10, maxSpike)} {i - (step / 2)} ");
+                    sb.Append($"{x} {i - step} ");
+                }
+                sb.Append("{\\p0}");
+                return sb.ToString();
+            }
+
             if (comboBoxBoxStyle.SelectedIndex == 1) // rounded corners
             {
-                //var barEnd = x + width;
-                //return $@"{{m {x} {y} b {x} {y} {x} {height} {height} {height} l {barEnd} {height} b {width} {height} {width} {y} {barEnd} {y} l  {barEnd} {y} {height} {y}{{\p0}}";
-                //m top-left - x top - right - x LINE top-right - y maxX height x left height
+                var radius = (int)numericUpDownRadius.Value;
+                //var radius = (int)Math.Round((bottom - y) * 0.66, MidpointRounding.AwayFromZero);
+                return $@"{{\p1}}m {x} {y} b {x - radius} {y} {x - radius} {bottom} {x} {bottom} l {right} {bottom} b {right + radius} {bottom} {right + radius} {y} {right} {y} l  {x} {y}{{\p0}}";
             }
 
             return $"{{\\p1}}m {x} {y} l {right} {y} {right} {bottom} {x} {bottom}{{\\p0}}";
@@ -481,11 +565,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _updatePreview = true;
         }
 
-        private void AssSetBackground_Load(object sender, EventArgs e)
-        {
-            
-        }
-
         private void buttonPrimaryColor_Click(object sender, EventArgs e)
         {
             var colorDialog = new ColorChooser();
@@ -535,6 +614,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void panelOutlineColor_MouseClick(object sender, MouseEventArgs e)
         {
             buttonOutlineColor_Click(null, null);
+        }
+
+        private void checkBoxFillWidth_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPaddingLeft.Enabled = !checkBoxFillWidth.Checked;
+            numericUpDownPaddingRight.Enabled = !checkBoxFillWidth.Checked;
+            _updatePreview = true;
+        }
+
+        private void comboBoxBoxStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            labelRadius.Visible = comboBoxBoxStyle.SelectedIndex == 1;
+            numericUpDownRadius.Visible = comboBoxBoxStyle.SelectedIndex == 1;
+            _updatePreview = true;
         }
     }
 }
