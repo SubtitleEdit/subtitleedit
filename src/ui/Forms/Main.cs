@@ -11468,9 +11468,17 @@ namespace Nikse.SubtitleEdit.Forms
                         .Replace(" " + Environment.NewLine, string.Empty)
                         .Replace(Environment.NewLine, string.Empty);
                 }
-                else
+                else if (breakMode == BreakMode.AutoBreak)
                 {
                     text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                }
+                else
+                {
+                    var textUnbroken = text.Replace(Environment.NewLine, " ");
+                    if (textUnbroken.Length <= Configuration.Settings.General.SubtitleLineMaximumLength)
+                    {
+                        text = textUnbroken;
+                    }
                 }
 
                 currentParagraph.Text = text;
@@ -11771,8 +11779,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        currentParagraph.Text = (currentParagraph.Text.Trim() + Environment.NewLine +
-                                                 RemoveAssStartAlignmentTag(nextParagraph.Text).Trim()).Trim();
+                        var merged = (currentParagraph.Text.Trim() + Environment.NewLine +
+                                              RemoveAssStartAlignmentTag(nextParagraph.Text).Trim()).Trim();
+                        var mergedUnbroken = merged.Replace(Environment.NewLine, " ");
+                        currentParagraph.Text = mergedUnbroken.Length <= Configuration.Settings.General.SubtitleLineMaximumLength ? mergedUnbroken : merged;
                     }
 
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "i");
