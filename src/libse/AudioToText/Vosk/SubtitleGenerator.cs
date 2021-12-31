@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Kaldi
             var subtitle = new Subtitle();
             foreach (var resultText in _resultTexts)
             {
-                subtitle.Paragraphs.Add(new Paragraph(resultText.Text, resultText.Start * 1000.0, resultText.End * 1000.0));
+                subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
             }
 
             AddPeriods(subtitle, language);

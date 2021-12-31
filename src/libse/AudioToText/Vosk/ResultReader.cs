@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Kaldi
                                     var start = double.Parse(parts[1]);
                                     var end = double.Parse(parts[2]);
                                     var confidence = double.Parse(parts[3]);
-                                    list.Add(new ResultText { Text = text, Start = start, End = end, Confidence = confidence });
+                                    list.Add(new ResultText { Text = text, Start = (decimal)start, End = (decimal)end, Confidence = (decimal)confidence });
                                 }
                                 catch
                                 {
