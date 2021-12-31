@@ -363,6 +363,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AssaBgBoxStyle { get; set; }
         public int AssaBgBoxStyleRadius { get; set; }
         public int AssaBgBoxOutlineWidth { get; set; }
+        public string AssaBgBoxDrawing { get; set; }
 
 
         public string GenVideoEncoding { get; set; }
@@ -5524,6 +5525,12 @@ $HorzAlign          =   Center
                 settings.Tools.AssaBgBoxOutlineWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaBgBoxDrawing");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawing = subNode.InnerText;
+            }
+
 
             subNode = node.SelectSingleNode("GenVideoEncoding");
             if (subNode != null)
@@ -9537,6 +9544,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
                 textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
                 textWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);
