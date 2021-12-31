@@ -161,6 +161,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                checkBoxItalic.Checked = !checkBoxItalic.Checked;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+            {
+                checkBoxAutoSubmitOfFirstChar.Checked = !checkBoxAutoSubmitOfFirstChar.Checked;
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void CheckBoxItalicCheckedChanged(object sender, EventArgs e)

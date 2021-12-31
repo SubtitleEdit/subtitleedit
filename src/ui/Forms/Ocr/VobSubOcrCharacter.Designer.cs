@@ -92,7 +92,7 @@
             this.buttonOK.Location = new System.Drawing.Point(329, 373);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 2;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -105,7 +105,7 @@
             this.buttonSkip.Location = new System.Drawing.Point(410, 373);
             this.buttonSkip.Name = "buttonSkip";
             this.buttonSkip.Size = new System.Drawing.Size(75, 23);
-            this.buttonSkip.TabIndex = 3;
+            this.buttonSkip.TabIndex = 4;
             this.buttonSkip.Text = "&Skip";
             this.buttonSkip.UseVisualStyleBackColor = true;
             this.buttonSkip.Click += new System.EventHandler(this.buttonSkip_Click);
@@ -149,7 +149,7 @@
             // contextMenuStripLetters
             // 
             this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(61, 4);
             // 
             // pictureBoxCharacter
             // 
@@ -180,7 +180,7 @@
             this.buttonAbort.Location = new System.Drawing.Point(491, 373);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(75, 23);
-            this.buttonAbort.TabIndex = 4;
+            this.buttonAbort.TabIndex = 5;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
             // 
@@ -263,7 +263,7 @@
             this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(12, 380);
             this.checkBoxAutoSubmitOfFirstChar.Name = "checkBoxAutoSubmitOfFirstChar";
             this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(166, 17);
-            this.checkBoxAutoSubmitOfFirstChar.TabIndex = 25;
+            this.checkBoxAutoSubmitOfFirstChar.TabIndex = 2;
             this.checkBoxAutoSubmitOfFirstChar.Text = "A&uto submit on first char";
             this.checkBoxAutoSubmitOfFirstChar.UseVisualStyleBackColor = true;
             this.checkBoxAutoSubmitOfFirstChar.CheckedChanged += new System.EventHandler(this.checkBoxAutoSubmitOfFirstChar_CheckedChanged);
