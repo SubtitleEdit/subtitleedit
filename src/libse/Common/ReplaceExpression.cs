@@ -13,11 +13,13 @@
         public string FindWhat { get; set; }
         public string ReplaceWith { get; set; }
         public int SearchType { get; set; }
+        public string RuleInfo { get; set; }
 
-        public ReplaceExpression(string findWhat, string replaceWith, string searchType)
+        public ReplaceExpression(string findWhat, string replaceWith, string searchType, string ruleInfo)
         {
             FindWhat = findWhat;
             ReplaceWith = replaceWith;
+            RuleInfo = ruleInfo;
             if (string.CompareOrdinal(searchType, SearchTypeRegularExpression) == 0)
             {
                 SearchType = SearchRegEx;

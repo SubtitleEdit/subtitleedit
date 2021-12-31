@@ -432,11 +432,11 @@
     <Compile Include="Forms\NetflixFixErrors.Designer.cs">
       <DependentUpon>NetflixFixErrors.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Ocr\AddBeterMultiMatch.cs">
+    <Compile Include="Forms\Ocr\AddBetterMultiMatch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Ocr\AddBeterMultiMatch.Designer.cs">
-      <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
+    <Compile Include="Forms\Ocr\AddBetterMultiMatch.Designer.cs">
+      <DependentUpon>AddBetterMultiMatch.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\AddBetterMultiMatchNOcr.cs">
       <SubType>Form</SubType>
@@ -1494,8 +1494,8 @@
     <EmbeddedResource Include="Forms\NetflixFixErrors.resx">
       <DependentUpon>NetflixFixErrors.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
-      <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ocr\AddBetterMultiMatch.resx">
+      <DependentUpon>AddBetterMultiMatch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddBetterMultiMatchNOcr.resx">
       <DependentUpon>AddBetterMultiMatchNOcr.cs</DependentUpon>

@@ -883,7 +883,7 @@
             public string Title { get; set; }
             public string InfoAssaOff { get; set; }
             public string InfoAssaOn { get; set; }
-            public string XGeneratedWithBurnedInSubs { get; set; }
+            public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
@@ -2052,6 +2052,7 @@
             public string RenameGroup { get; set; }
             public string NewGroup { get; set; }
             public string NothingToImport { get; set; }
+            public string RuleInfo { get; set; }
         }
 
         public class NetworkChat
@@ -2501,6 +2502,8 @@
             public string RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
+            public string MergeDialogWithNext { get; set; }
+            public string MergeDialogWithPrevious { get; set; }
             public string GoToNext { get; set; }
             public string GoToNextPlayTranslate { get; set; }
             public string GoToNextCursorAtEnd { get; set; }

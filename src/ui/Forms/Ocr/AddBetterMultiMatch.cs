@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class AddBeterMultiMatch : Form
+    public partial class AddBetterMultiMatch : Form
     {
-        public AddBeterMultiMatch()
+        public AddBetterMultiMatch()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void Initialize(int selectedIndex, List<VobSubOcr.CompareMatch> matches, List<ImageSplitterItem> splitterItems)
         {
             _startIndex = selectedIndex;
-            for (int i = 0; i < selectedIndex; i++)
+            for (var i = 0; i < selectedIndex; i++)
             {
                 if (matches[i].Extra != null && matches[i].Extra.Count > 0)
                 {
@@ -41,8 +41,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _matches = matches;
             _splitterItems = splitterItems;
-            int count = 0;
-            for (int i = _startIndex; i < _splitterItems.Count - _extraCount; i++)
+            var count = 0;
+            for (var i = _startIndex; i < _splitterItems.Count - _extraCount; i++)
             {
                 if (i >= _matches.Count)
                 {
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void NumericUpDownExpandCountValueChanged(object sender, System.EventArgs e)
         {
-            for (int i = 0; i < listBoxInspectItems.Items.Count; i++)
+            for (var i = 0; i < listBoxInspectItems.Items.Count; i++)
             {
                 listBoxInspectItems.SetSelected(i, i < numericUpDownExpandCount.Value);
             }
@@ -127,11 +127,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.Cancel;
         }
 
-        private void AddBeterMultiMatch_KeyDown(object sender, KeyEventArgs e)
+        private void AddBetterMultiMatch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                checkBoxItalic.Checked = !checkBoxItalic.Checked;
+                e.SuppressKeyPress = true;
             }
         }
     }

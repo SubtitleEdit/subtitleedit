@@ -15369,6 +15369,34 @@ namespace Nikse.SubtitleEdit.Forms
                 MergeDialogs();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainMergeDialogWithNext == e.KeyData && InListView)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                    {
+                        SelectListViewIndexAndEnsureVisible(idx);
+                        MergeWithLineAfter(true);
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainMergeDialogWithPrevious == e.KeyData && InListView)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx > 0)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
+                        MergeWithLineAfter(true);
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainListViewToggleDashes == e.KeyData && InListView)
             {
                 if (textBoxListViewText.Focused)
@@ -20690,6 +20718,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
             mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
+            closeVideoToolStripMenuItem.Enabled = true;
 
             if (_videoInfo.VideoCodec != null)
             {
@@ -26613,6 +26642,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownVideoPositionAdjust.Enabled = false;
             timeUpDownVideoPosition.TimeCode = new TimeCode();
             timeUpDownVideoPosition.Enabled = false;
+            closeVideoToolStripMenuItem.Enabled = false;
             CheckSecondSubtitleReset();
         }
 
@@ -27795,7 +27825,7 @@ namespace Nikse.SubtitleEdit.Forms
             actorToolStripMenuItem.Visible = formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha);
         }
 
-        private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripWaveformOpening(object sender, CancelEventArgs e)
         {
             if (audioVisualizer.IsSpectrogramAvailable)
             {
@@ -32658,7 +32688,8 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs, Path.GetFileName(form.VideoFileName)), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
+                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
                 {
                     f.ShowDialog(this);
                 }

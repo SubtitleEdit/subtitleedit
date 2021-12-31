@@ -1008,18 +1008,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".pac";
 
-        public virtual bool IsFPC { get; set; } = false;
+        public virtual bool IsFpc { get; set; }
 
         public const string NameOfFormat = "PAC (Screen Electronics)";
 
         public override string Name => NameOfFormat;
 
-        private static readonly byte[] MarkerStartOfUnicode = new byte[] { 0x1f, 0xef, 0xbb, 0xbf };
+        private static readonly byte[] MarkerStartOfUnicode = { 0x1f, 0xef, 0xbb, 0xbf };
         private const byte MarkerEndOfUnicode = 0x2e;
         private const byte MarkerReplaceEndOfUnicode = 0xff;
 
-        private bool doWritePACHeaderOpt => IsFPC; // Unknown paragraph header. Seems optionnal both for PAC and FPC: inserted here for expected broader FPC compatibility, including prior versions of SubtitleEdit
-        private static readonly byte[] PACHeaderOpt = new byte[] { 0x80, 0x80, 0x80 };
+        private bool DoWritePacHeaderOpt => IsFpc; // Unknown paragraph header. Seems optional both for PAC and FPC: inserted here for expected broader FPC compatibility, including prior versions of SubtitleEdit
+        private static readonly byte[] PacHeaderOpt = { 0x80, 0x80, 0x80 };
 
         public bool Save(string fileName, Subtitle subtitle)
         {
@@ -1078,7 +1078,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
 
-            if (CodePage == -1 && !IsFPC)
+            if (CodePage == -1 && !IsFpc)
             {
                 GetCodePage(null, 0, 0);
             }
@@ -1115,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var encoding = GetEncoding(CodePage);
             byte[] textBuffer;
 
-            if (IsFPC)
+            if (IsFpc)
             {
                 textBuffer = GetUnicodeBytes(text, alignment);
             }
@@ -1169,12 +1169,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             // write text length
-            var length = (ushort)(textBuffer.Length + 4 + (doWritePACHeaderOpt ? PACHeaderOpt.Length : 0));
+            var length = (ushort)(textBuffer.Length + 4 + (DoWritePacHeaderOpt ? PacHeaderOpt.Length : 0));
             fs.Write(BitConverter.GetBytes(length), 0, 2);
 
             fs.WriteByte(verticalAlignment); // fs.WriteByte(0x0a); // sometimes 0x0b? - this seems to be vertical alignment - 0 to 11
-            if (doWritePACHeaderOpt)
-                fs.Write(PACHeaderOpt, 0, PACHeaderOpt.Length);
+            if (DoWritePacHeaderOpt)
+            {
+                fs.Write(PacHeaderOpt, 0, PacHeaderOpt.Length);
+            }
+
             fs.WriteByte(0xfe);
             fs.WriteByte(alignment); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
             //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
@@ -1481,7 +1484,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             byte verticalAlignment = buffer[timeStartIndex + 11];
 
-            if (CodePage == -1 && !IsFPC)
+            if (CodePage == -1 && !IsFpc)
             {
                 GetCodePage(buffer, index, endDelimiter);
             }
@@ -1505,7 +1508,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (CompareBytes(buffer, index, MarkerStartOfUnicode))
                 {
-                    isUnicode = true; IsFPC = true;
+                    isUnicode = true; IsFpc = true;
                     index += MarkerStartOfUnicode.Length;
                 }
                 else if (buffer.Length > index + 2 && buffer[index] == 0x1f && buffer[index + 1] == 'C' && char.IsDigit((char)buffer[index + 2]))
@@ -1722,11 +1725,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             while (index >= 0 && index < text.Length - 1)
             {
-                bool insertSpace = false;
-                if (index >= 1 && text[index - 1] != ' ')
-                {
-                    insertSpace = true;
-                }
+                var insertSpace = index >= 1 && text[index - 1] != ' ';
 
                 text = text.Insert(index + 1, "i>");
                 if (insertSpace)

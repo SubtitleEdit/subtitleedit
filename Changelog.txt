@@ -10,7 +10,7 @@
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
    * Update Chinese translation - thx nkh0472
@@ -26,6 +26,7 @@
    * Allow higher font size in list view / text box - thx OmrSi
    * Improve list-view/text-box color dialog - thx Majid
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
+   * Add nvidia accel encodings for sub burn-in - thx Leon
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
@@ -39,6 +40,8 @@
    * Fix issue with bookmarks + not opened files - thx OmrSi
    * Fix spell check "change word" issue with apostrophe (') - thx Jim
    * Fix new-line-char in Bilibili format - thx Kuju29
+   * Fix ""Close video"" shortcut - thx OmrSi
+   * Fix double splace issue in sub burn-in - thx Leon
 
 
 3.6.4 (3rd December 2021)
@@ -185,7 +188,7 @@
    * Update Polish translation - thx admas
    * Update Portuguese translation - thx hugok79
    * Update Hungarian translation - thx Zityi
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update French translation - thx Pierre
    * Update Italian translation - thx NAMP
    * Update Korean translation - thx domddol
@@ -591,7 +594,7 @@
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
    * Update Korean translation - thx domddol
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Greek translation - thx Lero91
    * Update Dutch translation - thx xylographe/Flitskikker
    * Update Portuguese translation - thx moob
@@ -752,7 +755,7 @@
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
    * Update Bulgarian translation - thx KalinM
-   * Update Brazilian translation - thx igor
+   * Update Brazilian Portuguese translation - thx igor
    * Update Spanish translations - thx paconaranjo
    * Update Russian translation - thx Elheym
    * Update Chinese translation - thx LeonCheung
@@ -812,7 +815,7 @@
    * Update Finish translation - thx Teijo
    * Update Farsi translation - thx ghost1372
    * Update Bulgarian translation - thx kalin
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Catalan translation - thx juansa
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx moob
@@ -877,7 +880,7 @@
    * Add some support for remove spaces and 3 lines - thx James
 * IMPROVED:
    * Update Portuguese translation - thx moob
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Korean translation - thx domdoll
    * Update Hungarian translation - thx Zityi
    * Update Japanese translation - thx ScratchBuild
@@ -1007,7 +1010,7 @@
    * Update Hungarian translation - thx Zityi
    * Update Chinese translation - thx tinyboxvk
    * Update Portuguese translation - thx moob
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Updated Russian translation - thx  Elheym
    * Improve plain text import - thx uckthis/darnn/Leon
    * Make custom "Choose font" dialog - thx OmrSi
@@ -1072,7 +1075,7 @@
    * Add new setting: "save as..." take file name from
    * Add download of ffmpeg
 * IMPROVED:
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Czech translation - thx Trottel
    * Update Hungarian translation - thx ZityiSoft Team
    * Update Turkish translation - thx Falcon006
@@ -1276,7 +1279,7 @@
 * IMPROVED:
    * Update Spanish + Mexican + Argentinian translations - thx paconaranjo
    * Update Russian translation - thx Elheym
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Basque translation - thx Xabier 
    * Update Korean translaton - thx domddol
    * Update Chinese Traditional translation - thx jackielam1997
@@ -1494,7 +1497,7 @@
    * Updated Polish translation - thx Admas
    * Updated Catalan translation - thx Juansa
    * Updated French, Dutch and German translations - thx xylographe
-   * Updated Brazil translation - thx Igor
+   * Updated Brazilian Portuguese translation - thx Igor
    * Updated Russian translation - thx Elheym
    * Updated Basque translation - thx Xabier
    * Updated simplified Chinese translation - thx Leon

@@ -261,7 +261,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 string replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
                                 findWhat = RegexUtils.FixNewLine(findWhat);
                                 string searchType = rule.SearchType;
-                                var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
+                                var ruleInfo = string.IsNullOrEmpty(rule.Description) ? $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule)}" : $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule)}. {rule.Description}";
+                                var mpi = new ReplaceExpression(findWhat, replaceWith, searchType, ruleInfo);
                                 replaceExpressions.Add(mpi);
                                 if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                                 {
@@ -279,6 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 bool hit = false;
                 string newText = p.Text;
+                string ruleInfo = string.Empty;
                 foreach (ReplaceExpression item in replaceExpressions)
                 {
                     if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
@@ -286,6 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (newText.Contains(item.FindWhat))
                         {
                             hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
                             newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                         }
                     }
@@ -295,6 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (r.IsMatch(newText))
                         {
                             hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
                             newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                         }
                     }
@@ -304,6 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (index >= 0)
                         {
                             hit = true;
+                            ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";
                             do
                             {
                                 newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
@@ -316,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (hit && newText != p.Text)
                 {
                     fixedLines++;
-                    fixes.Add(MakePreviewListItem(p, newText));
+                    fixes.Add(MakePreviewListItem(p, newText, ruleInfo));
                     FixedSubtitle.Paragraphs[i].Text = newText;
                 }
             }
@@ -337,12 +342,17 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Items.Add(item);
         }
 
-        private ListViewItem MakePreviewListItem(Paragraph p, string newText)
+        private ListViewItem MakePreviewListItem(Paragraph p, string newText, string ruleInfo)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
+            if (Configuration.Settings.Tools.ListViewShowColumnStartTime)
+            {
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(ruleInfo));
+            }
+
             return item;
         }
 
@@ -860,6 +870,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
         {
+            if (Configuration.Settings.Tools.ListViewMultipleReplaceShowColumnRuleInfo)
+            {
+                ShowRuleInfoColumn();
+            }
+
             GeneratePreview();
             listViewRules.ItemChecked += ListViewRulesItemChecked;
             listViewGroups.ItemChecked += listViewGroups_ItemChecked;
@@ -1336,6 +1351,53 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void ContextMenuStripListViewFixesOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var coordinates = listViewFixes.PointToClient(Cursor.Position);
+            var hitTest = listViewFixes.HitTest(coordinates);
+            if (coordinates.Y < 19 || (hitTest.Item != null && hitTest.Item.Index == 0 && coordinates.Y < hitTest.Item.Position.Y))
+            {
+                e.Cancel = true;
+                var cm = new ContextMenuStrip();
+                UiUtil.FixFonts(cm);
+                var contextMenuStripLvHeaderShowInfoToolStripMenuItem = new ToolStripMenuItem(LanguageSettings.Current.MultipleReplace.RuleInfo)
+                {
+                    CheckOnClick = true,
+                    Checked = Configuration.Settings.Tools.ListViewMultipleReplaceShowColumnRuleInfo
+                };
+                contextMenuStripLvHeaderShowInfoToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    listViewFixes.BeginUpdate();
+                    Configuration.Settings.Tools.ListViewMultipleReplaceShowColumnRuleInfo = contextMenuStripLvHeaderShowInfoToolStripMenuItem.Checked;
+                    if (Configuration.Settings.Tools.ListViewMultipleReplaceShowColumnRuleInfo)
+                    {
+                        ShowRuleInfoColumn();
+                        GeneratePreview();
+                    }
+                    else
+                    {
+                        var idx = listViewFixes.Columns.IndexOf(columnHeader10);
+                        if (idx > 0)
+                        {
+                            listViewFixes.Columns.RemoveAt(4);
+                            listViewFixes.AutoSizeLastColumn();
+                        }
+                    }
+                    listViewFixes.EndUpdate();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderShowInfoToolStripMenuItem);
+                cm.Show(listViewFixes, coordinates);
+            }
+        }
+
+        private void ShowRuleInfoColumn()
+        {
+            listViewFixes.Columns[3].Width = 330;
+            listViewFixes.Columns.Add(columnHeader10);
+            listViewFixes.Columns[4].Text = LanguageSettings.Current.MultipleReplace.RuleInfo;
+            listViewFixes.AutoSizeLastColumn();
         }
     }
 }
