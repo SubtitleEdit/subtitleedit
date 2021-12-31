@@ -600,6 +600,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/VP9");
             }
+            else if (comboBoxVideoEncoding.Text == "h264_nvenc" || comboBoxVideoEncoding.Text == "hevc_nvenc")
+            {
+                UiUtil.OpenUrl("https://trac.ffmpeg.org/wiki/HWAccelIntro");
+            }
             else
             {
                 UiUtil.OpenUrl("http://trac.ffmpeg.org/wiki/Encode/H.264");

@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 </STYLE>
 </HEAD>
 <BODY>
-<-- Open play menu, choose Captions and Subtiles, On if available -->
+<-- Open play menu, choose Captions and Subtitles, On if available -->
 <-- Open tools menu, Security, Show local captions when present -->";
 
             bool useExtra = false;
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 " + subtitle.Header.Trim() + @"
 </HEAD>
 <BODY>
-<-- Open play menu, choose Captions and Subtiles, On if available -->
+<-- Open play menu, choose Captions and Subtitles, On if available -->
 <-- Open tools menu, Security, Show local captions when present -->";
             }
 
