@@ -84,15 +84,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 comboBoxBoxStyle.SelectedIndex = 0;
             }
 
-            numericUpDownPaddingLeft.Value = Configuration.Settings.Tools.AssaBgBoxPaddingLeft;
-            numericUpDownPaddingRight.Value = Configuration.Settings.Tools.AssaBgBoxPaddingRight;
-            numericUpDownPaddingTop.Value = Configuration.Settings.Tools.AssaBgBoxPaddingTop;
-            numericUpDownPaddingBottom.Value = Configuration.Settings.Tools.AssaBgBoxPaddingBottom;
+            SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
+            SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
+            SafeNumericUpDownAssign(numericUpDownPaddingRight, Configuration.Settings.Tools.AssaBgBoxPaddingRight);
+            SafeNumericUpDownAssign(numericUpDownPaddingTop, Configuration.Settings.Tools.AssaBgBoxPaddingTop);
+            SafeNumericUpDownAssign(numericUpDownPaddingBottom, Configuration.Settings.Tools.AssaBgBoxPaddingBottom);
             panelPrimaryColor.BackColor = Configuration.Settings.Tools.AssaBgBoxColor;
             panelOutlineColor.BackColor = Configuration.Settings.Tools.AssaBgBoxOutlineColor;
             panelShadowColor.BackColor = Configuration.Settings.Tools.AssaBgBoxShadowColor;
-            numericUpDownRadius.Value = Configuration.Settings.Tools.AssaBgBoxStyleRadius;
-            numericUpDownOutlineWidth.Value = Configuration.Settings.Tools.AssaBgBoxOutlineWidth;
+            SafeNumericUpDownAssign(numericUpDownRadius, Configuration.Settings.Tools.AssaBgBoxStyleRadius);
+            SafeNumericUpDownAssign(numericUpDownOutlineWidth, Configuration.Settings.Tools.AssaBgBoxOutlineWidth);
 
             _boxColor = panelPrimaryColor.BackColor;
             _boxOutlineColor = panelOutlineColor.BackColor;
@@ -107,6 +108,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             comboBoxBoxStyle_SelectedIndexChanged(null, null);
             SetPosition_ResizeEnd(null, null);
+        }
+
+        private void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
+        {
+            if (value < numericUpDown.Minimum)
+            {
+                numericUpDown.Value = numericUpDown.Minimum;
+            }
+            else if (value > numericUpDown.Maximum)
+            {
+                numericUpDown.Value = numericUpDown.Maximum;
+            }
+            else
+            {
+                numericUpDown.Value = value;
+            }
         }
 
         private void ApplyCustomStyles_KeyDown(object sender, KeyEventArgs e)
@@ -250,15 +267,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             p2.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
             p2.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
             p2.Layer = (int)numericUpDownBoxLayer.Value;
-            p2.Style = "SE-progress-bar-bg";
-            p2.Extra = "SE-progress-bar-bg";
+            p2.Style = "SE-box-bg";
+            p2.Extra = "SE-box-bg";
             subtitle.Paragraphs.Add(p2);
 
             subtitle.Header = _subtitleWithNewHeader.Header ?? AdvancedSubStationAlpha.DefaultHeader;
-            var style = new SsaStyle
+            var styleBoxBg = new SsaStyle
             {
                 Alignment = "7",
-                Name = "SE-progress-bar-bg",
+                Name = "SE-box-bg",
                 MarginLeft = 0,
                 MarginRight = 0,
                 MarginVertical = 0,
@@ -270,7 +287,75 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 ShadowWidth = numericUpDownShadowWidth.Value,
                 OutlineWidth = numericUpDownOutlineWidth.Value,
             };
-            subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, style);
+            subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxBg);
+
+            if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
+            {
+                var pDrawing = new Paragraph(textBoxDrawing.Text, 0, 1000);
+                var marginH = (int)numericUpDownDrawMarginH.Value;
+                var marginV = (int)numericUpDownDrawingMarginV.Value;
+                var pos = string.Empty;
+                if (radioButtonTopLeft.Checked)
+                {
+                    pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
+                }
+                else if (radioButtonTopCenter.Checked)
+                {
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
+                }
+                else if (radioButtonTopRight.Checked)
+                {
+                    pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
+                }
+                else if (radioButtonMiddleLeft.Checked)
+                {
+                    pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
+                }
+                else if (radioButtonMiddleCenter.Checked)
+                {
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
+                }
+                else if (radioButtonMiddleRight.Checked)
+                {
+                    pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
+                }
+                else if (radioButtonMiddleLeft.Checked)
+                {
+                    pos = $"{{\\pos({x + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
+                }
+                else if (radioButtonMiddleCenter.Checked)
+                {
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
+                }
+                else if (radioButtonMiddleRight.Checked)
+                {
+                    pos = $"{{\\pos({right + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
+                }
+
+                pDrawing.Text = pos + pDrawing.Text;
+                pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                pDrawing.Layer = (int)numericUpDownDrawingLayer.Value;
+                pDrawing.Style = "SE-box-drawing";
+                pDrawing.Extra = "SE-box-drawing";
+                subtitle.Paragraphs.Add(pDrawing);
+                var styleBoxDrawing = new SsaStyle
+                {
+                    Alignment = "7",
+                    Name = "SE-box-drawing",
+                    MarginLeft = 0,
+                    MarginRight = 0,
+                    MarginVertical = 0,
+                    Primary = _boxColor,
+                    Secondary = _boxShadowColor,
+                    Tertiary = _boxShadowColor,
+                    Background = _boxShadowColor,
+                    Outline = _boxOutlineColor,
+                    ShadowWidth = numericUpDownShadowWidth.Value,
+                    OutlineWidth = numericUpDownOutlineWidth.Value,
+                };
+                subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxDrawing);
+            }
 
             var text = subtitle.ToText(format);
             _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
@@ -451,27 +536,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private string GenerateBackgroundBox(int x, int y, int right, int bottom)
         {
-            if (comboBoxBoxStyle.SelectedIndex == 2) // test
+            if (comboBoxBoxStyle.SelectedIndex == 2) // spikes
             {
                 var sb = new StringBuilder();
                 sb.Append($"{{\\p1}}m {x} {y} l ");
-                var step = 4;
-                var maxSpike = 80;
+                var step = (int)numericUpDownSpikesStep.Value;
+                var maxSpike = (int)numericUpDownSpikesMax.Value;
+                var minSpike = Math.Min(10, maxSpike - 1);
                 for (var i = x; i <= right; i += step)
                 {
-                    sb.Append($"{i + (step / 2)} {y - _random.Next(10, maxSpike)} ");
+                    sb.Append($"{i + (step / 2)} {y - _random.Next(minSpike, maxSpike)} ");
                     sb.Append($"{i + step} {y} ");
                 }
 
                 for (var i = y; i <= bottom; i += step)
                 {
-                    sb.Append($"{right + _random.Next(10, maxSpike)} {i + (step / 2)} ");
+                    sb.Append($"{right + _random.Next(minSpike, maxSpike)} {i + (step / 2)} ");
                     sb.Append($"{right} {i + step} ");
                 }
 
                 for (var i = right; i >= x; i -= step)
                 {
-                        sb.Append($"{i - (step / 2)} {bottom + _random.Next(10, maxSpike)} ");
+                    sb.Append($"{i - (step / 2)} {bottom + _random.Next(minSpike, maxSpike)} ");
                     sb.Append($"{i - step} {bottom} ");
                     //sb.Append($"{i + (step / 2)} {bottom + r.Next(10, 30)} "); // direction
                     //sb.Append($"{i + step} {bottom} ");
@@ -479,7 +565,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 for (var i = bottom; i >= y; i -= step)
                 {
-                    sb.Append($"{x - _random.Next(10, maxSpike)} {i - (step / 2)} ");
+                    sb.Append($"{x - _random.Next(minSpike, maxSpike)} {i - (step / 2)} ");
                     sb.Append($"{x} {i - step} ");
                 }
                 sb.Append("{\\p0}");
@@ -489,8 +575,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (comboBoxBoxStyle.SelectedIndex == 1) // rounded corners
             {
                 var radius = (int)numericUpDownRadius.Value;
-                //var radius = (int)Math.Round((bottom - y) * 0.66, MidpointRounding.AwayFromZero);
-                return $@"{{\p1}}m {x} {y} b {x - radius} {y} {x - radius} {bottom} {x} {bottom} l {right} {bottom} b {right + radius} {bottom} {right + radius} {y} {right} {y} l  {x} {y}{{\p0}}";
+                radius = Math.Min((bottom - y) / 2, radius); // do not allow overflow
+                x += radius;
+                right -= radius;
+                return $@"{{\p1}}m {x} {y} b {x - radius} {y} {x - radius} {y} {x - radius} {y + radius} l {x - radius} {bottom - radius} b {x - radius} {bottom} {x - radius} {bottom}  {x} {bottom} l {right} {bottom} b {right + radius} {bottom} {right + radius} {bottom} {right + radius} {bottom - radius} l {right + radius} {bottom - radius} {right + radius} {y + radius} b {right + radius} {y} {right + radius} {y} {right} {y} l  {x} {y}{{\p0}}";
+                //                 top left  left top corner                                                                                left bottom corner                                                             lower right corner                                                                                                                                          upper right corner
             }
 
             return $"{{\\p1}}m {x} {y} l {right} {y} {right} {bottom} {x} {bottom}{{\\p0}}";
@@ -625,8 +714,31 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void comboBoxBoxStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            labelRadius.Visible = comboBoxBoxStyle.SelectedIndex == 1;
-            numericUpDownRadius.Visible = comboBoxBoxStyle.SelectedIndex == 1;
+
+            if (comboBoxBoxStyle.SelectedIndex == 1) // rounded
+            {
+                panelStyleRounded.Left = labelEdgeStyle.Left;
+                panelStyleRounded.Top = labelEdgeStyle.Top + labelEdgeStyle.Height + 9;
+
+                panelStyleSpikes.Visible = false;
+                panelStyleRounded.Visible = true;
+                panelStyleRounded.BringToFront();
+            }
+            else if (comboBoxBoxStyle.SelectedIndex == 2) // spikes
+            {
+                panelStyleSpikes.Left = labelEdgeStyle.Left;
+                panelStyleSpikes.Top = labelEdgeStyle.Top + labelEdgeStyle.Height + 9;
+
+                panelStyleRounded.Visible = false;
+                panelStyleSpikes.Visible = true;
+                panelStyleSpikes.BringToFront();
+            }
+            else // square
+            {
+                panelStyleRounded.Visible = false;
+                panelStyleSpikes.Visible = false;
+            }
+
             _updatePreview = true;
         }
     }
