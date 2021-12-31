@@ -146,10 +146,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             };
 
-            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments
-                .Replace("  ", " ")
-                .Replace("  ", " ")
-                .Trim();
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
 

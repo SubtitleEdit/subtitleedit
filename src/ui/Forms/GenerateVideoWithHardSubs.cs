@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private StringBuilder _log;
         private readonly bool _isAssa;
         public string VideoFileName { get; private set; }
+        public long MillisecondsEncoding { get; private set; }
 
         public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize)
         {
@@ -241,6 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Visible = true;
             }
 
+            var stopWatch = Stopwatch.StartNew();
             if (checkBoxTargetFileSize.Checked)
             {
                 RunTwoPassEncoding(assaTempFileName);
@@ -253,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             timer1.Stop();
+            MillisecondsEncoding = stopWatch.ElapsedMilliseconds;
             labelProgress.Text = string.Empty;
             groupBoxSettings.Enabled = true;
 
@@ -265,23 +268,31 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
-            if (!_abort && !File.Exists(VideoFileName))
+            if (_abort)
             {
-                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log?.ToString());
+                DialogResult = DialogResult.Cancel;
+                return;
             }
 
-            DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+            if (!File.Exists(VideoFileName) || new FileInfo(VideoFileName).Length == 0)
+            {
+                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log);
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            DialogResult = DialogResult.OK;
         }
 
         private string SuggestNewVideoFileName()
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
 
-            fileName += $".burn-in";
+            fileName += ".burn-in";
 
             fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
 
-            if (comboBoxVideoEncoding.Text == "libx265")
+            if (comboBoxVideoEncoding.Text == "libx265" || comboBoxVideoEncoding.Text == "hevc_nvenc")
             {
                 fileName += ".x265";
             }
