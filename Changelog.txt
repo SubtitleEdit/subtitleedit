@@ -26,6 +26,7 @@
    * Allow higher font size in list view / text box - thx OmrSi
    * Improve list-view/text-box color dialog - thx Majid
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
+   * Add nvidia accel encodings for sub burn-in - thx Leon
 * FIXED:
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
@@ -39,6 +40,8 @@
    * Fix issue with bookmarks + not opened files - thx OmrSi
    * Fix spell check "change word" issue with apostrophe (') - thx Jim
    * Fix new-line-char in Bilibili format - thx Kuju29
+   * Fix ""Close video"" shortcut - thx OmrSi
+   * Fix double splace issue in sub burn-in - thx Leon
 
 
 3.6.4 (3rd December 2021)
