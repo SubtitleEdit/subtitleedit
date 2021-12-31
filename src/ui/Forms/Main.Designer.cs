@@ -558,6 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateTextFromAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2143,6 +2144,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
+            this.generateTextFromAudioToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveformToolStripMenuItem,
             this.showhideVideoToolStripMenuItem,
@@ -5435,6 +5437,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
             // 
+            // generateTextFromAudioToolStripMenuItem
+            // 
+            this.generateTextFromAudioToolStripMenuItem.Name = "generateTextFromAudioToolStripMenuItem";
+            this.generateTextFromAudioToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            this.generateTextFromAudioToolStripMenuItem.Text = "Generate text from audio...";
+            this.generateTextFromAudioToolStripMenuItem.Click += new System.EventHandler(this.generateTextFromAudioToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6036,5 +6045,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStripShowVideoControls;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowVideoControls;
         private System.Windows.Forms.ToolStripMenuItem listErrorsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateTextFromAudioToolStripMenuItem;
     }
 }
