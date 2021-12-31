@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class AddBeterMultiMatch
+    partial class AddBetterMultiMatch
     {
         /// <summary>
         /// Required designer variable.
@@ -177,7 +177,7 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // AddBeterMultiMatch
+            // AddBetterMultiMatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -189,12 +189,12 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AddBeterMultiMatch";
+            this.Name = "AddBetterMultiMatch";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add better multi match";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddBeterMultiMatch_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddBetterMultiMatch_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExpandCount)).EndInit();
