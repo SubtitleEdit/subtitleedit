@@ -3,8 +3,17 @@
     public class ResultText
     {
         public string Text { get; set; }
-        public double Start { get; set; }
-        public double End { get; set; }
-        public double Confidence { get; set; }
+
+        /// <summary>
+        /// Start seconds
+        /// </summary>
+        public decimal Start { get; set; }
+
+        /// <summary>
+        /// End seconds
+        /// </summary>
+        public decimal End { get; set; }
+
+        public decimal Confidence { get; set; }
     }
 }

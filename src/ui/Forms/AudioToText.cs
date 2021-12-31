@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AudioToText;
 using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AudioToText : Form
     {
-        private string _videoFileName;
+        private readonly string _videoFileName;
+        private readonly Subtitle _subtitle;
         private bool _cancel;
 
         public AudioToText(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
@@ -26,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
+            _subtitle = subtitle;
             _videoFileName = videoFileName;
         }
 
@@ -37,12 +36,18 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxLog.AppendText(Environment.NewLine);
 
             var transcript = GenerateTranscript(waveFileName);
-            textBoxLog.AppendText("Transcript result:" + Environment.NewLine);
-            textBoxLog.AppendText(transcript);
-            // DialogResult = DialogResult.OK;
+
+            _subtitle.Paragraphs.Clear();
+            foreach (var resultText in transcript)
+            {
+                _subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
+            }
+
+            //textBoxLog.AppendText("Transcript result:" + Environment.NewLine);
+            DialogResult = DialogResult.OK;
         }
 
-        private string GenerateTranscript(string waveFileName)
+        private List<ResultText> GenerateTranscript(string waveFileName)
         {
             // You can set to -1 to disable logging messages
             Vosk.Vosk.SetLogLevel(0);
@@ -57,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Value = 0;
             progressBar1.Visible = true;
             progressBar1.Style = ProgressBarStyle.Blocks;
+            var list = new List<ResultText>();
             using (Stream source = File.OpenRead(waveFileName))
             {
                 byte[] buffer = new byte[4096];
@@ -73,22 +79,50 @@ namespace Nikse.SubtitleEdit.Forms
                         Console.WriteLine(rec.Result());
                         sb.AppendLine(rec.Result());
                         textBoxLog.AppendText("Result: " + rec.Result().RemoveChar('\n').RemoveChar('\r') + Environment.NewLine);
+                        var result = ParseJsonToResult(rec.Result());
+                        list.AddRange(result);
                     }
                     else
                     {
                         var s = rec.PartialResult();
+                        var s2 = rec.Result();
                         Console.WriteLine(s);
                         sb.AppendLine(s);
-                        if (!s.Contains("\"\""))
+                        if (s.Length > 20)
                         {
-                            textBoxLog.AppendText("Partial: " + rec.Result().RemoveChar('\n').RemoveChar('\r') + Environment.NewLine);
+                            textBoxLog.AppendText("Partial: " + rec.PartialResult().RemoveChar('\n').RemoveChar('\r') + Environment.NewLine);
+                            var result = ParseJsonToResult(s2);
+                            list.AddRange(result);
                         }
                     }
                 }
             }
 
-            //Console.WriteLine(rec.FinalResult());
-            return sb.ToString();
+            return list;
+        }
+
+        private List<ResultText> ParseJsonToResult(string result)
+        {
+            var list = new List<ResultText>();
+            var jsonParser = new SeJsonParser();
+            var root = jsonParser.GetArrayElementsByName(result, "result");
+            foreach (var item in root)
+            {
+                var conf = jsonParser.GetFirstObject(item, "conf");
+                var start = jsonParser.GetFirstObject(item, "start");
+                var end = jsonParser.GetFirstObject(item, "end");
+                var word = jsonParser.GetFirstObject(item, "word");
+                if (!string.IsNullOrWhiteSpace(word) &&
+                    decimal.TryParse(conf, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var confidence) &&
+                    decimal.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
+                decimal.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
+                {
+                    var rt = new ResultText { Confidence = confidence, Text = word, Start = startSeconds, End = endSeconds };
+                    list.Add(rt);
+                }
+            }
+
+            return list;
         }
 
         private string GenerateWavFile(string videoFileName, int audioTrackNumber)
