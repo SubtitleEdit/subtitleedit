@@ -32835,5 +32835,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ListSyntaxErrors();
         }
+
+        private void generateTextFromAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new AudioToText(_subtitle, VideoFileName, _videoInfo))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var idx = FirstSelectedIndex;
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
     }
 }
