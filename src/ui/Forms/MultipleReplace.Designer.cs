@@ -37,6 +37,7 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
             this.labelDescription = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
@@ -95,6 +96,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripListViewFixes = new System.Windows.Forms.ContextMenuStrip();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxReplaces.SuspendLayout();
             this.contextMenuStripRules.SuspendLayout();
@@ -104,6 +106,7 @@
             this.splitContainer1.SuspendLayout();
             this.groupBoxGroups.SuspendLayout();
             this.contextMenuStripGroups.SuspendLayout();
+            this.contextMenuStripListViewFixes.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxLinesFound
@@ -145,12 +148,19 @@
             this.buttonReplacesSelectAll.UseVisualStyleBackColor = true;
             this.buttonReplacesSelectAll.Click += new System.EventHandler(this.buttonReplacesSelectAll_Click);
             // 
+            // contextMenuStripListViewFixes
+            // 
+            this.contextMenuStripListViewFixes.Name = "contextMenuStripListViewFixes";
+            this.contextMenuStripListViewFixes.Size = new System.Drawing.Size(285, 776);
+            this.contextMenuStripListViewFixes.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewFixesOpening);
+            // 
             // listViewFixes
             // 
             this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
+            this.listViewFixes.ContextMenuStrip = this.contextMenuStripListViewFixes;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader5,
@@ -186,6 +196,11 @@
             // 
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 440;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "Rule";
+            this.columnHeader10.Width = 110;
             // 
             // groupBoxReplaces
             // 
@@ -764,6 +779,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.groupBoxGroups.ResumeLayout(false);
             this.contextMenuStripGroups.ResumeLayout(false);
+            this.contextMenuStripListViewFixes.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -776,6 +792,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.GroupBox groupBoxReplaces;
         private System.Windows.Forms.ListView listViewRules;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -836,5 +853,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem inverseSelectionToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListViewFixes;
     }
 }

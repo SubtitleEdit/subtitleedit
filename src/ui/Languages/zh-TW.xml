@@ -795,7 +795,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <DurationInMinutes>Duration in minutes</DurationInMinutes>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>Generate video with burned-in subtile</Title>
+    <Title>Generate video with burned-in subtitle</Title>
     <InfoAssaOff>Note: Advanced Substation Alpha styling supported.</InfoAssaOff>
     <InfoAssaOn>Note: Advanced Substation Alpha styling will be used :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>

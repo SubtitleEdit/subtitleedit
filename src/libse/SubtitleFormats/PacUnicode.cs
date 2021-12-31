@@ -9,6 +9,6 @@
 
         public override string Name => "PAC Unicode (UniPac)";
 
-        public override bool IsFPC => true;
+        public override bool IsFpc => true;
     }
 }

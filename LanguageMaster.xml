@@ -799,10 +799,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <DurationInMinutes>Duration in minutes</DurationInMinutes>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>Generate video with burned-in subtile</Title>
+    <Title>Generate video with burned-in subtitle</Title>
     <InfoAssaOff>Note: Advanced Substation Alpha styling supported.</InfoAssaOff>
     <InfoAssaOn>Note: Advanced Substation Alpha styling will be used :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" generated with burned-in subtitle in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
     <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
@@ -1902,6 +1902,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <RenameGroup>Rename group...</RenameGroup>
     <NewGroup>New group...</NewGroup>
     <NothingToImport>Nothing to import</NothingToImport>
+    <RuleInfo>Rule information</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -2320,6 +2321,8 @@ can edit in same subtitle file (collaboration)</Information>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Re-calculate duration of current subtitle (based on optimal reading speed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
+    <MergeDialogWithNext>Merge dialog with next (insert dashes)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>Merge dialog with previous (insert dashes)</MergeDialogWithPrevious>
     <GoToNext>Go to next line</GoToNext>
     <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
