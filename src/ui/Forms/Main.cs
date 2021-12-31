@@ -32861,6 +32861,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SaveSubtitleListviewIndices();
                     _subtitle.Paragraphs.Clear();
                     _subtitle.Paragraphs.AddRange(form.UpdatedSubtitle.Paragraphs);
+                    _subtitle.Header = form.UpdatedSubtitle.Header;
                     SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     RestoreSubtitleListviewIndices();
                 }

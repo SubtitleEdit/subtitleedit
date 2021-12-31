@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -17,6 +18,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class AssSetBackground : Form
     {
+        public class PositionAndSize
+        {
+            public int Top { get; set; }
+            public int Bottom { get; set; }
+            public int Left { get; set; }
+            public int Right { get; set; }
+            public int Index { get; set; }
+        }
+
         public Subtitle UpdatedSubtitle { get; private set; }
         private readonly Subtitle _subtitle;
         private readonly Subtitle _subtitleWithNewHeader;
@@ -94,6 +104,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelShadowColor.BackColor = Configuration.Settings.Tools.AssaBgBoxShadowColor;
             SafeNumericUpDownAssign(numericUpDownRadius, Configuration.Settings.Tools.AssaBgBoxStyleRadius);
             SafeNumericUpDownAssign(numericUpDownOutlineWidth, Configuration.Settings.Tools.AssaBgBoxOutlineWidth);
+            textBoxDrawing.Text = Configuration.Settings.Tools.AssaBgBoxDrawing;
 
             _boxColor = panelPrimaryColor.BackColor;
             _boxOutlineColor = panelOutlineColor.BackColor;
@@ -145,6 +156,122 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            UpdatedSubtitle = new Subtitle(_subtitle);
+            var positionsAndSizes = CalcAllPositionsAndSizes();
+
+            UpdatedSubtitle.Header = UpdatedSubtitle.Header ?? AdvancedSubStationAlpha.DefaultHeader;
+            var styleBoxBg = new SsaStyle
+            {
+                Alignment = "7",
+                Name = "SE-box-bg",
+                MarginLeft = 0,
+                MarginRight = 0,
+                MarginVertical = 0,
+                Primary = _boxColor,
+                Secondary = _boxShadowColor,
+                Tertiary = _boxShadowColor,
+                Background = _boxShadowColor,
+                Outline = _boxOutlineColor,
+                ShadowWidth = numericUpDownShadowWidth.Value,
+                OutlineWidth = numericUpDownOutlineWidth.Value,
+            };
+            UpdatedSubtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(UpdatedSubtitle.Header, styleBoxBg);
+
+            if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
+            {
+                var styleBoxDrawing = new SsaStyle
+                {
+                    Alignment = "7",
+                    Name = "SE-box-drawing",
+                    MarginLeft = 0,
+                    MarginRight = 0,
+                    MarginVertical = 0,
+                    ShadowWidth = 0,
+                    OutlineWidth = 0,
+                };
+                UpdatedSubtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(UpdatedSubtitle.Header, styleBoxDrawing);
+            }
+
+            foreach (var posAndSize in positionsAndSizes)
+            {
+                //Build box + gen preview via mpv
+                var x = posAndSize.Left - (int)numericUpDownPaddingLeft.Value;
+                var right = posAndSize.Right + (int)numericUpDownPaddingRight.Value;
+                if (checkBoxFillWidth.Checked)
+                {
+                    x = (int)numericUpDownFillWidthMarginLeft.Value;
+                    right = _videoInfo.Width - (int)numericUpDownFillWidthMarginRight.Value;
+                }
+
+                _assaBox = GenerateBackgroundBox(new PositionAndSize
+                {
+                    Index = posAndSize.Index,
+                    Top = posAndSize.Top - (int)numericUpDownPaddingTop.Value,
+                    Bottom = posAndSize.Bottom + (int)numericUpDownPaddingBottom.Value,
+                    Left = x,
+                    Right = right,
+                });
+
+                var p = UpdatedSubtitle.Paragraphs[posAndSize.Index];
+                var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                p2.Layer = (int)numericUpDownBoxLayer.Value;
+                p2.Style = "SE-box-bg";
+                p2.Extra = "SE-box-bg";
+                UpdatedSubtitle.Paragraphs.Add(p2);
+
+                if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
+                {
+                    var pDrawing = new Paragraph(textBoxDrawing.Text, 0, 1000);
+                    var marginH = (int)numericUpDownDrawMarginH.Value;
+                    var marginV = (int)numericUpDownDrawingMarginV.Value;
+                    var pos = string.Empty;
+                    if (radioButtonTopLeft.Checked)
+                    {
+                        pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
+                    }
+                    else if (radioButtonTopCenter.Checked)
+                    {
+                        pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
+                    }
+                    else if (radioButtonTopRight.Checked)
+                    {
+                        pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
+                    }
+                    else if (radioButtonMiddleLeft.Checked)
+                    {
+                        pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
+                    }
+                    else if (radioButtonMiddleCenter.Checked)
+                    {
+                        pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
+                    }
+                    else if (radioButtonMiddleRight.Checked)
+                    {
+                        pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
+                    }
+                    else if (radioButtonMiddleLeft.Checked)
+                    {
+                        pos = $"{{\\pos({x + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
+                    }
+                    else if (radioButtonMiddleCenter.Checked)
+                    {
+                        pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
+                    }
+                    else if (radioButtonMiddleRight.Checked)
+                    {
+                        pos = $"{{\\pos({right + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
+                    }
+
+                    pDrawing.Text = pos + pDrawing.Text;
+                    pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                    pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                    pDrawing.Layer = (int)numericUpDownDrawingLayer.Value;
+                    pDrawing.Style = "SE-box-drawing";
+                    pDrawing.Extra = "SE-box-drawing";
+                    UpdatedSubtitle.Paragraphs.Add(pDrawing);
+                }
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -257,11 +384,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 right = _videoInfo.Width - (int)numericUpDownFillWidthMarginRight.Value;
             }
 
-            _assaBox = GenerateBackgroundBox(
-                x,
-                _top - (int)numericUpDownPaddingTop.Value,
-                right,
-                _bottom + (int)numericUpDownPaddingBottom.Value);
+            _assaBox = GenerateBackgroundBox(new PositionAndSize
+            {
+                Index = 0,
+                Top = _top - (int)numericUpDownPaddingTop.Value,
+                Bottom = _bottom + (int)numericUpDownPaddingBottom.Value,
+                Left = x,
+                Right = right,
+            });
 
             var p2 = new Paragraph(_assaBox ?? string.Empty, 0, 1000);
             p2.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
@@ -346,13 +476,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     MarginLeft = 0,
                     MarginRight = 0,
                     MarginVertical = 0,
-                    Primary = _boxColor,
-                    Secondary = _boxShadowColor,
-                    Tertiary = _boxShadowColor,
-                    Background = _boxShadowColor,
-                    Outline = _boxOutlineColor,
-                    ShadowWidth = numericUpDownShadowWidth.Value,
-                    OutlineWidth = numericUpDownOutlineWidth.Value,
+                    ShadowWidth = 0,
+                    OutlineWidth = 0,
                 };
                 subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxDrawing);
             }
@@ -400,6 +525,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Configuration.Settings.Tools.AssaBgBoxColor = panelPrimaryColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxOutlineColor = panelOutlineColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxShadowColor = panelShadowColor.BackColor;
+            Configuration.Settings.Tools.AssaBgBoxDrawing = textBoxDrawing.Text;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -432,7 +558,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 }
             }
 
-            buttonPreview_Click(null, null);
+            CalcPositionAndSize();
+            Application.DoEvents();
             GeneratePreviewViaMpv();
             _loading = false;
         }
@@ -460,8 +587,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             VideoLoaded(null, null);
         }
 
-        private void buttonPreview_Click(object sender, EventArgs e)
+        private PositionAndSize CalcPositionAndSize()
         {
+            var positionAndSize = new PositionAndSize();
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -513,6 +641,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     _left = nBmp.CalcLeftCropping(Color.Cyan);
                     _right = nBmp.Width - nBmp.CalcRightCropping(Color.Cyan);
 
+
+                    positionAndSize.Top = _top;
+                    positionAndSize.Bottom = _bottom;
+                    positionAndSize.Left = _left;
+                    positionAndSize.Right = _right;
+                    positionAndSize.Index = 0;
+
                     _updatePreview = true;
                 }
 
@@ -532,10 +667,121 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Cursor = Cursors.Default;
             }
+
+            return positionAndSize;
         }
 
-        private string GenerateBackgroundBox(int x, int y, int right, int bottom)
+        private List<PositionAndSize> CalcAllPositionsAndSizes()
         {
+            var list = new List<PositionAndSize>();
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                // generate blank video
+                var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mkv");
+                var process = VideoPreviewGenerator.GenerateVideoFile(
+                               tempVideoFileName,
+                               _selectedIndices.Length + 2,
+                               _videoInfo.Width,
+                               _videoInfo.Height,
+                               Color.Cyan,
+                               false,
+                               25,
+                               null); // TODO Progress
+                process.Start();
+                while (!process.HasExited)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+
+                // make temp assa file with font
+                var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
+                var sub = new Subtitle { Header = _subtitle.Header };
+                for (var i = 0; i < _selectedIndices.Length; i++)
+                {
+                    var idx = _selectedIndices[i];
+                    var p = _subtitle.Paragraphs[idx];
+
+                    // remove fade tags 
+                    var text = p.Text;
+                    text = Regex.Replace(text, @"{\\fad\([\d\.,]*\)}", string.Empty);
+                    text = Regex.Replace(text, @"\\fad\([\d\.,]*\)", string.Empty);
+                    text = Regex.Replace(text, @"{\\fade\([\d\.,]*\)}", string.Empty);
+                    text = Regex.Replace(text, @"\\fade\([\d\.,]*\)", string.Empty);
+
+                    sub.Paragraphs.Add(new Paragraph(text, i * 1000 - 500, i * 1000 + 500));
+                }
+
+                File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
+
+                // hard code subtitle
+                var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
+                process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                while (!process.HasExited)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+
+                for (var i = 0; i < _selectedIndices.Length; i++)
+                {
+                    var idx = _selectedIndices[i];
+                    var tc = new TimeCode(i * 1000);
+                    var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, tc.ToHHMMSS());
+                    using (var bmp = new Bitmap(bmpFileName))
+                    {
+                        var nBmp = new NikseBitmap(bmp);
+                        list.Add(new PositionAndSize
+                        {
+                            Top = nBmp.CalcTopCropping(Color.Cyan),
+                            Bottom = nBmp.Height - nBmp.CalcBottomCropping(Color.Cyan),
+                            Left = nBmp.CalcLeftCropping(Color.Cyan),
+                            Right = nBmp.Width - nBmp.CalcRightCropping(Color.Cyan),
+                            Index = idx,
+                        });
+                    }
+                    try
+                    {
+                        File.Delete(bmpFileName);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
+                Cursor = Cursors.Default;
+                try
+                {
+                    File.Delete(tempVideoFileName);
+                    File.Delete(assaTempFileName);
+                    File.Delete(outputVideoFileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
+
+            return list;
+        }
+
+        private string GenerateBackgroundBox(PositionAndSize posAndSize)
+        {
+            var x = posAndSize.Left;
+            var y = posAndSize.Top;
+            var bottom = posAndSize.Bottom;
+            var right = posAndSize.Right;
+
             if (comboBoxBoxStyle.SelectedIndex == 2) // spikes
             {
                 var sb = new StringBuilder();
