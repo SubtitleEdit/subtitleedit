@@ -378,6 +378,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaBox { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
+        public string VoskModel { get; set; }
 
         public ToolsSettings()
         {
@@ -5604,6 +5605,12 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoNonAssaFixRtlUnicode = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("VoskModel");
+            if (subNode != null)
+            {
+                settings.Tools.VoskModel = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -9557,6 +9564,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
