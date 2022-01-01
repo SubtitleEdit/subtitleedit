@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
+namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
 {
     public class ResultReader
     {

@@ -32867,5 +32867,35 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        private void videoaudioToTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!ContinueNewOrExit())
+            {
+                return;
+            }
+
+            using (var form = new AudioToText(VideoFileName))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                if (form.TranscribedSubtitle.Paragraphs.Count == 0)
+                {
+                    MessageBox.Show("No text found!");
+                    return;
+                }
+
+                _subtitle.Paragraphs.Clear();
+                _subtitle.Paragraphs.AddRange(form.TranscribedSubtitle.Paragraphs);
+                var idx = FirstSelectedIndex;
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
     }
 }
