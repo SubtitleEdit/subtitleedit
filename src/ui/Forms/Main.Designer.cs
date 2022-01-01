@@ -273,6 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.setPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.videoResolutionResamplerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateBackgroundBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAssa = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
@@ -558,7 +559,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateBackgroundBoxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.videoaudioToTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2144,6 +2145,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
+            this.videoaudioToTextToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveformToolStripMenuItem,
             this.showhideVideoToolStripMenuItem,
@@ -2551,7 +2553,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 798);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 776);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -2607,6 +2609,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoResolutionResamplerToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.videoResolutionResamplerToolStripMenuItem.Text = "Video resolution resampler...";
             this.videoResolutionResamplerToolStripMenuItem.Click += new System.EventHandler(this.videoResolutionResamplerToolStripMenuItem_Click);
+            // 
+            // generateBackgroundBoxToolStripMenuItem
+            // 
+            this.generateBackgroundBoxToolStripMenuItem.Name = "generateBackgroundBoxToolStripMenuItem";
+            this.generateBackgroundBoxToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.generateBackgroundBoxToolStripMenuItem.Text = "Generate background box...";
+            this.generateBackgroundBoxToolStripMenuItem.Click += new System.EventHandler(this.generateBackgroundBoxToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAssStyles
             // 
@@ -5437,12 +5446,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
             // 
-            // generateBackgroundBoxToolStripMenuItem
+            // videoaudioToTextToolStripMenuItem
             // 
-            this.generateBackgroundBoxToolStripMenuItem.Name = "generateBackgroundBoxToolStripMenuItem";
-            this.generateBackgroundBoxToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.generateBackgroundBoxToolStripMenuItem.Text = "Generate background box...";
-            this.generateBackgroundBoxToolStripMenuItem.Click += new System.EventHandler(this.generateBackgroundBoxToolStripMenuItem_Click);
+            this.videoaudioToTextToolStripMenuItem.Name = "videoaudioToTextToolStripMenuItem";
+            this.videoaudioToTextToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
+            this.videoaudioToTextToolStripMenuItem.Text = "Video/audio to text...";
+            this.videoaudioToTextToolStripMenuItem.Click += new System.EventHandler(this.videoaudioToTextToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -6046,5 +6055,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowVideoControls;
         private System.Windows.Forms.ToolStripMenuItem listErrorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateBackgroundBoxToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem videoaudioToTextToolStripMenuItem;
     }
 }

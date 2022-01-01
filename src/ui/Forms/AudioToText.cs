@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class AudioToText : Form
     {
         private readonly string _videoFileName;
-        private readonly string _voskFolder;
         private bool _cancel;
+        private string _voskFolder;
         public Subtitle TranscribedSubtitle { get; private set; }
 
         public AudioToText(string videoFileName)
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(transcript);
-            TranscribedSubtitle = subtitleGenerator.Generate("en");
+            TranscribedSubtitle =  subtitleGenerator.Generate("en");
             DialogResult = DialogResult.OK;
         }
 
@@ -284,6 +284,11 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.OpenUrl("https://alphacephei.com/vosk/models");
         }
 
+        private void buttonOpenModelFolder_Click(object sender, EventArgs e)
+        {
+            UiUtil.OpenFolder(_voskFolder);
+        }
+
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.VoskModel = comboBoxModels.Text;
@@ -305,11 +310,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            UiUtil.OpenFolder(_voskFolder);
         }
     }
 }
