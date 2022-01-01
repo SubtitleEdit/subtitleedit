@@ -853,7 +853,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var styles = new List<SsaStyle>();
             foreach (var styleName in GetStylesFromHeader(header))
             {
-                styles.Add(AdvancedSubStationAlpha.GetSsaStyle(styleName, header));
+                styles.Add(GetSsaStyle(styleName, header));
             }
             return styles;
         }
@@ -2624,6 +2624,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
 
             return new SsaStyle { Name = styleName };
+        }
+
+        public static string UpdateOrAddStyle(string header, SsaStyle style)
+        {
+            var styles = GetSsaStylesFromHeader(header).Where(p=>p.Name != style.Name).ToList();
+            styles.Add(style);
+            return GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
         }
     }
 }

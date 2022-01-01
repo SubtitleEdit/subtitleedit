@@ -98,6 +98,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAlignRight.Left = left;
             checkBoxBox.Left = left;
 
+            var audioLeft = Math.Max(Math.Max(labelAudioEnc.Left + labelAudioEnc.Width, labelAudioSampleRate.Left + labelAudioSampleRate.Width), labelAudioBitRate.Left + labelAudioBitRate.Width) + 5;
+            comboBoxAudioEnc.Left = audioLeft;
+            checkBoxMakeStereo.Left = audioLeft;
+            comboBoxAudioSampleRate.Left = audioLeft;
+            comboBoxAudioBitRate.Left = audioLeft;
+
             _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue)
             {
@@ -654,7 +660,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTune.Visible = true;
             if (comboBoxVideoEncoding.Text == "libx265")
             {
-                for (int i = 0; i < 51; i++)
+                for (var i = 0; i < 51; i++)
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
@@ -668,7 +674,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxVideoEncoding.Text == "libvpx-vp9")
             {
-                for (int i = 4; i <= 63; i++)
+                for (var i = 4; i <= 63; i++)
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
@@ -680,7 +686,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                for (int i = 17; i <= 28; i++)
+                for (var i = 17; i <= 28; i++)
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
@@ -734,7 +740,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
 
                 // generate blank video
-                var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mkv");
+                var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mkv");
                 var process = VideoPreviewGenerator.GenerateVideoFile(
                                tempVideoFileName,
                                2,
@@ -835,7 +841,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Paragraph GetPreviewParagraph()
         {
-            string text = string.Empty;
             _assaSubtitle.Renumber();
             Paragraph longest;
             if (_assaSubtitle.Paragraphs.Count > 2)
@@ -869,6 +874,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
             contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
+        }
+
+        private void labelPreviewPleaseWait_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
