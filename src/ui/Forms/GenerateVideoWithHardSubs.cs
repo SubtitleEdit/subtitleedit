@@ -70,6 +70,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTune.SelectedIndex = 0;
             comboBoxAudioBitRate.Text = "128k";
             checkBoxTargetFileSize_CheckedChanged(null, null);
+            checkBoxTargetFileSize.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileSize;
+            labelFileSize.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.FileSizeMb;
+            numericUpDownTargetFileSize.Left = labelFileSize.Left + labelFileSize.Width + 5;
+            linkLabelHelp.Text = LanguageSettings.Current.Main.Menu.Help.Title;
+            groupBoxSettings.Text = LanguageSettings.Current.Settings.Title;
+            groupBoxVideo.Text = LanguageSettings.Current.Main.Menu.Video.Title;
+            groupBoxAudio.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio;
 
             comboBoxPreset.Text = Configuration.Settings.Tools.GenVideoPreset;
             comboBoxVideoEncoding.Text = Configuration.Settings.Tools.GenVideoEncoding;

@@ -1033,6 +1033,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Encoding = "Encoding",
                 BitRate = "Bit rate",
                 SampleRate = "Sample rate",
+                Audio = "Audio",
                 Stereo = "Stereo",
                 Preset = "Preset",
                 Crf = "CRF",
