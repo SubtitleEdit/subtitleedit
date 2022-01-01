@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.Kaldi
+namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
 {
     public class VoskSettings
     {

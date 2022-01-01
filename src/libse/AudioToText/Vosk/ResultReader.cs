@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.Common;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.Kaldi
+namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
 {
     public class ResultReader
     {
