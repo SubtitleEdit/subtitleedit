@@ -105,6 +105,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.SuppressKeyPress = true;
                 Redo();
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                checkBoxItalic.Checked = !checkBoxItalic.Checked;
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void SizePictureBox()

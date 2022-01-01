@@ -2125,8 +2125,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/InfoAssaOn":
                     language.GenerateVideoWithBurnedInSubs.InfoAssaOn = reader.Value;
                     break;
-                case "GenerateVideoWithBurnedInSubs/XGeneratedWithBurnedInSubs":
-                    language.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs = reader.Value;
+                case "GenerateVideoWithBurnedInSubs/XGeneratedWithBurnedInSubsInX":
+                    language.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX = reader.Value;
                     break;
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutes":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes = reader.Value;
@@ -2157,6 +2157,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "GenerateVideoWithBurnedInSubs/SampleRate":
                     language.GenerateVideoWithBurnedInSubs.SampleRate = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/Audio":
+                    language.GenerateVideoWithBurnedInSubs.Audio = reader.Value;
                     break;
                 case "GenerateVideoWithBurnedInSubs/Stereo":
                     language.GenerateVideoWithBurnedInSubs.Stereo = reader.Value;

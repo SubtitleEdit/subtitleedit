@@ -883,7 +883,7 @@
             public string Title { get; set; }
             public string InfoAssaOff { get; set; }
             public string InfoAssaOn { get; set; }
-            public string XGeneratedWithBurnedInSubs { get; set; }
+            public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
@@ -894,6 +894,7 @@
             public string Encoding { get; set; }
             public string BitRate { get; set; }
             public string SampleRate { get; set; }
+            public string Audio { get; set; }
             public string Stereo { get; set; }
             public string Preset { get; set; }
             public string Crf { get; set; }
