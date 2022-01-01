@@ -32867,5 +32867,68 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        private void videoaudioToTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(VideoFileName))
+            {
+                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                return;
+            }
+
+            if (!ContinueNewOrExit())
+            {
+                return;
+            }
+
+            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            {
+                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
+            }
+
+            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
+            {
+                if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (var form = new DownloadFfmpeg())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                    {
+                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
+            using (var form = new AudioToText(VideoFileName))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                if (form.TranscribedSubtitle.Paragraphs.Count == 0)
+                {
+                    MessageBox.Show("No text found!");
+                    return;
+                }
+
+                _subtitle.Paragraphs.Clear();
+                _subtitle.Paragraphs.AddRange(form.TranscribedSubtitle.Paragraphs);
+                var idx = FirstSelectedIndex;
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
     }
 }
