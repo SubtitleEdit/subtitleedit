@@ -36,6 +36,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxDrawing = new System.Windows.Forms.GroupBox();
+            this.groupBoxAlignment = new System.Windows.Forms.GroupBox();
+            this.radioButtonBottomRight = new System.Windows.Forms.RadioButton();
+            this.radioButtonBottomCenter = new System.Windows.Forms.RadioButton();
+            this.radioButtonMiddleRight = new System.Windows.Forms.RadioButton();
+            this.radioButtonBottomLeft = new System.Windows.Forms.RadioButton();
+            this.radioButtonMiddleLeft = new System.Windows.Forms.RadioButton();
+            this.radioButtonTopRight = new System.Windows.Forms.RadioButton();
+            this.radioButtonTopCenter = new System.Windows.Forms.RadioButton();
+            this.radioButtonMiddleCenter = new System.Windows.Forms.RadioButton();
+            this.radioButtonTopLeft = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.numericUpDownDrawingLayer = new System.Windows.Forms.NumericUpDown();
             this.textBoxDrawing = new System.Windows.Forms.TextBox();
@@ -79,19 +89,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleSpikes = new System.Windows.Forms.Panel();
             this.numericUpDownSpikesStep = new System.Windows.Forms.NumericUpDown();
             this.labelStep = new System.Windows.Forms.Label();
-            this.groupBoxAlignment = new System.Windows.Forms.GroupBox();
-            this.radioButtonBottomRight = new System.Windows.Forms.RadioButton();
-            this.radioButtonBottomCenter = new System.Windows.Forms.RadioButton();
-            this.radioButtonMiddleRight = new System.Windows.Forms.RadioButton();
-            this.radioButtonBottomLeft = new System.Windows.Forms.RadioButton();
-            this.radioButtonMiddleLeft = new System.Windows.Forms.RadioButton();
-            this.radioButtonTopRight = new System.Windows.Forms.RadioButton();
-            this.radioButtonTopCenter = new System.Windows.Forms.RadioButton();
-            this.radioButtonMiddleCenter = new System.Windows.Forms.RadioButton();
-            this.radioButtonTopLeft = new System.Windows.Forms.RadioButton();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
+            this.groupBoxAlignment.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingMarginV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawMarginH)).BeginInit();
@@ -110,7 +111,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleRounded.SuspendLayout();
             this.panelStyleSpikes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpikesStep)).BeginInit();
-            this.groupBoxAlignment.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxPreview
@@ -185,6 +185,116 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxDrawing.TabStop = false;
             this.groupBoxDrawing.Text = "Drawing";
             // 
+            // groupBoxAlignment
+            // 
+            this.groupBoxAlignment.Controls.Add(this.radioButtonBottomRight);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonBottomCenter);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleRight);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonBottomLeft);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleLeft);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonTopRight);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonTopCenter);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleCenter);
+            this.groupBoxAlignment.Controls.Add(this.radioButtonTopLeft);
+            this.groupBoxAlignment.Location = new System.Drawing.Point(168, 11);
+            this.groupBoxAlignment.Name = "groupBoxAlignment";
+            this.groupBoxAlignment.Size = new System.Drawing.Size(102, 93);
+            this.groupBoxAlignment.TabIndex = 34;
+            this.groupBoxAlignment.TabStop = false;
+            this.groupBoxAlignment.Text = "Alignment";
+            // 
+            // radioButtonBottomRight
+            // 
+            this.radioButtonBottomRight.AutoSize = true;
+            this.radioButtonBottomRight.Location = new System.Drawing.Point(59, 65);
+            this.radioButtonBottomRight.Name = "radioButtonBottomRight";
+            this.radioButtonBottomRight.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonBottomRight.TabIndex = 7;
+            this.radioButtonBottomRight.UseVisualStyleBackColor = true;
+            this.radioButtonBottomRight.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonBottomCenter
+            // 
+            this.radioButtonBottomCenter.AutoSize = true;
+            this.radioButtonBottomCenter.Checked = true;
+            this.radioButtonBottomCenter.Location = new System.Drawing.Point(39, 65);
+            this.radioButtonBottomCenter.Name = "radioButtonBottomCenter";
+            this.radioButtonBottomCenter.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonBottomCenter.TabIndex = 6;
+            this.radioButtonBottomCenter.TabStop = true;
+            this.radioButtonBottomCenter.UseVisualStyleBackColor = true;
+            this.radioButtonBottomCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonMiddleRight
+            // 
+            this.radioButtonMiddleRight.AutoSize = true;
+            this.radioButtonMiddleRight.Location = new System.Drawing.Point(59, 42);
+            this.radioButtonMiddleRight.Name = "radioButtonMiddleRight";
+            this.radioButtonMiddleRight.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonMiddleRight.TabIndex = 4;
+            this.radioButtonMiddleRight.UseVisualStyleBackColor = true;
+            this.radioButtonMiddleRight.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonBottomLeft
+            // 
+            this.radioButtonBottomLeft.AutoSize = true;
+            this.radioButtonBottomLeft.Location = new System.Drawing.Point(19, 65);
+            this.radioButtonBottomLeft.Name = "radioButtonBottomLeft";
+            this.radioButtonBottomLeft.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonBottomLeft.TabIndex = 5;
+            this.radioButtonBottomLeft.UseVisualStyleBackColor = true;
+            this.radioButtonBottomLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonMiddleLeft
+            // 
+            this.radioButtonMiddleLeft.AutoSize = true;
+            this.radioButtonMiddleLeft.Location = new System.Drawing.Point(19, 42);
+            this.radioButtonMiddleLeft.Name = "radioButtonMiddleLeft";
+            this.radioButtonMiddleLeft.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonMiddleLeft.TabIndex = 3;
+            this.radioButtonMiddleLeft.UseVisualStyleBackColor = true;
+            this.radioButtonMiddleLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonTopRight
+            // 
+            this.radioButtonTopRight.AutoSize = true;
+            this.radioButtonTopRight.Location = new System.Drawing.Point(59, 19);
+            this.radioButtonTopRight.Name = "radioButtonTopRight";
+            this.radioButtonTopRight.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonTopRight.TabIndex = 2;
+            this.radioButtonTopRight.UseVisualStyleBackColor = true;
+            this.radioButtonTopRight.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonTopCenter
+            // 
+            this.radioButtonTopCenter.AutoSize = true;
+            this.radioButtonTopCenter.Location = new System.Drawing.Point(39, 19);
+            this.radioButtonTopCenter.Name = "radioButtonTopCenter";
+            this.radioButtonTopCenter.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonTopCenter.TabIndex = 1;
+            this.radioButtonTopCenter.UseVisualStyleBackColor = true;
+            this.radioButtonTopCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonMiddleCenter
+            // 
+            this.radioButtonMiddleCenter.AutoSize = true;
+            this.radioButtonMiddleCenter.Location = new System.Drawing.Point(39, 42);
+            this.radioButtonMiddleCenter.Name = "radioButtonMiddleCenter";
+            this.radioButtonMiddleCenter.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonMiddleCenter.TabIndex = 4;
+            this.radioButtonMiddleCenter.UseVisualStyleBackColor = true;
+            this.radioButtonMiddleCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // radioButtonTopLeft
+            // 
+            this.radioButtonTopLeft.AutoSize = true;
+            this.radioButtonTopLeft.Location = new System.Drawing.Point(19, 19);
+            this.radioButtonTopLeft.Name = "radioButtonTopLeft";
+            this.radioButtonTopLeft.Size = new System.Drawing.Size(14, 13);
+            this.radioButtonTopLeft.TabIndex = 0;
+            this.radioButtonTopLeft.UseVisualStyleBackColor = true;
+            this.radioButtonTopLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -215,6 +325,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0,
             0,
             -2147483648});
+            this.numericUpDownDrawingLayer.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
             // textBoxDrawing
             // 
@@ -226,6 +337,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxDrawing.Name = "textBoxDrawing";
             this.textBoxDrawing.Size = new System.Drawing.Size(358, 96);
             this.textBoxDrawing.TabIndex = 21;
+            this.textBoxDrawing.TextChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
             // labelRotateX
             // 
@@ -760,116 +872,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStep.TabIndex = 49;
             this.labelStep.Text = "Step";
             // 
-            // groupBoxAlignment
-            // 
-            this.groupBoxAlignment.Controls.Add(this.radioButtonBottomRight);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonBottomCenter);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleRight);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonBottomLeft);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleLeft);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonTopRight);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonTopCenter);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleCenter);
-            this.groupBoxAlignment.Controls.Add(this.radioButtonTopLeft);
-            this.groupBoxAlignment.Location = new System.Drawing.Point(168, 11);
-            this.groupBoxAlignment.Name = "groupBoxAlignment";
-            this.groupBoxAlignment.Size = new System.Drawing.Size(102, 93);
-            this.groupBoxAlignment.TabIndex = 34;
-            this.groupBoxAlignment.TabStop = false;
-            this.groupBoxAlignment.Text = "Alignment";
-            // 
-            // radioButtonBottomRight
-            // 
-            this.radioButtonBottomRight.AutoSize = true;
-            this.radioButtonBottomRight.Location = new System.Drawing.Point(59, 65);
-            this.radioButtonBottomRight.Name = "radioButtonBottomRight";
-            this.radioButtonBottomRight.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonBottomRight.TabIndex = 7;
-            this.radioButtonBottomRight.UseVisualStyleBackColor = true;
-            this.radioButtonBottomRight.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonBottomCenter
-            // 
-            this.radioButtonBottomCenter.AutoSize = true;
-            this.radioButtonBottomCenter.Checked = true;
-            this.radioButtonBottomCenter.Location = new System.Drawing.Point(39, 65);
-            this.radioButtonBottomCenter.Name = "radioButtonBottomCenter";
-            this.radioButtonBottomCenter.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonBottomCenter.TabIndex = 6;
-            this.radioButtonBottomCenter.TabStop = true;
-            this.radioButtonBottomCenter.UseVisualStyleBackColor = true;
-            this.radioButtonBottomCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonMiddleRight
-            // 
-            this.radioButtonMiddleRight.AutoSize = true;
-            this.radioButtonMiddleRight.Location = new System.Drawing.Point(59, 42);
-            this.radioButtonMiddleRight.Name = "radioButtonMiddleRight";
-            this.radioButtonMiddleRight.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonMiddleRight.TabIndex = 4;
-            this.radioButtonMiddleRight.UseVisualStyleBackColor = true;
-            this.radioButtonMiddleRight.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonBottomLeft
-            // 
-            this.radioButtonBottomLeft.AutoSize = true;
-            this.radioButtonBottomLeft.Location = new System.Drawing.Point(19, 65);
-            this.radioButtonBottomLeft.Name = "radioButtonBottomLeft";
-            this.radioButtonBottomLeft.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonBottomLeft.TabIndex = 5;
-            this.radioButtonBottomLeft.UseVisualStyleBackColor = true;
-            this.radioButtonBottomLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonMiddleLeft
-            // 
-            this.radioButtonMiddleLeft.AutoSize = true;
-            this.radioButtonMiddleLeft.Location = new System.Drawing.Point(19, 42);
-            this.radioButtonMiddleLeft.Name = "radioButtonMiddleLeft";
-            this.radioButtonMiddleLeft.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonMiddleLeft.TabIndex = 3;
-            this.radioButtonMiddleLeft.UseVisualStyleBackColor = true;
-            this.radioButtonMiddleLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonTopRight
-            // 
-            this.radioButtonTopRight.AutoSize = true;
-            this.radioButtonTopRight.Location = new System.Drawing.Point(59, 19);
-            this.radioButtonTopRight.Name = "radioButtonTopRight";
-            this.radioButtonTopRight.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonTopRight.TabIndex = 2;
-            this.radioButtonTopRight.UseVisualStyleBackColor = true;
-            this.radioButtonTopRight.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonTopCenter
-            // 
-            this.radioButtonTopCenter.AutoSize = true;
-            this.radioButtonTopCenter.Location = new System.Drawing.Point(39, 19);
-            this.radioButtonTopCenter.Name = "radioButtonTopCenter";
-            this.radioButtonTopCenter.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonTopCenter.TabIndex = 1;
-            this.radioButtonTopCenter.UseVisualStyleBackColor = true;
-            this.radioButtonTopCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonMiddleCenter
-            // 
-            this.radioButtonMiddleCenter.AutoSize = true;
-            this.radioButtonMiddleCenter.Location = new System.Drawing.Point(39, 42);
-            this.radioButtonMiddleCenter.Name = "radioButtonMiddleCenter";
-            this.radioButtonMiddleCenter.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonMiddleCenter.TabIndex = 4;
-            this.radioButtonMiddleCenter.UseVisualStyleBackColor = true;
-            this.radioButtonMiddleCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // radioButtonTopLeft
-            // 
-            this.radioButtonTopLeft.AutoSize = true;
-            this.radioButtonTopLeft.Location = new System.Drawing.Point(19, 19);
-            this.radioButtonTopLeft.Name = "radioButtonTopLeft";
-            this.radioButtonTopLeft.Size = new System.Drawing.Size(14, 13);
-            this.radioButtonTopLeft.TabIndex = 0;
-            this.radioButtonTopLeft.UseVisualStyleBackColor = true;
-            this.radioButtonTopLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
             // AssSetBackground
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -921,6 +923,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.groupBoxDrawing.ResumeLayout(false);
             this.groupBoxDrawing.PerformLayout();
+            this.groupBoxAlignment.ResumeLayout(false);
+            this.groupBoxAlignment.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingMarginV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawMarginH)).EndInit();
@@ -942,8 +946,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleSpikes.ResumeLayout(false);
             this.panelStyleSpikes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpikesStep)).EndInit();
-            this.groupBoxAlignment.ResumeLayout(false);
-            this.groupBoxAlignment.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
