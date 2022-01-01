@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonGenerate = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -39,6 +40,8 @@
             this.labelModel = new System.Windows.Forms.Label();
             this.comboBoxModels = new System.Windows.Forms.ComboBox();
             this.linkLabelVoskWebSite = new System.Windows.Forms.LinkLabel();
+            this.labelTime = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxModels.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,7 +74,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 186);
+            this.progressBar1.Location = new System.Drawing.Point(12, 174);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(380, 13);
             this.progressBar1.TabIndex = 114;
@@ -81,7 +84,7 @@
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 170);
+            this.labelProgress.Location = new System.Drawing.Point(12, 158);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 115;
@@ -162,19 +165,35 @@
             this.linkLabelVoskWebSite.Text = "Vosk website";
             this.linkLabelVoskWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVoskWebsite_LinkClicked);
             // 
+            // labelTime
+            // 
+            this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelTime.AutoSize = true;
+            this.labelTime.Location = new System.Drawing.Point(12, 189);
+            this.labelTime.Name = "labelTime";
+            this.labelTime.Size = new System.Drawing.Size(88, 13);
+            this.labelTime.TabIndex = 122;
+            this.labelTime.Text = "Remaining time...";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // AudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(616, 211);
+            this.Controls.Add(this.labelTime);
             this.Controls.Add(this.linkLabelVoskWebSite);
             this.Controls.Add(this.groupBoxModels);
             this.Controls.Add(this.labelInfo);
-            this.Controls.Add(this.textBoxLog);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonGenerate);
+            this.Controls.Add(this.textBoxLog);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(575, 250);
             this.Name = "AudioToText";
@@ -204,5 +223,7 @@
         private System.Windows.Forms.Label labelModel;
         private System.Windows.Forms.ComboBox comboBoxModels;
         private System.Windows.Forms.LinkLabel linkLabelOpenModelsFolder;
+        private System.Windows.Forms.Label labelTime;
+        private System.Windows.Forms.Timer timer1;
     }
 }

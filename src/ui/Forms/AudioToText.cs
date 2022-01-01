@@ -17,6 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly string _videoFileName;
         private readonly string _voskFolder;
         private bool _cancel;
+        private long _startTicks;
+        private long _bytesWavTotal;
+        private long _bytesWavRead;
         public Subtitle TranscribedSubtitle { get; private set; }
 
         public AudioToText(string videoFileName)
@@ -65,6 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxLog.Visible = false;
             labelProgress.Text = string.Empty;
+            labelTime.Text = string.Empty;
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
@@ -127,14 +131,17 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
             var totalRead = 0;
             var buffer = new byte[4096];
-            var totalLength = new FileInfo(waveFileName).Length;
+            _bytesWavTotal = new FileInfo(waveFileName).Length;
+            _bytesWavRead = 0;
+            _startTicks = DateTime.UtcNow.Ticks;
+            timer1.Start();
             using (var source = File.OpenRead(waveFileName))
             {
                 int bytesRead;
                 while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    totalRead += bytesRead;
-                    progressBar1.Value = (int)(totalRead * 100.0 / totalLength);
+                    _bytesWavRead += bytesRead;
+                    progressBar1.Value = (int)(totalRead * 100.0 / _bytesWavTotal);
                     progressBar1.Refresh();
                     Application.DoEvents();
 
@@ -160,6 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             var finalResult = rec.FinalResult();
             var finalResults = ParseJsonToResult(finalResult);
             list.AddRange(finalResults);
+            timer1.Stop();
             return list;
         }
 
@@ -340,6 +348,36 @@ namespace Nikse.SubtitleEdit.Forms
         private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             UiUtil.OpenFolder(_voskFolder);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (_bytesWavRead <= 0 || _bytesWavTotal <= 0)
+            {
+                return;
+            }
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var msPerFrame = (float)durationMs / _bytesWavRead;
+            var estimatedTotalMs = msPerFrame * _bytesWavTotal;
+            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            labelTime.Text = estimatedLeft;
+        }
+
+        public static string ToProgressTime(float estimatedTotalMs)
+        {
+            var timeCode = new TimeCode(estimatedTotalMs);
+            if (timeCode.TotalSeconds < 60)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
+            }
+
+            if (timeCode.TotalSeconds / 60 > 5)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
+            }
+
+            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
     }
 }
