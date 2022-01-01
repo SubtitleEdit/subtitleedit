@@ -129,7 +129,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
             labelProgress.Refresh();
             Application.DoEvents();
-            var totalRead = 0;
             var buffer = new byte[4096];
             _bytesWavTotal = new FileInfo(waveFileName).Length;
             _bytesWavRead = 0;
@@ -141,10 +140,9 @@ namespace Nikse.SubtitleEdit.Forms
                 while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     _bytesWavRead += bytesRead;
-                    progressBar1.Value = (int)(totalRead * 100.0 / _bytesWavTotal);
+                    progressBar1.Value = (int)(_bytesWavRead * 100.0 / _bytesWavTotal);
                     progressBar1.Refresh();
                     Application.DoEvents();
-
                     if (rec.AcceptWaveform(buffer, bytesRead))
                     {
                         var res = rec.Result();
@@ -199,7 +197,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var outWaveFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
             var process = GetFfmpegProcess(videoFileName, audioTrackNumber, outWaveFile);
-
             process.Start();
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.Visible = true;
@@ -280,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return null;
             }
 
-            string audioParameter = string.Empty;
+            var audioParameter = string.Empty;
             if (audioTrackNumber > 0)
             {
                 audioParameter = $"-map 0:a:{audioTrackNumber}";
@@ -341,6 +338,11 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxLog.Visible = false;
                 }
 
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == UiUtil.HelpKeys)
+            {
+                linkLabelVoskWebsite_LinkClicked(null, null);
                 e.SuppressKeyPress = true;
             }
         }
