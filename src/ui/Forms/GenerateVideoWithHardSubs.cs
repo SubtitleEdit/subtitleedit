@@ -98,6 +98,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAlignRight.Left = left;
             checkBoxBox.Left = left;
 
+            var audioLeft = Math.Max(Math.Max(labelAudioEnc.Left + labelAudioEnc.Width, labelAudioSampleRate.Left + labelAudioSampleRate.Width), labelAudioBitRate.Left + labelAudioBitRate.Width) + 5;
+            comboBoxAudioEnc.Left = audioLeft;
+            checkBoxMakeStereo.Left = audioLeft;
+            comboBoxAudioSampleRate.Left = audioLeft;
+            comboBoxAudioBitRate.Left = audioLeft;
+
             _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue)
             {
