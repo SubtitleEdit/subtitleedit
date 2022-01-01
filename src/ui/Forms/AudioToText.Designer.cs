@@ -34,12 +34,12 @@
             this.labelProgress = new System.Windows.Forms.Label();
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.groupBoxModels = new System.Windows.Forms.GroupBox();
+            this.buttonOpenModelFolder = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelModel = new System.Windows.Forms.Label();
             this.comboBoxModels = new System.Windows.Forms.ComboBox();
             this.linkLabelVoskWebSite = new System.Windows.Forms.LinkLabel();
-            this.linkLabelOpenModelFolder = new System.Windows.Forms.LinkLabel();
-            this.groupBoxModels.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -108,20 +108,30 @@
             this.labelInfo.TabIndex = 118;
             this.labelInfo.Text = "Generate text from audio via Vosk/Kaldi speech recognition";
             // 
-            // groupBoxModels
+            // buttonOpenModelFolder
             // 
-            this.groupBoxModels.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.buttonOpenModelFolder.Location = new System.Drawing.Point(265, 43);
+            this.buttonOpenModelFolder.Name = "buttonOpenModelFolder";
+            this.buttonOpenModelFolder.Size = new System.Drawing.Size(230, 23);
+            this.buttonOpenModelFolder.TabIndex = 119;
+            this.buttonOpenModelFolder.Text = "Open model folder";
+            this.buttonOpenModelFolder.UseVisualStyleBackColor = true;
+            this.buttonOpenModelFolder.Click += new System.EventHandler(this.buttonOpenModelFolder_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxModels.Controls.Add(this.linkLabelOpenModelFolder);
-            this.groupBoxModels.Controls.Add(this.labelModel);
-            this.groupBoxModels.Controls.Add(this.comboBoxModels);
-            this.groupBoxModels.Location = new System.Drawing.Point(15, 66);
-            this.groupBoxModels.Name = "groupBoxModels";
-            this.groupBoxModels.Size = new System.Drawing.Size(589, 84);
-            this.groupBoxModels.TabIndex = 120;
-            this.groupBoxModels.TabStop = false;
-            this.groupBoxModels.Text = "Models";
+            this.groupBox1.Controls.Add(this.labelModel);
+            this.groupBox1.Controls.Add(this.comboBoxModels);
+            this.groupBox1.Controls.Add(this.buttonOpenModelFolder);
+            this.groupBox1.Location = new System.Drawing.Point(15, 66);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(589, 84);
+            this.groupBox1.TabIndex = 120;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Models";
             // 
             // labelModel
             // 
@@ -151,24 +161,13 @@
             this.linkLabelVoskWebSite.Text = "Vosk website";
             this.linkLabelVoskWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVoskWebsite_LinkClicked);
             // 
-            // linkLabelOpenModelFolder
-            // 
-            this.linkLabelOpenModelFolder.AutoSize = true;
-            this.linkLabelOpenModelFolder.Location = new System.Drawing.Point(265, 50);
-            this.linkLabelOpenModelFolder.Name = "linkLabelOpenModelFolder";
-            this.linkLabelOpenModelFolder.Size = new System.Drawing.Size(93, 13);
-            this.linkLabelOpenModelFolder.TabIndex = 122;
-            this.linkLabelOpenModelFolder.TabStop = true;
-            this.linkLabelOpenModelFolder.Text = "Open model folder";
-            this.linkLabelOpenModelFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenModelFolder_LinkClicked);
-            // 
             // AudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(616, 211);
             this.Controls.Add(this.linkLabelVoskWebSite);
-            this.Controls.Add(this.groupBoxModels);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.textBoxLog);
             this.Controls.Add(this.labelProgress);
@@ -184,8 +183,8 @@
             this.Text = "Video/audio to text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
-            this.groupBoxModels.ResumeLayout(false);
-            this.groupBoxModels.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -199,10 +198,10 @@
         private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.TextBox textBoxLog;
         private System.Windows.Forms.Label labelInfo;
-        private System.Windows.Forms.GroupBox groupBoxModels;
+        private System.Windows.Forms.Button buttonOpenModelFolder;
+        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.LinkLabel linkLabelVoskWebSite;
         private System.Windows.Forms.Label labelModel;
         private System.Windows.Forms.ComboBox comboBoxModels;
-        private System.Windows.Forms.LinkLabel linkLabelOpenModelFolder;
     }
 }

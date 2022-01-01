@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Dictionaries;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
+namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
 {
     public class SubtitleGenerator
     {
@@ -20,6 +20,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             SetPeriodIfDistanceToNextIsMoreThan = 250;
         }
 
+        /// <summary>
+        /// Generate subtitle from audio to text result.
+        /// </summary>
+        /// <param name="language">Two letter language name</param>
+        /// <returns>Subtitle</returns>
         public Subtitle Generate(string language)
         {
             var subtitle = new Subtitle();
@@ -28,19 +33,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                 subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
             }
 
-            AddPeriods(subtitle, language);
-
-            //  subtitle = MergeShortLines(subtitle, language);
-
-            FixCasing(subtitle, language);
+            subtitle = AddPeriods(subtitle, language);
+            subtitle = MergeShortLines(subtitle, language);
+            subtitle = FixCasing(subtitle, language);
 
             return subtitle;
         }
 
-        private void AddPeriods(Subtitle subtitle, string language)
+        private Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
             //TODO: check of English non-break words
-
+            var subtitle = new Subtitle(inputSubtitle);
             for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
             {
                 var paragraph = subtitle.Paragraphs[index];
@@ -63,6 +66,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }
+
+            return subtitle;
         }
 
         private Subtitle MergeShortLines(Subtitle subtitle, string language)
@@ -121,8 +126,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             return mergedSubtitle;
         }
 
-        private static void FixCasing(Subtitle subtitle, string language)
+        private static Subtitle FixCasing(Subtitle inputSubtitle, string language)
         {
+            var subtitle = new Subtitle(inputSubtitle);
+
             // fix casing normal
             var fixCasing = new FixCasing(language);
             fixCasing.Fix(subtitle);
@@ -144,6 +151,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                     }
                 }
             }
+
+            return subtitle;
         }
 
         private static string GetEndTag(string text)
