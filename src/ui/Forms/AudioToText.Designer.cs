@@ -138,9 +138,9 @@
             this.labelModel.AutoSize = true;
             this.labelModel.Location = new System.Drawing.Point(16, 29);
             this.labelModel.Name = "labelModel";
-            this.labelModel.Size = new System.Drawing.Size(92, 13);
+            this.labelModel.Size = new System.Drawing.Size(167, 13);
             this.labelModel.TabIndex = 121;
-            this.labelModel.Text = "Auto to text modal";
+            this.labelModel.Text = "Choose speech recognition model";
             // 
             // comboBoxModels
             // 
