@@ -1,13 +1,13 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.AudioToText;
 using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -15,57 +15,97 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class AudioToText : Form
     {
         private readonly string _videoFileName;
-        private readonly Subtitle _subtitle;
         private bool _cancel;
+        private string _voskFolder;
+        public Subtitle TranscribedSubtitle { get; private set; }
 
-        public AudioToText(Subtitle subtitle, string videoFileName, VideoInfo videoInfo)
+        public AudioToText(string videoFileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            UiUtil.FixLargeFonts(this, buttonOK);
-            _subtitle = subtitle;
+            UiUtil.FixLargeFonts(this, buttonGenerate);
             _videoFileName = videoFileName;
-        }
 
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            var waveFileName = GenerateWavFile(_videoFileName, 0);
-            textBoxLog.AppendText("Wav file name: " + waveFileName);
-            textBoxLog.AppendText(Environment.NewLine);
-            textBoxLog.AppendText(Environment.NewLine);
-
-            var transcript = GenerateTranscript(waveFileName);
-
-            _subtitle.Paragraphs.Clear();
-            foreach (var resultText in transcript)
+            _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
+            if (!Directory.Exists(_voskFolder))
             {
-                _subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
+                Directory.CreateDirectory(_voskFolder);
             }
 
-            //textBoxLog.AppendText("Transcript result:" + Environment.NewLine);
-            DialogResult = DialogResult.OK;
+            comboBoxModels.Items.Clear();
+            foreach (var directory in Directory.GetDirectories(_voskFolder))
+            {
+                var name = Path.GetFileName(directory);
+                if (!Directory.Exists(Path.Combine(directory, "conf")))
+                {
+                    continue;
+                }
+
+                comboBoxModels.Items.Add(name);
+                if (name == Configuration.Settings.Tools.VoskModel)
+                {
+                    comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                }
+            }
+
+            if (comboBoxModels.SelectedIndex < 0 && comboBoxModels.Items.Count > 0)
+            {
+                comboBoxModels.SelectedIndex = 0;
+            }
+
+            textBoxLog.Visible = false;
+            labelProgress.Text = string.Empty;
         }
 
-        private List<ResultText> GenerateTranscript(string waveFileName)
+        private void ButtonGenerate_Click(object sender, EventArgs e)
         {
-            // You can set to -1 to disable logging messages
-            Vosk.Vosk.SetLogLevel(0);
-            var model = new Model(Path.Combine(Configuration.DataDirectory, "Vosk", "eng"));
-            var rec = new VoskRecognizer(model, 16000.0f);
-            rec.SetMaxAlternatives(0);
-            rec.SetWords(true);
-            var sb = new StringBuilder();
-            var totalLength = new FileInfo(waveFileName).Length;
-            var totalRead = 0;
+            if (comboBoxModels.Items.Count == 0)
+            {
+                MessageBox.Show(string.Format("Please download an audio-to-text model from the Vosk website and unpack to {0}", _voskFolder));
+                return;
+            }
+
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
             progressBar1.Visible = true;
+            var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
+            buttonGenerate.Enabled = false;
+            var waveFileName = GenerateWavFile(_videoFileName, 0);
+            textBoxLog.AppendText("Wav file name: " + waveFileName);
+            textBoxLog.AppendText(Environment.NewLine);
             progressBar1.Style = ProgressBarStyle.Blocks;
-            var list = new List<ResultText>();
-            using (Stream source = File.OpenRead(waveFileName))
+            var transcript = TranscribeViaVosk(waveFileName, modelFileName);
+            if (_cancel)
             {
-                byte[] buffer = new byte[4096];
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(transcript);
+            TranscribedSubtitle =  subtitleGenerator.Generate("en");
+            DialogResult = DialogResult.OK;
+        }
+
+        public List<ResultText> TranscribeViaVosk(string waveFileName, string modelFileName)
+        {
+            labelProgress.Text = "Loading Vosk speach model...";
+            labelProgress.Refresh();
+            Application.DoEvents();
+            Vosk.Vosk.SetLogLevel(0);
+            var model = new Model(modelFileName);
+            var rec = new VoskRecognizer(model, 16000.0f);
+            rec.SetMaxAlternatives(0);
+            rec.SetWords(true);
+            var list = new List<ResultText>();
+            labelProgress.Text = "Transcribing audio to text...";
+            labelProgress.Refresh();
+            Application.DoEvents();
+            var totalRead = 0;
+            var buffer = new byte[4096];
+            var totalLength = new FileInfo(waveFileName).Length;
+            using (var source = File.OpenRead(waveFileName))
+            {
                 int bytesRead;
                 while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
@@ -76,32 +116,31 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (rec.AcceptWaveform(buffer, bytesRead))
                     {
-                        Console.WriteLine(rec.Result());
-                        sb.AppendLine(rec.Result());
-                        textBoxLog.AppendText("Result: " + rec.Result().RemoveChar('\n').RemoveChar('\r') + Environment.NewLine);
-                        var result = ParseJsonToResult(rec.Result());
-                        list.AddRange(result);
+                        var res = rec.Result();
+                        var results = ParseJsonToResult(res);
+                        list.AddRange(results);
+
                     }
                     else
                     {
-                        var s = rec.PartialResult();
-                        var s2 = rec.Result();
-                        Console.WriteLine(s);
-                        sb.AppendLine(s);
-                        if (s.Length > 20)
-                        {
-                            textBoxLog.AppendText("Partial: " + rec.PartialResult().RemoveChar('\n').RemoveChar('\r') + Environment.NewLine);
-                            var result = ParseJsonToResult(s2);
-                            list.AddRange(result);
-                        }
+                        var res = rec.PartialResult();
+                        textBoxLog.AppendText(res.RemoveChar('\r', '\n'));
                     }
+                }
+
+                if (_cancel)
+                {
+                    return null;
                 }
             }
 
+            var finalResult = rec.FinalResult();
+            var finalResults = ParseJsonToResult(finalResult);
+            list.AddRange(finalResults);
             return list;
         }
 
-        private List<ResultText> ParseJsonToResult(string result)
+        private static List<ResultText> ParseJsonToResult(string result)
         {
             var list = new List<ResultText>();
             var jsonParser = new SeJsonParser();
@@ -115,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrWhiteSpace(word) &&
                     decimal.TryParse(conf, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var confidence) &&
                     decimal.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
-                decimal.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
+                    decimal.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
                 {
                     var rt = new ResultText { Confidence = confidence, Text = word, Start = startSeconds, End = endSeconds };
                     list.Add(rt);
@@ -188,13 +227,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (drive.AvailableFreeSpace < 50 * 1000000) // 50 mb
                             {
-                                //labelInfo.ForeColor = Color.Red;
-                                //labelInfo.Text = LanguageSettings.Current.AddWaveform.LowDiskSpace;
+                                labelInfo.ForeColor = Color.Red;
+                                labelInfo.Text = LanguageSettings.Current.AddWaveform.LowDiskSpace;
                             }
-                            //else if (labelInfo.ForeColor == Color.Red)
-                            //{
-                            //    labelInfo.Text = string.Format(LanguageSettings.Current.AddWaveform.FreeDiskSpace, Utilities.FormatBytesToDisplayFileSize(drive.AvailableFreeSpace));
-                            //}
                         }
                     }
                     catch
@@ -207,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
             return outWaveFile;
         }
 
-        private Process GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile)
+        private static Process GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile)
         {
             if (!File.Exists(Configuration.Settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
             {
@@ -242,6 +277,39 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void linkLabelVoskWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenUrl("https://alphacephei.com/vosk/models");
+        }
+
+        private void buttonOpenModelFolder_Click(object sender, EventArgs e)
+        {
+            UiUtil.OpenFolder(_voskFolder);
+        }
+
+        private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.VoskModel = comboBoxModels.Text;
+        }
+
+        private void AudioToText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F2)
+            {
+                if (textBoxLog.Visible)
+                {
+                    textBoxLog.Visible = true;
+                    textBoxLog.BringToFront();
+                }
+                else
+                {
+                    textBoxLog.Visible = false;
+                }
+
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }

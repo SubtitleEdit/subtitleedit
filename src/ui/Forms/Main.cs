@@ -32838,7 +32838,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateTextFromAudioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new AudioToText(_subtitle, VideoFileName, _videoInfo))
+            if (!ContinueNewOrExit())
+            {
+                return;
+            }
+
+            using (var form = new AudioToText(VideoFileName))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
@@ -32846,6 +32851,14 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                if (form.TranscribedSubtitle.Paragraphs.Count == 0)
+                {
+                    MessageBox.Show("No text found!");
+                    return;
+                }
+
+                _subtitle.Paragraphs.Clear();
+                _subtitle.Paragraphs.AddRange(form.TranscribedSubtitle.Paragraphs);
                 var idx = FirstSelectedIndex;
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 _subtitleListViewIndex = -1;

@@ -29,10 +29,17 @@
         private void InitializeComponent()
         {
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonGenerate = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelProgress = new System.Windows.Forms.Label();
             this.textBoxLog = new System.Windows.Forms.TextBox();
+            this.labelInfo = new System.Windows.Forms.Label();
+            this.buttonOpenModelFolder = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelModel = new System.Windows.Forms.Label();
+            this.comboBoxModels = new System.Windows.Forms.ComboBox();
+            this.linkLabelVoskWebSite = new System.Windows.Forms.LinkLabel();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -40,7 +47,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(872, 496);
+            this.buttonCancel.Location = new System.Drawing.Point(529, 176);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 112;
@@ -48,32 +55,33 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // buttonOK
+            // buttonGenerate
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(758, 496);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(108, 23);
-            this.buttonOK.TabIndex = 111;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGenerate.Location = new System.Drawing.Point(398, 176);
+            this.buttonGenerate.Name = "buttonGenerate";
+            this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
+            this.buttonGenerate.TabIndex = 111;
+            this.buttonGenerate.Text = "&Generate";
+            this.buttonGenerate.UseVisualStyleBackColor = true;
+            this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 506);
+            this.progressBar1.Location = new System.Drawing.Point(12, 186);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(740, 13);
+            this.progressBar1.Size = new System.Drawing.Size(380, 13);
             this.progressBar1.TabIndex = 114;
             this.progressBar1.Visible = false;
             // 
             // labelProgress
             // 
+            this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 490);
+            this.labelProgress.Location = new System.Drawing.Point(12, 170);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 115;
@@ -84,25 +92,99 @@
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.Location = new System.Drawing.Point(12, 12);
+            this.textBoxLog.Location = new System.Drawing.Point(15, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(935, 478);
+            this.textBoxLog.Size = new System.Drawing.Size(589, 158);
             this.textBoxLog.TabIndex = 116;
+            // 
+            // labelInfo
+            // 
+            this.labelInfo.AutoSize = true;
+            this.labelInfo.Location = new System.Drawing.Point(12, 9);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(288, 13);
+            this.labelInfo.TabIndex = 118;
+            this.labelInfo.Text = "Generate text from audio via Vosk/Kaldi speech recognition";
+            // 
+            // buttonOpenModelFolder
+            // 
+            this.buttonOpenModelFolder.Location = new System.Drawing.Point(265, 43);
+            this.buttonOpenModelFolder.Name = "buttonOpenModelFolder";
+            this.buttonOpenModelFolder.Size = new System.Drawing.Size(230, 23);
+            this.buttonOpenModelFolder.TabIndex = 119;
+            this.buttonOpenModelFolder.Text = "Open model folder";
+            this.buttonOpenModelFolder.UseVisualStyleBackColor = true;
+            this.buttonOpenModelFolder.Click += new System.EventHandler(this.buttonOpenModelFolder_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.labelModel);
+            this.groupBox1.Controls.Add(this.comboBoxModels);
+            this.groupBox1.Controls.Add(this.buttonOpenModelFolder);
+            this.groupBox1.Location = new System.Drawing.Point(15, 66);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(589, 84);
+            this.groupBox1.TabIndex = 120;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Models";
+            // 
+            // labelModel
+            // 
+            this.labelModel.AutoSize = true;
+            this.labelModel.Location = new System.Drawing.Point(16, 29);
+            this.labelModel.Name = "labelModel";
+            this.labelModel.Size = new System.Drawing.Size(92, 13);
+            this.labelModel.TabIndex = 121;
+            this.labelModel.Text = "Auto to text modal";
+            // 
+            // comboBoxModels
+            // 
+            this.comboBoxModels.FormattingEnabled = true;
+            this.comboBoxModels.Location = new System.Drawing.Point(19, 45);
+            this.comboBoxModels.Name = "comboBoxModels";
+            this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
+            this.comboBoxModels.TabIndex = 120;
+            // 
+            // linkLabelVoskWebSite
+            // 
+            this.linkLabelVoskWebSite.AutoSize = true;
+            this.linkLabelVoskWebSite.Location = new System.Drawing.Point(12, 22);
+            this.linkLabelVoskWebSite.Name = "linkLabelVoskWebSite";
+            this.linkLabelVoskWebSite.Size = new System.Drawing.Size(70, 13);
+            this.linkLabelVoskWebSite.TabIndex = 121;
+            this.linkLabelVoskWebSite.TabStop = true;
+            this.linkLabelVoskWebSite.Text = "Vosk website";
+            this.linkLabelVoskWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVoskWebsite_LinkClicked);
             // 
             // AudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(959, 531);
+            this.ClientSize = new System.Drawing.Size(616, 211);
+            this.Controls.Add(this.linkLabelVoskWebSite);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.textBoxLog);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.buttonGenerate);
+            this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(575, 250);
             this.Name = "AudioToText";
-            this.Text = "AudioToText";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Video/audio to text";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -111,9 +193,15 @@
         #endregion
 
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonGenerate;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.TextBox textBoxLog;
+        private System.Windows.Forms.Label labelInfo;
+        private System.Windows.Forms.Button buttonOpenModelFolder;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.LinkLabel linkLabelVoskWebSite;
+        private System.Windows.Forms.Label labelModel;
+        private System.Windows.Forms.ComboBox comboBoxModels;
     }
 }
