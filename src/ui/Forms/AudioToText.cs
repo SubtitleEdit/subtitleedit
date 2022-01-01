@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class AudioToText : Form
     {
         private readonly string _videoFileName;
+        private readonly string _voskFolder;
         private bool _cancel;
-        private string _voskFolder;
         public Subtitle TranscribedSubtitle { get; private set; }
 
         public AudioToText(string videoFileName)
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(transcript);
-            TranscribedSubtitle =  subtitleGenerator.Generate("en");
+            TranscribedSubtitle = subtitleGenerator.Generate("en");
             DialogResult = DialogResult.OK;
         }
 
@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = "Loading Vosk speach model...";
             labelProgress.Refresh();
             Application.DoEvents();
+            Directory.SetCurrentDirectory(Configuration.DataDirectory);
             Vosk.Vosk.SetLogLevel(0);
             var model = new Model(modelFileName);
             var rec = new VoskRecognizer(model, 16000.0f);
@@ -310,6 +311,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UiUtil.OpenFolder(_voskFolder);
         }
     }
 }

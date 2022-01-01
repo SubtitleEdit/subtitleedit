@@ -237,6 +237,12 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DownloadVosk.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DownloadVosk.Designer.cs">
+      <DependentUpon>DownloadVosk.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\WordSplitDictionaryGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1401,6 +1407,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DownloadVosk.resx">
+      <DependentUpon>DownloadVosk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\WordSplitDictionaryGenerator.resx">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
