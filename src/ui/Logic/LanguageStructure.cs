@@ -894,6 +894,7 @@
             public string Encoding { get; set; }
             public string BitRate { get; set; }
             public string SampleRate { get; set; }
+            public string Audio { get; set; }
             public string Stereo { get; set; }
             public string Preset { get; set; }
             public string Crf { get; set; }

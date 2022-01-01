@@ -2158,6 +2158,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/SampleRate":
                     language.GenerateVideoWithBurnedInSubs.SampleRate = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/Audio":
+                    language.GenerateVideoWithBurnedInSubs.Audio = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/Stereo":
                     language.GenerateVideoWithBurnedInSubs.Stereo = reader.Value;
                     break;
