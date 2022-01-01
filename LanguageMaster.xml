@@ -170,6 +170,17 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesAvailable>Fixes available: {0}</FixesAvailable>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Audio/video to text</Title>
+    <Info>Generate text from audio via Vosk/Kaldi speech recognition</Info>
+    <VoskWebsite>Vosk website</VoskWebsite>
+    <Models>Models</Models>
+    <ChooseModel>Choose model</ChooseModel>
+    <OpenModelsFolder>Open models folder</OpenModelsFolder>
+    <DownloadVoskModelToX>Please download an audio-to-text model from the Vosk website and unpack to {0}</DownloadVoskModelToX>
+    <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
+    <Transcribing>Transcribing audio to text...</Transcribing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
     <AttachFiles>Attach files...</AttachFiles>
@@ -229,14 +240,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RotateXAxis>Rotate {0} axis</RotateXAxis>
     <DistortX>Distort {0}</DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>Audio to text</Title>
-    <ExtractingAudioUsingX>Extracting audio using {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Extracting text from audio using {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Extracting text via {0} progress: {1}%</ProgessViaXy>
-    <ShowLess>Show less  ▲</ShowLess>
-    <ShowMore>Show more  ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto balance selected lines</TitleAutoBreak>
     <TitleUnbreak>Remove line breaks from selected lines</TitleUnbreak>
@@ -1219,6 +1222,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>Video/audio to text...</VideoAudioToText>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveOrExportSceneChanges>Remove/export scene changes...</RemoveOrExportSceneChanges>

@@ -17,13 +17,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownload, "FFmpeg");
+            Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownload, "Vosk");
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        private void DownloadFfmpeg_KeyDown(object sender, KeyEventArgs e)
+        private void DownloadVosk_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void DownloadFfmpeg_Shown(object sender, EventArgs e)
+        private void DownloadVosk_Shown(object sender, EventArgs e)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                var url = "https://github.com/SubtitleEdit/support-files/raw/master/vosk/vosk" + IntPtr.Size * 8 + ".tar.gzip";
+                var url = "https://github.com/SubtitleEdit/support-files/blob/master/vosk/vosk" + IntPtr.Size * 8 + ".tar.gz?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
 
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.Error != null)
             {
-                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "ffmpeg");
+                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "Vosk");
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 return;

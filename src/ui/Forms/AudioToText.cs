@@ -12,7 +12,7 @@ using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AudioToText : Form
+    public sealed partial class AudioToText : Form
     {
         private readonly string _videoFileName;
         private readonly string _voskFolder;
@@ -26,6 +26,15 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonGenerate);
             _videoFileName = videoFileName;
+
+            Text = LanguageSettings.Current.AudioToText.Title;
+            labelInfo.Text = LanguageSettings.Current.AudioToText.Info;
+            labelInfo.Text = LanguageSettings.Current.AudioToText.Info;
+            groupBoxModels.Text = LanguageSettings.Current.AudioToText.Models;
+            labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
+            linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
+            buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
             if (!Directory.Exists(_voskFolder))
@@ -62,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxModels.Items.Count == 0)
             {
-                MessageBox.Show(string.Format("Please download an audio-to-text model from the Vosk website and unpack to {0}", _voskFolder));
+                MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.DownloadVoskModelToX, _voskFolder));
                 return;
             }
 
@@ -83,13 +92,27 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(transcript);
-            TranscribedSubtitle = subtitleGenerator.Generate("en");
+            TranscribedSubtitle = subtitleGenerator.Generate(GetLanguage(comboBoxModels.Text));
             DialogResult = DialogResult.OK;
+        }
+
+        private static string GetLanguage(string text)
+        {
+            var languageCodeList = new[] { "en", "ru", "cn", "fr", "sv", "de", "es", "fa", "tr", "ca", "uk", "kz", "ph", "ar", "nl", "el", "pt" };
+            foreach (var languageCode in languageCodeList)
+            {
+                if (text.Contains("model-" + languageCode) || text.Contains("model-small-" + languageCode) || text.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    return languageCode;
+                }
+            }
+
+            return "en";
         }
 
         public List<ResultText> TranscribeViaVosk(string waveFileName, string modelFileName)
         {
-            labelProgress.Text = "Loading Vosk speach model...";
+            labelProgress.Text = LanguageSettings.Current.AudioToText.LoadingVoskModel;
             labelProgress.Refresh();
             Application.DoEvents();
             Directory.SetCurrentDirectory(Configuration.DataDirectory);
@@ -99,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             rec.SetMaxAlternatives(0);
             rec.SetWords(true);
             var list = new List<ResultText>();
-            labelProgress.Text = "Transcribing audio to text...";
+            labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
             labelProgress.Refresh();
             Application.DoEvents();
             var totalRead = 0;
@@ -120,18 +143,17 @@ namespace Nikse.SubtitleEdit.Forms
                         var res = rec.Result();
                         var results = ParseJsonToResult(res);
                         list.AddRange(results);
-
                     }
                     else
                     {
                         var res = rec.PartialResult();
                         textBoxLog.AppendText(res.RemoveChar('\r', '\n'));
                     }
-                }
 
-                if (_cancel)
-                {
-                    return null;
+                    if (_cancel)
+                    {
+                        return null;
+                    }
                 }
             }
 
@@ -277,17 +299,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
+            if (buttonGenerate.Enabled)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else
+            {
+                _cancel = true;
+            }
         }
 
         private void linkLabelVoskWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             UiUtil.OpenUrl("https://alphacephei.com/vosk/models");
-        }
-
-        private void buttonOpenModelFolder_Click(object sender, EventArgs e)
-        {
-            UiUtil.OpenFolder(_voskFolder);
         }
 
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)

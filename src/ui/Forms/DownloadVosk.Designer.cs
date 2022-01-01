@@ -84,8 +84,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DownloadFfmpeg";
-            this.Shown += new System.EventHandler(this.DownloadFfmpeg_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DownloadFfmpeg_KeyDown);
+            this.Shown += new System.EventHandler(this.DownloadVosk_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DownloadVosk_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
