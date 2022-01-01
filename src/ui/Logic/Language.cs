@@ -18,12 +18,12 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddWaveformBatch AddWaveformBatch;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
+        public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AssaAttachments AssaAttachments;
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
         public LanguageStructure.AssaProgressBarGenerator AssaProgressBarGenerator;
         public LanguageStructure.AssaResulationChanger AssaResulationChanger;
         public LanguageStructure.AssaSetPosition AssaSetPosition;
-        public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
         public LanguageStructure.BinEdit BinEdit;
@@ -314,6 +314,19 @@ namespace Nikse.SubtitleEdit.Logic
                 UnableToFix = "Unable to fix: {0}",
             };
 
+            AudioToText = new LanguageStructure.AudioToText
+            {
+                Title = "Audio/video to text",
+                Info = "Generate text from audio via Vosk/Kaldi speech recognition",
+                VoskWebsite = "Vosk website",
+                Models = "Models",
+                ChooseModel = "Choose model",
+                OpenModelsFolder = "Open models folder",
+                DownloadVoskModelToX = "Please download an audio-to-text model from the Vosk website and unpack to {0}",
+                LoadingVoskModel = "Loading Vosk speech recognition model...",
+                Transcribing = "Transcribing audio to text...",
+            };
+
             AssaAttachments = new LanguageStructure.AssaAttachments
             {
                 Title = "Advanced Sub Station Alpha attachments",
@@ -381,16 +394,6 @@ namespace Nikse.SubtitleEdit.Logic
                 ResolutionMissing = "PlayResX/PlayResY are not set - set the resolution now?",
                 RotateXAxis = "Rotate {0} axis",
                 DistortX = "Distort {0}",
-            };
-
-            AudioToText = new LanguageStructure.AudioToText
-            {
-                Title = "Audio to text",
-                ExtractingAudioUsingX = "Extracting audio using {0}...",
-                ExtractingTextUsingX = "Extracting text from audio using {0}...",
-                ProgessViaXy = "Extracting text via {0} progress: {1}%",
-                ShowLess = "Show less  ▲",
-                ShowMore = "Show more  ▼"
             };
 
             AutoBreakUnbreakLines = new LanguageStructure.AutoBreakUnbreakLines
@@ -1021,7 +1024,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Generate video with burned-in subtitle",
                 InfoAssaOff = "Note: Advanced Substation Alpha styling supported.",
-                InfoAssaOn= "Note: Advanced Substation Alpha styling will be used :)",
+                InfoAssaOn = "Note: Advanced Substation Alpha styling will be used :)",
                 XGeneratedWithBurnedInSubsInX = "\"{0}\" generated with burned-in subtitle in {1}.",
                 TimeRemainingMinutes = "Time remaining: {0} minutes",
                 TimeRemainingSeconds = "Time remaining: {0} seconds",
@@ -1748,6 +1751,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in sub...",
+                        VideoAudioToText = "Video/audio to text...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveOrExportSceneChanges = "Remove/export scene changes...",

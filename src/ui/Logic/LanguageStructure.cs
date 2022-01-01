@@ -173,6 +173,19 @@
             public string UnableToFix { get; set; }
         }
 
+        public class AudioToText
+        {
+            public string Title { get; set; }
+            public string Info { get; set; }
+            public string VoskWebsite { get; set; }
+            public string Models { get; set; }
+            public string ChooseModel { get; set; }
+            public string OpenModelsFolder { get; set; }
+            public string DownloadVoskModelToX { get; set; }
+            public string LoadingVoskModel { get; set; }
+            public string Transcribing { get; set; }
+        }
+
         public class AssaAttachments
         {
             public string Title { get; set; }
@@ -240,16 +253,6 @@
             public string ResolutionMissing { get; set; }
             public string RotateXAxis { get; set; }
             public string DistortX { get; set; }
-        }
-
-        public class AudioToText
-        {
-            public string Title { get; set; }
-            public string ExtractingAudioUsingX { get; set; }
-            public string ExtractingTextUsingX { get; set; }
-            public string ProgessViaXy { get; set; }
-            public string ShowLess { get; set; }
-            public string ShowMore { get; set; }
         }
 
         public class AutoBreakUnbreakLines
@@ -1598,6 +1601,7 @@
                     public string GenerateTextFromVideo { get; set; }
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
+                    public string VideoAudioToText { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveOrExportSceneChanges { get; set; }

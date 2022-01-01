@@ -460,6 +460,33 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ApplyDurationLimits/UnableToFix":
                     language.ApplyDurationLimits.UnableToFix = reader.Value;
                     break;
+                case "AudioToText/Title":
+                    language.AudioToText.Title = reader.Value;
+                    break;
+                case "AudioToText/Info":
+                    language.AudioToText.Info = reader.Value;
+                    break;
+                case "AudioToText/VoskWebsite":
+                    language.AudioToText.VoskWebsite = reader.Value;
+                    break;
+                case "AudioToText/Models":
+                    language.AudioToText.Models = reader.Value;
+                    break;
+                case "AudioToText/ChooseModel":
+                    language.AudioToText.ChooseModel = reader.Value;
+                    break;
+                case "AudioToText/OpenModelsFolder":
+                    language.AudioToText.OpenModelsFolder = reader.Value;
+                    break;
+                case "AudioToText/DownloadVoskModelToX":
+                    language.AudioToText.DownloadVoskModelToX = reader.Value;
+                    break;
+                case "AudioToText/LoadingVoskModel":
+                    language.AudioToText.LoadingVoskModel = reader.Value;
+                    break;
+                case "AudioToText/Transcribing":
+                    language.AudioToText.Transcribing = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
@@ -606,24 +633,6 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AssaSetPosition/DistortX":
                     language.AssaSetPosition.DistortX = reader.Value;
-                    break;
-                case "AudioToText/Title":
-                    language.AudioToText.Title = reader.Value;
-                    break;
-                case "AudioToText/ExtractingAudioUsingX":
-                    language.AudioToText.ExtractingAudioUsingX = reader.Value;
-                    break;
-                case "AudioToText/ExtractingTextUsingX":
-                    language.AudioToText.ExtractingTextUsingX = reader.Value;
-                    break;
-                case "AudioToText/ProgessViaXy":
-                    language.AudioToText.ProgessViaXy = reader.Value;
-                    break;
-                case "AudioToText/ShowLess":
-                    language.AudioToText.ShowLess = reader.Value;
-                    break;
-                case "AudioToText/ShowMore":
-                    language.AudioToText.ShowMore = reader.Value;
                     break;
                 case "AutoBreakUnbreakLines/TitleAutoBreak":
                     language.AutoBreakUnbreakLines.TitleAutoBreak = reader.Value;
@@ -4074,6 +4083,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Video/GenerateVideoWithBurnedInSub":
                     language.Main.Menu.Video.GenerateVideoWithBurnedInSub = reader.Value;
+                    break;
+                case "Main/Menu/Video/VideoAudioToText":
+                    language.Main.Menu.Video.VideoAudioToText = reader.Value;
                     break;
                 case "Main/Menu/Video/ImportChaptersFromVideo":
                     language.Main.Menu.Video.ImportChaptersFromVideo = reader.Value;
