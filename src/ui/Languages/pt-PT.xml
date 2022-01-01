@@ -803,7 +803,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Title>Gerar vídeo com legenda embutida</Title>
     <InfoAssaOff>Nota: suporta o estilo de Advanced Substation Alpha.</InfoAssaOff>
     <InfoAssaOn>Nota: o estilo de Advanced Substation Alpha será usado :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" gerado com legenda embutida.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" gerado com legenda embutida em {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Tempo restante: {0} minutos</TimeRemainingMinutes>
     <TimeRemainingSeconds>Tempo restante: {0} segundos</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Tempo restante: {0} minutos e {1} segundos</TimeRemainingMinutesAndSeconds>
