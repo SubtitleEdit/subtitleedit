@@ -20718,6 +20718,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
             mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
+            closeVideoToolStripMenuItem.Enabled = true;
 
             if (_videoInfo.VideoCodec != null)
             {
@@ -26641,6 +26642,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownVideoPositionAdjust.Enabled = false;
             timeUpDownVideoPosition.TimeCode = new TimeCode();
             timeUpDownVideoPosition.Enabled = false;
+            closeVideoToolStripMenuItem.Enabled = false;
             CheckSecondSubtitleReset();
         }
 
@@ -32686,7 +32688,8 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubs, Path.GetFileName(form.VideoFileName)), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
+                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
                 {
                     f.ShowDialog(this);
                 }
@@ -32836,14 +32839,15 @@ namespace Nikse.SubtitleEdit.Forms
             ListSyntaxErrors();
         }
 
-        private void generateTextFromAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        private void generateBackgroundBoxToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!ContinueNewOrExit())
+            if (string.IsNullOrEmpty(VideoFileName))
             {
+                MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
                 return;
             }
 
-            using (var form = new AudioToText(VideoFileName))
+            using (var form = new AssSetBackground(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
@@ -32851,18 +32855,16 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (form.TranscribedSubtitle.Paragraphs.Count == 0)
+                MakeHistoryForUndo(string.Format(_language.BeforeX, "Set background box"));
+                if (form.UpdatedSubtitle != null)
                 {
-                    MessageBox.Show("No text found!");
-                    return;
+                    SaveSubtitleListviewIndices();
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(form.UpdatedSubtitle.Paragraphs);
+                    _subtitle.Header = form.UpdatedSubtitle.Header;
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
                 }
-
-                _subtitle.Paragraphs.Clear();
-                _subtitle.Paragraphs.AddRange(form.TranscribedSubtitle.Paragraphs);
-                var idx = FirstSelectedIndex;
-                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                _subtitleListViewIndex = -1;
-                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
             }
         }
     }

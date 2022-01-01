@@ -351,6 +351,21 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AssaProgressBarFontSize { get; set; }
         public bool AssaProgressBarTopAlign { get; set; }
         public string AssaProgressBarTextAlign { get; set; }
+
+
+        public int AssaBgBoxPaddingLeft { get; set; }
+        public int AssaBgBoxPaddingRight { get; set; }
+        public int AssaBgBoxPaddingTop { get; set; }
+        public int AssaBgBoxPaddingBottom { get; set; }
+        public Color AssaBgBoxColor { get; set; }
+        public Color AssaBgBoxOutlineColor { get; set; }
+        public Color AssaBgBoxShadowColor { get; set; }
+        public string AssaBgBoxStyle { get; set; }
+        public int AssaBgBoxStyleRadius { get; set; }
+        public int AssaBgBoxOutlineWidth { get; set; }
+        public string AssaBgBoxDrawing { get; set; }
+
+
         public string GenVideoEncoding { get; set; }
         public string GenVideoPreset { get; set; }
         public string GenVideoCrf { get; set; }
@@ -518,6 +533,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaProgressBarFontName = "Arial";
             AssaProgressBarFontSize = 30;
             AssaProgressBarTextAlign = "left";
+
+            AssaBgBoxPaddingLeft = 10;
+            AssaBgBoxPaddingRight = 10;
+            AssaBgBoxPaddingTop = 6;
+            AssaBgBoxPaddingBottom = 6;
+            AssaBgBoxColor = Color.FromArgb(200, 0, 0, 0);
+            AssaBgBoxOutlineColor = Color.FromArgb(200, 80, 80, 80);
+            AssaBgBoxShadowColor = Color.FromArgb(100, 0, 0, 0);
+            AssaBgBoxStyle = "square";
+            AssaBgBoxStyleRadius = 40;
+            AssaBgBoxOutlineWidth = 0;
 
             GenVideoEncoding = "libx264";
             GenVideoPreset = "medium";
@@ -4154,7 +4180,7 @@ $HorzAlign          =   Center
             {
                 settings.Tools.OcrUseWordSplitList = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("BDOpenIn");
             if (subNode != null)
             {
@@ -5437,6 +5463,73 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AssaProgressBarTextAlign = subNode.InnerText;
+            }
+
+
+            subNode = node.SelectSingleNode("AssaBgBoxPaddingLeft");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxPaddingLeft = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxPaddingRight");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxPaddingRight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxPaddingTop");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxPaddingTop = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxPaddingBottom");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxPaddingBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxOutlineColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxOutlineColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxShadowColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxShadowColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxStyle");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyle = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxStyleRadius");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyleRadius = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxOutlineWidth");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxOutlineWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxDrawing");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawing = subNode.InnerText;
             }
 
 
@@ -9448,6 +9541,17 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaProgressBarFontSize", settings.Tools.AssaProgressBarFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarTopAlign", settings.Tools.AssaProgressBarTopAlign.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaProgressBarTextAlign", settings.Tools.AssaProgressBarTextAlign);
+                textWriter.WriteElementString("AssaBgBoxPaddingLeft", settings.Tools.AssaBgBoxPaddingLeft.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxPaddingRight", settings.Tools.AssaBgBoxPaddingRight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxPaddingTop", settings.Tools.AssaBgBoxPaddingTop.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxPaddingBottom", settings.Tools.AssaBgBoxPaddingBottom.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxColor));
+                textWriter.WriteElementString("AssaBgBoxOutlineColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxOutlineColor));
+                textWriter.WriteElementString("AssaBgBoxShadowColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxShadowColor));
+                textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
+                textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
                 textWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);

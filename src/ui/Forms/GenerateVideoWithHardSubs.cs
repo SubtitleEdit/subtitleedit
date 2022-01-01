@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private StringBuilder _log;
         private readonly bool _isAssa;
         public string VideoFileName { get; private set; }
+        public long MillisecondsEncoding { get; private set; }
 
         public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize)
         {
@@ -69,6 +70,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTune.SelectedIndex = 0;
             comboBoxAudioBitRate.Text = "128k";
             checkBoxTargetFileSize_CheckedChanged(null, null);
+            checkBoxTargetFileSize.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileSize;
+            labelFileSize.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.FileSizeMb;
+            numericUpDownTargetFileSize.Left = labelFileSize.Left + labelFileSize.Width + 5;
+            linkLabelHelp.Text = LanguageSettings.Current.Main.Menu.Help.Title;
+            groupBoxSettings.Text = LanguageSettings.Current.Settings.Title;
+            groupBoxVideo.Text = LanguageSettings.Current.Main.Menu.Video.Title;
+            groupBoxAudio.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio;
 
             comboBoxPreset.Text = Configuration.Settings.Tools.GenVideoPreset;
             comboBoxVideoEncoding.Text = Configuration.Settings.Tools.GenVideoEncoding;
@@ -96,6 +104,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRightToLeft.Left = left;
             checkBoxAlignRight.Left = left;
             checkBoxBox.Left = left;
+
+            var audioLeft = Math.Max(Math.Max(labelAudioEnc.Left + labelAudioEnc.Width, labelAudioSampleRate.Left + labelAudioSampleRate.Width), labelAudioBitRate.Left + labelAudioBitRate.Width) + 5;
+            comboBoxAudioEnc.Left = audioLeft;
+            checkBoxMakeStereo.Left = audioLeft;
+            comboBoxAudioSampleRate.Left = audioLeft;
+            comboBoxAudioBitRate.Left = audioLeft;
 
             _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue)
@@ -241,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Visible = true;
             }
 
+            var stopWatch = Stopwatch.StartNew();
             if (checkBoxTargetFileSize.Checked)
             {
                 RunTwoPassEncoding(assaTempFileName);
@@ -253,6 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             timer1.Stop();
+            MillisecondsEncoding = stopWatch.ElapsedMilliseconds;
             labelProgress.Text = string.Empty;
             groupBoxSettings.Enabled = true;
 
@@ -265,23 +281,31 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignore
             }
 
-            if (!_abort && !File.Exists(VideoFileName))
+            if (_abort)
             {
-                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log?.ToString());
+                DialogResult = DialogResult.Cancel;
+                return;
             }
 
-            DialogResult = _abort ? DialogResult.Cancel : DialogResult.OK;
+            if (!File.Exists(VideoFileName) || new FileInfo(VideoFileName).Length == 0)
+            {
+                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log);
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            DialogResult = DialogResult.OK;
         }
 
         private string SuggestNewVideoFileName()
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
 
-            fileName += $".burn-in";
+            fileName += ".burn-in";
 
             fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
 
-            if (comboBoxVideoEncoding.Text == "libx265")
+            if (comboBoxVideoEncoding.Text == "libx265" || comboBoxVideoEncoding.Text == "hevc_nvenc")
             {
                 fileName += ".x265";
             }
@@ -643,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTune.Visible = true;
             if (comboBoxVideoEncoding.Text == "libx265")
             {
-                for (int i = 0; i < 51; i++)
+                for (var i = 0; i < 51; i++)
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
@@ -657,7 +681,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxVideoEncoding.Text == "libvpx-vp9")
             {
-                for (int i = 4; i <= 63; i++)
+                for (var i = 4; i <= 63; i++)
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
@@ -669,7 +693,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                for (int i = 17; i <= 28; i++)
+                for (var i = 17; i <= 28; i++)
                 {
                     comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
@@ -723,7 +747,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
 
                 // generate blank video
-                var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mkv");
+                var tempVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mkv");
                 var process = VideoPreviewGenerator.GenerateVideoFile(
                                tempVideoFileName,
                                2,
@@ -824,7 +848,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Paragraph GetPreviewParagraph()
         {
-            string text = string.Empty;
             _assaSubtitle.Renumber();
             Paragraph longest;
             if (_assaSubtitle.Paragraphs.Count > 2)
@@ -858,6 +881,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
             contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
+        }
+
+        private void labelPreviewPleaseWait_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
