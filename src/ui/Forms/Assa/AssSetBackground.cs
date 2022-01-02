@@ -903,5 +903,25 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _updatePreview = true;
         }
+
+        private void buttonChooseDrawing_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = "ASSA/Assadraw files|*.ass;*.assadraw";
+                openFileDialog1.FileName = string.Empty;
+                if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_subtitle.FileName))
+                {
+                    openFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitle.FileName);
+                }
+
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    labelFileName.Text = openFileDialog1.FileName;
+                }
+            }
+        }
     }
 }

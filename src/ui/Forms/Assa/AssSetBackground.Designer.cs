@@ -52,14 +52,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelRotateY = new System.Windows.Forms.Label();
             this.numericUpDownDrawMarginH = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownPaddingBottom = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelPaddingBottom = new System.Windows.Forms.Label();
             this.numericUpDownPaddingTop = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelPaddingTop = new System.Windows.Forms.Label();
             this.labelEdgeStyle = new System.Windows.Forms.Label();
             this.comboBoxBoxStyle = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.labelPaddingLeft = new System.Windows.Forms.Label();
             this.numericUpDownPaddingRight = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
+            this.labelPaddingRight = new System.Windows.Forms.Label();
             this.numericUpDownPaddingLeft = new System.Windows.Forms.NumericUpDown();
             this.panelPrimaryColor = new System.Windows.Forms.Panel();
             this.buttonPrimaryColor = new System.Windows.Forms.Button();
@@ -73,9 +73,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonOutlineColor = new System.Windows.Forms.Button();
             this.groupBoxFillWidth = new System.Windows.Forms.GroupBox();
             this.checkBoxFillWidth = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
+            this.labelMarginLeft = new System.Windows.Forms.Label();
             this.numericUpDownFillWidthMarginRight = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
+            this.labelMarginRight = new System.Windows.Forms.Label();
             this.numericUpDownFillWidthMarginLeft = new System.Windows.Forms.NumericUpDown();
             this.labelRadius = new System.Windows.Forms.Label();
             this.numericUpDownRadius = new System.Windows.Forms.NumericUpDown();
@@ -85,6 +85,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleSpikes = new System.Windows.Forms.Panel();
             this.numericUpDownSpikesStep = new System.Windows.Forms.NumericUpDown();
             this.labelStep = new System.Windows.Forms.Label();
+            this.buttonChooseDrawing = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.labelFileName = new System.Windows.Forms.Label();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -164,15 +167,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.groupBoxDrawing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDrawing.Controls.Add(this.labelFileName);
+            this.groupBoxDrawing.Controls.Add(this.label3);
+            this.groupBoxDrawing.Controls.Add(this.buttonChooseDrawing);
             this.groupBoxDrawing.Controls.Add(this.groupBoxAlignment);
             this.groupBoxDrawing.Controls.Add(this.textBoxDrawing);
             this.groupBoxDrawing.Controls.Add(this.labelRotateX);
             this.groupBoxDrawing.Controls.Add(this.numericUpDownDrawingMarginV);
             this.groupBoxDrawing.Controls.Add(this.labelRotateY);
             this.groupBoxDrawing.Controls.Add(this.numericUpDownDrawMarginH);
-            this.groupBoxDrawing.Location = new System.Drawing.Point(562, 12);
+            this.groupBoxDrawing.Location = new System.Drawing.Point(562, 16);
             this.groupBoxDrawing.Name = "groupBoxDrawing";
-            this.groupBoxDrawing.Size = new System.Drawing.Size(399, 214);
+            this.groupBoxDrawing.Size = new System.Drawing.Size(399, 210);
             this.groupBoxDrawing.TabIndex = 29;
             this.groupBoxDrawing.TabStop = false;
             this.groupBoxDrawing.Text = "Drawing";
@@ -292,10 +298,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxDrawing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDrawing.Location = new System.Drawing.Point(6, 112);
+            this.textBoxDrawing.Location = new System.Drawing.Point(6, 167);
             this.textBoxDrawing.Multiline = true;
             this.textBoxDrawing.Name = "textBoxDrawing";
-            this.textBoxDrawing.Size = new System.Drawing.Size(387, 96);
+            this.textBoxDrawing.Size = new System.Drawing.Size(387, 37);
             this.textBoxDrawing.TabIndex = 21;
             this.textBoxDrawing.TextChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
@@ -376,14 +382,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownPaddingBottom.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // label2
+            // labelPaddingBottom
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 98);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 13);
-            this.label2.TabIndex = 23;
-            this.label2.Text = "Padding bottom";
+            this.labelPaddingBottom.AutoSize = true;
+            this.labelPaddingBottom.Location = new System.Drawing.Point(12, 98);
+            this.labelPaddingBottom.Name = "labelPaddingBottom";
+            this.labelPaddingBottom.Size = new System.Drawing.Size(81, 13);
+            this.labelPaddingBottom.TabIndex = 23;
+            this.labelPaddingBottom.Text = "Padding bottom";
             // 
             // numericUpDownPaddingTop
             // 
@@ -408,14 +414,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownPaddingTop.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // label1
+            // labelPaddingTop
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 73);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "Padding top";
+            this.labelPaddingTop.AutoSize = true;
+            this.labelPaddingTop.Location = new System.Drawing.Point(12, 73);
+            this.labelPaddingTop.Name = "labelPaddingTop";
+            this.labelPaddingTop.Size = new System.Drawing.Size(64, 13);
+            this.labelPaddingTop.TabIndex = 21;
+            this.labelPaddingTop.Text = "Padding top";
             // 
             // labelEdgeStyle
             // 
@@ -440,14 +446,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.comboBoxBoxStyle.TabIndex = 26;
             this.comboBoxBoxStyle.SelectedIndexChanged += new System.EventHandler(this.comboBoxBoxStyle_SelectedIndexChanged);
             // 
-            // label5
+            // labelPaddingLeft
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 19);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 13);
-            this.label5.TabIndex = 34;
-            this.label5.Text = "Padding left";
+            this.labelPaddingLeft.AutoSize = true;
+            this.labelPaddingLeft.Location = new System.Drawing.Point(12, 19);
+            this.labelPaddingLeft.Name = "labelPaddingLeft";
+            this.labelPaddingLeft.Size = new System.Drawing.Size(63, 13);
+            this.labelPaddingLeft.TabIndex = 34;
+            this.labelPaddingLeft.Text = "Padding left";
             // 
             // numericUpDownPaddingRight
             // 
@@ -472,14 +478,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownPaddingRight.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // label6
+            // labelPaddingRight
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 44);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 13);
-            this.label6.TabIndex = 36;
-            this.label6.Text = "Padding right";
+            this.labelPaddingRight.AutoSize = true;
+            this.labelPaddingRight.Location = new System.Drawing.Point(12, 44);
+            this.labelPaddingRight.Name = "labelPaddingRight";
+            this.labelPaddingRight.Size = new System.Drawing.Size(69, 13);
+            this.labelPaddingRight.TabIndex = 36;
+            this.labelPaddingRight.Text = "Padding right";
             // 
             // numericUpDownPaddingLeft
             // 
@@ -553,7 +559,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownShadowWidth
             // 
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(164, 199);
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(164, 201);
+            this.numericUpDownShadowWidth.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
             this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownShadowWidth.TabIndex = 43;
@@ -570,7 +581,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // numericUpDownOutlineWidth
             // 
-            this.numericUpDownOutlineWidth.Location = new System.Drawing.Point(15, 199);
+            this.numericUpDownOutlineWidth.Location = new System.Drawing.Point(15, 201);
             this.numericUpDownOutlineWidth.Name = "numericUpDownOutlineWidth";
             this.numericUpDownOutlineWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownOutlineWidth.TabIndex = 47;
@@ -603,9 +614,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // groupBoxFillWidth
             // 
             this.groupBoxFillWidth.Controls.Add(this.checkBoxFillWidth);
-            this.groupBoxFillWidth.Controls.Add(this.label10);
+            this.groupBoxFillWidth.Controls.Add(this.labelMarginLeft);
             this.groupBoxFillWidth.Controls.Add(this.numericUpDownFillWidthMarginRight);
-            this.groupBoxFillWidth.Controls.Add(this.label11);
+            this.groupBoxFillWidth.Controls.Add(this.labelMarginRight);
             this.groupBoxFillWidth.Controls.Add(this.numericUpDownFillWidthMarginLeft);
             this.groupBoxFillWidth.Location = new System.Drawing.Point(378, 12);
             this.groupBoxFillWidth.Name = "groupBoxFillWidth";
@@ -625,14 +636,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.checkBoxFillWidth.UseVisualStyleBackColor = true;
             this.checkBoxFillWidth.CheckedChanged += new System.EventHandler(this.checkBoxFillWidth_CheckedChanged);
             // 
-            // label10
+            // labelMarginLeft
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(17, 50);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(56, 13);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Margin left";
+            this.labelMarginLeft.AutoSize = true;
+            this.labelMarginLeft.Location = new System.Drawing.Point(17, 50);
+            this.labelMarginLeft.Name = "labelMarginLeft";
+            this.labelMarginLeft.Size = new System.Drawing.Size(56, 13);
+            this.labelMarginLeft.TabIndex = 17;
+            this.labelMarginLeft.Text = "Margin left";
             // 
             // numericUpDownFillWidthMarginRight
             // 
@@ -657,14 +668,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownFillWidthMarginRight.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // label11
+            // labelMarginRight
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(17, 75);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(62, 13);
-            this.label11.TabIndex = 19;
-            this.label11.Text = "Margin right";
+            this.labelMarginRight.AutoSize = true;
+            this.labelMarginRight.Location = new System.Drawing.Point(17, 75);
+            this.labelMarginRight.Name = "labelMarginRight";
+            this.labelMarginRight.Size = new System.Drawing.Size(62, 13);
+            this.labelMarginRight.TabIndex = 19;
+            this.labelMarginRight.Text = "Margin right";
             // 
             // numericUpDownFillWidthMarginLeft
             // 
@@ -800,6 +811,34 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStep.TabIndex = 49;
             this.labelStep.Text = "Step";
             // 
+            // buttonChooseDrawing
+            // 
+            this.buttonChooseDrawing.Location = new System.Drawing.Point(192, 113);
+            this.buttonChooseDrawing.Name = "buttonChooseDrawing";
+            this.buttonChooseDrawing.Size = new System.Drawing.Size(24, 23);
+            this.buttonChooseDrawing.TabIndex = 35;
+            this.buttonChooseDrawing.Text = "...";
+            this.buttonChooseDrawing.UseVisualStyleBackColor = true;
+            this.buttonChooseDrawing.Click += new System.EventHandler(this.buttonChooseDrawing_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 118);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(180, 13);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "Choose drawing file (.ass/.assadraw)";
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(6, 137);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 37;
+            this.labelFileName.Text = "File name";
+            // 
             // AssSetBackground
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -817,16 +856,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.buttonShadowColor);
             this.Controls.Add(this.panelPrimaryColor);
             this.Controls.Add(this.buttonPrimaryColor);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.labelPaddingLeft);
             this.Controls.Add(this.numericUpDownPaddingRight);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.labelPaddingRight);
             this.Controls.Add(this.numericUpDownPaddingLeft);
             this.Controls.Add(this.groupBoxDrawing);
             this.Controls.Add(this.comboBoxBoxStyle);
             this.Controls.Add(this.labelEdgeStyle);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelPaddingTop);
             this.Controls.Add(this.numericUpDownPaddingTop);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelPaddingBottom);
             this.Controls.Add(this.numericUpDownPaddingBottom);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
@@ -888,14 +927,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelRotateY;
         private System.Windows.Forms.NumericUpDown numericUpDownDrawMarginH;
         private System.Windows.Forms.NumericUpDown numericUpDownPaddingBottom;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelPaddingBottom;
         private System.Windows.Forms.NumericUpDown numericUpDownPaddingTop;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelPaddingTop;
         private System.Windows.Forms.Label labelEdgeStyle;
         private System.Windows.Forms.ComboBox comboBoxBoxStyle;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelPaddingLeft;
         private System.Windows.Forms.NumericUpDown numericUpDownPaddingRight;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelPaddingRight;
         private System.Windows.Forms.NumericUpDown numericUpDownPaddingLeft;
         private System.Windows.Forms.Panel panelPrimaryColor;
         private System.Windows.Forms.Button buttonPrimaryColor;
@@ -909,9 +948,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonOutlineColor;
         private System.Windows.Forms.GroupBox groupBoxFillWidth;
         private System.Windows.Forms.CheckBox checkBoxFillWidth;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label labelMarginLeft;
         private System.Windows.Forms.NumericUpDown numericUpDownFillWidthMarginRight;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label labelMarginRight;
         private System.Windows.Forms.NumericUpDown numericUpDownFillWidthMarginLeft;
         private System.Windows.Forms.Label labelRadius;
         private System.Windows.Forms.NumericUpDown numericUpDownRadius;
@@ -931,5 +970,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.RadioButton radioButtonTopCenter;
         private System.Windows.Forms.RadioButton radioButtonMiddleCenter;
         private System.Windows.Forms.RadioButton radioButtonTopLeft;
+        private System.Windows.Forms.Label labelFileName;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonChooseDrawing;
     }
 }
