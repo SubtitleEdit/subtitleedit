@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         public Subtitle UpdatedSubtitle { get; private set; }
         private readonly Subtitle _subtitle;
         private readonly Subtitle _subtitleWithNewHeader;
+        private Subtitle _drawing;
         private readonly int[] _selectedIndices;
         private LibMpvDynamic _mpv;
         private string _mpvTextFileName;
@@ -100,11 +101,48 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelShadowColor.BackColor = Configuration.Settings.Tools.AssaBgBoxShadowColor;
             SafeNumericUpDownAssign(numericUpDownRadius, Configuration.Settings.Tools.AssaBgBoxStyleRadius);
             SafeNumericUpDownAssign(numericUpDownOutlineWidth, Configuration.Settings.Tools.AssaBgBoxOutlineWidth);
-            textBoxDrawing.Text = Configuration.Settings.Tools.AssaBgBoxDrawing;
+            labelFileName.Text = Configuration.Settings.Tools.AssaBgBoxDrawing;
+            ReadDrawingFile(Configuration.Settings.Tools.AssaBgBoxDrawing);
+            SafeNumericUpDownAssign(numericUpDownDrawMarginH, Configuration.Settings.Tools.AssaBgBoxDrawingMarginH);
+            SafeNumericUpDownAssign(numericUpDownDrawingMarginV, Configuration.Settings.Tools.AssaBgBoxDrawingMarginV);
+
+            switch (Configuration.Settings.Tools.AssaBgBoxDrawingAlignment)
+            {
+                case "2":
+                    radioButtonBottomLeft.Checked = true;
+                    break;
+                case "3":
+                    radioButtonBottomRight.Checked = true;
+                    break;
+                case "4":
+                    radioButtonMiddleLeft.Checked = true;
+                    break;
+                case "5":
+                    radioButtonMiddleCenter.Checked = true;
+                    break;
+                case "6":
+                    radioButtonMiddleRight.Checked = true;
+                    break;
+                case "7":
+                    radioButtonTopLeft.Checked = true;
+                    break;
+                case "8":
+                    radioButtonTopCenter.Checked = true;
+                    break;
+                case "9":
+                    radioButtonTopRight.Checked = true;
+                    break;
+                default:
+                    radioButtonTopLeft.Checked = true;
+                    break;
+            }
 
             _boxColor = panelPrimaryColor.BackColor;
             _boxOutlineColor = panelOutlineColor.BackColor;
             _boxShadowColor = panelShadowColor.BackColor;
+
+            buttonChooseDrawing.Left = labelChooseDrawing.Left + labelChooseDrawing.Width + 5;
+            buttonDrawingClear.Left = buttonChooseDrawing.Left + buttonChooseDrawing.Width + 5;
 
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -213,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             };
             subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxBg);
 
-            if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
+            if (_drawing != null)
             {
                 var styleBoxDrawing = new SsaStyle
                 {
@@ -378,9 +416,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void AddDrawing(int x, int right, Paragraph p, Subtitle subtitle)
         {
-            if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
+            if (_drawing != null)
             {
-                var pDrawing = new Paragraph(textBoxDrawing.Text, 0, 1000);
                 var marginH = (int)numericUpDownDrawMarginH.Value;
                 var marginV = (int)numericUpDownDrawingMarginV.Value;
                 var pos = string.Empty;
@@ -421,12 +458,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     pos = $"{{\\pos({right + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
                 }
 
-                pDrawing.Text = pos + pDrawing.Text;
-                pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + 1;
-                pDrawing.Extra = "SE-box-drawing";
-                subtitle.InsertParagraphInCorrectTimeOrder(pDrawing);
+                int layerAdd = 1;
+                foreach (var dp in _drawing.Paragraphs.OrderBy(pa => pa.Layer))
+                {
+                    var pDrawing = new Paragraph(dp.Text, 0, 1000);
+                    pDrawing.Text = pos + pDrawing.Text;
+                    pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                    pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                    pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + layerAdd;
+                    pDrawing.Extra = "SE-box-drawing";
+                    subtitle.InsertParagraphInCorrectTimeOrder(pDrawing);
+                    layerAdd++;
+                }
             }
         }
 
@@ -457,7 +500,46 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Configuration.Settings.Tools.AssaBgBoxColor = panelPrimaryColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxOutlineColor = panelOutlineColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxShadowColor = panelShadowColor.BackColor;
-            Configuration.Settings.Tools.AssaBgBoxDrawing = textBoxDrawing.Text;
+            Configuration.Settings.Tools.AssaBgBoxDrawing = labelFileName.Text;
+            Configuration.Settings.Tools.AssaBgBoxDrawingMarginV = (int)numericUpDownDrawMarginH.Value;
+            Configuration.Settings.Tools.AssaBgBoxDrawingMarginH = (int)numericUpDownDrawingMarginV.Value;
+
+            if (radioButtonBottomLeft.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "2";
+            }
+            else if (radioButtonBottomRight.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "3";
+            }
+            else if (radioButtonMiddleLeft.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "4";
+            }
+            else if (radioButtonMiddleCenter.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "5";
+            }
+            else if (radioButtonMiddleRight.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "6";
+            }
+            else if (radioButtonTopLeft.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "7";
+            }
+            else if (radioButtonTopCenter.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "8";
+            }
+            else if (radioButtonTopRight.Checked)
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "9";
+            }
+            else
+            {
+                Configuration.Settings.Tools.AssaBgBoxDrawingAlignment = "1";
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -917,11 +999,42 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     openFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitle.FileName);
                 }
 
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                if (openFileDialog1.ShowDialog() != DialogResult.OK)
                 {
-                    labelFileName.Text = openFileDialog1.FileName;
+                    return;
                 }
+
+                ReadDrawingFile(openFileDialog1.FileName);
+                _updatePreview = true;
             }
+        }
+
+        private void ReadDrawingFile(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            {
+                _drawing = null;
+                labelFileName.Text = string.Empty;
+                return;
+            }
+
+            _drawing = Subtitle.Parse(fileName, new AdvancedSubStationAlpha());
+            if (_drawing.Paragraphs.Count > 0 && _drawing.Paragraphs.Count < 200)
+            {
+                labelFileName.Text = fileName;
+            }
+            else
+            {
+                _drawing = null;
+                labelFileName.Text = string.Empty;
+            }
+        }
+
+        private void buttonDrawingClear_Click(object sender, EventArgs e)
+        {
+            _drawing = null;
+            labelFileName.Text = string.Empty;
+            _updatePreview = true;
         }
     }
 }

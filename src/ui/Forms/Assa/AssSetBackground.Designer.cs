@@ -36,6 +36,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBoxDrawing = new System.Windows.Forms.GroupBox();
+            this.labelFileName = new System.Windows.Forms.Label();
+            this.labelChooseDrawing = new System.Windows.Forms.Label();
+            this.buttonChooseDrawing = new System.Windows.Forms.Button();
             this.groupBoxAlignment = new System.Windows.Forms.GroupBox();
             this.radioButtonBottomRight = new System.Windows.Forms.RadioButton();
             this.radioButtonBottomCenter = new System.Windows.Forms.RadioButton();
@@ -46,7 +49,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonTopCenter = new System.Windows.Forms.RadioButton();
             this.radioButtonMiddleCenter = new System.Windows.Forms.RadioButton();
             this.radioButtonTopLeft = new System.Windows.Forms.RadioButton();
-            this.textBoxDrawing = new System.Windows.Forms.TextBox();
             this.labelRotateX = new System.Windows.Forms.Label();
             this.numericUpDownDrawingMarginV = new System.Windows.Forms.NumericUpDown();
             this.labelRotateY = new System.Windows.Forms.Label();
@@ -85,9 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleSpikes = new System.Windows.Forms.Panel();
             this.numericUpDownSpikesStep = new System.Windows.Forms.NumericUpDown();
             this.labelStep = new System.Windows.Forms.Label();
-            this.buttonChooseDrawing = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.labelFileName = new System.Windows.Forms.Label();
+            this.buttonDrawingClear = new System.Windows.Forms.Button();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -167,11 +167,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.groupBoxDrawing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDrawing.Controls.Add(this.buttonDrawingClear);
             this.groupBoxDrawing.Controls.Add(this.labelFileName);
-            this.groupBoxDrawing.Controls.Add(this.label3);
+            this.groupBoxDrawing.Controls.Add(this.labelChooseDrawing);
             this.groupBoxDrawing.Controls.Add(this.buttonChooseDrawing);
             this.groupBoxDrawing.Controls.Add(this.groupBoxAlignment);
-            this.groupBoxDrawing.Controls.Add(this.textBoxDrawing);
             this.groupBoxDrawing.Controls.Add(this.labelRotateX);
             this.groupBoxDrawing.Controls.Add(this.numericUpDownDrawingMarginV);
             this.groupBoxDrawing.Controls.Add(this.labelRotateY);
@@ -182,6 +182,34 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxDrawing.TabIndex = 29;
             this.groupBoxDrawing.TabStop = false;
             this.groupBoxDrawing.Text = "Drawing";
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(6, 137);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 37;
+            this.labelFileName.Text = "File name";
+            // 
+            // labelChooseDrawing
+            // 
+            this.labelChooseDrawing.AutoSize = true;
+            this.labelChooseDrawing.Location = new System.Drawing.Point(6, 118);
+            this.labelChooseDrawing.Name = "labelChooseDrawing";
+            this.labelChooseDrawing.Size = new System.Drawing.Size(180, 13);
+            this.labelChooseDrawing.TabIndex = 36;
+            this.labelChooseDrawing.Text = "Choose drawing file (.ass/.assadraw)";
+            // 
+            // buttonChooseDrawing
+            // 
+            this.buttonChooseDrawing.Location = new System.Drawing.Point(192, 113);
+            this.buttonChooseDrawing.Name = "buttonChooseDrawing";
+            this.buttonChooseDrawing.Size = new System.Drawing.Size(24, 23);
+            this.buttonChooseDrawing.TabIndex = 35;
+            this.buttonChooseDrawing.Text = "...";
+            this.buttonChooseDrawing.UseVisualStyleBackColor = true;
+            this.buttonChooseDrawing.Click += new System.EventHandler(this.buttonChooseDrawing_Click);
             // 
             // groupBoxAlignment
             // 
@@ -292,18 +320,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonTopLeft.TabIndex = 0;
             this.radioButtonTopLeft.UseVisualStyleBackColor = true;
             this.radioButtonTopLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
-            // textBoxDrawing
-            // 
-            this.textBoxDrawing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDrawing.Location = new System.Drawing.Point(6, 167);
-            this.textBoxDrawing.Multiline = true;
-            this.textBoxDrawing.Name = "textBoxDrawing";
-            this.textBoxDrawing.Size = new System.Drawing.Size(387, 37);
-            this.textBoxDrawing.TabIndex = 21;
-            this.textBoxDrawing.TextChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
             // labelRotateX
             // 
@@ -811,33 +827,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStep.TabIndex = 49;
             this.labelStep.Text = "Step";
             // 
-            // buttonChooseDrawing
+            // buttonDrawingClear
             // 
-            this.buttonChooseDrawing.Location = new System.Drawing.Point(192, 113);
-            this.buttonChooseDrawing.Name = "buttonChooseDrawing";
-            this.buttonChooseDrawing.Size = new System.Drawing.Size(24, 23);
-            this.buttonChooseDrawing.TabIndex = 35;
-            this.buttonChooseDrawing.Text = "...";
-            this.buttonChooseDrawing.UseVisualStyleBackColor = true;
-            this.buttonChooseDrawing.Click += new System.EventHandler(this.buttonChooseDrawing_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 118);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(180, 13);
-            this.label3.TabIndex = 36;
-            this.label3.Text = "Choose drawing file (.ass/.assadraw)";
-            // 
-            // labelFileName
-            // 
-            this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(6, 137);
-            this.labelFileName.Name = "labelFileName";
-            this.labelFileName.Size = new System.Drawing.Size(52, 13);
-            this.labelFileName.TabIndex = 37;
-            this.labelFileName.Text = "File name";
+            this.buttonDrawingClear.Location = new System.Drawing.Point(222, 113);
+            this.buttonDrawingClear.Name = "buttonDrawingClear";
+            this.buttonDrawingClear.Size = new System.Drawing.Size(79, 23);
+            this.buttonDrawingClear.TabIndex = 38;
+            this.buttonDrawingClear.Text = "Clear";
+            this.buttonDrawingClear.UseVisualStyleBackColor = true;
+            this.buttonDrawingClear.Click += new System.EventHandler(this.buttonDrawingClear_Click);
             // 
             // AssSetBackground
             // 
@@ -921,7 +919,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.GroupBox groupBoxDrawing;
-        private System.Windows.Forms.TextBox textBoxDrawing;
         private System.Windows.Forms.Label labelRotateX;
         private System.Windows.Forms.NumericUpDown numericUpDownDrawingMarginV;
         private System.Windows.Forms.Label labelRotateY;
@@ -971,7 +968,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.RadioButton radioButtonMiddleCenter;
         private System.Windows.Forms.RadioButton radioButtonTopLeft;
         private System.Windows.Forms.Label labelFileName;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelChooseDrawing;
         private System.Windows.Forms.Button buttonChooseDrawing;
+        private System.Windows.Forms.Button buttonDrawingClear;
     }
 }
