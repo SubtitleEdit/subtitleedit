@@ -725,6 +725,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case SubtitleSortCriteria.Duration:
                     Paragraphs = Paragraphs.OrderBy(p => p.Duration.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
+                case SubtitleSortCriteria.Gap:
+                    var lookupDictionary = new Dictionary<string, double>();
+                    for (var index = 0; index < Paragraphs.Count; index++)
+                    {
+                        var paragraph = Paragraphs[index];
+                        var next = GetParagraphOrDefault(index + 1);
+                        if (next == null)
+                        {
+                            lookupDictionary.Add(paragraph.Id, 100_000);
+                        }
+                        else
+                        {
+                            var gapMilliseconds = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                            lookupDictionary.Add(paragraph.Id, gapMilliseconds);
+                        }
+                    }
+
+                    Paragraphs = Paragraphs.OrderBy(p => lookupDictionary[p.Id]).ThenBy(p => p.Number).ToList();
+                    break;
                 case SubtitleSortCriteria.Text:
                     Paragraphs = Paragraphs.OrderBy(p => p.Text, StringComparer.Ordinal).ThenBy(p => p.Number).ToList();
                     break;
