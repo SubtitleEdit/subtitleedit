@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoInfo = videoInfo;
 
             _subtitleWithNewHeader = new Subtitle(_subtitle, false);
-            if (_subtitleWithNewHeader.Header == null)
+            if (string.IsNullOrWhiteSpace(_subtitleWithNewHeader.Header))
             {
                 _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.DefaultHeader;
             }
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void ApplyCustomStyles_KeyDown(object sender, KeyEventArgs e)
+        private void AssSetBackground_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
@@ -143,16 +143,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 buttonOK_Click(null, null);
             }
-            else if (e.KeyData == UiUtil.HelpKeys)
-            {
-                UiUtil.OpenUrl("https://www.nikse.dk/SubtitleEdit/AssaOverrideTags#pos");
-                e.SuppressKeyPress = true;
-            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            UpdatedSubtitle = new Subtitle(_subtitle, false);
+            UpdatedSubtitle = new Subtitle(_subtitleWithNewHeader, false);
             AddBgBoxStyles(UpdatedSubtitle);
             var positionsAndSizes = CalcAllPositionsAndSizes();
             foreach (var posAndSize in positionsAndSizes)
@@ -176,6 +171,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 });
 
                 var p = UpdatedSubtitle.GetParagraphOrDefaultById(posAndSize.Id);
+                if (p.IsComment)
+                {
+                    continue;
+                }
+
                 var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)
                 {
                     Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void VideoLoaded(object sender, EventArgs e)
         {
             var format = new AdvancedSubStationAlpha();
-            var subtitle = new Subtitle(_subtitle);
+            var subtitle = new Subtitle(_subtitleWithNewHeader);
             subtitle.Paragraphs.Clear();
             var indices = GetIndices();
             var styleToApply = string.Empty;
@@ -471,7 +471,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _updatePreview = false;
         }
 
-        private void SetPosition_Shown(object sender, EventArgs e)
+        private void AssSetBackground_Shown(object sender, EventArgs e)
         {
             var playResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", _subtitleWithNewHeader.Header);
             var playResY = AdvancedSubStationAlpha.GetTagFromHeader("PlayResY", "[Script Info]", _subtitleWithNewHeader.Header);
@@ -480,11 +480,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var dialogResult = MessageBox.Show(LanguageSettings.Current.AssaSetPosition.ResolutionMissing, "Subtitle Edit", MessageBoxButtons.YesNoCancel);
                 if (dialogResult == DialogResult.OK || dialogResult == DialogResult.Yes)
                 {
-                    if (string.IsNullOrEmpty(_subtitleWithNewHeader.Header))
-                    {
-                        _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.DefaultHeader;
-                    }
-
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + _videoInfo.Width.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
                     _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + _videoInfo.Height.ToString(CultureInfo.InvariantCulture), "[Script Info]", _subtitleWithNewHeader.Header);
                 }
@@ -519,9 +514,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             VideoLoaded(null, null);
         }
 
-        private PositionAndSize CalcPositionAndSize()
+        private void CalcPositionAndSize()
         {
-            var positionAndSize = new PositionAndSize();
             try
             {
                 Cursor = Cursors.WaitCursor;
@@ -572,14 +566,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     _bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
                     _left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
                     _right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
-
-
-                    positionAndSize.Top = _top;
-                    positionAndSize.Bottom = _bottom;
-                    positionAndSize.Left = _left;
-                    positionAndSize.Right = _right;
-                    positionAndSize.Id = sub.Paragraphs[0].Id;
-
                     _updatePreview = true;
                 }
 
@@ -599,8 +585,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Cursor = Cursors.Default;
             }
-
-            return positionAndSize;
         }
 
         private List<PositionAndSize> CalcAllPositionsAndSizes()
