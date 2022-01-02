@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxItalic.Checked = !checkBoxItalic.Checked;
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
             {
                 checkBoxAutoSubmitOfFirstChar.Checked = !checkBoxAutoSubmitOfFirstChar.Checked;
                 e.SuppressKeyPress = true;
