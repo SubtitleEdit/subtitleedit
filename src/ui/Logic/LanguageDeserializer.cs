@@ -487,6 +487,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/Transcribing":
                     language.AudioToText.Transcribing = reader.Value;
                     break;
+                case "AudioToText/UsePostProcessing":
+                    language.AudioToText.UsePostProcessing = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;

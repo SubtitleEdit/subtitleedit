@@ -1,47 +1,63 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Dictionaries;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
+namespace Nikse.SubtitleEdit.Core.AudioToText
 {
-    public class SubtitleGenerator
+    public class AudioToTextPostProcessor
     {
         private List<ResultText> _resultTexts;
 
         /// <summary>
         /// Set period if distance to next subtitle is more than this value in milliseconds.
         /// </summary>
-        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; }
+        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 300;
+        public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 500;
+
+        public int ParagraphMaxChars { get; set; } = 86;
 
         public string TwoLetterLanguageCode { get; private set; }
 
 
-        public SubtitleGenerator(string twoLetterLanguageCode)
+        public AudioToTextPostProcessor(string twoLetterLanguageCode)
         {
-            SetPeriodIfDistanceToNextIsMoreThan = 250;
             TwoLetterLanguageCode = twoLetterLanguageCode;
         }
 
-        public Subtitle Generate(List<ResultText> resultTexts)
+        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing)
         {
             _resultTexts = resultTexts;
             var subtitle = new Subtitle();
             foreach (var resultText in _resultTexts)
             {
+                if (usePostProcessing && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.End - resultText.Start > 1)
+                {
+                    continue;
+                }
+
                 subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
             }
 
-            subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
-            subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
-            subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
+            if (usePostProcessing)
+            {
+                subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
+                subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
+                subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
+                subtitle = FixShortDuration(subtitle);
+            }
 
+            subtitle.Renumber();
             return subtitle;
         }
 
         private Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
-            //TODO: check of English non-break words
+            var englishSkipLastWords = new string[] { "with", "however" };
+            var englishSkipFirstWords = new string[] { "to", "and", "but" };
+
             var subtitle = new Subtitle(inputSubtitle);
             for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
             {
@@ -53,7 +69,21 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
                     !paragraph.Text.EndsWith('?') &&
                     !paragraph.Text.EndsWith(':'))
                 {
-                    paragraph.Text += ".";
+                    if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThanAlways)
+                    {
+                        paragraph.Text += ".";
+                    }
+                    else
+                    {
+                        var lastWord = GetLastWord(paragraph.Text);
+                        var nextFirstWord = GetFirstWord(next.Text);
+                        if (TwoLetterLanguageCode == "en" && (englishSkipLastWords.Contains(lastWord) || englishSkipFirstWords.Contains(nextFirstWord)))
+                        {
+                            continue;
+                        }
+
+                        paragraph.Text += ".";
+                    }
                 }
             }
 
@@ -69,10 +99,21 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
             return subtitle;
         }
 
-        private static Subtitle MergeShortLines(Subtitle subtitle, string language)
+        private static string GetFirstWord(string text)
+        {
+            var arr = text.Split(' ', '\r', '\n', '\t', ',');
+            return arr.Length == 0 ? string.Empty : arr[0];
+        }
+
+        private static string GetLastWord(string text)
+        {
+            var arr = text.Split(' ', '\r', '\n', '\t', ',');
+            return arr.Length == 0 ? string.Empty : arr[arr.Length - 1];
+        }
+
+        private Subtitle MergeShortLines(Subtitle subtitle, string language)
         {
             var maxMillisecondsBetweenLines = 100;
-            var maxCharacters = 90;
             const bool onlyContinuousLines = true;
 
             var mergedSubtitle = new Subtitle();
@@ -88,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
                 var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
-                    if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines))
+                    if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, ParagraphMaxChars, onlyContinuousLines))
                     {
                         if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
                             GetEndTag(p.Text) == GetEndTag(next.Text))
@@ -195,6 +236,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
             }
 
             return startTag;
+        }
+
+        private static Subtitle FixShortDuration(Subtitle inputSubtitle)
+        {
+            var subtitle = new Subtitle(inputSubtitle);
+            new FixShortDisplayTimes().Fix(subtitle, new EmptyFixCallback());
+            return subtitle;
         }
     }
 }

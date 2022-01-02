@@ -180,6 +180,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <DownloadVoskModelToX>Please download an audio-to-text model from the Vosk website and unpack to {0}</DownloadVoskModelToX>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>
+    <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>

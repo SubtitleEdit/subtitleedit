@@ -184,6 +184,7 @@
             public string DownloadVoskModelToX { get; set; }
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
+            public string UsePostProcessing { get; set; }
         }
 
         public class AssaAttachments
