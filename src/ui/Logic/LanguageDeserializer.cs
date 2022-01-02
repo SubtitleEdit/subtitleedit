@@ -2128,6 +2128,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateBlankVideo/DurationInMinutes":
                     language.GenerateBlankVideo.DurationInMinutes = reader.Value;
                     break;
+                case "GenerateBlankVideo/Background":
+                    language.GenerateBlankVideo.Background = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/Title":
                     language.GenerateVideoWithBurnedInSubs.Title = reader.Value;
                     break;
@@ -5958,6 +5961,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/WaveformUseFFmpeg":
                     language.Settings.WaveformUseFFmpeg = reader.Value;
+                    break;
+                case "Settings/DownloadX":
+                    language.Settings.DownloadX = reader.Value;
                     break;
                 case "Settings/WaveformFFmpegPath":
                     language.Settings.WaveformFFmpegPath = reader.Value;
