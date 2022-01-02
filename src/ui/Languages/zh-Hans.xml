@@ -169,6 +169,17 @@ Command line: {1} {2}
     <FixesAvailable>可用修复: {0}</FixesAvailable>
     <UnableToFix>无法修复 {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>音频转文字</Title>
+    <Info>通过 Vosk/Kaldi 语音识别从音频生成文本</Info>
+    <VoskWebsite>Vosk网站</VoskWebsite>
+    <Models>模型</Models>
+    <ChooseModel>选择模型</ChooseModel>
+    <OpenModelsFolder>打开模型文件夹</OpenModelsFolder>
+    <DownloadVoskModelToX>请从 Vosk 网站下载音频文本转换模型，并解压到 {0}</DownloadVoskModelToX>
+    <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
+    <Transcribing>将音频转录为文本...</Transcribing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
     <AttachFiles>添加附件…</AttachFiles>
@@ -228,14 +239,6 @@ Command line: {1} {2}
     <RotateXAxis>旋转 {0} 轴</RotateXAxis>
     <DistortX>扭曲{0}</DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>音频转文字</Title>
-    <ExtractingAudioUsingX>使用{0}提取音频...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>使用{0}从音频中提取文字...</ExtractingTextUsingX>
-    <ProgessViaXy>使用{0}提取文字进度：{1}%</ProgessViaXy>
-    <ShowLess>显示更少 ▲</ShowLess>
-    <ShowMore>显示更多 ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>自动平衡所选行</TitleAutoBreak>
     <TitleUnbreak>删除所选行的换行符</TitleUnbreak>
@@ -801,7 +804,7 @@ Command line: {1} {2}
     <Title>生成带有内嵌字幕的视频</Title>
     <InfoAssaOff>注意：支持 ASSA 样式。</InfoAssaOff>
     <InfoAssaOn>注意：将使用 ASSA 样式:)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>带有内嵌字幕的“{0}”已生成。</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
@@ -812,6 +815,7 @@ Command line: {1} {2}
     <Encoding>编码</Encoding>
     <BitRate>比特率</BitRate>
     <SampleRate>采样率</SampleRate>
+    <Audio>音频</Audio>
     <Stereo>立体声</Stereo>
     <Preset>预设</Preset>
     <Crf>CRF</Crf>
@@ -1213,6 +1217,7 @@ Command line: {1} {2}
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>视频/音频到文本...</VideoAudioToText>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>生成/导入场景切换...</GenerateImportSceneChanges>
         <RemoveOrExportSceneChanges>删除/导出场景切换...</RemoveOrExportSceneChanges>
