@@ -357,6 +357,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AssaBgBoxPaddingRight { get; set; }
         public int AssaBgBoxPaddingTop { get; set; }
         public int AssaBgBoxPaddingBottom { get; set; }
+        public int AssaBgBoxDrawingMarginV { get; set; }
+        public int AssaBgBoxDrawingMarginH { get; set; }
+        public string AssaBgBoxDrawingAlignment { get; set; }
         public Color AssaBgBoxColor { get; set; }
         public Color AssaBgBoxOutlineColor { get; set; }
         public Color AssaBgBoxShadowColor { get; set; }
@@ -5497,6 +5500,24 @@ $HorzAlign          =   Center
                 settings.Tools.AssaBgBoxPaddingBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaBgBoxDrawingMarginV");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawingMarginV = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxDrawingMarginH");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawingMarginH = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxDrawingAlignment");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawingAlignment = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AssaBgBoxColor");
             if (subNode != null)
             {
@@ -9576,6 +9597,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxPaddingRight", settings.Tools.AssaBgBoxPaddingRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxPaddingTop", settings.Tools.AssaBgBoxPaddingTop.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxPaddingBottom", settings.Tools.AssaBgBoxPaddingBottom.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawingMarginH", settings.Tools.AssaBgBoxDrawingMarginH.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawingMarginV", settings.Tools.AssaBgBoxDrawingMarginV.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawingAlignment", settings.Tools.AssaBgBoxDrawingAlignment);
                 textWriter.WriteElementString("AssaBgBoxColor", ToHtml(settings.Tools.AssaBgBoxColor));
                 textWriter.WriteElementString("AssaBgBoxOutlineColor", ToHtml(settings.Tools.AssaBgBoxOutlineColor));
                 textWriter.WriteElementString("AssaBgBoxShadowColor", ToHtml(settings.Tools.AssaBgBoxShadowColor));
