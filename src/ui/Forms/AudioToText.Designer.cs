@@ -158,7 +158,7 @@
             // linkLabelVoskWebSite
             // 
             this.linkLabelVoskWebSite.AutoSize = true;
-            this.linkLabelVoskWebSite.Location = new System.Drawing.Point(12, 22);
+            this.linkLabelVoskWebSite.Location = new System.Drawing.Point(12, 26);
             this.linkLabelVoskWebSite.Name = "linkLabelVoskWebSite";
             this.linkLabelVoskWebSite.Size = new System.Drawing.Size(70, 13);
             this.linkLabelVoskWebSite.TabIndex = 121;

@@ -1,41 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
 {
     public class SubtitleGenerator
     {
-        private readonly List<ResultText> _resultTexts;
+        private List<ResultText> _resultTexts;
 
         /// <summary>
-        /// Set period if distance to next subtitle is more than this value in milliseconds
+        /// Set period if distance to next subtitle is more than this value in milliseconds.
         /// </summary>
         public double SetPeriodIfDistanceToNextIsMoreThan { get; set; }
 
-        public SubtitleGenerator(List<ResultText> resultTexts)
+        public string TwoLetterLanguageCode { get; private set; }
+
+
+        public SubtitleGenerator(string twoLetterLanguageCode)
         {
-            _resultTexts = resultTexts;
             SetPeriodIfDistanceToNextIsMoreThan = 250;
+            TwoLetterLanguageCode = twoLetterLanguageCode;
         }
 
-        /// <summary>
-        /// Generate subtitle from audio to text result.
-        /// </summary>
-        /// <param name="language">Two letter language name</param>
-        /// <returns>Subtitle</returns>
-        public Subtitle Generate(string language)
+        public Subtitle Generate(List<ResultText> resultTexts)
         {
+            _resultTexts = resultTexts;
             var subtitle = new Subtitle();
             foreach (var resultText in _resultTexts)
             {
                 subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
             }
 
-            subtitle = AddPeriods(subtitle, language);
-            subtitle = MergeShortLines(subtitle, language);
-            subtitle = FixCasing(subtitle, language);
+            subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
+            subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
+            subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
 
             return subtitle;
         }
@@ -70,16 +69,16 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
             return subtitle;
         }
 
-        private Subtitle MergeShortLines(Subtitle subtitle, string language)
+        private static Subtitle MergeShortLines(Subtitle subtitle, string language)
         {
-            int maxMillisecondsBetweenLines = 100;
-            int maxCharacters = 90;
+            var maxMillisecondsBetweenLines = 100;
+            var maxCharacters = 90;
             const bool onlyContinuousLines = true;
 
             var mergedSubtitle = new Subtitle();
-            bool lastMerged = false;
+            var lastMerged = false;
             Paragraph p = null;
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
                 {
@@ -94,9 +93,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
                         if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
                             GetEndTag(p.Text) == GetEndTag(next.Text))
                         {
-                            string s1 = p.Text.Trim();
+                            var s1 = p.Text.Trim();
                             s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
-                            string s2 = next.Text.Trim();
+                            var s2 = next.Text.Trim();
                             s2 = s2.Substring(GetStartTag(s2).Length);
                             p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
                         }
@@ -118,6 +117,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
                     lastMerged = false;
                 }
             }
+
             if (!lastMerged)
             {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
@@ -139,16 +139,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
             var nameListInclMulti = nameList.GetAllNames();
             foreach (var paragraph in subtitle.Paragraphs)
             {
-                string text = paragraph.Text;
-                string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                if (textNoTags != textNoTags.ToUpperInvariant())
+                var text = paragraph.Text;
+                var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+                if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
                 {
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        var st = new StrippableText(text);
-                        st.FixCasing(nameListInclMulti, true, false, false, string.Empty);
-                        paragraph.Text = st.MergedString;
-                    }
+                    var st = new StrippableText(text);
+                    st.FixCasing(nameListInclMulti, true, false, false, string.Empty);
+                    paragraph.Text = st.MergedString;
                 }
             }
 
@@ -168,8 +165,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
                 return string.Empty;
             }
 
-            string endTag = string.Empty;
-            int start = text.LastIndexOf("</", StringComparison.Ordinal);
+            var endTag = string.Empty;
+            var start = text.LastIndexOf("</", StringComparison.Ordinal);
             if (start > 0 && start >= text.Length - 8)
             {
                 endTag = text.Substring(start);
@@ -190,14 +187,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.Vosk
                 return string.Empty;
             }
 
-            string startTag = string.Empty;
-            int end = text.IndexOf('>');
+            var startTag = string.Empty;
+            var end = text.IndexOf('>');
             if (end > 0 && end < 25)
             {
                 startTag = text.Substring(0, end + 1);
             }
+
             return startTag;
         }
-
     }
 }

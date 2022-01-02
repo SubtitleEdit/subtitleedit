@@ -32909,7 +32909,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (Configuration.IsRunningOnWindows && (!File.Exists(Path.Combine(Configuration.DataDirectory, "libvosk.dll"))))
+            var voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
+            if (!Directory.Exists(voskFolder))
+            {
+                Directory.CreateDirectory(voskFolder);
+            }
+
+            if (Configuration.IsRunningOnWindows && (!File.Exists(Path.Combine(voskFolder, "libvosk.dll"))))
             {
                 using (var form = new DownloadVosk())
                 {

@@ -40,11 +40,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
-            if (!Directory.Exists(_voskFolder))
-            {
-                Directory.CreateDirectory(_voskFolder);
-            }
-
             comboBoxModels.Items.Clear();
             foreach (var directory in Directory.GetDirectories(_voskFolder))
             {
@@ -95,8 +90,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(transcript);
-            TranscribedSubtitle = subtitleGenerator.Generate(GetLanguage(comboBoxModels.Text));
+            var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(GetLanguage(comboBoxModels.Text));
+            TranscribedSubtitle = subtitleGenerator.Generate(transcript);
             DialogResult = DialogResult.OK;
         }
 
@@ -119,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = LanguageSettings.Current.AudioToText.LoadingVoskModel;
             labelProgress.Refresh();
             Application.DoEvents();
-            Directory.SetCurrentDirectory(Configuration.DataDirectory);
+            Directory.SetCurrentDirectory(_voskFolder);
             Vosk.Vosk.SetLogLevel(0);
             var model = new Model(modelFileName);
             var rec = new VoskRecognizer(model, 16000.0f);

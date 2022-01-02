@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var folder = Configuration.DataDirectory;
+            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
             var tempFileName = FileUtil.GetTempFileName(".tar");
             using (var ms = new MemoryStream(e.Result))
             using (var fs = new FileStream(tempFileName, FileMode.Create))
