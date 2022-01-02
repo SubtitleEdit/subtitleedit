@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // labelEdgeStyle
             // 
             this.labelEdgeStyle.AutoSize = true;
-            this.labelEdgeStyle.Location = new System.Drawing.Point(198, 19);
+            this.labelEdgeStyle.Location = new System.Drawing.Point(200, 19);
             this.labelEdgeStyle.Name = "labelEdgeStyle";
             this.labelEdgeStyle.Size = new System.Drawing.Size(30, 13);
             this.labelEdgeStyle.TabIndex = 25;
@@ -752,7 +752,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.panelStyleRounded.Controls.Add(this.numericUpDownRadius);
             this.panelStyleRounded.Controls.Add(this.labelRadius);
-            this.panelStyleRounded.Location = new System.Drawing.Point(201, 48);
+            this.panelStyleRounded.Location = new System.Drawing.Point(200, 48);
             this.panelStyleRounded.Name = "panelStyleRounded";
             this.panelStyleRounded.Size = new System.Drawing.Size(167, 68);
             this.panelStyleRounded.TabIndex = 53;
@@ -763,7 +763,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleSpikes.Controls.Add(this.label9);
             this.panelStyleSpikes.Controls.Add(this.labelStep);
             this.panelStyleSpikes.Controls.Add(this.numericUpDownSpikesMax);
-            this.panelStyleSpikes.Location = new System.Drawing.Point(201, 122);
+            this.panelStyleSpikes.Location = new System.Drawing.Point(200, 122);
             this.panelStyleSpikes.Name = "panelStyleSpikes";
             this.panelStyleSpikes.Size = new System.Drawing.Size(167, 68);
             this.panelStyleSpikes.TabIndex = 54;
@@ -835,7 +835,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(790, 545);
+            this.MinimumSize = new System.Drawing.Size(830, 545);
             this.Name = "AssSetBackground";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
