@@ -1666,6 +1666,7 @@ namespace Nikse.SubtitleEdit.Forms
             sortStartTimeToolStripMenuItem.Text = _language.Menu.Tools.StartTime;
             sortEndTimeToolStripMenuItem.Text = _language.Menu.Tools.EndTime;
             sortDisplayTimeToolStripMenuItem.Text = _language.Menu.Tools.Duration;
+            sortByGapToolStripMenuItem.Text = LanguageSettings.Current.General.Gap;
 
             descendingToolStripMenuItem.Text = _language.Menu.Tools.Descending;
             AscendingToolStripMenuItem.Text = _language.Menu.Tools.Ascending;
@@ -19645,6 +19646,11 @@ namespace Nikse.SubtitleEdit.Forms
             SortSubtitle(SubtitleSortCriteria.Duration, (sender as ToolStripItem).Text);
         }
 
+        private void sortByGapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortSubtitle(SubtitleSortCriteria.Gap, (sender as ToolStripItem).Text);
+        }
+
         private void SortTextMaxLineLengthToolStripMenuItemClick(object sender, EventArgs e)
         {
             SortSubtitle(SubtitleSortCriteria.TextMaxLineLength, (sender as ToolStripItem).Text);
@@ -23607,6 +23613,7 @@ namespace Nikse.SubtitleEdit.Forms
             sortStartTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByStartTime);
             sortEndTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByEndTime);
             sortDisplayTimeToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByDuration);
+            sortByGapToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByGap);
             sortTextAlphabeticallytoolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByText);
             sortTextMaxLineLengthToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortBySingleLineMaxLen);
             sortTextTotalLengthToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSortByTextTotalLength);

@@ -2222,6 +2222,7 @@ $HorzAlign          =   Center
         public string MainListViewSortByStartTime { get; set; }
         public string MainListViewSortByEndTime { get; set; }
         public string MainListViewSortByDuration { get; set; }
+        public string MainListViewSortByGap { get; set; }
         public string MainListViewSortByText { get; set; }
         public string MainListViewSortBySingleLineMaxLen { get; set; }
         public string MainListViewSortByTextTotalLength { get; set; }
@@ -8297,6 +8298,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewSortByDuration = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewSortByGap");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewSortByGap = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewSortByText");
                 if (subNode != null)
                 {
@@ -10134,6 +10141,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewSortByStartTime", shortcuts.MainListViewSortByStartTime);
             textWriter.WriteElementString("MainListViewSortByEndTime", shortcuts.MainListViewSortByEndTime);
             textWriter.WriteElementString("MainListViewSortByDuration", shortcuts.MainListViewSortByDuration);
+            textWriter.WriteElementString("MainListViewSortByGap", shortcuts.MainListViewSortByGap);
             textWriter.WriteElementString("MainListViewSortByText", shortcuts.MainListViewSortByText);
             textWriter.WriteElementString("MainListViewSortBySingleLineMaxLen", shortcuts.MainListViewSortBySingleLineMaxLen);
             textWriter.WriteElementString("MainListViewSortByTextTotalLength", shortcuts.MainListViewSortByTextTotalLength);
