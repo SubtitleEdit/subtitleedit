@@ -2373,7 +2373,7 @@
             public string SpectrogramOneColorGradient { get; set; }
             public string SpectrogramClassic { get; set; }
             public string WaveformUseFFmpeg { get; set; }
-            public string DownloadFFmpeg { get; set; }
+            public string DownloadX { get; set; }
             public string WaveformFFmpegPath { get; set; }
             public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }

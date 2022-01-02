@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonBluRaySup_CheckedChanged(null, null);
 
-            buttonDownloadFfmpeg.Text = LanguageSettings.Current.Settings.DownloadFFmpeg;
+            buttonDownloadFfmpeg.Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg");
             var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
 

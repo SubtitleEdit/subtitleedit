@@ -32554,7 +32554,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
             {
-                if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     return;
                 }
@@ -32654,7 +32654,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
             {
-                if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     return;
                 }
@@ -32897,7 +32897,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
             {
-                if (MessageBox.Show(LanguageSettings.Current.Settings.DownloadFFmpeg, "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     return;
                 }
@@ -32924,6 +32924,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.IsRunningOnWindows && (!File.Exists(Path.Combine(voskFolder, "libvosk.dll"))))
             {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "libvosk"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+
                 using (var form = new DownloadVosk())
                 {
                     if (form.ShowDialog(this) != DialogResult.OK)
