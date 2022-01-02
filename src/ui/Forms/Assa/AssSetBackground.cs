@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             public int Bottom { get; set; }
             public int Left { get; set; }
             public int Right { get; set; }
-            public int Index { get; set; }
+            public string Id { get; set; }
         }
 
         public Subtitle UpdatedSubtitle { get; private set; }
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             SetPosition_ResizeEnd(null, null);
         }
 
-        private void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
+        private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
         {
             if (value < numericUpDown.Minimum)
             {
@@ -152,10 +152,50 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            UpdatedSubtitle = new Subtitle(_subtitle);
+            UpdatedSubtitle = new Subtitle(_subtitle, false);
+            AddBgBoxStyles(UpdatedSubtitle);
             var positionsAndSizes = CalcAllPositionsAndSizes();
+            foreach (var posAndSize in positionsAndSizes)
+            {
+                //Build box + gen preview via mpv
+                var x = posAndSize.Left - (int)numericUpDownPaddingLeft.Value;
+                var right = posAndSize.Right + (int)numericUpDownPaddingRight.Value;
+                if (checkBoxFillWidth.Checked)
+                {
+                    x = (int)numericUpDownFillWidthMarginLeft.Value;
+                    right = _videoInfo.Width - (int)numericUpDownFillWidthMarginRight.Value;
+                }
 
-            UpdatedSubtitle.Header = UpdatedSubtitle.Header ?? AdvancedSubStationAlpha.DefaultHeader;
+                _assaBox = GenerateBackgroundBox(new PositionAndSize
+                {
+                    Id = posAndSize.Id,
+                    Top = posAndSize.Top - (int)numericUpDownPaddingTop.Value,
+                    Bottom = posAndSize.Bottom + (int)numericUpDownPaddingBottom.Value,
+                    Left = x,
+                    Right = right,
+                });
+
+                var p = UpdatedSubtitle.GetParagraphOrDefaultById(posAndSize.Id);
+                var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)
+                {
+                    Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
+                    Extra = "SE-box-bg"
+                };
+                UpdatedSubtitle.InsertParagraphInCorrectTimeOrder(p2);
+                AddDrawing(x, right, p, UpdatedSubtitle);
+            }
+
+            UpdatedSubtitle.Renumber();
+            DialogResult = DialogResult.OK;
+        }
+
+        private void AddBgBoxStyles(Subtitle subtitle)
+        {
+            if (string.IsNullOrWhiteSpace(subtitle.Header))
+            {
+                subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
             var styleBoxBg = new SsaStyle
             {
                 Alignment = "7",
@@ -171,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 ShadowWidth = numericUpDownShadowWidth.Value,
                 OutlineWidth = numericUpDownOutlineWidth.Value,
             };
-            UpdatedSubtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(UpdatedSubtitle.Header, styleBoxBg);
+            subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxBg);
 
             if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
             {
@@ -185,93 +225,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     ShadowWidth = 0,
                     OutlineWidth = 0,
                 };
-                UpdatedSubtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(UpdatedSubtitle.Header, styleBoxDrawing);
+                subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxDrawing);
             }
-
-            foreach (var posAndSize in positionsAndSizes)
-            {
-                //Build box + gen preview via mpv
-                var x = posAndSize.Left - (int)numericUpDownPaddingLeft.Value;
-                var right = posAndSize.Right + (int)numericUpDownPaddingRight.Value;
-                if (checkBoxFillWidth.Checked)
-                {
-                    x = (int)numericUpDownFillWidthMarginLeft.Value;
-                    right = _videoInfo.Width - (int)numericUpDownFillWidthMarginRight.Value;
-                }
-
-                _assaBox = GenerateBackgroundBox(new PositionAndSize
-                {
-                    Index = posAndSize.Index,
-                    Top = posAndSize.Top - (int)numericUpDownPaddingTop.Value,
-                    Bottom = posAndSize.Bottom + (int)numericUpDownPaddingBottom.Value,
-                    Left = x,
-                    Right = right,
-                });
-
-                var p = UpdatedSubtitle.Paragraphs[posAndSize.Index];
-                var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)
-                {
-                    Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
-                    Style = "SE-box-bg",
-                    Extra = "SE-box-bg"
-                };
-                UpdatedSubtitle.Paragraphs.Add(p2);
-
-                if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
-                {
-                    var pDrawing = new Paragraph(textBoxDrawing.Text, 0, 1000);
-                    var marginH = (int)numericUpDownDrawMarginH.Value;
-                    var marginV = (int)numericUpDownDrawingMarginV.Value;
-                    var pos = string.Empty;
-                    if (radioButtonTopLeft.Checked)
-                    {
-                        pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
-                    }
-                    else if (radioButtonTopCenter.Checked)
-                    {
-                        pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
-                    }
-                    else if (radioButtonTopRight.Checked)
-                    {
-                        pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
-                    }
-                    else if (radioButtonMiddleLeft.Checked)
-                    {
-                        pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
-                    }
-                    else if (radioButtonMiddleCenter.Checked)
-                    {
-                        pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
-                    }
-                    else if (radioButtonMiddleRight.Checked)
-                    {
-                        pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
-                    }
-                    else if (radioButtonMiddleLeft.Checked)
-                    {
-                        pos = $"{{\\pos({x + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
-                    }
-                    else if (radioButtonMiddleCenter.Checked)
-                    {
-                        pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
-                    }
-                    else if (radioButtonMiddleRight.Checked)
-                    {
-                        pos = $"{{\\pos({right + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
-                    }
-
-                    pDrawing.Text = pos + pDrawing.Text;
-                    pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                    pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                    pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + 1;
-                    pDrawing.Style = "SE-box-drawing";
-                    pDrawing.Extra = "SE-box-drawing";
-                    UpdatedSubtitle.Paragraphs.Add(pDrawing);
-                }
-            }
-
-            UpdatedSubtitle.Renumber();
-            DialogResult = DialogResult.OK;
         }
 
         private int[] GetIndices()
@@ -357,9 +312,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void VideoLoaded(object sender, EventArgs e)
         {
             var format = new AdvancedSubStationAlpha();
-            var subtitle = new Subtitle();
+            var subtitle = new Subtitle(_subtitle);
+            subtitle.Paragraphs.Clear();
             var indices = GetIndices();
-            var styleToApply = string.Empty; // $"{{\\pos({_x},{_y})}}";
+            var styleToApply = string.Empty;
 
             var p = indices.Length > 0 ?
                 new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
@@ -385,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _assaBox = GenerateBackgroundBox(new PositionAndSize
             {
-                Index = 0,
+                Id = p.Id,
                 Top = _top - (int)numericUpDownPaddingTop.Value,
                 Bottom = _bottom + (int)numericUpDownPaddingBottom.Value,
                 Left = x,
@@ -397,91 +353,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 StartTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds },
                 EndTime = { TotalMilliseconds = p.EndTime.TotalMilliseconds },
                 Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
-                Style = "SE-box-bg",
                 Extra = "SE-box-bg"
             };
             subtitle.Paragraphs.Add(p2);
 
-            subtitle.Header = _subtitleWithNewHeader.Header ?? AdvancedSubStationAlpha.DefaultHeader;
-            var styleBoxBg = new SsaStyle
-            {
-                Alignment = "7",
-                Name = "SE-box-bg",
-                MarginLeft = 0,
-                MarginRight = 0,
-                MarginVertical = 0,
-                Primary = _boxColor,
-                Secondary = _boxShadowColor,
-                Tertiary = _boxShadowColor,
-                Background = _boxShadowColor,
-                Outline = _boxOutlineColor,
-                ShadowWidth = numericUpDownShadowWidth.Value,
-                OutlineWidth = numericUpDownOutlineWidth.Value,
-            };
-            subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxBg);
-
-            if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
-            {
-                var pDrawing = new Paragraph(textBoxDrawing.Text, 0, 1000);
-                var marginH = (int)numericUpDownDrawMarginH.Value;
-                var marginV = (int)numericUpDownDrawingMarginV.Value;
-                var pos = string.Empty;
-                if (radioButtonTopLeft.Checked)
-                {
-                    pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
-                }
-                else if (radioButtonTopCenter.Checked)
-                {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
-                }
-                else if (radioButtonTopRight.Checked)
-                {
-                    pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + marginV })}}";
-                }
-                else if (radioButtonMiddleLeft.Checked)
-                {
-                    pos = $"{{\\pos({x + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
-                }
-                else if (radioButtonMiddleCenter.Checked)
-                {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
-                }
-                else if (radioButtonMiddleRight.Checked)
-                {
-                    pos = $"{{\\pos({right + marginH},{ _top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV })}}";
-                }
-                else if (radioButtonMiddleLeft.Checked)
-                {
-                    pos = $"{{\\pos({x + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
-                }
-                else if (radioButtonMiddleCenter.Checked)
-                {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
-                }
-                else if (radioButtonMiddleRight.Checked)
-                {
-                    pos = $"{{\\pos({right + marginH},{ _bottom - (int)numericUpDownPaddingBottom.Value - marginV })}}";
-                }
-
-                pDrawing.Text = pos + pDrawing.Text;
-                pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + 1;
-                pDrawing.Style = "SE-box-drawing";
-                pDrawing.Extra = "SE-box-drawing";
-                subtitle.Paragraphs.Add(pDrawing);
-                var styleBoxDrawing = new SsaStyle
-                {
-                    Alignment = "7",
-                    Name = "SE-box-drawing",
-                    MarginLeft = 0,
-                    MarginRight = 0,
-                    MarginVertical = 0,
-                    ShadowWidth = 0,
-                    OutlineWidth = 0,
-                };
-                subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxDrawing);
-            }
+            AddBgBoxStyles(subtitle);
+            AddDrawing(x, right, p, subtitle);
 
             var text = subtitle.ToText(format);
             _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
@@ -496,6 +373,60 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 Application.DoEvents();
                 _videoLoaded = true;
                 timer1.Start();
+            }
+        }
+
+        private void AddDrawing(int x, int right, Paragraph p, Subtitle subtitle)
+        {
+            if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
+            {
+                var pDrawing = new Paragraph(textBoxDrawing.Text, 0, 1000);
+                var marginH = (int)numericUpDownDrawMarginH.Value;
+                var marginV = (int)numericUpDownDrawingMarginV.Value;
+                var pos = string.Empty;
+                if (radioButtonTopLeft.Checked)
+                {
+                    pos = $"{{\\pos({x + marginH},{_top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                }
+                else if (radioButtonTopCenter.Checked)
+                {
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{_top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                }
+                else if (radioButtonTopRight.Checked)
+                {
+                    pos = $"{{\\pos({right + marginH},{_top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                }
+                else if (radioButtonMiddleLeft.Checked)
+                {
+                    pos = $"{{\\pos({x + marginH},{_top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV})}}";
+                }
+                else if (radioButtonMiddleCenter.Checked)
+                {
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{_top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV})}}";
+                }
+                else if (radioButtonMiddleRight.Checked)
+                {
+                    pos = $"{{\\pos({right + marginH},{_top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV})}}";
+                }
+                else if (radioButtonMiddleLeft.Checked)
+                {
+                    pos = $"{{\\pos({x + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
+                }
+                else if (radioButtonMiddleCenter.Checked)
+                {
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
+                }
+                else if (radioButtonMiddleRight.Checked)
+                {
+                    pos = $"{{\\pos({right + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
+                }
+
+                pDrawing.Text = pos + pDrawing.Text;
+                pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
+                pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + 1;
+                pDrawing.Extra = "SE-box-drawing";
+                subtitle.InsertParagraphInCorrectTimeOrder(pDrawing);
             }
         }
 
@@ -647,7 +578,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     positionAndSize.Bottom = _bottom;
                     positionAndSize.Left = _left;
                     positionAndSize.Right = _right;
-                    positionAndSize.Index = 0;
+                    positionAndSize.Id = sub.Paragraphs[0].Id;
 
                     _updatePreview = true;
                 }
@@ -743,7 +674,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                             Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
                             Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
                             Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                            Index = idx,
+                            Id = _subtitle.Paragraphs[idx].Id,
                         });
                     }
                     try
