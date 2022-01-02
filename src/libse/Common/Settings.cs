@@ -360,9 +360,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color AssaBgBoxColor { get; set; }
         public Color AssaBgBoxOutlineColor { get; set; }
         public Color AssaBgBoxShadowColor { get; set; }
+        public Color AssaBgBoxTransparentColor { get; set; }
         public string AssaBgBoxStyle { get; set; }
         public int AssaBgBoxStyleRadius { get; set; }
         public int AssaBgBoxOutlineWidth { get; set; }
+        public int AssaBgBoxLayer { get; set; }
         public string AssaBgBoxDrawing { get; set; }
 
 
@@ -542,9 +544,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaBgBoxColor = Color.FromArgb(200, 0, 0, 0);
             AssaBgBoxOutlineColor = Color.FromArgb(200, 80, 80, 80);
             AssaBgBoxShadowColor = Color.FromArgb(100, 0, 0, 0);
+            AssaBgBoxTransparentColor = Color.Cyan;
             AssaBgBoxStyle = "square";
             AssaBgBoxStyleRadius = 40;
             AssaBgBoxOutlineWidth = 0;
+            AssaBgBoxLayer = -11893;
 
             GenVideoEncoding = "libx264";
             GenVideoPreset = "medium";
@@ -5510,6 +5514,12 @@ $HorzAlign          =   Center
                 settings.Tools.AssaBgBoxShadowColor = ColorTranslator.FromHtml(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("AssaBgBoxTransparentColor");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxTransparentColor = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AssaBgBoxStyle");
             if (subNode != null)
             {
@@ -5526,6 +5536,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AssaBgBoxOutlineWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxLayer");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxLayer = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("AssaBgBoxDrawing");
@@ -9556,9 +9572,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxColor));
                 textWriter.WriteElementString("AssaBgBoxOutlineColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxOutlineColor));
                 textWriter.WriteElementString("AssaBgBoxShadowColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxShadowColor));
+                textWriter.WriteElementString("AssaBgBoxTransparentColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxTransparentColor));
                 textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
                 textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxLayer", settings.Tools.AssaBgBoxLayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
