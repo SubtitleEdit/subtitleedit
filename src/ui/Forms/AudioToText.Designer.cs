@@ -42,6 +42,7 @@
             this.linkLabelVoskWebSite = new System.Windows.Forms.LinkLabel();
             this.labelTime = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.checkBoxUsePostProcessing = new System.Windows.Forms.CheckBox();
             this.groupBoxModels.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +51,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(529, 176);
+            this.buttonCancel.Location = new System.Drawing.Point(529, 228);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 112;
@@ -62,7 +63,7 @@
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(398, 176);
+            this.buttonGenerate.Location = new System.Drawing.Point(398, 228);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
             this.buttonGenerate.TabIndex = 111;
@@ -74,7 +75,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 174);
+            this.progressBar1.Location = new System.Drawing.Point(12, 226);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(380, 13);
             this.progressBar1.TabIndex = 114;
@@ -84,7 +85,7 @@
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 158);
+            this.labelProgress.Location = new System.Drawing.Point(12, 210);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 115;
@@ -95,11 +96,11 @@
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.Location = new System.Drawing.Point(15, 9);
+            this.textBoxLog.Location = new System.Drawing.Point(529, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(589, 158);
+            this.textBoxLog.Size = new System.Drawing.Size(75, 57);
             this.textBoxLog.TabIndex = 116;
             // 
             // labelInfo
@@ -121,7 +122,7 @@
             this.groupBoxModels.Controls.Add(this.comboBoxModels);
             this.groupBoxModels.Location = new System.Drawing.Point(15, 66);
             this.groupBoxModels.Name = "groupBoxModels";
-            this.groupBoxModels.Size = new System.Drawing.Size(589, 84);
+            this.groupBoxModels.Size = new System.Drawing.Size(589, 86);
             this.groupBoxModels.TabIndex = 120;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Models";
@@ -170,7 +171,7 @@
             // 
             this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTime.AutoSize = true;
-            this.labelTime.Location = new System.Drawing.Point(12, 189);
+            this.labelTime.Location = new System.Drawing.Point(12, 241);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(88, 13);
             this.labelTime.TabIndex = 122;
@@ -181,11 +182,22 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // checkBoxUsePostProcessing
+            // 
+            this.checkBoxUsePostProcessing.AutoSize = true;
+            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 158);
+            this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
+            this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
+            this.checkBoxUsePostProcessing.TabIndex = 123;
+            this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
+            this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
+            // 
             // AudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(616, 211);
+            this.ClientSize = new System.Drawing.Size(616, 263);
+            this.Controls.Add(this.checkBoxUsePostProcessing);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.linkLabelVoskWebSite);
             this.Controls.Add(this.groupBoxModels);
@@ -226,5 +238,6 @@
         private System.Windows.Forms.LinkLabel linkLabelOpenModelsFolder;
         private System.Windows.Forms.Label labelTime;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.CheckBox checkBoxUsePostProcessing;
     }
 }

@@ -325,6 +325,7 @@ namespace Nikse.SubtitleEdit.Logic
                 DownloadVoskModelToX = "Please download an audio-to-text model from the Vosk website and unpack to {0}",
                 LoadingVoskModel = "Loading Vosk speech recognition model...",
                 Transcribing = "Transcribing audio to text...",
+                UsePostProcessing = "Use post-processing (line merge, fix casing, punctuation, and more)",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments

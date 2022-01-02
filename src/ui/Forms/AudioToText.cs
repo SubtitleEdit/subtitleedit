@@ -36,9 +36,11 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxModels.Text = LanguageSettings.Current.AudioToText.Models;
             labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
+            checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
+            checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
             comboBoxModels.Items.Clear();
             foreach (var directory in Directory.GetDirectories(_voskFolder))
@@ -62,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             textBoxLog.Visible = false;
+            textBoxLog.Dock = DockStyle.Fill;
             labelProgress.Text = string.Empty;
             labelTime.Text = string.Empty;
         }
@@ -90,8 +93,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var subtitleGenerator = new Core.AudioToText.Vosk.SubtitleGenerator(GetLanguage(comboBoxModels.Text));
-            TranscribedSubtitle = subtitleGenerator.Generate(transcript);
+            var postProcessor = new AudioToTextPostProcessor(GetLanguage(comboBoxModels.Text))
+            {
+                ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+            };
+            TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked);
             DialogResult = DialogResult.OK;
         }
 
@@ -317,6 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.VoskModel = comboBoxModels.Text;
+            Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
         }
 
         private void AudioToText_KeyDown(object sender, KeyEventArgs e)
