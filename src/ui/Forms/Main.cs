@@ -22951,7 +22951,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (original != null)
                     {
                         index = _subtitleOriginal.GetIndex(original);
-                        for (int i = index; i < lastLineNumber; i++)
+                        for (int i = index; i < _subtitleOriginal.Paragraphs.Count; i++)
                         {
                             if (!_subtitleOriginal.Paragraphs[i].StartTime.IsMaxTime)
                             {
