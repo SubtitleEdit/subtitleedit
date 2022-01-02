@@ -40,10 +40,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private readonly VideoInfo _videoInfo;
         private bool _loading = true;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
-        private long _processedFrames;
         private string _assaBox;
         private readonly Random _random = new Random();
-
         private int _top;
         private int _bottom;
         private int _left;
@@ -51,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Color _boxColor;
         private Color _boxShadowColor;
         private Color _boxOutlineColor;
+        private long _processedFrames;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
         {
@@ -70,8 +69,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             _selectedIndices = selectedIndices;
             // Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
-            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
-
             comboBoxBoxStyle.Items.Clear();
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.SquareCorners);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
@@ -79,7 +76,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
-
 
             if (Configuration.Settings.Tools.AssaBgBoxStyle == "spikes")
             {
@@ -213,10 +209,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 });
 
                 var p = UpdatedSubtitle.Paragraphs[posAndSize.Index];
-                var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
-                p2.Layer = (int)numericUpDownBoxLayer.Value;
-                p2.Style = "SE-box-bg";
-                p2.Extra = "SE-box-bg";
+                var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)
+                {
+                    Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
+                    Style = "SE-box-bg",
+                    Extra = "SE-box-bg"
+                };
                 UpdatedSubtitle.Paragraphs.Add(p2);
 
                 if (!string.IsNullOrWhiteSpace(textBoxDrawing.Text))
@@ -265,13 +263,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     pDrawing.Text = pos + pDrawing.Text;
                     pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                     pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                    pDrawing.Layer = (int)numericUpDownDrawingLayer.Value;
+                    pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + 1;
                     pDrawing.Style = "SE-box-drawing";
                     pDrawing.Extra = "SE-box-drawing";
                     UpdatedSubtitle.Paragraphs.Add(pDrawing);
                 }
             }
 
+            UpdatedSubtitle.Renumber();
             DialogResult = DialogResult.OK;
         }
 
@@ -393,12 +392,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 Right = right,
             });
 
-            var p2 = new Paragraph(_assaBox ?? string.Empty, 0, 1000);
-            p2.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-            p2.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-            p2.Layer = (int)numericUpDownBoxLayer.Value;
-            p2.Style = "SE-box-bg";
-            p2.Extra = "SE-box-bg";
+            var p2 = new Paragraph(_assaBox ?? string.Empty, 0, 1000)
+            {
+                StartTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds },
+                EndTime = { TotalMilliseconds = p.EndTime.TotalMilliseconds },
+                Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
+                Style = "SE-box-bg",
+                Extra = "SE-box-bg"
+            };
             subtitle.Paragraphs.Add(p2);
 
             subtitle.Header = _subtitleWithNewHeader.Header ?? AdvancedSubStationAlpha.DefaultHeader;
@@ -465,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 pDrawing.Text = pos + pDrawing.Text;
                 pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                 pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                pDrawing.Layer = (int)numericUpDownDrawingLayer.Value;
+                pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + 1;
                 pDrawing.Style = "SE-box-drawing";
                 pDrawing.Extra = "SE-box-drawing";
                 subtitle.Paragraphs.Add(pDrawing);
@@ -601,7 +602,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                2,
                                _videoInfo.Width,
                                _videoInfo.Height,
-                               Color.Cyan,
+                               Configuration.Settings.Tools.AssaBgBoxTransparentColor,
                                false,
                                25,
                                null);
@@ -636,10 +637,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 using (var bmp = new Bitmap(bmpFileName))
                 {
                     var nBmp = new NikseBitmap(bmp);
-                    _top = nBmp.CalcTopCropping(Color.Cyan);
-                    _bottom = nBmp.Height - nBmp.CalcBottomCropping(Color.Cyan);
-                    _left = nBmp.CalcLeftCropping(Color.Cyan);
-                    _right = nBmp.Width - nBmp.CalcRightCropping(Color.Cyan);
+                    _top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
+                    _bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
+                    _left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
+                    _right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor);
 
 
                     positionAndSize.Top = _top;
@@ -685,7 +686,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                _selectedIndices.Length + 2,
                                _videoInfo.Width,
                                _videoInfo.Height,
-                               Color.Cyan,
+                               Configuration.Settings.Tools.AssaBgBoxTransparentColor,
                                false,
                                25,
                                null); // TODO Progress
@@ -738,10 +739,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         var nBmp = new NikseBitmap(bmp);
                         list.Add(new PositionAndSize
                         {
-                            Top = nBmp.CalcTopCropping(Color.Cyan),
-                            Bottom = nBmp.Height - nBmp.CalcBottomCropping(Color.Cyan),
-                            Left = nBmp.CalcLeftCropping(Color.Cyan),
-                            Right = nBmp.Width - nBmp.CalcRightCropping(Color.Cyan),
+                            Top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                            Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                            Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                            Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
                             Index = idx,
                         });
                     }

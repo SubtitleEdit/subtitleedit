@@ -46,8 +46,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonTopCenter = new System.Windows.Forms.RadioButton();
             this.radioButtonMiddleCenter = new System.Windows.Forms.RadioButton();
             this.radioButtonTopLeft = new System.Windows.Forms.RadioButton();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownDrawingLayer = new System.Windows.Forms.NumericUpDown();
             this.textBoxDrawing = new System.Windows.Forms.TextBox();
             this.labelRotateX = new System.Windows.Forms.Label();
             this.numericUpDownDrawingMarginV = new System.Windows.Forms.NumericUpDown();
@@ -59,8 +57,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.label1 = new System.Windows.Forms.Label();
             this.labelEdgeStyle = new System.Windows.Forms.Label();
             this.comboBoxBoxStyle = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDownBoxLayer = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.numericUpDownPaddingRight = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
@@ -93,12 +89,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
             this.groupBoxAlignment.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingMarginV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawMarginH)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingTop)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBoxLayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).BeginInit();
@@ -171,16 +165,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxDrawing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxDrawing.Controls.Add(this.groupBoxAlignment);
-            this.groupBoxDrawing.Controls.Add(this.label4);
-            this.groupBoxDrawing.Controls.Add(this.numericUpDownDrawingLayer);
             this.groupBoxDrawing.Controls.Add(this.textBoxDrawing);
             this.groupBoxDrawing.Controls.Add(this.labelRotateX);
             this.groupBoxDrawing.Controls.Add(this.numericUpDownDrawingMarginV);
             this.groupBoxDrawing.Controls.Add(this.labelRotateY);
             this.groupBoxDrawing.Controls.Add(this.numericUpDownDrawMarginH);
-            this.groupBoxDrawing.Location = new System.Drawing.Point(591, 12);
+            this.groupBoxDrawing.Location = new System.Drawing.Point(562, 12);
             this.groupBoxDrawing.Name = "groupBoxDrawing";
-            this.groupBoxDrawing.Size = new System.Drawing.Size(370, 214);
+            this.groupBoxDrawing.Size = new System.Drawing.Size(399, 214);
             this.groupBoxDrawing.TabIndex = 29;
             this.groupBoxDrawing.TabStop = false;
             this.groupBoxDrawing.Text = "Drawing";
@@ -295,38 +287,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.radioButtonTopLeft.UseVisualStyleBackColor = true;
             this.radioButtonTopLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 72);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(33, 13);
-            this.label4.TabIndex = 32;
-            this.label4.Text = "Layer";
-            // 
-            // numericUpDownDrawingLayer
-            // 
-            this.numericUpDownDrawingLayer.Location = new System.Drawing.Point(100, 70);
-            this.numericUpDownDrawingLayer.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-            this.numericUpDownDrawingLayer.Minimum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownDrawingLayer.Name = "numericUpDownDrawingLayer";
-            this.numericUpDownDrawingLayer.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownDrawingLayer.TabIndex = 33;
-            this.numericUpDownDrawingLayer.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownDrawingLayer.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
             // textBoxDrawing
             // 
             this.textBoxDrawing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -335,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.textBoxDrawing.Location = new System.Drawing.Point(6, 112);
             this.textBoxDrawing.Multiline = true;
             this.textBoxDrawing.Name = "textBoxDrawing";
-            this.textBoxDrawing.Size = new System.Drawing.Size(358, 96);
+            this.textBoxDrawing.Size = new System.Drawing.Size(387, 96);
             this.textBoxDrawing.TabIndex = 21;
             this.textBoxDrawing.TextChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
@@ -479,38 +439,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.comboBoxBoxStyle.Size = new System.Drawing.Size(116, 21);
             this.comboBoxBoxStyle.TabIndex = 26;
             this.comboBoxBoxStyle.SelectedIndexChanged += new System.EventHandler(this.comboBoxBoxStyle_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(375, 127);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(33, 13);
-            this.label3.TabIndex = 30;
-            this.label3.Text = "Layer";
-            // 
-            // numericUpDownBoxLayer
-            // 
-            this.numericUpDownBoxLayer.Location = new System.Drawing.Point(414, 127);
-            this.numericUpDownBoxLayer.Maximum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            0});
-            this.numericUpDownBoxLayer.Minimum = new decimal(new int[] {
-            360,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownBoxLayer.Name = "numericUpDownBoxLayer";
-            this.numericUpDownBoxLayer.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownBoxLayer.TabIndex = 31;
-            this.numericUpDownBoxLayer.Value = new decimal(new int[] {
-            9,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownBoxLayer.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
             // label5
             // 
@@ -891,9 +819,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.Controls.Add(this.buttonPrimaryColor);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.numericUpDownPaddingRight);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.numericUpDownBoxLayer);
             this.Controls.Add(this.numericUpDownPaddingLeft);
             this.Controls.Add(this.groupBoxDrawing);
             this.Controls.Add(this.comboBoxBoxStyle);
@@ -925,12 +851,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxDrawing.PerformLayout();
             this.groupBoxAlignment.ResumeLayout(false);
             this.groupBoxAlignment.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawingMarginV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDrawMarginH)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingBottom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingTop)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBoxLayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaddingLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).EndInit();
@@ -958,8 +882,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.GroupBox groupBoxDrawing;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown numericUpDownDrawingLayer;
         private System.Windows.Forms.TextBox textBoxDrawing;
         private System.Windows.Forms.Label labelRotateX;
         private System.Windows.Forms.NumericUpDown numericUpDownDrawingMarginV;
@@ -971,8 +893,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelEdgeStyle;
         private System.Windows.Forms.ComboBox comboBoxBoxStyle;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numericUpDownBoxLayer;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDownPaddingRight;
         private System.Windows.Forms.Label label6;

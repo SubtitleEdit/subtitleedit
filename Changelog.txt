@@ -29,6 +29,7 @@
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
 * FIXED:
+   * Fix crash in "Set start and offset the rest" w original - thx hamilaci
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
    * Fix typo for middle/center in WebVTT default property - thx koitsu
@@ -42,7 +43,7 @@
    * Fix spell check "change word" issue with apostrophe (') - thx Jim
    * Fix new-line-char in Bilibili format - thx Kuju29
    * Fix "Close video" shortcut - thx OmrSi
-   * Fix double splace issue in sub burn-in - thx Leon
+   * Fix double space issue for output file name in sub burn-in - thx Leon
 
 
 3.6.4 (3rd December 2021)
