@@ -5500,25 +5500,25 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("AssaBgBoxColor");
             if (subNode != null)
             {
-                settings.Tools.AssaBgBoxColor = ColorTranslator.FromHtml(subNode.InnerText);
-            }
+                settings.Tools.AssaBgBoxColor = FromHtml(subNode.InnerText);
+             }
 
             subNode = node.SelectSingleNode("AssaBgBoxOutlineColor");
             if (subNode != null)
             {
-                settings.Tools.AssaBgBoxOutlineColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaBgBoxOutlineColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaBgBoxShadowColor");
             if (subNode != null)
             {
-                settings.Tools.AssaBgBoxShadowColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaBgBoxShadowColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaBgBoxTransparentColor");
             if (subNode != null)
             {
-                settings.Tools.AssaBgBoxTransparentColor = ColorTranslator.FromHtml(subNode.InnerText);
+                settings.Tools.AssaBgBoxTransparentColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AssaBgBoxStyle");
@@ -9576,10 +9576,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxPaddingRight", settings.Tools.AssaBgBoxPaddingRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxPaddingTop", settings.Tools.AssaBgBoxPaddingTop.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxPaddingBottom", settings.Tools.AssaBgBoxPaddingBottom.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("AssaBgBoxColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxColor));
-                textWriter.WriteElementString("AssaBgBoxOutlineColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxOutlineColor));
-                textWriter.WriteElementString("AssaBgBoxShadowColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxShadowColor));
-                textWriter.WriteElementString("AssaBgBoxTransparentColor", ColorTranslator.ToHtml(settings.Tools.AssaBgBoxTransparentColor));
+                textWriter.WriteElementString("AssaBgBoxColor", ToHtml(settings.Tools.AssaBgBoxColor));
+                textWriter.WriteElementString("AssaBgBoxOutlineColor", ToHtml(settings.Tools.AssaBgBoxOutlineColor));
+                textWriter.WriteElementString("AssaBgBoxShadowColor", ToHtml(settings.Tools.AssaBgBoxShadowColor));
+                textWriter.WriteElementString("AssaBgBoxTransparentColor", ToHtml(settings.Tools.AssaBgBoxTransparentColor));
                 textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
                 textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
@@ -9941,6 +9941,68 @@ $HorzAlign          =   Center
                     // ignored
                 }
             }
+        }
+
+        private static string ToHtml(Color c)
+        {
+            return Utilities.ColorToHexWithTransparency(c);
+        }
+
+        private static Color FromHtml(string hex)
+        {
+            var s = hex.Trim().TrimStart('#');
+
+            if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
+            {
+                var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (arr.Length >= 3)
+                {
+                    try
+                    {
+                        return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                    }
+                    catch
+                    {
+                        return Color.White;
+                    }
+                }
+
+                return Color.White;
+            }
+
+
+            if (s.Length == 6)
+            {
+                try
+                {
+                    return ColorTranslator.FromHtml("#" + s);
+                }
+                catch
+                {
+                    return Color.White;
+                }
+            }
+
+            if (s.Length == 8)
+            {
+                if (!int.TryParse(s.Substring(0, 2), NumberStyles.HexNumber, null, out var alpha))
+                {
+                    alpha = 255; // full solid color
+                }
+
+                s = s.Substring(2);
+                try
+                {
+                    var c = ColorTranslator.FromHtml("#" + s);
+                    return Color.FromArgb(alpha, c);
+                }
+                catch
+                {
+                    return Color.White;
+                }
+            }
+
+            return Color.White;
         }
 
         internal static void WriteShortcuts(Shortcuts shortcuts, XmlWriter textWriter)
