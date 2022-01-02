@@ -6,6 +6,7 @@
    * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
    * Add "File type associations" in Options - Settings
+   * Add "Sort by Gap" - thx Andrebavila
    * Add shorcuts for Tools - Sort By - thx Jolana
    * Add "waveform-multi-move" with Ctrl+mouse-move
 * IMPROVED:

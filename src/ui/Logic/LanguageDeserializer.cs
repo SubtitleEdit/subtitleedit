@@ -5959,9 +5959,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformUseFFmpeg":
                     language.Settings.WaveformUseFFmpeg = reader.Value;
                     break;
-                case "Settings/DownloadFFmpeg":
-                    language.Settings.DownloadFFmpeg = reader.Value;
-                    break;
                 case "Settings/WaveformFFmpegPath":
                     language.Settings.WaveformFFmpegPath = reader.Value;
                     break;

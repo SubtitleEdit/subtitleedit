@@ -688,7 +688,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
             checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
-            buttonDownloadFfmpeg.Text = language.DownloadFFmpeg;
+            buttonDownloadFfmpeg.Text = string.Format(language.DownloadX, "FFmpeg");
             if (!Configuration.IsRunningOnWindows)
             {
                 buttonDownloadFfmpeg.Visible = false;
