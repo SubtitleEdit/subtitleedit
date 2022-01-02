@@ -1019,6 +1019,7 @@ namespace Nikse.SubtitleEdit.Logic
                 CheckeredImage = "Checkered image",
                 DurationInMinutes = "Duration in minutes",
                 SolidColor = "Solid color",
+                Background = "Background",
             };
 
             GenerateVideoWithBurnedInSubs = new LanguageStructure.GenerateVideoWithBurnedInSubs

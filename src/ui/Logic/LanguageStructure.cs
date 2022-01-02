@@ -880,6 +880,7 @@
             public string CheckeredImage { get; set; }
             public string SolidColor { get; set; }
             public string DurationInMinutes { get; set; }
+            public string Background { get; set; }
         }
 
         public class GenerateVideoWithBurnedInSubs
