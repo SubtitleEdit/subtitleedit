@@ -181,7 +181,6 @@
             public string Models { get; set; }
             public string ChooseModel { get; set; }
             public string OpenModelsFolder { get; set; }
-            public string DownloadVoskModelToX { get; set; }
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
             public string UsePostProcessing { get; set; }

@@ -478,9 +478,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/OpenModelsFolder":
                     language.AudioToText.OpenModelsFolder = reader.Value;
                     break;
-                case "AudioToText/DownloadVoskModelToX":
-                    language.AudioToText.DownloadVoskModelToX = reader.Value;
-                    break;
                 case "AudioToText/LoadingVoskModel":
                     language.AudioToText.LoadingVoskModel = reader.Value;
                     break;

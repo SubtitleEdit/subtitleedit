@@ -42,11 +42,21 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
+            FillModels();
+
+            textBoxLog.Visible = false;
+            textBoxLog.Dock = DockStyle.Fill;
+            labelProgress.Text = string.Empty;
+            labelTime.Text = string.Empty;
+        }
+
+        private void FillModels()
+        {
             comboBoxModels.Items.Clear();
             foreach (var directory in Directory.GetDirectories(_voskFolder))
             {
                 var name = Path.GetFileName(directory);
-                if (!Directory.Exists(Path.Combine(directory, "conf")))
+                if (!File.Exists(Path.Combine(directory, "final.mdl")) && !File.Exists(Path.Combine(directory, "am", "final.mdl")))
                 {
                     continue;
                 }
@@ -62,18 +72,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxModels.SelectedIndex = 0;
             }
-
-            textBoxLog.Visible = false;
-            textBoxLog.Dock = DockStyle.Fill;
-            labelProgress.Text = string.Empty;
-            labelTime.Text = string.Empty;
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
             if (comboBoxModels.Items.Count == 0)
             {
-                MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.DownloadVoskModelToX, _voskFolder));
+                buttonDownload_Click(null, null);
                 return;
             }
 
@@ -82,6 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = true;
             var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
             buttonGenerate.Enabled = false;
+            buttonDownload.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, 0);
             textBoxLog.AppendText("Wav file name: " + waveFileName);
             textBoxLog.AppendText(Environment.NewLine);
@@ -101,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-        private static string GetLanguage(string text)
+        internal static string GetLanguage(string text)
         {
             var languageCodeList = new[] { "en", "ru", "cn", "fr", "sv", "de", "es", "fa", "tr", "ca", "uk", "kz", "ph", "ar", "nl", "el", "pt" };
             foreach (var languageCode in languageCodeList)
@@ -286,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -vol 448 -f wav {2} \"{1}\"";
             //-i indicates the input
-            //-vn means no video ouput
+            //-vn means no video output
             //-ar 44100 indicates the sampling frequency.
             //-ab indicates the bit rate (in this example 160kb/s)
             //-vol 448 will boot volume... 256 is normal
@@ -382,6 +388,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
+        }
+
+        private void buttonDownload_Click(object sender, EventArgs e)
+        {
+            using (var form = new AudioToTextModelDownload() { AutoClose = true })
+            {
+                form.ShowDialog(this);
+                FillModels();
+            }
         }
     }
 }
