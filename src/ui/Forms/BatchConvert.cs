@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Cursor = Cursors.WaitCursor;
                     labelStatus.Text = LanguageSettings.Current.General.PleaseWait;
                     listViewInputFiles.BeginUpdate();
-                    foreach (string fileName in openFileDialog1.FileNames)
+                    foreach (var fileName in openFileDialog1.FileNames)
                     {
                         AddInputFile(fileName);
                         Application.DoEvents();
@@ -787,9 +787,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                             item = new ListViewItem(fileName);
                             item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                            listViewInputFiles.Items.Add(item);
                             item.SubItems.Add($"Matroska/{mkvSubFormat.Key} - {lang}");
                             item.SubItems.Add("-");
+                            listViewInputFiles.Items.Add(item);
                         }
                     }
                 }
