@@ -133,7 +133,7 @@
             // 
             this.buttonDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDownload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownload.Location = new System.Drawing.Point(265, 43);
+            this.buttonDownload.Location = new System.Drawing.Point(265, 44);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(28, 23);
             this.buttonDownload.TabIndex = 2;
@@ -144,7 +144,7 @@
             // linkLabelOpenModelsFolder
             // 
             this.linkLabelOpenModelsFolder.AutoSize = true;
-            this.linkLabelOpenModelsFolder.Location = new System.Drawing.Point(314, 53);
+            this.linkLabelOpenModelsFolder.Location = new System.Drawing.Point(301, 51);
             this.linkLabelOpenModelsFolder.Name = "linkLabelOpenModelsFolder";
             this.linkLabelOpenModelsFolder.Size = new System.Drawing.Size(98, 13);
             this.linkLabelOpenModelsFolder.TabIndex = 3;
