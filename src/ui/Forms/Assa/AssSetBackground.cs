@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             SafeNumericUpDownAssign(numericUpDownOutlineWidth, Configuration.Settings.Tools.AssaBgBoxOutlineWidth);
             labelFileName.Text = Configuration.Settings.Tools.AssaBgBoxDrawing;
             ReadDrawingFile(Configuration.Settings.Tools.AssaBgBoxDrawing);
-            SafeNumericUpDownAssign(numericUpDownDrawMarginH, Configuration.Settings.Tools.AssaBgBoxDrawingMarginH);
+            SafeNumericUpDownAssign(numericUpDownDrawingMarginH, Configuration.Settings.Tools.AssaBgBoxDrawingMarginH);
             SafeNumericUpDownAssign(numericUpDownDrawingMarginV, Configuration.Settings.Tools.AssaBgBoxDrawingMarginV);
 
             switch (Configuration.Settings.Tools.AssaBgBoxDrawingAlignment)
@@ -141,8 +141,22 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _boxOutlineColor = panelOutlineColor.BackColor;
             _boxShadowColor = panelShadowColor.BackColor;
 
+            numericUpDownOutlineWidth.Left = labelOutlineWidth.Left + labelOutlineWidth.Width + 5;
+            numericUpDownShadowDistance.Left = labelShadowDistance.Left + labelShadowDistance.Width + 5;
+
             buttonChooseDrawing.Left = labelChooseDrawing.Left + labelChooseDrawing.Width + 5;
             buttonDrawingClear.Left = buttonChooseDrawing.Left + buttonChooseDrawing.Width + 5;
+            buttonAssaDraw.Left = buttonDrawingClear.Left + buttonDrawingClear.Width + 5;
+
+            var left = Math.Max(labelFillWidthMarginLeft.Left + labelFillWidthMarginLeft.Width + 5, labelFillWidthMarginRight.Left + labelFillWidthMarginRight.Width + 5);
+            numericUpDownFillWidthMarginLeft.Left = left;
+            numericUpDownFillWidthMarginRight.Left = left;
+
+            left = Math.Max(labelDrawingMarginH.Left + labelDrawingMarginH.Width + 5, labelDrawingMarginV.Left + labelDrawingMarginV.Width + 5);
+            numericUpDownDrawingMarginH.Left = left;
+            numericUpDownDrawingMarginV.Left = left;
+
+            groupBoxAlignment.Left = numericUpDownDrawingMarginH.Left + numericUpDownDrawingMarginH.Width + 10;
 
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -153,6 +167,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             comboBoxBoxStyle_SelectedIndexChanged(null, null);
             SetPosition_ResizeEnd(null, null);
+            buttonAssaDraw.Visible = File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
         }
 
         private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
@@ -246,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 Tertiary = _boxShadowColor,
                 Background = _boxShadowColor,
                 Outline = _boxOutlineColor,
-                ShadowWidth = numericUpDownShadowWidth.Value,
+                ShadowWidth = numericUpDownShadowDistance.Value,
                 OutlineWidth = numericUpDownOutlineWidth.Value,
             };
             subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxBg);
@@ -418,7 +433,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (_drawing != null)
             {
-                var marginH = (int)numericUpDownDrawMarginH.Value;
+                var marginH = (int)numericUpDownDrawingMarginH.Value;
                 var marginV = (int)numericUpDownDrawingMarginV.Value;
                 var pos = string.Empty;
                 if (radioButtonTopLeft.Checked)
@@ -501,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Configuration.Settings.Tools.AssaBgBoxOutlineColor = panelOutlineColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxDrawing = labelFileName.Text;
-            Configuration.Settings.Tools.AssaBgBoxDrawingMarginV = (int)numericUpDownDrawMarginH.Value;
+            Configuration.Settings.Tools.AssaBgBoxDrawingMarginV = (int)numericUpDownDrawingMarginH.Value;
             Configuration.Settings.Tools.AssaBgBoxDrawingMarginH = (int)numericUpDownDrawingMarginV.Value;
 
             if (radioButtonBottomLeft.Checked)
@@ -983,6 +998,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 panelStyleSpikes.Visible = false;
             }
 
+            groupBoxPreview.BringToFront();
             _updatePreview = true;
         }
 
@@ -992,7 +1008,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = "ASSA/Assadraw files|*.ass;*.assadraw";
+                openFileDialog1.Filter = "ASSA/AssaDraw files|*.ass;*.assadraw";
                 openFileDialog1.FileName = string.Empty;
                 if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_subtitle.FileName))
                 {
@@ -1035,6 +1051,26 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _drawing = null;
             labelFileName.Text = string.Empty;
             _updatePreview = true;
+        }
+
+        private void buttonAssaDraw_Click(object sender, EventArgs e)
+        {
+            var assaDrawPluginFileName = Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll");
+            var pluginObject = Main.GetPropertiesAndDoAction(assaDrawPluginFileName, out var name, out var text, out var version, out var description, out var actionType, out var shortcut, out var mi);
+            if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
+            {
+                mi.Invoke(pluginObject,
+                    new object[]
+                    {
+                        this,
+                        "standalone",
+                        Configuration.Settings.General.CurrentFrameRate,
+                        Configuration.Settings.General.ListViewLineSeparatorString,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty
+                    });
+            }
         }
     }
 }
