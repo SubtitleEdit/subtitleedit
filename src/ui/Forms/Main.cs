@@ -15694,7 +15694,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainGeneralGoToBookmark == e.KeyData)
             {
                 e.SuppressKeyPress = true;
-                GoToBookmark();
+                BeginInvoke(new Action(() => GoToBookmark()));
             }
             else if (_shortcuts.MainGeneralGoToPreviousBookmark == e.KeyData)
             {
