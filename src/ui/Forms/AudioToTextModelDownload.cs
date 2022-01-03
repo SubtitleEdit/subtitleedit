@@ -80,6 +80,12 @@ namespace Nikse.SubtitleEdit.Forms
             },
             new DownloadModel
             {
+                TwoLetterLanguageCode = "ru",
+                LanguageName = "Russian",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-ru-0.22.zip",
+            },
+            new DownloadModel
+            {
                 TwoLetterLanguageCode = "fa",
                 LanguageName = "Farsi",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-fa-0.5.zip",
@@ -101,7 +107,25 @@ namespace Nikse.SubtitleEdit.Forms
                 TwoLetterLanguageCode = "ar",
                 LanguageName = "Arabic",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-ar-mgb2-0.4.zip",
-            }
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "uk",
+                LanguageName = "Ukrainian",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-uk-v3-small.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "ph",
+                LanguageName = "Filipino",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-tl-ph-generic-0.6.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "kz",
+                LanguageName = "Kazakh",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-kz-0.15.zip",
+            },
         };
 
         public AudioToTextModelDownload()

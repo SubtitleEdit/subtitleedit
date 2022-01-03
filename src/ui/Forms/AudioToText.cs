@@ -348,6 +348,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.Escape && buttonGenerate.Enabled)
+            {
+                DialogResult = DialogResult.Cancel;
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 linkLabelVoskWebsite_LinkClicked(null, null);
