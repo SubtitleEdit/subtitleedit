@@ -205,6 +205,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            buttonOK.Enabled = false;
             UpdatedSubtitle = new Subtitle(_subtitleWithNewHeader, false);
             AddBgBoxStyles(UpdatedSubtitle);
             var positionsAndSizes = CalcAllPositionsAndSizes();
@@ -691,13 +692,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             _processedFrames = 0;
             _processedFramesAdd = 0;
-            _totalFrames = (_selectedIndices.Length + 2) * 25 * 2;
+            var third = (_selectedIndices.Length + 2) * 25;
+            _totalFrames = third * 3;
             if (_totalFrames > 0 && _selectedIndices.Length > 5)
             {
-                progressBar1.Maximum = (int)_totalFrames;
+                //progressBar1.Maximum = (int)_totalFrames;
                 progressBar1.Visible = true;
                 _startTicks = DateTime.UtcNow.Ticks;
-                timerProgress.Start();
+                progressBar1.Style = ProgressBarStyle.Marquee;
+                labelProgress.Text = LanguageSettings.Current.General.PleaseWait;
+                //timerProgress.Start();
             }
 
             var list = new List<PositionAndSize>();
@@ -760,8 +764,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     Application.DoEvents();
                 }
 
+                _processedFrames = 0;
+                _processedFramesAdd = third * 2;
                 for (var i = 0; i < _selectedIndices.Length; i++)
                 {
+                    var percent = i * 100 / _selectedIndices.Length;
+                    _processedFrames += third * percent / 100;
+                    Application.DoEvents();
+
                     var idx = _selectedIndices[i];
                     var tc = new TimeCode(i * 1000);
                     var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, tc.ToHHMMSS());
@@ -1115,8 +1125,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 progressBar1.Value = v;
             }
-
-            Text = processedFrames + " / " + _totalFrames;
         }
 
         public static string ToProgressTime(float estimatedTotalMs)
