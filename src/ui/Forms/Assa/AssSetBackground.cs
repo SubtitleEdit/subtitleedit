@@ -50,7 +50,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Color _boxColor;
         private Color _boxShadowColor;
         private Color _boxOutlineColor;
+        private long _processedFramesAdd;
         private long _processedFrames;
+        private long _totalFrames;
+        private long _startTicks;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
         {
@@ -168,6 +171,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             comboBoxBoxStyle_SelectedIndexChanged(null, null);
             SetPosition_ResizeEnd(null, null);
             buttonAssaDraw.Visible = File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
+            progressBar1.Visible = false;
+            labelProgress.Visible = false;
         }
 
         private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
@@ -425,7 +430,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _mpv.CurrentPosition = p.StartTime.TotalSeconds + 0.05;
                 Application.DoEvents();
                 _videoLoaded = true;
-                timer1.Start();
+                timerPreview.Start();
             }
         }
 
@@ -557,7 +562,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timerPreview_Tick(object sender, EventArgs e)
         {
             if (_mpv == null || _closing || !_updatePreview)
             {
@@ -646,8 +651,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
                 process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
                 process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
                 while (!process.HasExited)
                 {
                     System.Threading.Thread.Sleep(100);
@@ -686,6 +689,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private List<PositionAndSize> CalcAllPositionsAndSizes()
         {
+            _processedFrames = 0;
+            _processedFramesAdd = 0;
+            _totalFrames = (_selectedIndices.Length + 2) * 25 * 2;
+            if (_totalFrames > 0 && _selectedIndices.Length > 5)
+            {
+                progressBar1.Maximum = (int)_totalFrames;
+                progressBar1.Visible = true;
+                _startTicks = DateTime.UtcNow.Ticks;
+                timerProgress.Start();
+            }
+
             var list = new List<PositionAndSize>();
             try
             {
@@ -701,13 +715,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                Configuration.Settings.Tools.AssaBgBoxTransparentColor,
                                false,
                                25,
-                               null); // TODO Progress
+                               null,
+                               OutputHandler);
                 process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
                 while (!process.HasExited)
                 {
                     System.Threading.Thread.Sleep(100);
                     Application.DoEvents();
                 }
+
+                _processedFramesAdd = _totalFrames / 2;
 
                 // make temp assa file with font
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
@@ -731,7 +750,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 // hard code subtitle
                 var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
-                process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
+                process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName, null, null, OutputHandler);
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
@@ -784,6 +803,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Cursor = Cursors.Default;
             }
+
+            progressBar1.Visible = false;
+            timerProgress.Stop();
 
             return list;
         }
@@ -856,7 +878,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             return new Paragraph(first) { StartTime = new TimeCode(0), EndTime = new TimeCode(10000) };
         }
 
-        private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null)
+        private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null, DataReceivedEventHandler dataReceivedHandler = null)
         {
             var pass = string.Empty;
             if (passNumber.HasValue)
@@ -880,7 +902,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 null,
                 pass,
                 twoPassBitRate,
-                OutputHandler);
+                dataReceivedHandler);
         }
 
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -1071,6 +1093,46 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         string.Empty
                     });
             }
+        }
+
+        private void timerProgress_Tick(object sender, EventArgs e)
+        {
+            if (_processedFrames <= 0 || _totalFrames <= 0)
+            {
+                return;
+            }
+
+            var processedFrames = _processedFrames + _processedFramesAdd;
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var msPerFrame = (float)durationMs / processedFrames;
+            var estimatedTotalMs = msPerFrame * _totalFrames;
+            var estimatedLeft = ToProgressTime((float)estimatedTotalMs - durationMs);
+            labelProgress.Text = estimatedLeft;
+
+            var v = (int)processedFrames;
+            if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
+            {
+                progressBar1.Value = v;
+            }
+
+            Text = processedFrames + " / " + _totalFrames;
+        }
+
+        public static string ToProgressTime(float estimatedTotalMs)
+        {
+            var timeCode = new TimeCode(estimatedTotalMs);
+            if (timeCode.TotalSeconds < 60)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
+            }
+
+            if (timeCode.TotalSeconds / 60 > 5)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
+            }
+
+            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
     }
 }

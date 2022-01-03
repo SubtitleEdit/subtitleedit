@@ -34,8 +34,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.groupBoxDrawing = new System.Windows.Forms.GroupBox();
+            this.buttonAssaDraw = new System.Windows.Forms.Button();
             this.buttonDrawingClear = new System.Windows.Forms.Button();
             this.labelFileName = new System.Windows.Forms.Label();
             this.labelChooseDrawing = new System.Windows.Forms.Label();
@@ -88,7 +89,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelStyleSpikes = new System.Windows.Forms.Panel();
             this.numericUpDownSpikesStep = new System.Windows.Forms.NumericUpDown();
             this.labelStep = new System.Windows.Forms.Label();
-            this.buttonAssaDraw = new System.Windows.Forms.Button();
+            this.labelProgress = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.timerProgress = new System.Windows.Forms.Timer(this.components);
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -159,10 +162,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // timer1
+            // timerPreview
             // 
-            this.timer1.Interval = 250;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timerPreview.Interval = 250;
+            this.timerPreview.Tick += new System.EventHandler(this.timerPreview_Tick);
             // 
             // groupBoxDrawing
             // 
@@ -184,6 +187,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxDrawing.TabIndex = 23;
             this.groupBoxDrawing.TabStop = false;
             this.groupBoxDrawing.Text = "Drawing";
+            // 
+            // buttonAssaDraw
+            // 
+            this.buttonAssaDraw.Location = new System.Drawing.Point(189, 113);
+            this.buttonAssaDraw.Name = "buttonAssaDraw";
+            this.buttonAssaDraw.Size = new System.Drawing.Size(92, 23);
+            this.buttonAssaDraw.TabIndex = 9;
+            this.buttonAssaDraw.Text = "Assa Draw";
+            this.buttonAssaDraw.UseVisualStyleBackColor = true;
+            this.buttonAssaDraw.Click += new System.EventHandler(this.buttonAssaDraw_Click);
             // 
             // buttonDrawingClear
             // 
@@ -839,21 +852,38 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStep.TabIndex = 49;
             this.labelStep.Text = "Step";
             // 
-            // buttonAssaDraw
+            // labelProgress
             // 
-            this.buttonAssaDraw.Location = new System.Drawing.Point(189, 113);
-            this.buttonAssaDraw.Name = "buttonAssaDraw";
-            this.buttonAssaDraw.Size = new System.Drawing.Size(92, 23);
-            this.buttonAssaDraw.TabIndex = 9;
-            this.buttonAssaDraw.Text = "Assa Draw";
-            this.buttonAssaDraw.UseVisualStyleBackColor = true;
-            this.buttonAssaDraw.Click += new System.EventHandler(this.buttonAssaDraw_Click);
+            this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelProgress.AutoSize = true;
+            this.labelProgress.Location = new System.Drawing.Point(12, 712);
+            this.labelProgress.Name = "labelProgress";
+            this.labelProgress.Size = new System.Drawing.Size(88, 13);
+            this.labelProgress.TabIndex = 31;
+            this.labelProgress.Text = "Remaining time...";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(12, 698);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(787, 11);
+            this.progressBar1.TabIndex = 30;
+            this.progressBar1.Visible = false;
+            // 
+            // timerProgress
+            // 
+            this.timerProgress.Interval = 1000;
+            this.timerProgress.Tick += new System.EventHandler(this.timerProgress_Tick);
             // 
             // AssSetBackground
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(973, 734);
+            this.Controls.Add(this.labelProgress);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.panelStyleRounded);
             this.Controls.Add(this.groupBoxFillWidth);
             this.Controls.Add(this.labelOutlineWidth);
@@ -929,7 +959,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.PictureBox pictureBoxPreview;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timerPreview;
         private System.Windows.Forms.GroupBox groupBoxDrawing;
         private System.Windows.Forms.Label labelDrawingMarginH;
         private System.Windows.Forms.NumericUpDown numericUpDownDrawingMarginV;
@@ -984,5 +1014,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonChooseDrawing;
         private System.Windows.Forms.Button buttonDrawingClear;
         private System.Windows.Forms.Button buttonAssaDraw;
+        private System.Windows.Forms.Label labelProgress;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Timer timerProgress;
     }
 }
