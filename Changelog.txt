@@ -45,6 +45,7 @@
    * Fix new-line-char in Bilibili format - thx Kuju29
    * Fix "Close video" shortcut - thx OmrSi
    * Fix double space issue for output file name in sub burn-in - thx Leon
+   * Fix crash in "Batch convert" w add after sort - thx Siamak
 
 
 3.6.4 (3rd December 2021)

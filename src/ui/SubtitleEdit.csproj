@@ -237,6 +237,12 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AudioToTextModelDownload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToTextModelDownload.Designer.cs">
+      <DependentUpon>AudioToTextModelDownload.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DownloadVosk.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1407,6 +1413,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToTextModelDownload.resx">
+      <DependentUpon>AudioToTextModelDownload.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadVosk.resx">
       <DependentUpon>DownloadVosk.cs</DependentUpon>
