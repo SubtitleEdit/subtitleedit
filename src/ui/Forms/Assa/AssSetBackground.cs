@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private bool _updatePreview = true;
         private readonly string _videoFileName;
         private readonly VideoInfo _videoInfo;
+        private double _videoPositionSeconds;
         private bool _loading = true;
         private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private string _assaBox;
@@ -55,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private long _totalFrames;
         private long _startTicks;
 
-        public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo)
+        public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double videoPositionSeconds)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -64,6 +65,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _subtitle = subtitle;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
+            _videoPositionSeconds = videoPositionSeconds;
 
             _subtitleWithNewHeader = new Subtitle(_subtitle, false);
             if (string.IsNullOrWhiteSpace(_subtitleWithNewHeader.Header))
@@ -218,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var positionsAndSizes = CalcAllPositionsAndSizes();
             foreach (var posAndSize in positionsAndSizes)
             {
-                //Build box + gen preview via mpv
+                // build box + gen preview via mpv
                 var x = posAndSize.Left - (int)numericUpDownPaddingLeft.Value;
                 var right = posAndSize.Right + (int)numericUpDownPaddingRight.Value;
                 if (checkBoxFillWidth.Checked)
@@ -320,12 +322,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var fileName = _videoFileName;
             if (!File.Exists(fileName))
             {
-                var isFfmpegAvailable = !Configuration.IsRunningOnWindows || !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
-                if (!isFfmpegAvailable)
-                {
-                    return;
-                }
-
                 using (var p = GetFFmpegProcess(fileName))
                 {
                     p.Start();
@@ -393,9 +389,21 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var indices = GetIndices();
             var styleToApply = string.Empty;
 
-            var p = indices.Length > 0 ?
-                new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
-                new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
+            if (_videoPositionSeconds < 0.001)
+            {
+                _videoPositionSeconds = 0.05;
+            }
+
+            var p = _subtitleWithNewHeader.Paragraphs.FirstOrDefault(l => !l.IsComment &&
+                                                                             _videoPositionSeconds > l.StartTime.TotalSeconds &&
+                                                                             _videoPositionSeconds < l.EndTime.TotalSeconds &&
+                                                                             indices.Contains(_subtitleWithNewHeader.GetIndex(l)));
+            if (p == null)
+            {
+                p = indices.Length > 0 ?
+                    new Paragraph(_subtitleWithNewHeader.Paragraphs[indices[0]]) :
+                    new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
+            }
 
             // remove fade tags 
             p.Text = Regex.Replace(p.Text, @"{\\fad\([\d\.,]*\)}", string.Empty);
@@ -406,7 +414,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             p.Text = styleToApply + p.Text;
             subtitle.Paragraphs.Add(p);
 
-            //Build box + gen preview via mpv
+            // build box + gen preview via mpv
             var x = _left - (int)numericUpDownPaddingLeft.Value;
             var right = _right + (int)numericUpDownPaddingRight.Value;
             if (checkBoxFillWidth.Checked)
@@ -449,10 +457,26 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Application.DoEvents();
                 _mpv.Pause();
-                _mpv.CurrentPosition = p.StartTime.TotalSeconds + 0.05;
+                if (_videoPositionSeconds > p.StartTime.TotalSeconds && _videoPositionSeconds < p.EndTime.TotalSeconds)
+                {
+                    _mpv.CurrentPosition = _videoPositionSeconds;
+                }
+                else
+                {
+                    _mpv.CurrentPosition = p.StartTime.TotalSeconds + 0.05;
+                }
+
                 Application.DoEvents();
                 _videoLoaded = true;
                 timerPreview.Start();
+
+                labelProgress.Text = $"{Path.GetFileName(_videoFileName)} - {string.Format(LanguageSettings.Current.Main.LineNumberX, _subtitleWithNewHeader.GetIndex(p) + 1)} - {p.StartTime}";
+                if (p.StartTime.TotalSeconds > _videoInfo.TotalSeconds)
+                {
+                    labelProgress.Text = "Video position is after end of video - NO PREVIEW!";
+                }
+
+                labelProgress.Visible = true;
             }
         }
 

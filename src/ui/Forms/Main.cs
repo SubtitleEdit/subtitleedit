@@ -32816,7 +32816,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new AssSetBackground(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo))
+            using (var form = new AssSetBackground(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo, mediaPlayer.CurrentPosition))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
