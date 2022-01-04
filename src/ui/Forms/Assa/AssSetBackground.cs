@@ -144,9 +144,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _boxOutlineColor = panelOutlineColor.BackColor;
             _boxShadowColor = panelShadowColor.BackColor;
 
-            numericUpDownOutlineWidth.Left = labelOutlineWidth.Left + labelOutlineWidth.Width + 5;
-            numericUpDownShadowDistance.Left = labelShadowDistance.Left + labelShadowDistance.Width + 5;
-
             buttonChooseDrawing.Left = labelChooseDrawing.Left + labelChooseDrawing.Width + 5;
             buttonDrawingClear.Left = buttonChooseDrawing.Left + buttonChooseDrawing.Width + 5;
             buttonAssaDraw.Left = buttonDrawingClear.Left + buttonDrawingClear.Width + 5;
@@ -200,6 +197,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             else if (e.KeyCode == Keys.Enter)
             {
                 buttonOK_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.F5)
+            {
+                if (!string.IsNullOrEmpty(labelFileName.Text))
+                {
+                    ReadDrawingFile(labelFileName.Text);
+                }
+
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -240,7 +247,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
                     Extra = "SE-box-bg"
                 };
-                UpdatedSubtitle.InsertParagraphInCorrectTimeOrder(p2);
+
+                if (!checkBoxOnlyDrawing.Checked)
+                {
+                    UpdatedSubtitle.InsertParagraphInCorrectTimeOrder(p2);
+                }
+
                 AddDrawing(x, right, p, UpdatedSubtitle);
             }
 
@@ -253,6 +265,26 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (string.IsNullOrWhiteSpace(subtitle.Header))
             {
                 subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+            }
+
+            if (_drawing != null)
+            {
+                var styleBoxDrawing = new SsaStyle
+                {
+                    Alignment = "7",
+                    Name = "SE-box-drawing",
+                    MarginLeft = 0,
+                    MarginRight = 0,
+                    MarginVertical = 0,
+                    ShadowWidth = 0,
+                    OutlineWidth = 0,
+                };
+                subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxDrawing);
+            }
+
+            if (checkBoxOnlyDrawing.Checked)
+            {
+                return;
             }
 
             var styleBoxBg = new SsaStyle
@@ -271,21 +303,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 OutlineWidth = numericUpDownOutlineWidth.Value,
             };
             subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxBg);
-
-            if (_drawing != null)
-            {
-                var styleBoxDrawing = new SsaStyle
-                {
-                    Alignment = "7",
-                    Name = "SE-box-drawing",
-                    MarginLeft = 0,
-                    MarginRight = 0,
-                    MarginVertical = 0,
-                    ShadowWidth = 0,
-                    OutlineWidth = 0,
-                };
-                subtitle.Header = AdvancedSubStationAlpha.UpdateOrAddStyle(subtitle.Header, styleBoxDrawing);
-            }
         }
 
         private int[] GetIndices()
@@ -414,7 +431,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
                 Extra = "SE-box-bg"
             };
-            subtitle.Paragraphs.Add(p2);
+
+            if (!checkBoxOnlyDrawing.Checked)
+            {
+                subtitle.Paragraphs.Add(p2);
+            }
 
             AddBgBoxStyles(subtitle);
             AddDrawing(x, right, p, subtitle);
@@ -1008,19 +1029,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (comboBoxBoxStyle.SelectedIndex == 1) // rounded
             {
-                panelStyleRounded.Left = labelEdgeStyle.Left;
-                panelStyleRounded.Top = labelEdgeStyle.Top + labelEdgeStyle.Height + 9;
-
                 panelStyleSpikes.Visible = false;
+                panelStyleRounded.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
                 panelStyleRounded.Visible = true;
                 panelStyleRounded.BringToFront();
             }
             else if (comboBoxBoxStyle.SelectedIndex == 2) // spikes
             {
-                panelStyleSpikes.Left = labelEdgeStyle.Left;
-                panelStyleSpikes.Top = labelEdgeStyle.Top + labelEdgeStyle.Height + 9;
-
                 panelStyleRounded.Visible = false;
+                panelStyleSpikes.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
                 panelStyleSpikes.Visible = true;
                 panelStyleSpikes.BringToFront();
             }
@@ -1045,6 +1062,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_subtitle.FileName))
                 {
                     openFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitle.FileName);
+                }
+
+                if (!string.IsNullOrEmpty(labelFileName.Text))
+                {
+                    openFileDialog1.InitialDirectory = Path.GetDirectoryName(labelFileName.Text);
+                    openFileDialog1.FileName = labelFileName.Text;
                 }
 
                 if (openFileDialog1.ShowDialog() != DialogResult.OK)
@@ -1141,6 +1164,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
+        }
+
+        private void checkBoxNoBox_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxPadding.Enabled = !checkBoxOnlyDrawing.Checked;
+            groupBoxFillWidth.Enabled = !checkBoxOnlyDrawing.Checked;
+            groupBoxStyle.Enabled = !checkBoxOnlyDrawing.Checked;
+            buttonPrimaryColor.Enabled = !checkBoxOnlyDrawing.Checked;
+            buttonOutlineColor.Enabled = !checkBoxOnlyDrawing.Checked;
+            buttonShadowColor.Enabled = !checkBoxOnlyDrawing.Checked;
+            numericUpDownShadowDistance.Enabled = !checkBoxOnlyDrawing.Checked;
+            numericUpDownOutlineWidth.Enabled = !checkBoxOnlyDrawing.Checked;
+
+            _updatePreview = true;
         }
     }
 }
