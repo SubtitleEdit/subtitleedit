@@ -32546,31 +32546,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateBlankVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
-            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            if (!RequireFfmpegOk())
             {
-                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
-            }
-
-            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
-            {
-                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                {
-                    return;
-                }
-
-                using (var form = new DownloadFfmpeg())
-                {
-                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
-                    {
-                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
-                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
+                return;
             }
 
             using (var form = new GenerateVideo(_subtitle, _videoInfo))
@@ -32646,31 +32624,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
-            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            if (!RequireFfmpegOk())
             {
-                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
-            }
-
-            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
-            {
-                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                {
-                    return;
-                }
-
-                using (var form = new DownloadFfmpeg())
-                {
-                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
-                    {
-                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
-                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
+                return;
             }
 
             var sub = new Subtitle(_subtitle, false);
@@ -32855,6 +32811,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
             using (var form = new AssSetBackground(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo))
             {
                 var result = form.ShowDialog(this);
@@ -32876,6 +32837,41 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private bool RequireFfmpegOk()
+        {
+            if (Configuration.IsRunningOnWindows)
+            {
+                var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+                if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+                {
+                    Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
+                }
+            }
+
+            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                using (var form = new DownloadFfmpeg())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                    {
+                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private void videoaudioToTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(VideoFileName))
@@ -32889,31 +32885,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
-            if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+            if (!RequireFfmpegOk())
             {
-                Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
-            }
-
-            if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
-            {
-                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                {
-                    return;
-                }
-
-                using (var form = new DownloadFfmpeg())
-                {
-                    if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
-                    {
-                        Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
-                        Configuration.Settings.General.UseFFmpegForWaveExtraction = true;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
+                return;
             }
 
             var voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
