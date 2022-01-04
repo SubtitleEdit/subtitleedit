@@ -89,7 +89,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelStep = new System.Windows.Forms.Label();
             this.labelProgress = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.timerProgress = new System.Windows.Forms.Timer(this.components);
             this.groupBoxPadding = new System.Windows.Forms.GroupBox();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
             this.groupBoxPreview.SuspendLayout();
@@ -859,11 +858,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.progressBar1.TabIndex = 30;
             this.progressBar1.Visible = false;
             // 
-            // timerProgress
-            // 
-            this.timerProgress.Interval = 1000;
-            this.timerProgress.Tick += new System.EventHandler(this.timerProgress_Tick);
-            // 
             // groupBoxPadding
             // 
             this.groupBoxPadding.Controls.Add(this.labelPaddingLeft);
@@ -1020,7 +1014,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Button buttonAssaDraw;
         private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Timer timerProgress;
         private System.Windows.Forms.GroupBox groupBoxPadding;
         private System.Windows.Forms.GroupBox groupBoxStyle;
         private System.Windows.Forms.CheckBox checkBoxOnlyDrawing;

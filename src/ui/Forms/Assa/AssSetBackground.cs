@@ -861,8 +861,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             progressBar1.Visible = false;
-            timerProgress.Stop();
-
             return list;
         }
 
@@ -1151,44 +1149,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         string.Empty
                     });
             }
-        }
-
-        private void timerProgress_Tick(object sender, EventArgs e)
-        {
-            if (_processedFrames <= 0 || _totalFrames <= 0)
-            {
-                return;
-            }
-
-            var processedFrames = _processedFrames + _processedFramesAdd;
-
-            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
-            var msPerFrame = (float)durationMs / processedFrames;
-            var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
-            labelProgress.Text = estimatedLeft;
-
-            var v = (int)processedFrames;
-            if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
-            {
-                progressBar1.Value = v;
-            }
-        }
-
-        public static string ToProgressTime(float estimatedTotalMs)
-        {
-            var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            if (timeCode.TotalSeconds / 60 > 5)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
-            }
-
-            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
 
         private void checkBoxNoBox_CheckedChanged(object sender, EventArgs e)
