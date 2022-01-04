@@ -512,15 +512,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     pos = $"{{\\pos({right + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
                 }
-                else if (radioButtonMiddleLeft.Checked)
+                else if (radioButtonBottomLeft.Checked)
                 {
                     pos = $"{{\\pos({x + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
                 }
-                else if (radioButtonMiddleCenter.Checked)
+                else if (radioButtonBottomCenter.Checked)
                 {
                     pos = $"{{\\pos({x + (right - x / 2) + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
                 }
-                else if (radioButtonMiddleRight.Checked)
+                else if (radioButtonBottomRight.Checked)
                 {
                     pos = $"{{\\pos({right + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
                 }
