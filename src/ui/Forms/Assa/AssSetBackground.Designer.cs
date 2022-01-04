@@ -281,12 +281,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // radioButtonBottomCenter
             // 
             this.radioButtonBottomCenter.AutoSize = true;
-            this.radioButtonBottomCenter.Checked = true;
             this.radioButtonBottomCenter.Location = new System.Drawing.Point(39, 65);
             this.radioButtonBottomCenter.Name = "radioButtonBottomCenter";
             this.radioButtonBottomCenter.Size = new System.Drawing.Size(14, 13);
             this.radioButtonBottomCenter.TabIndex = 7;
-            this.radioButtonBottomCenter.TabStop = true;
             this.radioButtonBottomCenter.UseVisualStyleBackColor = true;
             this.radioButtonBottomCenter.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
@@ -353,10 +351,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // radioButtonTopLeft
             // 
             this.radioButtonTopLeft.AutoSize = true;
+            this.radioButtonTopLeft.Checked = true;
             this.radioButtonTopLeft.Location = new System.Drawing.Point(19, 19);
             this.radioButtonTopLeft.Name = "radioButtonTopLeft";
             this.radioButtonTopLeft.Size = new System.Drawing.Size(14, 13);
             this.radioButtonTopLeft.TabIndex = 0;
+            this.radioButtonTopLeft.TabStop = true;
             this.radioButtonTopLeft.UseVisualStyleBackColor = true;
             this.radioButtonTopLeft.CheckedChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
