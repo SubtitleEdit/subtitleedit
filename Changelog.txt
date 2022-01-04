@@ -9,6 +9,7 @@
    * Add "Sort by Gap" - thx Andrebavila
    * Add shorcuts for Tools - Sort By - thx Jolana
    * Add "waveform-multi-move" with Ctrl+mouse-move
+   * Add ASSA tool "Background box generator" - thx Leon
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
