@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -200,6 +201,27 @@ namespace Nikse.SubtitleEdit.Logic
             process.Start();
             process.WaitForExit();
             return outputFileName;
+        }
+
+        public static string[] GetScreenShotsForEachFrame(string videoFileName)
+        {
+            var outputFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(outputFolder);
+            var outputFileName = Path.Combine(outputFolder, "image%05d.png");
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" -vsync vfr \"{outputFileName}\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+            return Directory.GetFiles(outputFolder, "*.png").OrderBy(p => p).ToArray();
         }
 
         private static string GetFfmpegLocation()

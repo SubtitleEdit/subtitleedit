@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
@@ -763,7 +764,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                _videoInfo.Height,
                                Configuration.Settings.Tools.AssaBgBoxTransparentColor,
                                false,
-                               25,
+                               1,
                                null,
                                OutputHandler);
                 process.Start();
@@ -811,36 +812,36 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 _processedFrames = 0;
                 _processedFramesAdd = third * 2;
-                for (var i = 0; i < _selectedIndices.Length; i++)
-                {
-                    var percent = i * 100 / _selectedIndices.Length;
-                    _processedFrames += third * percent / 100;
-                    Application.DoEvents();
+                var images = VideoPreviewGenerator.GetScreenShotsForEachFrame(outputVideoFileName);
 
-                    var idx = _selectedIndices[i];
-                    var tc = new TimeCode(i * 1000);
-                    var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, tc.ToHHMMSS());
-                    using (var bmp = new Bitmap(bmpFileName))
+                Parallel.For(0, images.Length, index =>
+                {
+                    if (index < _selectedIndices.Length)
                     {
-                        var nBmp = new NikseBitmap(bmp);
-                        list.Add(new PositionAndSize
+                        var idx = _selectedIndices[index];
+                        var bmpFileName = images[index];
+                        using (var bmp = new Bitmap(bmpFileName))
                         {
-                            Top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                            Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                            Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                            Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                            Id = _subtitle.Paragraphs[idx].Id,
-                        });
+                            var nBmp = new NikseBitmap(bmp);
+                            list.Add(new PositionAndSize
+                            {
+                                Top = nBmp.CalcTopCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
+                                Id = _subtitle.Paragraphs[idx].Id,
+                            });
+                        }
+                        try
+                        {
+                            File.Delete(bmpFileName);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                     }
-                    try
-                    {
-                        File.Delete(bmpFileName);
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
+                });
 
                 Cursor = Cursors.Default;
                 try
@@ -1164,7 +1165,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ToProgressTime((float)estimatedTotalMs - durationMs);
+            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
             labelProgress.Text = estimatedLeft;
 
             var v = (int)processedFrames;
