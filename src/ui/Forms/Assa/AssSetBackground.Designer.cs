@@ -372,12 +372,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.numericUpDownDrawingMarginV.Location = new System.Drawing.Point(100, 40);
             this.numericUpDownDrawingMarginV.Maximum = new decimal(new int[] {
-            360,
+            9999,
             0,
             0,
             0});
             this.numericUpDownDrawingMarginV.Minimum = new decimal(new int[] {
-            360,
+            9999,
             0,
             0,
             -2147483648});
@@ -399,12 +399,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.numericUpDownDrawingMarginH.Location = new System.Drawing.Point(100, 15);
             this.numericUpDownDrawingMarginH.Maximum = new decimal(new int[] {
-            360,
+            9999,
             0,
             0,
             0});
             this.numericUpDownDrawingMarginH.Minimum = new decimal(new int[] {
-            360,
+            9999,
             0,
             0,
             -2147483648});
