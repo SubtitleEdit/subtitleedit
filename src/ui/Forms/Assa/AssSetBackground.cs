@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     UpdatedSubtitle.InsertParagraphInCorrectTimeOrder(p2);
                 }
 
-                AddDrawing(x, right, p, UpdatedSubtitle);
+                AddDrawing(x, right, posAndSize.Top, p, UpdatedSubtitle);
             }
 
             UpdatedSubtitle.Renumber();
@@ -438,7 +438,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             AddBgBoxStyles(subtitle);
-            AddDrawing(x, right, p, subtitle);
+            AddDrawing(x, right, _top, p, subtitle);
 
             var text = subtitle.ToText(format);
             _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void AddDrawing(int x, int right, Paragraph p, Subtitle subtitle)
+        private void AddDrawing(int x, int right, int top, Paragraph p, Subtitle subtitle)
         {
             if (_drawing != null)
             {
@@ -465,27 +465,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var pos = string.Empty;
                 if (radioButtonTopLeft.Checked)
                 {
-                    pos = $"{{\\pos({x + marginH},{_top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                    pos = $"{{\\pos({x + marginH},{top - (int)numericUpDownPaddingTop.Value + marginV})}}";
                 }
                 else if (radioButtonTopCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{_top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{top - (int)numericUpDownPaddingTop.Value + marginV})}}";
                 }
                 else if (radioButtonTopRight.Checked)
                 {
-                    pos = $"{{\\pos({right + marginH},{_top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                    pos = $"{{\\pos({right + marginH},{top - (int)numericUpDownPaddingTop.Value + marginV})}}";
                 }
                 else if (radioButtonMiddleLeft.Checked)
                 {
-                    pos = $"{{\\pos({x + marginH},{_top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV})}}";
+                    pos = $"{{\\pos({x + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
                 }
                 else if (radioButtonMiddleCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{_top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV})}}";
+                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
                 }
                 else if (radioButtonMiddleRight.Checked)
                 {
-                    pos = $"{{\\pos({right + marginH},{_top - (int)numericUpDownPaddingTop.Value + (_bottom - _top / 2) + marginV})}}";
+                    pos = $"{{\\pos({right + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
                 }
                 else if (radioButtonMiddleLeft.Checked)
                 {
