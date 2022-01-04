@@ -1480,9 +1480,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _lastStartTotalSeconds = p.StartTime.TotalSeconds;
             _lastEndTotalSeconds = p.EndTime.TotalSeconds;
 
-            int maxIndex = timeStartIndex + 10 + textLength;
+            var maxIndex = timeStartIndex + 10 + textLength;
 
-            byte verticalAlignment = buffer[timeStartIndex + 11];
+            var verticalAlignment = buffer[timeStartIndex + 11];
 
             if (CodePage == -1 && !IsFpc)
             {
@@ -1492,13 +1492,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var overrides = (CodePage == CodePageLatinTurkish) ? LatinTurkishOverrides : null;
             var sb = new StringBuilder();
             index = feIndex + 3;
-            bool w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
+            var w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
             if (w16)
             {
                 index += 5;
             }
 
-            bool isUnicode = false;
+            var isUnicode = false;
             while (index < buffer.Length && index <= maxIndex) // buffer[index] != endDelimiter)
             {
                 if (buffer.Length > index + 3 && buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16")
@@ -1695,6 +1695,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     p.Text = "{\\an3}" + p.Text;
                 }
+            }
+
+            // Remove position tags
+            var indexOfPositioningCodes = p.Text.IndexOf("\u002e\u001f");
+            if (indexOfPositioningCodes > 0)
+            {
+                p.Text = p.Text.Substring(0, indexOfPositioningCodes + 1);
             }
 
             p.Text = p.Text.RemoveControlCharactersButWhiteSpace().TrimEnd();
