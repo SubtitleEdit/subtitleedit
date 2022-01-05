@@ -369,6 +369,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AssaBgBoxOutlineWidth { get; set; }
         public int AssaBgBoxLayer { get; set; }
         public string AssaBgBoxDrawing { get; set; }
+        public bool AssaBgBoxDrawingFileWatch { get; set; }
+        public bool AssaBgBoxDrawingOnly { get; set; }
 
 
         public string GenVideoEncoding { get; set; }
@@ -552,6 +554,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaBgBoxStyleRadius = 40;
             AssaBgBoxOutlineWidth = 0;
             AssaBgBoxLayer = -11893;
+            AssaBgBoxDrawingFileWatch = true;
 
             GenVideoEncoding = "libx264";
             GenVideoPreset = "medium";
@@ -5566,6 +5569,18 @@ $HorzAlign          =   Center
                 settings.Tools.AssaBgBoxLayer = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaBgBoxDrawingFileWatch");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawingFileWatch = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxDrawingOnly");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxDrawingOnly = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AssaBgBoxDrawing");
             if (subNode != null)
             {
@@ -9608,6 +9623,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxLayer", settings.Tools.AssaBgBoxLayer.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawingFileWatch", settings.Tools.AssaBgBoxDrawingFileWatch.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxDrawingOnly", settings.Tools.AssaBgBoxDrawingOnly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
