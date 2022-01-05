@@ -1202,9 +1202,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         "standalone",
                         Configuration.Settings.General.CurrentFrameRate,
                         Configuration.Settings.General.ListViewLineSeparatorString,
+                        _drawing != null ? _drawing.FileName : string.Empty,
                         string.Empty,
                         string.Empty,
-                        string.Empty
                     });
             }
         }
