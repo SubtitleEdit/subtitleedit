@@ -30,6 +30,7 @@
    * Improve list-view/text-box color dialog - thx Majid
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
+   * Remove position codes when reading PAC - thx Ernest
 * FIXED:
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
    * Fix for generating empty waveform for online videos - thx OmrSi
@@ -47,6 +48,7 @@
    * Fix "Close video" shortcut - thx OmrSi
    * Fix double space issue for output file name in sub burn-in - thx Leon
    * Fix crash in "Batch convert" w add after sort - thx Siamak
+   * Remove beep sound with "Go to bookmark" shortcut - thx OmrSi
 
 
 3.6.4 (3rd December 2021)
