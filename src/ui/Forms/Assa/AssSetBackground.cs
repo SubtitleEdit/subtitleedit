@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     UpdatedSubtitle.InsertParagraphInCorrectTimeOrder(p2);
                 }
 
-                AddDrawing(x, right, posAndSize.Top, p, UpdatedSubtitle);
+                AddDrawing(x, right, posAndSize.Top - (int)numericUpDownPaddingTop.Value, posAndSize.Bottom + (int)numericUpDownPaddingBottom.Value, p, UpdatedSubtitle);
             }
 
             UpdatedSubtitle.Renumber();
@@ -447,7 +447,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             AddBgBoxStyles(subtitle);
-            AddDrawing(x, right, _top, p, subtitle);
+            AddDrawing(x, right, _top - (int)numericUpDownPaddingTop.Value, _bottom + (int)numericUpDownPaddingBottom.Value, p, subtitle);
 
             var text = subtitle.ToText(format);
             _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
@@ -481,51 +481,53 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void AddDrawing(int x, int right, int top, Paragraph p, Subtitle subtitle)
+        private void AddDrawing(int x, int right, int top, int bottom, Paragraph p, Subtitle subtitle)
         {
             if (_drawing != null)
             {
                 var marginH = (int)numericUpDownDrawingMarginH.Value;
                 var marginV = (int)numericUpDownDrawingMarginV.Value;
+                var height = bottom - x;
+                var width = right - x;
                 var pos = string.Empty;
                 if (radioButtonTopLeft.Checked)
                 {
-                    pos = $"{{\\pos({x + marginH},{top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                    pos = $"{{\\pos({x + marginH},{top + marginV})}}";
                 }
                 else if (radioButtonTopCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                    pos = $"{{\\pos({x + (width / 2) + marginH},{top+ marginV})}}";
                 }
                 else if (radioButtonTopRight.Checked)
                 {
-                    pos = $"{{\\pos({right + marginH},{top - (int)numericUpDownPaddingTop.Value + marginV})}}";
+                    pos = $"{{\\pos({right - marginH},{top + marginV})}}";
                 }
                 else if (radioButtonMiddleLeft.Checked)
                 {
-                    pos = $"{{\\pos({x + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
+                    pos = $"{{\\pos({x + marginH},{top + (height / 2) + marginV})}}";
                 }
                 else if (radioButtonMiddleCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
+                    pos = $"{{\\pos({x + (width / 2) + marginH},{top + (height / 2) + marginV})}}";
                 }
                 else if (radioButtonMiddleRight.Checked)
                 {
-                    pos = $"{{\\pos({right + marginH},{top - (int)numericUpDownPaddingTop.Value + (_bottom - top / 2) + marginV})}}";
+                    pos = $"{{\\pos({right - marginH},{top + (height / 2) + marginV})}}";
                 }
                 else if (radioButtonBottomLeft.Checked)
                 {
-                    pos = $"{{\\pos({x + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
+                    pos = $"{{\\pos({x + marginH},{bottom - marginV})}}";
                 }
                 else if (radioButtonBottomCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (right - x / 2) + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
+                    pos = $"{{\\pos({x + (width / 2) + marginH},{bottom - marginV})}}";
                 }
                 else if (radioButtonBottomRight.Checked)
                 {
-                    pos = $"{{\\pos({right + marginH},{_bottom - (int)numericUpDownPaddingBottom.Value - marginV})}}";
+                    pos = $"{{\\pos({right - marginH},{bottom - marginV})}}";
                 }
 
-                int layerAdd = 1;
+                var layerAdd = 1;
                 foreach (var dp in _drawing.Paragraphs.OrderBy(pa => pa.Layer))
                 {
                     var pDrawing = new Paragraph(dp.Text, 0, 1000);
@@ -568,8 +570,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Configuration.Settings.Tools.AssaBgBoxOutlineColor = panelOutlineColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.AssaBgBoxDrawing = labelFileName.Text;
-            Configuration.Settings.Tools.AssaBgBoxDrawingMarginV = (int)numericUpDownDrawingMarginH.Value;
-            Configuration.Settings.Tools.AssaBgBoxDrawingMarginH = (int)numericUpDownDrawingMarginV.Value;
+            Configuration.Settings.Tools.AssaBgBoxDrawingMarginV = (int)numericUpDownDrawingMarginV.Value;
+            Configuration.Settings.Tools.AssaBgBoxDrawingMarginH = (int)numericUpDownDrawingMarginH.Value;
 
             if (radioButtonBottomLeft.Checked)
             {
