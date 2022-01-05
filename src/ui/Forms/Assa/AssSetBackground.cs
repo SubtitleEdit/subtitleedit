@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NCalc;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
@@ -496,7 +497,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 }
                 else if (radioButtonTopCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (width / 2) + marginH},{top+ marginV})}}";
+                    pos = $"{{\\pos({x + (width / 2) + marginH},{top + marginV})}}";
                 }
                 else if (radioButtonTopRight.Checked)
                 {
@@ -530,15 +531,70 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var layerAdd = 1;
                 foreach (var dp in _drawing.Paragraphs.OrderBy(pa => pa.Layer))
                 {
-                    var pDrawing = new Paragraph(dp.Text, 0, 1000);
-                    pDrawing.Text = pos + pDrawing.Text;
-                    pDrawing.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                    pDrawing.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                    var pDrawing = new Paragraph(dp.Text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                    pDrawing.Text = pos + TranslateTemplate(pDrawing.Text, x, top, right, bottom);
                     pDrawing.Layer = Configuration.Settings.Tools.AssaBgBoxLayer + layerAdd;
                     pDrawing.Extra = "SE-box-drawing";
                     subtitle.InsertParagraphInCorrectTimeOrder(pDrawing);
                     layerAdd++;
                 }
+            }
+        }
+
+        private string TranslateTemplate(string input, int left, int top, int right, int bottom)
+        {
+            var text = input;
+            var width = right - left;
+            var height = bottom - top;
+
+            try
+            {
+                var startIdx = text.IndexOf('[');
+                while (startIdx >= 0)
+                {
+                    var endIdx = text.IndexOf(']', startIdx);
+                    if (endIdx < 0)
+                    {
+                        return input;
+                    }
+
+                    var expr = text.Substring(startIdx+1, endIdx - startIdx - 1);
+                    expr = expr.ToUpperInvariant()
+                        .Replace("LEFT", left.ToString(CultureInfo.InvariantCulture))
+                        .Replace("TOP", top.ToString(CultureInfo.InvariantCulture))
+                        .Replace("RIGHT", right.ToString(CultureInfo.InvariantCulture))
+                        .Replace("BOTTOM", bottom.ToString(CultureInfo.InvariantCulture))
+                        .Replace("WIDTH", width.ToString(CultureInfo.InvariantCulture))
+                        .Replace("HEIGHT", height.ToString(CultureInfo.InvariantCulture));
+
+                    var calcExpression = new Expression(expr);
+                    var calcObj = calcExpression.Evaluate();
+                    var calcResult = calcExpression.Evaluate().ToString();
+                    if (calcObj is double numberDouble)
+                    {
+                        calcResult = numberDouble.ToString(CultureInfo.InvariantCulture);
+                    }
+                    else if (calcObj is float numberFloat)
+                    {
+                        calcResult = numberFloat.ToString(CultureInfo.InvariantCulture);
+                    }
+                    else if (calcObj is decimal numberDecimal)
+                    {
+                        calcResult = numberDecimal.ToString(CultureInfo.InvariantCulture);
+                    }
+
+                    text = text
+                        .Remove(startIdx, endIdx - startIdx + 1)
+                        .Insert(startIdx, calcResult);
+
+                    startIdx = text.IndexOf('[', startIdx);
+                }
+
+                return text;
+            }
+            catch
+            {
+                return input;
             }
         }
 
