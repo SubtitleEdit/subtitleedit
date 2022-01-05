@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using NCalc;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Logic;
@@ -14,7 +15,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NCalc;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
@@ -39,11 +39,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private bool _closing;
         private bool _videoLoaded;
         private bool _updatePreview = true;
+        private bool _updateDrawingFile;
         private readonly string _videoFileName;
         private readonly VideoInfo _videoInfo;
         private double _videoPositionSeconds;
         private bool _loading = true;
-        private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
         private string _assaBox;
         private readonly Random _random = new Random();
         private int _top;
@@ -53,10 +53,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Color _boxColor;
         private Color _boxShadowColor;
         private Color _boxOutlineColor;
-        private long _processedFramesAdd;
-        private long _processedFrames;
         private long _totalFrames;
-        private long _startTicks;
+        private FileSystemWatcher _drawingFileWatcher;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double videoPositionSeconds)
         {
@@ -112,6 +110,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ReadDrawingFile(Configuration.Settings.Tools.AssaBgBoxDrawing);
             SafeNumericUpDownAssign(numericUpDownDrawingMarginH, Configuration.Settings.Tools.AssaBgBoxDrawingMarginH);
             SafeNumericUpDownAssign(numericUpDownDrawingMarginV, Configuration.Settings.Tools.AssaBgBoxDrawingMarginV);
+            checkBoxOnlyDrawing.Checked = Configuration.Settings.Tools.AssaBgBoxDrawingOnly;
 
             switch (Configuration.Settings.Tools.AssaBgBoxDrawingAlignment)
             {
@@ -558,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         return input;
                     }
 
-                    var expr = text.Substring(startIdx+1, endIdx - startIdx - 1);
+                    var expr = text.Substring(startIdx + 1, endIdx - startIdx - 1);
                     expr = expr.ToUpperInvariant()
                         .Replace("LEFT", left.ToString(CultureInfo.InvariantCulture))
                         .Replace("TOP", top.ToString(CultureInfo.InvariantCulture))
@@ -600,6 +599,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void ApplyCustomStyles_FormClosing(object sender, FormClosingEventArgs e)
         {
+            timerPreview.Stop();
+            timerFileChange.Stop();
+            _drawingFileWatcher?.Dispose();
             _closing = true;
             _mpv?.Dispose();
 
@@ -628,6 +630,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Configuration.Settings.Tools.AssaBgBoxDrawing = labelFileName.Text;
             Configuration.Settings.Tools.AssaBgBoxDrawingMarginV = (int)numericUpDownDrawingMarginV.Value;
             Configuration.Settings.Tools.AssaBgBoxDrawingMarginH = (int)numericUpDownDrawingMarginH.Value;
+            Configuration.Settings.Tools.AssaBgBoxDrawingOnly = checkBoxOnlyDrawing.Checked;
 
             if (radioButtonBottomLeft.Checked)
             {
@@ -696,6 +699,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Application.DoEvents();
             GeneratePreviewViaMpv();
             _loading = false;
+            timerFileChange.Start();
         }
 
         private void pictureBoxPreview_Click(object sender, EventArgs e)
@@ -794,18 +798,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private List<PositionAndSize> CalcAllPositionsAndSizes()
         {
-            _processedFrames = 0;
-            _processedFramesAdd = 0;
             var third = (_selectedIndices.Length + 2) * 25;
             _totalFrames = third * 3;
             if (_totalFrames > 0 && _selectedIndices.Length > 5)
             {
-                //progressBar1.Maximum = (int)_totalFrames;
                 progressBar1.Visible = true;
-                _startTicks = DateTime.UtcNow.Ticks;
                 progressBar1.Style = ProgressBarStyle.Marquee;
                 labelProgress.Text = LanguageSettings.Current.General.PleaseWait;
-                //timerProgress.Start();
             }
 
             var list = new List<PositionAndSize>();
@@ -824,7 +823,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                false,
                                1,
                                null,
-                               OutputHandler);
+                               null);
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
@@ -833,8 +832,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     System.Threading.Thread.Sleep(100);
                     Application.DoEvents();
                 }
-
-                _processedFramesAdd = _totalFrames / 2;
 
                 // make temp assa file with font
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
@@ -858,7 +855,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 // hard code subtitle
                 var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
-                process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName, null, null, OutputHandler);
+                process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
@@ -868,10 +865,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     Application.DoEvents();
                 }
 
-                _processedFrames = 0;
-                _processedFramesAdd = third * 2;
                 var images = VideoPreviewGenerator.GetScreenShotsForEachFrame(outputVideoFileName);
-
                 Parallel.For(0, images.Length, index =>
                 {
                     if (index < _selectedIndices.Length)
@@ -1017,31 +1011,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 dataReceivedHandler);
         }
 
-        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            if (string.IsNullOrWhiteSpace(outLine.Data))
-            {
-                return;
-            }
-
-            var match = FrameFinderRegex.Match(outLine.Data);
-            if (!match.Success)
-            {
-                return;
-            }
-
-            var arr = match.Value.Split('=');
-            if (arr.Length != 2)
-            {
-                return;
-            }
-
-            if (long.TryParse(arr[1].Trim(), out var f))
-            {
-                _processedFrames = f;
-            }
-        }
-
         private void PreviewValueChanged(object sender, EventArgs e)
         {
             _updatePreview = true;
@@ -1170,10 +1139,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
+            _drawingFileWatcher?.Dispose();
             _drawing = Subtitle.Parse(fileName, new AdvancedSubStationAlpha());
-            if (_drawing.Paragraphs.Count > 0 && _drawing.Paragraphs.Count < 200)
+            if (_drawing == null)
+            {
+                Application.DoEvents();
+                _drawing = Subtitle.Parse(fileName, new AdvancedSubStationAlpha());
+            }
+
+            if (_drawing != null && _drawing.Paragraphs.Count > 0 && _drawing.Paragraphs.Count < 200)
             {
                 labelFileName.Text = fileName;
+
+                if (Configuration.Settings.Tools.AssaBgBoxDrawingFileWatch)
+                {
+                    _drawingFileWatcher = new FileSystemWatcher();
+                    _drawingFileWatcher.Path = Path.GetDirectoryName(fileName);
+                    _drawingFileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+                    _drawingFileWatcher.Filter = Path.GetFileName(fileName);
+                    _drawingFileWatcher.Changed += OnChanged;
+                    _drawingFileWatcher.Created += OnChanged;
+                    _drawingFileWatcher.EnableRaisingEvents = true;
+                }
             }
             else
             {
@@ -1182,8 +1169,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            _updateDrawingFile = true;
+        }
+
         private void buttonDrawingClear_Click(object sender, EventArgs e)
         {
+            _drawingFileWatcher?.Dispose();
             _drawing = null;
             labelFileName.Text = string.Empty;
             _updatePreview = true;
@@ -1211,8 +1204,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void checkBoxNoBox_CheckedChanged(object sender, EventArgs e)
         {
-            groupBoxPadding.Enabled = !checkBoxOnlyDrawing.Checked;
-            groupBoxFillWidth.Enabled = !checkBoxOnlyDrawing.Checked;
             groupBoxStyle.Enabled = !checkBoxOnlyDrawing.Checked;
             buttonPrimaryColor.Enabled = !checkBoxOnlyDrawing.Checked;
             buttonOutlineColor.Enabled = !checkBoxOnlyDrawing.Checked;
@@ -1221,6 +1212,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             numericUpDownOutlineWidth.Enabled = !checkBoxOnlyDrawing.Checked;
 
             _updatePreview = true;
+        }
+
+        private void timerFileChange_Tick(object sender, EventArgs e)
+        {
+            if (_updateDrawingFile)
+            {
+                _updateDrawingFile = false;
+                ReadDrawingFile(labelFileName.Text);
+                _updatePreview = true;
+            }
         }
     }
 }

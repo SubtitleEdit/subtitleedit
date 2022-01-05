@@ -91,6 +91,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxPadding = new System.Windows.Forms.GroupBox();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
+            this.timerFileChange = new System.Windows.Forms.Timer(this.components);
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -887,6 +888,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle.TabStop = false;
             this.groupBoxStyle.Text = "Style";
             // 
+            // timerFileChange
+            // 
+            this.timerFileChange.Interval = 250;
+            this.timerFileChange.Tick += new System.EventHandler(this.timerFileChange_Tick);
+            // 
             // AssSetBackground
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1017,5 +1023,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.GroupBox groupBoxPadding;
         private System.Windows.Forms.GroupBox groupBoxStyle;
         private System.Windows.Forms.CheckBox checkBoxOnlyDrawing;
+        private System.Windows.Forms.Timer timerFileChange;
     }
 }
