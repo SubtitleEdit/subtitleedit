@@ -2512,7 +2512,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <TotalAdjustmentX>調整總數: {0}</TotalAdjustmentX>
     <AllLines>所有行</AllLines>
     <SelectedLinesOnly>僅已選的行</SelectedLinesOnly>
-    <SelectedLinesAndForward>已選的行及之前行</SelectedLinesAndForward>
+    <SelectedLinesAndForward>選擇的行及之後行</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>歷史記錄 (用於復原)</Title>
