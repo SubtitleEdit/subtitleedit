@@ -404,12 +404,13 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.RightToLeftLayout = true;
                 }
 
-                SwitchView(SourceView); // AC
-                ShowSourceLineNumber(); // AC
-                SwitchView(ListView); // AC
                 if (Configuration.Settings.General.StartInSourceView)
                 {
                     SwitchView(SourceView);
+                }
+                else
+                {
+                    SwitchView(ListView);
                 }
 
                 audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
