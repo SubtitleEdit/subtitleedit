@@ -925,6 +925,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Generate background box";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplyCustomStyles_FormClosing);
+            this.Load += new System.EventHandler(this.AssSetBackground_Load);
             this.Shown += new System.EventHandler(this.AssSetBackground_Shown);
             this.ResizeEnd += new System.EventHandler(this.SetPosition_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AssSetBackground_KeyDown);

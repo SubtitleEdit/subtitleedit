@@ -102,6 +102,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             groupBoxDrawing.Text = LanguageSettings.Current.AssaSetBackgroundBox.Drawing;
             groupBoxStyle.Text = LanguageSettings.Current.General.Style;
             groupBoxAlignment.Text = LanguageSettings.Current.SubStationAlphaStyles.Alignment;
+            labelPaddingLeft.Text = LanguageSettings.Current.ExportPngXml.Left;
+            labelPaddingRight.Text = LanguageSettings.Current.ExportPngXml.Right;
+            labelPaddingBottom.Text = LanguageSettings.Current.AssaProgressBarGenerator.Bottom;
+            labelPaddingTop.Text = LanguageSettings.Current.AssaProgressBarGenerator.Top;
             checkBoxOnlyDrawing.Text = LanguageSettings.Current.AssaSetBackgroundBox.OnlyDrawing;
             buttonPrimaryColor.Text = LanguageSettings.Current.AssaSetBackgroundBox.BoxColor;
             buttonOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
@@ -867,7 +871,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     text = Regex.Replace(text, @"{\\fade\([\d\.,]*\)}", string.Empty);
                     text = Regex.Replace(text, @"\\fade\([\d\.,]*\)", string.Empty);
 
-                    sub.Paragraphs.Add(new Paragraph(text, i * 1000 - 500, i * 1000 + 500));
+                    sub.Paragraphs.Add(new Paragraph(text, i * 1000 - 500, i * 1000 + 500)
+                    {
+                        Extra = p.Extra,
+                    });
                 }
 
                 File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
@@ -1238,6 +1245,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 ReadDrawingFile(labelFileName.Text);
                 _updatePreview = true;
             }
+        }
+
+        private void AssSetBackground_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
