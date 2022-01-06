@@ -74,11 +74,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             _selectedIndices = selectedIndices;
-            // Text = LanguageSettings.Current.AssaSetPosition.SetPosition;
             comboBoxBoxStyle.Items.Clear();
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.SquareCorners);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
-            comboBoxBoxStyle.Items.Add("Spikes");
+            comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaSetBackgroundBox.Spikes);
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -95,6 +94,29 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 comboBoxBoxStyle.SelectedIndex = 0;
             }
+
+            Text = LanguageSettings.Current.AssaSetBackgroundBox.Title;
+            groupBoxPadding.Text = LanguageSettings.Current.AssaSetBackgroundBox.Padding;
+            groupBoxFillWidth.Text = LanguageSettings.Current.AssaSetBackgroundBox.FillWidth;
+            checkBoxFillWidth.Text = LanguageSettings.Current.AssaSetBackgroundBox.FillWidth;
+            groupBoxDrawing.Text = LanguageSettings.Current.AssaSetBackgroundBox.Drawing;
+            groupBoxStyle.Text = LanguageSettings.Current.General.Style;
+            groupBoxAlignment.Text = LanguageSettings.Current.SubStationAlphaStyles.Alignment;
+            checkBoxOnlyDrawing.Text = LanguageSettings.Current.AssaSetBackgroundBox.OnlyDrawing;
+            buttonPrimaryColor.Text = LanguageSettings.Current.AssaSetBackgroundBox.BoxColor;
+            buttonOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
+            buttonShadowColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            labelRadius.Text = LanguageSettings.Current.AssaSetBackgroundBox.Radius;
+            labelDrawingMarginH.Text = LanguageSettings.Current.AssaSetBackgroundBox.MarginX;
+            labelDrawingMarginV.Text = LanguageSettings.Current.AssaSetBackgroundBox.MarginY;
+            labelChooseDrawing.Text = LanguageSettings.Current.AssaSetBackgroundBox.DrawingFile;
+            groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            labelFillWidthMarginLeft.Text = LanguageSettings.Current.SubStationAlphaStyles.MarginLeft;
+            labelFillWidthMarginRight.Text = LanguageSettings.Current.SubStationAlphaStyles.MarginRight;
+            labelStep.Text = LanguageSettings.Current.AssaSetBackgroundBox.Step;
+            labelMaxSpike.Text = LanguageSettings.Current.AssaSetBackgroundBox.MaxSpike;
+            buttonDrawingClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
+
 
             SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
             SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
@@ -822,11 +844,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                Configuration.Settings.Tools.AssaBgBoxTransparentColor,
                                false,
                                1,
-                               null,
                                null);
                 process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
                 while (!process.HasExited)
                 {
                     System.Threading.Thread.Sleep(100);
@@ -857,15 +876,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
                 process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
                 process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
                 while (!process.HasExited)
                 {
                     System.Threading.Thread.Sleep(100);
                     Application.DoEvents();
                 }
 
-                var images = VideoPreviewGenerator.GetScreenShotsForEachFrame(outputVideoFileName);
+                var tempImageFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                var images = VideoPreviewGenerator.GetScreenShotsForEachFrame(outputVideoFileName, tempImageFolder);
                 Parallel.For(0, images.Length, index =>
                 {
                     if (index < _selectedIndices.Length)
@@ -901,6 +919,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     File.Delete(tempVideoFileName);
                     File.Delete(assaTempFileName);
                     File.Delete(outputVideoFileName);
+                    Directory.Delete(tempImageFolder);
                 }
                 catch
                 {
@@ -946,8 +965,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     sb.Append($"{i - (step / 2)} {bottom + _random.Next(minSpike, maxSpike)} ");
                     sb.Append($"{i - step} {bottom} ");
-                    //sb.Append($"{i + (step / 2)} {bottom + r.Next(10, 30)} "); // direction
-                    //sb.Append($"{i + step} {bottom} ");
                 }
 
                 for (var i = bottom; i >= y; i -= step)
@@ -984,7 +1001,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             return new Paragraph(first) { StartTime = new TimeCode(0), EndTime = new TimeCode(10000) };
         }
 
-        private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null, DataReceivedEventHandler dataReceivedHandler = null)
+        private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null)
         {
             var pass = string.Empty;
             if (passNumber.HasValue)
@@ -1007,8 +1024,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 null,
                 null,
                 pass,
-                twoPassBitRate,
-                dataReceivedHandler);
+                twoPassBitRate);
         }
 
         private void PreviewValueChanged(object sender, EventArgs e)

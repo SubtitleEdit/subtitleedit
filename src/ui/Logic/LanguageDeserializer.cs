@@ -604,6 +604,45 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaResulationChanger/ChangeResolutionDrawing":
                     language.AssaResulationChanger.ChangeResolutionDrawing = reader.Value;
                     break;
+                case "AssaSetBackgroundBox/Title":
+                    language.AssaSetBackgroundBox.Title = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/Padding":
+                    language.AssaSetBackgroundBox.Padding = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/FillWidth":
+                    language.AssaSetBackgroundBox.FillWidth = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/Drawing":
+                    language.AssaSetBackgroundBox.Drawing = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/BoxColor":
+                    language.AssaSetBackgroundBox.BoxColor = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/Radius":
+                    language.AssaSetBackgroundBox.Radius = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/Step":
+                    language.AssaSetBackgroundBox.Step = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/MaxSpike":
+                    language.AssaSetBackgroundBox.MaxSpike = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/Spikes":
+                    language.AssaSetBackgroundBox.Spikes = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/MarginX":
+                    language.AssaSetBackgroundBox.MarginX = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/MarginY":
+                    language.AssaSetBackgroundBox.MarginY = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/OnlyDrawing":
+                    language.AssaSetBackgroundBox.OnlyDrawing = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/DrawingFile":
+                    language.AssaSetBackgroundBox.DrawingFile = reader.Value;
+                    break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
                     break;

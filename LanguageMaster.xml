@@ -228,6 +228,21 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>Change ASSA script resolution</Title>
+    <Padding>Padding</Padding>
+    <FillWidth>Fill width</FillWidth>
+    <Drawing>Drawing</Drawing>
+    <BoxColor>Box color</BoxColor>
+    <Radius>Radius</Radius>
+    <Step>Step</Step>
+    <MaxSpike>Max spike</MaxSpike>
+    <Spikes>Spikes</Spikes>
+    <MarginX>MarginX</MarginX>
+    <MarginY>MarginY</MarginY>
+    <OnlyDrawing>Only drawing</OnlyDrawing>
+    <DrawingFile>Drawing file</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Set position</SetPosition>
     <VideoResolutionX>Video resolution: {0}</VideoResolutionX>

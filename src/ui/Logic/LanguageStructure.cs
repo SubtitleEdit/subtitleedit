@@ -241,6 +241,23 @@
             public string ChangeResolutionDrawing { get; set; }
         }
 
+        public class AssaSetBackgroundBox
+        {
+            public string Title { get; set; }
+            public string Padding { get; set; }
+            public string FillWidth { get; set; }
+            public string Drawing { get; set; }
+            public string BoxColor { get; set; }
+            public string Radius { get; set; }
+            public string Step { get; set; }
+            public string MaxSpike { get; set; }
+            public string Spikes { get; set; }
+            public string MarginX { get; set; }
+            public string MarginY { get; set; }
+            public string OnlyDrawing { get; set; }
+            public string DrawingFile { get; set; }
+        }
+
         public class AssaSetPosition
         {
             public string SetPosition { get; set; }

@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownFillWidthMarginLeft = new System.Windows.Forms.NumericUpDown();
             this.labelRadius = new System.Windows.Forms.Label();
             this.numericUpDownRadius = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelMaxSpike = new System.Windows.Forms.Label();
             this.numericUpDownSpikesMax = new System.Windows.Forms.NumericUpDown();
             this.panelStyleRounded = new System.Windows.Forms.Panel();
             this.panelStyleSpikes = new System.Windows.Forms.Panel();
@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             "Spikes"});
             this.comboBoxBoxStyle.Location = new System.Drawing.Point(6, 25);
             this.comboBoxBoxStyle.Name = "comboBoxBoxStyle";
-            this.comboBoxBoxStyle.Size = new System.Drawing.Size(116, 21);
+            this.comboBoxBoxStyle.Size = new System.Drawing.Size(167, 21);
             this.comboBoxBoxStyle.TabIndex = 9;
             this.comboBoxBoxStyle.SelectedIndexChanged += new System.EventHandler(this.comboBoxBoxStyle_SelectedIndexChanged);
             // 
@@ -755,14 +755,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownRadius.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // label9
+            // labelMaxSpike
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(-3, 30);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(55, 13);
-            this.label9.TabIndex = 51;
-            this.label9.Text = "Max spike";
+            this.labelMaxSpike.AutoSize = true;
+            this.labelMaxSpike.Location = new System.Drawing.Point(-3, 30);
+            this.labelMaxSpike.Name = "labelMaxSpike";
+            this.labelMaxSpike.Size = new System.Drawing.Size(55, 13);
+            this.labelMaxSpike.TabIndex = 51;
+            this.labelMaxSpike.Text = "Max spike";
             // 
             // numericUpDownSpikesMax
             // 
@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // panelStyleSpikes
             // 
             this.panelStyleSpikes.Controls.Add(this.numericUpDownSpikesStep);
-            this.panelStyleSpikes.Controls.Add(this.label9);
+            this.panelStyleSpikes.Controls.Add(this.labelMaxSpike);
             this.panelStyleSpikes.Controls.Add(this.labelStep);
             this.panelStyleSpikes.Controls.Add(this.numericUpDownSpikesMax);
             this.panelStyleSpikes.Location = new System.Drawing.Point(6, 95);
@@ -997,7 +997,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.NumericUpDown numericUpDownFillWidthMarginLeft;
         private System.Windows.Forms.Label labelRadius;
         private System.Windows.Forms.NumericUpDown numericUpDownRadius;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelMaxSpike;
         private System.Windows.Forms.NumericUpDown numericUpDownSpikesMax;
         private System.Windows.Forms.Panel panelStyleRounded;
         private System.Windows.Forms.Panel panelStyleSpikes;
