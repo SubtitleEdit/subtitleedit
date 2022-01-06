@@ -2560,7 +2560,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
     <AllLines>&amp;All lines</AllLines>
     <SelectedLinesOnly>&amp;Selected lines only</SelectedLinesOnly>
-    <SelectedLinesAndForward>Selected line(s) and &amp;forward</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Selected and subse&amp;quent lines</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>History (for undo)</Title>

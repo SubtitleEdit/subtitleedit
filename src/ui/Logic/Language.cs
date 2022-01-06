@@ -2899,7 +2899,7 @@ can edit in same subtitle file (collaboration)",
                 TotalAdjustmentX = "Total adjustment: {0}",
                 AllLines = "&All lines",
                 SelectedLinesOnly = "&Selected lines only",
-                SelectedLinesAndForward = "Selected line(s) and &forward",
+                SelectedLinesAndForward = "Selected and subse&quent lines",
             };
 
             ShowHistory = new LanguageStructure.ShowHistory
