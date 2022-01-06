@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
         public LanguageStructure.AssaProgressBarGenerator AssaProgressBarGenerator;
         public LanguageStructure.AssaResulationChanger AssaResulationChanger;
+        public LanguageStructure.AssaSetBackgroundBox AssaSetBackgroundBox;
         public LanguageStructure.AssaSetPosition AssaSetPosition;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
@@ -380,6 +381,23 @@ namespace Nikse.SubtitleEdit.Logic
                 ChangeResolutionFontSize = "Change resolution for font size",
                 ChangeResolutionPositions = "Change resolution for position",
                 ChangeResolutionDrawing = "Change resolution for drawing",
+            };
+
+            AssaSetBackgroundBox = new LanguageStructure.AssaSetBackgroundBox
+            {
+                Title = "Change ASSA script resolution",
+                Padding = "Padding",
+                FillWidth = "Fill width",
+                Drawing = "Drawing",
+                BoxColor = "Box color",
+                Radius = "Radius",
+                Step = "Step",
+                Spikes = "Spikes",
+                MaxSpike = "Max spike",
+                MarginX = "MarginX",
+                MarginY = "MarginY",
+                OnlyDrawing = "Only drawing",
+                DrawingFile = "Drawing file",
             };
 
             AssaSetPosition = new LanguageStructure.AssaSetPosition

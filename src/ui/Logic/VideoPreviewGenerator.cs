@@ -203,9 +203,8 @@ namespace Nikse.SubtitleEdit.Logic
             return outputFileName;
         }
 
-        public static string[] GetScreenShotsForEachFrame(string videoFileName)
+        public static string[] GetScreenShotsForEachFrame(string videoFileName, string outputFolder)
         {
-            var outputFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(outputFolder);
             var outputFileName = Path.Combine(outputFolder, "image%05d.png");
             var process = new Process

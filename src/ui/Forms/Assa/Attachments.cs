@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         };
 
         public string NewFooter { get; private set; }
-        private bool _loading = true;
+        private bool _loading;
 
         public Attachments(string source)
         {
@@ -35,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            _loading = true;
             labelInfo.Visible = false;
             textBoxInfo.Visible = false;
             textBoxInfo.ReadOnly = true;
