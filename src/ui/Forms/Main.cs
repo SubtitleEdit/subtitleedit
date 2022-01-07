@@ -7100,6 +7100,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void RecalcCurrentDurationMin()
+        {
+            if (SubtitleListview1.SelectedItems.Count >= 1)
+            {
+                MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+                _makeHistoryPaused = true;
+                var idx = SubtitleListview1.SelectedItems[0].Index;
+                _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
+                SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
+                _makeHistoryPaused = false;
+            }
+        }
+
         private void AdjustDisplayTime(bool onlySelectedLines)
         {
             if (!IsSubtitleLoaded)
@@ -16719,6 +16732,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainAutoCalcCurrentDurationByOptimalReadingSpeed == e.KeyData)
             {
                 RecalcCurrentDuration(true);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAutoCalcCurrentDurationByMinReadingSpeed == e.KeyData)
+            {
+                RecalcCurrentDurationMin();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.F3 && e.Modifiers == Keys.Shift)
