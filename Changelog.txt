@@ -31,6 +31,7 @@
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
    * Remove position codes when reading PAC - thx Ernest
+   * Allow .m4s as sub ext - farside
 * FIXED:
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
    * Fix for generating empty waveform for online videos - thx OmrSi
@@ -50,6 +51,7 @@
    * Fix crash in "Batch convert" w add after sort - thx Siamak
    * Remove beep sound with "Go to bookmark" shortcut - thx OmrSi
    * Fix crash in list view context menu after clearing source view - thx Leon
+   * Fix crash in list view focus/select - thx Leon
 
 
 3.6.4 (3rd December 2021)
