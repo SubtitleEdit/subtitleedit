@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Logic
                         OpenContainingFolder = "Open containing folder",
                         Compare = "&Compare...",
                         Statistics = "S&tatistics...",
-                        Plugins = "Plugins...",
+                        Plugins = "&Plugins...",
                         ImportSubtitleFromVideoFile = "Subtitle from video file...",
                         ImportOcrFromDvd = "Subtitle from VOB/IFO (DVD)...",
                         ImportOcrVobSubSubtitle = "VobSub (sub/idx) subtitle for OCR...",
