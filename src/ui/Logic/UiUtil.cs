@@ -1149,6 +1149,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".son");
             AddExtension(sb, ".mts");
             AddExtension(sb, ".m2ts");
+            AddExtension(sb, ".m4s");
 
             sb.Append('|');
             sb.Append(LanguageSettings.Current.General.AllFiles);
