@@ -6388,8 +6388,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/RecalculateDurationOfCurrentSubtitle":
                     language.Settings.RecalculateDurationOfCurrentSubtitle = reader.Value;
                     break;
-                case "Settings/RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed":
-                    language.Settings.RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed = reader.Value;
+                case "Settings/RecalculateDurationOfCurrentSubtitleByOptimalCps":
+                    language.Settings.RecalculateDurationOfCurrentSubtitleByOptimalCps = reader.Value;
+                    break;
+                case "Settings/RecalculateDurationOfCurrentSubtitleByMaxCps":
+                    language.Settings.RecalculateDurationOfCurrentSubtitleByMaxCps = reader.Value;
                     break;
                 case "Settings/MainCreateStartDownEndUp":
                     language.Settings.MainCreateStartDownEndUp = reader.Value;

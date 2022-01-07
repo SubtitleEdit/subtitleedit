@@ -77,8 +77,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGoToPrevSubtitleAndPlay { get; set; }
         public Keys MainGoToNextSubtitleAndPlay { get; set; }
         public Keys MainAutoCalcCurrentDuration { get; set; }
-        public Keys MainAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
-        public Keys MainAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
+        public Keys MainAutoCalcCurrentDurationByOptimalCps { get; set; }
+        public Keys MainAutoCalcCurrentDurationByMaxCps { get; set; }
         public Keys MainGeneralToggleBookmarks { get; set; }
         public Keys MainGeneralClearBookmarks { get; set; }
         public Keys MainGeneralGoToBookmark { get; set; }
@@ -286,8 +286,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainGoToPrevSubtitleAndPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay);
             MainGoToNextSubtitleAndPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
             MainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
-            MainAutoCalcCurrentDurationByOptimalReadingSpeed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed);
-            MainAutoCalcCurrentDurationByMinReadingSpeed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed);
+            MainAutoCalcCurrentDurationByOptimalCps = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalCps);
+            MainAutoCalcCurrentDurationByMaxCps = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMaxCps);
             MainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
             MainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
             MainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);

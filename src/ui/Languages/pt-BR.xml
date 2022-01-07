@@ -2311,7 +2311,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<AdjustExtendPreviousLineEndToCurrentStart>Estender final da linha anterior para o início da atual</AdjustExtendPreviousLineEndToCurrentStart>
 		<AdjustExtendNextLineStartToCurrentEnd>Estender início da próxima linha até o final da atual</AdjustExtendNextLineStartToCurrentEnd>
 		<RecalculateDurationOfCurrentSubtitle>Recalcular duração da legenda atual</RecalculateDurationOfCurrentSubtitle>
-		<RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Recalcular duração da legenda atual (baseado na velocidade de leitura ideal)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+		<RecalculateDurationOfCurrentSubtitleByOptimalCps>Recalcular duração da legenda atual (baseado na velocidade de leitura ideal)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
 		<MainCreateStartDownEndUp>Inserir nova legenda com tecla para cima, definir tempo final com tecla para baixo</MainCreateStartDownEndUp>
 		<MergeDialog>Combinar diálogo (inserir traços)</MergeDialog>
 		<GoToNext>Ir para próxima linha</GoToNext>

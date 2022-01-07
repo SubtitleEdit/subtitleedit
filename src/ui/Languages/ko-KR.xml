@@ -2316,7 +2316,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AdjustExtendPreviousLineEndToCurrentStart>이전 줄의 끝을 현재의 시작으로 확장</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>다음 줄의 시작을 현재의 끝으로 확장</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>현재 자막의 표시시간 다시 계산</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>현재 자막의 표시시간 다시 계산 (최적의 판독 속도 기준)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>현재 자막의 표시시간 다시 계산 (최적의 판독 속도 기준)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>

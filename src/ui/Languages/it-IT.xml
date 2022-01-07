@@ -2317,7 +2317,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Estendi la fine della riga precedente all'inizio dell'attuale</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Estendi l'inizio della riga successiva alla fine dell'attuale</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Ricalcola durata sottotitolo attuale</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Ricalcola durata sottotitolo attuale (in base a velocità di lettura ottimale)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Ricalcola durata sottotitolo attuale (in base a velocità di lettura ottimale)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Crea nuovo premendo la freccia giù, imposta la fine premendo la freccia su</MainCreateStartDownEndUp>
     <MergeDialog>Unisci dialoghi (inserisci trattini)</MergeDialog>
     <GoToNext>Vai alla riga successiva</GoToNext>

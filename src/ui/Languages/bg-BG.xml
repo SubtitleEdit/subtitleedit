@@ -2319,7 +2319,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustExtendPreviousLineEndToCurrentStart>Удължаване края на предишния ред до текущото начало</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Удължаване началото на следващия ред до текущия край</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущия субтитър</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Преизчисляване на продължителността на текущия субтитър (въз основа на оптималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Преизчисляване на продължителността на текущия субтитър (въз основа на оптималната скорост на четене)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Създаване на ново - стрелка НАДОЛУ, задаване крайно време - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Обединяване диалога (вмъкване на тирета)</MergeDialog>
     <GoToNext>Преминаване на следващия ред</GoToNext>

@@ -2318,7 +2318,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Rozciągnij koniec poprzedniej linii do początku bieżącej</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Rozciągnij początek następnej linii do końca bieżącej</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Oblicz ponownie czas trwania bieżących napisów</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Oblicz ponownie czas trwania bieżących napisów (w oparciu o optymalną prędkość czytania)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Oblicz ponownie czas trwania bieżących napisów (w oparciu o optymalną prędkość czytania)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Klawisz ↓ - utwórz nowy, klawisz ↑ - ustaw czas zakończenia</MainCreateStartDownEndUp>
     <MergeDialog>Połącz dialogi (wstaw myślniki)</MergeDialog>
     <MergeDialogWithNext>Połącz dialog z następnym (wstaw myślniki)</MergeDialogWithNext>

@@ -2313,7 +2313,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Az előző sor végének kiterjesztése a jelenlegi kezdetére</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>A következő sor kezdetének kiterjesztése a jelenlegi végére</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Az aktuális felirat időtartamának újraszámolása</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Az aktuális felirat időtartamának újbóli kiszámítása (az optimális olvasási sebesség alapján)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Az aktuális felirat időtartamának újbóli kiszámítása (az optimális olvasási sebesség alapján)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Új felirat beszúrása a gomb lenyomásakor, befejezési idő beállítása a gomb elengedésekor</MainCreateStartDownEndUp>
     <MergeDialog>Párbeszéd egyesítése (gondolatjelek beszúrása)</MergeDialog>
     <GoToNext>Ugrás a következő sorra</GoToNext>

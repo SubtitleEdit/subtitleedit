@@ -2309,7 +2309,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustExtendPreviousLineEndToCurrentStart>Επέκταση λήξης προηγούμενης γραμμής σε έναρξη τρέχουσας</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Επέκταση έναρξης επόμενης γραμμής σε λήξη τρέχουσας</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Επαναϋπολογισμός διάρκειας υποτίτλου</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Επαναϋπολογισμός διάρκειας τρέχοντος υποτίτλου (βάσει βέλτιστης ταχύτητας ανάγνωσης)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Επαναϋπολογισμός διάρκειας τρέχοντος υποτίτλου (βάσει βέλτιστης ταχύτητας ανάγνωσης)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>

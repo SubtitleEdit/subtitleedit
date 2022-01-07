@@ -7100,7 +7100,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void RecalcCurrentDurationMin()
+        private void RecalcCurrentDurationMaxCps()
         {
             if (SubtitleListview1.SelectedItems.Count >= 1)
             {
@@ -16729,14 +16729,14 @@ namespace Nikse.SubtitleEdit.Forms
                 RecalcCurrentDuration();
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainAutoCalcCurrentDurationByOptimalReadingSpeed == e.KeyData)
+            else if (_shortcuts.MainAutoCalcCurrentDurationByOptimalCps == e.KeyData)
             {
                 RecalcCurrentDuration(true);
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainAutoCalcCurrentDurationByMinReadingSpeed == e.KeyData)
+            else if (_shortcuts.MainAutoCalcCurrentDurationByMaxCps == e.KeyData)
             {
-                RecalcCurrentDurationMin();
+                RecalcCurrentDurationMaxCps();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.F3 && e.Modifiers == Keys.Shift)

@@ -2340,7 +2340,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Prolongar o fim da linha anterior até ao início da actual</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Prolongar o início da linha seguinte até ao fim da actual</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Recalcular a duração da legenda actual (com base na velocidade de leitura ideal)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Recalcular a duração da legenda actual (com base na velocidade de leitura ideal)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Inserir nova linha com tecla "Page Down", definir tempo final com tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir travessões)</MergeDialog>
     <MergeDialogWithNext>Combinar os diálogos com a seguinte (inserir travessões)</MergeDialogWithNext>

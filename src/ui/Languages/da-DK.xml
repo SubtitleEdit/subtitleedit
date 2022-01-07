@@ -2300,7 +2300,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Forlæng slutningen af ​​den forrige linje til den aktuelle start</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Forlæng næste linjes start til strømens slutning</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Genberegn varigheden af ​​den aktuelle undertekst (baseret på optimal læsehastighed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Genberegn varigheden af ​​den aktuelle undertekst (baseret på optimal læsehastighed)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <GoToNext>Gå til næste linje</GoToNext>

@@ -2312,7 +2312,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustExtendPreviousLineEndToCurrentStart>Extender el final de la línea anterior hasta el inicio de la actual</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Extender el inicio de la línea siguiente hasta el final de la actual</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Recalcular la duración del subtítulo actual</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Recalcular la duración del subtítulo actual (según la velocidad de lectura óptima)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Recalcular la duración del subtítulo actual (según la velocidad de lectura óptima)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Crear inicio con la tecla-abajo, ajustar final con la tecla-arriba</MainCreateStartDownEndUp>
     <MergeDialog>Unir diálogo (guiones de inserción)</MergeDialog>
     <GoToNext>Ir a la línea siguiente</GoToNext>

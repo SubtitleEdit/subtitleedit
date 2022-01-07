@@ -2303,8 +2303,8 @@ $HorzAlign          =   Center
         public string MainAdjustExtendPreviousLineEndToCurrentStart { get; set; }
         public string MainAdjustExtendNextLineStartToCurrentEnd { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
-        public string GeneralAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
-        public string GeneralAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
+        public string GeneralAutoCalcCurrentDurationByOptimalCps { get; set; }
+        public string GeneralAutoCalcCurrentDurationByMaxCps { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
         public string MainTextBoxBreakAtPosition { get; set; }
@@ -7405,16 +7405,16 @@ $HorzAlign          =   Center
                     shortcuts.GeneralAutoCalcCurrentDuration = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDurationByOptimalReadingSpeed");
+                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDurationByOptimalCps");
                 if (subNode != null)
                 {
-                    shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed = subNode.InnerText;
+                    shortcuts.GeneralAutoCalcCurrentDurationByOptimalCps = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDurationByMinReadingSpeed");
+                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDurationByMaxCps");
                 if (subNode != null)
                 {
-                    shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed = subNode.InnerText;
+                    shortcuts.GeneralAutoCalcCurrentDurationByMaxCps = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
@@ -10097,8 +10097,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToPrevSubtitleAndPlay", shortcuts.GeneralGoToPrevSubtitleAndPlay);
             textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", shortcuts.GeneralGoToNextSubtitleAndPlay);
             textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", shortcuts.GeneralAutoCalcCurrentDuration);
-            textWriter.WriteElementString("GeneralAutoCalcCurrentDurationByOptimalReadingSpeed", shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed);
-            textWriter.WriteElementString("GeneralAutoCalcCurrentDurationByMinReadingSpeed", shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed);
+            textWriter.WriteElementString("GeneralAutoCalcCurrentDurationByOptimalCps", shortcuts.GeneralAutoCalcCurrentDurationByOptimalCps);
+            textWriter.WriteElementString("GeneralAutoCalcCurrentDurationByMaxCps", shortcuts.GeneralAutoCalcCurrentDurationByMaxCps);
             textWriter.WriteElementString("GeneralPlayFirstSelected", shortcuts.GeneralPlayFirstSelected);
             textWriter.WriteElementString("GeneralToggleBookmarks", shortcuts.GeneralToggleBookmarks);
             textWriter.WriteElementString("GeneralToggleBookmarksWithText", shortcuts.GeneralToggleBookmarksWithText);

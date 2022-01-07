@@ -2303,7 +2303,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustExtendPreviousLineEndToCurrentStart>Laajenna edellisen rivin loppu nykyisen alkuun</AdjustExtendPreviousLineEndToCurrentStart>
     <AdjustExtendNextLineStartToCurrentEnd>Laajenna seuraavan rivin alku nykyisen loppuun</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Laske uudelleen nykyisen tekstityksen kesto</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Laske uudelleen nykyisen tekstityksen kesto (perustuen optimaaliseen lukunopeuteen)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalCps>Laske uudelleen nykyisen tekstityksen kesto (perustuen optimaaliseen lukunopeuteen)</RecalculateDurationOfCurrentSubtitleByOptimalCps>
     <MainCreateStartDownEndUp>Luo uusi alasnuolella, aseta loppuaika ylösnuolella</MainCreateStartDownEndUp>
     <MergeDialog>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialog>
     <GoToNext>Siirry seuraavalle riville</GoToNext>
