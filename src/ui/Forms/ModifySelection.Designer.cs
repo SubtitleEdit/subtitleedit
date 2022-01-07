@@ -37,7 +37,10 @@
             this.groupBoxRule = new System.Windows.Forms.GroupBox();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.checkBoxCaseSensitive = new System.Windows.Forms.CheckBox();
+            this.comboBoxRule = new System.Windows.Forms.ComboBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
+            this.listViewStyles = new System.Windows.Forms.ListView();
+            this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonApply = new System.Windows.Forms.Button();
@@ -51,9 +54,6 @@
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.listViewStyles = new System.Windows.Forms.ListView();
-            this.comboBoxRule = new System.Windows.Forms.ComboBox();
             this.groupBoxWhatToDo.SuspendLayout();
             this.groupBoxRule.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
@@ -161,6 +161,22 @@
             this.checkBoxCaseSensitive.UseVisualStyleBackColor = true;
             this.checkBoxCaseSensitive.CheckedChanged += new System.EventHandler(this.checkBoxCaseSensitive_CheckedChanged);
             // 
+            // comboBoxRule
+            // 
+            this.comboBoxRule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRule.FormattingEnabled = true;
+            this.comboBoxRule.Items.AddRange(new object[] {
+            "Contains",
+            "Starts with",
+            "Ends with",
+            "Not contains",
+            "RegEx"});
+            this.comboBoxRule.Location = new System.Drawing.Point(6, 20);
+            this.comboBoxRule.Name = "comboBoxRule";
+            this.comboBoxRule.Size = new System.Drawing.Size(185, 21);
+            this.comboBoxRule.TabIndex = 0;
+            this.comboBoxRule.SelectedIndexChanged += new System.EventHandler(this.comboBoxRule_SelectedIndexChanged);
+            // 
             // textBoxText
             // 
             this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -170,6 +186,23 @@
             this.textBoxText.Size = new System.Drawing.Size(199, 20);
             this.textBoxText.TabIndex = 1;
             this.textBoxText.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // listViewStyles
+            // 
+            this.listViewStyles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewStyles.CheckBoxes = true;
+            this.listViewStyles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderStyleName});
+            this.listViewStyles.FullRowSelect = true;
+            this.listViewStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewStyles.HideSelection = false;
+            this.listViewStyles.Location = new System.Drawing.Point(198, 21);
+            this.listViewStyles.Name = "listViewStyles";
+            this.listViewStyles.Size = new System.Drawing.Size(199, 108);
+            this.listViewStyles.TabIndex = 3;
+            this.listViewStyles.UseCompatibleStateImageBehavior = false;
+            this.listViewStyles.View = System.Windows.Forms.View.Details;
             // 
             // buttonCancel
             // 
@@ -289,40 +322,6 @@
             this.labelInfo.Size = new System.Drawing.Size(47, 13);
             this.labelInfo.TabIndex = 3;
             this.labelInfo.Text = "labelInfo";
-            // 
-            // listViewStyles
-            // 
-            this.listViewStyles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewStyles.CheckBoxes = true;
-            this.listViewStyles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderStyleName});
-            this.listViewStyles.FullRowSelect = true;
-            this.listViewStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewStyles.HideSelection = false;
-            this.listViewStyles.Location = new System.Drawing.Point(198, 21);
-            this.listViewStyles.Name = "listViewStyles";
-            this.listViewStyles.Size = new System.Drawing.Size(199, 108);
-            this.listViewStyles.TabIndex = 3;
-            this.listViewStyles.UseCompatibleStateImageBehavior = false;
-            this.listViewStyles.View = System.Windows.Forms.View.Details;
-            this.listViewStyles.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewStyles_ItemChecked);
-            // 
-            // comboBoxRule
-            // 
-            this.comboBoxRule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxRule.FormattingEnabled = true;
-            this.comboBoxRule.Items.AddRange(new object[] {
-            "Contains",
-            "Starts with",
-            "Ends with",
-            "Not contains",
-            "RegEx"});
-            this.comboBoxRule.Location = new System.Drawing.Point(6, 20);
-            this.comboBoxRule.Name = "comboBoxRule";
-            this.comboBoxRule.Size = new System.Drawing.Size(185, 21);
-            this.comboBoxRule.TabIndex = 0;
-            this.comboBoxRule.SelectedIndexChanged += new System.EventHandler(this.comboBoxRule_SelectedIndexChanged);
             // 
             // ModifySelection
             // 
