@@ -569,6 +569,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ModifySelection_Shown(object sender, EventArgs e)
         {
             ModifySelection_Resize(sender, e);
+            listViewStyles.ItemChecked += listViewStyles_ItemChecked;
         }
 
         private void listViewStyles_ItemChecked(object sender, ItemCheckedEventArgs e)
