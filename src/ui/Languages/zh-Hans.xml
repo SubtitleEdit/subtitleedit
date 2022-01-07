@@ -5,7 +5,7 @@
     <Version>3.6.4</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
-    <HelpFile />
+    <HelpFile>帮助文件</HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -176,9 +176,9 @@ Command line: {1} {2}
     <Models>模型</Models>
     <ChooseModel>选择模型</ChooseModel>
     <OpenModelsFolder>打开模型文件夹</OpenModelsFolder>
-    <DownloadVoskModelToX>请从 Vosk 网站下载音频文本转换模型，并解压到 {0}</DownloadVoskModelToX>
     <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
     <Transcribing>将音频转录为文本...</Transcribing>
+    <UsePostProcessing>使用后处理（行合并、修复大小写、标点符号等）</UsePostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -227,6 +227,21 @@ Command line: {1} {2}
     <ChangeResolutionPositions>缩放位置</ChangeResolutionPositions>
     <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>更改 ASSA 脚本分辨率</Title>
+    <Padding>填充</Padding>
+    <FillWidth>填充宽度</FillWidth>
+    <Drawing>绘制</Drawing>
+    <BoxColor>边框颜色</BoxColor>
+    <Radius>半径</Radius>
+    <Step>步长</Step>
+    <MaxSpike>最大峰值</MaxSpike>
+    <Spikes>峰值</Spikes>
+    <MarginX>X边距</MarginX>
+    <MarginY>Y边距</MarginY>
+    <OnlyDrawing>仅绘制</OnlyDrawing>
+    <DrawingFile>绘制文件</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
     <VideoResolutionX>视频分辨率：{0}</VideoResolutionX>
@@ -799,6 +814,7 @@ Command line: {1} {2}
     <CheckeredImage>方格图像</CheckeredImage>
     <SolidColor>纯色</SolidColor>
     <DurationInMinutes>持续时间（分钟）</DurationInMinutes>
+    <Background>背景</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>生成带有内嵌字幕的视频</Title>
