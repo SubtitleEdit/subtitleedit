@@ -171,6 +171,17 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <FixesAvailable>Correcções disponíveis: {0}</FixesAvailable>
     <UnableToFix>Incapaz de corrigir: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Áudio/vídeo para texto</Title>
+    <Info>Gerar texto a partir de áudio via reconhecimento de voz Vosk/Kaldi</Info>
+    <VoskWebsite>Website do Vosk</VoskWebsite>
+    <Models>Modelos</Models>
+    <ChooseModel>Escolher modelo</ChooseModel>
+    <OpenModelsFolder>Abrir pasta de modelos</OpenModelsFolder>
+    <LoadingVoskModel>A carregar o modelo de reconhecimento de voz Vosk...</LoadingVoskModel>
+    <Transcribing>A transcrever áudio para texto...</Transcribing>
+    <UsePostProcessing>Usar pós-processamento (combinar linhas, corrigir maiúsculas/minúsculas, pontuação e mais)</UsePostProcessing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
     <AttachFiles>Anexar ficheiros...</AttachFiles>
@@ -210,7 +221,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <TakePosFromVideo>Assumir a posição do vídeo</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
-    <Title>Alterar a resolução do script</Title>
+    <Title>Alterar a resolução do script ASSA</Title>
     <SourceVideoRes>Resolução do vídeo de origem</SourceVideoRes>
     <TargetVideoRes>Resolução do vídeo de destino</TargetVideoRes>
     <ChangeResolutionMargins>Alterar resolução para margem</ChangeResolutionMargins>
@@ -218,6 +229,21 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <ChangeResolutionPositions>Alterar a resolução para a posição</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Alterar a resolução para desenho</ChangeResolutionDrawing>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>Alterar a resolução do script ASSA</Title>
+    <Padding>Preenchimento</Padding>
+    <FillWidth>Largura de preenchimento</FillWidth>
+    <Drawing>Desenho</Drawing>
+    <BoxColor>Cor da caixa</BoxColor>
+    <Radius>Raio</Radius>
+    <Step>Fase</Step>
+    <MaxSpike>Pico máx.</MaxSpike>
+    <Spikes>Picos</Spikes>
+    <MarginX>MargemX</MarginX>
+    <MarginY>MargemY</MarginY>
+    <OnlyDrawing>Apenas desenho</OnlyDrawing>
+    <DrawingFile>Ficheiro de desenho</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Definir posição</SetPosition>
     <VideoResolutionX>Resolução do vídeo: {0}</VideoResolutionX>
@@ -230,14 +256,6 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <RotateXAxis>Rodar o eixo {0}</RotateXAxis>
     <DistortX>Distorcer {0}</DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>Áudio para texto</Title>
-    <ExtractingAudioUsingX>Extrair áudio utilizando {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Extrair texto do áudio utilizando {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Extrair texto através da {0} progressão: {1}%</ProgessViaXy>
-    <ShowLess>Mostrar menos  ▲</ShowLess>
-    <ShowMore>Mostrar mais  ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto-ajustar linhas seleccionadas</TitleAutoBreak>
     <TitleUnbreak>Remover quebras de linha das linhas seleccionadas</TitleUnbreak>
@@ -798,6 +816,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <CheckeredImage>Imagem axadrezada</CheckeredImage>
     <SolidColor>Cor sólida</SolidColor>
     <DurationInMinutes>Duração em minutos</DurationInMinutes>
+    <Background>Fundo</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Gerar vídeo com legenda embutida</Title>
@@ -814,6 +833,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Encoding>Codificação</Encoding>
     <BitRate>Taxa de bits</BitRate>
     <SampleRate>Taxa de amostra</SampleRate>
+    <Audio>Áudio</Audio>
     <Stereo>Estéreo</Stereo>
     <Preset>Predefinição</Preset>
     <Crf>CRF</Crf>
@@ -1219,6 +1239,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda embutida...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>Vídeo/áudio para texto...</VideoAudioToText>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Gerar/importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveOrExportSceneChanges>Remover/exportar mudanças de cena...</RemoveOrExportSceneChanges>
@@ -2188,8 +2209,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
-    <WaveformUseFFmpeg>Usar o FFmpeg para extrair o áudio onda</WaveformUseFFmpeg>
-    <DownloadFFmpeg>Transferir o FFmpeg</DownloadFFmpeg>
+    <WaveformUseFFmpeg>Usar o FFmpeg para extrair a onda áudio</WaveformUseFFmpeg>
+    <DownloadX>Transferir o {0}</DownloadX>
     <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
@@ -2539,8 +2560,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ShowLater>Mostrar &amp;depois</ShowLater>
     <TotalAdjustmentX>Total de ajustes: {0}</TotalAdjustmentX>
     <AllLines>&amp;Todas as linhas</AllLines>
-    <SelectedLinesOnly>Só linhas seleccionadas</SelectedLinesOnly>
-    <SelectedLinesAndForward>Linha(s) e proseguir</SelectedLinesAndForward>
+    <SelectedLinesOnly>&amp;Só linhas seleccionadas</SelectedLinesOnly>
+    <SelectedLinesAndForward>Linhas seleccionadas e subse&amp;quentes</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Histórico (para anular)</Title>
@@ -2999,13 +3020,13 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChangesFromSelection>Remover mudanças de cena da selecção</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
-    <InsertSubtitleHere>Inserir legendagem aqui...</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserir legenda aqui...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Adivinhar os tempos</Title>
-    <StartFrom>Iniciar apartir de:</StartFrom>
+    <StartFrom>Iniciar a partir de:</StartFrom>
     <CurrentVideoPosition>Posição de vídeo actual</CurrentVideoPosition>
     <Beginning>Início</Beginning>
     <DeleteLines>Eliminar linhas</DeleteLines>
