@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
-                UiUtil.ShowHelp("assa_bg_box");
+                UiUtil.ShowHelp("#assa_bg_box");
                 e.SuppressKeyPress = true;
             }
         }
