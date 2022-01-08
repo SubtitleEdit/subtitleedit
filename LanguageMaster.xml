@@ -229,7 +229,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
-    <Title>Change ASSA script resolution</Title>
+    <Title>Generate background box</Title>
     <Padding>Padding</Padding>
     <FillWidth>Fill width</FillWidth>
     <Drawing>Drawing</Drawing>

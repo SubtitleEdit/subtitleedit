@@ -237,6 +237,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("assa_bg_box");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
