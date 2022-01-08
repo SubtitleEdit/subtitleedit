@@ -353,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == UiUtil.HelpKeys)
+            else if (e.KeyData == UiUtil.HelpKeys)
             {
                 linkLabelVoskWebsite_LinkClicked(null, null);
                 e.SuppressKeyPress = true;

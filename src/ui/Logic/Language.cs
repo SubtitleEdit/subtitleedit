@@ -385,7 +385,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             AssaSetBackgroundBox = new LanguageStructure.AssaSetBackgroundBox
             {
-                Title = "Change ASSA script resolution",
+                Title = "Generate background box",
                 Padding = "Padding",
                 FillWidth = "Fill width",
                 Drawing = "Drawing",
