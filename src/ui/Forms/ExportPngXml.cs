@@ -2578,28 +2578,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         if (fontContent.Contains(" face=", StringComparison.OrdinalIgnoreCase) || fontContent.Contains(" size=", StringComparison.OrdinalIgnoreCase))
                         {
-                            float fontSize = parameter.SubtitleFontSize;
-                            string fontFace = parameter.SubtitleFontName;
+                            var fontSize = parameter.SubtitleFontSize;
+                            var fontFace = parameter.SubtitleFontName;
 
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (arr.Length > 0)
+                            var ff = GetFontAttr(fontContent, "face=");
+                            if (!string.IsNullOrEmpty(ff))
                             {
-                                fontFace = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                fontFace = ff;
                             }
 
-                            arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (arr.Length > 0)
+                            var fs = GetFontAttr(fontContent, "size=");
+                            if (!string.IsNullOrEmpty(fs) && float.TryParse(fs, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
                             {
-                                string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
-                                {
-                                    fontSize = f;
-                                }
+                                fontSize = f;
                             }
 
                             try
                             {
-                                fontStack.Push(font); // save old cfont
+                                fontStack.Push(font); // save old font
                                 var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
                                 font = GetFont(p, p.SubtitleFontSize);
                             }
@@ -2739,6 +2735,30 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             font.Dispose();
             sf.Dispose();
             return nbmp;
+        }
+
+        private static string GetFontAttr(string fontContent, string tag)
+        {
+            if (string.IsNullOrWhiteSpace(fontContent) || string.IsNullOrWhiteSpace(tag))
+            {
+                return string.Empty;
+            }
+
+            var idx = fontContent.IndexOf(tag, StringComparison.Ordinal);
+            if (idx < 0)
+            {
+                return string.Empty;
+            }
+
+            var s = fontContent.Substring(idx + tag.Length).Trim(' ', '"','\"');
+            var end = s.IndexOfAny(new[] { '"', '\''});
+            if (end < 0)
+            {
+                return s;
+            }
+
+            s = s.Substring(0, end).Trim(' ', '"', '\"');
+            return s;
         }
 
         internal static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
@@ -3371,28 +3391,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     }
                                     if (fontContent.Contains(" face=", StringComparison.OrdinalIgnoreCase) || fontContent.Contains(" size=", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        float fontSize = parameter.SubtitleFontSize;
-                                        string fontFace = parameter.SubtitleFontName;
+                                        var fontSize = parameter.SubtitleFontSize;
+                                        var fontFace = parameter.SubtitleFontName;
 
-                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                        if (arr.Length > 0)
+                                        var ff = GetFontAttr(fontContent, "face=");
+                                        if (!string.IsNullOrEmpty(ff))
                                         {
-                                            fontFace = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                            fontFace = ff;
                                         }
 
-                                        arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                        if (arr.Length > 0)
+                                        var fs = GetFontAttr(fontContent, "size=");
+                                        if (!string.IsNullOrEmpty(fs) && float.TryParse(fs, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
                                         {
-                                            string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                            if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
-                                            {
-                                                fontSize = f;
-                                            }
+                                            fontSize = f;
                                         }
 
                                         try
                                         {
-                                            fontStack.Push(font); // save old cfont
+                                            fontStack.Push(font); // save old font
                                             var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
                                             font = GetFont(p, p.SubtitleFontSize);
                                         }
