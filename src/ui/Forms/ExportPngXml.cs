@@ -3038,7 +3038,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     bool tempItalicOn = false;
                     bool tempBoldOn = false;
                     var tempFontOn = string.Empty;
-                    foreach (string line in text.SplitToLines())
+                    foreach (var line in text.SplitToLines())
                     {
                         var tempLine = line;
 
@@ -3477,6 +3477,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
                                 if (fontStack.Count > 0)
                                 {
+                                    if (sb.Length > 0)
+                                    {
+                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    }
+
+                                    sb.Clear();
                                     font.Dispose();
                                     font = fontStack.Pop();
                                 }
@@ -3631,6 +3637,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 sb.Append(text[i]);
                             }
                         }
+
                         if (sb.Length > 0)
                         {
                             TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
