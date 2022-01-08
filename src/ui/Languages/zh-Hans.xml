@@ -461,7 +461,7 @@ Command line: {1} {2}
     <FontUri>URI</FontUri>
     <FontColor>颜色</FontColor>
     <FontEffect>特效</FontEffect>
-    <FontEffectColor>特性颜色</FontEffectColor>
+    <FontEffectColor>特效颜色</FontEffectColor>
     <FontSize>大小</FontSize>
     <TopBottomMargin>顶部/底部边界</TopBottomMargin>
     <FadeUpTime>淡入时间</FadeUpTime>
@@ -1117,7 +1117,7 @@ Command line: {1} {2}
         <Save>保存(&amp;S)</Save>
         <SaveAs>另存为(&amp;A)...</SaveAs>
         <RestoreAutoBackup>还原自动备份...</RestoreAutoBackup>
-        <FormatXProperties>{0} 个属性...</FormatXProperties>
+        <FormatXProperties>{0} 属性...</FormatXProperties>
         <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
         <SaveOriginal>保存原始字幕</SaveOriginal>
         <CloseOriginal>关闭原始字幕</CloseOriginal>
@@ -1953,7 +1953,7 @@ Command line: {1} {2}
     <Date>日期</Date>
     <Type>类型</Type>
     <OpenPluginsFolder>打开 'Plugins' 文件夹</OpenPluginsFolder>
-    <GetPluginsInfo1>“字幕编辑”插件必须已下载到 'Plugins' 文件夹</GetPluginsInfo1>
+    <GetPluginsInfo1>Subtitle Edit插件必须下载到 'Plugins' 文件夹</GetPluginsInfo1>
     <GetPluginsInfo2>选择插件并点击「下载」</GetPluginsInfo2>
     <PluginXDownloaded>插件 {0} 已下载</PluginXDownloaded>
     <Download>下载(&amp;D)</Download>
@@ -2532,7 +2532,7 @@ Command line: {1} {2}
   <SettingsFfmpeg>
     <XDownload>下载{0}</XDownload>
     <XDownloadFailed>无法下载{0} - 请稍后再试！</XDownloadFailed>
-    <XDownloadOk>{0}已下载完成并准备使用</XDownloadOk>
+    <XDownloadOk>{0}已下载完成，准备就绪</XDownloadOk>
   </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>设置视频偏移</Title>
@@ -2567,7 +2567,7 @@ Command line: {1} {2}
     <Language>语言</Language>
     <Change>更改</Change>
     <ChangeAll>全部更改</ChangeAll>
-    <SkipOnce>跳过一个(&amp;O)</SkipOnce>
+    <SkipOnce>跳过此处(&amp;O)</SkipOnce>
     <SkipAll>全部跳过(&amp;S)</SkipAll>
     <AddToUserDictionary>添加到用户词典</AddToUserDictionary>
     <AddToNamesAndIgnoreList>添加到 名称/其它 列表 (区分大小写)</AddToNamesAndIgnoreList>
@@ -2689,8 +2689,8 @@ Command line: {1} {2}
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
-    <Title>Advanced Sub Station Alpha 特性</Title>
-    <TitleSubstationAlpha>Sub Station Alpha 特性</TitleSubstationAlpha>
+    <Title>Advanced Sub Station Alpha 属性</Title>
+    <TitleSubstationAlpha>Sub Station Alpha 属性</TitleSubstationAlpha>
     <Script>脚本</Script>
     <ScriptTitle>标题</ScriptTitle>
     <OriginalScript>原始脚本</OriginalScript>
