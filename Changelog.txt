@@ -21,6 +21,7 @@
    * Update Finnish translation - thx Teijo S
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
    * Update Korean translation - thx domddol
+   * Update Vietnamese translation - thx Minh Toan Ma
    * Update file association icons (so nice) in installer - thx Leon
    * Improve VTT parsing of malformed files - thx Leon
    * Handle merge/split better with "box" tag
@@ -32,7 +33,7 @@
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
    * Remove position codes when reading PAC - thx Ernest
-   * Allow .m4s as sub ext - farside
+   * Allow .m4s as sub file extension - thx farside
 * FIXED:
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
    * Fix for generating empty waveform for online videos - thx OmrSi
@@ -53,6 +54,7 @@
    * Remove beep sound with "Go to bookmark" shortcut - thx OmrSi
    * Fix crash in list view context menu after clearing source view - thx Leon
    * Fix crash in list view focus/select - thx Leon
+   * Fix crash in modify selection w styles - thx Leon
 
 
 3.6.4 (3rd December 2021)
