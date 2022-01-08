@@ -288,6 +288,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 comboboxStorageCategories.SelectedItem = _currentCategory.Name;
             }
 
+            comboboxStorageCategories.Left = labelStorageCategory.Right + 5;
+            comboboxStorageCategories.Width = buttonStorageCategoryNew.Left - comboboxStorageCategories.Left - 10;
 
             comboBoxOpaqueBoxStyle.Items.Clear();
             comboBoxOpaqueBoxStyle.Items.Add(l.BoxPerLine);
