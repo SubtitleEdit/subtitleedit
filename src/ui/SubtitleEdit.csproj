@@ -402,16 +402,16 @@
     <Compile Include="Forms\Assa\ChooseAssaFontName.Designer.cs">
       <DependentUpon>ChooseAssaFontName.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.cs">
+    <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesImportExport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.Designer.cs">
+    <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesImportExport.Designer.cs">
       <DependentUpon>SubStationAlphaStylesCategoriesImportExport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.cs">
+    <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.Designer.cs">
+    <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.Designer.cs">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TimedTextPropertiesItunes.cs">
@@ -1499,10 +1499,10 @@
     <EmbeddedResource Include="Forms\Assa\ChooseAssaFontName.resx">
       <DependentUpon>ChooseAssaFontName.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesCategoriesImportExport.resx">
+    <EmbeddedResource Include="Forms\Assa\SubStationAlphaStylesCategoriesImportExport.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesImportExport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesCategoriesManager.resx">
+    <EmbeddedResource Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextPropertiesItunes.resx">

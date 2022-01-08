@@ -1,13 +1,13 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms.Styles
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class SubStationAlphaStylesCategoriesManager : Form
     {
