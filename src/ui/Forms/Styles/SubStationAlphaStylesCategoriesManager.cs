@@ -42,8 +42,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public SubStationAlphaStylesCategoriesManager(List<AssaStorageCategory> currentAssaCategories, string focusCategory)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            UiUtil.FixLargeFonts(this, buttonOK);
             InitializeLanguage();
             SetControlsSize();
 
