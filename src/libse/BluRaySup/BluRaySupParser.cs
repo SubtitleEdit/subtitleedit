@@ -853,8 +853,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // Merge images that are the same (probably due to fade)
             // First we find groups with same pixels
             var removeIndices = new List<DeleteIndex>();
-            int deleteNo = 0;
-            for (int pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
+            var deleteNo = 0;
+            for (var pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
             {
                 var cur = pcsList[pcsIndex];
                 var prev = pcsList[pcsIndex - 1];
@@ -864,13 +864,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         prev.BitmapObjects.Count == cur.BitmapObjects.Count && prev.BitmapObjects[0].Count == cur.BitmapObjects[0].Count)
                     {
                         var remove = true;
-                        for (int k = 0; k < cur.BitmapObjects.Count; k++)
+                        for (var k = 0; k < cur.BitmapObjects.Count; k++)
                         {
                             var c = cur.BitmapObjects[k];
                             var p = prev.BitmapObjects[k];
                             if (p.Count == c.Count)
                             {
-                                for (int j = 0; j < c.Count; j++)
+                                for (var j = 0; j < c.Count; j++)
                                 {
                                     if (!ByteArraysEqual(c[j].Fragment.ImageBuffer, p[j].Fragment.ImageBuffer))
                                     {
@@ -896,6 +896,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             {
                                 removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex });
                             }
+                        }
+                        else
+                        {
+                            deleteNo++;
                         }
                     }
                 }
@@ -958,13 +962,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return false;
             }
 
-            for (int i = 0; i < b1.Length; i++)
+            for (var i = 0; i < b1.Length; i++)
             {
                 if (b1[i] != b2[i])
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
