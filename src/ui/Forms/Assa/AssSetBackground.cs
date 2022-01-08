@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         }
 
         public Subtitle UpdatedSubtitle { get; private set; }
-        private readonly Subtitle _subtitle;
         private readonly Subtitle _subtitleWithNewHeader;
         private Subtitle _drawing;
         private readonly int[] _selectedIndices;
@@ -62,12 +61,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _subtitle = subtitle;
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
             _videoPositionSeconds = videoPositionSeconds;
 
-            _subtitleWithNewHeader = new Subtitle(_subtitle, false);
+            _subtitleWithNewHeader = new Subtitle(subtitle, false);
             if (string.IsNullOrWhiteSpace(_subtitleWithNewHeader.Header))
             {
                 _subtitleWithNewHeader.Header = AdvancedSubStationAlpha.DefaultHeader;
@@ -783,7 +781,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 // make temp assa file with font
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
                 var sub = new Subtitle();
-                sub.Header = _subtitle.Header;
+                sub.Header = _subtitleWithNewHeader.Header;
                 sub.Paragraphs.Add(new Paragraph(GetPreviewParagraph()));
                 File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
 
@@ -863,11 +861,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 // make temp assa file with font
                 var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
-                var sub = new Subtitle { Header = _subtitle.Header };
+                var sub = new Subtitle { Header = _subtitleWithNewHeader.Header };
                 for (var i = 0; i < _selectedIndices.Length; i++)
                 {
                     var idx = _selectedIndices[i];
-                    var p = _subtitle.Paragraphs[idx];
+                    var p = _subtitleWithNewHeader.Paragraphs[idx];
 
                     // remove fade tags 
                     var text = p.Text;
@@ -911,7 +909,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                 Bottom = nBmp.Height - nBmp.CalcBottomCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
                                 Left = nBmp.CalcLeftCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
                                 Right = nBmp.Width - nBmp.CalcRightCropping(Configuration.Settings.Tools.AssaBgBoxTransparentColor),
-                                Id = _subtitle.Paragraphs[idx].Id,
+                                Id = _subtitleWithNewHeader.Paragraphs[idx].Id,
                             });
                         }
                         try
@@ -1004,7 +1002,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Paragraph GetPreviewParagraph()
         {
             var idx = _selectedIndices.Min();
-            var first = _subtitle.Paragraphs[idx];
+            var first = _subtitleWithNewHeader.Paragraphs[idx];
             if (string.IsNullOrWhiteSpace(first.Text))
             {
                 return new Paragraph("Example text", 0, 10000);
@@ -1137,9 +1135,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 openFileDialog1.FileName = string.Empty;
                 openFileDialog1.Filter = "ASSA/AssaDraw files|*.ass;*.assadraw";
                 openFileDialog1.FileName = string.Empty;
-                if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_subtitle.FileName))
+                if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_subtitleWithNewHeader.FileName))
                 {
-                    openFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitle.FileName);
+                    openFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitleWithNewHeader.FileName);
                 }
 
                 if (!string.IsNullOrEmpty(labelFileName.Text))
