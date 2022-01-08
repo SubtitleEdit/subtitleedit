@@ -3690,7 +3690,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (format != null)
             {
                 RemoveOriginal(true, false);
-                SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
+                //if (!format.HasStyleSupport) -- remove -- see https://www.nikse.dk/Home/Details/637741307830000000
+                //{
+                //    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
+                //}
 
                 new BookmarkPersistence(_subtitle, fileName).Load();
 
