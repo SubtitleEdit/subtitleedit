@@ -228,7 +228,7 @@ Command line: {1} {2}
     <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
-    <Title>更改 ASSA 脚本分辨率</Title>
+    <Title>生成背景框</Title>
     <Padding>填充</Padding>
     <FillWidth>填充宽度</FillWidth>
     <Drawing>绘制</Drawing>
@@ -2330,6 +2330,7 @@ Command line: {1} {2}
     <AdjustExtendNextLineStartToCurrentEnd>将下一条字幕起点延伸至所选行结尾</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>重新计算当前字幕时长</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>重新计算当前字幕时长（基于最优阅读速度）</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>重新计算当前字幕时长（基于最低阅读速度）</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <MergeDialogWithNext>与下一条合并对话 (插入破折号)</MergeDialogWithNext>
