@@ -32841,6 +32841,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SetAssaResolutionWithChecks();
             using (var form = new AssSetBackground(_subtitle, SubtitleListview1.GetSelectedIndices(), VideoFileName, _videoInfo, mediaPlayer.CurrentPosition))
             {
                 var result = form.ShowDialog(this);
