@@ -126,6 +126,18 @@ namespace Nikse.SubtitleEdit.Forms
                 LanguageName = "Kazakh",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-kz-0.15.zip",
             },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "jp",
+                LanguageName = "Japanese",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-ja-0.22.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "ca",
+                LanguageName = "Catalan",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-ca-0.4.zip",
+            },
         };
 
         public AudioToTextModelDownload()
