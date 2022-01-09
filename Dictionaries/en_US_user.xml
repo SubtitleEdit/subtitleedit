@@ -19,6 +19,12 @@
   <word>08pm</word>
   <word>09am</word>
   <word>09pm</word>
+  <word>10am</word>
+  <word>10pm</word>
+  <word>11am</word>
+  <word>11pm</word>
+  <word>12am</word>
+  <word>12pm</word>
   <word>1am</word>
   <word>1pm</word>
   <word>2am</word>
@@ -27,6 +33,7 @@
   <word>3pm</word>
   <word>4am</word>
   <word>4pm</word>
+  <word>50s</word>
   <word>5am</word>
   <word>5pm</word>
   <word>6am</word>
@@ -35,17 +42,11 @@
   <word>7pm</word>
   <word>8am</word>
   <word>8pm</word>
+  <word>9/11</word>
   <word>9am</word>
   <word>9pm</word>
-  <word>10am</word>
-  <word>10pm</word>
-  <word>11am</word>
-  <word>11pm</word>
-  <word>12am</word>
-  <word>12pm</word>
-  <word>50s</word>
-  <word>9/11</word>
   <word>a.m.</word>
+  <word>accelerant</word>
   <word>actinium</word>
   <word>adrenocorticotropic</word>
   <word>advisors</word>
@@ -90,6 +91,7 @@
   <word>blowjobs</word>
   <word>bluejacked</word>
   <word>blushy</word>
+  <word>bogholes</word>
   <word>bohrium</word>
   <word>bona fide</word>
   <word>boneyard</word>
@@ -156,6 +158,7 @@
   <word>defibrillation</word>
   <word>dialogue</word>
   <word>dipshit</word>
+  <word>dismemberments</word>
   <word>disorderlies</word>
   <word>doofus</word>
   <word>douchey</word>
@@ -187,6 +190,7 @@
   <word>favoured</word>
   <word>favourite</word>
   <word>fbi's</word>
+  <word>fentanyl</word>
   <word>fermium</word>
   <word>fiancé</word>
   <word>fiancée</word>
@@ -350,6 +354,7 @@
   <word>perfusionist</word>
   <word>phosphorus</word>
   <word>photoshopped</word>
+  <word>piccaninny</word>
   <word>platinum</word>
   <word>playbook</word>
   <word>plutonium</word>
