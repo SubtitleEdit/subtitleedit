@@ -222,6 +222,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Collapse = "Collapse",
                 ShortcutX = "Shortcut: {0}",
                 ExampleX = "Example: {0}",
+                Reset = "Reset",
             };
 
             About = new LanguageStructure.About
@@ -381,6 +382,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ChangeResolutionFontSize = "Change resolution for font size",
                 ChangeResolutionPositions = "Change resolution for position",
                 ChangeResolutionDrawing = "Change resolution for drawing",
+                SourceAndTargetEqual = "Source and target resolution is the same - nothing to do.",
             };
 
             AssaSetBackgroundBox = new LanguageStructure.AssaSetBackgroundBox
@@ -1929,6 +1931,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SetPosition = "Set position...",
                         GenerateProgressBar = "Generate progress bar...",
                         AssaResolutionChanger = "Change ASSA script resolution...",
+                        AssaGenerateBackgroundBox = "Generate background box...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
@@ -3076,6 +3079,10 @@ can edit in same subtitle file (collaboration)",
                 WrapStyle = "Wrap style",
                 Collision = "Collision",
                 ScaleBorderAndShadow = "Scale border and shadow",
+                WrapStyle0 = "0: Smart wrapping, top line is wider",
+                WrapStyle1 = "1: End-of-line word wrapping, only \\N breaks",
+                WrapStyle2 = "2: No word wrapping, both \\n and \\N break",
+                WrapStyle3 = "3: Smart wrapping, bottom line is wider",
             };
 
             SubStationAlphaStyles = new LanguageStructure.SubStationAlphaStyles

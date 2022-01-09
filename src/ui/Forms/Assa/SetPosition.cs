@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             labelInfo.Text = LanguageSettings.Current.AssaSetPosition.SetPosInfo;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
             groupBoxApplyTo.Text = LanguageSettings.Current.General.ApplyTo;
+            labelCurrentPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentMousePositionX, string.Empty);
             labelCurrentTextPosition.Text = string.Format(LanguageSettings.Current.AssaSetPosition.CurrentTextPositionX, string.Empty);
             labelRotateX.Text = string.Format(LanguageSettings.Current.AssaSetPosition.RotateXAxis, "X");
             labelRotateY.Text = string.Format(LanguageSettings.Current.AssaSetPosition.RotateXAxis, "Y");

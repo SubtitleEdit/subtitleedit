@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             buttonRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
             buttonTextColor.Text = LanguageSettings.Current.Settings.WaveformTextColor;
+            buttonReset.Text = LanguageSettings.Current.General.Reset;
             columnHeaderName.Text = LanguageSettings.Current.General.Text;
             columnHeaderStart.Text = LanguageSettings.Current.General.StartTime;
 
