@@ -2729,7 +2729,6 @@
 
         public class SettingsFfmpeg
         {
-            public string XDownload { get; set; }
             public string XDownloadFailed { get; set; }
             public string XDownloadOk { get; set; }
         }
