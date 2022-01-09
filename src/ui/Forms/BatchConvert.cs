@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!format.IsVobSubIndexFile)
                 {
-                    formatNames.Add(format.Name);
+                    formatNames.Add(format.FriendlyName);
                     _allFormats.Add(format);
                 }
             }
@@ -939,6 +939,21 @@ namespace Nikse.SubtitleEdit.Forms
             return format ?? new SubRip();
         }
 
+        private string ComboBoxSubtitleFormatText
+        {
+            get
+            {
+                var text = comboBoxSubtitleFormats.Text;
+                var idx = text.IndexOf('(');
+                if (idx > 0)
+                {
+                    text = text.Substring(0, idx).TrimEnd();
+                }
+
+                return text;
+            }
+        }
+
         private void buttonConvert_Click(object sender, EventArgs e)
         {
             if (buttonConvert.Text == LanguageSettings.Current.General.Cancel)
@@ -980,7 +995,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Maximum = listViewInputFiles.Items.Count;
             progressBar1.Value = 0;
             progressBar1.Visible = progressBar1.Maximum > 2;
-            string toFormat = comboBoxSubtitleFormats.Text;
+            var toFormat = ComboBoxSubtitleFormatText;
             SetControlState(false);
 
             _count = 0;
@@ -1424,14 +1439,14 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
+                        if (ComboBoxSubtitleFormatText == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
                         {
                             if (!string.IsNullOrWhiteSpace(_assStyle) && !checkBoxUseStyleFromSource.Checked)
                             {
                                 sub.Header = _assStyle;
                             }
                         }
-                        else if (comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat && _ssaStyle != null)
+                        else if (ComboBoxSubtitleFormatText == SubStationAlpha.NameOfFormat && _ssaStyle != null)
                         {
                             if (!string.IsNullOrWhiteSpace(_ssaStyle) && !checkBoxUseStyleFromSource.Checked)
                             {
@@ -2256,7 +2271,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
             checkBoxUseStyleFromSource.Visible = false;
-            if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat || comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat)
+            if (ComboBoxSubtitleFormatText == AdvancedSubStationAlpha.NameOfFormat || ComboBoxSubtitleFormatText == SubStationAlpha.NameOfFormat)
             {
                 buttonStyles.Text = LanguageSettings.Current.BatchConvert.Style;
                 buttonStyles.Visible = true;
@@ -2265,7 +2280,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxUseStyleFromSource.Visible = true;
                 checkBoxUseStyleFromSource.Left = buttonStyles.Left + buttonStyles.Width - checkBoxUseStyleFromSource.Width;
             }
-            else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
+            else if (ComboBoxSubtitleFormatText == Ebu.NameOfFormat)
             {
                 buttonStyles.Text = LanguageSettings.Current.BatchConvert.Settings;
                 buttonStyles.Visible = true;
@@ -2277,19 +2292,19 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxEncoding.Enabled = true;
                 buttonBrowseEncoding.Visible = true;
             }
-            else if (comboBoxSubtitleFormats.Text == BluRaySubtitle ||
-                     comboBoxSubtitleFormats.Text == VobSubSubtitle ||
-                     comboBoxSubtitleFormats.Text == DostImageSubtitle ||
-                     comboBoxSubtitleFormats.Text == BdnXmlSubtitle ||
-                     comboBoxSubtitleFormats.Text == FcpImageSubtitle ||
-                     comboBoxSubtitleFormats.Text == LanguageSettings.Current.ExportCustomText.Title)
+            else if (ComboBoxSubtitleFormatText == BluRaySubtitle ||
+                     ComboBoxSubtitleFormatText == VobSubSubtitle ||
+                     ComboBoxSubtitleFormatText == DostImageSubtitle ||
+                     ComboBoxSubtitleFormatText == BdnXmlSubtitle ||
+                     ComboBoxSubtitleFormatText == FcpImageSubtitle ||
+                     ComboBoxSubtitleFormatText == LanguageSettings.Current.ExportCustomText.Title)
             {
                 buttonStyles.Text = LanguageSettings.Current.BatchConvert.Settings;
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = false;
                 buttonBrowseEncoding.Visible = false;
             }
-            else if (comboBoxSubtitleFormats.Text == LanguageSettings.Current.BatchConvert.PlainText)
+            else if (ComboBoxSubtitleFormatText == LanguageSettings.Current.BatchConvert.PlainText)
             {
                 buttonStyles.Text = LanguageSettings.Current.BatchConvert.Settings;
                 buttonStyles.Visible = true;
@@ -2306,35 +2321,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonStylesClick(object sender, EventArgs e)
         {
-            if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat || comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat)
+            if (ComboBoxSubtitleFormatText == AdvancedSubStationAlpha.NameOfFormat || ComboBoxSubtitleFormatText == SubStationAlpha.NameOfFormat)
             {
                 ShowAssSsaStyles();
             }
-            else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
+            else if (ComboBoxSubtitleFormatText == Ebu.NameOfFormat)
             {
                 ShowEbuSettings();
             }
-            else if (comboBoxSubtitleFormats.Text == BluRaySubtitle)
+            else if (ComboBoxSubtitleFormatText == BluRaySubtitle)
             {
                 ImageExportSettings(ExportPngXml.ExportFormats.BluraySup);
             }
-            else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
+            else if (ComboBoxSubtitleFormatText == VobSubSubtitle)
             {
                 ImageExportSettings(ExportPngXml.ExportFormats.VobSub);
             }
-            else if (comboBoxSubtitleFormats.Text == DostImageSubtitle)
+            else if (ComboBoxSubtitleFormatText == DostImageSubtitle)
             {
                 ImageExportSettings(ExportPngXml.ExportFormats.Dost);
             }
-            else if (comboBoxSubtitleFormats.Text == BdnXmlSubtitle)
+            else if (ComboBoxSubtitleFormatText == BdnXmlSubtitle)
             {
                 ImageExportSettings(ExportPngXml.ExportFormats.BdnXml);
             }
-            else if (comboBoxSubtitleFormats.Text == FcpImageSubtitle)
+            else if (ComboBoxSubtitleFormatText == FcpImageSubtitle)
             {
                 ImageExportSettings(ExportPngXml.ExportFormats.Fcp);
             }
-            else if (comboBoxSubtitleFormats.Text == LanguageSettings.Current.BatchConvert.PlainText)
+            else if (ComboBoxSubtitleFormatText == LanguageSettings.Current.BatchConvert.PlainText)
             {
                 using (var form = new ExportText())
                 {
@@ -2346,7 +2361,7 @@ namespace Nikse.SubtitleEdit.Forms
                     form.ShowDialog(this);
                 }
             }
-            else if (comboBoxSubtitleFormats.Text == LanguageSettings.Current.ExportCustomText.Title)
+            else if (ComboBoxSubtitleFormatText == LanguageSettings.Current.ExportCustomText.Title)
             {
                 ShowExportCustomTextSettings();
             }
@@ -2395,7 +2410,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var assa = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
-                if (comboBoxSubtitleFormats.Text == assa.Name)
+                if (ComboBoxSubtitleFormatText == assa.Name)
                 {
                     if (!string.IsNullOrEmpty(_assStyle))
                     {
@@ -2414,7 +2429,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sub.Header = _ssaStyle;
                     }
                     var ssa = new SubStationAlpha();
-                    if (comboBoxSubtitleFormats.Text == ssa.Name)
+                    if (ComboBoxSubtitleFormatText == ssa.Name)
                     {
                         form = new SubStationAlphaStylesBatchConvert(sub, ssa);
                         if (form.ShowDialog(this) == DialogResult.OK)
