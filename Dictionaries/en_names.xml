@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names with specific casing - and specific to English only -->
 <names>
-  <blacklist>
-    <name>Bill</name>
-    <name>Black</name>
-    <name>Male</name>
-  </blacklist>
+	<blacklist>
+		<name>Bill</name>
+		<name>Black</name>
+		<name>Male</name>
+	</blacklist>
   <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
@@ -456,6 +456,7 @@
   <name>Czech Republic</name>
   <name>Czechia</name>
   <name>Czechs</name>
+  <name>D.A.</name>
   <name>Dacca</name>
   <name>Dahlia</name>
   <name>Dalia</name>
@@ -1043,6 +1044,7 @@
   <name>Kenyan</name>
   <name>Kenyans</name>
   <name>Kenzie</name>
+  <name>Ketamine</name>
   <name>Keyla</name>
   <name>Keyon</name>
   <name>Khalil</name>
@@ -1068,6 +1070,7 @@
   <name>Kobe</name>
   <name>Kody</name>
   <name>Kohen</name>
+  <name>Kokoda</name>
   <name>Kolby</name>
   <name>Kole</name>
   <name>Kolten</name>
@@ -1213,6 +1216,7 @@
   <name>M&amp;M</name>
   <name>Maasai</name>
   <name>Mabel</name>
+  <name>MacAlpine</name>
   <name>Macao</name>
   <name>Macao SAR China</name>
   <name>Macedonian</name>
@@ -1459,6 +1463,7 @@
   <name>Norwegian</name>
   <name>Norwegians</name>
   <name>Nova Scotia</name>
+  <name>Nùñez</name>
   <name>Nutella</name>
   <name>Nyla</name>
   <name>Nylah</name>
@@ -1466,6 +1471,7 @@
   <name>Oceania</name>
   <name>Oeufcocque Penteano</name>
   <name>Oeufcocque-Penteano</name>
+  <name>O'Flynn</name>
   <name>Ogilvie</name>
   <name>Oliveira</name>
   <name>Oman</name>
@@ -1480,6 +1486,7 @@
   <name>Ottawa</name>
   <name>Outlying Oceania</name>
   <name>P.A.</name>
+  <name>P.D.</name>
   <name>Paisley</name>
   <name>Paityn</name>
   <name>Pakistan</name>

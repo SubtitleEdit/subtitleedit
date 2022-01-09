@@ -215,13 +215,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAvailablePlugins()
         {
-            bool search = textBoxSearch.Text.Length > 1;
-            string searchText = textBoxSearch.Text;
+            if (_downloadList == null)
+            {
+                return;
+            }
+
+            var search = textBoxSearch.Text.Length > 1;
+            var searchText = textBoxSearch.Text;
             listViewGetPlugins.BeginUpdate();
             if (listViewGetPlugins.Items.Count > 0)
             {
                 listViewGetPlugins.Items.Clear();
             }
+
             foreach (var plugin in _downloadList)
             {
                 var item = new ListViewItem(plugin.Name) { Tag = plugin };
