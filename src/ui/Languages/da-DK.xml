@@ -94,6 +94,7 @@
     <Collapse>Fold sammen</Collapse>
     <ShortcutX>Genvej: {0}</ShortcutX>
     <ExampleX>Eksempel: {0}</ExampleX>
+    <Reset>Nulstil</Reset>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -223,6 +224,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ChangeResolutionFontSize>Skift opløsning for skriftstørrelse</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Skift opløsning for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Skift opløsning for tegninger</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>Kilde og målopløsning er den samme - intet at gøre.</SourceAndTargetEqual>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
     <Title>Generer baggrundsboks</Title>
@@ -1376,6 +1378,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SetPosition>Indstil position...</SetPosition>
         <GenerateProgressBar>Generer statuslinje...</GenerateProgressBar>
         <AssaResolutionChanger>Skift scriptopløsning...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Generer baggrundsboks...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
@@ -2186,7 +2189,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Enkeltklik for at vælge undertekster</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>Skift til sceneændringer (hold "shift" nede for at override)</WaveformSnapToSceneChanges>
-    <WaveformAutoGen></WaveformAutoGen>
+    <WaveformAutoGen>Generer automatisk bølgeform, når du åbner video</WaveformAutoGen>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
     <WaveformColor>Farve</WaveformColor>
@@ -2536,7 +2539,6 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>MPV lib blev hentet og er klar til brug.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>Download {0}</XDownload>
     <XDownloadFailed>Kan ikke downloade {0} - prøv igen senere!</XDownloadFailed>
     <XDownloadOk>{0} blev downloadet og er klar til brug.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2713,6 +2715,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <WrapStyle>Wrap stil</WrapStyle>
     <Collision>Kollision</Collision>
     <ScaleBorderAndShadow>Scaler kant og skygge</ScaleBorderAndShadow>
+    <WrapStyle0>0: Smart ombrydning, toplinjen er bredere</WrapStyle0>
+    <WrapStyle1>1: End-of-line ordombrydning, kun \N bryder</WrapStyle1>
+    <WrapStyle2>2: Ingen ordombrydning, både\n og \N bryder</WrapStyle2>
+    <WrapStyle3>3: Smart ombrydning, bundlinjen er bredere</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Avanceret Sub Station Alpha stilarter</Title>
