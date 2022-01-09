@@ -544,7 +544,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         return LoadLib();
                     }
 
-                    var dllFile = GetMpvPath("mpv-1.dll");
+                    var dllFile = GetMpvPath("mpv-2.dll");
+                    if (File.Exists(dllFile))
+                    {
+                        return File.Exists(dllFile);
+                    }
+
+                    dllFile = GetMpvPath("mpv-1.dll");
                     return File.Exists(dllFile);
                 }
                 catch (Exception ex)
