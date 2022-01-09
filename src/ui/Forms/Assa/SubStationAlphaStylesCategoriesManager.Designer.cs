@@ -38,7 +38,6 @@
             this.listViewCategories = new System.Windows.Forms.ListView();
             this.columnHeaderForName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderForStyles = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Default = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripCategories = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,6 +54,7 @@
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.columnHeaderForDefault = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxCategories.SuspendLayout();
             this.contextMenuStripCategories.SuspendLayout();
             this.SuspendLayout();
@@ -143,7 +143,7 @@
             this.listViewCategories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderForName,
             this.columnHeaderForStyles,
-            this.Default});
+            this.columnHeaderForDefault});
             this.listViewCategories.ContextMenuStrip = this.contextMenuStripCategories;
             this.listViewCategories.FullRowSelect = true;
             this.listViewCategories.GridLines = true;
@@ -167,12 +167,6 @@
             // 
             this.columnHeaderForStyles.Text = "Number of styles";
             this.columnHeaderForStyles.Width = 100;
-            // 
-            // Default
-            // 
-            this.Default.Name = "Default";
-            this.Default.Text = "Default";
-            this.Default.Width = 100;
             // 
             // contextMenuStripCategories
             // 
@@ -340,7 +334,6 @@
         private System.Windows.Forms.ListView listViewCategories;
         private System.Windows.Forms.ColumnHeader columnHeaderForName;
         private System.Windows.Forms.ColumnHeader columnHeaderForStyles;
-        private System.Windows.Forms.ColumnHeader columnHeaderForDefault;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripCategories;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRename;
@@ -357,6 +350,6 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialogImport;
-        private System.Windows.Forms.ColumnHeader Default;
+        private System.Windows.Forms.ColumnHeader columnHeaderForDefault;
     }
 }
