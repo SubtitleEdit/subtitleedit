@@ -221,13 +221,13 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine(MakeParagraphCsvLine(p));
                 }
 
-                File.WriteAllText(saveDialog.FileName, sb.ToString());
+                File.WriteAllText(saveDialog.FileName, sb.ToString(), Encoding.UTF8);
             }
         }
 
         private static string MakeParagraphCsvLine(Paragraph paragraph)
         {
-            const string separator = ";";
+            const string separator = ",";
             var sb = new StringBuilder();
             sb.Append(paragraph.Number + separator);
             sb.Append(ToCsvText(paragraph.StartTime.ToDisplayString()) + separator);
