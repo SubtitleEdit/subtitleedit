@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private readonly Subtitle _subtitle;
         private readonly string _videoFileName;
         private readonly VideoInfo _currentVideoInfo;
-        private readonly int _height;
 
         public AssaProperties(Subtitle subtitle, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
         {
@@ -26,7 +25,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _currentVideoInfo = currentVideoInfo;
 
             var l = LanguageSettings.Current.SubStationAlphaProperties;
-            _height = 500;
+            comboBoxWrapStyle.Items.Clear();
+            comboBoxWrapStyle.Items.Add(l.WrapStyle0);
+            comboBoxWrapStyle.Items.Add(l.WrapStyle1);
+            comboBoxWrapStyle.Items.Add(l.WrapStyle2);
+            comboBoxWrapStyle.Items.Add(l.WrapStyle3);
+
             Text = l.Title;
             comboBoxWrapStyle.SelectedIndex = 2;
 
@@ -122,19 +126,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             comboBoxWrapStyle.Width = groupBoxOptions.Right - comboBoxWrapStyle.Left - 25;
             checkBoxScaleBorderAndShadow.Left = labelWrapStyle.Right + 10;
 
-            comboBoxWrapStyle.Items.Clear();
-            comboBoxWrapStyle.Items.Add(l.WrapStyle0);
-            comboBoxWrapStyle.Items.Add(l.WrapStyle1);
-            comboBoxWrapStyle.Items.Add(l.WrapStyle2);
-            comboBoxWrapStyle.Items.Add(l.WrapStyle3);
-
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             buttonGetResolutionFromCurrentVideo.Enabled = !string.IsNullOrEmpty(videoFileName);
-            Height = _height;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -271,11 +268,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             numericUpDownVideoWidth.Value = _currentVideoInfo.Width;
             numericUpDownVideoHeight.Value = _currentVideoInfo.Height;
-        }
-
-        private void SubStationAlphaProperties_Shown(object sender, EventArgs e)
-        {
-            Height = _height;
         }
     }
 }

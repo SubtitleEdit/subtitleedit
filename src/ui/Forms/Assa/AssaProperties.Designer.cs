@@ -248,6 +248,7 @@
             // 
             // comboBoxWrapStyle
             // 
+            this.comboBoxWrapStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxWrapStyle.FormattingEnabled = true;
             this.comboBoxWrapStyle.Items.AddRange(new object[] {
             "0: Smart wrapping, top line is wider",
@@ -392,7 +393,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Sub Station Alpha properties";
-            this.Shown += new System.EventHandler(this.SubStationAlphaProperties_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaProperties_KeyDown);
             this.groupBoxScript.ResumeLayout(false);
             this.groupBoxScript.PerformLayout();
