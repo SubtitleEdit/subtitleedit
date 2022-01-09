@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
             this.comboBoxProgressBarEdge = new System.Windows.Forms.ComboBox();
             this.labelEdgeStyle = new System.Windows.Forms.Label();
@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonTakePosFromVideo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonTakePosFromVideo.Location = new System.Drawing.Point(181, 291);
             this.buttonTakePosFromVideo.Name = "buttonTakePosFromVideo";
-            this.buttonTakePosFromVideo.Size = new System.Drawing.Size(145, 23);
+            this.buttonTakePosFromVideo.Size = new System.Drawing.Size(196, 23);
             this.buttonTakePosFromVideo.TabIndex = 20;
             this.buttonTakePosFromVideo.Text = "Take pos from video";
             this.buttonTakePosFromVideo.UseVisualStyleBackColor = true;
@@ -495,16 +495,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.timeUpDownStartTime.Location = new System.Drawing.Point(63, 290);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownStartTime.TabIndex = 19;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelStartTime

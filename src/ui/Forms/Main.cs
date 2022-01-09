@@ -1783,6 +1783,7 @@ namespace Nikse.SubtitleEdit.Forms
             setPositionToolStripMenuItem.Text = _language.Menu.ContextMenu.SetPosition;
             progressBarToolStripMenuItem.Text = _language.Menu.ContextMenu.GenerateProgressBar;
             videoResolutionResamplerToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaResolutionChanger;
+            generateBackgroundBoxToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaGenerateBackgroundBox;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -29453,7 +29454,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ft == typeof(AdvancedSubStationAlpha))
             {
-                using (var properties = new AssaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _videoInfo, _fileName))
+                using (var properties = new AssaProperties(_subtitle, VideoFileName, _videoInfo, _fileName))
                 {
                     if (properties.ShowDialog(this) == DialogResult.OK)
                     {

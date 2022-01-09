@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private readonly VideoInfo _currentVideoInfo;
         private readonly int _height;
 
-        public AssaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
+        public AssaProperties(Subtitle subtitle, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Text = l.Title;
             comboBoxWrapStyle.SelectedIndex = 2;
 
-            var title = "Untitled";
             if (string.IsNullOrWhiteSpace(subtitle.Header))
             {
                 subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
@@ -122,6 +121,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             comboBoxWrapStyle.Left = labelWrapStyle.Right + 10;
             comboBoxWrapStyle.Width = groupBoxOptions.Right - comboBoxWrapStyle.Left - 25;
             checkBoxScaleBorderAndShadow.Left = labelWrapStyle.Right + 10;
+
+            comboBoxWrapStyle.Items.Clear();
+            comboBoxWrapStyle.Items.Add(l.WrapStyle0);
+            comboBoxWrapStyle.Items.Add(l.WrapStyle1);
+            comboBoxWrapStyle.Items.Add(l.WrapStyle2);
+            comboBoxWrapStyle.Items.Add(l.WrapStyle3);
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;

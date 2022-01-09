@@ -62,6 +62,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             toolStripMenuItemStorageAttach.Text = LanguageSettings.Current.AssaAttachments.AttachFiles;
             importToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
             toolStripMenuItemStorageExport.Text = LanguageSettings.Current.MultipleReplace.Export;
+            columnHeaderFileName.Text = LanguageSettings.Current.RestoreAutoBackup.FileName;
+            columnHeaderType.Text = LanguageSettings.Current.PluginsGet.Type;
+            columnHeaderFileSize.Text = LanguageSettings.Current.General.Size;
 
             Text = LanguageSettings.Current.AssaAttachments.Title;
             buttonAttachFile.Text = LanguageSettings.Current.AssaAttachments.AttachFiles;

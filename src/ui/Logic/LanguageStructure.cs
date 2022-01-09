@@ -98,6 +98,7 @@
             public string Collapse { get; set; }
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
+            public string Reset { get; set; }
         }
 
         public class About
@@ -239,6 +240,7 @@
             public string ChangeResolutionFontSize { get; set; }
             public string ChangeResolutionPositions { get; set; }
             public string ChangeResolutionDrawing { get; set; }
+            public string SourceAndTargetEqual { get; set; }
         }
 
         public class AssaSetBackgroundBox
@@ -1774,6 +1776,7 @@
                     public string SetPosition { get; set; }
                     public string GenerateProgressBar { get; set; }
                     public string AssaResolutionChanger { get; set; }
+                    public string AssaGenerateBackgroundBox { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
@@ -2925,6 +2928,10 @@
             public string WrapStyle { get; set; }
             public string Collision { get; set; }
             public string ScaleBorderAndShadow { get; set; }
+            public string WrapStyle0 { get; set; }
+            public string WrapStyle1 { get; set; }
+            public string WrapStyle2 { get; set; }
+            public string WrapStyle3 { get; set; }
         }
 
         public class SubStationAlphaStyles

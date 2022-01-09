@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (sourceWidth == targetWidth && sourceHeight == targetHeight)
             {
-                MessageBox.Show("Source and target resolution is the same - nothing to do.");
+                MessageBox.Show(LanguageSettings.Current.AssaResulationChanger.SourceAndTargetEqual);
                 return;
             }
 
