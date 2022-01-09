@@ -360,7 +360,7 @@ Command line: {1} {2}
   <ChangeCasing>
     <Title>更改大小写</Title>
     <ChangeCasingTo>更改大小写为</ChangeCasingTo>
-    <NormalCasing>正常大小写。句首字母大写。</NormalCasing>
+    <NormalCasing>正常大小写，句首字母大写。</NormalCasing>
     <FixNamesCasing>修复名称大小写 (依据 Dictionaries\NamesEtc.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>仅修复名称大小写 (依据 Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>仅更改全部大写的行</OnlyChangeAllUppercaseLines>
@@ -839,9 +839,9 @@ Command line: {1} {2}
     <AlignRight>右对齐</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
-    <Title>是否使用词典？</Title>
-    <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，它</DescriptionLine1>
-    <DescriptionLine2>使用的是 LibreOffice 的拼写检查词典。</DescriptionLine2>
+    <Title>获取更多词典</Title>
+    <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，</DescriptionLine1>
+    <DescriptionLine2>它使用的是 LibreOffice 的拼写检查词典。</DescriptionLine2>
     <ChooseLanguageAndClickDownload>选择您的语言并点击「下载」</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>打开 'Dictionaries' 文件夹</OpenDictionariesFolder>
     <Download>下载</Download>
@@ -875,7 +875,7 @@ Command line: {1} {2}
     <AutoTranslateViaCopyPaste>通过复制粘贴自动翻译</AutoTranslateViaCopyPaste>
     <CopyPasteMaxSize>最大块大小</CopyPasteMaxSize>
     <AutoCopyToClipboard>自动复制到剪贴板</AutoCopyToClipboard>
-    <AutoCopyLineSeparator>行分离器</AutoCopyLineSeparator>
+    <AutoCopyLineSeparator>行分隔符</AutoCopyLineSeparator>
     <TranslateBlockXOfY>翻译块{0}/{1}</TranslateBlockXOfY>
     <TranslateBlockInfo>转到翻译器并粘贴文本，将结果复制回剪贴板，然后单击下面的按钮</TranslateBlockInfo>
     <TranslateBlockGetFromClipboard>从剪贴板获取翻译(Ctrl + V)</TranslateBlockGetFromClipboard>
@@ -1177,7 +1177,7 @@ Command line: {1} {2}
         <RemoveUnicodeControlCharacters>移除 Unicode 控制字符(针对选中的行)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>反转 RTL 开始/结束 (所选行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音频/视频 预览中显示原始文本</ShowOriginalTextInAudioAndVideoPreview>
-        <ModifySelection>更改选择...</ModifySelection>
+        <ModifySelection>修改选集...</ModifySelection>
         <InverseSelection>反选</InverseSelection>
       </Edit>
       <Tools>
@@ -1241,8 +1241,8 @@ Command line: {1} {2}
         <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
         <ShowHideWaveform>显示/隐藏波形</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>显示/隐藏波形和频谱图</ShowHideWaveformAndSpectrogram>
-        <UnDockVideoControls>取消停靠视频控件</UnDockVideoControls>
-        <ReDockVideoControls>重新停靠视频控件</ReDockVideoControls>
+        <UnDockVideoControls>取消内嵌显示视频控件</UnDockVideoControls>
+        <ReDockVideoControls>内嵌显示视频控件</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>拼写检查(&amp;S)</Title>
@@ -1615,7 +1615,7 @@ Command line: {1} {2}
     <ShowSelectedLinesXSecondsLinesLater>显示所选行 {0:0.0##} 秒滞后</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>显示所选及以前行 {0:0.0##} 秒提前</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>显示所选及以前行 {0:0.0##} 秒滞后</ShowSelectionAndForwardXSecondsLinesLater>
-    <DoubleWordsViaRegEx>双词使用正则表达式 {0}</DoubleWordsViaRegEx>
+    <DoubleWordsViaRegEx>使用正则表达式 {0} 查找重复词</DoubleWordsViaRegEx>
     <BeforeSortX>排序之前: {0}</BeforeSortX>
     <SortedByX>排序方式: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>自动平衡所选行之前</BeforeAutoBalanceSelectedLines>
@@ -2628,7 +2628,7 @@ Command line: {1} {2}
     <LineMaximumLength>行最大长度</LineMaximumLength>
     <LineContinuationBeginEndStrings>行延续部分的 开头/末尾 字符串</LineContinuationBeginEndStrings>
     <NumberOfSplits>分割数量: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>单行最长长度为 {0} 在第 {1} 行</LongestSingleLineIsXAtY>
+    <LongestSingleLineIsXAtY>最长单行的长度为 {0} 在第 {1} 行</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>最长总行的长度是 {0} 在第 {1} 行</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
@@ -2674,7 +2674,7 @@ Command line: {1} {2}
     <LineLengthMinimum>字幕长度（最短）: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕长度（最长）: {0}</LineLengthMaximum>
     <LineLengthAverage>字幕长度（平均）: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>字幕, 平均行数: {0:0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>平均行数: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>单行长度（最短）: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度（最长）: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>单行长度（平均）: {0}</SingleLineLengthAverage>
@@ -2705,12 +2705,12 @@ Command line: {1} {2}
     <VideoResolution>视频分辨率</VideoResolution>
     <FromCurrentVideo>从当前视频</FromCurrentVideo>
     <Options>选项</Options>
-    <WrapStyle>翻卷样式</WrapStyle>
-    <Collision>冲突</Collision>
+    <WrapStyle>翻卷样式*</WrapStyle>
+    <Collision>冲突*</Collision>
     <ScaleBorderAndShadow>缩放边框和阴影</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
-    <Title>高级 Sub Station Alpha 样式</Title>
+    <Title>Advanced Sub Station Alpha 样式</Title>
     <TitleSubstationAlpha>Sub Station Alpha 样式</TitleSubstationAlpha>
     <Styles>样式</Styles>
     <Properties>属性</Properties>
@@ -2718,7 +2718,7 @@ Command line: {1} {2}
     <Font>字体</Font>
     <FontName>字体名称</FontName>
     <FontSize>字体大小</FontSize>
-    <UseCount>已用</UseCount>
+    <UseCount>使用次数</UseCount>
     <Primary>主色</Primary>
     <Secondary>副色</Secondary>
     <Tertiary>三级色</Tertiary>
