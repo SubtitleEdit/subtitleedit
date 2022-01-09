@@ -34,6 +34,10 @@
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
    * Remove position codes when reading PAC - thx Ernest
    * Allow .m4s as sub file extension - thx farside
+   * SE now works with new libmpv (mpv-2.dll) - thx OmrSi
+   * Minor improvements for ASSA properties window
+   * Use comma not semicolon in CSV export - thx OmrSi
+   * Add some missing translation - thx domddol/nkh0472
 * FIXED:
    * Fix bug in BD SUP reading w missing lines - thx peter-qgd
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
