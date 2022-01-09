@@ -94,6 +94,7 @@
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
+    <Reset>Reset</Reset>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -227,6 +228,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>Source and target resolution is the same - nothing to do.</SourceAndTargetEqual>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
     <Title>Generate background box</Title>
@@ -1381,6 +1383,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SetPosition>Set position...</SetPosition>
         <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
         <AssaResolutionChanger>Change ASSA script resolution...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Generate background box...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -2542,7 +2545,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>Download {0}</XDownload>
     <XDownloadFailed>Unable to download {0} - please re-try later!</XDownloadFailed>
     <XDownloadOk>{0} was downloaded and is ready for use.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2719,6 +2721,10 @@ Continue?</RestoreDefaultSettingsMsg>
     <WrapStyle>Wrap style</WrapStyle>
     <Collision>Collision</Collision>
     <ScaleBorderAndShadow>Scale border and shadow</ScaleBorderAndShadow>
+    <WrapStyle0>0: Smart wrapping, top line is wider</WrapStyle0>
+    <WrapStyle1>1: End-of-line word wrapping, only \N breaks</WrapStyle1>
+    <WrapStyle2>2: No word wrapping, both \n and \N break</WrapStyle2>
+    <WrapStyle3>3: Smart wrapping, bottom line is wider</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Advanced Sub Station Alpha styles</Title>

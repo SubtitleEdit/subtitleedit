@@ -337,6 +337,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/ExampleX":
                     language.General.ExampleX = reader.Value;
                     break;
+                case "General/Reset":
+                    language.General.Reset = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
@@ -603,6 +606,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AssaResulationChanger/ChangeResolutionDrawing":
                     language.AssaResulationChanger.ChangeResolutionDrawing = reader.Value;
+                    break;
+                case "AssaResulationChanger/SourceAndTargetEqual":
+                    language.AssaResulationChanger.SourceAndTargetEqual = reader.Value;
                     break;
                 case "AssaSetBackgroundBox/Title":
                     language.AssaSetBackgroundBox.Title = reader.Value;
@@ -4507,6 +4513,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/AssaResolutionChanger":
                     language.Main.Menu.ContextMenu.AssaResolutionChanger = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/AssaGenerateBackgroundBox":
+                    language.Main.Menu.ContextMenu.AssaGenerateBackgroundBox = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;
                     break;
@@ -6973,9 +6982,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SettingsMpv/DownloadMpvOk":
                     language.SettingsMpv.DownloadMpvOk = reader.Value;
                     break;
-                case "SettingsFfmpeg/XDownload":
-                    language.SettingsFfmpeg.XDownload = reader.Value;
-                    break;
                 case "SettingsFfmpeg/XDownloadFailed":
                     language.SettingsFfmpeg.XDownloadFailed = reader.Value;
                     break;
@@ -7437,6 +7443,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "SubStationAlphaProperties/ScaleBorderAndShadow":
                     language.SubStationAlphaProperties.ScaleBorderAndShadow = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/WrapStyle0":
+                    language.SubStationAlphaProperties.WrapStyle0 = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/WrapStyle1":
+                    language.SubStationAlphaProperties.WrapStyle1 = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/WrapStyle2":
+                    language.SubStationAlphaProperties.WrapStyle2 = reader.Value;
+                    break;
+                case "SubStationAlphaProperties/WrapStyle3":
+                    language.SubStationAlphaProperties.WrapStyle3 = reader.Value;
                     break;
                 case "SubStationAlphaStyles/Title":
                     language.SubStationAlphaStyles.Title = reader.Value;

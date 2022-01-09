@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownload, "youtube-dl");
+            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "youtube-dl");
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);

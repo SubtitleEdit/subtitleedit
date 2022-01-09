@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownload, "Vosk models");
+            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "Vosk models");
             buttonDownload.Text = LanguageSettings.Current.GetDictionaries.Download;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonDownload);
