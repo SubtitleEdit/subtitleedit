@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var script = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+script.
 ScriptType: v4.00+
-Collisions: Normal
+ScaledBorderAndShadow: Yes
 PlayResX: [VIDEO_WIDTH]
 PlayResY: [VIDEO_HEIGHT]
 

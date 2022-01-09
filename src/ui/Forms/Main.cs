@@ -29451,7 +29451,20 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (ft == typeof(AdvancedSubStationAlpha) || ft == typeof(SubStationAlpha))
+            if (ft == typeof(AdvancedSubStationAlpha))
+            {
+                using (var properties = new AssaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _videoInfo, _fileName))
+                {
+                    if (properties.ShowDialog(this) == DialogResult.OK)
+                    {
+                        UpdateSourceView();
+                    }
+                }
+
+                return;
+            }
+
+            if (ft == typeof(SubStationAlpha))
             {
                 using (var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), VideoFileName, _videoInfo, _fileName))
                 {

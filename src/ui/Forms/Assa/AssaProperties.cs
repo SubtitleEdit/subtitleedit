@@ -7,135 +7,97 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public sealed partial class SubStationAlphaProperties : PositionAndSizeForm
+    public sealed partial class AssaProperties : PositionAndSizeForm
     {
         private readonly Subtitle _subtitle;
-        private readonly bool _isSubStationAlpha;
         private readonly string _videoFileName;
         private readonly VideoInfo _currentVideoInfo;
         private readonly int _height;
 
-        public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
+        public AssaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             _subtitle = subtitle;
-            _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
             _currentVideoInfo = currentVideoInfo;
 
             var l = LanguageSettings.Current.SubStationAlphaProperties;
             _height = 500;
-            if (_isSubStationAlpha)
-            {
-                Text = l.TitleSubstationAlpha;
-                labelWrapStyle.Visible = false;
-                comboBoxWrapStyle.Visible = false;
-                checkBoxScaleBorderAndShadow.Visible = false;
-                _height -= (comboBoxWrapStyle.Height + checkBoxScaleBorderAndShadow.Height + 8);
-            }
-            else
-            {
-                Text = l.Title;
-            }
-
+            Text = l.Title;
             comboBoxWrapStyle.SelectedIndex = 2;
-            comboBoxCollision.SelectedIndex = 0;
 
-            string header = subtitle.Header;
-            if (subtitle.Header == null)
+            var title = "Untitled";
+            if (string.IsNullOrWhiteSpace(subtitle.Header))
             {
-                var ssa = new SubStationAlpha();
-                var sub = new Subtitle();
-                var lines = subtitle.ToText(ssa).SplitToLines();
-                string title = "Untitled";
-                if (!string.IsNullOrEmpty(subtitleFileName))
-                {
-                    title = Path.GetFileNameWithoutExtension(subtitleFileName);
-                }
-                else if (!string.IsNullOrEmpty(videoFileName))
-                {
-                    title = Path.GetFileNameWithoutExtension(videoFileName);
-                }
-
-                ssa.LoadSubtitle(sub, lines, title);
-                header = sub.Header;
+                subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
             }
 
-            if (header != null)
+            var header = subtitle.Header;
+            foreach (var line in header.SplitToLines())
             {
-                foreach (string line in header.SplitToLines())
+                var s = line.ToLowerInvariant().Trim();
+                if (s.StartsWith("title:", StringComparison.Ordinal))
                 {
-                    string s = line.ToLowerInvariant().Trim();
-                    if (s.StartsWith("title:", StringComparison.Ordinal))
+                    textBoxTitle.Text = line.Trim().Remove(0, 6).Trim();
+                }
+                else if (s.StartsWith("original script:", StringComparison.Ordinal))
+                {
+                    textBoxOriginalScript.Text = line.Trim().Remove(0, 16).Trim();
+                }
+                else if (s.StartsWith("original translation:", StringComparison.Ordinal))
+                {
+                    textBoxTranslation.Text = line.Trim().Remove(0, 21).Trim();
+                }
+                else if (s.StartsWith("original editing:", StringComparison.Ordinal))
+                {
+                    textBoxEditing.Text = line.Trim().Remove(0, 17).Trim();
+                }
+                else if (s.StartsWith("original timing:", StringComparison.Ordinal))
+                {
+                    textBoxTiming.Text = line.Trim().Remove(0, 16).Trim();
+                }
+                else if (s.StartsWith("synch point:", StringComparison.Ordinal))
+                {
+                    textBoxSyncPoint.Text = line.Trim().Remove(0, 12).Trim();
+                }
+                else if (s.StartsWith("script updated by:", StringComparison.Ordinal))
+                {
+                    textBoxUpdatedBy.Text = line.Trim().Remove(0, 18).Trim();
+                }
+                else if (s.StartsWith("update details:", StringComparison.Ordinal))
+                {
+                    textBoxUpdateDetails.Text = line.Trim().Remove(0, 15).Trim();
+                }
+                else if (s.StartsWith("playresx:", StringComparison.Ordinal))
+                {
+                    if (int.TryParse(line.Trim().Remove(0, 9).Trim(), out var number))
                     {
-                        textBoxTitle.Text = line.Trim().Remove(0, 6).Trim();
+                        numericUpDownVideoWidth.Value = number;
                     }
-                    else if (s.StartsWith("original script:", StringComparison.Ordinal))
+                }
+                else if (s.StartsWith("playresy:", StringComparison.Ordinal))
+                {
+                    if (int.TryParse(line.Trim().Remove(0, 9).Trim(), out var number))
                     {
-                        textBoxOriginalScript.Text = line.Trim().Remove(0, 16).Trim();
+                        numericUpDownVideoHeight.Value = number;
                     }
-                    else if (s.StartsWith("original translation:", StringComparison.Ordinal))
+                }
+                else if (s.StartsWith("scaledborderandshadow:", StringComparison.Ordinal))
+                {
+                    checkBoxScaleBorderAndShadow.Checked = line.Trim().Remove(0, 22).Trim().ToLowerInvariant().Equals("yes");
+                }
+                else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
+                {
+                    var wrapStyle = line.Trim().Remove(0, 10).Trim();
+                    for (int i = 0; i < comboBoxWrapStyle.Items.Count; i++)
                     {
-                        textBoxTranslation.Text = line.Trim().Remove(0, 21).Trim();
-                    }
-                    else if (s.StartsWith("original editing:", StringComparison.Ordinal))
-                    {
-                        textBoxEditing.Text = line.Trim().Remove(0, 17).Trim();
-                    }
-                    else if (s.StartsWith("original timing:", StringComparison.Ordinal))
-                    {
-                        textBoxTiming.Text = line.Trim().Remove(0, 16).Trim();
-                    }
-                    else if (s.StartsWith("synch point:", StringComparison.Ordinal))
-                    {
-                        textBoxSyncPoint.Text = line.Trim().Remove(0, 12).Trim();
-                    }
-                    else if (s.StartsWith("script updated by:", StringComparison.Ordinal))
-                    {
-                        textBoxUpdatedBy.Text = line.Trim().Remove(0, 18).Trim();
-                    }
-                    else if (s.StartsWith("update details:", StringComparison.Ordinal))
-                    {
-                        textBoxUpdateDetails.Text = line.Trim().Remove(0, 15).Trim();
-                    }
-                    else if (s.StartsWith("collisions:", StringComparison.Ordinal))
-                    {
-                        if (line.Trim().Remove(0, 11).Trim() == "reverse")
+                        if (i.ToString(CultureInfo.InvariantCulture) == wrapStyle)
                         {
-                            comboBoxCollision.SelectedIndex = 1;
-                        }
-                    }
-                    else if (s.StartsWith("playresx:", StringComparison.Ordinal))
-                    {
-                        if (int.TryParse(line.Trim().Remove(0, 9).Trim(), out var number))
-                        {
-                            numericUpDownVideoWidth.Value = number;
-                        }
-                    }
-                    else if (s.StartsWith("playresy:", StringComparison.Ordinal))
-                    {
-                        if (int.TryParse(line.Trim().Remove(0, 9).Trim(), out var number))
-                        {
-                            numericUpDownVideoHeight.Value = number;
-                        }
-                    }
-                    else if (s.StartsWith("scaledborderandshadow:", StringComparison.Ordinal))
-                    {
-                        checkBoxScaleBorderAndShadow.Checked = line.Trim().Remove(0, 22).Trim().ToLowerInvariant().Equals("yes");
-                    }
-                    else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
-                    {
-                        var wrapStyle = line.Trim().Remove(0, 10).Trim();
-                        for (int i = 0; i < comboBoxWrapStyle.Items.Count; i++)
-                        {
-                            if (i.ToString(CultureInfo.InvariantCulture) == wrapStyle)
-                            {
-                                comboBoxWrapStyle.SelectedIndex = i;
-                            }
+                            comboBoxWrapStyle.SelectedIndex = i;
                         }
                     }
                 }
@@ -154,9 +116,12 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoResolution.Text = l.VideoResolution;
             buttonGetResolutionFromCurrentVideo.Text = l.FromCurrentVideo;
             groupBoxOptions.Text = l.Options;
-            labelCollision.Text = l.Collision;
             labelWrapStyle.Text = l.WrapStyle;
             checkBoxScaleBorderAndShadow.Text = l.ScaleBorderAndShadow;
+
+            comboBoxWrapStyle.Left = labelWrapStyle.Right + 10;
+            comboBoxWrapStyle.Width = groupBoxOptions.Right - comboBoxWrapStyle.Left - 25;
+            checkBoxScaleBorderAndShadow.Left = labelWrapStyle.Right + 10;
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -174,16 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetDefaultHeader()
         {
-            SubtitleFormat format;
-            if (_isSubStationAlpha)
-            {
-                format = new SubStationAlpha();
-            }
-            else
-            {
-                format = new AdvancedSubStationAlpha();
-            }
-
+            SubtitleFormat format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();
@@ -214,26 +170,15 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateTag("Update Details", textBoxUpdateDetails.Text, string.IsNullOrWhiteSpace(textBoxUpdateDetails.Text));
             UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoWidth.Value == 0);
             UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoHeight.Value == 0);
-            if (comboBoxCollision.SelectedIndex == 0)
+
+            UpdateTag("WrapStyle", comboBoxWrapStyle.SelectedIndex.ToString(CultureInfo.InvariantCulture), false);
+            if (checkBoxScaleBorderAndShadow.Checked)
             {
-                UpdateTag("collisions", "Normal", false); // normal
+                UpdateTag("ScaledBorderAndShadow", "Yes", false);
             }
             else
             {
-                UpdateTag("collisions", "Reverse", false); // reverse
-            }
-
-            if (!_isSubStationAlpha)
-            {
-                UpdateTag("WrapStyle", comboBoxWrapStyle.SelectedIndex.ToString(CultureInfo.InvariantCulture), false);
-                if (checkBoxScaleBorderAndShadow.Checked)
-                {
-                    UpdateTag("ScaledBorderAndShadow", "Yes", false);
-                }
-                else
-                {
-                    UpdateTag("ScaledBorderAndShadow", "No", false);
-                }
+                UpdateTag("ScaledBorderAndShadow", "No", false);
             }
 
             DialogResult = DialogResult.OK;

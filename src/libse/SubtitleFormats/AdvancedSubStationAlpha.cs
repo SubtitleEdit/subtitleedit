@@ -97,8 +97,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
 ScriptType: v4.00+
-Collisions: Normal
 PlayDepth: 0
+ScaledBorderAndShadow: Yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -112,10 +112,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             bool fromTtml = false;
             string header = $@"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
-Title: {0}
+Title: {{0}}
 ScriptType: v4.00+
-Collisions: Normal
 PlayDepth: 0
+ScaledBorderAndShadow: Yes
 
 [V4+ Styles]
 {SsaStyle.DefaultAssStyleFormat}
@@ -1702,13 +1702,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         }
 
         private static string NormalizeNewLines(string text)
-        { 
+        {
             return text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var paragraphs = subtitle.Paragraphs.Where(p => !p.IsComment).Select(p=> new Paragraph(p)).ToList();
+            var paragraphs = subtitle.Paragraphs.Where(p => !p.IsComment).Select(p => new Paragraph(p)).ToList();
             subtitle.Paragraphs.Clear();
             subtitle.Paragraphs.AddRange(paragraphs);
 
@@ -2628,7 +2628,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public static string UpdateOrAddStyle(string header, SsaStyle style)
         {
-            var styles = GetSsaStylesFromHeader(header).Where(p=>p.Name != style.Name).ToList();
+            var styles = GetSsaStylesFromHeader(header).Where(p => p.Name != style.Name).ToList();
             styles.Add(style);
             return GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
         }
