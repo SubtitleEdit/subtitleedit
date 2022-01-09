@@ -5,12 +5,14 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class AdvancedSubStationAlpha : SubtitleFormat
     {
+        private static readonly Regex ScriptTypeFinder = new Regex("ScriptType: *v4.00", RegexOptions.Compiled);
         public string Errors { get; private set; }
 
         public static string DefaultStyle
@@ -233,6 +235,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
         {
             var scriptInfo = string.Empty;
+            header = FixScriptType(header);
             if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00") &&
@@ -288,6 +291,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromAdvancedSubStationAlpha(string header, List<SsaStyle> styles)
         {
             var scriptInfo = string.Empty;
+            header = FixScriptType(header);
+
             if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00+"))
@@ -341,6 +346,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 {SsaStyle.DefaultAssStyleFormat}
 {style.ToString().Trim() + Environment.NewLine}
 [Events]");
+        }
+
+        private static string FixScriptType(string header)
+        {
+            if (header != null && !header.Contains("ScriptType: v4.00+"))
+            {
+                var match = ScriptTypeFinder.Match(header);
+                if (match.Success)
+                {
+                    header = header.Remove(match.Index, match.Length).Insert(match.Index, "ScriptType: v4.00+");
+                }
+            }
+
+            return header;
         }
 
         private static void LoadStylesFromSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
