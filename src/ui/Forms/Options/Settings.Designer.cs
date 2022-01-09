@@ -416,11 +416,11 @@
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panelFileTypeAssociations = new System.Windows.Forms.Panel();
-            this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.buttonUpdateFileTypeAssociations = new System.Windows.Forms.Button();
             this.listViewFileTypeAssociations = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -5027,15 +5027,6 @@
             this.panelFileTypeAssociations.Size = new System.Drawing.Size(852, 521);
             this.panelFileTypeAssociations.TabIndex = 16;
             // 
-            // labelUpdateFileTypeAssociationsStatus
-            // 
-            this.labelUpdateFileTypeAssociationsStatus.AutoSize = true;
-            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(439, 531);
-            this.labelUpdateFileTypeAssociationsStatus.Name = "labelUpdateFileTypeAssociationsStatus";
-            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(38, 13);
-            this.labelUpdateFileTypeAssociationsStatus.TabIndex = 24;
-            this.labelUpdateFileTypeAssociationsStatus.Text = "Status";
-            // 
             // buttonUpdateFileTypeAssociations
             // 
             this.buttonUpdateFileTypeAssociations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -5061,6 +5052,15 @@
             this.listViewFileTypeAssociations.UseCompatibleStateImageBehavior = false;
             this.listViewFileTypeAssociations.View = System.Windows.Forms.View.Details;
             // 
+            // labelUpdateFileTypeAssociationsStatus
+            // 
+            this.labelUpdateFileTypeAssociationsStatus.AutoSize = true;
+            this.labelUpdateFileTypeAssociationsStatus.Location = new System.Drawing.Point(439, 531);
+            this.labelUpdateFileTypeAssociationsStatus.Name = "labelUpdateFileTypeAssociationsStatus";
+            this.labelUpdateFileTypeAssociationsStatus.Size = new System.Drawing.Size(38, 13);
+            this.labelUpdateFileTypeAssociationsStatus.TabIndex = 24;
+            this.labelUpdateFileTypeAssociationsStatus.Text = "Status";
+            // 
             // imageListFileTypeAssociations
             // 
             this.imageListFileTypeAssociations.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -5073,10 +5073,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelGeneral);

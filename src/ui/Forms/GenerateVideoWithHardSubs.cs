@@ -112,6 +112,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAudioSampleRate.Left = audioLeft;
             comboBoxAudioBitRate.Left = audioLeft;
 
+            linkLabelHelp.Left = Width - linkLabelHelp.Width - 30;
+
             _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue)
             {
