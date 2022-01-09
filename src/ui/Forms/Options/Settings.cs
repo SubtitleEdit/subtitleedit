@@ -465,6 +465,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             groupBoxMiscellaneous.Text = language.General;
+            groupBoxToolsMisc.Text = language.Miscellaneous;
             groupBoxGeneralRules.Text = language.Rules;
             labelRulesProfileName.Text = language.Profile;
             checkBoxShowFrameRate.Text = language.ShowFrameRate;
