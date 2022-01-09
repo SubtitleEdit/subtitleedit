@@ -449,14 +449,19 @@ namespace Nikse.SubtitleEdit.Controls
 
             try
             {
+                subtitle = new Subtitle(subtitle, false);
                 if (SmpteMode)
                 {
-                    subtitle = new Subtitle(subtitle, false);
                     foreach (var paragraph in subtitle.Paragraphs)
                     {
                         paragraph.StartTime.TotalMilliseconds *= 1.001;
                         paragraph.EndTime.TotalMilliseconds *= 1.001;
                     }
+                }
+
+                foreach (var paragraph in subtitle.Paragraphs)
+                {
+                    paragraph.EndTime.TotalMilliseconds += 30; //TODO: good idea or not?
                 }
 
                 var format = new AdvancedSubStationAlpha();
@@ -472,7 +477,6 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (subtitle.Header != null && subtitle.Header.Contains("[V4 Styles]"))
                         {
-                            subtitle = new Subtitle(subtitle, false);
                             subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(subtitle.Header);
                         }
 
