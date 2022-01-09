@@ -94,6 +94,7 @@
     <Collapse>축소</Collapse>
     <ShortcutX>단축키: {0}</ShortcutX>
     <ExampleX>예: {0}</ExampleX>
+    <Reset>초기화</Reset>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -223,9 +224,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ChangeResolutionFontSize>글꼴 크기를 위해 해상도 변경</ChangeResolutionFontSize>
     <ChangeResolutionPositions>위치를 위해 해상도 변경</ChangeResolutionPositions>
     <ChangeResolutionDrawing>밑그림을 위해 해상도 변경</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>원본 해상도와 대상 해상도가 같습니다! - 작업 안됨</SourceAndTargetEqual>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
-    <Title>배경에 박스 생성</Title>
+    <Title>배경 박스 생성</Title>
     <Padding>여백</Padding>
     <FillWidth>너비 채우기</FillWidth>
     <Drawing>밑그림</Drawing>
@@ -1377,6 +1379,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <SetPosition>위치 설정...</SetPosition>
         <GenerateProgressBar>진행 표시줄 생성...</GenerateProgressBar>
         <AssaResolutionChanger>ASSA 스크립트 해상도 변경...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>배경 박스 생성...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
@@ -2541,7 +2544,6 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DownloadMpvOk>mpv lib를 다운로드하고 사용준비를 완료했습니다.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>{0} 다운로드</XDownload>
     <XDownloadFailed>{0} 다운로드 실패 - 나중에 다시 시도하십시오!</XDownloadFailed>
     <XDownloadOk>{0} 다운로드 완료됨 - 사용 가능 합니다!</XDownloadOk>
   </SettingsFfmpeg>
@@ -2715,9 +2717,13 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <VideoResolution>비디오 해상도</VideoResolution>
     <FromCurrentVideo>현재 비디오</FromCurrentVideo>
     <Options>옵션</Options>
-    <WrapStyle>배치 스타일</WrapStyle>
+    <WrapStyle>줄바꿈 스타일</WrapStyle>
     <Collision>충돌</Collision>
     <ScaleBorderAndShadow>테두리와 그림자에 배율 적용</ScaleBorderAndShadow>
+    <WrapStyle0>0: 스마트 줄바꿈, 윗 줄이 넓음</WrapStyle0>
+    <WrapStyle1>1: 줄의 끝 단어 줄바꿈, 오직 \N 줄바꿈</WrapStyle1>
+    <WrapStyle2>2: 단어 줄바꿈 안함, 양쪽 \n 및 \N 줄바꿈</WrapStyle2>
+    <WrapStyle3>3: 스마트 줄바꿈, 아래 줄이 넓음</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>* Advanced Sub Station Alpha의 스타일</Title>
