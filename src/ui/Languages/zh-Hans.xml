@@ -1295,7 +1295,7 @@ Command line: {1} {2}
         <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
         <SpellCheck>拼写检查</SpellCheck>
-        <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
+        <NetflixQualityCheck>Netflix字幕质量检查</NetflixQualityCheck>
         <Settings>设置</Settings>
         <Help>帮助</Help>
         <ShowHideWaveform>显示/隐藏音频</ShowHideWaveform>
