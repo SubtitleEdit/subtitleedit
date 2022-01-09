@@ -581,12 +581,26 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 if (Configuration.IsRunningOnWindows)
                 {
-                    _libMpvDll = NativeMethods.CrossLoadLibrary(GetMpvPath("mpv-1.dll"));
+                    var mpvPath = GetMpvPath("mpv-2.dll");
+                    if (!File.Exists(mpvPath))
+                    {
+                        mpvPath = GetMpvPath("mpv-1.dll");
+                    }
+
+                    _libMpvDll = NativeMethods.CrossLoadLibrary(mpvPath);
+
                     if (_libMpvDll == IntPtr.Zero)
                     {
                         // to work with e.g. cyrillic characters!
                         Directory.SetCurrentDirectory(Configuration.DataDirectory);
-                        _libMpvDll = NativeMethods.CrossLoadLibrary("mpv-1.dll");
+                        if (File.Exists("mpv-2.dll"))
+                        {
+                            _libMpvDll = NativeMethods.CrossLoadLibrary("mpv-2.dll");
+                        }
+                        else
+                        {
+                            _libMpvDll = NativeMethods.CrossLoadLibrary("mpv-1.dll");
+                        }
                     }
                 }
                 else
@@ -596,11 +610,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     {
                         _libMpvDll = NativeMethods.CrossLoadLibrary("libmpv.so.1");
                     }
+                    if (_libMpvDll == IntPtr.Zero)
+                    {
+                        _libMpvDll = NativeMethods.CrossLoadLibrary("libmpv.so.2");
+                    }
 
                     int i = 107;
                     while (_libMpvDll == IntPtr.Zero && i < 120)
                     {
                         _libMpvDll = NativeMethods.CrossLoadLibrary($"libmpv.so.1.{i}.0");
+                        i++;
+                    }
+
+                    i = 107;
+                    while (_libMpvDll == IntPtr.Zero && i < 120)
+                    {
+                        _libMpvDll = NativeMethods.CrossLoadLibrary($"libmpv.so.2.{i}.0");
                         i++;
                     }
                 }
