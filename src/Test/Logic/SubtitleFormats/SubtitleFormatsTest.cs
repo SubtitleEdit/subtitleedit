@@ -441,7 +441,6 @@ Title:
 Original Script: swk
 Update Details:
 ScriptType: v4.00+
-Collisions: Normal
 PlayDepth: 0
 PlayResX: 1920
 PlayResY: 1080

@@ -132,6 +132,12 @@
     <Compile Include="Forms\Assa\AssaProgressBar.Designer.cs">
       <DependentUpon>AssaProgressBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\AssaProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\AssaProperties.Designer.cs">
+      <DependentUpon>AssaProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\ResolutionResampler.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1362,6 +1368,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\AssaProgressBar.resx">
       <DependentUpon>AssaProgressBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\AssaProperties.resx">
+      <DependentUpon>AssaProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\ResolutionResampler.resx">
       <DependentUpon>ResolutionResampler.cs</DependentUpon>
