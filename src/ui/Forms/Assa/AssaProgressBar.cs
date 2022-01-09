@@ -62,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
             buttonTextColor.Text = LanguageSettings.Current.Settings.WaveformTextColor;
             buttonReset.Text = LanguageSettings.Current.General.Reset;
+            buttonTakePosFromVideo.Text = l.TakePosFromVideo;
             columnHeaderName.Text = LanguageSettings.Current.General.Text;
             columnHeaderStart.Text = LanguageSettings.Current.General.StartTime;
 

@@ -2716,8 +2716,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Collision>Kollision</Collision>
     <ScaleBorderAndShadow>Scaler kant og skygge</ScaleBorderAndShadow>
     <WrapStyle0>0: Smart ombrydning, toplinjen er bredere</WrapStyle0>
-    <WrapStyle1>1: End-of-line ordombrydning, kun \N bryder</WrapStyle1>
-    <WrapStyle2>2: Ingen ordombrydning, både\n og \N bryder</WrapStyle2>
+    <WrapStyle1>1: End-of-line ombrydning, kun \N bryder</WrapStyle1>
+    <WrapStyle2>2: Ingen ombrydning, både\n og \N bryder</WrapStyle2>
     <WrapStyle3>3: Smart ombrydning, bundlinjen er bredere</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
