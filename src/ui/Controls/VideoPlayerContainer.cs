@@ -459,11 +459,6 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                foreach (var paragraph in subtitle.Paragraphs)
-                {
-                    paragraph.EndTime.TotalMilliseconds += 30; //TODO: good idea or not?
-                }
-
                 var format = new AdvancedSubStationAlpha();
                 string text;
 
