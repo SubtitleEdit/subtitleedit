@@ -545,15 +545,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 }
                 else if (radioButtonBottomLeft.Checked)
                 {
-                    pos = $"{{\\pos({x + marginH},{bottom - marginV})}}";
+                    pos = $"{{\\pos({x + marginH},{bottom + marginV})}}";
                 }
                 else if (radioButtonBottomCenter.Checked)
                 {
-                    pos = $"{{\\pos({x + (width / 2) + marginH},{bottom - marginV})}}";
+                    pos = $"{{\\pos({x + (width / 2) + marginH},{bottom + marginV})}}";
                 }
                 else if (radioButtonBottomRight.Checked)
                 {
-                    pos = $"{{\\pos({right - marginH},{bottom - marginV})}}";
+                    pos = $"{{\\pos({right - marginH},{bottom + marginV})}}";
                 }
 
                 var layerAdd = 1;
