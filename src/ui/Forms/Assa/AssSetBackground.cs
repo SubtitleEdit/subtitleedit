@@ -516,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 var marginH = (int)numericUpDownDrawingMarginH.Value;
                 var marginV = (int)numericUpDownDrawingMarginV.Value;
-                var height = bottom - x;
+                var height = bottom - top;
                 var width = right - x;
                 var pos = string.Empty;
                 if (radioButtonTopLeft.Checked)
