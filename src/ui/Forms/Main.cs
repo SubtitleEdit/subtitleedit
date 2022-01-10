@@ -19078,6 +19078,30 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show("Unable to set clipboard text - some other application might have locked the clipboard.");
         }
 
+        private void CopyTextFromSelectedLinesToClipboard(bool removeTags)
+        {
+            var sb = new StringBuilder();
+            foreach (int i in SubtitleListview1.SelectedIndices)
+            {
+                var p = _subtitle.GetParagraphOrDefault(i);
+                if (p != null)
+                {
+                    sb.Append(p.Text).AppendLine(Environment.NewLine);
+                }
+            }
+
+            if (sb.ToString().TrimEnd().Length > 0)
+            {
+                var text = sb.ToString().TrimEnd();
+                if (removeTags)
+                {
+                    text = HtmlUtil.RemoveHtmlTags(text, true);
+                }
+
+                ClipboardSetText(text);
+            }
+        }
+
         private void SubtitleListview1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control) //Ctrl+c = Copy to clipboard
@@ -19106,21 +19130,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewCopyText)
             {
-                var sb = new StringBuilder();
-                foreach (int i in SubtitleListview1.SelectedIndices)
-                {
-                    var p = _subtitle.GetParagraphOrDefault(i);
-                    if (p != null)
-                    {
-                        sb.Append(p.Text).AppendLine(Environment.NewLine);
-                    }
-                }
-
-                if (sb.ToString().TrimEnd().Length > 0)
-                {
-                    ClipboardSetText(sb.ToString().TrimEnd());
-                }
-
+                CopyTextFromSelectedLinesToClipboard(false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewCopyPlainText)
+            {
+                CopyTextFromSelectedLinesToClipboard(true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewAutoDuration)

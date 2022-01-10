@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewRemoveBlankLines { get; set; }
         public Keys MainListViewRemoveTimeCodes { get; set; }
         public Keys MainListViewCopyText { get; set; }
+        public Keys MainListViewCopyPlainText { get; set; }
         public Keys MainEditFixRTLViaUnicodeChars { get; set; }
         public Keys MainEditRemoveRTLUnicodeChars { get; set; }
         public Keys MainEditReverseStartAndEndingForRtl { get; set; }
@@ -334,6 +335,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditReverseStartAndEndingForRtl = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             MainToggleVideoControls = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleControls);
             MainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
+            MainListViewCopyPlainText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyPlainText);
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             MainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
