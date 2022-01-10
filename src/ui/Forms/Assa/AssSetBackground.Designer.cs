@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // labelFileName
             // 
             this.labelFileName.AutoSize = true;
-            this.labelFileName.Location = new System.Drawing.Point(6, 137);
+            this.labelFileName.Location = new System.Drawing.Point(6, 142);
             this.labelFileName.Name = "labelFileName";
             this.labelFileName.Size = new System.Drawing.Size(52, 13);
             this.labelFileName.TabIndex = 7;

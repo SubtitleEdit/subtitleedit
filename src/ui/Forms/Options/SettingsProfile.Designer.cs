@@ -528,7 +528,7 @@
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemoveAll.Location = new System.Drawing.Point(446, 414);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
+            this.buttonRemoveAll.Size = new System.Drawing.Size(123, 23);
             this.buttonRemoveAll.TabIndex = 70;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
