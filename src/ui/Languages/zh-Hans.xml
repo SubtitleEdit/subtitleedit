@@ -94,6 +94,7 @@
     <Collapse>收起</Collapse>
     <ShortcutX>快捷键: {0}</ShortcutX>
     <ExampleX>示例: {0}</ExampleX>
+    <Reset>重置</Reset>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -226,6 +227,7 @@ Command line: {1} {2}
     <ChangeResolutionFontSize>缩放字号</ChangeResolutionFontSize>
     <ChangeResolutionPositions>缩放位置</ChangeResolutionPositions>
     <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>源视频与目标分辨率相同 - 别管了……</SourceAndTargetEqual>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
     <Title>生成背景框</Title>
@@ -1376,6 +1378,7 @@ Command line: {1} {2}
         <SetPosition>设置位置...</SetPosition>
         <GenerateProgressBar>生成进度条...</GenerateProgressBar>
         <AssaResolutionChanger>更改ASSA脚本分辨率...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>生成背景框...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -2531,7 +2534,6 @@ Command line: {1} {2}
     <DownloadMpvOk>mpv 库下载完成，等待启用。</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>下载{0}</XDownload>
     <XDownloadFailed>无法下载{0} - 请稍后再试！</XDownloadFailed>
     <XDownloadOk>{0}已下载完成，准备就绪</XDownloadOk>
   </SettingsFfmpeg>
@@ -2703,11 +2705,15 @@ Command line: {1} {2}
     <UpdateDetails>更新详情</UpdateDetails>
     <Resolution>分辨率</Resolution>
     <VideoResolution>视频分辨率</VideoResolution>
-    <FromCurrentVideo>从当前视频</FromCurrentVideo>
+    <FromCurrentVideo>取自当前视频</FromCurrentVideo>
     <Options>选项</Options>
-    <WrapStyle>翻卷样式*</WrapStyle>
-    <Collision>冲突*</Collision>
-    <ScaleBorderAndShadow>缩放边框和阴影</ScaleBorderAndShadow>
+    <WrapStyle>换行方式</WrapStyle>
+    <Collision>叠加方式</Collision>
+    <ScaleBorderAndShadow>按分辨率比例缩放边框和阴影</ScaleBorderAndShadow>
+    <WrapStyle0>0: 智能换行, 上行较宽</WrapStyle0>
+    <WrapStyle1>1: 在行尾换行, 仅在\N处断行</WrapStyle1>
+    <WrapStyle2>2: 不智能换行, 仅在\n和\N处断行</WrapStyle2>
+    <WrapStyle3>3: 智能换行, 下行较宽</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Advanced Sub Station Alpha 样式</Title>
