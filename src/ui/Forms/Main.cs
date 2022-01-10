@@ -9556,6 +9556,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     newParagraph.Extra = TimedText10.SetExtra(newParagraph);
                 }
+                else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    var c = _subtitle.GetParagraphOrDefault(nearestIndex);
+                    if (c != null)
+                    {
+                        newParagraph.Extra = c.Extra;
+                    }
+                }
             }
         }
 
@@ -19311,15 +19319,39 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MakeHistoryForUndo(_language.BeforeInsertLine);
                         _makeHistoryPaused = true;
+                        int firstSelectedIndex = 0;
+                        if (SubtitleListview1.SelectedItems.Count > 0)
+                        {
+                            firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                        }
+
                         SubtitleListview1.BeginUpdate();
+                        var newParagraph = new Paragraph();
+                        var tempS = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                        if (tempS != null)
+                        {
+                            newParagraph.EndTime.TotalMilliseconds = tempS.EndTime.TotalMilliseconds;
+                        }
+
                         foreach (var line in list)
                         {
                             if (!string.IsNullOrWhiteSpace(line))
                             {
                                 var s = line.Trim().Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(line) : line.Trim();
-                                InsertAfter(s, true);
+                                var lastP = newParagraph;
+                                newParagraph = new Paragraph()
+                                {
+                                    Text = line,
+                                    StartTime = new TimeCode(newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines),
+                                    EndTime = new TimeCode(newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Utilities.GetOptimalDisplayMilliseconds(line)),
+                                };
+                                SetStyleForNewParagraph(newParagraph, firstSelectedIndex);
+                                _subtitle.InsertParagraphInCorrectTimeOrder(newParagraph);
                             }
                         }
+
+                        _subtitle.Renumber();
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
 
                         SubtitleListview1.EndUpdate();
                         RestartHistory();
