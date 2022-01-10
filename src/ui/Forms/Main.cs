@@ -10304,6 +10304,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralToggleBookmarksAddComment == e.KeyData) 
+            {
+                BeginInvoke(new Action(() => ToggleBookmarks(true)));
+                e.SuppressKeyPress = true;
+            }
 
             //TODO: add these two to custom shortcuts
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Home)
@@ -31617,9 +31622,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
-
-
 
         private void toolStripMenuItemBookmark_Click(object sender, EventArgs e)
         {
