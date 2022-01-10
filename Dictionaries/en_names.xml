@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names with specific casing - and specific to English only -->
 <names>
-	<blacklist>
-		<name>Bill</name>
-		<name>Black</name>
-		<name>Male</name>
-	</blacklist>
+  <blacklist>
+    <name>Bill</name>
+    <name>Black</name>
+    <name>Male</name>
+  </blacklist>
+  <name>2Pac</name>
   <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
@@ -241,6 +242,7 @@
   <name>Birnbaum</name>
   <name>Blakely</name>
   <name>Blaze</name>
+  <name>Bo Diddley</name>
   <name>Boba Fett</name>
   <name>Boca Chica</name>
   <name>Bodhi</name>
@@ -405,8 +407,10 @@
   <name>Chongqing</name>
   <name>Christmas Island</name>
   <name>Ciara</name>
+  <name>Clairmont</name>
   <name>Clara</name>
   <name>Clare</name>
+  <name>Clermont</name>
   <name>Clipperton Island</name>
   <name>Clooney</name>
   <name>Coachella</name>
@@ -667,6 +671,7 @@
   <name>Georgiou</name>
   <name>Gerard Depardieu</name>
   <name>Gerardo</name>
+  <name>Gerbert</name>
   <name>German</name>
   <name>Germans</name>
   <name>Germany</name>
@@ -779,6 +784,7 @@
   <name>Hungarian</name>
   <name>Hungarians</name>
   <name>Hungary</name>
+  <name>I.D.</name>
   <name>Iceland</name>
   <name>Icelander</name>
   <name>Icelanders</name>
@@ -1175,6 +1181,7 @@
   <name>Liechtenstein</name>
   <name>Liechtensteiner</name>
   <name>Liechtensteiners</name>
+  <name>Lil' Kim</name>
   <name>Lila</name>
   <name>Lilah</name>
   <name>Lilia</name>
@@ -1473,6 +1480,7 @@
   <name>Oeufcocque-Penteano</name>
   <name>O'Flynn</name>
   <name>Ogilvie</name>
+  <name>O'Jays</name>
   <name>Oliveira</name>
   <name>Oman</name>
   <name>Omani</name>
@@ -1960,6 +1968,7 @@
   <name>Western Sahara</name>
   <name>Westin</name>
   <name>Weston</name>
+  <name>Westside</name>
   <name>Westwood</name>
   <name>Wilco</name>
   <name>Willow</name>
