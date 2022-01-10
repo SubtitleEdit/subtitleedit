@@ -2560,6 +2560,7 @@
             public string AlignmentN9 { get; set; }
             public string ColorX { get; set; }
             public string CopyTextOnly { get; set; }
+            public string CopyPlainText { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }
             public string FixRTLViaUnicodeChars { get; set; }
