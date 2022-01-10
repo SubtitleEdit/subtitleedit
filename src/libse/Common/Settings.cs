@@ -2214,6 +2214,7 @@ $HorzAlign          =   Center
         public string MainListViewColor4 { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
+        public string MainListViewCopyPlainText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }
@@ -8257,6 +8258,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewCopyText = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewCopyPlainText");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewCopyPlainText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
                 if (subNode != null)
                 {
@@ -10238,6 +10245,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColor4", shortcuts.MainListViewColor4);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
+            textWriter.WriteElementString("MainListViewCopyPlainText", shortcuts.MainListViewCopyPlainText);
             textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", shortcuts.MainListViewCopyTextFromOriginalToCurrent);
             textWriter.WriteElementString("MainListViewAutoDuration", shortcuts.MainListViewAutoDuration);
             textWriter.WriteElementString("MainListViewColumnDeleteText", shortcuts.MainListViewColumnDeleteText);
