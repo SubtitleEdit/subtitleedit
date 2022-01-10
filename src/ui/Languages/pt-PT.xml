@@ -95,6 +95,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Collapse>Recolher</Collapse>
     <ShortcutX>Atalho: {0}</ShortcutX>
     <ExampleX>Exemplo: {0}</ExampleX>
+    <Reset>Repor</Reset>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -228,9 +229,10 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <ChangeResolutionFontSize>Alterar a resolução para o tamanho do tipo de letra</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Alterar a resolução para a posição</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Alterar a resolução para desenho</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>A fonte e a resolução de destino são as mesmas - nada a fazer.</SourceAndTargetEqual>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
-    <Title>Alterar a resolução do script ASSA</Title>
+    <Title>Gerar caixa de fundo</Title>
     <Padding>Preenchimento</Padding>
     <FillWidth>Largura de preenchimento</FillWidth>
     <Drawing>Desenho</Drawing>
@@ -1130,7 +1132,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <OpenContainingFolder>Abrir pasta</OpenContainingFolder>
         <Compare>&amp;Comparar...</Compare>
         <Statistics>Estatís&amp;tica...</Statistics>
-        <Plugins>Plugins...</Plugins>
+        <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Legenda do ficheiro de vídeo...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Legenda de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Legenda VobSub (sub/idx) para OCR...</ImportOcrVobSubSubtitle>
@@ -1382,6 +1384,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SetPosition>Definir posição...</SetPosition>
         <GenerateProgressBar>Gerar barra de progressão...</GenerateProgressBar>
         <AssaResolutionChanger>Alterar a resolução do script ASSA...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Gerar caixa de fundo...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
@@ -2341,6 +2344,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustExtendNextLineStartToCurrentEnd>Prolongar o início da linha seguinte até ao fim da actual</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Recalcular a duração da legenda actual (com base na velocidade de leitura ideal)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Recalcular a duração da legenda actual (com base na velocidade de leitura mínima)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>Inserir nova linha com tecla "Page Down", definir tempo final com tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir travessões)</MergeDialog>
     <MergeDialogWithNext>Combinar os diálogos com a seguinte (inserir travessões)</MergeDialogWithNext>
@@ -2542,7 +2546,6 @@ Continuar?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>O mpv lib foi transferido e está pronto para ser utilizado.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>Transferir o {0}</XDownload>
     <XDownloadFailed>Não é possível transferir o {0} - tente novamente mais tarde!</XDownloadFailed>
     <XDownloadOk>O {0} foi transferido e está pronto para ser utilizado.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2719,6 +2722,10 @@ Continuar?</RestoreDefaultSettingsMsg>
     <WrapStyle>Estilo moldado</WrapStyle>
     <Collision>Colisão</Collision>
     <ScaleBorderAndShadow>Reduzir o contorno e sombreado</ScaleBorderAndShadow>
+    <WrapStyle0>0: Quebra de linha inteligente, a linha superior é mais larga</WrapStyle0>
+    <WrapStyle1>1: Quebra de linha de palavras em fim-de-linha, apenas \N quebra</WrapStyle1>
+    <WrapStyle2>2: Sem quebra de linha de palavras, ambas \n e \N quebram</WrapStyle2>
+    <WrapStyle3>3: Quebra de linha inteligente, a linha inferior é mais larga</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Estilos Advanced Sub Station Alpha</Title>
