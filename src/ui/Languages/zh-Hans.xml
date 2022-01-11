@@ -2367,6 +2367,7 @@ Command line: {1} {2}
     <AlignmentN9>右上对齐 - {\an9}</AlignmentN9>
     <ColorX>颜色 {0} ({1})</ColorX>
     <CopyTextOnly>仅将文本复制到剪贴板 (所选行)</CopyTextOnly>
+    <CopyPlainText>复制纯文本到剪贴板 (所选行)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>将文本从原内容复制到当前内容</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>通过Unicode控制符修复RTL</FixRTLViaUnicodeChars>
