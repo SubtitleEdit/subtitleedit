@@ -25352,7 +25352,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var nikseBmp = new NikseBitmap(bitmap);
                         var nonTransparentHeight = nikseBmp.GetNonTransparentHeight();
-                        if (nonTransparentHeight > 0)
+                        if (nonTransparentHeight > 1)
                         {
                             list.Add(x);
                         }
