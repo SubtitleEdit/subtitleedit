@@ -7,7 +7,7 @@
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
    * Add "File type associations" in Options - Settings
    * Add "Sort by Gap" - thx Andrebavila
-   * Add shorcuts for Tools - Sort By - thx Jolana
+   * Add shortcuts for Tools - Sort By - thx Jolana
    * Add "waveform-multi-move" with Ctrl+mouse-move
    * Add ASSA tool "Background box generator" - thx Leon
    * Add shortcut for re-calc duration to min - thx m0ck69
@@ -30,7 +30,7 @@
    * Improve zoom-in for waveform a little - thx vitacon
    * Trying to make nOCR work better with corrupted files - thx k7Up
    * Improve English/Italian OCR rules a little - thx tormento
-   * Allow higher font size in list view / text box - thx OmrSi
+   * Allow larger font size in list view / text box - thx OmrSi
    * Improve list-view/text-box color dialog - thx Majid
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
