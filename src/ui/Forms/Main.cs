@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
 using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -3040,6 +3041,19 @@ namespace Nikse.SubtitleEdit.Forms
                     SetTitle();
                     ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                     _converted = true;
+                    return;
+                }
+            }
+
+            if (ext == ".ttml")
+            {
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                var f = new TimedTextBase64Image();
+                if (f.IsMine(list, fileName))
+                {
+                    var sub = new Subtitle();
+                    f.LoadSubtitle(sub, list, fileName);
+                    ImportAndInlineBase64(sub, _loading, fileName);
                     return;
                 }
             }
@@ -10304,7 +10318,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainGeneralToggleBookmarksAddComment == e.KeyData) 
+            else if (_shortcuts.MainGeneralToggleBookmarksAddComment == e.KeyData)
             {
                 BeginInvoke(new Action(() => ToggleBookmarks(true)));
                 e.SuppressKeyPress = true;
@@ -25314,6 +25328,68 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ImportAndInlineBase64(Subtitle subtitle, bool showInTaskbar, string fileName)
+        {
+            using (var vobSubOcr = new VobSubOcr())
+            {
+                if (showInTaskbar)
+                {
+                    vobSubOcr.Icon = (Icon)Icon.Clone();
+                    vobSubOcr.ShowInTaskbar = true;
+                    vobSubOcr.ShowIcon = true;
+                }
+
+                IList<IBinaryParagraphWithPosition> list = new List<IBinaryParagraphWithPosition>();
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    var x = new TimedTextBase64Image.Base64PngImage()
+                    {
+                        Text = p.Text,
+                        StartTimeCode = p.StartTime,
+                        EndTimeCode = p.EndTime,
+                    };
+                    using (var bitmap = x.GetBitmap())
+                    {
+                        var nikseBmp = new NikseBitmap(bitmap);
+                        var nonTransparentHeight = nikseBmp.GetNonTransparentHeight();
+                        if (nonTransparentHeight > 0)
+                        {
+                            list.Add(x);
+                        }
+                    }
+                }
+
+                vobSubOcr.Initialize(list, Configuration.Settings.VobSubOcr, fileName, "");
+                vobSubOcr.FileName = Path.GetFileName(fileName);
+                if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingBluRaySupFile);
+                    FileNew();
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    foreach (var p in vobSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    UpdateSourceView();
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    RefreshSelectedParagraph();
+                    _fileName = Path.ChangeExtension(fileName, GetCurrentSubtitleFormat().Extension);
+                    SetTitle();
+                    _converted = true;
+
+                    Configuration.Settings.Save();
+                }
+                else
+                {
+                    _exitWhenLoaded = _loading;
+                }
+            }
+        }
+
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (InSourceView)
@@ -32270,7 +32346,8 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup|" +
                                      "Matroska|*.mkv;*.mks|" +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
-                                     "BdnXml|*.xml";
+                                     "BdnXml|*.xml|" +
+                                     "TTML base64 inline images|*.ttml";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))
