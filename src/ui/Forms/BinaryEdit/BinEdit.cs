@@ -393,6 +393,46 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     FillListView(_subtitle);
                 }
             }
+            else if (ext == ".ttml")
+            {
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                var f = new TimedTextBase64Image();
+                if (f.IsMine(list, fileName))
+                {
+                    var rawSub = new Subtitle();
+                    f.LoadSubtitle(rawSub, list, fileName);
+                    _binSubtitles = new List<IBinaryParagraphWithPosition>();
+                    _extra = new List<Extra>();
+                    var sub = new Subtitle();
+                    //var res = BdnXmlParagraph.GetResolution(fileName);
+                    //SetResolution(res);
+                    //SetFrameRate(BdnXmlParagraph.GetFrameRate(fileName));
+                    foreach (var p in rawSub.Paragraphs)
+                    {
+                        var x = new TimedTextBase64Image.Base64PngImage()
+                        {
+                            Text = p.Text,
+                            StartTimeCode = p.StartTime,
+                            EndTimeCode = p.EndTime,
+                        };
+                        using (var bitmap = x.GetBitmap())
+                        {
+                            var nikseBmp = new NikseBitmap(bitmap);
+                            var nonTransparentHeight = nikseBmp.GetNonTransparentHeight();
+                            if (nonTransparentHeight > 0)
+                            {
+                                sub.Paragraphs.Add(p);
+                                _binSubtitles.Add(x);
+                                _extra.Add(new Extra { IsForced = x.IsForced, X = x.GetPosition().Left, Y = x.GetPosition().Top });
+                            }
+                        }
+
+                    }
+
+                    _subtitle = new Subtitle(sub);
+                    FillListView(_subtitle);
+                }
+            }
 
             if (_subtitle != null)
             {
@@ -1845,7 +1885,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|" +
                                      "Matroska|*.mkv;*.mks|" +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
-                                     "BdnXml|*.xml";
+                                     "BdnXml|*.xml|" +
+                                     "TTML base64 inline images|*.ttml";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 OpenBinSubtitle(openFileDialog1.FileName);

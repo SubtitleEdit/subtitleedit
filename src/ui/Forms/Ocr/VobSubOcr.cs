@@ -317,6 +317,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // DVB (from transport stream inside mkv)
         private List<DvbSubPes> _dvbPesSubtitles;
 
+        // Other
+        private IList<IBinaryParagraphWithPosition> _binaryParagraphWithPositions;
+
         private string _lastLine;
         private string _languageId;
         private string _importLanguageString;
@@ -1449,6 +1452,36 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonStartOcr.Focus();
         }
 
+        private void LoadBinarySubtitlesWithPosition()
+        {
+            _subtitle = new Subtitle();
+
+            int max = _binaryParagraphWithPositions.Count;
+            for (int i = 0; i < max; i++)
+            {
+                var x = _binaryParagraphWithPositions[i];
+                _subtitle.Paragraphs.Add(new Paragraph
+                {
+                    StartTime = new TimeCode(x.StartTimeCode.TotalMilliseconds),
+                    EndTime = new TimeCode(x.EndTimeCode.TotalMilliseconds)
+                });
+            }
+
+            _subtitle.Renumber();
+
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+
+            numericUpDownStartNumber.Maximum = max;
+            if (numericUpDownStartNumber.Maximum > 0 && numericUpDownStartNumber.Minimum <= 1)
+            {
+                numericUpDownStartNumber.Value = 1;
+            }
+
+            SetButtonsEnabledAfterOcrDone();
+            buttonStartOcr.Focus();
+        }
+
         public void FixShortDisplayTimes(Subtitle subtitle)
         {
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -1501,6 +1534,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_dvbPesSubtitles != null)
             {
                 return false;
+            }
+
+            if (_binaryParagraphWithPositions != null)
+            {
+                return _binaryParagraphWithPositions[index].IsForced;
             }
 
             if (_bluRaySubtitlesOriginal != null)
@@ -1794,6 +1832,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     returnBmp = nDvbBmp.GetBitmap();
                 }
             }
+            else if (_binaryParagraphWithPositions != null)
+            {
+                var bmp = _binaryParagraphWithPositions[index].GetBitmap();
+                var nDvbBmp = new NikseBitmap(bmp);
+                nDvbBmp.CropTopTransparent(2);
+                nDvbBmp.CropTransparentSidesAndBottom(2, true);
+                if (_transportStreamUseColor)
+                {
+                    _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
+                }
+
+                if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                {
+                    nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
+                }
+
+                if (checkBoxTransportStreamGrayscale.Checked)
+                {
+                    nDvbBmp.GrayScale();
+                }
+
+                bmp.Dispose();
+                returnBmp = nDvbBmp.GetBitmap();
+            }
             else if (_bluRaySubtitlesOriginal != null)
             {
                 if (_bluRaySubtitles != null)
@@ -2029,6 +2091,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 start = item.StartTime;
                 end = item.EndTime;
             }
+            else if (_binaryParagraphWithPositions != null)
+            {
+                var item = _binaryParagraphWithPositions[index];
+                start = item.StartTimeCode;
+                end = item.EndTimeCode;
+            }
             else
             {
                 var item = _vobSubMergedPackList[index];
@@ -2072,6 +2140,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_dvbPesSubtitles != null)
             {
                 return _dvbPesSubtitles.Count;
+            }
+
+            if (_binaryParagraphWithPositions != null)
+            {
+                return _binaryParagraphWithPositions.Count;
             }
 
             return _vobSubMergedPackList.Count;
@@ -2164,6 +2237,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_dvbPesSubtitles != null)
             {
                 var item = _subtitle.Paragraphs[index];
+                //TODO
+                left = 0;
+                top = 0;
+                width = 0;
+                height = 0;
+                return;
+            }
+
+            if (_binaryParagraphWithPositions != null)
+            {
+                var item = _binaryParagraphWithPositions[index];
                 //TODO
                 left = 0;
                 top = 0;
@@ -2276,6 +2360,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_dvbPesSubtitles != null)
             {
                 var size = _dvbPesSubtitles[index].GetScreenSize();
+                width = size.Width;
+                height = size.Height;
+            }
+
+            if (_binaryParagraphWithPositions != null)
+            {
+                var size = _binaryParagraphWithPositions[index].GetScreenSize();
                 width = size.Width;
                 height = size.Height;
             }
@@ -4806,6 +4897,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
+                SetButtonsEnabledAfterOcrDone();
+                buttonStartOcr.Focus();
+            }
+            else if (_binaryParagraphWithPositions != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+                LoadBinarySubtitlesWithPosition();
                 SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
@@ -8416,6 +8515,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _dvbPesSubtitles.RemoveAt(idx);
                 }
             }
+            else if (_binaryParagraphWithPositions != null)
+            {
+                foreach (int idx in indices)
+                {
+                    _binaryParagraphWithPositions.RemoveAt(idx);
+                }
+            }
             else if (_bdnXmlSubtitle != null)
             {
                 foreach (int idx in indices)
@@ -9670,6 +9776,28 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void underlineToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             TextBoxListViewToggleTag(HtmlUtil.TagUnderline);
+        }
+
+        public void Initialize(IList<IBinaryParagraphWithPosition> list, VobSubOcrSettings vobSubOcrSettings, string fileName, string languageString)
+        {
+            SetButtonsStartOcr();
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+            groupBoxImagePalette.Visible = false;
+
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
+
+            SetOcrMethod();
+
+            _binaryParagraphWithPositions = list;
+
+            SetTesseractLanguageFromLanguageString(languageString);
+            _importLanguageString = languageString;
         }
     }
 }
