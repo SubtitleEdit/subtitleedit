@@ -11,6 +11,8 @@
    * Add "waveform-multi-move" with Ctrl+mouse-move
    * Add ASSA tool "Background box generator" - thx Leon
    * Add shortcut for re-calc duration to min - thx m0ck69
+   * Add shortcut for copy plain text - thx OmrSi
+   * New image subtitle format TTML with inline base64 images - thx mat
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
@@ -38,6 +40,7 @@
    * Minor improvements for ASSA properties window
    * Use comma not semicolon in CSV export - thx OmrSi
    * Add some missing translation - thx domddol/nkh0472
+   * Shortcut "add bm w comment" work in text box - thx Minh Toan Ma
 * FIXED:
    * Fix bug in BD SUP reading w missing lines - thx peter-qgd
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
