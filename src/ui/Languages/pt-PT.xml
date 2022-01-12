@@ -2377,7 +2377,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AlignmentN8>Alinhamento superior central - {\an8}</AlignmentN8>
     <AlignmentN9>Alinhamento superior direito - {\an9}</AlignmentN9>
     <ColorX>Cor {0} ({1})</ColorX>
-    <CopyTextOnly>Copiar apenas o texto (linhas seleccionadas)</CopyTextOnly>
+    <CopyTextOnly>Copiar apenas o texto para a àrea de transferência (linhas seleccionadas)</CopyTextOnly>
+    <CopyPlainText>Copiar texto simples para a àrea de transferência (linhas seleccionadas)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Corrigir RTL através de controlo de caracteres Unicode</FixRTLViaUnicodeChars>
