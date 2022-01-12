@@ -24,6 +24,8 @@
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
    * Update Korean translation - thx domddol
    * Update Vietnamese translation - thx Minh Toan Ma
+   * Update Persian translation - thx abdollahim
+   * Update French translation - thx Pierre
    * Update file association icons (so nice) in installer - thx Leon
    * Improve VTT parsing of malformed files - thx Leon
    * Handle merge/split better with "box" tag
@@ -64,6 +66,7 @@
    * Fix crash in list view focus/select - thx Leon
    * Fix crash in modify selection w styles - thx Leon
    * Fix export to image issue w font face - thx red4d
+   * Fix close/save original not working before opening file menu - thx OmrSi
 
 
 3.6.4 (3rd December 2021)
