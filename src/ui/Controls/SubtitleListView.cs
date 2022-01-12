@@ -1198,6 +1198,13 @@ namespace Nikse.SubtitleEdit.Controls
                 SubtitleColumns.RemoveAt(idx);
                 UpdateColumnIndexes();
                 Columns.RemoveAt(idx);
+                foreach (ListViewItem lvi in Items)
+                {
+                    if (lvi.SubItems.Count - 1 > idx && lvi.SubItems[idx] != null)
+                    {
+                        lvi.SubItems.RemoveAt(idx);
+                    }
+                }
                 AutoSizeAllColumns(null);
             }
         }
