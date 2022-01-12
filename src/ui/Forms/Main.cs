@@ -20622,6 +20622,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
 
+                saveOriginalToolStripMenuItem.Enabled = true;
+                saveOriginalAstoolStripMenuItem.Enabled = true;
+                removeOriginalToolStripMenuItem.Enabled = true;
+
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, VideoFileName, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
@@ -27273,6 +27277,10 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             labelTextLineTotal.Left = 236;
             labelTextOriginalLineTotal.Left = 236;
+
+            saveOriginalToolStripMenuItem.Enabled = false;
+            saveOriginalAstoolStripMenuItem.Enabled = false;
+            removeOriginalToolStripMenuItem.Enabled = false;
 
             MainResize();
             SetTitle();
