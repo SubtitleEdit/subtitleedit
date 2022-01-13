@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -97,7 +98,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (double.TryParse(comboBoxFrameRateFrom.Text, out _) && double.TryParse(comboBoxFrameRateTo.Text, out _))
+            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _) &&
+                double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
             {
                 DialogResult = DialogResult.OK;
             }
@@ -116,8 +118,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateTo.Text = oldFrameRate;
         }
 
-        public double OldFrameRate => double.Parse(comboBoxFrameRateFrom.Text);
+        public double OldFrameRate => double.Parse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
 
-        public double NewFrameRate => double.Parse(comboBoxFrameRateTo.Text);
+        public double NewFrameRate => double.Parse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
     }
 }
