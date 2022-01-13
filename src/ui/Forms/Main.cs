@@ -557,6 +557,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (string.IsNullOrEmpty(_fileName))
+                {
+                    EnableOrDisableEditControls();
+                }
+
                 // Initialize events etc. for audio waveform
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveform_OnDoubleClickNonParagraph;
                 audioVisualizer.OnPositionSelected += AudioWaveform_OnPositionSelected;
@@ -5047,15 +5052,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             _sourceViewChange = false;
 
-            _subtitleListViewIndex = -1;
-            textBoxListViewText.Text = string.Empty;
-            textBoxListViewTextOriginal.Text = string.Empty;
-            textBoxListViewText.Enabled = false;
-            textBoxListViewText.BackColor = SystemColors.ActiveBorder;
-            textBoxListViewTextOriginal.BackColor = SystemColors.ActiveBorder;
-            labelTextLineLengths.Text = string.Empty;
-            labelCharactersPerSecond.Text = string.Empty;
-            labelTextLineTotal.Text = string.Empty;
+            //harboe _subtitleListViewIndex = -1;
+            //textBoxListViewText.Text = string.Empty;
+            //textBoxListViewTextOriginal.Text = string.Empty;
+            //textBoxListViewText.Enabled = false;
+            //textBoxListViewText.BackColor = SystemColors.ActiveBorder;
+            //textBoxListViewTextOriginal.BackColor = SystemColors.ActiveBorder;
+            //labelTextLineLengths.Text = string.Empty;
+            //labelCharactersPerSecond.Text = string.Empty;
+            //labelTextLineTotal.Text = string.Empty;
+            EnableOrDisableEditControls();
 
             _listViewTextUndoLast = null;
             _listViewOriginalTextUndoLast = null;
@@ -6968,8 +6974,9 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
                     _sourceViewChange = false;
                     _subtitle.Paragraphs.Clear();
-                    textBoxListViewText.Text = string.Empty;
-                    textBoxListViewText.Enabled = false;
+                    //harboe textBoxListViewText.Text = string.Empty;
+                    //textBoxListViewText.Enabled = false;
+                    EnableOrDisableEditControls();
                 }
 
                 _subtitleListViewIndex = -1;
@@ -6991,8 +6998,9 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
                 _subtitle.Paragraphs.Clear();
                 SubtitleListview1.Items.Clear();
-                textBoxListViewText.Text = string.Empty;
-                textBoxListViewText.Enabled = false;
+                //textBoxListViewText.Text = string.Empty;
+                //textBoxListViewText.Enabled = false;
+                EnableOrDisableEditControls();
                 return;
             }
 
@@ -7779,6 +7787,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timerOriginalTextUndo.Start();
                 SetTitle();
                 SetListViewStateImages();
+                EnableOrDisableEditControls();
             }
         }
 
@@ -9155,14 +9164,14 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(historyText);
                 DeleteSelectedLines();
 
-                ResetTextInfoIfEmpty();
+                EnableOrDisableEditControls();
 
                 ShowStatus(statusText);
                 UpdateSourceView();
             }
         }
 
-        private void ResetTextInfoIfEmpty()
+        private void EnableOrDisableEditControls()
         {
             if (_subtitle.Paragraphs.Count == 0)
             {
@@ -9190,6 +9199,55 @@ namespace Nikse.SubtitleEdit.Forms
                 labelOriginalCharactersPerSecond.Text = string.Empty;
                 labelTextOriginalLineLengths.Text = string.Empty;
                 labelTextOriginalLineTotal.Text = string.Empty;
+                numericUpDownDuration.Value = 0;
+                timeUpDownStartTime.TimeCode = new TimeCode(0);
+
+                textBoxListViewText.Enabled = false;
+                textBoxListViewTextOriginal.Enabled = false;
+                timeUpDownStartTime.Enabled = false;
+                numericUpDownDuration.Enabled = false;
+                buttonPrevious.Enabled = false;
+                buttonNext.Enabled = false;
+                buttonUnBreak.Enabled = false;
+                buttonAutoBreak.Enabled = false;
+                if (!Configuration.Settings.General.UseDarkTheme)
+                {
+                    labelText.Enabled = false;
+                    labelStartTime.Enabled = false;
+                    labelDuration.Enabled = false;
+                }
+                else
+                {
+                    var foreColor = Configuration.Settings.General.DarkThemeForeColor;
+                    var slightDarker = Color.FromArgb(Math.Max(0, foreColor.R - 75), Math.Max(0, foreColor.G - 75), Math.Max(0, foreColor.B - 75));
+                    labelText.ForeColor = slightDarker;
+                    labelStartTime.ForeColor = slightDarker;
+                    labelDuration.ForeColor = slightDarker;
+                }
+            }
+            else if (!numericUpDownDuration.Enabled)
+            {
+                textBoxListViewText.BackColor = SystemColors.WindowFrame; 
+                textBoxListViewTextOriginal.BackColor = SystemColors.WindowFrame;
+
+                textBoxListViewText.Enabled = true;
+                textBoxListViewTextOriginal.Enabled = true;
+                timeUpDownStartTime.Enabled = true;
+                numericUpDownDuration.Enabled = true;
+                buttonPrevious.Enabled = true;
+                buttonNext.Enabled = true;
+                buttonUnBreak.Enabled = true;
+                buttonAutoBreak.Enabled = true;
+                labelText.Enabled = true;
+                labelStartTime.Enabled = true;
+                labelDuration.Enabled = true;
+                if (Configuration.Settings.General.UseDarkTheme)
+                {
+                    var foreColor = Configuration.Settings.General.DarkThemeForeColor;
+                    labelText.ForeColor = foreColor;
+                    labelStartTime.ForeColor = foreColor;
+                    labelDuration.ForeColor = foreColor;
+                }
             }
         }
 
@@ -9264,7 +9322,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            ResetTextInfoIfEmpty();
+            EnableOrDisableEditControls();
             SetListViewStateImages();
         }
 
@@ -12183,6 +12241,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.Enabled = true;
                 textBoxListViewText.BackColor = textBoxListViewText.Focused ? SystemColors.Highlight : SystemColors.WindowFrame;
+                EnableOrDisableEditControls();
             }
 
             StartUpdateListSyntaxColoring();
@@ -23427,6 +23486,14 @@ namespace Nikse.SubtitleEdit.Forms
             _timerSlow.Start();
         }
 
+        private void GroupBoxEdit_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (!textBoxListViewText.Enabled)
+            {
+                InsertLineToolStripMenuItemClick(null, null);
+            }
+        }
+
         private void TextBoxListViewText_MouseDown(object sender, MouseEventArgs e)
         {
             if (!textBoxListViewText.Enabled)
@@ -33109,6 +33176,18 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
+
+        private void Main_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.X > 72 && e.X <= (122 + textBoxListViewText.Height))
+            {
+                if (!textBoxListViewText.Enabled)
+                {
+                    InsertLineToolStripMenuItemClick(null, null);
+                    return;
+                }
             }
         }
     }

@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        private string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
+        private static string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
         {
             var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
             if (!File.Exists(fileName))
