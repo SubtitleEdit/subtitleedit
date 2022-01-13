@@ -167,6 +167,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new RhozetHarmonic(),
                     new Rtf1(),
                     new Rtf2(),
+                    new RxMarker(),
                     new Sami(),
                     new SamiAvDicPlayer(),
                     new SamiModern(),
