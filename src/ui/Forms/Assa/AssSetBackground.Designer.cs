@@ -91,6 +91,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxPadding = new System.Windows.Forms.GroupBox();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
+            this.panelCircle = new System.Windows.Forms.Panel();
+            this.labelCircleY = new System.Windows.Forms.Label();
+            this.numericUpDownCircleY = new System.Windows.Forms.NumericUpDown();
             this.timerFileChange = new System.Windows.Forms.Timer(this.components);
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
@@ -114,6 +117,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpikesStep)).BeginInit();
             this.groupBoxPadding.SuspendLayout();
             this.groupBoxStyle.SuspendLayout();
+            this.panelCircle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxPreview
@@ -485,7 +490,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.comboBoxBoxStyle.Items.AddRange(new object[] {
             "Square corners",
             "Rounded corners",
-            "Spikes"});
+            "Spikes",
+            "Circle"});
             this.comboBoxBoxStyle.Location = new System.Drawing.Point(6, 25);
             this.comboBoxBoxStyle.Name = "comboBoxBoxStyle";
             this.comboBoxBoxStyle.Size = new System.Drawing.Size(167, 21);
@@ -878,6 +884,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // groupBoxStyle
             // 
+            this.groupBoxStyle.Controls.Add(this.panelCircle);
             this.groupBoxStyle.Controls.Add(this.comboBoxBoxStyle);
             this.groupBoxStyle.Controls.Add(this.panelStyleRounded);
             this.groupBoxStyle.Controls.Add(this.panelStyleSpikes);
@@ -887,6 +894,47 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle.TabIndex = 7;
             this.groupBoxStyle.TabStop = false;
             this.groupBoxStyle.Text = "Style";
+            // 
+            // panelCircle
+            // 
+            this.panelCircle.Controls.Add(this.labelCircleY);
+            this.panelCircle.Controls.Add(this.numericUpDownCircleY);
+            this.panelCircle.Location = new System.Drawing.Point(0, 60);
+            this.panelCircle.Name = "panelCircle";
+            this.panelCircle.Size = new System.Drawing.Size(167, 58);
+            this.panelCircle.TabIndex = 53;
+            // 
+            // labelCircleY
+            // 
+            this.labelCircleY.AutoSize = true;
+            this.labelCircleY.Location = new System.Drawing.Point(3, 11);
+            this.labelCircleY.Name = "labelCircleY";
+            this.labelCircleY.Size = new System.Drawing.Size(14, 13);
+            this.labelCircleY.TabIndex = 51;
+            this.labelCircleY.Text = "Y";
+            // 
+            // numericUpDownCircleY
+            // 
+            this.numericUpDownCircleY.Location = new System.Drawing.Point(31, 9);
+            this.numericUpDownCircleY.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.numericUpDownCircleY.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCircleY.Name = "numericUpDownCircleY";
+            this.numericUpDownCircleY.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownCircleY.TabIndex = 52;
+            this.numericUpDownCircleY.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownCircleY.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
             // timerFileChange
             // 
@@ -957,6 +1005,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxPadding.ResumeLayout(false);
             this.groupBoxPadding.PerformLayout();
             this.groupBoxStyle.ResumeLayout(false);
+            this.panelCircle.ResumeLayout(false);
+            this.panelCircle.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1025,5 +1076,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.GroupBox groupBoxStyle;
         private System.Windows.Forms.CheckBox checkBoxOnlyDrawing;
         private System.Windows.Forms.Timer timerFileChange;
+        private System.Windows.Forms.Panel panelCircle;
+        private System.Windows.Forms.Label labelCircleY;
+        private System.Windows.Forms.NumericUpDown numericUpDownCircleY;
     }
 }

@@ -366,6 +366,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color AssaBgBoxTransparentColor { get; set; }
         public string AssaBgBoxStyle { get; set; }
         public int AssaBgBoxStyleRadius { get; set; }
+        public int AssaBgBoxStyleCircleAdjustY { get; set; }
         public int AssaBgBoxOutlineWidth { get; set; }
         public int AssaBgBoxLayer { get; set; }
         public string AssaBgBoxDrawing { get; set; }
@@ -552,6 +553,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaBgBoxTransparentColor = Color.Cyan;
             AssaBgBoxStyle = "square";
             AssaBgBoxStyleRadius = 40;
+            AssaBgBoxStyleCircleAdjustY = 30;
             AssaBgBoxOutlineWidth = 0;
             AssaBgBoxLayer = -11893;
             AssaBgBoxDrawingFileWatch = true;
@@ -5559,6 +5561,12 @@ $HorzAlign          =   Center
                 settings.Tools.AssaBgBoxStyleRadius = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaBgBoxStyleCircleAdjustY");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyleCircleAdjustY = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AssaBgBoxOutlineWidth");
             if (subNode != null)
             {
@@ -9635,6 +9643,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxTransparentColor", ToHtml(settings.Tools.AssaBgBoxTransparentColor));
                 textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
                 textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxStyleCircleAdjustY", settings.Tools.AssaBgBoxStyleCircleAdjustY.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxLayer", settings.Tools.AssaBgBoxLayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawingFileWatch", settings.Tools.AssaBgBoxDrawingFileWatch.ToString(CultureInfo.InvariantCulture));

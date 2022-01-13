@@ -4068,7 +4068,7 @@
             // labelTBNetflixQualityCheck
             // 
             this.labelTBNetflixQualityCheck.AutoSize = true;
-            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(636, 136);
+            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(647, 136);
             this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
             this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
             this.labelTBNetflixQualityCheck.TabIndex = 42;
@@ -4076,7 +4076,7 @@
             // 
             // pictureBoxNetflixQualityCheck
             // 
-            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(649, 155);
+            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(660, 155);
             this.pictureBoxNetflixQualityCheck.Name = "pictureBoxNetflixQualityCheck";
             this.pictureBoxNetflixQualityCheck.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxNetflixQualityCheck.TabIndex = 41;
@@ -4085,7 +4085,7 @@
             // checkBoxNetflixQualityCheck
             // 
             this.checkBoxNetflixQualityCheck.AutoSize = true;
-            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(652, 195);
+            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(663, 195);
             this.checkBoxNetflixQualityCheck.Name = "checkBoxNetflixQualityCheck";
             this.checkBoxNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
             this.checkBoxNetflixQualityCheck.TabIndex = 40;
@@ -5073,6 +5073,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
@@ -5083,7 +5084,6 @@
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
-            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
