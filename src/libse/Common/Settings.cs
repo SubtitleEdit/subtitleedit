@@ -552,7 +552,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaBgBoxShadowColor = Color.FromArgb(100, 0, 0, 0);
             AssaBgBoxTransparentColor = Color.Cyan;
             AssaBgBoxStyle = "square";
-            AssaBgBoxStyleRadius = 40;
+            AssaBgBoxStyleRadius = 30;
             AssaBgBoxStyleCircleAdjustY = 30;
             AssaBgBoxOutlineWidth = 0;
             AssaBgBoxLayer = -11893;

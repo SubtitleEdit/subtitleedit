@@ -124,8 +124,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             labelMaxSpike.Text = LanguageSettings.Current.AssaSetBackgroundBox.MaxSpike;
             buttonDrawingClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
 
-
-            SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
             SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
             SafeNumericUpDownAssign(numericUpDownPaddingRight, Configuration.Settings.Tools.AssaBgBoxPaddingRight);
             SafeNumericUpDownAssign(numericUpDownPaddingTop, Configuration.Settings.Tools.AssaBgBoxPaddingTop);
