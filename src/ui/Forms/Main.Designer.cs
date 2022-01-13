@@ -2569,7 +2569,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectedLines,
             this.toolStripMenuItemGoogleMicrosoftTranslateSelLine});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 798);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(285, 776);
             this.contextMenuStripListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListViewOpening);
             this.contextMenuStripListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -5483,6 +5483,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.Main_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainKeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainKeyUp);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
             this.Resize += new System.EventHandler(this.Main_Resize);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
