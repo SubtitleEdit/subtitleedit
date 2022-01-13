@@ -75,12 +75,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             comboBoxBoxStyle.Items.Clear();
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.SquareCorners);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
+            comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaSetBackgroundBox.Circle);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaSetBackgroundBox.Spikes);
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             if (Configuration.Settings.Tools.AssaBgBoxStyle == "spikes")
+            {
+                comboBoxBoxStyle.SelectedIndex = 3;
+            }
+            else if (Configuration.Settings.Tools.AssaBgBoxStyle == "circle")
             {
                 comboBoxBoxStyle.SelectedIndex = 2;
             }
@@ -128,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelPrimaryColor.BackColor = Configuration.Settings.Tools.AssaBgBoxColor;
             panelOutlineColor.BackColor = Configuration.Settings.Tools.AssaBgBoxOutlineColor;
             panelShadowColor.BackColor = Configuration.Settings.Tools.AssaBgBoxShadowColor;
+            SafeNumericUpDownAssign(numericUpDownCircleY, Configuration.Settings.Tools.AssaBgBoxStyleCircleAdjustY);
             SafeNumericUpDownAssign(numericUpDownRadius, Configuration.Settings.Tools.AssaBgBoxStyleRadius);
             SafeNumericUpDownAssign(numericUpDownOutlineWidth, Configuration.Settings.Tools.AssaBgBoxOutlineWidth);
             labelFileName.Text = Configuration.Settings.Tools.AssaBgBoxDrawing;
@@ -425,7 +431,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             var p = _subtitleWithNewHeader.Paragraphs.FirstOrDefault(l => !l.IsComment &&
-                                                                             _videoPositionSeconds > l.StartTime.TotalSeconds &&
+                                                                             _videoPositionSeconds >= l.StartTime.TotalSeconds &&
                                                                              _videoPositionSeconds < l.EndTime.TotalSeconds &&
                                                                              indices.Contains(_subtitleWithNewHeader.GetIndex(l)));
             if (p == null)
@@ -487,7 +493,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Application.DoEvents();
                 _mpv.Pause();
-                if (_videoPositionSeconds > p.StartTime.TotalSeconds && _videoPositionSeconds < p.EndTime.TotalSeconds)
+                if (_videoPositionSeconds >= p.StartTime.TotalSeconds && _videoPositionSeconds < p.EndTime.TotalSeconds)
                 {
                     _mpv.CurrentPosition = _videoPositionSeconds;
                 }
@@ -636,6 +642,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (comboBoxBoxStyle.SelectedIndex == 2)
             {
+                Configuration.Settings.Tools.AssaBgBoxStyle = "circle";
+            }
+            else if (comboBoxBoxStyle.SelectedIndex == 3)
+            {
                 Configuration.Settings.Tools.AssaBgBoxStyle = "spikes";
             }
             else if (comboBoxBoxStyle.SelectedIndex == 1)
@@ -647,6 +657,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 Configuration.Settings.Tools.AssaBgBoxStyle = "square";
             }
 
+            Configuration.Settings.Tools.AssaBgBoxStyleCircleAdjustY = (int)numericUpDownCircleY.Value; 
             Configuration.Settings.Tools.AssaBgBoxStyleRadius = (int)numericUpDownRadius.Value;
             Configuration.Settings.Tools.AssaBgBoxOutlineWidth = (int)numericUpDownOutlineWidth.Value;
             Configuration.Settings.Tools.AssaBgBoxPaddingLeft = (int)numericUpDownPaddingLeft.Value;
@@ -951,8 +962,20 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var y = posAndSize.Top;
             var bottom = posAndSize.Bottom;
             var right = posAndSize.Right;
+            var height = bottom - y;
 
-            if (comboBoxBoxStyle.SelectedIndex == 2) // spikes
+            if (comboBoxBoxStyle.SelectedIndex == 2) // circle
+            {
+                var halfHeight = (int)Math.Round(height / 2.0, MidpointRounding.AwayFromZero);
+                var extraY = (int)numericUpDownCircleY.Value + Math.Round(height * 0.66, MidpointRounding.AwayFromZero);
+                var middleY = y + halfHeight;
+                // {\p1}m x 256 b 125 308 523 316 520 258 533 207 117 200 120 256{\p0}
+                var sb = new StringBuilder();
+                sb.Append($"{{\\p1}}m {x} {middleY} b {x} {bottom + extraY} {right} {bottom + extraY} {right} {middleY} {right} {y - extraY} {x} {y - extraY} {x} {middleY}{{\\p0}}");
+                return sb.ToString();
+            }
+
+            if (comboBoxBoxStyle.SelectedIndex == 3) // spikes
             {
                 var sb = new StringBuilder();
                 sb.Append($"{{\\p1}}m {x} {y} l ");
@@ -1001,14 +1024,18 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private Paragraph GetPreviewParagraph()
         {
-            var idx = _selectedIndices.Min();
-            var first = _subtitleWithNewHeader.Paragraphs[idx];
-            if (string.IsNullOrWhiteSpace(first.Text))
+            var p = _subtitleWithNewHeader.Paragraphs.FirstOrDefault(l => !l.IsComment &&
+                                                                          _videoPositionSeconds >= l.StartTime.TotalSeconds &&
+                                                                          _videoPositionSeconds < l.EndTime.TotalSeconds &&
+                                                                          _selectedIndices.Contains(_subtitleWithNewHeader.GetIndex(l)));
+            if (p == null)
             {
-                return new Paragraph("Example text", 0, 10000);
+                p = _selectedIndices.Length > 0 ?
+                    new Paragraph(_subtitleWithNewHeader.Paragraphs[_selectedIndices[0]]) :
+                    new Paragraph(Configuration.Settings.General.PreviewAssaText, 0, 1000);
             }
 
-            return new Paragraph(first) { StartTime = new TimeCode(0), EndTime = new TimeCode(10000) };
+            return new Paragraph(p) { StartTime = new TimeCode(0), EndTime = new TimeCode(10000) };
         }
 
         private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null)
@@ -1102,25 +1129,39 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void comboBoxBoxStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             if (comboBoxBoxStyle.SelectedIndex == 1) // rounded
             {
+                panelCircle.Visible = false;
                 panelStyleSpikes.Visible = false;
                 panelStyleRounded.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
+                panelStyleRounded.Left = 7;
                 panelStyleRounded.Visible = true;
                 panelStyleRounded.BringToFront();
             }
-            else if (comboBoxBoxStyle.SelectedIndex == 2) // spikes
+            else if (comboBoxBoxStyle.SelectedIndex == 3) // spikes
             {
+                panelCircle.Visible = false;
                 panelStyleRounded.Visible = false;
                 panelStyleSpikes.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
+                panelStyleSpikes.Left = 7;
                 panelStyleSpikes.Visible = true;
                 panelStyleSpikes.BringToFront();
+            }
+            else if (comboBoxBoxStyle.SelectedIndex == 2) // circle
+            {
+                panelCircle.Visible = true;
+                panelStyleRounded.Visible = false;
+                panelStyleSpikes.Visible = false;
+                panelCircle.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
+                panelCircle.Left = 7;
+                panelCircle.Visible = true;
+                panelCircle.BringToFront();
             }
             else // square
             {
                 panelStyleRounded.Visible = false;
                 panelStyleSpikes.Visible = false;
+                panelCircle.Visible = false;
             }
 
             groupBoxPreview.BringToFront();

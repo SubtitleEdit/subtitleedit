@@ -254,6 +254,7 @@
             public string Step { get; set; }
             public string MaxSpike { get; set; }
             public string Spikes { get; set; }
+            public string Circle { get; set; }
             public string MarginX { get; set; }
             public string MarginY { get; set; }
             public string OnlyDrawing { get; set; }

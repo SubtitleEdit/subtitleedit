@@ -395,6 +395,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Radius = "Radius",
                 Step = "Step",
                 Spikes = "Spikes",
+                Circle = "Circle",
                 MaxSpike = "Max spike",
                 MarginX = "MarginX",
                 MarginY = "MarginY",

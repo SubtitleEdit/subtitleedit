@@ -240,6 +240,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Step>Step</Step>
     <MaxSpike>Max spike</MaxSpike>
     <Spikes>Spikes</Spikes>
+    <Circle>Circle</Circle>
     <MarginX>MarginX</MarginX>
     <MarginY>MarginY</MarginY>
     <OnlyDrawing>Only drawing</OnlyDrawing>

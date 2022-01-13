@@ -637,6 +637,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaSetBackgroundBox/Spikes":
                     language.AssaSetBackgroundBox.Spikes = reader.Value;
                     break;
+                case "AssaSetBackgroundBox/Circle":
+                    language.AssaSetBackgroundBox.Circle = reader.Value;
+                    break;
                 case "AssaSetBackgroundBox/MarginX":
                     language.AssaSetBackgroundBox.MarginX = reader.Value;
                     break;
