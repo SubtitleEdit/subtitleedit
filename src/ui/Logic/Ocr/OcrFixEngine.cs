@@ -1339,16 +1339,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            foreach (string name in _nameMultiWordListAndWordsWithPeriods)
+            foreach (var name in _nameMultiWordListAndWordsWithPeriods)
             {
-                int start = tempLine.FastIndexOf(name);
+                var start = tempLine.FastIndexOf(name);
                 if (start < 0 && hasAllUpperWord)
                 {
                     start = tempLine.FastIndexOf(name.ToUpperInvariant());
                 }
                 if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
                 {
-                    int end = start + name.Length;
+                    var end = start + name.Length;
                     if (end == tempLine.Length || p.Contains(tempLine[end]))
                     {
                         tempLine = tempLine.Remove(start, name.Length);
@@ -1356,7 +1356,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            int minLength = 2;
+            var minLength = 2;
             if (Configuration.Settings.Tools.CheckOneLetterWords)
             {
                 minLength = 1;
@@ -1373,10 +1373,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 words.Add(w.Trim(trimChars));
             }
 
-            for (int i = 0; i < words.Count && i < 1000; i++)
+            for (var i = 0; i < words.Count && i < 1000; i++)
             {
-                string word = words[i].TrimStart('\'');
-                string wordNotEndTrimmed = word;
+                var word = words[i].TrimStart('\'');
+                var wordNotEndTrimmed = word;
                 word = word.TrimEnd('\'');
                 if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
@@ -1458,7 +1458,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (!correct)
                     {
                         //look for match via dash'ed word, e.g. sci-fi
-                        string dashedWord = GetDashedWordBefore(word, line, words, i);
+                        var dashedWord = GetDashedWordBefore(word, line, words, i);
                         if (!string.IsNullOrEmpty(dashedWord))
                         {
                             correct = IsWordKnownOrNumber(dashedWord, line);
@@ -1522,7 +1522,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         wordsNotFound++;
                         if (log)
                         {
-                            string nf = word;
+                            var nf = word;
                             if (nf.StartsWith("<i>", StringComparison.Ordinal))
                             {
                                 nf = nf.Remove(0, 3);
