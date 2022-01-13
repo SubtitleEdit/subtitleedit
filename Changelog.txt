@@ -42,7 +42,8 @@
    * Minor improvements for ASSA properties window
    * Use comma not semicolon in CSV export - thx OmrSi
    * Add some missing translation - thx domddol/nkh0472
-   * Shortcut "add bm w comment" work in text box - thx Minh Toan Ma
+   * Shortcut "add bm w comment" works in text box - thx Minh Toan Ma
+   * Update Tesseract to 5.0.1 (from 5.0.0)
 * FIXED:
    * Fix bug in BD SUP reading w missing lines - thx peter-qgd
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
@@ -67,6 +68,7 @@
    * Fix crash in modify selection w styles - thx Leon
    * Fix export to image issue w font face - thx red4d
    * Fix close/save original not working before opening file menu - thx OmrSi
+   * Fix decimal point char issue in "Convert frame rate" - thx peter-qgd
 
 
 3.6.4 (3rd December 2021)
