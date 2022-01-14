@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         public Settings()
         {
             UiUtil.PreInitialize(this);
-            InitializeComponent();          
+            InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             Init();
@@ -386,83 +386,54 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
-            checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
-            if (labelTBNew.Right > labelTBOpen.Left)
-            {
-                labelTBOpen.Left = labelTBNew.Right + 15;
-                pictureBoxOpen.Left = labelTBOpen.Left;
-                checkBoxToolbarOpen.Left = labelTBOpen.Left;
-            }
+            checkBoxHelp.Text = LanguageSettings.Current.General.Visible; 
 
-            if (labelTBOpen.Right > labelTBSave.Left)
-            {
-                labelTBSave.Left = labelTBOpen.Right + 15;
-                pictureBoxSave.Left = labelTBSave.Left;
-                checkBoxToolbarSave.Left = labelTBSave.Left;
-            }
+            // Toolbar icons first row
+            labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right)  + 18;
+            pictureBoxOpen.Left = labelTBOpen.Left;
+            checkBoxToolbarOpen.Left = labelTBOpen.Left;
 
-            if (labelTBSave.Right > labelTBSaveAs.Left)
-            {
-                labelTBSaveAs.Left = labelTBSave.Right + 15;
-                pictureBoxSaveAs.Left = labelTBSaveAs.Left;
-                checkBoxToolbarSaveAs.Left = labelTBSaveAs.Left;
-            }
+            labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxToolbarOpen.Right) + 18;
+            pictureBoxSave.Left = labelTBSave.Left;
+            checkBoxToolbarSave.Left = labelTBSave.Left;
 
-            if (labelTBSaveAs.Right > labelTBFind.Left)
-            {
-                labelTBFind.Left = labelTBSaveAs.Right + 15;
-                pictureBoxFind.Left = labelTBFind.Left;
-                checkBoxToolbarFind.Left = labelTBFind.Left;
-            }
+            labelTBSaveAs.Left = Math.Max(labelTBSave.Right, checkBoxToolbarSave.Right) + 18;
+            pictureBoxSaveAs.Left = labelTBSaveAs.Left;
+            checkBoxToolbarSaveAs.Left = labelTBSaveAs.Left;
 
-            if (labelTBFind.Right > labelTBReplace.Left)
-            {
-                labelTBReplace.Left = labelTBFind.Right + 15;
-                pictureBoxReplace.Left = labelTBReplace.Left;
-                checkBoxReplace.Left = labelTBReplace.Left;
-            }
+            labelTBFind.Left = Math.Max(labelTBSaveAs.Right, checkBoxToolbarSaveAs.Right) + 18;
+            pictureBoxFind.Left = labelTBFind.Left;
+            checkBoxToolbarFind.Left = labelTBFind.Left;
 
-            if (labelTBFixCommonErrors.Right > labelTBRemoveTextForHi.Left)
-            {
-                labelTBRemoveTextForHi.Left = labelTBFixCommonErrors.Right + 15;
-                pictureBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
-                checkBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
-            }
+            labelTBReplace.Left = Math.Max(labelTBFind.Right, checkBoxToolbarFind.Right) + 18;
+            pictureBoxReplace.Left = labelTBReplace.Left;
+            checkBoxReplace.Left = labelTBReplace.Left;
 
-            if (labelTBRemoveTextForHi.Right > labelTBVisualSync.Left)
-            {
-                labelTBVisualSync.Left = labelTBRemoveTextForHi.Right + 15;
-                pictureBoxVisualSync.Left = labelTBVisualSync.Left;
-                checkBoxVisualSync.Left = labelTBVisualSync.Left;
-            }
+            // Toolbar icons second row
+            labelTBRemoveTextForHi.Left = Math.Max(labelTBFixCommonErrors.Right, checkBoxTBFixCommonErrors.Right) + 18;
+            pictureBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
+            checkBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
 
-            if (labelTBVisualSync.Right > labelTBSpellCheck.Left)
-            {
-                labelTBSpellCheck.Left = labelTBVisualSync.Right + 15;
-                pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
-                checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
-            }
+            labelTBVisualSync.Left = Math.Max(labelTBRemoveTextForHi.Right, checkBoxTBRemoveTextForHi.Right) + 18;
+            pictureBoxVisualSync.Left = labelTBVisualSync.Left;
+            checkBoxVisualSync.Left = labelTBVisualSync.Left;
 
-            if (labelTBSpellCheck.Right > labelTBSettings.Left)
-            {
-                labelTBSettings.Left = labelTBSpellCheck.Right + 15;
-                pictureBoxSettings.Left = labelTBSettings.Left;
-                checkBoxSettings.Left = labelTBSettings.Left;
-            }
+            labelTBSpellCheck.Left = Math.Max(labelTBVisualSync.Right, checkBoxVisualSync.Right) + 18;
+            pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
+            checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
 
-            if (labelTBSettings.Right > labelTBHelp.Left)
-            {
-                labelTBHelp.Left = labelTBSettings.Right + 15;
-                pictureBoxHelp.Left = labelTBHelp.Left;
-                checkBoxHelp.Left = labelTBHelp.Left;
-            }
+            labelTBSettings.Left = Math.Max(labelTBSpellCheck.Right, checkBoxSpellCheck.Right) + 18;
+            pictureBoxSettings.Left = labelTBSettings.Left;
+            checkBoxSettings.Left = labelTBSettings.Left;
 
-            if (labelTBHelp.Right > labelTBNetflixQualityCheck.Left)
-            {
-                labelTBNetflixQualityCheck.Left = labelTBHelp.Right + 15;
-                pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
-                checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
-            }
+            labelTBHelp.Left = Math.Max(labelTBSettings.Right, checkBoxSettings.Right) + 18;
+            pictureBoxHelp.Left = labelTBHelp.Left;
+            checkBoxHelp.Left = labelTBHelp.Left;
+
+            labelTBNetflixQualityCheck.Left = Math.Max(labelTBHelp.Right, checkBoxHelp.Right) + 18;
+            pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+            checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxToolsMisc.Text = language.Miscellaneous;
@@ -2702,7 +2673,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     {
                         FillFileTypeAssociationsListView();
                     }
-                    
+
                     break;
             }
 
