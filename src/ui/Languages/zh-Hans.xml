@@ -239,6 +239,7 @@ Command line: {1} {2}
     <Step>步长</Step>
     <MaxSpike>最大峰值</MaxSpike>
     <Spikes>峰值</Spikes>
+    <Circle>圆</Circle>
     <MarginX>X边距</MarginX>
     <MarginY>Y边距</MarginY>
     <OnlyDrawing>仅绘制</OnlyDrawing>
