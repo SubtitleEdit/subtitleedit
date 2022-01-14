@@ -236,6 +236,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Step>단계</Step>
     <MaxSpike>스파이크(최대)</MaxSpike>
     <Spikes>스파이크</Spikes>
+    <Circle>원형</Circle>
     <MarginX>X여백</MarginX>
     <MarginY>Y여백</MarginY>
     <OnlyDrawing>밑그림 만</OnlyDrawing>
@@ -818,7 +819,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>자막 입혀진 비디오 파일 생성</Title>
     <InfoAssaOff>참고: Advanced Substation Alpha 스타일이 지원됨.</InfoAssaOff>
     <InfoAssaOn>참고: Advanced Substation Alpha 스타일링이 사용됩니다:)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubsInX>자막 입혀진 비디오 파일 "{0}" 먼들기 완료! - (경과시간 {1})</XGeneratedWithBurnedInSubsInX>
+    <XGeneratedWithBurnedInSubsInX>자막 입혀진 비디오 파일 "{0}" 만들기 완료! - (경과시간 {1})</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>남은 시간: {0} 분</TimeRemainingMinutes>
     <TimeRemainingSeconds>남은 시간: {0} 초</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>남은 시간: {0} 분 {1} 초</TimeRemainingMinutesAndSeconds>
@@ -2375,7 +2376,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AlignmentN8>중앙 상단 정렬 - {\an8}</AlignmentN8>
     <AlignmentN9>우측 상단 정렬 - {\an9}</AlignmentN9>
     <ColorX>색상 {0} ({1})</ColorX>
-    <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
+    <CopyTextOnly>클립보드에 텍스트만 복사 (선택한 줄)</CopyTextOnly>
+    <CopyPlainText>클립보드에 일반 텍스트 복사 (선택한 줄)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>유니코드 제어 문자로 RTL 수정</FixRTLViaUnicodeChars>
