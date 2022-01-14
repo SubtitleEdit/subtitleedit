@@ -13028,7 +13028,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var formatType = GetCurrentSubtitleFormat().GetType();
                 if (formatType == typeof(AdvancedSubStationAlpha))
                 {
-                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White) })
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Configuration.Settings.General.LastColorPickerColor) })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -13036,6 +13036,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         color = Utilities.ColorToHexWithTransparency(form.Color);
+                        Configuration.Settings.General.LastColorPickerColor = form.Color;
                     }
                 }
                 else if (formatType == typeof(Ebu))
@@ -13064,7 +13065,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White), ShowAlpha = false })
+                    using (var form = new ColorChooser { Color = GetColorFromFirstLine(Configuration.Settings.General.LastColorPickerColor), ShowAlpha = false })
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -13072,6 +13073,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         color = Utilities.ColorToHex(form.Color);
+                        Configuration.Settings.General.LastColorPickerColor = form.Color;
                     }
                 }
 
@@ -25705,7 +25707,7 @@ namespace Nikse.SubtitleEdit.Forms
             var formatType = GetCurrentSubtitleFormat().GetType();
             if (formatType == typeof(AdvancedSubStationAlpha))
             {
-                using (var form = new ColorChooser { Color = Color.White })
+                using (var form = new ColorChooser { Color = Configuration.Settings.General.LastColorPickerColor })
                 {
                     if (form.ShowDialog(this) != DialogResult.OK)
                     {
@@ -25713,6 +25715,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     color = Utilities.ColorToHexWithTransparency(form.Color);
+                    Configuration.Settings.General.LastColorPickerColor = form.Color;
                 }
             }
             else if (formatType == typeof(Ebu))
@@ -25741,7 +25744,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                using (var form = new ColorChooser { Color = GetColorFromFirstLine(Color.White), ShowAlpha = false })
+                using (var form = new ColorChooser { Color = GetColorFromFirstLine(Configuration.Settings.General.LastColorPickerColor), ShowAlpha = false })
                 {
                     if (form.ShowDialog(this) != DialogResult.OK)
                     {
@@ -25749,6 +25752,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     color = Utilities.ColorToHex(form.Color);
+                    Configuration.Settings.General.LastColorPickerColor = form.Color;
                 }
             }
 

@@ -1342,6 +1342,7 @@ $HorzAlign          =   Center
         public bool AllowLetterShortcutsInTextBox { get; set; }
         public Color DarkThemeForeColor { get; set; }
         public Color DarkThemeBackColor { get; set; }
+        public Color LastColorPickerColor { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -1478,6 +1479,7 @@ $HorzAlign          =   Center
             DefaultVideoOffsetInMsList = "36000000;3600000";
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
+            LastColorPickerColor = Color.Yellow;
             UseDarkTheme = false;
             DarkThemeShowListViewGridLines = false;
             AutoSetVideoSmpteForTtml = true;
@@ -3989,6 +3991,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.AllowLetterShortcutsInTextBox = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("DarkThemeBackColor");
@@ -9403,6 +9411,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MeasurementConverterCategories", settings.General.MeasurementConverterCategories);
                 textWriter.WriteElementString("SubtitleTextBoxMaxHeight", settings.General.SubtitleTextBoxMaxHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowLetterShortcutsInTextBox", settings.General.AllowLetterShortcutsInTextBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LastColorPickerColor", ToHtml(settings.General.LastColorPickerColor));
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
