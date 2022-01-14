@@ -238,8 +238,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BoxColor>Box color</BoxColor>
     <Radius>Radius</Radius>
     <Step>Step</Step>
-    <MaxSpike>Max spike</MaxSpike>
     <Spikes>Spikes</Spikes>
+    <Bubbles>Bubbles</Bubbles>
     <Circle>Circle</Circle>
     <MarginX>MarginX</MarginX>
     <MarginY>MarginY</MarginY>

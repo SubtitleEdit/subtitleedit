@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Step = "Step",
                 Spikes = "Spikes",
                 Circle = "Circle",
-                MaxSpike = "Max spike",
+                Bubbles = "Bubbles",
                 MarginX = "MarginX",
                 MarginY = "MarginY",
                 OnlyDrawing = "Only drawing",

@@ -367,6 +367,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string AssaBgBoxStyle { get; set; }
         public int AssaBgBoxStyleRadius { get; set; }
         public int AssaBgBoxStyleCircleAdjustY { get; set; }
+        public int AssaBgBoxStyleSpikesStep { get; set; }
+        public int AssaBgBoxStyleSpikesHeight { get; set; }
+        public int AssaBgBoxStyleBubblesStep { get; set; }
+        public int AssaBgBoxStyleBubblesHeight { get; set; }
         public int AssaBgBoxOutlineWidth { get; set; }
         public int AssaBgBoxLayer { get; set; }
         public string AssaBgBoxDrawing { get; set; }
@@ -554,6 +558,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaBgBoxStyle = "square";
             AssaBgBoxStyleRadius = 30;
             AssaBgBoxStyleCircleAdjustY = 30;
+            AssaBgBoxStyleSpikesStep = 15;
+            AssaBgBoxStyleSpikesHeight = 30;
+            AssaBgBoxStyleBubblesStep = 75;
+            AssaBgBoxStyleBubblesHeight = 40;
             AssaBgBoxOutlineWidth = 0;
             AssaBgBoxLayer = -11893;
             AssaBgBoxDrawingFileWatch = true;
@@ -5567,6 +5575,30 @@ $HorzAlign          =   Center
                 settings.Tools.AssaBgBoxStyleCircleAdjustY = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AssaBgBoxStyleSpikesStep");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyleSpikesStep = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxStyleSpikesHeight");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyleSpikesHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxStyleBubblesStep");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyleBubblesStep = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AssaBgBoxStyleBubblesHeight");
+            if (subNode != null)
+            {
+                settings.Tools.AssaBgBoxStyleBubblesHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AssaBgBoxOutlineWidth");
             if (subNode != null)
             {
@@ -9644,6 +9676,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxStyle", settings.Tools.AssaBgBoxStyle);
                 textWriter.WriteElementString("AssaBgBoxStyleRadius", settings.Tools.AssaBgBoxStyleRadius.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxStyleCircleAdjustY", settings.Tools.AssaBgBoxStyleCircleAdjustY.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxStyleSpikesStep", settings.Tools.AssaBgBoxStyleSpikesStep.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxStyleSpikesHeight", settings.Tools.AssaBgBoxStyleSpikesHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxStyleBubblesStep", settings.Tools.AssaBgBoxStyleBubblesStep.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaBgBoxStyleBubblesHeight", settings.Tools.AssaBgBoxStyleBubblesHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxOutlineWidth", settings.Tools.AssaBgBoxOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxLayer", settings.Tools.AssaBgBoxLayer.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawingFileWatch", settings.Tools.AssaBgBoxDrawingFileWatch.ToString(CultureInfo.InvariantCulture));

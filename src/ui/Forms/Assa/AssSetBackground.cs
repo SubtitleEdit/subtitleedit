@@ -77,11 +77,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaProgressBarGenerator.RoundedCorners);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaSetBackgroundBox.Circle);
             comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaSetBackgroundBox.Spikes);
+            comboBoxBoxStyle.Items.Add(LanguageSettings.Current.AssaSetBackgroundBox.Bubbles);
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            if (Configuration.Settings.Tools.AssaBgBoxStyle == "spikes")
+            if (Configuration.Settings.Tools.AssaBgBoxStyle == "bubbles")
+            {
+                comboBoxBoxStyle.SelectedIndex = 4;
+            }
+            else if (Configuration.Settings.Tools.AssaBgBoxStyle == "spikes")
             {
                 comboBoxBoxStyle.SelectedIndex = 3;
             }
@@ -121,7 +126,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             labelFillWidthMarginLeft.Text = LanguageSettings.Current.SubStationAlphaStyles.MarginLeft;
             labelFillWidthMarginRight.Text = LanguageSettings.Current.SubStationAlphaStyles.MarginRight;
             labelStep.Text = LanguageSettings.Current.AssaSetBackgroundBox.Step;
-            labelMaxSpike.Text = LanguageSettings.Current.AssaSetBackgroundBox.MaxSpike;
+            labelMaxSpike.Text = LanguageSettings.Current.General.Height;
+            labelBubbleHeight.Text = LanguageSettings.Current.General.Height;
+            labelBubbleStep.Text = LanguageSettings.Current.AssaSetBackgroundBox.Step;
             buttonDrawingClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
 
             SafeNumericUpDownAssign(numericUpDownPaddingLeft, Configuration.Settings.Tools.AssaBgBoxPaddingLeft);
@@ -133,6 +140,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             panelShadowColor.BackColor = Configuration.Settings.Tools.AssaBgBoxShadowColor;
             SafeNumericUpDownAssign(numericUpDownCircleY, Configuration.Settings.Tools.AssaBgBoxStyleCircleAdjustY);
             SafeNumericUpDownAssign(numericUpDownRadius, Configuration.Settings.Tools.AssaBgBoxStyleRadius);
+            SafeNumericUpDownAssign(numericUpDownSpikesStep, Configuration.Settings.Tools.AssaBgBoxStyleSpikesStep);
+            SafeNumericUpDownAssign(numericUpDownSpikesMax, Configuration.Settings.Tools.AssaBgBoxStyleSpikesHeight);
+            SafeNumericUpDownAssign(numericUpDownBubbleStep, Configuration.Settings.Tools.AssaBgBoxStyleBubblesStep);
+            SafeNumericUpDownAssign(numericUpDownBubbleHeight, Configuration.Settings.Tools.AssaBgBoxStyleBubblesHeight);
             SafeNumericUpDownAssign(numericUpDownOutlineWidth, Configuration.Settings.Tools.AssaBgBoxOutlineWidth);
             labelFileName.Text = Configuration.Settings.Tools.AssaBgBoxDrawing;
             ReadDrawingFile(Configuration.Settings.Tools.AssaBgBoxDrawing);
@@ -638,13 +649,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _closing = true;
             _mpv?.Dispose();
 
-            if (comboBoxBoxStyle.SelectedIndex == 2)
+            if (comboBoxBoxStyle.SelectedIndex == 4)
             {
-                Configuration.Settings.Tools.AssaBgBoxStyle = "circle";
+                Configuration.Settings.Tools.AssaBgBoxStyle = "bubbles";
             }
             else if (comboBoxBoxStyle.SelectedIndex == 3)
             {
                 Configuration.Settings.Tools.AssaBgBoxStyle = "spikes";
+            }
+            else if (comboBoxBoxStyle.SelectedIndex == 2)
+            {
+                Configuration.Settings.Tools.AssaBgBoxStyle = "circle";
             }
             else if (comboBoxBoxStyle.SelectedIndex == 1)
             {
@@ -655,8 +670,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 Configuration.Settings.Tools.AssaBgBoxStyle = "square";
             }
 
-            Configuration.Settings.Tools.AssaBgBoxStyleCircleAdjustY = (int)numericUpDownCircleY.Value; 
+            Configuration.Settings.Tools.AssaBgBoxStyleCircleAdjustY = (int)numericUpDownCircleY.Value;
             Configuration.Settings.Tools.AssaBgBoxStyleRadius = (int)numericUpDownRadius.Value;
+            Configuration.Settings.Tools.AssaBgBoxStyleSpikesStep = (int)numericUpDownSpikesStep.Value;
+            Configuration.Settings.Tools.AssaBgBoxStyleSpikesHeight = (int)numericUpDownSpikesMax.Value;
+            Configuration.Settings.Tools.AssaBgBoxStyleBubblesStep = (int)numericUpDownBubbleStep.Value;
+            Configuration.Settings.Tools.AssaBgBoxStyleBubblesHeight = (int)numericUpDownBubbleHeight.Value;
             Configuration.Settings.Tools.AssaBgBoxOutlineWidth = (int)numericUpDownOutlineWidth.Value;
             Configuration.Settings.Tools.AssaBgBoxPaddingLeft = (int)numericUpDownPaddingLeft.Value;
             Configuration.Settings.Tools.AssaBgBoxPaddingRight = (int)numericUpDownPaddingRight.Value;
@@ -962,14 +981,59 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var right = posAndSize.Right;
             var height = bottom - y;
 
-            if (comboBoxBoxStyle.SelectedIndex == 2) // circle
+            if (comboBoxBoxStyle.SelectedIndex == 4) // bubbles
             {
-                var halfHeight = (int)Math.Round(height / 2.0, MidpointRounding.AwayFromZero);
-                var extraY = (int)numericUpDownCircleY.Value + Math.Round(height * 0.66, MidpointRounding.AwayFromZero);
-                var middleY = y + halfHeight;
-                // {\p1}m x 256 b 125 308 523 316 520 258 533 207 117 200 120 256{\p0}
                 var sb = new StringBuilder();
-                sb.Append($"{{\\p1}}m {x} {middleY} b {x} {bottom + extraY} {right} {bottom + extraY} {right} {middleY} {right} {y - extraY} {x} {y - extraY} {x} {middleY}{{\\p0}}");
+                sb.Append($"{{\\p1}}m {x} {y} b ");
+                var step = (int)numericUpDownBubbleStep.Value;
+                var maxSpike = (int)numericUpDownBubbleHeight.Value;
+                var minSpike = Math.Min(10, maxSpike - 1);
+                for (var i = x; i <= right; i += step) // top side
+                {
+                    var y1 = y - _random.Next(minSpike, maxSpike);
+                    sb.Append($"{i} {y1} ");
+                    var x2 = i + step;
+                    sb.Append($"{x2} {y1} ");
+                    sb.Append($"{x2} {y} ");
+                }
+
+                for (var i = y; i <= bottom; i += step) // right side
+                {
+                    var x1 = right + _random.Next(minSpike, maxSpike);
+                    sb.Append($"{x1} {i + (step / 2)} ");
+                    var y2 = i + step;
+                    sb.Append($"{x1} {y2} ");
+                    sb.Append($"{right} {i + step} ");
+                }
+
+                for (var i = right; i >= x; i -= step) // bottom
+                {
+                    var y1 = bottom + _random.Next(minSpike, maxSpike);
+                    sb.Append($"{i - (step / 2)} {y1} ");
+                    var x2 = i - step;
+                    sb.Append($"{x2} {y1} ");
+                    sb.Append($"{x2} {bottom} ");
+                }
+
+                for (var i = bottom; i >= y; i -= step) // left side
+                {
+                    var x1 = x - +_random.Next(minSpike, maxSpike);
+                    sb.Append($"{x1} {i - (step / 2)} ");
+                    var y2 = i - step;
+                    sb.Append($"{x1} {y2} ");
+
+                    var last = i - step < y;
+                    if (last)
+                    {
+                        sb.Append($"{x} {y} ");
+                    }
+                    else
+                    {
+                        sb.Append($"{x} {i - step} ");
+                    }
+
+                }
+                sb.Append("{\\p0}");
                 return sb.ToString();
             }
 
@@ -1001,10 +1065,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 for (var i = bottom; i >= y; i -= step)
                 {
                     sb.Append($"{x - _random.Next(minSpike, maxSpike)} {i - (step / 2)} ");
-                    sb.Append($"{x} {i - step} ");
+
+                    var last = i - step < y;
+                    if (last)
+                    {
+                        sb.Append($"{x} {y} ");
+                    }
+                    else
+                    {
+                        sb.Append($"{x} {i - step} ");
+                    }
                 }
                 sb.Append("{\\p0}");
                 return sb.ToString();
+            }
+
+            if (comboBoxBoxStyle.SelectedIndex == 2) // circle
+            {
+                var halfHeight = (int)Math.Round(height / 2.0, MidpointRounding.AwayFromZero);
+                var extraY = (int)numericUpDownCircleY.Value + Math.Round(height * 0.66, MidpointRounding.AwayFromZero);
+                var middleY = y + halfHeight;
+                return $"{{\\p1}}m {x} {middleY} b {x} {bottom + extraY} {right} {bottom + extraY} {right} {middleY} {right} {y - extraY} {x} {y - extraY} {x} {middleY}{{\\p0}}";
             }
 
             if (comboBoxBoxStyle.SelectedIndex == 1) // rounded corners
@@ -1127,17 +1208,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void comboBoxBoxStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxBoxStyle.SelectedIndex == 1) // rounded
+            if (comboBoxBoxStyle.SelectedIndex == 4) // bubbles
             {
                 panelCircle.Visible = false;
+                panelStyleRounded.Visible = false;
                 panelStyleSpikes.Visible = false;
-                panelStyleRounded.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
-                panelStyleRounded.Left = 7;
-                panelStyleRounded.Visible = true;
-                panelStyleRounded.BringToFront();
+                panelBubbles.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
+                panelBubbles.Left = 7;
+                panelBubbles.Visible = true;
+                panelBubbles.BringToFront();
             }
             else if (comboBoxBoxStyle.SelectedIndex == 3) // spikes
             {
+                panelBubbles.Visible = false;
                 panelCircle.Visible = false;
                 panelStyleRounded.Visible = false;
                 panelStyleSpikes.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
@@ -1147,6 +1230,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
             else if (comboBoxBoxStyle.SelectedIndex == 2) // circle
             {
+                panelBubbles.Visible = false;
                 panelCircle.Visible = true;
                 panelStyleRounded.Visible = false;
                 panelStyleSpikes.Visible = false;
@@ -1155,8 +1239,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 panelCircle.Visible = true;
                 panelCircle.BringToFront();
             }
+            else if (comboBoxBoxStyle.SelectedIndex == 1) // rounded
+            {
+                panelBubbles.Visible = false;
+                panelCircle.Visible = false;
+                panelStyleSpikes.Visible = false;
+                panelStyleRounded.Top = comboBoxBoxStyle.Top + comboBoxBoxStyle.Height + 9;
+                panelStyleRounded.Left = 7;
+                panelStyleRounded.Visible = true;
+                panelStyleRounded.BringToFront();
+            }
             else // square
             {
+                panelBubbles.Visible = false;
                 panelStyleRounded.Visible = false;
                 panelStyleSpikes.Visible = false;
                 panelCircle.Visible = false;

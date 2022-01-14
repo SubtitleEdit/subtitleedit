@@ -3086,7 +3086,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var tempSubtitle = new Subtitle(_subtitle, false);
             if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
             {
                 MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
@@ -3094,12 +3093,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             var subtitleHash = GetFastSubtitleHash();
             bool hasChanged = (_changeSubtitleHash != subtitleHash) && (_lastDoNotPrompt != subtitleHash);
-
-            SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
-            if (format == null)
-            {
-                _subtitle = tempSubtitle;
-            }
+            var newSubtitle = new Subtitle();
+            SubtitleFormat format = newSubtitle.LoadSubtitle(fileName, out encoding, encoding);
 
             if (!hasChanged)
             {
@@ -3115,7 +3110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var textST = new TextST();
                 if (textST.IsMine(null, fileName))
                 {
-                    textST.LoadSubtitle(_subtitle, null, fileName);
+                    textST.LoadSubtitle(newSubtitle, null, fileName);
                     _oldSubtitleFormat = textST;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3137,7 +3132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                 if (f.IsMine(list, fileName))
                 {
-                    f.LoadSubtitle(_subtitle, list, fileName);
+                    f.LoadSubtitle(newSubtitle, list, fileName);
                     _oldSubtitleFormat = f;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3153,7 +3148,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                 if (f.IsMine(list, fileName))
                 {
-                    f.LoadSubtitle(_subtitle, list, fileName);
+                    f.LoadSubtitle(newSubtitle, list, fileName);
                     _oldSubtitleFormat = f;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3256,7 +3251,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var arib = new AribB36();
                 if (arib.IsMine(null, fileName))
                 {
-                    arib.LoadSubtitle(_subtitle, null, fileName);
+                    arib.LoadSubtitle(newSubtitle, null, fileName);
                     _oldSubtitleFormat = arib;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3380,10 +3375,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (format == null || format.Name == SubRip.NameOfFormat)
             {
-                if (_subtitle.Paragraphs.Count > 1)
+                if (newSubtitle.Paragraphs.Count > 1)
                 {
                     int imageCount = 0;
-                    foreach (var p in _subtitle.Paragraphs)
+                    foreach (var p in newSubtitle.Paragraphs)
                     {
                         string s = p.Text.ToLowerInvariant();
                         if (s.EndsWith(".bmp", StringComparison.Ordinal) || s.EndsWith(".png", StringComparison.Ordinal) || s.EndsWith(".jpg", StringComparison.Ordinal) || s.EndsWith(".tif", StringComparison.Ordinal))
@@ -3392,11 +3387,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (imageCount > 2 && imageCount >= _subtitle.Paragraphs.Count - 2)
+                    if (imageCount > 2 && imageCount >= newSubtitle.Paragraphs.Count - 2)
                     {
                         if (ContinueNewOrExit())
                         {
-                            ImportAndOcrSrt(_subtitle);
+                            ImportAndOcrSrt(newSubtitle);
                         }
 
                         return;
@@ -3458,7 +3453,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (htmlSamiArray.IsMine(list, fileName))
                     {
-                        htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
+                        htmlSamiArray.LoadSubtitle(newSubtitle, list, fileName);
                         _oldSubtitleFormat = htmlSamiArray;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3479,7 +3474,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (f.IsMine(null, fileName))
                     {
-                        f.LoadSubtitle(_subtitle, null, fileName);
+                        f.LoadSubtitle(newSubtitle, null, fileName);
                         _oldSubtitleFormat = f;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3498,7 +3493,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (f.IsMine(lines, fileName))
                     {
-                        f.LoadSubtitle(_subtitle, lines, fileName);
+                        f.LoadSubtitle(newSubtitle, lines, fileName);
                         _oldSubtitleFormat = f;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3674,7 +3669,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
                     if (genericParseSubtitle.Paragraphs.Count > 1)
                     {
-                        _subtitle = genericParseSubtitle;
+                        newSubtitle = genericParseSubtitle;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
@@ -3715,16 +3710,16 @@ namespace Nikse.SubtitleEdit.Forms
                 //    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
                 //}
 
-                new BookmarkPersistence(_subtitle, fileName).Load();
+                new BookmarkPersistence(newSubtitle, fileName).Load();
 
                 if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                 {
-                    _subtitle.RemoveEmptyLines();
+                    newSubtitle.RemoveEmptyLines();
                 }
 
                 if (Configuration.Settings.General.RemoveBadCharsWhenOpening)
                 {
-                    foreach (var p in _subtitle.Paragraphs)
+                    foreach (var p in newSubtitle.Paragraphs)
                     {
                         // Replace U+0456 (CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I) by U+0069 (LATIN SMALL LETTER I)
                         p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");
@@ -3763,14 +3758,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // Seungki begin
                 _splitDualSami = false;
-                if (Configuration.Settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles && format.GetType() == typeof(Sami) && Sami.GetStylesFromHeader(_subtitle.Header).Count == 2)
+                if (Configuration.Settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles && format.GetType() == typeof(Sami) && Sami.GetStylesFromHeader(newSubtitle.Header).Count == 2)
                 {
-                    var classes = Sami.GetStylesFromHeader(_subtitle.Header);
-                    var s1 = new Subtitle(_subtitle);
-                    var s2 = new Subtitle(_subtitle);
+                    var classes = Sami.GetStylesFromHeader(newSubtitle.Header);
+                    var s1 = new Subtitle(newSubtitle);
+                    var s2 = new Subtitle(newSubtitle);
                     s1.Paragraphs.Clear();
                     s2.Paragraphs.Clear();
-                    foreach (var p in _subtitle.Paragraphs)
+                    foreach (var p in newSubtitle.Paragraphs)
                     {
                         if (p.Extra != null && p.Extra.Equals(classes[0], StringComparison.OrdinalIgnoreCase))
                         {
@@ -3787,7 +3782,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
-                    _subtitle = s1;
+                    newSubtitle = s1;
                     _subtitleOriginal = s2;
                     _subtitleOriginalFileName = _fileName;
                     SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
@@ -3798,10 +3793,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (InSourceView || _loading && Configuration.Settings.General.StartInSourceView)
                 {
-                    textBoxSource.Text = _subtitle.ToText(format);
+                    textBoxSource.Text = newSubtitle.ToText(format);
                 }
 
-                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                SubtitleListview1.Fill(newSubtitle, _subtitleOriginal);
+                _subtitle = newSubtitle;
                 if (SubtitleListview1.Items.Count > 0)
                 {
                     SubtitleListview1.Items[0].Selected = true;

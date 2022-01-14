@@ -95,6 +95,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelCircleY = new System.Windows.Forms.Label();
             this.numericUpDownCircleY = new System.Windows.Forms.NumericUpDown();
             this.timerFileChange = new System.Windows.Forms.Timer(this.components);
+            this.panelBubbles = new System.Windows.Forms.Panel();
+            this.numericUpDownBubbleStep = new System.Windows.Forms.NumericUpDown();
+            this.labelBubbleHeight = new System.Windows.Forms.Label();
+            this.labelBubbleStep = new System.Windows.Forms.Label();
+            this.numericUpDownBubbleHeight = new System.Windows.Forms.NumericUpDown();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -119,6 +124,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle.SuspendLayout();
             this.panelCircle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).BeginInit();
+            this.panelBubbles.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleStep)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxPreview
@@ -766,9 +774,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.labelMaxSpike.AutoSize = true;
             this.labelMaxSpike.Location = new System.Drawing.Point(-3, 30);
             this.labelMaxSpike.Name = "labelMaxSpike";
-            this.labelMaxSpike.Size = new System.Drawing.Size(55, 13);
+            this.labelMaxSpike.Size = new System.Drawing.Size(38, 13);
             this.labelMaxSpike.TabIndex = 51;
-            this.labelMaxSpike.Text = "Max spike";
+            this.labelMaxSpike.Text = "Height";
             // 
             // numericUpDownSpikesMax
             // 
@@ -817,7 +825,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.numericUpDownSpikesStep.Location = new System.Drawing.Point(97, 2);
             this.numericUpDownSpikesStep.Maximum = new decimal(new int[] {
-            40,
+            200,
             0,
             0,
             0});
@@ -884,10 +892,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // groupBoxStyle
             // 
+            this.groupBoxStyle.Controls.Add(this.panelBubbles);
+            this.groupBoxStyle.Controls.Add(this.panelStyleSpikes);
             this.groupBoxStyle.Controls.Add(this.panelCircle);
             this.groupBoxStyle.Controls.Add(this.comboBoxBoxStyle);
             this.groupBoxStyle.Controls.Add(this.panelStyleRounded);
-            this.groupBoxStyle.Controls.Add(this.panelStyleSpikes);
             this.groupBoxStyle.Location = new System.Drawing.Point(352, 12);
             this.groupBoxStyle.Name = "groupBoxStyle";
             this.groupBoxStyle.Size = new System.Drawing.Size(197, 177);
@@ -940,6 +949,81 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             this.timerFileChange.Interval = 250;
             this.timerFileChange.Tick += new System.EventHandler(this.timerFileChange_Tick);
+            // 
+            // panelBubbles
+            // 
+            this.panelBubbles.Controls.Add(this.numericUpDownBubbleStep);
+            this.panelBubbles.Controls.Add(this.labelBubbleHeight);
+            this.panelBubbles.Controls.Add(this.labelBubbleStep);
+            this.panelBubbles.Controls.Add(this.numericUpDownBubbleHeight);
+            this.panelBubbles.Location = new System.Drawing.Point(0, 0);
+            this.panelBubbles.Name = "panelBubbles";
+            this.panelBubbles.Size = new System.Drawing.Size(167, 58);
+            this.panelBubbles.TabIndex = 53;
+            // 
+            // numericUpDownBubbleStep
+            // 
+            this.numericUpDownBubbleStep.Location = new System.Drawing.Point(97, 2);
+            this.numericUpDownBubbleStep.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownBubbleStep.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownBubbleStep.Name = "numericUpDownBubbleStep";
+            this.numericUpDownBubbleStep.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownBubbleStep.TabIndex = 50;
+            this.numericUpDownBubbleStep.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownBubbleStep.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
+            // labelBubbleHeight
+            // 
+            this.labelBubbleHeight.AutoSize = true;
+            this.labelBubbleHeight.Location = new System.Drawing.Point(-3, 30);
+            this.labelBubbleHeight.Name = "labelBubbleHeight";
+            this.labelBubbleHeight.Size = new System.Drawing.Size(38, 13);
+            this.labelBubbleHeight.TabIndex = 51;
+            this.labelBubbleHeight.Text = "Height";
+            // 
+            // labelBubbleStep
+            // 
+            this.labelBubbleStep.AutoSize = true;
+            this.labelBubbleStep.Location = new System.Drawing.Point(-3, 4);
+            this.labelBubbleStep.Name = "labelBubbleStep";
+            this.labelBubbleStep.Size = new System.Drawing.Size(29, 13);
+            this.labelBubbleStep.TabIndex = 49;
+            this.labelBubbleStep.Text = "Step";
+            // 
+            // numericUpDownBubbleHeight
+            // 
+            this.numericUpDownBubbleHeight.Location = new System.Drawing.Point(97, 28);
+            this.numericUpDownBubbleHeight.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.numericUpDownBubbleHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownBubbleHeight.Name = "numericUpDownBubbleHeight";
+            this.numericUpDownBubbleHeight.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownBubbleHeight.TabIndex = 52;
+            this.numericUpDownBubbleHeight.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownBubbleHeight.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
             // AssSetBackground
             // 
@@ -1008,6 +1092,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelCircle.ResumeLayout(false);
             this.panelCircle.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).EndInit();
+            this.panelBubbles.ResumeLayout(false);
+            this.panelBubbles.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleStep)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1079,5 +1167,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Panel panelCircle;
         private System.Windows.Forms.Label labelCircleY;
         private System.Windows.Forms.NumericUpDown numericUpDownCircleY;
+        private System.Windows.Forms.Panel panelBubbles;
+        private System.Windows.Forms.NumericUpDown numericUpDownBubbleStep;
+        private System.Windows.Forms.Label labelBubbleHeight;
+        private System.Windows.Forms.Label labelBubbleStep;
+        private System.Windows.Forms.NumericUpDown numericUpDownBubbleHeight;
     }
 }

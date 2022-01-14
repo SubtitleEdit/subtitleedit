@@ -252,8 +252,8 @@
             public string BoxColor { get; set; }
             public string Radius { get; set; }
             public string Step { get; set; }
-            public string MaxSpike { get; set; }
             public string Spikes { get; set; }
+            public string Bubbles { get; set; }
             public string Circle { get; set; }
             public string MarginX { get; set; }
             public string MarginY { get; set; }
