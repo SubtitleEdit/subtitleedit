@@ -19406,6 +19406,11 @@ namespace Nikse.SubtitleEdit.Forms
                              !text.Trim().Contains(Environment.NewLine + Environment.NewLine) &&
                              text.Length < 90)
                     {
+                        if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+                        {
+                            InsertLineToolStripMenuItemClick(null, null);
+                        }
+
                         // just insert into first selected
                         textBoxListViewText.Text = text.Trim();
                     }
