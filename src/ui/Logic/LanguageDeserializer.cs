@@ -631,11 +631,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaSetBackgroundBox/Step":
                     language.AssaSetBackgroundBox.Step = reader.Value;
                     break;
-                case "AssaSetBackgroundBox/MaxSpike":
-                    language.AssaSetBackgroundBox.MaxSpike = reader.Value;
-                    break;
                 case "AssaSetBackgroundBox/Spikes":
                     language.AssaSetBackgroundBox.Spikes = reader.Value;
+                    break;
+                case "AssaSetBackgroundBox/Bubbles":
+                    language.AssaSetBackgroundBox.Bubbles = reader.Value;
                     break;
                 case "AssaSetBackgroundBox/Circle":
                     language.AssaSetBackgroundBox.Circle = reader.Value;
