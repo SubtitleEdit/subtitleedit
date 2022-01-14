@@ -13,6 +13,7 @@
    * Add shortcut for re-calc duration to min - thx m0ck69
    * Add shortcut for copy plain text - thx OmrSi
    * New image subtitle format TTML with inline base64 images - thx mat
+   * New subtitle format - thx Richard
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
