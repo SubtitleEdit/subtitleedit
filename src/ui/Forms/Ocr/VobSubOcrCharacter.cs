@@ -102,7 +102,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             pictureBoxSubtitleImage.Image = vobSubImage;
-            pictureBoxCharacter.Image = character.NikseBitmap.GetBitmap();
+            var charImage = character.NikseBitmap.GetBitmap();
+            if (charImage.Width > 100 || charImage.Height > 50)
+            {
+                pictureBoxCharacter.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBoxCharacter.Width = 100;
+                pictureBoxCharacter.Height = 50;
+            }
+            else
+            {
+                pictureBoxCharacter.SizeMode = PictureBoxSizeMode.AutoSize;
+            }
+
+            pictureBoxCharacter.Image = charImage;
             labelItalicOn2.Left = Math.Max(40, pictureBoxCharacter.Left + pictureBoxCharacter.Width);
 
             if (_additions.Count > 0)
