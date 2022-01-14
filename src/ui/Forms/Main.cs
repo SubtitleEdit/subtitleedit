@@ -9227,7 +9227,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (!numericUpDownDuration.Enabled)
             {
-                textBoxListViewText.BackColor = SystemColors.WindowFrame; 
+                textBoxListViewText.BackColor = SystemColors.WindowFrame;
                 textBoxListViewTextOriginal.BackColor = SystemColors.WindowFrame;
 
                 textBoxListViewText.Enabled = true;
@@ -19403,9 +19403,12 @@ namespace Nikse.SubtitleEdit.Forms
                             RestartHistory();
                         }
                     }
-                    else if (SubtitleListview1.Items.Count > 0 && list.Count >= 1 && list.Count < 4 && !text.Trim().Contains(Environment.NewLine + Environment.NewLine))
+                    else if (SubtitleListview1.Items.Count > 0 &&
+                             list.Count >= 1 && list.Count < 3 &&
+                             !text.Trim().Contains(Environment.NewLine + Environment.NewLine) &&
+                             text.Length < 90)
                     {
-                        // less than 4 lines of text, just insert into first selected
+                        // just insert into first selected
                         textBoxListViewText.Text = text.Trim();
                     }
                     else if (list.Count >= 1 && list.Count < 2000)
