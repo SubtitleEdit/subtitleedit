@@ -42,10 +42,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
             checkBoxGenerateSceneChanges.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             checkBoxGenerateSceneChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateSceneChanges.Width;
-            checkBoxGenerateSceneChanges.Visible = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation) && Configuration.Settings.General.UseFFmpegForWaveExtraction == false;
+            checkBoxGenerateSceneChanges.Visible = !Configuration.IsRunningOnWindows ||
+                                                   (!string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) &&
+                                                    File.Exists(Configuration.Settings.General.FFmpegLocation));
             if (checkBoxGenerateSceneChanges.Visible)
             {
-                checkBoxGenerateSceneChanges.Checked = true;
+                checkBoxGenerateSceneChanges.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
             }
 
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
