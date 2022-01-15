@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType17(),
                     new JsonType18(),
                     new JsonType19(),
+                    new JsonType20(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
