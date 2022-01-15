@@ -1022,17 +1022,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     var y2 = i - step;
                     sb.Append($"{x1} {y2} ");
 
-                    var last = i - step < y;
+                    var last = i - step < y + (step / 2);
                     if (last)
                     {
                         sb.Append($"{x} {y} ");
-                    }
-                    else
-                    {
-                        sb.Append($"{x} {i - step} ");
+                        break;
                     }
 
+                    sb.Append($"{x} {i - step} ");
+
                 }
+
                 sb.Append("{\\p0}");
                 return sb.ToString();
             }
