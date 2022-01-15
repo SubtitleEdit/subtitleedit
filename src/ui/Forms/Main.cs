@@ -20760,6 +20760,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
+            saveOriginalToolStripMenuItem.Enabled = true;
+            saveOriginalAstoolStripMenuItem.Enabled = true;
+            removeOriginalToolStripMenuItem.Enabled = true;
+
             SetAssaResolution(_subtitleOriginal);
             SetupOriginalEdit();
             FixRightToLeftDependingOnLanguage();
