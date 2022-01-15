@@ -239,8 +239,9 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <BoxColor>Cor da caixa</BoxColor>
     <Radius>Raio</Radius>
     <Step>Fase</Step>
-    <MaxSpike>Pico máx.</MaxSpike>
     <Spikes>Picos</Spikes>
+    <Bubbles>Bolhas</Bubbles>
+    <Circle>Círculo</Circle>
     <MarginX>MargemX</MarginX>
     <MarginY>MargemY</MarginY>
     <OnlyDrawing>Apenas desenho</OnlyDrawing>
