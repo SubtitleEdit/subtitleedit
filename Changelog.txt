@@ -3,17 +3,18 @@
 3.6.5 (xth February 2022) BETA
 * NEW:
    * Add audio to text (speech recognition) via Vosk/Kaldi
-   * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
-   * Add "File type associations" in Options - Settings
-   * Add "Sort by Gap" - thx Andrebavila
-   * Add shortcuts for Tools - Sort By - thx Jolana
-   * Add "waveform-multi-move" with Ctrl+mouse-move
    * Add ASSA tool "Background box generator" - thx Leon
+   * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
+   * Add "File type associations" in Options - Settings
+   * Add "waveform-multi-move" with Ctrl+mouse-move
+   * Add shortcuts for Tools - Sort By - thx Jolana
    * Add shortcut for re-calc duration to min - thx m0ck69
    * Add shortcut for copy plain text - thx OmrSi
+   * Add "Sort by Gap" - thx Andrebavila
    * New image subtitle format TTML with inline base64 images - thx mat
-   * New subtitle format - thx Richard
+   * New text subtitle format - thx Richard
+   * Add new json subtitle format - thx Tim
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
@@ -45,6 +46,7 @@
    * Add some missing translation - thx domddol/nkh0472
    * Shortcut "add bm w comment" works in text box - thx Minh Toan Ma
    * Update Tesseract to 5.0.1 (from 5.0.0)
+   * Improve UI regarding empty subtitle a little - txh darnn
 * FIXED:
    * Fix bug in BD SUP reading w missing lines - thx peter-qgd
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
