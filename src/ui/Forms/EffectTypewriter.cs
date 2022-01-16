@@ -38,6 +38,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal struct ColorEntry
+        {
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public Color Color { get; set; }
+        }
+
+        internal struct FontEntry
+        {
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public Font Font { get; set; }
+        }
+
         internal void Initialize(Paragraph paragraph)
         {
             _paragraph = paragraph;
@@ -52,30 +66,37 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
         }
 
-        private List<EffectKaraoke.ColorEntry> _colorList;
-        private List<EffectKaraoke.FontEntry> _fontList;
+        private List<ColorEntry> _colorList;
+        private List<FontEntry> _fontList;
 
         private void AddToPreview(RichTextBox rtb, string text)
         {
             richTextBoxPreview.ForeColor = Color.White;
-            _colorList = new List<EffectKaraoke.ColorEntry>();
-            _fontList = new List<EffectKaraoke.FontEntry>();
+            _colorList = new List<ColorEntry>();
+            _fontList = new List<FontEntry>();
 
-            int bold = 0;
-            int underline = 0;
-            int italic = 0;
+            var bold = 0;
+            var underline = 0;
+            var italic = 0;
             var fontColors = new Stack<string>();
-            string currentColor = string.Empty;
+            var currentColor = string.Empty;
 
             var sb = new StringBuilder();
-            int i = 0;
+            var i = 0;
             while (i < text.Length)
             {
+                if (text.Substring(i).StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}', i) > 0)
+                {
+                    var endIndex = _paragraph.Text.IndexOf('}', i);
+                    i = endIndex + 1;
+                    continue;
+                }
+                
                 if (text[i] == '<')
                 {
                     AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
                     sb.Clear();
-                    string tag = GetTag(text.Substring(i).ToLowerInvariant());
+                    var tag = GetTag(text.Substring(i).ToLowerInvariant());
                     if (i + 1 < text.Length && text[i + 1] == '/')
                     {
                         if (tag == "</i>" && italic > 0)
@@ -114,9 +135,9 @@ namespace Nikse.SubtitleEdit.Forms
                             const string colorTag = " color=";
                             if (tag.Contains(colorTag))
                             {
-                                string tempColor = string.Empty;
+                                var tempColor = string.Empty;
                                 var start = tag.IndexOf(colorTag, StringComparison.Ordinal);
-                                int j = start + colorTag.Length;
+                                var j = start + colorTag.Length;
                                 if (@"""'".Contains(tag[j]))
                                 {
                                     j++;
@@ -144,6 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                     i++;
                 }
             }
+
             if (sb.Length > 0)
             {
                 AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
@@ -168,37 +190,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddTextToRichTextBox(RichTextBox rtb, bool bold, bool italic, bool underline, string color, string text)
         {
-            if (text.Length > 0)
+            if (text.Length <= 0)
             {
-                int length = rtb.Text.Length;
-                richTextBoxPreview.Text += text;
-
-                var c = Color.White;
-                if (!string.IsNullOrWhiteSpace(color))
-                {
-                    c = HtmlUtil.GetColorFromString(color);
-                }
-
-                _colorList.Add(new EffectKaraoke.ColorEntry { Start = length, Length = text.Length, Color = c });
-
-                var fontStyle = new FontStyle();
-                if (underline)
-                {
-                    fontStyle |= FontStyle.Underline;
-                }
-
-                if (italic)
-                {
-                    fontStyle |= FontStyle.Italic;
-                }
-
-                if (bold)
-                {
-                    fontStyle |= FontStyle.Bold;
-                }
-
-                _fontList.Add(new EffectKaraoke.FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
+                return;
             }
+
+            var length = rtb.Text.Length;
+            richTextBoxPreview.Text += text;
+
+            var c = Color.White;
+            if (!string.IsNullOrWhiteSpace(color))
+            {
+                c = HtmlUtil.GetColorFromString(color);
+            }
+
+            _colorList.Add(new ColorEntry { Start = length, Length = text.Length, Color = c });
+
+            var fontStyle = new FontStyle();
+            if (underline)
+            {
+                fontStyle |= FontStyle.Underline;
+            }
+
+            if (italic)
+            {
+                fontStyle |= FontStyle.Italic;
+            }
+
+            if (bold)
+            {
+                fontStyle |= FontStyle.Bold;
+            }
+
+            _fontList.Add(new FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
         }
 
         private static string GetTag(string text)
@@ -212,6 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return sb.ToString();
                 }
             }
+
             return sb.ToString();
         }
 
@@ -241,54 +266,51 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static double CalculateStepLength(string text, double duration)
         {
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') > 2)
-            {
-                int i = 0;
-                while (i < text.Length &&
-                       text.Substring(i).StartsWith("{\\", StringComparison.Ordinal) &&
-                       text.Substring(i).IndexOf('}', i) > 2)
-                {
-                    int idx = text.IndexOf('}', i);
-                    i = idx + 1;
-                }
-                text = text.Remove(0, i);
-            }
-
-            text = HtmlUtil.RemoveHtmlTags(text);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             return duration / text.Length;
         }
 
         public void MakeAnimation()
         {
             TypewriterParagraphs = new List<Paragraph>();
-            double duration = _paragraph.Duration.TotalMilliseconds - (double)numericUpDownDelay.Value * TimeCode.BaseUnit;
-            double stepsLength = CalculateStepLength(_paragraph.Text, duration);
-
+            var duration = _paragraph.Duration.TotalMilliseconds - (double)numericUpDownDelay.Value * TimeCode.BaseUnit;
+            var stepsLength = CalculateStepLength(_paragraph.Text, duration);
             double startMilliseconds;
             double endMilliseconds;
             TimeCode start;
             TimeCode end;
-            int index = 0;
-            string text = string.Empty;
-            bool tagOn = false;
-            string tag = string.Empty;
-            int i = 0;
-            string beforeEndTag = string.Empty;
-            string alignment = string.Empty;
+            var index = 0;
+            var text = string.Empty;
+            var tagOn = false;
+            var tag = string.Empty;
+            var i = 0;
+            var beforeEndTag = string.Empty;
+            var alignment = string.Empty;
             while (i < _paragraph.Text.Length)
             {
                 if (i == 0 && _paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
                 {
-                    int j = i;
+                    var j = i;
                     while (j < _paragraph.Text.Length &&
                            _paragraph.Text.Substring(j).StartsWith("{\\", StringComparison.Ordinal) &&
                            _paragraph.Text.Substring(j).IndexOf('}', j) > 2)
                     {
-                        int idx = _paragraph.Text.IndexOf('}', j);
+                        var idx = _paragraph.Text.IndexOf('}', j);
                         i = idx;
                         j = i + 1;
                     }
                     alignment = _paragraph.Text.Substring(0, j);
+                }
+                else if (_paragraph.Text.Substring(i).StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}', i) > 0)
+                {
+                    var endIndex = _paragraph.Text.IndexOf('}', i);
+                    if (endIndex >= 0)
+                    {
+                        var assaTag = _paragraph.Text.Substring(i, endIndex - i + 1);
+                        text += assaTag;
+                        i = endIndex + 1;
+                        continue;
+                    }
                 }
                 else if (tagOn)
                 {
@@ -334,6 +356,7 @@ namespace Nikse.SubtitleEdit.Forms
                     TypewriterParagraphs.Add(new Paragraph(start, end, alignment + text + beforeEndTag) { Extra = _paragraph.Extra });
                     index++;
                 }
+
                 i++;
             }
 
@@ -356,7 +379,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _timerCount += timer1.Interval;
 
-            string s = GetText(_timerCount, TypewriterParagraphs);
+            var s = GetText(_timerCount, TypewriterParagraphs);
             ClearPreview();
             AddToPreview(richTextBoxPreview, s);
             RefreshPreview();
@@ -372,7 +395,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string GetText(int milliseconds, IEnumerable<Paragraph> animation)
         {
-            foreach (Paragraph p in animation)
+            foreach (var p in animation)
             {
                 if (p.StartTime.TotalMilliseconds <= milliseconds &&
                     p.EndTime.TotalMilliseconds >= milliseconds)
@@ -388,6 +411,5 @@ namespace Nikse.SubtitleEdit.Forms
             MakeAnimation();
             DialogResult = DialogResult.OK;
         }
-
     }
 }
