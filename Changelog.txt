@@ -25,7 +25,7 @@
    * Update Finnish translation - thx Teijo S
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
    * Update Korean translation - thx domddol
-   * Update Vietnamese translation - thx Minh Toan Ma
+   * Update Vietnamese translation - thx MMT Gouenji Tech
    * Update Persian translation - thx abdollahim
    * Update French translation - thx Pierre
    * Update file association icons (so nice) in installer - thx Leon
@@ -44,7 +44,7 @@
    * Minor improvements for ASSA properties window
    * Use comma not semicolon in CSV export - thx OmrSi
    * Add some missing translation - thx domddol/nkh0472
-   * Shortcut "add bm w comment" works in text box - thx Minh Toan Ma
+   * Shortcut "add bm w comment" works in text box - thx MMT Gouenji Tech
    * Update Tesseract to 5.0.1 (from 5.0.0)
    * Improve UI regarding empty subtitle a little - txh darnn
 * FIXED:
@@ -72,6 +72,7 @@
    * Fix export to image issue w font face - thx red4d
    * Fix close/save original not working before opening file menu - thx OmrSi
    * Fix decimal point char issue in "Convert frame rate" - thx peter-qgd
+   * Fix add scene changes in "Waveform batch" - thx JDTR75
 
 
 3.6.4 (3rd December 2021)
