@@ -15794,6 +15794,16 @@ namespace Nikse.SubtitleEdit.Forms
                 ToggleBookmarks(false);
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralEditBookmark == e.KeyData)
+            {
+                var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                if (p?.Bookmark != null)
+                {
+                    labelBookmark_DoubleClick(null, null);
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralClearBookmarks == e.KeyData)
             {
                 ClearBookmarks();
