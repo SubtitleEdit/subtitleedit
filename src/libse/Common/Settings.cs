@@ -1343,6 +1343,9 @@ $HorzAlign          =   Center
         public Color DarkThemeForeColor { get; set; }
         public Color DarkThemeBackColor { get; set; }
         public Color LastColorPickerColor { get; set; }
+        public Color LastColorPickerColor1 { get; set; }
+        public Color LastColorPickerColor2 { get; set; }
+        public Color LastColorPickerColor3 { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -1480,6 +1483,9 @@ $HorzAlign          =   Center
             DarkThemeForeColor = Color.FromArgb(155, 155, 155);
             DarkThemeBackColor = Color.FromArgb(30, 30, 30);
             LastColorPickerColor = Color.Yellow;
+            LastColorPickerColor1 = Color.Red;
+            LastColorPickerColor2 = Color.Green;
+            LastColorPickerColor3 = Color.Blue;
             UseDarkTheme = false;
             DarkThemeShowListViewGridLines = false;
             AutoSetVideoSmpteForTtml = true;
@@ -3998,6 +4004,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.LastColorPickerColor = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor1");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor1 = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor2");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor2 = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor3");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor3 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("DarkThemeBackColor");
@@ -9419,6 +9443,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleTextBoxMaxHeight", settings.General.SubtitleTextBoxMaxHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowLetterShortcutsInTextBox", settings.General.AllowLetterShortcutsInTextBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastColorPickerColor", ToHtml(settings.General.LastColorPickerColor));
+                textWriter.WriteElementString("LastColorPickerColor1", ToHtml(settings.General.LastColorPickerColor1));
+                textWriter.WriteElementString("LastColorPickerColor2", ToHtml(settings.General.LastColorPickerColor2));
+                textWriter.WriteElementString("LastColorPickerColor3", ToHtml(settings.General.LastColorPickerColor3));
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
