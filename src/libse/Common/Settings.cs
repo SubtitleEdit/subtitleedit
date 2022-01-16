@@ -2067,6 +2067,7 @@ $HorzAlign          =   Center
         public string GeneralGoToNextSubtitleAndPlay { get; set; }
         public string GeneralToggleBookmarks { get; set; }
         public string GeneralToggleBookmarksWithText { get; set; }
+        public string GeneralEditBookmarks { get; set; }
         public string GeneralClearBookmarks { get; set; }
         public string GeneralGoToBookmark { get; set; }
         public string GeneralGoToPreviousBookmark { get; set; }
@@ -7484,6 +7485,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralToggleBookmarksWithText = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralEditBookmarks");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralEditBookmarks = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralClearBookmarks");
                 if (subNode != null)
                 {
@@ -10163,6 +10170,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralPlayFirstSelected", shortcuts.GeneralPlayFirstSelected);
             textWriter.WriteElementString("GeneralToggleBookmarks", shortcuts.GeneralToggleBookmarks);
             textWriter.WriteElementString("GeneralToggleBookmarksWithText", shortcuts.GeneralToggleBookmarksWithText);
+            textWriter.WriteElementString("GeneralEditBookmarks", shortcuts.GeneralEditBookmarks);
             textWriter.WriteElementString("GeneralClearBookmarks", shortcuts.GeneralClearBookmarks);
             textWriter.WriteElementString("GeneralGoToBookmark", shortcuts.GeneralGoToBookmark);
             textWriter.WriteElementString("GeneralGoToNextBookmark", shortcuts.GeneralGoToNextBookmark);
