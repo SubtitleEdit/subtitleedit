@@ -13,9 +13,10 @@
    * Add shortcut for edit of bookmark - thx OmrSi
    * Add shortcut for copy plain text - thx OmrSi
    * Add "Sort by Gap" - thx Andrebavila
-   * New image subtitle format TTML with inline base64 images - thx mat
-   * New text subtitle format - thx Richard
+   * Add new image subtitle format TTML with inline base64 images - thx mat
+   * Add new text subtitle format - thx Richard
    * Add new json subtitle format - thx Tim
+   * Add new text subtitle format - thx jiunyilin
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
