@@ -9220,6 +9220,8 @@ namespace Nikse.SubtitleEdit.Forms
                     labelStartTime.ForeColor = slightDarker;
                     labelDuration.ForeColor = slightDarker;
                 }
+
+                textBoxListViewText.ContextMenuStrip = null; 
             }
             else if (!numericUpDownDuration.Enabled)
             {
@@ -9244,6 +9246,8 @@ namespace Nikse.SubtitleEdit.Forms
                     labelStartTime.ForeColor = foreColor;
                     labelDuration.ForeColor = foreColor;
                 }
+
+                textBoxListViewText.ContextMenuStrip = contextMenuStripTextBoxSourceView;
             }
         }
 
@@ -19461,8 +19465,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _subtitle.Renumber();
                         SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-
                         SubtitleListview1.EndUpdate();
+                        SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
                         RestartHistory();
                     }
 
@@ -25541,9 +25545,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (InSourceView)
             {
-                textBoxSource.Paste();
+                if (textBoxSource.Enabled)
+                {
+                    textBoxSource.Paste();
+                }
             }
-            else
+            else if (GetFocusedTextBox().Enabled)
             {
                 GetFocusedTextBox().Paste();
             }
