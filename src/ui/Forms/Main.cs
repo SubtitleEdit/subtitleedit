@@ -9198,6 +9198,12 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.Value = 0;
                 timeUpDownStartTime.TimeCode = new TimeCode(0);
 
+                var focused = FindFocusedControl(this);
+                if (focused?.Name == MainTextBox)
+                {
+                    SubtitleListview1.Focus();
+                }
+
                 textBoxListViewText.Enabled = false;
                 textBoxListViewTextOriginal.Enabled = false;
                 timeUpDownStartTime.Enabled = false;
@@ -9222,6 +9228,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 textBoxListViewText.ContextMenuStrip = null; 
+
             }
             else if (!numericUpDownDuration.Enabled)
             {
@@ -9249,6 +9256,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 textBoxListViewText.ContextMenuStrip = contextMenuStripTextBoxSourceView;
             }
+        }
+
+        public static Control FindFocusedControl(Control control)
+        {
+            var container = control as IContainerControl;
+            while (container != null)
+            {
+                control = container.ActiveControl;
+                container = control as IContainerControl;
+            }
+
+            return control;
         }
 
         private void DeleteSelectedLines()
