@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public class SetRtbHtml
+    public static class SetRtbHtml
     {
         public static void SetText(RichTextBox rtb, string textOrHtml)
         {
