@@ -60,10 +60,10 @@ namespace Nikse.SubtitleEdit.Forms
         private TrackBar _tbValue;
         private bool _showAlpha = true;
         private readonly Timer _hexCodeEditTimer;
-        private Panel panelC0;
-        private Panel panelC1;
-        private Panel panelC2;
-        private Panel panelC3;
+        private Panel _panelC0;
+        private Panel _panelC1;
+        private Panel _panelC2;
+        private Panel _panelC3;
         private bool _hexEditOn;
 
         public ColorChooser()
@@ -88,10 +88,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             };
 
-            panelC0.BackColor = Configuration.Settings.General.LastColorPickerColor;
-            panelC1.BackColor = Configuration.Settings.General.LastColorPickerColor1;
-            panelC2.BackColor = Configuration.Settings.General.LastColorPickerColor2;
-            panelC3.BackColor = Configuration.Settings.General.LastColorPickerColor3;
+            _panelC0.BackColor = Configuration.Settings.General.LastColorPickerColor;
+            _panelC1.BackColor = Configuration.Settings.General.LastColorPickerColor1;
+            _panelC2.BackColor = Configuration.Settings.General.LastColorPickerColor2;
+            _panelC3.BackColor = Configuration.Settings.General.LastColorPickerColor3;
         }
 
         public bool ShowAlpha
@@ -346,10 +346,10 @@ namespace Nikse.SubtitleEdit.Forms
             this._pnlSelectedColor = new System.Windows.Forms.Panel();
             this._buttonCancel = new System.Windows.Forms.Button();
             this._buttonOk = new System.Windows.Forms.Button();
-            this.panelC0 = new System.Windows.Forms.Panel();
-            this.panelC1 = new System.Windows.Forms.Panel();
-            this.panelC2 = new System.Windows.Forms.Panel();
-            this.panelC3 = new System.Windows.Forms.Panel();
+            this._panelC0 = new System.Windows.Forms.Panel();
+            this._panelC1 = new System.Windows.Forms.Panel();
+            this._panelC2 = new System.Windows.Forms.Panel();
+            this._panelC3 = new System.Windows.Forms.Panel();
             this._flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._tbRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._tbGreen)).BeginInit();
@@ -694,48 +694,48 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // panelC0
             // 
-            this.panelC0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC0.Location = new System.Drawing.Point(295, 97);
-            this.panelC0.Name = "panelC0";
-            this.panelC0.Size = new System.Drawing.Size(21, 20);
-            this.panelC0.TabIndex = 62;
-            this.panelC0.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC0_MouseClick);
+            this._panelC0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC0.Location = new System.Drawing.Point(295, 97);
+            this._panelC0.Name = "_panelC0";
+            this._panelC0.Size = new System.Drawing.Size(21, 20);
+            this._panelC0.TabIndex = 62;
+            this._panelC0.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC0_MouseClick);
             // 
             // panelC1
             // 
-            this.panelC1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC1.Location = new System.Drawing.Point(322, 97);
-            this.panelC1.Name = "panelC1";
-            this.panelC1.Size = new System.Drawing.Size(21, 20);
-            this.panelC1.TabIndex = 63;
-            this.panelC1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC1_MouseClick);
+            this._panelC1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC1.Location = new System.Drawing.Point(322, 97);
+            this._panelC1.Name = "_panelC1";
+            this._panelC1.Size = new System.Drawing.Size(21, 20);
+            this._panelC1.TabIndex = 63;
+            this._panelC1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC1_MouseClick);
             // 
             // panelC2
             // 
-            this.panelC2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC2.Location = new System.Drawing.Point(349, 97);
-            this.panelC2.Name = "panelC2";
-            this.panelC2.Size = new System.Drawing.Size(21, 20);
-            this.panelC2.TabIndex = 63;
-            this.panelC2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC2_MouseClick);
+            this._panelC2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC2.Location = new System.Drawing.Point(349, 97);
+            this._panelC2.Name = "_panelC2";
+            this._panelC2.Size = new System.Drawing.Size(21, 20);
+            this._panelC2.TabIndex = 63;
+            this._panelC2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC2_MouseClick);
             // 
             // panelC3
             // 
-            this.panelC3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelC3.Location = new System.Drawing.Point(376, 97);
-            this.panelC3.Name = "panelC3";
-            this.panelC3.Size = new System.Drawing.Size(21, 20);
-            this.panelC3.TabIndex = 64;
-            this.panelC3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC3_MouseClick);
+            this._panelC3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._panelC3.Location = new System.Drawing.Point(376, 97);
+            this._panelC3.Name = "_panelC3";
+            this._panelC3.Size = new System.Drawing.Size(21, 20);
+            this._panelC3.TabIndex = 64;
+            this._panelC3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC3_MouseClick);
             // 
             // ColorChooser
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(413, 441);
-            this.Controls.Add(this.panelC3);
-            this.Controls.Add(this.panelC2);
-            this.Controls.Add(this.panelC1);
-            this.Controls.Add(this.panelC0);
+            this.Controls.Add(this._panelC3);
+            this.Controls.Add(this._panelC2);
+            this.Controls.Add(this._panelC1);
+            this.Controls.Add(this._panelC0);
             this.Controls.Add(this._buttonCancel);
             this.Controls.Add(this._buttonOk);
             this.Controls.Add(this._label5);
@@ -792,10 +792,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.General.LastColorPickerColor3 = Configuration.Settings.General.LastColorPickerColor2;
-            Configuration.Settings.General.LastColorPickerColor2 = Configuration.Settings.General.LastColorPickerColor1;
-            Configuration.Settings.General.LastColorPickerColor1 = Configuration.Settings.General.LastColorPickerColor;
-            Configuration.Settings.General.LastColorPickerColor = Color;
+            if (Color != Configuration.Settings.General.LastColorPickerColor)
+            {
+                Configuration.Settings.General.LastColorPickerColor3 = Configuration.Settings.General.LastColorPickerColor2;
+                Configuration.Settings.General.LastColorPickerColor2 = Configuration.Settings.General.LastColorPickerColor1;
+                Configuration.Settings.General.LastColorPickerColor1 = Configuration.Settings.General.LastColorPickerColor;
+                Configuration.Settings.General.LastColorPickerColor = Color;
+            }
 
             DialogResult = DialogResult.OK;
         }
@@ -874,7 +877,7 @@ namespace Nikse.SubtitleEdit.Forms
             HandleRgbScroll(null, null);
         }
 
-        private bool IsValidHexString(string hexString)
+        private static bool IsValidHexString(string hexString)
         {
             if (hexString.Length % 2 != 0)
             {
@@ -894,22 +897,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void panelC0_MouseClick(object sender, MouseEventArgs e)
         {
-            Color = panelC0.BackColor;
+            var c = _panelC0.BackColor;
+            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
         }
 
         private void panelC1_MouseClick(object sender, MouseEventArgs e)
         {
-            Color = panelC1.BackColor;
+            var c = _panelC1.BackColor;
+            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
         }
 
         private void panelC2_MouseClick(object sender, MouseEventArgs e)
         {
-            Color = panelC2.BackColor;
+            var c = _panelC2.BackColor;
+            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
         }
 
         private void panelC3_MouseClick(object sender, MouseEventArgs e)
         {
-            Color = panelC3.BackColor;
+            var c = _panelC3.BackColor;
+            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
         }
     }
 }
