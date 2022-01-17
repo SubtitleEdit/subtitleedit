@@ -107,6 +107,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void MakeAnimation()
         {
             _animation = new List<Paragraph>();
+
+            if (HtmlUtil.RemoveHtmlTags(_paragraph.Text, true).Length == 0 || _paragraph.Duration.TotalMilliseconds < 0.001)
+            {
+                _animation.Add(new Paragraph(_paragraph));
+                return;
+            }
+
             var duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
             var partsBase = EffectAnimationPart.MakeBase(_paragraph.Text);
             var stepsLength = duration / partsBase.Count+1;
