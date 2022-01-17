@@ -287,6 +287,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 });
             }
 
+            var startTagsCount = 0;
+            var endTagsCount = 0;
             for (var index = 0; index < list.Count - 1; index++)
             {
                 var part = list[index];
@@ -294,24 +296,31 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (index == 0)
                 {
-                    part.Pre += MakeFontTag(part);
+                    part.Pre += MakeFontTag(part, ref startTagsCount);
                     if (next.Color != part.Color || next.Face != part.Face || next.Size != part.Size)
                     {
                         part.Post = "</font>" + part.Post;
-                        next.Pre += MakeFontTag(next);
+                        endTagsCount++;
+                        next.Pre += MakeFontTag(next, ref startTagsCount);
                     }
                 }
                 else if (next.Color != part.Color || next.Face != part.Face || next.Size != part.Size)
                 {
                     part.Post = "</font>" + part.Post;
-                    next.Pre += MakeFontTag(next);
+                    endTagsCount++;
+                    next.Pre += MakeFontTag(next, ref startTagsCount);
                 }
+            }
+
+            if (startTagsCount > endTagsCount)
+            {
+                list.Last().Post += "</font>";
             }
 
             return list;
         }
 
-        private static string MakeFontTag(EffectAnimationPart part)
+        private static string MakeFontTag(EffectAnimationPart part, ref int startTagsCount)
         {
             var attributes = string.Empty;
             if (part.Color != NullColor)
@@ -330,6 +339,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var result = $"<font{attributes.TrimEnd()}>".Replace("<font>", string.Empty);
+
+            if (result.Length > 0)
+            {
+                startTagsCount++;
+            }
+
             return result;
         }
 
