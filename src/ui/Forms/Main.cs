@@ -9254,7 +9254,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelDuration.ForeColor = foreColor;
                 }
 
-                textBoxListViewText.ContextMenuStrip = contextMenuStripTextBoxSourceView;
+                textBoxListViewText.ContextMenuStrip = contextMenuStripTextBoxListView;
             }
         }
 
