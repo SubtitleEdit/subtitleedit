@@ -75,6 +75,7 @@
    * Fix close/save original not working before opening file menu - thx OmrSi
    * Fix decimal point char issue in "Convert frame rate" - thx peter-qgd
    * Fix add scene changes in "Waveform batch" - thx JDTR75
+   * Fix missing style column in some cases for assa - thx MMT Gouenji Tech
 
 
 3.6.4 (3rd December 2021)
