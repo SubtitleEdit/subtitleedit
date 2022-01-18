@@ -745,7 +745,7 @@ namespace Test.FixCommonErrors
             {
                 InitializeFixCommonErrorsLine(target, "<font color=\"#00ffff\">Yeah, so...</font> That goes in there," + Environment.NewLine + "does it ?<font color=\"#00ffff\">Yeah.</font>");
                 new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
-                Assert.AreEqual("<font color=\"#00ffff\">Yeah, so...</font> That goes in there," + Environment.NewLine + "does it ? <font color=\"#00ffff\">Yeah.</font>"", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("<font color=\"#00ffff\">Yeah, so...</font> That goes in there," + Environment.NewLine + "does it ? <font color=\"#00ffff\">Yeah.</font>", _subtitle.Paragraphs[0].Text);
             }
         }
 
