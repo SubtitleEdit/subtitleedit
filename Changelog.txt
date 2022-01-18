@@ -38,6 +38,7 @@
    * Improve English/Italian OCR rules a little - thx tormento
    * Allow larger font size in list view / text box - thx OmrSi
    * Improve list-view/text-box color dialog - thx Majid
+   * Improve color dialog with 4 last used colors - thx Siamak
    * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
    * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
    * Remove position codes when reading PAC - thx Ernest
@@ -76,6 +77,7 @@
    * Fix decimal point char issue in "Convert frame rate" - thx peter-qgd
    * Fix add scene changes in "Waveform batch" - thx JDTR75
    * Fix missing style column in some cases for assa - thx MMT Gouenji Tech
+   * Fix for "Fix missing spaces"" w font tag - thx beeeeswax
 
 
 3.6.4 (3rd December 2021)
