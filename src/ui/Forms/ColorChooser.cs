@@ -194,13 +194,17 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshText(_lblBlue, argb.Blue);
             RefreshText(_lblGreen, argb.Green);
             RefreshText(_lblAlpha2, argb.Alpha);
-            if (_showAlpha)
+
+            if (!_hexEditOn)
             {
-                _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
-            }
-            else
-            {
-                _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
+                if (_showAlpha)
+                {
+                    _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
+                }
+                else
+                {
+                    _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
+                }
             }
         }
 
@@ -467,7 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.BackColor = System.Drawing.Color.White;
             this._tbHexCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._tbHexCode.Location = new System.Drawing.Point(295, 50);
-            this._tbHexCode.MaxLength = 8;
+            this._tbHexCode.MaxLength = 9;
             this._tbHexCode.Name = "_tbHexCode";
             this._tbHexCode.ReadOnly = true;
             this._tbHexCode.Size = new System.Drawing.Size(96, 22);
@@ -476,6 +480,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._tbHexCode.Enter += new System.EventHandler(this._tbHexCode_Enter);
             this._tbHexCode.Leave += new System.EventHandler(this._tbHexCode_Leave);
             this._tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
+            this._tbHexCode.MouseUp += new System.Windows.Forms.MouseEventHandler(this._tbHexCode_MouseUp);
             // 
             // _flowLayoutPanel1
             // 
@@ -692,7 +697,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._buttonOk.UseVisualStyleBackColor = true;
             this._buttonOk.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // panelC0
+            // _panelC0
             // 
             this._panelC0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC0.Location = new System.Drawing.Point(295, 97);
@@ -701,7 +706,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC0.TabIndex = 62;
             this._panelC0.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC0_MouseClick);
             // 
-            // panelC1
+            // _panelC1
             // 
             this._panelC1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC1.Location = new System.Drawing.Point(322, 97);
@@ -710,7 +715,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC1.TabIndex = 63;
             this._panelC1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC1_MouseClick);
             // 
-            // panelC2
+            // _panelC2
             // 
             this._panelC2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC2.Location = new System.Drawing.Point(349, 97);
@@ -719,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms
             this._panelC2.TabIndex = 63;
             this._panelC2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC2_MouseClick);
             // 
-            // panelC3
+            // _panelC3
             // 
             this._panelC3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._panelC3.Location = new System.Drawing.Point(376, 97);
@@ -852,14 +857,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CheckValidHexInput()
         {
-            var hexString = _tbHexCode.Text.Trim();
-            if (hexString.Length == 6 && !_showAlpha && IsValidHexString(hexString))
+            var hexString = _tbHexCode.Text.Trim().TrimStart('#');
+            if (hexString.Length == 6 && IsValidHexString(hexString))
             {
                 UpdateRgb("ff" + hexString);
             }
             else if (hexString.Length == 8 && _showAlpha && IsValidHexString(hexString))
             {
                 UpdateRgb(hexString);
+            }
+            else if (hexString.Length == 8 && IsValidHexString(hexString))
+            {
+                UpdateRgb("ff" + hexString.Remove(0, 2));
             }
             else
             {
@@ -917,6 +926,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var c = _panelC3.BackColor;
             UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+        }
+
+        private void _tbHexCode_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (_hexEditOn)
+            {
+                CheckValidHexInput();
+            }
         }
     }
 }
