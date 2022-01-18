@@ -348,6 +348,26 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
+                if (p.Text.IndexOf('<') >= 0) // fix: You!<font color="#ffff00">Well, bye!</font>
+                {
+                    var regexFontStart = new Regex("[!\\.,?]<font[ colrsizeabcdef#0123456789\"=]+>\\p{L}");
+                    var matchFontStart = regexFontStart.Match(p.Text);
+                    var jumpOut = 0;
+                    var oldText = p.Text;
+                    while (matchFontStart.Success && jumpOut < 10)
+                    {
+                        p.Text = p.Text.Insert(matchFontStart.Index + 1, " ");
+                        matchFontStart = regexFontStart.Match(p.Text, matchFontStart.Index+1);
+                        jumpOut++;
+                    }
+
+                    if (oldText != p.Text)
+                    {
+                        missingSpaces++;
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
+
                 if (callbacks.Language == "fr") // special rules for French
                 {
                     string newText = p.Text;
