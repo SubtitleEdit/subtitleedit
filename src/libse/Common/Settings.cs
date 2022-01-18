@@ -699,6 +699,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string MPlayer2Extension { get; set; }
         public bool TeletextItalicFix { get; set; }
         public bool MccDebug { get; set; }
+        public bool BluRaySupSkipMerge { get; set; }
+        public bool BluRaySupForceMergeAll { get; set; }
 
         public SubtitleSettings()
         {
@@ -6219,6 +6221,18 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.MccDebug = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("BluRaySupSkipMerge");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.BluRaySupSkipMerge = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("BluRaySupForceMergeAll");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.BluRaySupForceMergeAll = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("WebVttUseXTimestampMap");
                 if (subNode != null)
                 {
@@ -9859,6 +9873,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MPlayer2Extension", settings.SubtitleSettings.MPlayer2Extension);
                 textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MccDebug", settings.SubtitleSettings.MccDebug.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BluRaySupSkipMerge", settings.SubtitleSettings.BluRaySupSkipMerge.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BluRaySupForceMergeAll", settings.SubtitleSettings.BluRaySupForceMergeAll.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
