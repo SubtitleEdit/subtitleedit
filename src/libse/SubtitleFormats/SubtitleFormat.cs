@@ -657,6 +657,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new Rdf1(),
                 new CombinedXml(),
                 new AudacityLabels(),
+                new Fte(),
             };
         }
 
