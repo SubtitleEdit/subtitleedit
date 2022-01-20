@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Vosk;
 
@@ -109,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal static string GetLanguage(string text)
         {
-            var languageCodeList = new[] { "en", "ru", "cn", "fr", "sv", "de", "es", "fa", "tr", "ca", "uk", "kz", "ph", "ar", "nl", "el", "pt" };
+            var languageCodeList = DownloadModel.VoskModels.Select(p => p.TwoLetterLanguageCode);
             foreach (var languageCode in languageCodeList)
             {
                 if (text.Contains("model-" + languageCode) || text.Contains("model-small-" + languageCode) || text.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase))
