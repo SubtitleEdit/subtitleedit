@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class WordSplitDictionaryGenerator : Form
     {
-        private List<Subtitle> _subtitleList;
+        private readonly List<Subtitle> _subtitleList;
         private Hunspell _hunspell;
 
         public WordSplitDictionaryGenerator()
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (!FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName) &&
                     !((ext == ".mkv" || ext == ".mks") && FileUtil.IsMatroskaFile(fileName)))
                 {
-                    SubtitleFormat format = sub.LoadSubtitle(fileName, out _, null);
+                    var format = sub.LoadSubtitle(fileName, out _, null);
 
                     if (format == null)
                     {
@@ -151,6 +151,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var p in subtitle.Paragraphs)
                 {
+                    if (p.Text.Contains("Synced and corrected by", StringComparison.OrdinalIgnoreCase) ||
+                        p.Text.Contains("www."))
+                    {
+                        continue;
+                    }
+
                     var words = SpellCheckWordLists.Split(HtmlUtil.RemoveHtmlTags(p.Text, true));
                     foreach (var word in words)
                     {
