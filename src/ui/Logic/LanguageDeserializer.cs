@@ -5605,6 +5605,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/VisualSync":
                     language.Settings.VisualSync = reader.Value;
                     break;
+                case "Settings/BurnIn":
+                    language.Settings.BurnIn = reader.Value;
+                    break;
                 case "Settings/SpellCheck":
                     language.Settings.SpellCheck = reader.Value;
                     break;

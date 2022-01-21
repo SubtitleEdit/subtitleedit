@@ -1769,6 +1769,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonFixCommonErrors.ToolTipText = _language.Menu.ToolBar.FixCommonErrors;
             toolStripButtonRemoveTextForHi.ToolTipText = _language.Menu.ToolBar.RemoveTextForHi;
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
+            toolStripButtonBurnIn.ToolTipText = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonNetflixQualityCheck.ToolTipText = _language.Menu.ToolBar.NetflixQualityCheck;
             toolStripButtonAssStyleManager.ToolTipText = LanguageSettings.Current.SubStationAlphaStyles.Title;
@@ -5239,7 +5240,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var settings = new Options.Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
-                    toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
+                    toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image, toolStripButtonBurnIn.Image,
                     toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
 
                 if (settings.ShowDialog(this) == DialogResult.Cancel)
@@ -5699,6 +5700,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
                 TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
                 TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
+                TryLoadIcon(toolStripButtonBurnIn, "BurnIn");
                 TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
                 TryLoadIcon(toolStripButtonNetflixQualityCheck, "Netflix");
                 TryLoadIcon(toolStripButtonAssStyleManager, "AssaStyle");
@@ -5721,6 +5723,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonRemoveTextForHi.Visible = gs.ShowToolbarRemoveTextForHi;
 
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
+            toolStripButtonBurnIn.Visible = gs.ShowToolbarBurnIn;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
             toolStripButtonNetflixQualityCheck.Visible = gs.ShowToolbarNetflixGlyphCheck;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
@@ -5846,6 +5849,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ReloadFromSourceView();
             ShowVisualSync(false);
+        }
+
+        private void ToolStripButtonBurnInClick(object sender, EventArgs e)
+        {
+            generateVideoWithHardcodedSubtitleToolStripMenuItem_Click(null, null);
         }
 
         private void ToolStripButtonSettingsClick(object sender, EventArgs e)

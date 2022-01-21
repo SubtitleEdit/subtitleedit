@@ -422,6 +422,9 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
+            this.labelTBBurnIn = new System.Windows.Forms.Label();
+            this.pictureBoxTBBurnIn = new System.Windows.Forms.PictureBox();
+            this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -495,6 +498,7 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -4019,6 +4023,9 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBurnIn);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBBurnIn);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
@@ -4095,7 +4102,7 @@
             // labelTBRemoveTextForHi
             // 
             this.labelTBRemoveTextForHi.AutoSize = true;
-            this.labelTBRemoveTextForHi.Location = new System.Drawing.Point(124, 136);
+            this.labelTBRemoveTextForHi.Location = new System.Drawing.Point(9, 143);
             this.labelTBRemoveTextForHi.Name = "labelTBRemoveTextForHi";
             this.labelTBRemoveTextForHi.Size = new System.Drawing.Size(100, 13);
             this.labelTBRemoveTextForHi.TabIndex = 39;
@@ -4103,7 +4110,7 @@
             // 
             // pictureBoxTBRemoveTextForHi
             // 
-            this.pictureBoxTBRemoveTextForHi.Location = new System.Drawing.Point(137, 155);
+            this.pictureBoxTBRemoveTextForHi.Location = new System.Drawing.Point(22, 162);
             this.pictureBoxTBRemoveTextForHi.Name = "pictureBoxTBRemoveTextForHi";
             this.pictureBoxTBRemoveTextForHi.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBRemoveTextForHi.TabIndex = 38;
@@ -4112,7 +4119,7 @@
             // checkBoxTBRemoveTextForHi
             // 
             this.checkBoxTBRemoveTextForHi.AutoSize = true;
-            this.checkBoxTBRemoveTextForHi.Location = new System.Drawing.Point(140, 195);
+            this.checkBoxTBRemoveTextForHi.Location = new System.Drawing.Point(25, 202);
             this.checkBoxTBRemoveTextForHi.Name = "checkBoxTBRemoveTextForHi";
             this.checkBoxTBRemoveTextForHi.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBRemoveTextForHi.TabIndex = 18;
@@ -4122,7 +4129,7 @@
             // labelTBFixCommonErrors
             // 
             this.labelTBFixCommonErrors.AutoSize = true;
-            this.labelTBFixCommonErrors.Location = new System.Drawing.Point(9, 136);
+            this.labelTBFixCommonErrors.Location = new System.Drawing.Point(597, 22);
             this.labelTBFixCommonErrors.Name = "labelTBFixCommonErrors";
             this.labelTBFixCommonErrors.Size = new System.Drawing.Size(95, 13);
             this.labelTBFixCommonErrors.TabIndex = 36;
@@ -4130,7 +4137,7 @@
             // 
             // pictureBoxTBFixCommonErrors
             // 
-            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(22, 155);
+            this.pictureBoxTBFixCommonErrors.Location = new System.Drawing.Point(610, 41);
             this.pictureBoxTBFixCommonErrors.Name = "pictureBoxTBFixCommonErrors";
             this.pictureBoxTBFixCommonErrors.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBFixCommonErrors.TabIndex = 35;
@@ -4139,7 +4146,7 @@
             // checkBoxTBFixCommonErrors
             // 
             this.checkBoxTBFixCommonErrors.AutoSize = true;
-            this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(25, 195);
+            this.checkBoxTBFixCommonErrors.Location = new System.Drawing.Point(613, 81);
             this.checkBoxTBFixCommonErrors.Name = "checkBoxTBFixCommonErrors";
             this.checkBoxTBFixCommonErrors.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBFixCommonErrors.TabIndex = 17;
@@ -4230,7 +4237,7 @@
             // labelTBVisualSync
             // 
             this.labelTBVisualSync.AutoSize = true;
-            this.labelTBVisualSync.Location = new System.Drawing.Point(247, 136);
+            this.labelTBVisualSync.Location = new System.Drawing.Point(132, 143);
             this.labelTBVisualSync.Name = "labelTBVisualSync";
             this.labelTBVisualSync.Size = new System.Drawing.Size(59, 13);
             this.labelTBVisualSync.TabIndex = 21;
@@ -4238,7 +4245,7 @@
             // 
             // pictureBoxVisualSync
             // 
-            this.pictureBoxVisualSync.Location = new System.Drawing.Point(260, 155);
+            this.pictureBoxVisualSync.Location = new System.Drawing.Point(145, 162);
             this.pictureBoxVisualSync.Name = "pictureBoxVisualSync";
             this.pictureBoxVisualSync.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxVisualSync.TabIndex = 20;
@@ -4247,7 +4254,7 @@
             // checkBoxVisualSync
             // 
             this.checkBoxVisualSync.AutoSize = true;
-            this.checkBoxVisualSync.Location = new System.Drawing.Point(263, 195);
+            this.checkBoxVisualSync.Location = new System.Drawing.Point(148, 202);
             this.checkBoxVisualSync.Name = "checkBoxVisualSync";
             this.checkBoxVisualSync.Size = new System.Drawing.Size(55, 17);
             this.checkBoxVisualSync.TabIndex = 19;
@@ -5067,6 +5074,33 @@
             this.imageListFileTypeAssociations.ImageSize = new System.Drawing.Size(32, 32);
             this.imageListFileTypeAssociations.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // labelTBBurnIn
+            // 
+            this.labelTBBurnIn.AutoSize = true;
+            this.labelTBBurnIn.Location = new System.Drawing.Point(243, 139);
+            this.labelTBBurnIn.Name = "labelTBBurnIn";
+            this.labelTBBurnIn.Size = new System.Drawing.Size(40, 13);
+            this.labelTBBurnIn.TabIndex = 45;
+            this.labelTBBurnIn.Text = "Burn in";
+            // 
+            // pictureBoxTBBurnIn
+            // 
+            this.pictureBoxTBBurnIn.Location = new System.Drawing.Point(256, 158);
+            this.pictureBoxTBBurnIn.Name = "pictureBoxTBBurnIn";
+            this.pictureBoxTBBurnIn.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxTBBurnIn.TabIndex = 44;
+            this.pictureBoxTBBurnIn.TabStop = false;
+            // 
+            // checkBoxTBBurnIn
+            // 
+            this.checkBoxTBBurnIn.AutoSize = true;
+            this.checkBoxTBBurnIn.Location = new System.Drawing.Point(259, 198);
+            this.checkBoxTBBurnIn.Name = "checkBoxTBBurnIn";
+            this.checkBoxTBBurnIn.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBBurnIn.TabIndex = 43;
+            this.checkBoxTBBurnIn.Text = "Visible";
+            this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5208,6 +5242,7 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5608,5 +5643,8 @@
         private System.Windows.Forms.Button buttonUpdateFileTypeAssociations;
         private System.Windows.Forms.Label labelUpdateFileTypeAssociationsStatus;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Label labelTBBurnIn;
+        private System.Windows.Forms.PictureBox pictureBoxTBBurnIn;
+        private System.Windows.Forms.CheckBox checkBoxTBBurnIn;
     }
 }

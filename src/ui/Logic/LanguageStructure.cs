@@ -2256,6 +2256,7 @@
             public string Find { get; set; }
             public string Replace { get; set; }
             public string VisualSync { get; set; }
+            public string BurnIn { get; set; }
             public string SpellCheck { get; set; }
             public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
