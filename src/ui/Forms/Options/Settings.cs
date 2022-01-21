@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
             checkBoxTBRemoveTextForHi.Checked = gs.ShowToolbarRemoveTextForHi;
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
+            checkBoxTBBurnIn.Checked = gs.ShowToolbarBurnIn;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
@@ -370,6 +371,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBFixCommonErrors.Text = language.FixCommonerrors;
             labelTBRemoveTextForHi.Text = language.RemoveTextForHi;
             labelTBVisualSync.Text = language.VisualSync;
+            labelTBBurnIn.Text = language.BurnIn;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
             labelTBSettings.Text = language.SettingsName;
@@ -409,16 +411,20 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxReplace.Left = labelTBReplace.Left;
             checkBoxReplace.Left = labelTBReplace.Left;
 
-            // Toolbar icons second row
-            labelTBRemoveTextForHi.Left = Math.Max(labelTBFixCommonErrors.Right, checkBoxTBFixCommonErrors.Right) + 18;
-            pictureBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
-            checkBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
+            labelTBFixCommonErrors.Left = Math.Max(labelTBReplace.Right, checkBoxReplace.Right) + 18;
+            pictureBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
+            checkBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
 
+            // Toolbar icons second row
             labelTBVisualSync.Left = Math.Max(labelTBRemoveTextForHi.Right, checkBoxTBRemoveTextForHi.Right) + 18;
             pictureBoxVisualSync.Left = labelTBVisualSync.Left;
             checkBoxVisualSync.Left = labelTBVisualSync.Left;
 
-            labelTBSpellCheck.Left = Math.Max(labelTBVisualSync.Right, checkBoxVisualSync.Right) + 18;
+            labelTBBurnIn.Left = Math.Max(labelTBVisualSync.Right, checkBoxVisualSync.Right) + 18;
+            pictureBoxTBBurnIn.Left = labelTBBurnIn.Left;
+            checkBoxTBBurnIn.Left = labelTBBurnIn.Left;
+
+            labelTBSpellCheck.Left = Math.Max(labelTBBurnIn.Right, checkBoxTBBurnIn.Right) + 18;
             pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
             checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
 
@@ -1706,7 +1712,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help)
+                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -1718,6 +1724,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
             pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
+            pictureBoxTBBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
@@ -1807,6 +1814,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
             gs.ShowToolbarRemoveTextForHi = checkBoxTBRemoveTextForHi.Checked;
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
+            gs.ShowToolbarBurnIn = checkBoxTBBurnIn.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
             gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
