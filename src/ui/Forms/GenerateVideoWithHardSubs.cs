@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _log = new StringBuilder();
             buttonOK.Enabled = false;
+            var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
             using (var saveDialog = new SaveFileDialog { FileName = SuggestNewVideoFileName(), Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm", AddExtension = true })
@@ -224,6 +225,21 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName = saveDialog.FileName;
             }
 
+            if (File.Exists(VideoFileName))
+            {
+                try
+                {
+                    File.Delete(VideoFileName);
+                }
+                catch
+                {
+                    MessageBox.Show($"Cannot overwrite video file { VideoFileName} - probably in use!");
+                    buttonOK.Enabled = true;
+                    numericUpDownFontSize.Enabled = oldFontSizeEnabled;
+                    return;
+                }
+            }
+
             _totalFrames = (long)_videoInfo.TotalFrames;
 
             _log = new StringBuilder();
@@ -232,11 +248,6 @@ namespace Nikse.SubtitleEdit.Forms
             _log.AppendLine("Video info width: " + _videoInfo.Height);
             _log.AppendLine("Video info total frames: " + _videoInfo.TotalFrames);
             _log.AppendLine("Video info total seconds: " + _videoInfo.TotalSeconds);
-
-            if (File.Exists(VideoFileName))
-            {
-                File.Delete(VideoFileName);
-            }
 
             labelFileName.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TargetFileName, VideoFileName);
             if (!_isAssa)
