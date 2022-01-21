@@ -10730,7 +10730,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
         {
             int maxSingleLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             int? originalTextIndex = null;
             if (textBoxListViewTextOriginal.Focused)
             {
@@ -10951,7 +10951,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                FixSplitItalicTag(currentParagraph, newParagraph);
+                FixSplitItalicTagAndAssa(currentParagraph, newParagraph);
                 FixSplitFontTag(currentParagraph, newParagraph);
                 FixSplitBoxTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
@@ -11139,7 +11139,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _subtitleOriginal.InsertParagraphInCorrectTimeOrder(originalNew);
                         _subtitleOriginal.Renumber();
-                        FixSplitItalicTag(originalCurrent, originalNew);
+                        FixSplitItalicTagAndAssa(originalCurrent, originalNew);
                         FixSplitFontTag(originalCurrent, originalNew);
                         FixSplitBoxTag(currentParagraph, newParagraph);
                     }
@@ -11178,7 +11178,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FixSplitItalicTag(Paragraph currentParagraph, Paragraph nextParagraph)
+        private void FixSplitItalicTagAndAssa(Paragraph currentParagraph, Paragraph nextParagraph)
         {
             if (currentParagraph == null || nextParagraph == null)
             {
@@ -11247,15 +11247,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     currentParagraph.Text = pre + currentParagraph.Text + "</box>";
                     nextParagraph.Text = pre + fontTag + nextParagraph.Text;
-                }
-            }
-            else if (currentParagraph.Text.StartsWith("{\\", StringComparison.Ordinal))
-            {
-                var endIdx = currentParagraph.Text.IndexOf('}', 2);
-                if (endIdx > 2)
-                {
-                    pre = currentParagraph.Text.Substring(0, endIdx + 1);
-                    nextParagraph.Text = pre + nextParagraph.Text;
                 }
             }
         }
