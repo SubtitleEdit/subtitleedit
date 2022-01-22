@@ -4241,7 +4241,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var clearHistoryMenuItem = new ToolStripMenuItem(LanguageSettings.Current.DvdSubRip.Clear);
                 clearHistoryMenuItem.Click += (sender, args) =>
                 {
-                    Configuration.Settings.RecentFiles.Files.RemoveAll(entry => entry.FileName != _fileName);
+                    Configuration.Settings.RecentFiles.Files.RemoveAll(entry => entry.FileName != _fileName || entry.FileName == _fileName && entry.OriginalFileName != _subtitleOriginalFileName);
                     UpdateRecentFilesUI();
                 };
                 UiUtil.FixFonts(clearHistoryMenuItem);
