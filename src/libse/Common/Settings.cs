@@ -5810,7 +5810,7 @@ $HorzAlign          =   Center
                         subNode = listNode.SelectSingleNode("FontSize");
                         if (subNode != null)
                         {
-                            item.FontSize = Convert.ToSingle(subNode.InnerText, CultureInfo.InvariantCulture);
+                            item.FontSize = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
                         }
 
                         subNode = listNode.SelectSingleNode("Bold");

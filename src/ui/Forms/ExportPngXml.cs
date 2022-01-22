@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var style = AdvancedSubStationAlpha.GetSsaStyle(parameter.P.Extra, _subtitle.Header);
                         parameter.SubtitleColor = style.Primary;
                         parameter.SubtitleFontBold = style.Bold;
-                        parameter.SubtitleFontSize = style.FontSize;
+                        parameter.SubtitleFontSize = (float)style.FontSize;
                         parameter.SubtitleFontName = style.FontName;
                         parameter.BottomMargin = style.MarginVertical;
                         if (style.BorderStyle == "3")
@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var style = AdvancedSubStationAlpha.GetSsaStyle(parameter.P.Extra, _subtitle.Header);
                         parameter.SubtitleColor = style.Primary;
                         parameter.SubtitleFontBold = style.Bold;
-                        parameter.SubtitleFontSize = style.FontSize;
+                        parameter.SubtitleFontSize = (float)style.FontSize;
                         parameter.SubtitleFontName = style.FontName;
                         parameter.BottomMargin = style.MarginVertical;
                         if (style.BorderStyle == "3")
@@ -2405,7 +2405,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                     mbp.SubtitleColor = style.Primary;
                     mbp.SubtitleFontBold = style.Bold;
-                    mbp.SubtitleFontSize = style.FontSize;
+                    mbp.SubtitleFontSize = (float)style.FontSize;
                     mbp.BottomMargin = style.MarginVertical;
                     if (style.BorderStyle == "3")
                     {
@@ -2418,7 +2418,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                     mbp.SubtitleColor = style.Primary;
                     mbp.SubtitleFontBold = style.Bold;
-                    mbp.SubtitleFontSize = style.FontSize;
+                    mbp.SubtitleFontSize = (float)style.FontSize;
                     mbp.BottomMargin = style.MarginVertical;
                     if (style.BorderStyle == "3")
                     {
@@ -4551,7 +4551,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             var mbp = new MakeBitmapParameter
                             {
                                 SubtitleFontName = style.FontName,
-                                SubtitleFontSize = style.FontSize,
+                                SubtitleFontSize = (float)style.FontSize,
                                 SubtitleFontBold = style.Bold
                             };
                             var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);

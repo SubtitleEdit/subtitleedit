@@ -19,6 +19,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             return factor * v;
         }
 
+        public static decimal Resample(decimal source, decimal target, decimal v)
+        {
+            var factor = (target / source);
+            return factor * v;
+        }
+
         public static string ResampleOverrideTagsFont(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
         {
             var s = input;

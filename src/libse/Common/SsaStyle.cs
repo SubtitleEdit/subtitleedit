@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public string Name { get; set; }
         public string FontName { get; set; }
-        public float FontSize { get; set; }
+        public decimal FontSize { get; set; }
         public bool Italic { get; set; }
         public bool Bold { get; set; }
         public bool Underline { get; set; }
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             Name = "Default";
             FontName = "Arial";
-            FontSize = 20F;
+            FontSize = 20m;
             Primary = Color.White;
             Secondary = Color.Yellow;
             Outline = Color.Black;

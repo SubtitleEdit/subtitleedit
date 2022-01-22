@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             else if (propertyName == "fontsize")
             {
-                style.FontSize = float.Parse(propertyValue, CultureInfo.InvariantCulture);
+                style.FontSize = decimal.Parse(propertyValue, CultureInfo.InvariantCulture);
             }
             else if (propertyName == "bold")
             {
@@ -905,9 +905,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             numericUpDownSpacing.Value = style.Spacing;
             numericUpDownAngle.Value = style.Angle;
 
-            if (style.FontSize > 0 && style.FontSize <= (float)numericUpDownFontSize.Maximum)
+            if (style.FontSize > 0 && style.FontSize <= numericUpDownFontSize.Maximum)
             {
-                numericUpDownFontSize.Value = (decimal)style.FontSize;
+                numericUpDownFontSize.Value = style.FontSize;
             }
             else
             {
