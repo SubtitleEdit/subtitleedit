@@ -21135,9 +21135,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             style.FontSize = AssaResampler.Resample(sourceHeight, _videoInfo.Height, style.FontSize);
 
-                            style.OutlineWidth = (decimal)AssaResampler.Resample(sourceHeight, _videoInfo.Height, (float)style.OutlineWidth);
-                            style.ShadowWidth = (decimal)AssaResampler.Resample(sourceHeight, _videoInfo.Height, (float)style.ShadowWidth);
-                            style.Spacing = (decimal)AssaResampler.Resample(sourceWidth, _videoInfo.Width, (float)style.Spacing);
+                            style.OutlineWidth = AssaResampler.Resample(sourceHeight, _videoInfo.Height, style.OutlineWidth);
+                            style.ShadowWidth = AssaResampler.Resample(sourceHeight, _videoInfo.Height, style.ShadowWidth);
+                            style.Spacing = AssaResampler.Resample(sourceWidth, _videoInfo.Width, style.Spacing);
                         }
                     }
                     else

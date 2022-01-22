@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                             subNode = styleNode.SelectSingleNode("FontSize");
                             if (subNode != null)
                             {
-                                style.FontSize = Convert.ToSingle(subNode.InnerText);
+                                style.FontSize = Convert.ToDecimal(subNode.InnerText);
                             }
 
                             subNode = styleNode.SelectSingleNode("Primary");

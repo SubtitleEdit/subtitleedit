@@ -840,7 +840,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             sub.Header = AdvancedSubStationAlpha.DefaultHeader;
             var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
-            style.FontSize = (float)numericUpDownFontSize.Value;
+            style.FontSize = numericUpDownFontSize.Value;
             style.FontName = comboBoxSubtitleFont.Text;
             style.Background = Color.FromArgb(150, 0, 0, 0);
 
