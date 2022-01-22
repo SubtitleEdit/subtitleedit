@@ -1540,7 +1540,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <NumberOfSkippedWords>Số từ ngữ bỏ qua: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Số từ ngữ đúng: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Số lượng từ ngữ được bổ sung vào từ điển: {0}</NumberOfWordsAddedToDictionary>
-    <NumberOfNameHits>Số tên truy cập: { 0}</NumberOfNameHits>
+    <NumberOfNameHits>Số tên truy cập: {0}</NumberOfNameHits>
     <SpellCheck>Kiểm tra chính tả</SpellCheck>
     <BeforeSpellCheck>Trước khi kiểm tra chính tả</BeforeSpellCheck>
     <SpellCheckChangedXToY>kiểm tra chính tả: Thay đổi '{0}' thành '{1}'</SpellCheckChangedXToY>
