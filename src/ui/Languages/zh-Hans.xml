@@ -1297,6 +1297,7 @@ Command line: {1} {2}
         <FixCommonErrors>修正常规错误</FixCommonErrors>
         <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
+        <BurnIn>内嵌字幕</BurnIn>
         <SpellCheck>拼写检查</SpellCheck>
         <NetflixQualityCheck>Netflix字幕质量检查</NetflixQualityCheck>
         <Settings>设置</Settings>
