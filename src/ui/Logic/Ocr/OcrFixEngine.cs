@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -1176,42 +1177,55 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var st = new StrippableText(text);
                 if (lastLine == null || !lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList))
                 {
-                    if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') &&
+                    var skip = lastLine != null &&
+                                   (lastLine.EndsWith("...", StringComparison.Ordinal) || lastLine.EndsWith("…")) &&
+                                   Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingDots;
+
+                    if (!skip && lastLine != null &&
+                        (lastLine.EndsWith("...", StringComparison.Ordinal) || lastLine.EndsWith("…")) &&
+                        Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingEllipsis)
+                    {
+                        skip = true;
+                    }
+
+                    if (!skip && HtmlUtil.StartsWithUrl(st.StrippedText))
+                    {
+                        skip = true;
+                    }
+
+                    if (!skip && st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') &&
                         !st.Pre.Contains("...", StringComparison.Ordinal) &&
                         !st.Pre.Contains('…'))
                     {
-                        if (!HtmlUtil.StartsWithUrl(st.StrippedText))
+                        var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
+                        if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && (st.StrippedText[1] == ' ' || char.IsLower(st.StrippedText[1])))
                         {
-                            var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
-                            if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && (st.StrippedText[1] == ' ' || char.IsLower(st.StrippedText[1])))
-                            {
-                                uppercaseLetter = 'I';
-                            }
-                            if (st.StrippedText.Length == 1 && uppercaseLetter == 'L')
-                            {
-                                uppercaseLetter = 'I';
-                            }
-
-                            if ((st.StrippedText.StartsWith("lo ", StringComparison.Ordinal) || st.StrippedText.Equals("lo.", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("ita", StringComparison.Ordinal))
-                            {
-                                uppercaseLetter = 'I';
-                            }
-
-                            if ((st.StrippedText.StartsWith("k ", StringComparison.Ordinal) || st.StrippedText.StartsWith("m ", StringComparison.Ordinal) || st.StrippedText.StartsWith("n ", StringComparison.Ordinal) || st.StrippedText.StartsWith("r ", StringComparison.Ordinal) || st.StrippedText.StartsWith("s ", StringComparison.Ordinal) || st.StrippedText.StartsWith("t ", StringComparison.Ordinal)) &&
-                                st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName.Equals("nld", StringComparison.Ordinal))
-                            {
-                                uppercaseLetter = st.StrippedText[0];
-                            }
-
-                            if ((st.StrippedText.StartsWith("l-I'll ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-l'll ", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("eng", StringComparison.Ordinal))
-                            {
-                                uppercaseLetter = 'I';
-                                st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
-                            }
-
-                            st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
-                            text = st.Pre + st.StrippedText + st.Post;
+                            uppercaseLetter = 'I';
                         }
+                        if (st.StrippedText.Length == 1 && uppercaseLetter == 'L')
+                        {
+                            uppercaseLetter = 'I';
+                        }
+
+                        if ((st.StrippedText.StartsWith("lo ", StringComparison.Ordinal) || st.StrippedText.Equals("lo.", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("ita", StringComparison.Ordinal))
+                        {
+                            uppercaseLetter = 'I';
+                        }
+
+                        if ((st.StrippedText.StartsWith("k ", StringComparison.Ordinal) || st.StrippedText.StartsWith("m ", StringComparison.Ordinal) || st.StrippedText.StartsWith("n ", StringComparison.Ordinal) || st.StrippedText.StartsWith("r ", StringComparison.Ordinal) || st.StrippedText.StartsWith("s ", StringComparison.Ordinal) || st.StrippedText.StartsWith("t ", StringComparison.Ordinal)) &&
+                            st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName.Equals("nld", StringComparison.Ordinal))
+                        {
+                            uppercaseLetter = st.StrippedText[0];
+                        }
+
+                        if ((st.StrippedText.StartsWith("l-I'll ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-l'll ", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("eng", StringComparison.Ordinal))
+                        {
+                            uppercaseLetter = 'I';
+                            st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
+                        }
+
+                        st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
+                        text = st.Pre + st.StrippedText + st.Post;
                     }
                 }
             }

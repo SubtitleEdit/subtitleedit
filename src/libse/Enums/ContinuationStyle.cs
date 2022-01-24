@@ -11,5 +11,6 @@
         LeadingTrailingEllipsis,
         LeadingTrailingDash,
         LeadingTrailingDashDots,
+        OnlyTrailingEllipsis,
     }
 }

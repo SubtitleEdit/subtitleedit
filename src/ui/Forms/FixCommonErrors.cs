@@ -731,17 +731,17 @@ namespace Nikse.SubtitleEdit.Forms
                 _ocrFixEngine = new OcrFixEngine(_ocrFixEngineLanguage, null, this);
             }
 
-            string fixAction = _language.FixCommonOcrErrors;
-            int noOfFixes = 0;
-            string lastLine = string.Empty;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
+            var fixAction = _language.FixCommonOcrErrors;
+            var noOfFixes = 0;
+            var lastLine = string.Empty;
+            for (var i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 var p = Subtitle.Paragraphs[i];
-                string text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+                var text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                 lastLine = text;
                 if (AllowFix(p, fixAction) && p.Text != text)
                 {
-                    string oldText = p.Text;
+                    var oldText = p.Text;
                     p.Text = text;
                     noOfFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
