@@ -2,6 +2,6 @@
 {
     public interface ICalcLength
     {
-        decimal CalculateLength(string text);
+        decimal CountCharacters(string text);
     }
 }

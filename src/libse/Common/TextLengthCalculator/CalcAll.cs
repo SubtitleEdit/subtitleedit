@@ -3,9 +3,9 @@
     public class CalcAll : ICalcLength
     {
         /// <summary>
-        /// Calculate all text including space (tags are not counted).
+        /// Calculate length of all text including space (tags are not counted).
         /// </summary>
-        public decimal CalculateLength(string text)
+        public decimal CountCharacters(string text)
         {
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';

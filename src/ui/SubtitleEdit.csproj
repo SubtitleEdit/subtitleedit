@@ -1271,6 +1271,7 @@
     <Compile Include="Logic\CommandLineConvert\TsToBdnXml.cs" />
     <Compile Include="Logic\CommandLineConvert\TsConvert.cs" />
     <Compile Include="Logic\CommandLineConvert\TsToBluRaySup.cs" />
+    <Compile Include="Logic\CpsLineLength.cs" />
     <Compile Include="Logic\CurrentLanguage.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FileTypeAssociations.cs" />

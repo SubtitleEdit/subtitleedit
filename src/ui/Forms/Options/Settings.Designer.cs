@@ -40,12 +40,13 @@
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
+            this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.buttonGapChoose = new System.Windows.Forms.Button();
             this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
             this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
             this.comboBoxDialogStyle = new System.Windows.Forms.ComboBox();
-            this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.buttonEditProfile = new System.Windows.Forms.Button();
             this.comboBoxRulesProfileName = new System.Windows.Forms.ComboBox();
             this.labelRulesProfileName = new System.Windows.Forms.Label();
@@ -322,6 +323,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.labelTBBurnIn = new System.Windows.Forms.Label();
+            this.pictureBoxTBBurnIn = new System.Windows.Forms.PictureBox();
+            this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
             this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
             this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
             this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
@@ -422,9 +426,6 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
-            this.labelTBBurnIn = new System.Windows.Forms.Label();
-            this.pictureBoxTBBurnIn = new System.Windows.Forms.PictureBox();
-            this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -473,6 +474,7 @@
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
@@ -498,7 +500,6 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -654,12 +655,13 @@
             // 
             // groupBoxGeneralRules
             // 
+            this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
+            this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.buttonGapChoose);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelDialogStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxDialogStyle);
-            this.groupBoxGeneralRules.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
             this.groupBoxGeneralRules.Controls.Add(this.buttonEditProfile);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxRulesProfileName);
             this.groupBoxGeneralRules.Controls.Add(this.labelRulesProfileName);
@@ -687,6 +689,26 @@
             this.groupBoxGeneralRules.TabIndex = 0;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
+            // 
+            // comboBoxCpsLineLenCalc
+            // 
+            this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
+            this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
+            this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(203, 351);
+            this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
+            this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(170, 21);
+            this.comboBoxCpsLineLenCalc.TabIndex = 65;
+            this.comboBoxCpsLineLenCalc.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
+            // 
+            // labelCpsLineLenCalc
+            // 
+            this.labelCpsLineLenCalc.AutoSize = true;
+            this.labelCpsLineLenCalc.Location = new System.Drawing.Point(6, 354);
+            this.labelCpsLineLenCalc.Name = "labelCpsLineLenCalc";
+            this.labelCpsLineLenCalc.Size = new System.Drawing.Size(104, 13);
+            this.labelCpsLineLenCalc.TabIndex = 64;
+            this.labelCpsLineLenCalc.Text = "Cps/line length style";
             // 
             // buttonGapChoose
             // 
@@ -741,17 +763,6 @@
             this.comboBoxDialogStyle.Size = new System.Drawing.Size(170, 21);
             this.comboBoxDialogStyle.TabIndex = 57;
             this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
-            // 
-            // checkBoxCpsIncludeWhiteSpace
-            // 
-            this.checkBoxCpsIncludeWhiteSpace.AutoSize = true;
-            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(9, 354);
-            this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
-            this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(271, 17);
-            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 65;
-            this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes white spaces";
-            this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
-            this.checkBoxCpsIncludeWhiteSpace.CheckedChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // buttonEditProfile
             // 
@@ -4072,6 +4083,33 @@
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
             // 
+            // labelTBBurnIn
+            // 
+            this.labelTBBurnIn.AutoSize = true;
+            this.labelTBBurnIn.Location = new System.Drawing.Point(243, 139);
+            this.labelTBBurnIn.Name = "labelTBBurnIn";
+            this.labelTBBurnIn.Size = new System.Drawing.Size(40, 13);
+            this.labelTBBurnIn.TabIndex = 45;
+            this.labelTBBurnIn.Text = "Burn in";
+            // 
+            // pictureBoxTBBurnIn
+            // 
+            this.pictureBoxTBBurnIn.Location = new System.Drawing.Point(256, 158);
+            this.pictureBoxTBBurnIn.Name = "pictureBoxTBBurnIn";
+            this.pictureBoxTBBurnIn.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxTBBurnIn.TabIndex = 44;
+            this.pictureBoxTBBurnIn.TabStop = false;
+            // 
+            // checkBoxTBBurnIn
+            // 
+            this.checkBoxTBBurnIn.AutoSize = true;
+            this.checkBoxTBBurnIn.Location = new System.Drawing.Point(259, 198);
+            this.checkBoxTBBurnIn.Name = "checkBoxTBBurnIn";
+            this.checkBoxTBBurnIn.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBBurnIn.TabIndex = 43;
+            this.checkBoxTBBurnIn.Text = "Visible";
+            this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
+            // 
             // labelTBNetflixQualityCheck
             // 
             this.labelTBNetflixQualityCheck.AutoSize = true;
@@ -5074,39 +5112,13 @@
             this.imageListFileTypeAssociations.ImageSize = new System.Drawing.Size(32, 32);
             this.imageListFileTypeAssociations.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // labelTBBurnIn
-            // 
-            this.labelTBBurnIn.AutoSize = true;
-            this.labelTBBurnIn.Location = new System.Drawing.Point(243, 139);
-            this.labelTBBurnIn.Name = "labelTBBurnIn";
-            this.labelTBBurnIn.Size = new System.Drawing.Size(40, 13);
-            this.labelTBBurnIn.TabIndex = 45;
-            this.labelTBBurnIn.Text = "Burn in";
-            // 
-            // pictureBoxTBBurnIn
-            // 
-            this.pictureBoxTBBurnIn.Location = new System.Drawing.Point(256, 158);
-            this.pictureBoxTBBurnIn.Name = "pictureBoxTBBurnIn";
-            this.pictureBoxTBBurnIn.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxTBBurnIn.TabIndex = 44;
-            this.pictureBoxTBBurnIn.TabStop = false;
-            // 
-            // checkBoxTBBurnIn
-            // 
-            this.checkBoxTBBurnIn.AutoSize = true;
-            this.checkBoxTBBurnIn.Location = new System.Drawing.Point(259, 198);
-            this.checkBoxTBBurnIn.Name = "checkBoxTBBurnIn";
-            this.checkBoxTBBurnIn.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxTBBurnIn.TabIndex = 43;
-            this.checkBoxTBBurnIn.Text = "Visible";
-            this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFileTypeAssociations);
@@ -5114,7 +5126,6 @@
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelWordLists);
@@ -5209,6 +5220,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
@@ -5242,7 +5254,6 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5553,7 +5564,6 @@
         private System.Windows.Forms.Button buttonEditProfile;
         private System.Windows.Forms.ComboBox comboBoxRulesProfileName;
         private System.Windows.Forms.Label labelRulesProfileName;
-        private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.Label labelBingTokenEndpoint;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyComma;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyDash;
@@ -5646,5 +5656,7 @@
         private System.Windows.Forms.Label labelTBBurnIn;
         private System.Windows.Forms.PictureBox pictureBoxTBBurnIn;
         private System.Windows.Forms.CheckBox checkBoxTBBurnIn;
+        private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
+        private System.Windows.Forms.Label labelCpsLineLenCalc;
     }
 }

@@ -1542,14 +1542,14 @@ namespace Nikse.SubtitleEdit.Controls
                 string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                 foreach (string line in s.SplitToLines())
                 {
-                    if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         return;
                     }
                 }
                 int noOfLines = paragraph.NumberOfLines;
-                if (s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+                if (s.CountCharacters() <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                 {
                     if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                     {

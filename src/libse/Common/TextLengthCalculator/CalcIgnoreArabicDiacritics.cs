@@ -1,21 +1,15 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
-    public class CalcCjkNoSpace : ICalcLength
+    public class CalcIgnoreArabicDiacritics : ICalcLength
     {
         /// <summary>
         /// Calculate all text including space (tags are not counted).
         /// </summary>
         public decimal CountCharacters(string text)
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                return 0;
-            }
-
-            const string japaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
-            var count = 0m;
+            var length = 0;
             var ssaTagOn = false;
             var htmlTagOn = false;
             var max = text.Length;
@@ -46,7 +40,6 @@
                     htmlTagOn = true;
                 }
                 else if (!char.IsControl(ch) &&
-                         ch != ' ' &&
                          ch != zeroWidthSpace &&
                          ch != zeroWidthNoBreakSpace &&
                          ch != '\u200E' &&
@@ -55,28 +48,14 @@
                          ch != '\u202B' &&
                          ch != '\u202C' &&
                          ch != '\u202D' &&
-                         ch != '\u202E')
+                         ch != '\u202E' &&
+                         !(ch >= '\u064B' && ch <= '\u0653'))
                 {
-                    var number = char.GetNumericValue(ch);
-                    if (number >= 0x4E00 && number <= 0x2FA1F)
-                    {
-                        if (japaneseHalfWidthCharacters.Contains(ch))
-                        {
-                            count += 0.5m;
-                        }
-                        else
-                        {
-                            count++;
-                        }
-                    }
-                    else
-                    {
-                        count += 0.5m;
-                    }
+                    length++;
                 }
             }
-            
-            return count;
+
+            return length;
         }
     }
 }

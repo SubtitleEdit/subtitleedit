@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.MinimumMillisecondsBetweenLines = RulesProfiles[idx].MinimumMillisecondsBetweenLines;
             Configuration.Settings.General.MaxNumberOfLines = RulesProfiles[idx].MaxNumberOfLines;
             Configuration.Settings.General.SubtitleMaximumWordsPerMinute = (double)RulesProfiles[idx].SubtitleMaximumWordsPerMinute;
-            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !RulesProfiles[idx].CpsIncludesSpace;
+            Configuration.Settings.General.CpsLineLengthStrategy = RulesProfiles[idx].CpsLineLengthStrategy;
             Configuration.Settings.General.MergeLinesShorterThan = RulesProfiles[idx].MergeLinesShorterThan;
             DialogResult = DialogResult.OK;
         }

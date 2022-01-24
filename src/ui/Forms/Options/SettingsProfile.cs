@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
             labelContinuationStyle.Text = language.ContinuationStyle;
-            checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
+            labelCpsLineLenCalc.Text = language.CpsLineLengthStyle;
             listViewProfiles.Columns[0].Text = LanguageSettings.Current.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
             listViewProfiles.Columns[2].Text = language.OptimalCharactersPerSecond;
@@ -69,6 +69,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxMergeShortLineLength.EndUpdate();
             RulesProfiles = rulesProfiles;
             ShowRulesProfiles(rulesProfiles.FirstOrDefault(p => p.Name == name), true);
+        }
+
+        private void SetCpsLineLengthStyle(string cpsLineLengthStyle)
+        {
+            comboBoxCpsLineLenCalc.Items.Clear();
+            foreach (var calc in CpsLineLength.List())
+            {
+                comboBoxCpsLineLenCalc.Items.Add(calc);
+                if (cpsLineLengthStyle == calc.Code)
+                {
+                    comboBoxCpsLineLenCalc.SelectedIndex = comboBoxCpsLineLenCalc.Items.Count - 1;
+                }
+            }
+
+            if (comboBoxCpsLineLenCalc.SelectedIndex < 0)
+            {
+                comboBoxCpsLineLenCalc.SelectedIndex = 0;
+            }
         }
 
         private void ShowRulesProfiles(RulesProfile itemToFocus, bool sort)
@@ -203,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             RulesProfiles[idx].MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
             RulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
             RulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
-            RulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
+            RulesProfiles[idx].CpsLineLengthStrategy = (comboBoxCpsLineLenCalc.SelectedItem as CpsLineLength)?.Code;
             RulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 1;
             RulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             RulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
@@ -261,7 +279,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 numericUpDownMaxWordsMin.Value = p.SubtitleMaximumWordsPerMinute;
             }
-            checkBoxCpsIncludeWhiteSpace.Checked = RulesProfiles[idx].CpsIncludesSpace;
+
+            SetCpsLineLengthStyle(RulesProfiles[idx].CpsLineLengthStrategy);
             var comboIdx = RulesProfiles[idx].MergeLinesShorterThan - 1;
             if (comboIdx >= 0 && comboIdx < comboBoxMergeShortLineLength.Items.Count)
             {

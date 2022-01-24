@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         {
                             if (CalculateJapaneseLength(text) > 11)
                             {
-                                string comment = "Single vertical line length > 11";
+                                var comment = "Single vertical line length > 11";
                                 controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), comment, line.Length.ToString(CultureInfo.InvariantCulture));
                             }
                         }
@@ -33,16 +33,16 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         {
                             if (CalculateJapaneseLength(text) > 13)
                             {
-                                string comment = "Single horizontal line length > 13";
+                                var comment = "Single horizontal line length > 13";
                                 controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), comment, line.Length.ToString(CultureInfo.InvariantCulture));
                             }
                         }
                     }
-                    else if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > controller.SingleLineMaxLength)
+                    else if (line.CountCharacters() > controller.SingleLineMaxLength)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
-                        string comment = "Single line length > " + controller.SingleLineMaxLength;
+                        var comment = "Single line length > " + controller.SingleLineMaxLength;
                         controller.AddRecord(p, fixedParagraph, comment, line.Length.ToString(CultureInfo.InvariantCulture));
                     }
                 }

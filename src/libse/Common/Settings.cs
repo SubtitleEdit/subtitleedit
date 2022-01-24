@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -1231,8 +1232,7 @@ $HorzAlign          =   Center
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
         public double SubtitleOptimalCharactersPerSeconds { get; set; }
-        public bool CharactersPerSecondsIgnoreWhiteSpace { get; set; }
-        public bool IgnoreArabicDiacritics { get; set; }
+        public string CpsLineLengthStrategy { get; set; }
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
@@ -1394,7 +1394,6 @@ $HorzAlign          =   Center
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = TextEncoding.Utf8WithBom;
             AutoConvertToUtf8 = false;
-            IgnoreArabicDiacritics = false;
             AutoGuessAnsiEncoding = true;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
@@ -1524,7 +1523,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = SubtitleMaximumDisplayMilliseconds,
                 SubtitleMinimumDisplayMilliseconds = SubtitleMinimumDisplayMilliseconds,
                 SubtitleMaximumWordsPerMinute = (decimal)SubtitleMaximumWordsPerMinute,
-                CpsIncludesSpace = !CharactersPerSecondsIgnoreWhiteSpace,
+                CpsLineLengthStrategy = CpsLineLengthStrategy,
                 MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
                 DialogStyle = DialogStyle,
                 ContinuationStyle = ContinuationStyle
@@ -1545,7 +1544,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
                 ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
@@ -1561,7 +1560,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
@@ -1577,7 +1576,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
@@ -1593,7 +1592,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
@@ -1609,7 +1608,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = typeof(CalcIgnoreArabicDiacritics).Name,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
@@ -1625,7 +1624,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
                 ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
@@ -1641,7 +1640,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
@@ -1657,7 +1656,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 10000,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -1673,7 +1672,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1400,
                 SubtitleMaximumWordsPerMinute = 280,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.OnlyTrailingDots
@@ -1689,7 +1688,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1400,
                 SubtitleMaximumWordsPerMinute = 280,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.OnlyTrailingDots
@@ -1705,7 +1704,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1200,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashSecondLineWithSpace,
                 ContinuationStyle = ContinuationStyle.OnlyTrailingDots
@@ -1721,7 +1720,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1200,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashSecondLineWithSpace,
                 ContinuationStyle = ContinuationStyle.OnlyTrailingDots
@@ -1737,7 +1736,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 8008,
                 SubtitleMinimumDisplayMilliseconds = 2002,
                 SubtitleMaximumWordsPerMinute = 280,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
@@ -1753,7 +1752,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 8000,
                 SubtitleMinimumDisplayMilliseconds = 2000,
                 SubtitleMaximumWordsPerMinute = 280,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
@@ -1769,7 +1768,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 5005,
                 SubtitleMinimumDisplayMilliseconds = 792,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -1785,7 +1784,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 5000,
                 SubtitleMinimumDisplayMilliseconds = 800,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -1801,7 +1800,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 5005,
                 SubtitleMinimumDisplayMilliseconds = 792,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 167,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -1817,7 +1816,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 5000,
                 SubtitleMinimumDisplayMilliseconds = 800,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 160,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -1833,7 +1832,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 5005,
                 SubtitleMinimumDisplayMilliseconds = 792,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 250,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -1849,7 +1848,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 5000,
                 SubtitleMinimumDisplayMilliseconds = 800,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = true,
+                CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 240,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.None
@@ -2871,7 +2870,7 @@ $HorzAlign          =   Center
                 var subtitleMinimumDisplayMilliseconds = listNode.SelectSingleNode("SubtitleMinimumDisplayMilliseconds")?.InnerText;
                 var subtitleMaximumDisplayMilliseconds = listNode.SelectSingleNode("SubtitleMaximumDisplayMilliseconds")?.InnerText;
                 var subtitleMaximumWordsPerMinute = listNode.SelectSingleNode("SubtitleMaximumWordsPerMinute")?.InnerText;
-                var cpsIncludesSpace = listNode.SelectSingleNode("CpsIncludesSpace")?.InnerText;
+                var cpsLineLengthStrategy = listNode.SelectSingleNode("CpsLineLengthStrategy")?.InnerText;
                 var maxNumberOfLines = listNode.SelectSingleNode("MaxNumberOfLines")?.InnerText;
                 var mergeLinesShorterThan = listNode.SelectSingleNode("MergeLinesShorterThan")?.InnerText;
                 var minimumMillisecondsBetweenLines = listNode.SelectSingleNode("MinimumMillisecondsBetweenLines")?.InnerText;
@@ -2931,7 +2930,7 @@ $HorzAlign          =   Center
                     SubtitleMinimumDisplayMilliseconds = Convert.ToInt32(subtitleMinimumDisplayMilliseconds, CultureInfo.InvariantCulture),
                     SubtitleMaximumDisplayMilliseconds = Convert.ToInt32(subtitleMaximumDisplayMilliseconds, CultureInfo.InvariantCulture),
                     SubtitleMaximumWordsPerMinute = Convert.ToDecimal(subtitleMaximumWordsPerMinute, CultureInfo.InvariantCulture),
-                    CpsIncludesSpace = Convert.ToBoolean(cpsIncludesSpace, CultureInfo.InvariantCulture),
+                    CpsLineLengthStrategy = cpsLineLengthStrategy,
                     MaxNumberOfLines = Convert.ToInt32(maxNumberOfLines, CultureInfo.InvariantCulture),
                     MergeLinesShorterThan = Convert.ToInt32(mergeLinesShorterThan, CultureInfo.InvariantCulture),
                     MinimumMillisecondsBetweenLines = Convert.ToInt32(minimumMillisecondsBetweenLines, CultureInfo.InvariantCulture),
@@ -3362,16 +3361,10 @@ $HorzAlign          =   Center
                 settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("CharactersPerSecondsIgnoreWhiteSpace");
+            subNode = node.SelectSingleNode("CpsLineLengthStrategy");
             if (subNode != null)
             {
-                settings.General.CharactersPerSecondsIgnoreWhiteSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
-            subNode = node.SelectSingleNode("IgnoreArabicDiacritics");
-            if (subNode != null)
-            {
-                settings.General.IgnoreArabicDiacritics = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.General.CpsLineLengthStrategy = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("SubtitleMaximumWordsPerMinute");
@@ -7289,7 +7282,7 @@ $HorzAlign          =   Center
                         SubtitleMaximumDisplayMilliseconds = settings.General.SubtitleMaximumDisplayMilliseconds,
                         SubtitleMinimumDisplayMilliseconds = settings.General.SubtitleMinimumDisplayMilliseconds,
                         SubtitleMaximumWordsPerMinute = (decimal)settings.General.SubtitleMaximumWordsPerMinute,
-                        CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
+                        CpsLineLengthStrategy = settings.General.CpsLineLengthStrategy,
                         MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
                         DialogStyle = settings.General.DialogStyle,
                         ContinuationStyle = settings.General.ContinuationStyle
@@ -9279,7 +9272,7 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", profile.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", profile.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("MinimumMillisecondsBetweenLines", profile.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
-                    textWriter.WriteElementString("CpsIncludesSpace", profile.CpsIncludesSpace.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("CpsLineLengthStrategy", profile.CpsLineLengthStrategy);
                     textWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("DialogStyle", profile.DialogStyle.ToString());
@@ -9357,8 +9350,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("IgnoreArabicDiacritics", settings.General.IgnoreArabicDiacritics.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CpsLineLengthStrategy", settings.General.CpsLineLengthStrategy);
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
