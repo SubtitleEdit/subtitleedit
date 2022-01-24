@@ -6175,6 +6175,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ContinuationStyleNoneTrailingEllipsis":
                     language.Settings.ContinuationStyleNoneTrailingEllipsis = reader.Value;
                     break;
+                case "Settings/ContinuationStyleOnlyTrailingEllipsis":
+                    language.Settings.ContinuationStyleOnlyTrailingEllipsis = reader.Value;
+                    break;
                 case "Settings/ContinuationStyleLeadingTrailingDash":
                     language.Settings.ContinuationStyleLeadingTrailingDash = reader.Value;
                     break;
