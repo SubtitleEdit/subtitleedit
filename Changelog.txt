@@ -9,6 +9,7 @@
    * Add "File type associations" in Options - Settings
    * Add "waveform-multi-move" with Ctrl+mouse-move
    * Add burn-in toolbar icon - thx Leon/ jaydeflix
+   * Add more line witdth (cps) calculation options
    * Add shortcuts for Tools - Sort By - thx Jolana
    * Add shortcut for re-calc duration to min - thx m0ck69
    * Add shortcut for edit of bookmark - thx OmrSi
