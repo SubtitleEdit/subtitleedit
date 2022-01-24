@@ -47,12 +47,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            int minGapMs = ContinuationUtilities.GetMinimumGapMs();
+            var minGapMs = ContinuationUtilities.GetMinimumGapMs();
 
-            bool inSentence = false;
+            var inSentence = false;
             bool? inItalicSentence = null;
 
-            for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+            for (var i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 var pNext = subtitle.Paragraphs[i + 1];
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var shouldProcess = true;
 
                 // Detect gap
-                bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= minGapMs;
+                var gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= minGapMs;
 
                 // Convert for Arabic
                 if (callbacks.Language == "ar")
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var textNextWithoutPrefix = ContinuationUtilities.SanitizeString(oldTextNextWithoutPrefix, true);
 
                     // Get last word of this paragraph
-                    string lastWord = ContinuationUtilities.GetLastWord(text);
+                    var lastWord = ContinuationUtilities.GetLastWord(text);
 
 
                     // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // and profile states to NOT replace comma,
                         // and next sentence starts with conjunction,
                         // try to re-add comma
-                        bool addComma = lastWord.EndsWith(",") || HasSuffix(text)
+                        var addComma = lastWord.EndsWith(",") || HasSuffix(text)
                                         && (gap ? !_continuationProfile.GapSuffixReplaceComma : !_continuationProfile.SuffixReplaceComma)
                                         && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language);
 
