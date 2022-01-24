@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly bool _isSubStationAlpha;
         private readonly string _videoFileName;
         private readonly VideoInfo _currentVideoInfo;
-        private int _height;
+        private readonly int _height;
 
         public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, VideoInfo currentVideoInfo, string subtitleFileName)
         {

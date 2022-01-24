@@ -61,6 +61,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             buttonRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
             buttonTextColor.Text = LanguageSettings.Current.Settings.WaveformTextColor;
+            buttonReset.Text = LanguageSettings.Current.General.Reset;
+            buttonTakePosFromVideo.Text = l.TakePosFromVideo;
             columnHeaderName.Text = LanguageSettings.Current.General.Text;
             columnHeaderStart.Text = LanguageSettings.Current.General.StartTime;
 
@@ -529,7 +531,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var script = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+script.
 ScriptType: v4.00+
-Collisions: Normal
+ScaledBorderAndShadow: Yes
 PlayResX: [VIDEO_WIDTH]
 PlayResY: [VIDEO_HEIGHT]
 

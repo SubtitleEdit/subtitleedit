@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (errors.Count > 0)
                 {
                     p.Bookmark = string.Join(" -- ", errors);
-                    ListViewItem item = new ListViewItem("#" + p.Number) { Tag = p };
+                    var item = new ListViewItem("#" + p.Number) { Tag = p };
                     item.SubItems.Add(p.StartTime.ToShortDisplayString());
                     item.SubItems.Add(p.Bookmark);
                     listViewErrors.Items.Add(item);
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {listViewErrors.Items.Count}";
         }
 
-        private List<string> GetErrors(Paragraph paragraph, int i, List<Paragraph> paragraphs)
+        private List<string> GetErrors(Paragraph paragraph, int i, IReadOnlyList<Paragraph> paragraphs)
         {
             var errors = new List<string>();
 
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
                     errors.Add($"WPM: {paragraph.WordsPerMinute:#,###.00} > {Configuration.Settings.General.SubtitleMaximumWordsPerMinute}");
                 }
 
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                var charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     errors.Add($"CPS: {charactersPerSecond:#,###.00} > {Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds}");
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (i >= 0 && i < paragraphs.Count - 1)
                 {
-                    Paragraph next = paragraphs[i + 1];
+                    var next = paragraphs[i + 1];
                     var gapMilliseconds = (int)Math.Round(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds);
                     if (gapMilliseconds < 0)
                     {
@@ -112,18 +112,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-            foreach (string line in s.SplitToLines())
+            var s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+            foreach (var line in s.SplitToLines())
             {
-                var count = line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+                var count = line.CountCharacters();
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength)
                 {
                     errors.Add($"Line too long: {count} > {Configuration.Settings.General.SubtitleLineMaximumLength}");
                 }
             }
 
-            int noOfLines = paragraph.NumberOfLines;
-            if (s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+            var noOfLines = paragraph.NumberOfLines;
+            if (s.CountCharacters() <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
             {
                 if (noOfLines > Configuration.Settings.General.MaxNumberOfLines)
                 {
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
             {
                 s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-                foreach (string line in s.SplitToLines())
+                foreach (var line in s.SplitToLines())
                 {
                     var pixels = TextWidth.CalcPixelWidth(line);
                     if (pixels > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
@@ -221,13 +221,13 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine(MakeParagraphCsvLine(p));
                 }
 
-                File.WriteAllText(saveDialog.FileName, sb.ToString());
+                File.WriteAllText(saveDialog.FileName, sb.ToString(), Encoding.UTF8);
             }
         }
 
         private static string MakeParagraphCsvLine(Paragraph paragraph)
         {
-            const string separator = ";";
+            const string separator = ",";
             var sb = new StringBuilder();
             sb.Append(paragraph.Number + separator);
             sb.Append(ToCsvText(paragraph.StartTime.ToDisplayString()) + separator);
@@ -255,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.Append("\"");
                 }
             }
+
             sb.Append("\"");
             return sb.ToString();
         }

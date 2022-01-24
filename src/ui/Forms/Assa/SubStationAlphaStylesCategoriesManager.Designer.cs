@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Forms.Styles
+﻿namespace Nikse.SubtitleEdit.Forms.Assa
 {
     sealed partial class SubStationAlphaStylesCategoriesManager
     {
@@ -38,7 +38,6 @@
             this.listViewCategories = new System.Windows.Forms.ListView();
             this.columnHeaderForName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderForStyles = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderForDefault = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripCategories = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRename = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,15 +54,16 @@
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.columnHeaderForDefault = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxCategories.SuspendLayout();
             this.contextMenuStripCategories.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxCategories
             // 
-            this.groupBoxCategories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right));
+            this.groupBoxCategories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxCategories.Controls.Add(this.buttonExportCategories);
             this.groupBoxCategories.Controls.Add(this.buttonImportCategories);
             this.groupBoxCategories.Controls.Add(this.buttonSetDefaultCategory);
@@ -79,7 +79,8 @@
             // 
             // buttonExportCategories
             // 
-            this.buttonExportCategories.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExportCategories.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExportCategories.Location = new System.Drawing.Point(178, 380);
             this.buttonExportCategories.Name = "buttonExportCategories";
             this.buttonExportCategories.Size = new System.Drawing.Size(164, 23);
@@ -101,7 +102,8 @@
             // 
             // buttonSetDefaultCategory
             // 
-            this.buttonSetDefaultCategory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSetDefaultCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSetDefaultCategory.Location = new System.Drawing.Point(8, 352);
             this.buttonSetDefaultCategory.Name = "buttonSetDefaultCategory";
             this.buttonSetDefaultCategory.Size = new System.Drawing.Size(335, 23);
@@ -112,7 +114,8 @@
             // 
             // buttonRemoveCategory
             // 
-            this.buttonRemoveCategory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemoveCategory.Location = new System.Drawing.Point(178, 324);
             this.buttonRemoveCategory.Name = "buttonRemoveCategory";
             this.buttonRemoveCategory.Size = new System.Drawing.Size(164, 23);
@@ -134,7 +137,7 @@
             // 
             // listViewCategories
             // 
-            this.listViewCategories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.listViewCategories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewCategories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -147,14 +150,13 @@
             this.listViewCategories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewCategories.HideSelection = false;
             this.listViewCategories.Location = new System.Drawing.Point(8, 20);
-            this.listViewCategories.MultiSelect = true;
             this.listViewCategories.Name = "listViewCategories";
             this.listViewCategories.Size = new System.Drawing.Size(335, 299);
             this.listViewCategories.TabIndex = 0;
             this.listViewCategories.UseCompatibleStateImageBehavior = false;
             this.listViewCategories.View = System.Windows.Forms.View.Details;
-            this.listViewCategories.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewCategories_KeyDown);
             this.listViewCategories.SelectedIndexChanged += new System.EventHandler(this.ListViewCategories_SelectedIndexChanged);
+            this.listViewCategories.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewCategories_KeyDown);
             // 
             // columnHeaderForName
             // 
@@ -165,12 +167,6 @@
             // 
             this.columnHeaderForStyles.Text = "Number of styles";
             this.columnHeaderForStyles.Width = 100;
-            // 
-            // columnHeaderForDefault
-            // 
-            this.columnHeaderForDefault.Name = "Default";
-            this.columnHeaderForDefault.Text = "Default";
-            this.columnHeaderForDefault.Width = 100;
             // 
             // contextMenuStripCategories
             // 
@@ -188,13 +184,13 @@
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem});
             this.contextMenuStripCategories.Name = "contextMenuStripCategories";
-            this.contextMenuStripCategories.Size = new System.Drawing.Size(216, 214);
+            this.contextMenuStripCategories.Size = new System.Drawing.Size(216, 236);
             this.contextMenuStripCategories.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripCategories_Opening);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.N)));
             this.newToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.newToolStripMenuItem.Text = "New...";
@@ -314,13 +310,13 @@
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(200, 300);
+            this.MinimumSize = new System.Drawing.Size(376, 491);
             this.Name = "SubStationAlphaStylesCategoriesManager";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Assa Categories Manager";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStylesCategoriesManager_KeyDown);
             this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStylesCategoriesManager_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStylesCategoriesManager_KeyDown);
             this.groupBoxCategories.ResumeLayout(false);
             this.contextMenuStripCategories.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -338,7 +334,6 @@
         private System.Windows.Forms.ListView listViewCategories;
         private System.Windows.Forms.ColumnHeader columnHeaderForName;
         private System.Windows.Forms.ColumnHeader columnHeaderForStyles;
-        private System.Windows.Forms.ColumnHeader columnHeaderForDefault;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripCategories;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRename;
@@ -355,5 +350,6 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialogImport;
+        private System.Windows.Forms.ColumnHeader columnHeaderForDefault;
     }
 }

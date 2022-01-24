@@ -25,6 +25,7 @@
     <OpenVideoFile>Åbn video fil...</OpenVideoFile>
     <OpenVideoFileTitle>Åbn video fil...</OpenVideoFileTitle>
     <NoVideoLoaded>Ingen video indlæst</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>Funktionen er ikke tilgængelig for online video</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Video info</VideoInformation>
     <StartTime>Starttid</StartTime>
     <EndTime>Sluttid</EndTime>
@@ -93,6 +94,7 @@
     <Collapse>Fold sammen</Collapse>
     <ShortcutX>Genvej: {0}</ShortcutX>
     <ExampleX>Eksempel: {0}</ExampleX>
+    <Reset>Nulstil</Reset>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -124,6 +126,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Kilde video-fil:</SourceVideoFile>
     <GenerateWaveformData>Generer bølgeform data</GenerateWaveformData>
     <PleaseWait>Dette kan tage et par minutter - vent venligst</PleaseWait>
+    <FfmpegNotFound>Subtitle Edit kræver FFmpeg for at analysere audio. Hent FFmpeg nu?</FfmpegNotFound>
     <GeneratingPeakFile>Genererer peak-fil...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generer spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>
@@ -163,6 +166,17 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixesAvailable>Mulige rettelser: {0}</FixesAvailable>
     <UnableToFix>Kan ikke rettes: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Lyd til tekst</Title>
+    <Info>Generer tekst fra lyd via Vosk/Kaldi talegenkendelse</Info>
+    <VoskWebsite>Vosk hjemmeside</VoskWebsite>
+    <Models>Modeller</Models>
+    <ChooseModel>Vælg model</ChooseModel>
+    <OpenModelsFolder>Åbn mappen modeller</OpenModelsFolder>
+    <LoadingVoskModel>Indlæser Vosk talegenkendelsesmodel...</LoadingVoskModel>
+    <Transcribing>Transskriberer lyd til tekst...</Transcribing>
+    <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
     <AttachFiles>Vedhæft filer...</AttachFiles>
@@ -210,7 +224,23 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ChangeResolutionFontSize>Skift opløsning for skriftstørrelse</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Skift opløsning for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Skift opløsning for tegninger</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>Kilde og målopløsning er den samme - intet at gøre.</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>Generer baggrundsboks</Title>
+    <Padding>Padding</Padding>
+    <FillWidth>Fyldbredde</FillWidth>
+    <Drawing>Tegning</Drawing>
+    <BoxColor>Boks farve</BoxColor>
+    <Radius>Radius</Radius>
+    <Step>Trin</Step>
+    <MaxSpike>Max spids</MaxSpike>
+    <Spikes>Pigge</Spikes>
+    <MarginX>Margen X</MarginX>
+    <MarginY>Margen Y</MarginY>
+    <OnlyDrawing>Kun tegning</OnlyDrawing>
+    <DrawingFile>Tegning fil</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Indstil/hent position</SetPosition>
     <VideoResolutionX>Video opløsning: {0}</VideoResolutionX>
@@ -223,14 +253,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RotateXAxis>Drej {0} akse</RotateXAxis>
     <DistortX>Forvræng {0}</DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>Lyd til tekst</Title>
-    <ExtractingAudioUsingX>Udtræk lyd ved hjælp af {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Udtræk tekst fra lyd ved hjælp af {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Udtræk tekst via {0} fremskridt: {1}%</ProgessViaXy>
-    <ShowLess>Vis mindre ▲</ShowLess>
-    <ShowMore>Vis mere ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto ombryd valgte linjer</TitleAutoBreak>
     <TitleUnbreak>Fjern linjeskift i valgte linjer</TitleUnbreak>
@@ -791,12 +813,13 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <CheckeredImage>Ternet billede</CheckeredImage>
     <SolidColor>Farve</SolidColor>
     <DurationInMinutes>Varighed i minutter</DurationInMinutes>
+    <Background>Baggrund</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Generer video med indbrændt subtil</Title>
     <InfoAssaOff>Bemærk: Avanceret substation Alpha -styling understøttes.</InfoAssaOff>
     <InfoAssaOn>Bemærk: Avanceret substation Alpha styling vil blive brugt :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" genereret med indbrændt undertekst.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" genereret med indbrændt undertekst tog {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Resterende tid: {0} minutter</TimeRemainingMinutes>
     <TimeRemainingSeconds>Resterende tid: {0} sekunder</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Resterende tid: {0} minutter og {1} sekunder</TimeRemainingMinutesAndSeconds>
@@ -807,6 +830,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Encoding>Encoding</Encoding>
     <BitRate>Bit rate</BitRate>
     <SampleRate>Sample rate</SampleRate>
+    <Audio>Lyd</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
     <Crf>CRF</Crf>
@@ -1175,11 +1199,12 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorter efter</SortBy>
-        <NetflixQualityCheck>Netflix kvalitetskontrol...</NetflixQualityCheck>
         <Number>Number</Number>
         <StartTime>Starttidspunkt</StartTime>
         <EndTime>Sluttidspunkt</EndTime>
         <Duration>Varighed</Duration>
+        <ListErrors>Liste over fejl...</ListErrors>
+        <NetflixQualityCheck>Netflix kvalitetskontrol...</NetflixQualityCheck>
         <TextAlphabetically>Tekst - alfabetisk</TextAlphabetically>
         <TextSingleLineMaximumLength>Tekst - enkelt linje max. længde</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - samlet længde</TextTotalLength>
@@ -1210,9 +1235,10 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>Video/lyd til tekst...</VideoAudioToText>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generer/importer sceneændringer...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
+        <RemoveOrExportSceneChanges>Fjern/eksporter sceneændringer...</RemoveOrExportSceneChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveform>Vis/skjul lyd kurve</ShowHideWaveform>
@@ -1352,6 +1378,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SetPosition>Indstil position...</SetPosition>
         <GenerateProgressBar>Generer statuslinje...</GenerateProgressBar>
         <AssaResolutionChanger>Skift scriptopløsning...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Generer baggrundsboks...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
@@ -1697,6 +1724,11 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <NoSupportHereDivx>DivX-filer understøttes ikke her.</NoSupportHereDivx>
     <NoChapters>Ingen kapitler fundet i videoen.</NoChapters>
     <DarkThemeRestart>Genstart Subtitle Edit for at temaændringer træder i kraft.</DarkThemeRestart>
+    <VideoFromUrlRequirements>Åbning af video fra url kræver mpv og youtube-dl - download og fortsæt?</VideoFromUrlRequirements>
+    <Errors>Fejl</Errors>
+    <ShowVideoControls>Vis video vindue</ShowVideoControls>
+    <HideVideoControls>Skjul vide vindue</HideVideoControls>
+    <GeneratingWaveformInBackground>Genererer bølgeform i baggrunden...</GeneratingWaveformInBackground>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1710,6 +1742,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <ConvertTo>Konverter til</ConvertTo>
     <CopyToClipboard>Kopier til udklipsholder</CopyToClipboard>
     <CloseOnInsert>Luk ved indsæt</CloseOnInsert>
+    <Insert>Indsæt</Insert>
     <Length>Længde</Length>
     <Mass>Masse</Mass>
     <Volume>Volume</Volume>
@@ -1887,6 +1920,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <RenameGroup>Omdøb gruppe...</RenameGroup>
     <NewGroup>Ny gruppe...</NewGroup>
     <NothingToImport>Intet at importere</NothingToImport>
+    <RuleInfo>Regeloplysninger</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -2027,6 +2061,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WordLists>Ordlister</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
     <Network>Netværk</Network>
+    <FileTypeAssociations>Filtypetilknytninger</FileTypeAssociations>
     <Rules>Regler</Rules>
     <ShowToolBarButtons>Vis Værktøjslinjeknapperne</ShowToolBarButtons>
     <New>Ny</New>
@@ -2154,6 +2189,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Enkeltklik for at vælge undertekster</WaveformSingleClickSelect>
     <WaveformSnapToSceneChanges>Skift til sceneændringer (hold "shift" nede for at override)</WaveformSnapToSceneChanges>
+    <WaveformAutoGen>Generer automatisk bølgeform, når du åbner video</WaveformAutoGen>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
     <WaveformColor>Farve</WaveformColor>
@@ -2170,7 +2206,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
     <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
-    <DownloadFFmpeg>Download FFmpeg</DownloadFFmpeg>
+    <DownloadX>Download {0}</DownloadX>
     <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
@@ -2301,8 +2337,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustExtendNextLineStartToCurrentEnd>Forlæng næste linjes start til strømens slutning</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Genberegn varigheden af ​​den aktuelle undertekst (baseret på optimal læsehastighed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Genberegn varigheden af ​​den aktuelle undertekst (baseret på minimum læsehastighed)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
+    <MergeDialogWithNext>Flet dialog med næste (indsæt bindestreger)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>Flet dialog med forrige (indsæt bindestreger)</MergeDialogWithPrevious>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToNextPlayTranslate>Gå til næste linje (og spil i 'Oversæt tilstand')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gå til næste linje, og indstil markøren i slutningen</GoToNextCursorAtEnd>
@@ -2350,6 +2389,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformGoToPreviousSceneChange>Gå til forrige sceneændring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
+    <WaveformRemoveOrExportSceneChanges>Fjern/eksporter sceneændringer</WaveformRemoveOrExportSceneChanges>
     <WaveformGuessStart>Autojuster start via lydstyrke/sceneændring</WaveformGuessStart>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
     <GoForward1Frame>En frame frem</GoForward1Frame>
@@ -2416,6 +2456,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SplitSelectedLineBilingual>Split valgte linie tosproget</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Skift original- og oversættelsestekstbokse/listevisningskolonner</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Flet original og oversættelse</MergeOriginalAndTranslation>
     <MergeWithNext>Flet med næste</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Flet sammen med forrige og fjern linjeskift</MergeWithPreviousAndUnbreak>
@@ -2433,6 +2474,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListViewColumnTextUp>Kolonne, tekst op</ListViewColumnTextUp>
     <ListViewColumnTextDown>Kolonne, tekst ned</ListViewColumnTextDown>
     <ListViewGoToNextError>Gå til næste fejl</ListViewGoToNextError>
+    <ListViewListErrors>Liste over fejl</ListViewListErrors>
+    <ListViewListSortByX>Sorter efter {0}</ListViewListSortByX>
     <ShowStyleManager>Vis style manager</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
@@ -2487,6 +2530,8 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Rediger</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Genveje: Tillad enkelt bogstav/tal i tekstfeltet</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <UpdateFileTypeAssociations>Opdater filtypetilknytninger</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>Filtypetilknytninger opdateret</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
@@ -2494,7 +2539,6 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>MPV lib blev hentet og er klar til brug.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Download FFmpeg</Title>
     <XDownloadFailed>Kan ikke downloade {0} - prøv igen senere!</XDownloadFailed>
     <XDownloadOk>{0} blev downloadet og er klar til brug.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2671,6 +2715,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <WrapStyle>Wrap stil</WrapStyle>
     <Collision>Kollision</Collision>
     <ScaleBorderAndShadow>Scaler kant og skygge</ScaleBorderAndShadow>
+    <WrapStyle0>0: Smart ombrydning, toplinjen er bredere</WrapStyle0>
+    <WrapStyle1>1: End-of-line ombrydning, kun \N bryder</WrapStyle1>
+    <WrapStyle2>2: Ingen ombrydning, både\n og \N bryder</WrapStyle2>
+    <WrapStyle3>3: Smart ombrydning, bundlinjen er bredere</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Avanceret Sub Station Alpha stilarter</Title>

@@ -6,6 +6,7 @@
     <name>Black</name>
     <name>Male</name>
   </blacklist>
+  <name>2Pac</name>
   <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
@@ -241,6 +242,7 @@
   <name>Birnbaum</name>
   <name>Blakely</name>
   <name>Blaze</name>
+  <name>Bo Diddley</name>
   <name>Boba Fett</name>
   <name>Boca Chica</name>
   <name>Bodhi</name>
@@ -405,8 +407,10 @@
   <name>Chongqing</name>
   <name>Christmas Island</name>
   <name>Ciara</name>
+  <name>Clairmont</name>
   <name>Clara</name>
   <name>Clare</name>
+  <name>Clermont</name>
   <name>Clipperton Island</name>
   <name>Clooney</name>
   <name>Coachella</name>
@@ -456,6 +460,7 @@
   <name>Czech Republic</name>
   <name>Czechia</name>
   <name>Czechs</name>
+  <name>D.A.</name>
   <name>Dacca</name>
   <name>Dahlia</name>
   <name>Dalia</name>
@@ -666,6 +671,7 @@
   <name>Georgiou</name>
   <name>Gerard Depardieu</name>
   <name>Gerardo</name>
+  <name>Gerbert</name>
   <name>German</name>
   <name>Germans</name>
   <name>Germany</name>
@@ -778,6 +784,7 @@
   <name>Hungarian</name>
   <name>Hungarians</name>
   <name>Hungary</name>
+  <name>I.D.</name>
   <name>Iceland</name>
   <name>Icelander</name>
   <name>Icelanders</name>
@@ -1043,6 +1050,7 @@
   <name>Kenyan</name>
   <name>Kenyans</name>
   <name>Kenzie</name>
+  <name>Ketamine</name>
   <name>Keyla</name>
   <name>Keyon</name>
   <name>Khalil</name>
@@ -1068,6 +1076,7 @@
   <name>Kobe</name>
   <name>Kody</name>
   <name>Kohen</name>
+  <name>Kokoda</name>
   <name>Kolby</name>
   <name>Kole</name>
   <name>Kolten</name>
@@ -1172,6 +1181,7 @@
   <name>Liechtenstein</name>
   <name>Liechtensteiner</name>
   <name>Liechtensteiners</name>
+  <name>Lil' Kim</name>
   <name>Lila</name>
   <name>Lilah</name>
   <name>Lilia</name>
@@ -1213,6 +1223,7 @@
   <name>M&amp;M</name>
   <name>Maasai</name>
   <name>Mabel</name>
+  <name>MacAlpine</name>
   <name>Macao</name>
   <name>Macao SAR China</name>
   <name>Macedonian</name>
@@ -1459,6 +1470,7 @@
   <name>Norwegian</name>
   <name>Norwegians</name>
   <name>Nova Scotia</name>
+  <name>Nùñez</name>
   <name>Nutella</name>
   <name>Nyla</name>
   <name>Nylah</name>
@@ -1466,7 +1478,9 @@
   <name>Oceania</name>
   <name>Oeufcocque Penteano</name>
   <name>Oeufcocque-Penteano</name>
+  <name>O'Flynn</name>
   <name>Ogilvie</name>
+  <name>O'Jays</name>
   <name>Oliveira</name>
   <name>Oman</name>
   <name>Omani</name>
@@ -1480,6 +1494,7 @@
   <name>Ottawa</name>
   <name>Outlying Oceania</name>
   <name>P.A.</name>
+  <name>P.D.</name>
   <name>Paisley</name>
   <name>Paityn</name>
   <name>Pakistan</name>
@@ -1516,6 +1531,7 @@
   <name>Peruvians</name>
   <name>Philippines</name>
   <name>Pinella</name>
+  <name>Pippi Longstocking</name>
   <name>Pinkman</name>
   <name>Pitcairn Islands</name>
   <name>Poindexter</name>
@@ -1570,6 +1586,7 @@
   <name>Rayne</name>
   <name>Rebekah</name>
   <name>Reece</name>
+  <name>Reddington</name>
   <name>Regan</name>
   <name>Reid</name>
   <name>Remington</name>
@@ -1953,6 +1970,7 @@
   <name>Western Sahara</name>
   <name>Westin</name>
   <name>Weston</name>
+  <name>Westside</name>
   <name>Westwood</name>
   <name>Wilco</name>
   <name>Willow</name>

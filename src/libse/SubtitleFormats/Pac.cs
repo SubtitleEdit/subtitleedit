@@ -1008,18 +1008,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".pac";
 
-        public virtual bool IsFPC { get; set; } = false;
+        public virtual bool IsFpc { get; set; }
 
         public const string NameOfFormat = "PAC (Screen Electronics)";
 
         public override string Name => NameOfFormat;
 
-        private static readonly byte[] MarkerStartOfUnicode = new byte[] { 0x1f, 0xef, 0xbb, 0xbf };
+        private static readonly byte[] MarkerStartOfUnicode = { 0x1f, 0xef, 0xbb, 0xbf };
         private const byte MarkerEndOfUnicode = 0x2e;
         private const byte MarkerReplaceEndOfUnicode = 0xff;
 
-        private bool doWritePACHeaderOpt => IsFPC; // Unknown paragraph header. Seems optionnal both for PAC and FPC: inserted here for expected broader FPC compatibility, including prior versions of SubtitleEdit
-        private static readonly byte[] PACHeaderOpt = new byte[] { 0x80, 0x80, 0x80 };
+        private bool DoWritePacHeaderOpt => IsFpc; // Unknown paragraph header. Seems optional both for PAC and FPC: inserted here for expected broader FPC compatibility, including prior versions of SubtitleEdit
+        private static readonly byte[] PacHeaderOpt = { 0x80, 0x80, 0x80 };
 
         public bool Save(string fileName, Subtitle subtitle)
         {
@@ -1035,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // header
             stream.WriteByte(1);
-            for (int i = 1; i < 23; i++)
+            for (var i = 1; i < 23; i++)
             {
                 stream.WriteByte(0);
             }
@@ -1043,23 +1043,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             stream.WriteByte(0x60);
 
             // paragraphs
-            int number = 0;
-            foreach (var p in subtitle.Paragraphs)
+            var number = 1;
+            var firstParagraph = subtitle.Paragraphs.FirstOrDefault();
+            if (firstParagraph != null &&
+                Math.Abs(firstParagraph.StartTime.TotalMilliseconds) < 0.001 &&
+                firstParagraph.EndTime.TotalMilliseconds < 350)
             {
-                WriteParagraph(stream, p, number, number + 1 == subtitle.Paragraphs.Count);
+                number = 0;
+            }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var p = subtitle.Paragraphs[index];
+                WriteParagraph(stream, p, number, index + 1 == subtitle.Paragraphs.Count);
                 number++;
             }
 
             // footer
             stream.WriteByte(0xff);
-            for (int i = 0; i < 11; i++)
+            for (var i = 0; i < 11; i++)
             {
                 stream.WriteByte(0);
             }
 
             stream.WriteByte(0x11);
             stream.WriteByte(0);
-            byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
+            var footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
             stream.Write(footerBuffer, 0, footerBuffer.Length);
             return true;
         }
@@ -1069,7 +1078,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
 
-            if (CodePage == -1 && !IsFPC)
+            if (CodePage == -1 && !IsFpc)
             {
                 GetCodePage(null, 0, 0);
             }
@@ -1106,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var encoding = GetEncoding(CodePage);
             byte[] textBuffer;
 
-            if (IsFPC)
+            if (IsFpc)
             {
                 textBuffer = GetUnicodeBytes(text, alignment);
             }
@@ -1160,12 +1169,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             // write text length
-            var length = (ushort)(textBuffer.Length + 4 + (doWritePACHeaderOpt ? PACHeaderOpt.Length : 0));
+            var length = (ushort)(textBuffer.Length + 4 + (DoWritePacHeaderOpt ? PacHeaderOpt.Length : 0));
             fs.Write(BitConverter.GetBytes(length), 0, 2);
 
             fs.WriteByte(verticalAlignment); // fs.WriteByte(0x0a); // sometimes 0x0b? - this seems to be vertical alignment - 0 to 11
-            if (doWritePACHeaderOpt)
-                fs.Write(PACHeaderOpt, 0, PACHeaderOpt.Length);
+            if (DoWritePacHeaderOpt)
+            {
+                fs.Write(PacHeaderOpt, 0, PacHeaderOpt.Length);
+            }
+
             fs.WriteByte(0xfe);
             fs.WriteByte(alignment); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
             //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
@@ -1176,8 +1188,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!isLast)
             {
                 fs.WriteByte(0);
-                fs.WriteByte((byte)((number + 1) % 256));
-                fs.WriteByte((byte)((number + 1) / 256));
+                fs.WriteByte((byte)(number % 256));
+                fs.WriteByte((byte)(number / 256));
                 fs.WriteByte(0x60);
             }
         }
@@ -1468,11 +1480,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _lastStartTotalSeconds = p.StartTime.TotalSeconds;
             _lastEndTotalSeconds = p.EndTime.TotalSeconds;
 
-            int maxIndex = timeStartIndex + 10 + textLength;
+            var maxIndex = timeStartIndex + 10 + textLength;
 
-            byte verticalAlignment = buffer[timeStartIndex + 11];
+            var verticalAlignment = buffer[timeStartIndex + 11];
 
-            if (CodePage == -1 && !IsFPC)
+            if (CodePage == -1 && !IsFpc)
             {
                 GetCodePage(buffer, index, endDelimiter);
             }
@@ -1480,13 +1492,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var overrides = (CodePage == CodePageLatinTurkish) ? LatinTurkishOverrides : null;
             var sb = new StringBuilder();
             index = feIndex + 3;
-            bool w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
+            var w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
             if (w16)
             {
                 index += 5;
             }
 
-            bool isUnicode = false;
+            var isUnicode = false;
             while (index < buffer.Length && index <= maxIndex) // buffer[index] != endDelimiter)
             {
                 if (buffer.Length > index + 3 && buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16")
@@ -1496,7 +1508,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (CompareBytes(buffer, index, MarkerStartOfUnicode))
                 {
-                    isUnicode = true; IsFPC = true;
+                    isUnicode = true; IsFpc = true;
                     index += MarkerStartOfUnicode.Length;
                 }
                 else if (buffer.Length > index + 2 && buffer[index] == 0x1f && buffer[index + 1] == 'C' && char.IsDigit((char)buffer[index + 2]))
@@ -1685,6 +1697,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            // Remove position tags
+            var indexOfPositioningCodes = p.Text.IndexOf("\u002e\u001f");
+            if (indexOfPositioningCodes > 0)
+            {
+                p.Text = p.Text.Substring(0, indexOfPositioningCodes + 1);
+            }
+
             p.Text = p.Text.RemoveControlCharactersButWhiteSpace().TrimEnd();
             return p;
         }
@@ -1713,11 +1732,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             while (index >= 0 && index < text.Length - 1)
             {
-                bool insertSpace = false;
-                if (index >= 1 && text[index - 1] != ' ')
-                {
-                    insertSpace = true;
-                }
+                var insertSpace = index >= 1 && text[index - 1] != ' ';
 
                 text = text.Insert(index + 1, "i>");
                 if (insertSpace)

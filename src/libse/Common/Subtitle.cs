@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds, onlyOptimal);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-            var numberOfCharacters = p.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace, Configuration.Settings.General.IgnoreArabicDiacritics);
+            var numberOfCharacters = p.Text.CountCharacters();
             while (Utilities.GetCharactersPerSecond(p, numberOfCharacters) > maxCharactersPerSecond)
             {
                 duration++;
@@ -724,6 +724,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                     break;
                 case SubtitleSortCriteria.Duration:
                     Paragraphs = Paragraphs.OrderBy(p => p.Duration.TotalMilliseconds).ThenBy(p => p.Number).ToList();
+                    break;
+                case SubtitleSortCriteria.Gap:
+                    var lookupDictionary = new Dictionary<string, double>();
+                    for (var index = 0; index < Paragraphs.Count; index++)
+                    {
+                        var paragraph = Paragraphs[index];
+                        var next = GetParagraphOrDefault(index + 1);
+                        if (next == null)
+                        {
+                            lookupDictionary.Add(paragraph.Id, 100_000);
+                        }
+                        else
+                        {
+                            var gapMilliseconds = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                            lookupDictionary.Add(paragraph.Id, gapMilliseconds);
+                        }
+                    }
+
+                    Paragraphs = Paragraphs.OrderBy(p => lookupDictionary[p.Id]).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Text:
                     Paragraphs = Paragraphs.OrderBy(p => p.Text, StringComparer.Ordinal).ThenBy(p => p.Number).ToList();

@@ -1198,6 +1198,13 @@ namespace Nikse.SubtitleEdit.Controls
                 SubtitleColumns.RemoveAt(idx);
                 UpdateColumnIndexes();
                 Columns.RemoveAt(idx);
+                foreach (ListViewItem lvi in Items)
+                {
+                    if (lvi.SubItems.Count - 1 > idx && lvi.SubItems[idx] != null)
+                    {
+                        lvi.SubItems.RemoveAt(idx);
+                    }
+                }
                 AutoSizeAllColumns(null);
             }
         }
@@ -1535,14 +1542,14 @@ namespace Nikse.SubtitleEdit.Controls
                 string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                 foreach (string line in s.SplitToLines())
                 {
-                    if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         return;
                     }
                 }
                 int noOfLines = paragraph.NumberOfLines;
-                if (s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+                if (s.CountCharacters() <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                 {
                     if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                     {
@@ -1663,8 +1670,14 @@ namespace Nikse.SubtitleEdit.Controls
             selectedItem.Focused = true;
 
             var topIndex = topItem.Index;
-            var numberOfVisibleItems = (Height - 30) / GetItemRect(0).Height;
-            int bottomIndex = topIndex + numberOfVisibleItems;
+            var itemHeight = GetItemRect(0).Height;
+            if (itemHeight == 0)
+            {
+                return;
+            }
+
+            var numberOfVisibleItems = (Height - 30) / itemHeight;
+            var bottomIndex = topIndex + numberOfVisibleItems;
             if (index >= bottomIndex)
             {
                 Items[Math.Min(Items.Count - 1, index + numberOfVisibleItems / 2)].EnsureVisible();
@@ -1673,6 +1686,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Items[Math.Max(0, index - numberOfVisibleItems / 2)].EnsureVisible();
             }
+
             EndUpdate();
         }
 

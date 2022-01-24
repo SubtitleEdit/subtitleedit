@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 
@@ -11,40 +12,35 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
-            var oldIgnoreWhiteSpace = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
-            try
+            ICalcLength calc = CalcFactory.MakeCalculator(nameof(CalcAll));
+            var charactersPerSecond = controller.CharactersPerSecond;
+            var comment = "Maximum " + charactersPerSecond + " characters per second";
+            foreach (var p in subtitle.Paragraphs)
             {
-                Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = false;
-
-                int charactersPerSecond = controller.CharactersPerSecond;
-                string comment = "Maximum " + charactersPerSecond + " characters per second";
-                foreach (Paragraph p in subtitle.Paragraphs)
+                var jp = new Paragraph(p);
+                if (controller.Language == "ja")
                 {
-                    var jp = new Paragraph(p);
-                    if (controller.Language == "ja")
+                    jp.Text = HtmlUtil.RemoveHtmlTags(jp.Text, true);
+                    jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
+                }
+
+                if (controller.Language == "ja" || controller.Language == "ko")
+                {
+                    calc = CalcFactory.MakeCalculator(nameof(CalcCjk));
+                }
+
+                var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp, calc);
+                if (charactersPerSeconds > charactersPerSecond && !p.StartTime.IsMaxTime)
+                {
+                    var fixedParagraph = new Paragraph(p, false);
+                    while (Utilities.GetCharactersPerSecond(fixedParagraph) > charactersPerSecond)
                     {
-                        jp.Text = HtmlUtil.RemoveHtmlTags(jp.Text, true);
-                        jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
+                        fixedParagraph.EndTime.TotalMilliseconds++;
                     }
 
-                    var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp);
-                    if (charactersPerSeconds > charactersPerSecond && !p.StartTime.IsMaxTime)
-                    {
-                        var fixedParagraph = new Paragraph(p, false);
-                        while (Utilities.GetCharactersPerSecond(fixedParagraph) > charactersPerSecond)
-                        {
-                            fixedParagraph.EndTime.TotalMilliseconds++;
-                        }
-
-                        controller.AddRecord(p, fixedParagraph, comment, FormattableString.Invariant($"CPS={charactersPerSeconds:0.##}"));
-                    }
+                    controller.AddRecord(p, fixedParagraph, comment, FormattableString.Invariant($"CPS={charactersPerSeconds:0.##}"));
                 }
             }
-            finally
-            {
-                Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = oldIgnoreWhiteSpace;
-            }
         }
-
     }
 }

@@ -37,7 +37,6 @@
             this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
             this.comboBoxDialogStyle = new System.Windows.Forms.ComboBox();
-            this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.labelOptimalCharsPerSecond = new System.Windows.Forms.Label();
             this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelSubMaxLen = new System.Windows.Forms.Label();
@@ -72,6 +71,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
+            this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
+            this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
@@ -128,11 +129,12 @@
             // 
             this.groupBoxGeneralRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
+            this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelDialogStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxDialogStyle);
-            this.groupBoxGeneralRules.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
             this.groupBoxGeneralRules.Controls.Add(this.labelOptimalCharsPerSecond);
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownOptimalCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelSubMaxLen);
@@ -202,17 +204,6 @@
             this.comboBoxDialogStyle.Size = new System.Drawing.Size(203, 21);
             this.comboBoxDialogStyle.TabIndex = 194;
             this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
-            // 
-            // checkBoxCpsIncludeWhiteSpace
-            // 
-            this.checkBoxCpsIncludeWhiteSpace.AutoSize = true;
-            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(9, 318);
-            this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
-            this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(270, 17);
-            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 196;
-            this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes white spaces";
-            this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
-            this.checkBoxCpsIncludeWhiteSpace.CheckedChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // labelOptimalCharsPerSecond
             // 
@@ -528,7 +519,7 @@
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemoveAll.Location = new System.Drawing.Point(446, 414);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
+            this.buttonRemoveAll.Size = new System.Drawing.Size(123, 23);
             this.buttonRemoveAll.TabIndex = 70;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
@@ -636,6 +627,25 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // comboBoxCpsLineLenCalc
+            // 
+            this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
+            this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
+            this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(132, 313);
+            this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
+            this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxCpsLineLenCalc.TabIndex = 197;
+            // 
+            // labelCpsLineLenCalc
+            // 
+            this.labelCpsLineLenCalc.AutoSize = true;
+            this.labelCpsLineLenCalc.Location = new System.Drawing.Point(4, 316);
+            this.labelCpsLineLenCalc.Name = "labelCpsLineLenCalc";
+            this.labelCpsLineLenCalc.Size = new System.Drawing.Size(102, 13);
+            this.labelCpsLineLenCalc.TabIndex = 196;
+            this.labelCpsLineLenCalc.Text = "Cps/line length style";
+            // 
             // SettingsProfile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -707,12 +717,13 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.Label labelMinGapMs;
         private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;
-        private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.OpenFileDialog openFileDialogImport;
         private System.Windows.Forms.Label labelDialogStyle;
         private System.Windows.Forms.ComboBox comboBoxDialogStyle;
         private System.Windows.Forms.Label labelContinuationStyle;
         private System.Windows.Forms.ComboBox comboBoxContinuationStyle;
         private System.Windows.Forms.ToolTip toolTipContinuationPreview;
+        private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
+        private System.Windows.Forms.Label labelCpsLineLenCalc;
     }
 }

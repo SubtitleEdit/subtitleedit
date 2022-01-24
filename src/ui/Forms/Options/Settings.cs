@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         public Settings()
         {
             UiUtil.PreInitialize(this);
-            InitializeComponent();          
+            InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             Init();
@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
             checkBoxTBRemoveTextForHi.Checked = gs.ShowToolbarRemoveTextForHi;
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
+            checkBoxTBBurnIn.Checked = gs.ShowToolbarBurnIn;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
@@ -370,6 +371,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBFixCommonErrors.Text = language.FixCommonerrors;
             labelTBRemoveTextForHi.Text = language.RemoveTextForHi;
             labelTBVisualSync.Text = language.VisualSync;
+            labelTBBurnIn.Text = language.BurnIn;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
             labelTBSettings.Text = language.SettingsName;
@@ -383,88 +385,65 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBFixCommonErrors.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBRemoveTextForHi.Text = LanguageSettings.Current.General.Visible;
             checkBoxVisualSync.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBBurnIn.Text = LanguageSettings.Current.General.Visible;
             checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
             checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
-            if (labelTBNew.Right > labelTBOpen.Left)
-            {
-                labelTBOpen.Left = labelTBNew.Right + 15;
-                pictureBoxOpen.Left = labelTBOpen.Left;
-                checkBoxToolbarOpen.Left = labelTBOpen.Left;
-            }
 
-            if (labelTBOpen.Right > labelTBSave.Left)
-            {
-                labelTBSave.Left = labelTBOpen.Right + 15;
-                pictureBoxSave.Left = labelTBSave.Left;
-                checkBoxToolbarSave.Left = labelTBSave.Left;
-            }
+            // Toolbar icons first row
+            labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
+            pictureBoxOpen.Left = labelTBOpen.Left;
+            checkBoxToolbarOpen.Left = labelTBOpen.Left;
 
-            if (labelTBSave.Right > labelTBSaveAs.Left)
-            {
-                labelTBSaveAs.Left = labelTBSave.Right + 15;
-                pictureBoxSaveAs.Left = labelTBSaveAs.Left;
-                checkBoxToolbarSaveAs.Left = labelTBSaveAs.Left;
-            }
+            labelTBSave.Left = Math.Max(labelTBOpen.Right, checkBoxToolbarOpen.Right) + 18;
+            pictureBoxSave.Left = labelTBSave.Left;
+            checkBoxToolbarSave.Left = labelTBSave.Left;
 
-            if (labelTBSaveAs.Right > labelTBFind.Left)
-            {
-                labelTBFind.Left = labelTBSaveAs.Right + 15;
-                pictureBoxFind.Left = labelTBFind.Left;
-                checkBoxToolbarFind.Left = labelTBFind.Left;
-            }
+            labelTBSaveAs.Left = Math.Max(labelTBSave.Right, checkBoxToolbarSave.Right) + 18;
+            pictureBoxSaveAs.Left = labelTBSaveAs.Left;
+            checkBoxToolbarSaveAs.Left = labelTBSaveAs.Left;
 
-            if (labelTBFind.Right > labelTBReplace.Left)
-            {
-                labelTBReplace.Left = labelTBFind.Right + 15;
-                pictureBoxReplace.Left = labelTBReplace.Left;
-                checkBoxReplace.Left = labelTBReplace.Left;
-            }
+            labelTBFind.Left = Math.Max(labelTBSaveAs.Right, checkBoxToolbarSaveAs.Right) + 18;
+            pictureBoxFind.Left = labelTBFind.Left;
+            checkBoxToolbarFind.Left = labelTBFind.Left;
 
-            if (labelTBFixCommonErrors.Right > labelTBRemoveTextForHi.Left)
-            {
-                labelTBRemoveTextForHi.Left = labelTBFixCommonErrors.Right + 15;
-                pictureBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
-                checkBoxTBRemoveTextForHi.Left = labelTBRemoveTextForHi.Left;
-            }
+            labelTBReplace.Left = Math.Max(labelTBFind.Right, checkBoxToolbarFind.Right) + 18;
+            pictureBoxReplace.Left = labelTBReplace.Left;
+            checkBoxReplace.Left = labelTBReplace.Left;
 
-            if (labelTBRemoveTextForHi.Right > labelTBVisualSync.Left)
-            {
-                labelTBVisualSync.Left = labelTBRemoveTextForHi.Right + 15;
-                pictureBoxVisualSync.Left = labelTBVisualSync.Left;
-                checkBoxVisualSync.Left = labelTBVisualSync.Left;
-            }
+            labelTBFixCommonErrors.Left = Math.Max(labelTBReplace.Right, checkBoxReplace.Right) + 18;
+            pictureBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
+            checkBoxTBFixCommonErrors.Left = labelTBFixCommonErrors.Left;
 
-            if (labelTBVisualSync.Right > labelTBSpellCheck.Left)
-            {
-                labelTBSpellCheck.Left = labelTBVisualSync.Right + 15;
-                pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
-                checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
-            }
+            // Toolbar icons second row
+            labelTBVisualSync.Left = Math.Max(labelTBRemoveTextForHi.Right, checkBoxTBRemoveTextForHi.Right) + 18;
+            pictureBoxVisualSync.Left = labelTBVisualSync.Left;
+            checkBoxVisualSync.Left = labelTBVisualSync.Left;
 
-            if (labelTBSpellCheck.Right > labelTBSettings.Left)
-            {
-                labelTBSettings.Left = labelTBSpellCheck.Right + 15;
-                pictureBoxSettings.Left = labelTBSettings.Left;
-                checkBoxSettings.Left = labelTBSettings.Left;
-            }
+            labelTBBurnIn.Left = Math.Max(labelTBVisualSync.Right, checkBoxVisualSync.Right) + 18;
+            pictureBoxTBBurnIn.Left = labelTBBurnIn.Left;
+            checkBoxTBBurnIn.Left = labelTBBurnIn.Left;
 
-            if (labelTBSettings.Right > labelTBHelp.Left)
-            {
-                labelTBHelp.Left = labelTBSettings.Right + 15;
-                pictureBoxHelp.Left = labelTBHelp.Left;
-                checkBoxHelp.Left = labelTBHelp.Left;
-            }
+            labelTBSpellCheck.Left = Math.Max(labelTBBurnIn.Right, checkBoxTBBurnIn.Right) + 18;
+            pictureBoxSpellCheck.Left = labelTBSpellCheck.Left;
+            checkBoxSpellCheck.Left = labelTBSpellCheck.Left;
 
-            if (labelTBHelp.Right > labelTBNetflixQualityCheck.Left)
-            {
-                labelTBNetflixQualityCheck.Left = labelTBHelp.Right + 15;
-                pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
-                checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
-            }
+            labelTBSettings.Left = Math.Max(labelTBSpellCheck.Right, checkBoxSpellCheck.Right) + 18;
+            pictureBoxSettings.Left = labelTBSettings.Left;
+            checkBoxSettings.Left = labelTBSettings.Left;
+
+            labelTBHelp.Left = Math.Max(labelTBSettings.Right, checkBoxSettings.Right) + 18;
+            pictureBoxHelp.Left = labelTBHelp.Left;
+            checkBoxHelp.Left = labelTBHelp.Left;
+
+            labelTBNetflixQualityCheck.Left = Math.Max(labelTBHelp.Right, checkBoxHelp.Right) + 18;
+            pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+            checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+
 
             groupBoxMiscellaneous.Text = language.General;
+            groupBoxToolsMisc.Text = language.Miscellaneous;
             groupBoxGeneralRules.Text = language.Rules;
             labelRulesProfileName.Text = language.Profile;
             checkBoxShowFrameRate.Text = language.ShowFrameRate;
@@ -688,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
             checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
-            buttonDownloadFfmpeg.Text = language.DownloadFFmpeg;
+            buttonDownloadFfmpeg.Text = string.Format(language.DownloadX, "FFmpeg");
             if (!Configuration.IsRunningOnWindows)
             {
                 buttonDownloadFfmpeg.Visible = false;
@@ -768,6 +747,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
             labelContinuationStyle.Text = language.ContinuationStyle;
+            labelCpsLineLenCalc.Text = language.CpsLineLengthStyle;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
@@ -791,7 +771,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxToolsBreakPreferBottomHeavy.Text = language.BreakPreferBottomHeavy;
             numericUpDownToolsBreakPreferBottomHeavy.Left = checkBoxToolsBreakPreferBottomHeavy.Left + checkBoxToolsBreakPreferBottomHeavy.Width + 9;
             labelToolsBreakBottomHeavyPercent.Left = numericUpDownToolsBreakPreferBottomHeavy.Left + numericUpDownToolsBreakPreferBottomHeavy.Width + 2;
-            checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = LanguageSettings.Current.VobSubOcr.Edit;
 
             groupBoxMiscellaneous.Text = language.Miscellaneous;
@@ -930,6 +909,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
             SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
+            SetCpsLineLengthStyle(Configuration.Settings.General.CpsLineLengthStrategy);
 
             UpdateProfileNames(gs.Profiles);
 
@@ -983,7 +963,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxToolsBreakByPixelWidth.Checked = toolsSettings.AutoBreakUsePixelWidth;
             checkBoxToolsBreakPreferBottomHeavy.Checked = toolsSettings.AutoBreakPreferBottomHeavy;
             numericUpDownToolsBreakPreferBottomHeavy.Value = (decimal)toolsSettings.AutoBreakPreferBottomPercent;
-            checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
             comboBoxBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
@@ -1186,6 +1165,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
+        private void SetCpsLineLengthStyle(string cpsLineLengthStyle)
+        {
+            comboBoxCpsLineLenCalc.Items.Clear();
+            foreach (var calc in CpsLineLength.List())
+            {
+                comboBoxCpsLineLenCalc.Items.Add(calc);
+                if (cpsLineLengthStyle == calc.Code)
+                {
+                    comboBoxCpsLineLenCalc.SelectedIndex = comboBoxCpsLineLenCalc.Items.Count - 1;
+                }
+            }
+
+            if (comboBoxCpsLineLenCalc.SelectedIndex < 0)
+            {
+                comboBoxCpsLineLenCalc.SelectedIndex = 0;
+            }
+        }
+
         private void SetContinuationStyle(ContinuationStyle continuationStyle)
         {
             comboBoxContinuationStyle.Items.Clear();
@@ -1284,6 +1281,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.GoToNextSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
+            AddNode(generalNode, LanguageSettings.Current.Bookmarks.EditBookmark, nameof(Configuration.Settings.Shortcuts.GeneralEditBookmarks), true);
             AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
             AddNode(generalNode, language.GoToBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToBookmark));
             AddNode(generalNode, language.GoToPreviousBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark));
@@ -1453,11 +1451,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             var listViewNode = new ShortcutNode(language.ListView);
             AddNode(listViewNode, language.MergeDialog, nameof(Configuration.Settings.Shortcuts.MainMergeDialog));
+            AddNode(listViewNode, language.MergeDialogWithNext, nameof(Configuration.Settings.Shortcuts.MainMergeDialogWithNext));
+            AddNode(listViewNode, language.MergeDialogWithPrevious, nameof(Configuration.Settings.Shortcuts.MainMergeDialogWithPrevious));
             AddNode(listViewNode, language.ToggleFocus, nameof(Configuration.Settings.Shortcuts.MainToggleFocus));
             AddNode(listViewNode, language.ToggleFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainToggleFocusWaveform));
             AddNode(listViewNode, language.ToggleDialogDashes, nameof(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             AddNode(listViewNode, language.Alignment, nameof(Configuration.Settings.Shortcuts.MainListViewAlignment), true);
             AddNode(listViewNode, language.CopyTextOnly, nameof(Configuration.Settings.Shortcuts.MainListViewCopyText));
+            AddNode(listViewNode, language.CopyPlainText, nameof(Configuration.Settings.Shortcuts.MainListViewCopyPlainText));
             AddNode(listViewNode, language.CopyTextOnlyFromOriginalToCurrent, nameof(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent), true);
             AddNode(listViewNode, language.AutoDurationSelectedLines, nameof(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
             AddNode(listViewNode, language.ListViewColumnDelete, nameof(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText), true);
@@ -1472,6 +1473,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.StartTime), nameof(Configuration.Settings.Shortcuts.MainListViewSortByStartTime), true);
             AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.EndTime), nameof(Configuration.Settings.Shortcuts.MainListViewSortByEndTime), true);
             AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.Duration), nameof(Configuration.Settings.Shortcuts.MainListViewSortByDuration), true);
+            AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.General.Gap), nameof(Configuration.Settings.Shortcuts.MainListViewSortByGap), true);
             AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextAlphabetically), nameof(Configuration.Settings.Shortcuts.MainListViewSortByText), true);
             AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextSingleLineMaximumLength), nameof(Configuration.Settings.Shortcuts.MainListViewSortBySingleLineMaxLen), true);
             AddNode(listViewNode, string.Format(language.ListViewListSortByX, LanguageSettings.Current.Main.Menu.Tools.TextTotalLength), nameof(Configuration.Settings.Shortcuts.MainListViewSortByTextTotalLength), true);
@@ -1555,6 +1557,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.AdjustEndOneFrameForwardKeepGapNext, nameof(Configuration.Settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed));
+            AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByMinReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed));
             AddNode(createAndAdjustNode, language.AdjustSnapStartToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChange));
             AddNode(createAndAdjustNode, language.AdjustSnapStartToNextSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange));
@@ -1728,7 +1731,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help)
+                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -1740,6 +1743,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
             pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
+            pictureBoxTBBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
@@ -1829,6 +1833,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
             gs.ShowToolbarRemoveTextForHi = checkBoxTBRemoveTextForHi.Checked;
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
+            gs.ShowToolbarBurnIn = checkBoxTBBurnIn.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
             gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
@@ -2032,6 +2037,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             gs.DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             gs.ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
+            gs.CpsLineLengthStrategy = (comboBoxCpsLineLenCalc.SelectedItem as CpsLineLength)?.Code;
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -2052,7 +2058,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.Tools.BDOpenIn = comboBoxBDOpensIn.SelectedIndex == 0 ? "OCR" : "EDIT";
             Configuration.Settings.General.AllowLetterShortcutsInTextBox = checkBoxShortcutsAllowLetterOrNumberInTextBox.Checked;
 
-            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
@@ -2696,7 +2701,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     {
                         FillFileTypeAssociationsListView();
                     }
-                    
+
                     break;
             }
 
@@ -3497,8 +3502,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             SetDialogStyle(profile.DialogStyle);
             SetContinuationStyle(profile.ContinuationStyle);
-
-            checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
+            SetCpsLineLengthStyle(profile.CpsLineLengthStrategy);
             _oldProfileId = profile.Id;
             _editProfileOn = false;
         }
@@ -3518,7 +3522,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _rulesProfiles[idx].MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
             _rulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
-            _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
+            _rulesProfiles[idx].CpsLineLengthStrategy = (comboBoxCpsLineLenCalc.SelectedItem as CpsLineLength)?.Code;
             _rulesProfiles[idx].MergeLinesShorterThan = int.Parse(comboBoxMergeShortLineLength.Text, CultureInfo.InvariantCulture);
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             _rulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);

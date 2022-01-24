@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             string header = null;
             SubtitleFormat lastFormat = null;
             var subtitles = new List<Subtitle>();
-            for (int k = 0; k < _fileNamesToJoin.Count; k++)
+            for (var k = 0; k < _fileNamesToJoin.Count; k++)
             {
                 var fileName = _fileNamesToJoin[k];
                 try
@@ -179,6 +179,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (sub.Header != null)
                     {
+                        if (format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                        {
+                            sub.Header = sub.Header.Replace("*Default", "Default");
+                            foreach (var subParagraph in sub.Paragraphs)
+                            {
+                                if (subParagraph.Extra == "*Default")
+                                {
+                                    subParagraph.Extra = "Default";
+                                }
+                            }
+                        }
+
                         if (format.Name == AdvancedSubStationAlpha.NameOfFormat && header != null)
                         {
                             var oldPlayResX = AdvancedSubStationAlpha.GetTagFromHeader("PlayResX", "[Script Info]", header);
@@ -197,15 +209,18 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (stylesInHeader.Any(p => p == newStyle))
                                 {
-                                    var styleToBeRenamed = AdvancedSubStationAlpha.GetSsaStyle(newStyle, sub.Header);
-                                    var newName = styleToBeRenamed.Name + "_" + Guid.NewGuid();
-                                    foreach (var p in sub.Paragraphs.Where(p=>p.Extra == styleToBeRenamed.Name))
+                                    if (IsStyleDifferent(newStyle, sub, header))
                                     {
-                                        p.Extra = newName;
-                                    }
+                                        var styleToBeRenamed = AdvancedSubStationAlpha.GetSsaStyle(newStyle, sub.Header);
+                                        var newName = styleToBeRenamed.Name + "_" + Guid.NewGuid();
+                                        foreach (var p in sub.Paragraphs.Where(p => p.Extra == styleToBeRenamed.Name))
+                                        {
+                                            p.Extra = newName;
+                                        }
 
-                                    styleToBeRenamed.Name = newName;
-                                    styles.Add(styleToBeRenamed);
+                                        styleToBeRenamed.Name = newName;
+                                        styles.Add(styleToBeRenamed);
+                                    }
                                 }
                                 else
                                 {
@@ -311,6 +326,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             JoinedSubtitle.Renumber();
             labelTotalLines.Text = string.Format(LanguageSettings.Current.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
+        }
+
+        private static bool IsStyleDifferent(string styleName, Subtitle newSubtitle, string oldHeader)
+        {
+            var newStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, newSubtitle.Header);
+            var oldStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, oldHeader);
+            if (oldStyle == null || newStyle == null)
+            {
+                return true;
+            }
+
+            return newStyle.ToRawAss() != oldStyle.ToRawAss();
         }
 
         private void Revert(int idx, string message)

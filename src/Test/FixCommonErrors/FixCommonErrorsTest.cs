@@ -728,6 +728,28 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixMissingSpacesAfterFontStart()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "You!<font color=\"#ffff00\">Well, bye!</font>");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
+                Assert.AreEqual("You! <font color=\"#ffff00\">Well, bye!</font>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesAfterFontStart2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<font color=\"#00ffff\">Yeah, so...</font> That goes in there," + Environment.NewLine + "does it ?<font color=\"#00ffff\">Yeah.</font>");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
+                Assert.AreEqual("<font color=\"#00ffff\">Yeah, so...</font> That goes in there," + Environment.NewLine + "does it ? <font color=\"#00ffff\">Yeah.</font>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
         public void FixMissingSwedish()
         {
             using (var target = GetFixCommonErrorsLib())

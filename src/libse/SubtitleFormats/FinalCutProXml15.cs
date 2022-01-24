@@ -346,9 +346,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private void WriteCurrentTextSegment(List<FcpXmlStyle> styles, Dictionary<int, string> styleTextPairs, XmlNode video, int number, string title, XmlDocument xml)
+        private static void WriteCurrentTextSegment(List<FcpXmlStyle> styles, Dictionary<int, string> styleTextPairs, XmlNode video, int number, string title, XmlDocument xml)
         {
-            string xmlClipStructure =
+            var xmlClipStructure =
                 "<title name=\"Basic Title: [TITLEID]\" lane=\"1\" offset=\"8665300/2400s\" ref=\"r2\" duration=\"13400/2400s\" start=\"3600s\">" + Environment.NewLine +
                 "    <param name=\"Position\" key=\"9999/999166631/999166633/1/100/101\" value=\"-1.67499 -470.934\"/>" + Environment.NewLine +
                 "    <text>" + Environment.NewLine +
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var textStyleStructure = "<text-style font=\"[FONT_NAME]\" fontSize=\"[FONT_SIZE]\" fontFace=\"[FONT_FACE]\" fontColor=\"[FONT_COLOR]\" baseline=\"[BASELINE]\" shadowColor=\"0 0 0 1\" shadowOffset=\"5 315\" alignment=\"[ALIGNMENT]\" [ITALIC] [BOLD] />";
 
-            string temp = xmlClipStructure.Replace("[TITLEID]", title);
+            var temp = xmlClipStructure.Replace("[TITLEID]", title);
             video.InnerXml = temp;
 
             var titleNode = video.SelectSingleNode("//title");
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private string ToColorString(Color fontColor)
+        private static string ToColorString(Color fontColor)
         {
             //  0.793266 0.793391 0.793221 1
 
@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            string x = sb.ToString();
+            var x = sb.ToString();
             if (!x.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">"))
             {
                 return;
@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            string text = node.ParentNode.InnerText.Replace("\r\r", "\r");
+                            var text = GetInnerText(node.ParentNode);
                             var p = new Paragraph();
                             p.Text = text.Trim();
                             if (node.ParentNode.InnerXml.Contains("bold=\"1\""))
@@ -472,11 +472,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             p.StartTime = DecodeTime(node.ParentNode.Attributes["offset"]);
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(node.ParentNode.Attributes["duration"]).TotalMilliseconds;
-                            bool add = true;
+                            var add = true;
                             if (subtitle.Paragraphs.Count > 0)
                             {
                                 var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                                if (prev.Text == p.Text && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                                if (prev.Text == p.Text && Math.Abs(prev.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
                                 {
                                     add = false;
                                 }
@@ -497,6 +497,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             catch
             {
                 _errorCount = 1;
+            }
+        }
+
+        private static string GetInnerText(XmlNode node)
+        {
+            var firstChild = node.FirstChild;
+            if (firstChild == null)
+            {
+                return string.Empty;
+            }
+
+            if (firstChild.NextSibling == null)
+            {
+                switch (firstChild.NodeType)
+                {
+                    case XmlNodeType.Text:
+                    case XmlNodeType.CDATA:
+                    case XmlNodeType.Whitespace:
+                    case XmlNodeType.SignificantWhitespace:
+                        return firstChild.Value;
+                }
+            }
+            var sb = new StringBuilder();
+            AppendChildText(sb, node);
+            return sb.ToString().Replace("\r\r", "\r");
+        }
+
+        private static void AppendChildText(StringBuilder builder, XmlNode node)
+        {
+            for (var xmlNode = node.FirstChild; xmlNode != null; xmlNode = xmlNode.NextSibling)
+            {
+                if (xmlNode.FirstChild == null)
+                {
+                    if (xmlNode.NodeType == XmlNodeType.Text || xmlNode.NodeType == XmlNodeType.CDATA || xmlNode.NodeType == XmlNodeType.Whitespace || xmlNode.NodeType == XmlNodeType.SignificantWhitespace)
+                    {
+                        if (xmlNode.ParentNode?.Name == "note")
+                        {
+                            continue;
+                        }
+
+                        builder.Append(xmlNode.InnerText);
+                    }
+                }
+                else
+                {
+                    AppendChildText(builder, xmlNode);
+                }
             }
         }
 
@@ -533,6 +580,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             return new TimeCode();
         }
-
     }
 }

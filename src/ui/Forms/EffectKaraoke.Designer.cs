@@ -107,9 +107,10 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.BackColor = System.Drawing.SystemColors.Control;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(353, 173);
+            this.buttonCancel.Location = new System.Drawing.Point(421, 252);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 44;
@@ -118,7 +119,8 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(272, 173);
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.Location = new System.Drawing.Point(340, 252);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 43;
@@ -154,7 +156,8 @@
             // 
             // buttonPreview
             // 
-            this.buttonPreview.Location = new System.Drawing.Point(12, 154);
+            this.buttonPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonPreview.Location = new System.Drawing.Point(12, 233);
             this.buttonPreview.Name = "buttonPreview";
             this.buttonPreview.Size = new System.Drawing.Size(100, 23);
             this.buttonPreview.TabIndex = 39;
@@ -168,13 +171,18 @@
             // 
             // richTextBoxPreview
             // 
+            this.richTextBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxPreview.BackColor = System.Drawing.Color.Black;
             this.richTextBoxPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxPreview.DetectUrls = false;
+            this.richTextBoxPreview.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBoxPreview.ForeColor = System.Drawing.Color.White;
             this.richTextBoxPreview.Location = new System.Drawing.Point(13, 99);
             this.richTextBoxPreview.Name = "richTextBoxPreview";
             this.richTextBoxPreview.ReadOnly = true;
-            this.richTextBoxPreview.Size = new System.Drawing.Size(415, 49);
+            this.richTextBoxPreview.Size = new System.Drawing.Size(483, 128);
             this.richTextBoxPreview.TabIndex = 50;
             this.richTextBoxPreview.TabStop = false;
             this.richTextBoxPreview.Text = "";
@@ -183,7 +191,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(440, 208);
+            this.ClientSize = new System.Drawing.Size(508, 287);
             this.Controls.Add(this.richTextBoxPreview);
             this.Controls.Add(this.labelTotalMilliseconds);
             this.Controls.Add(this.labelTM);
@@ -205,7 +213,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Karaoke effect";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectkaraoke_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectKaraoke_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -739,14 +739,14 @@ namespace Nikse.SubtitleEdit.Controls
                                 using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, TextBold ? FontStyle.Bold : FontStyle.Regular))
                                 using (var brush = new SolidBrush(Color.White))
                                 {
-                                    var name = string.Empty;
+                                    string name;
                                     var x = pos + 3;
-                                    var y = index + 1 < _chapters.Count && _chapters[index].StartTime == _chapters[index + 1].StartTime ? Height / 2 - font.Height - 12 : Height / 2 - 12;
-                                    using (var chpaterTextBackBrush = new SolidBrush(ChaptersColor))
+                                    var y = index + 1 < _chapters.Count && Math.Abs(_chapters[index].StartTime - _chapters[index + 1].StartTime) < 0.01 ? Height / 2 - font.Height - 12 : Height / 2 - 12;
+                                    using (var chapterTextBackBrush = new SolidBrush(ChaptersColor))
                                     {
                                         name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
                                         var textSize = graphics.MeasureString(name, font);
-                                        graphics.FillRectangle(chpaterTextBackBrush, x, y, textSize.Width + 2, textSize.Height);
+                                        graphics.FillRectangle(chapterTextBackBrush, x, y, textSize.Width + 2, textSize.Height);
                                     }
 
                                     x += 2;
@@ -1236,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    Paragraph p = GetParagraphAtMilliseconds(milliseconds);
+                    var p = GetParagraphAtMilliseconds(milliseconds);
                     if (p != null)
                     {
                         _oldParagraph = new Paragraph(p);
@@ -1374,6 +1374,15 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Set limits for move paragraph(s).
+        /// </summary>
+        public void SetMinAndMax(double minMoveMs, double maxMoveMs)
+        {
+            _wholeParagraphMinMilliseconds = minMoveMs;
+            _wholeParagraphMaxMilliseconds = maxMoveMs;
         }
 
         private void SetMinAndMaxMoveStart()
@@ -1792,16 +1801,15 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         else if (_mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
-                            double durationMilliseconds = _mouseDownParagraph.Duration.TotalMilliseconds;
-
+                            var durationMilliseconds = _mouseDownParagraph.Duration.TotalMilliseconds;
                             var oldStart = _mouseDownParagraph.StartTime.TotalMilliseconds;
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds - _moveWholeStartDifferenceMilliseconds;
                             _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
 
                             if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
                             {
-                                double nearestSceneChangeInFront = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) ? x : y) : -9999;
-                                double nearestSceneChangeInBack = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) ? x : y) : -9999;
+                                var nearestSceneChangeInFront = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) ? x : y) : -9999;
+                                var nearestSceneChangeInBack = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) ? x : y) : -9999;
 
                                 if (Math.Abs(SecondsToXPosition(_mouseDownParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestSceneChangeInFront - _startPositionSeconds)) < SceneChangeSnapPixels)
                                 {
@@ -1896,9 +1904,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool IsParagraphBorderHit(int milliseconds, List<Paragraph> paragraphs)
         {
-            foreach (Paragraph p in paragraphs)
+            foreach (var p in paragraphs)
             {
-                bool hit = IsParagraphBorderHit(milliseconds, p);
+                var hit = IsParagraphBorderHit(milliseconds, p);
                 if (hit)
                 {
                     return true;
@@ -2104,10 +2112,10 @@ namespace Nikse.SubtitleEdit.Controls
 
                     if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                     {
-                        double seconds = RelativeXPositionToSeconds(e.X);
+                        var seconds = RelativeXPositionToSeconds(e.X);
                         var milliseconds = (int)(seconds * TimeCode.BaseUnit);
-                        Paragraph p = GetParagraphAtMilliseconds(milliseconds);
-                        OnSingleClick.Invoke(this, new ParagraphEventArgs(RelativeXPositionToSeconds(e.X), p));
+                        var p = GetParagraphAtMilliseconds(milliseconds);
+                        OnSingleClick?.Invoke(this, new ParagraphEventArgs(RelativeXPositionToSeconds(e.X), p));
                     }
                 }
             }

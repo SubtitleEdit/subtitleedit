@@ -2,28 +2,59 @@
 
 3.6.5 (xth February 2022) BETA
 * NEW:
-   * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
+   * Add audio to text (speech recognition) via Vosk/Kaldi
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
+   * Add ASSA tool "Background box generator" - thx Leon
+   * Option for auto-gen waveform when opening video - thx jirih/Leon/OmrSi
    * Add "File type associations" in Options - Settings
-   * Add shorcuts for Tools - Sort By - thx Jolana
+   * Add "waveform-multi-move" with Ctrl+mouse-move
+   * Add burn-in toolbar icon - thx Leon/ jaydeflix
+   * Add shortcuts for Tools - Sort By - thx Jolana
+   * Add shortcut for re-calc duration to min - thx m0ck69
+   * Add shortcut for edit of bookmark - thx OmrSi
+   * Add shortcut for copy plain text - thx OmrSi
+   * Add "Sort by Gap" - thx Andrebavila
+   * Add new image subtitle format TTML with inline base64 images - thx mat
+   * Add new text subtitle format - thx Richard
+   * Add new json subtitle format - thx Tim
+   * Add new text subtitle format - thx jiunyilin
+   * Add new readonly text format - thx Aris
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Italian translation - thx NAMP/bovirus
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Portuguese translation - thx hugok79
    * Update Polish translation - thx admas
    * Update Chinese translation - thx nkh0472
    * Update Finnish translation - thx Teijo S
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
+   * Update Korean translation - thx domddol
+   * Update Vietnamese translation - thx MMT Gouenji Tech
+   * Update Persian translation - thx abdollahim
+   * Update French translation - thx Pierre
    * Update file association icons (so nice) in installer - thx Leon
    * Improve VTT parsing of malformed files - thx Leon
    * Handle merge/split better with "box" tag
    * Improve zoom-in for waveform a little - thx vitacon
    * Trying to make nOCR work better with corrupted files - thx k7Up
    * Improve English/Italian OCR rules a little - thx tormento
-   * Allow higher font size in list view / text box - thx OmrSi
+   * Allow larger font size in list view / text box - thx OmrSi
    * Improve list-view/text-box color dialog - thx Majid
+   * Improve color dialog with 4 last used colors - thx Siamak
+   * Improve spell check regarding Yen symbol (¥) - thx Dnkhatri
+   * Add Nvidia hardware accel encodings for sub burn-in - thx Leon
+   * Remove position codes when reading PAC - thx Ernest
+   * Allow .m4s as sub file extension - thx farside
+   * SE now works with new libmpv (mpv-2.dll) - thx OmrSi
+   * Minor improvements for ASSA properties window
+   * Use comma not semicolon in CSV export - thx OmrSi
+   * Add some missing translation - thx domddol/nkh0472
+   * Shortcut "add bm w comment" works in text box - thx MMT Gouenji Tech
+   * Update Tesseract to 5.0.1 (from 5.0.0)
+   * Improve UI regarding empty subtitle a little - txh darnn
 * FIXED:
+   * Fix bug in BD SUP reading w missing lines - thx peter-qgd
+   * Fix crash in "Set start and offset the rest" w original - thx hamilaci
    * Fix for generating empty waveform for online videos - thx OmrSi
    * Fix for finding frame rate in some mp4 files - thx OmrSi
    * Fix typo for middle/center in WebVTT default property - thx koitsu
@@ -36,6 +67,19 @@
    * Fix issue with bookmarks + not opened files - thx OmrSi
    * Fix spell check "change word" issue with apostrophe (') - thx Jim
    * Fix new-line-char in Bilibili format - thx Kuju29
+   * Fix "Close video" shortcut - thx OmrSi
+   * Fix double space issue for output file name in sub burn-in - thx Leon
+   * Fix crash in "Batch convert" w add after sort - thx Siamak
+   * Remove beep sound with "Go to bookmark" shortcut - thx OmrSi
+   * Fix crash in list view context menu after clearing source view - thx Leon
+   * Fix crash in list view focus/select - thx Leon
+   * Fix crash in modify selection w styles - thx Leon
+   * Fix export to image issue w font face - thx red4d
+   * Fix close/save original not working before opening file menu - thx OmrSi
+   * Fix decimal point char issue in "Convert frame rate" - thx peter-qgd
+   * Fix add scene changes in "Waveform batch" - thx JDTR75
+   * Fix missing style column in some cases for assa - thx MMT Gouenji Tech
+   * Fix for "Fix missing spaces"" w font tag - thx beeeeswax
 
 
 3.6.4 (3rd December 2021)
@@ -182,7 +226,7 @@
    * Update Polish translation - thx admas
    * Update Portuguese translation - thx hugok79
    * Update Hungarian translation - thx Zityi
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update French translation - thx Pierre
    * Update Italian translation - thx NAMP
    * Update Korean translation - thx domddol
@@ -588,7 +632,7 @@
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
    * Update Korean translation - thx domddol
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Greek translation - thx Lero91
    * Update Dutch translation - thx xylographe/Flitskikker
    * Update Portuguese translation - thx moob
@@ -749,7 +793,7 @@
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
    * Update Bulgarian translation - thx KalinM
-   * Update Brazilian translation - thx igor
+   * Update Brazilian Portuguese translation - thx igor
    * Update Spanish translations - thx paconaranjo
    * Update Russian translation - thx Elheym
    * Update Chinese translation - thx LeonCheung
@@ -809,7 +853,7 @@
    * Update Finish translation - thx Teijo
    * Update Farsi translation - thx ghost1372
    * Update Bulgarian translation - thx kalin
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Catalan translation - thx juansa
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx moob
@@ -874,7 +918,7 @@
    * Add some support for remove spaces and 3 lines - thx James
 * IMPROVED:
    * Update Portuguese translation - thx moob
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Korean translation - thx domdoll
    * Update Hungarian translation - thx Zityi
    * Update Japanese translation - thx ScratchBuild
@@ -1004,7 +1048,7 @@
    * Update Hungarian translation - thx Zityi
    * Update Chinese translation - thx tinyboxvk
    * Update Portuguese translation - thx moob
-   * Update Brazil translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Updated Russian translation - thx  Elheym
    * Improve plain text import - thx uckthis/darnn/Leon
    * Make custom "Choose font" dialog - thx OmrSi
@@ -1069,7 +1113,7 @@
    * Add new setting: "save as..." take file name from
    * Add download of ffmpeg
 * IMPROVED:
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Czech translation - thx Trottel
    * Update Hungarian translation - thx ZityiSoft Team
    * Update Turkish translation - thx Falcon006
@@ -1273,7 +1317,7 @@
 * IMPROVED:
    * Update Spanish + Mexican + Argentinian translations - thx paconaranjo
    * Update Russian translation - thx Elheym
-   * Update Brazilian translation - thx Igor
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Basque translation - thx Xabier 
    * Update Korean translaton - thx domddol
    * Update Chinese Traditional translation - thx jackielam1997
@@ -1491,7 +1535,7 @@
    * Updated Polish translation - thx Admas
    * Updated Catalan translation - thx Juansa
    * Updated French, Dutch and German translations - thx xylographe
-   * Updated Brazil translation - thx Igor
+   * Updated Brazilian Portuguese translation - thx Igor
    * Updated Russian translation - thx Elheym
    * Updated Basque translation - thx Xabier
    * Updated simplified Chinese translation - thx Leon

@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonBlack.Visible = false;
                 buttonBlue.Top -= buttonBlue.Height;
-                buttonCyan .Top -= buttonBlue.Height;
+                buttonCyan.Top -= buttonBlue.Height;
                 buttonGreen.Top -= buttonBlue.Height;
                 buttonMagenta.Top -= buttonBlue.Height;
                 buttonRed.Top -= buttonBlue.Height;
@@ -27,6 +27,15 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonYellow.Top -= buttonBlue.Height;
                 Height -= buttonBlue.Height;
             }
+
+            buttonBlack.BackColor = System.Drawing.Color.Black;
+            buttonBlue.BackColor = System.Drawing.Color.DarkBlue;
+            buttonCyan.BackColor = System.Drawing.Color.Cyan;
+            buttonGreen.BackColor = System.Drawing.Color.DarkGreen;
+            buttonMagenta.BackColor = System.Drawing.Color.DarkMagenta;
+            buttonRed.BackColor = System.Drawing.Color.Red;
+            buttonWhite.BackColor = System.Drawing.Color.White;
+            buttonYellow.BackColor = System.Drawing.Color.Yellow;
         }
 
         private void EbuColorPicker_KeyDown(object sender, KeyEventArgs e)

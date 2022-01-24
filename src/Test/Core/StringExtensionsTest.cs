@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Common;
 using System;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Test.Core
 {
@@ -219,58 +220,57 @@ namespace Test.Core
         [TestMethod]
         public void CountLetters1()
         {
-            string input = " Hallo  world! ";
-            var res = input.CountCharacters(false, false);
+            var input = " Hallo  world! ";
+            var res = CalcFactory.MakeCalculator(nameof(CalcAll)).CountCharacters(input);
             Assert.AreEqual(" Hallo  world! ".Length, res);
         }
 
         [TestMethod]
         public void CountLetters2()
         {
-            string input = " Hallo " + Environment.NewLine + " world! ";
-            var res = input.CountCharacters(true, false);
+            var input = " Hallo " + Environment.NewLine + " world! ";
+            var res = CalcFactory.MakeCalculator(nameof(CalcNoSpace)).CountCharacters(input);
             Assert.AreEqual("Halloworld!".Length, res);
         }
 
         [TestMethod]
         public void CountLetters3()
         {
-            string input = " Hallo" + Environment.NewLine + "world!";
-            var res = input.CountCharacters(false, false);
+            var input = " Hallo" + Environment.NewLine + "world!";
+            var res = CalcFactory.MakeCalculator(nameof(CalcAll)).CountCharacters(input);
             Assert.AreEqual(" Halloworld!".Length, res);
         }
 
         [TestMethod]
         public void CountLetters4Ssa()
         {
-            string input = "{\\an1}Hallo";
-            var res = input.CountCharacters(true, false);
+            var input = "{\\an1}Hallo";
+            var res = CalcFactory.MakeCalculator(nameof(CalcAll)).CountCharacters(input);
             Assert.AreEqual("Hallo".Length, res);
         }
 
         [TestMethod]
         public void CountLetters4Html()
         {
-            string input = "<i>Hallo</i>";
-            var res = input.CountCharacters(true, false);
+            var input = "<i>Hallo</i>";
+            var res = CalcFactory.MakeCalculator(nameof(CalcAll)).CountCharacters(input);
             Assert.AreEqual("Hallo".Length, res);
         }
 
         [TestMethod]
         public void CountLetters5HtmlFont()
         {
-            string input = "<font color=\"red\"><i>Hal lo<i></font>";
-            var res = input.CountCharacters(true, false);
+            var input = "<font color=\"red\"><i>Hal lo<i></font>";
+            var res = CalcFactory.MakeCalculator(nameof(CalcNoSpace)).CountCharacters(input);
             Assert.AreEqual("Hallo".Length, res);
         }
 
         [TestMethod]
         public void CountLetters6HtmlFontMultiLine()
         {
-            string input = "<font color=\"red\"><i>Hal lo<i></font>" + Environment.NewLine + "<i>Bye!</i>";
-            var res = input.CountCharacters(true, false);
+            var input = "<font color=\"red\"><i>Hal lo<i></font>" + Environment.NewLine + "<i>Bye!</i>";
+            var res = CalcFactory.MakeCalculator(nameof(CalcNoSpace)).CountCharacters(input);
             Assert.AreEqual("HalloBye!".Length, res);
         }
-
     }
 }

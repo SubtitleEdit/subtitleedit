@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType17(),
                     new JsonType18(),
                     new JsonType19(),
+                    new JsonType20(),
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
@@ -167,6 +168,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new RhozetHarmonic(),
                     new Rtf1(),
                     new Rtf2(),
+                    new RxMarker(),
                     new Sami(),
                     new SamiAvDicPlayer(),
                     new SamiModern(),
@@ -337,6 +339,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle102(),
                     new UnknownSubtitle103(),
                     new UnknownSubtitle104(),
+                    new UnknownSubtitle105(),
                 };
 
                 string path = Configuration.PluginsDirectory;
@@ -654,6 +657,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new Rdf1(),
                 new CombinedXml(),
                 new AudacityLabels(),
+                new Fte(),
             };
         }
 

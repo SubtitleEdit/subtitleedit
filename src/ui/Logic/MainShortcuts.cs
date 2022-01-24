@@ -78,7 +78,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGoToNextSubtitleAndPlay { get; set; }
         public Keys MainAutoCalcCurrentDuration { get; set; }
         public Keys MainAutoCalcCurrentDurationByOptimalReadingSpeed { get; set; }
+        public Keys MainAutoCalcCurrentDurationByMinReadingSpeed { get; set; }
         public Keys MainGeneralToggleBookmarks { get; set; }
+        public Keys MainGeneralToggleBookmarksAddComment { get; set; }
+        public Keys MainGeneralEditBookmark { get; set; }
         public Keys MainGeneralClearBookmarks { get; set; }
         public Keys MainGeneralGoToBookmark { get; set; }
         public Keys MainGeneralGoToPreviousBookmark { get; set; }
@@ -162,6 +165,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxBreakAtCursorPosition { get; set; }
         public Keys MainTextBoxBreakAtCursorPositionAndGoToNext { get; set; }
         public Keys MainMergeDialog { get; set; }
+        public Keys MainMergeDialogWithNext { get; set; }
+        public Keys MainMergeDialogWithPrevious { get; set; }
         public Keys MainToggleFocus { get; set; }
         public Keys MainToggleFocusWaveform { get; set; }
         public Keys MainWaveformAdd { get; set; }
@@ -187,6 +192,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewRemoveBlankLines { get; set; }
         public Keys MainListViewRemoveTimeCodes { get; set; }
         public Keys MainListViewCopyText { get; set; }
+        public Keys MainListViewCopyPlainText { get; set; }
         public Keys MainEditFixRTLViaUnicodeChars { get; set; }
         public Keys MainEditRemoveRTLUnicodeChars { get; set; }
         public Keys MainEditReverseStartAndEndingForRtl { get; set; }
@@ -284,7 +290,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainGoToNextSubtitleAndPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
             MainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
             MainAutoCalcCurrentDurationByOptimalReadingSpeed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed);
+            MainAutoCalcCurrentDurationByMinReadingSpeed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed);
             MainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
+            MainGeneralToggleBookmarksAddComment = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
+            MainGeneralEditBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralEditBookmarks);
             MainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
             MainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
             MainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
@@ -328,6 +337,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditReverseStartAndEndingForRtl = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             MainToggleVideoControls = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleControls);
             MainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
+            MainListViewCopyPlainText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyPlainText);
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             MainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
@@ -401,6 +411,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxAssaIntellisense = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaIntellisense);
             MainTextBoxAssaRemoveTag = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaRemoveTag);
             MainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
+            MainMergeDialogWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogWithNext);
+            MainMergeDialogWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogWithPrevious);
             MainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
             MainToggleFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocusWaveform);
             MainWaveformAdd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAdd);

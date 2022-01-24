@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// <param name="threeLetterIsoLanguageName">E.g. eng for English</param>
         /// <param name="hunspellName">Name of hunspell dictionary</param>
         /// <param name="parentForm">Used for centering/show spell check dialog</param>
-        /// <param name="isBinaryImageCompare">Calling from OCR via "Image compare"</param>
+        /// <param name="isBinaryImageCompareOrNOcr">Calling from OCR via "Image compare"</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompareOrNOcr = false)
         {
             if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        private string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
+        private static string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
         {
             var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
             if (!File.Exists(fileName))
@@ -1339,16 +1339,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            foreach (string name in _nameMultiWordListAndWordsWithPeriods)
+            foreach (var name in _nameMultiWordListAndWordsWithPeriods)
             {
-                int start = tempLine.FastIndexOf(name);
+                var start = tempLine.FastIndexOf(name);
                 if (start < 0 && hasAllUpperWord)
                 {
                     start = tempLine.FastIndexOf(name.ToUpperInvariant());
                 }
                 if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
                 {
-                    int end = start + name.Length;
+                    var end = start + name.Length;
                     if (end == tempLine.Length || p.Contains(tempLine[end]))
                     {
                         tempLine = tempLine.Remove(start, name.Length);
@@ -1356,7 +1356,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            int minLength = 2;
+            var minLength = 2;
             if (Configuration.Settings.Tools.CheckOneLetterWords)
             {
                 minLength = 1;
@@ -1373,10 +1373,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 words.Add(w.Trim(trimChars));
             }
 
-            for (int i = 0; i < words.Count && i < 1000; i++)
+            for (var i = 0; i < words.Count && i < 1000; i++)
             {
-                string word = words[i].TrimStart('\'');
-                string wordNotEndTrimmed = word;
+                var word = words[i].TrimStart('\'');
+                var wordNotEndTrimmed = word;
                 word = word.TrimEnd('\'');
                 if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
@@ -1458,7 +1458,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (!correct)
                     {
                         //look for match via dash'ed word, e.g. sci-fi
-                        string dashedWord = GetDashedWordBefore(word, line, words, i);
+                        var dashedWord = GetDashedWordBefore(word, line, words, i);
                         if (!string.IsNullOrEmpty(dashedWord))
                         {
                             correct = IsWordKnownOrNumber(dashedWord, line);
@@ -1522,7 +1522,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         wordsNotFound++;
                         if (log)
                         {
-                            string nf = word;
+                            var nf = word;
                             if (nf.StartsWith("<i>", StringComparison.Ordinal))
                             {
                                 nf = nf.Remove(0, 3);
@@ -1574,8 +1574,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                             if (word.Length > 4)
                             {
-                                if (_threeLetterIsoLanguageName == "eng" && 
-                                    word.EndsWith("in", StringComparison.Ordinal) && 
+                                if (_threeLetterIsoLanguageName == "eng" &&
+                                    word.EndsWith("in", StringComparison.Ordinal) &&
                                     line.Contains(word + "'") &&
                                     DoSpell(word + "g"))
                                 {
@@ -1931,8 +1931,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             foreach (string s in word.Split(' '))
             {
-                if (!DoSpell(s) && 
-                    !_nameList.Contains(s) && 
+                if (!DoSpell(s) &&
+                    !_nameList.Contains(s) &&
                     !_userWordList.Contains(s) &&
                     !IsWordKnownOrNumber(s, word))
                 {
@@ -1973,7 +1973,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public bool IsWordKnownOrNumber(string word, string line)
         {
-            if (double.TryParse(word.TrimStart('\'').Replace("$", string.Empty).Replace("£", string.Empty).Replace("¢", string.Empty), out _))
+            if (double.TryParse(word.TrimStart('\'').RemoveChar('$', '£', '¥', '¢'), out _))
             {
                 return true;
             }

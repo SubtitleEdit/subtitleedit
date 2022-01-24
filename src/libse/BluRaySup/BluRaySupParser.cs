@@ -850,74 +850,90 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
             }
 
-            // Merge images that are the same (probably due to fade)
-            // First we find groups with same pixels
-            var removeIndices = new List<DeleteIndex>();
-            int deleteNo = 0;
-            for (int pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
+            if (!Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge || Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll)
             {
-                var cur = pcsList[pcsIndex];
-                var prev = pcsList[pcsIndex - 1];
-                if (Math.Abs(prev.EndTime - cur.StartTime) < 10 && prev.Size.Width == cur.Size.Width && prev.Size.Height == cur.Size.Height)
+                // Merge images that are the same (probably due to fade)
+                // First we find groups with same pixels
+                var removeIndices = new List<DeleteIndex>();
+                var deleteNo = 0;
+                for (var pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
                 {
-                    if (cur.BitmapObjects.Count > 0 && cur.BitmapObjects[0].Count > 0 &&
-                        prev.BitmapObjects.Count == cur.BitmapObjects.Count && prev.BitmapObjects[0].Count == cur.BitmapObjects[0].Count)
+                    var cur = pcsList[pcsIndex];
+                    var prev = pcsList[pcsIndex - 1];
+                    if (Math.Abs(prev.EndTime - cur.StartTime) < 10 && prev.Size.Width == cur.Size.Width && prev.Size.Height == cur.Size.Height)
                     {
-                        var remove = true;
-                        for (int k = 0; k < cur.BitmapObjects.Count; k++)
+                        if (cur.BitmapObjects.Count > 0 && cur.BitmapObjects[0].Count > 0 &&
+                            prev.BitmapObjects.Count == cur.BitmapObjects.Count && prev.BitmapObjects[0].Count == cur.BitmapObjects[0].Count)
                         {
-                            var c = cur.BitmapObjects[k];
-                            var p = prev.BitmapObjects[k];
-                            if (p.Count == c.Count)
+                            var remove = true;
+                            for (var k = 0; k < cur.BitmapObjects.Count; k++)
                             {
-                                for (int j = 0; j < c.Count; j++)
+                                var c = cur.BitmapObjects[k];
+                                var p = prev.BitmapObjects[k];
+                                if (p.Count == c.Count)
                                 {
-                                    if (!ByteArraysEqual(c[j].Fragment.ImageBuffer, p[j].Fragment.ImageBuffer))
+                                    for (var j = 0; j < c.Count; j++)
                                     {
-                                        remove = false;
-                                        break;
+                                        if (!ByteArraysEqual(c[j].Fragment.ImageBuffer, p[j].Fragment.ImageBuffer))
+                                        {
+                                            remove = false;
+                                            break;
+                                        }
                                     }
+                                }
+                                else
+                                {
+                                    remove = false;
+                                    break;
+                                }
+                            }
+
+                            if (remove)
+                            {
+                                if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex - 1))
+                                {
+                                    removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex - 1 });
+                                }
+                                if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex))
+                                {
+                                    removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex });
                                 }
                             }
                             else
                             {
-                                remove = false;
-                                break;
-                            }
-                        }
-
-                        if (remove)
-                        {
-                            if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex - 1))
-                            {
-                                removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex - 1 });
-                            }
-                            if (!removeIndices.Any(p => p.Number == deleteNo && p.Index == pcsIndex))
-                            {
-                                removeIndices.Add(new DeleteIndex { Number = deleteNo, Index = pcsIndex });
+                                deleteNo++;
                             }
                         }
                     }
-                }
-                else
-                {
-                    deleteNo++;
-                }
-            }
-
-            // Use the middle image of each group with same pixels
-            foreach (var group in removeIndices.GroupBy(p => p.Number).OrderBy(p => p.Key))
-            {
-                var arr = group.OrderByDescending(p => p.Index).ToArray();
-                var middle = (int)Math.Round(group.Count() / 2.0);
-                var middleElement = arr[middle];
-                pcsList[middleElement.Index].StartTime = pcsList[arr.Last().Index].StartTime;
-                pcsList[middleElement.Index].EndTime = pcsList[arr.First().Index].EndTime;
-                foreach (var deleteIndex in group.OrderByDescending(p => p.Index))
-                {
-                    if (deleteIndex != middleElement)
+                    else
                     {
-                        pcsList.RemoveAt(deleteIndex.Index);
+                        deleteNo++;
+                    }
+                }
+
+                // Use the middle image of each group with same pixels
+                int mergeCount = removeIndices.GroupBy(p => p.Number).Count();
+                foreach (var group in removeIndices.GroupBy(p => p.Number).OrderBy(p => p.Key))
+                {
+                    var arr = group.OrderByDescending(p => p.Index).ToArray();
+                    var middle = (int)Math.Round(group.Count() / 2.0);
+                    var middleElement = arr[middle];
+
+                    if (!QualifiesForMerge(arr, pcsList, mergeCount))
+                    {
+                        // Don't know really how to do this... so "QualifiesForMerge" is mostly guessing
+                        // See https://github.com/SubtitleEdit/subtitleedit/issues/5713
+                        continue;
+                    }
+
+                    pcsList[middleElement.Index].StartTime = pcsList[arr.Last().Index].StartTime;
+                    pcsList[middleElement.Index].EndTime = pcsList[arr.First().Index].EndTime;
+                    foreach (var deleteIndex in group.OrderByDescending(p => p.Index))
+                    {
+                        if (deleteIndex != middleElement)
+                        {
+                            pcsList.RemoveAt(deleteIndex.Index);
+                        }
                     }
                 }
             }
@@ -933,6 +949,56 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             return pcsList;
+        }
+
+        private static bool QualifiesForMerge(IReadOnlyList<DeleteIndex> arr, IReadOnlyList<PcsData> pcsList, int mergeCount)
+        {
+            if (Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll)
+            {
+                return false;
+            }
+
+            if (mergeCount < 3)
+            {
+                return false;
+            }
+
+            if (arr.Count != 2)
+            {
+                return true;
+            }
+
+            var i1 = pcsList[arr[0].Index];
+            var i2 = pcsList[arr[1].Index];
+            var dur1 = i1.EndTimeCode.TotalMilliseconds - i1.StartTimeCode.TotalMilliseconds;
+            var dur2 = i2.EndTimeCode.TotalMilliseconds - i2.StartTimeCode.TotalMilliseconds;
+            if (dur1 < 400 || dur2 < 400)
+            {
+                return true;
+            }
+
+            if (i1.PaletteInfos.Count > 2 || i2.PaletteInfos.Count > 2)
+            {
+                return true;
+            }
+
+            using (var b1 = i1.GetBitmap())
+            {
+                var n1 = new NikseBitmap(b1);
+                var height = n1.GetNonTransparentHeight();
+                var width = n1.GetNonTransparentWidth();
+                if (height > 110 || width > 300)
+                {
+                    return true;
+                }
+
+                using (var b2 = i2.GetBitmap())
+                {
+                    var n2 = new NikseBitmap(b2);
+                    var areEqual = n1.IsEqualTo(n2);
+                    return areEqual;
+                }
+            }
         }
 
         public class DeleteIndex
@@ -958,13 +1024,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return false;
             }
 
-            for (int i = 0; i < b1.Length; i++)
+            for (var i = 0; i < b1.Length; i++)
             {
                 if (b1[i] != b2[i])
                 {
                     return false;
                 }
             }
+
             return true;
         }
 

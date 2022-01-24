@@ -1,7 +1,52 @@
 <words>
+  <word>00am</word>
+  <word>00pm</word>
+  <word>01am</word>
+  <word>01pm</word>
+  <word>02am</word>
+  <word>02am</word>
+  <word>03am</word>
+  <word>03pm</word>
+  <word>04am</word>
+  <word>04pm</word>
+  <word>05am</word>
+  <word>05pm</word>
+  <word>06am</word>
+  <word>06pm</word>
+  <word>07am</word>
+  <word>07pm</word>
+  <word>08am</word>
+  <word>08pm</word>
+  <word>09am</word>
+  <word>09pm</word>
+  <word>10am</word>
+  <word>10pm</word>
+  <word>11am</word>
+  <word>11pm</word>
+  <word>12am</word>
+  <word>12pm</word>
+  <word>1am</word>
+  <word>1pm</word>
+  <word>2am</word>
+  <word>2am</word>
+  <word>3am</word>
+  <word>3pm</word>
+  <word>4am</word>
+  <word>4pm</word>
   <word>50s</word>
+  <word>5am</word>
+  <word>5pm</word>
+  <word>6am</word>
+  <word>6pm</word>
+  <word>7am</word>
+  <word>7pm</word>
+  <word>8am</word>
+  <word>8pm</word>
   <word>9/11</word>
+  <word>9am</word>
+  <word>9pm</word>
   <word>a.m.</word>
+  <word>accelerant</word>
   <word>actinium</word>
   <word>adrenocorticotropic</word>
   <word>advisors</word>
@@ -46,6 +91,7 @@
   <word>blowjobs</word>
   <word>bluejacked</word>
   <word>blushy</word>
+  <word>bogholes</word>
   <word>bohrium</word>
   <word>bona fide</word>
   <word>boneyard</word>
@@ -88,6 +134,7 @@
   <word>colonoscopy</word>
   <word>colours</word>
   <word>contractualism</word>
+  <word>copain</word>
   <word>copernicium</word>
   <word>copper</word>
   <word>copperish</word>
@@ -96,6 +143,9 @@
   <word>cottonoid</word>
   <word>could've</word>
   <word>craniotomy</word>
+  <word>crossbone</word>
+  <word>crosshair</word>
+  <word>crosshairs</word>
   <word>cryo</word>
   <word>cryotube</word>
   <word>cudgelled</word>
@@ -108,11 +158,14 @@
   <word>defibrillation</word>
   <word>dialogue</word>
   <word>dipshit</word>
+  <word>dismemberments</word>
   <word>disorderlies</word>
+  <word>disproven</word>
   <word>doofus</word>
   <word>douchey</word>
   <word>dreamt</word>
   <word>dubnium</word>
+  <word>dumbass</word>
   <word>dysesthesia</word>
   <word>dysprosium</word>
   <word>einsteinium</word>
@@ -130,22 +183,28 @@
   <word>everything's</word>
   <word>extradural</word>
   <word>faggot</word>
+  <word>failsafe</word>
   <word>falafel</word>
   <word>fallin'</word>
+  <word>fanboy</word>
   <word>favour</word>
   <word>favoured</word>
   <word>favourite</word>
   <word>fbi's</word>
+  <word>fentanyl</word>
   <word>fermium</word>
   <word>fiancé</word>
   <word>fiancée</word>
   <word>financials</word>
   <word>flavour</word>
   <word>flavours</word>
+  <word>floricultural</word>
   <word>fluorine</word>
   <word>flushin'</word>
   <word>flyer</word>
+  <word>forevermore</word>
   <word>francium</word>
+  <word>frenemy</word>
   <word>fuckable</word>
   <word>fundraiser</word>
   <word>gadolinium</word>
@@ -172,14 +231,17 @@
   <word>hashtag</word>
   <word>hassium</word>
   <word>hatchling</word>
+  <word>hawala</word>
   <word>heh</word>
   <word>helium</word>
   <word>heloooooo</word>
   <word>hematoma</word>
   <word>hiei</word>
   <word>hijab</word>
+  <word>hitman</word>
   <word>hm</word>
   <word>holmium</word>
+  <word>hotpants</word>
   <word>hottie</word>
   <word>houseguests</word>
   <word>how'd</word>
@@ -190,6 +252,7 @@
   <word>hypothermic</word>
   <word>immersive</word>
   <word>immunotherapy</word>
+  <word>inbox</word>
   <word>incontinentia</word>
   <word>indium</word>
   <word>intercostal</word>
@@ -219,6 +282,7 @@
   <word>laryngopharyngeal</word>
   <word>lawrencium</word>
   <word>lead</word>
+  <word>lightsaber</word>
   <word>lithium</word>
   <word>lobectomy</word>
   <word>lockdown</word>
@@ -265,7 +329,11 @@
   <word>neuroscientific</word>
   <word>neurotypical</word>
   <word>neurovascular</word>
+  <word>newsfeed</word>
+  <word>newsfeeds</word>
   <word>nickel</word>
+  <word>nigga</word>
+  <word>niggas</word>
   <word>niobium</word>
   <word>nitrogen</word>
   <word>nobelium</word>
@@ -291,8 +359,11 @@
   <word>parents'</word>
   <word>percutaneously</word>
   <word>perfusionist</word>
+  <word>pescatarian</word>
+  <word>pescatarians</word>
   <word>phosphorus</word>
   <word>photoshopped</word>
+  <word>piccaninny</word>
   <word>platinum</word>
   <word>playbook</word>
   <word>plutonium</word>
@@ -330,6 +401,8 @@
   <word>rubidium</word>
   <word>ruthenium</word>
   <word>rutherfordium</word>
+  <word>safehouse</word>
+  <word>safeword</word>
   <word>saké</word>
   <word>saltimbocca</word>
   <word>samarium</word>
@@ -346,6 +419,8 @@
   <word>señorita</word>
   <word>sensei</word>
   <word>sharpshoot</word>
+  <word>shitbox</word>
+  <word>shithead</word>
   <word>shithead's</word>
   <word>shithole</word>
   <word>should've</word>
@@ -366,6 +441,7 @@
   <word>splenectomy</word>
   <word>spork</word>
   <word>spotteth</word>
+  <word>squirrelly</word>
   <word>stenosis</word>
   <word>stent</word>
   <word>stenting</word>
@@ -379,6 +455,9 @@
   <word>sudoku</word>
   <word>sulfur</word>
   <word>sulphur</word>
+  <word>sunglass</word>
+  <word>supervillain</word>
+  <word>supervillains</word>
   <word>supervolcano</word>
   <word>synchronicity</word>
   <word>syncopal</word>
@@ -440,8 +519,11 @@
   <word>vegetations</word>
   <word>voicemail</word>
   <word>voila</word>
+  <word>walkthrough</word>
+  <word>weaponized</word>
   <word>weirding</word>
   <word>what'd</word>
+  <word>what'll</word>
   <word>what're</word>
   <word>when'd</word>
   <word>where'd</word>

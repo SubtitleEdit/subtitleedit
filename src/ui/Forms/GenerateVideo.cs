@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonColor.Text = LanguageSettings.Current.GenerateBlankVideo.SolidColor;
             labelDuration.Text = LanguageSettings.Current.GenerateBlankVideo.DurationInMinutes;
             labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
+            groupBoxBackground.Text = LanguageSettings.Current.GenerateBlankVideo.Background;
             buttonColor.Text = LanguageSettings.Current.Settings.ChooseColor;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;

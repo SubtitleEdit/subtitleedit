@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (callbacks.AllowFix(p, fixAction))
                 {
                     string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                    if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) < Configuration.Settings.General.MergeLinesShorterThan)
+                    if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters() < Configuration.Settings.General.MergeLinesShorterThan)
                     {
                         s = Utilities.AutoBreakLine(p.Text, callbacks.Language);
                         if (s != p.Text)

@@ -94,6 +94,7 @@
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
+    <Reset>Reset</Reset>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -170,6 +171,17 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesAvailable>Fixes available: {0}</FixesAvailable>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Audio/video to text</Title>
+    <Info>Generate text from audio via Vosk/Kaldi speech recognition</Info>
+    <VoskWebsite>Vosk website</VoskWebsite>
+    <Models>Models</Models>
+    <ChooseModel>Choose model</ChooseModel>
+    <OpenModelsFolder>Open models folder</OpenModelsFolder>
+    <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
+    <Transcribing>Transcribing audio to text...</Transcribing>
+    <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
     <AttachFiles>Attach files...</AttachFiles>
@@ -216,7 +228,24 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>Source and target resolution is the same - nothing to do.</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>Generate background box</Title>
+    <Padding>Padding</Padding>
+    <FillWidth>Fill width</FillWidth>
+    <Drawing>Drawing</Drawing>
+    <BoxColor>Box color</BoxColor>
+    <Radius>Radius</Radius>
+    <Step>Step</Step>
+    <Spikes>Spikes</Spikes>
+    <Bubbles>Bubbles</Bubbles>
+    <Circle>Circle</Circle>
+    <MarginX>MarginX</MarginX>
+    <MarginY>MarginY</MarginY>
+    <OnlyDrawing>Only drawing</OnlyDrawing>
+    <DrawingFile>Drawing file</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Set position</SetPosition>
     <VideoResolutionX>Video resolution: {0}</VideoResolutionX>
@@ -229,14 +258,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RotateXAxis>Rotate {0} axis</RotateXAxis>
     <DistortX>Distort {0}</DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>Audio to text</Title>
-    <ExtractingAudioUsingX>Extracting audio using {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Extracting text from audio using {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Extracting text via {0} progress: {1}%</ProgessViaXy>
-    <ShowLess>Show less  ▲</ShowLess>
-    <ShowMore>Show more  ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto balance selected lines</TitleAutoBreak>
     <TitleUnbreak>Remove line breaks from selected lines</TitleUnbreak>
@@ -797,12 +818,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CheckeredImage>Checkered image</CheckeredImage>
     <SolidColor>Solid color</SolidColor>
     <DurationInMinutes>Duration in minutes</DurationInMinutes>
+    <Background>Background</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>Generate video with burned-in subtile</Title>
+    <Title>Generate video with burned-in subtitle</Title>
     <InfoAssaOff>Note: Advanced Substation Alpha styling supported.</InfoAssaOff>
     <InfoAssaOn>Note: Advanced Substation Alpha styling will be used :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" generated with burned-in subtitle.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" generated with burned-in subtitle in {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Time remaining: {0} minutes</TimeRemainingMinutes>
     <TimeRemainingSeconds>Time remaining: {0} seconds</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Time remaining: {0} minutes and {1} seconds</TimeRemainingMinutesAndSeconds>
@@ -813,6 +835,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Encoding>Encoding</Encoding>
     <BitRate>Bit rate</BitRate>
     <SampleRate>Sample rate</SampleRate>
+    <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
     <Preset>Preset</Preset>
     <Crf>CRF</Crf>
@@ -1109,7 +1132,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <OpenContainingFolder>Open containing folder</OpenContainingFolder>
         <Compare>&amp;Compare...</Compare>
         <Statistics>S&amp;tatistics...</Statistics>
-        <Plugins>Plugins...</Plugins>
+        <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Subtitle from video file...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>VobSub (sub/idx) subtitle for OCR...</ImportOcrVobSubSubtitle>
@@ -1218,6 +1241,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>Video/audio to text...</VideoAudioToText>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveOrExportSceneChanges>Remove/export scene changes...</RemoveOrExportSceneChanges>
@@ -1360,6 +1384,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SetPosition>Set position...</SetPosition>
         <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
         <AssaResolutionChanger>Change ASSA script resolution...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Generate background box...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
@@ -1902,6 +1927,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <RenameGroup>Rename group...</RenameGroup>
     <NewGroup>New group...</NewGroup>
     <NothingToImport>Nothing to import</NothingToImport>
+    <RuleInfo>Rule information</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -2052,6 +2078,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Find>Find</Find>
     <Replace>Replace</Replace>
     <VisualSync>Visual sync</VisualSync>
+    <BurnIn>Burn in</BurnIn>
     <SpellCheck>Spell check</SpellCheck>
     <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
     <SettingsName>Settings</SettingsName>
@@ -2187,7 +2214,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SpectrogramOneColorGradient>One color gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classic</SpectrogramClassic>
     <WaveformUseFFmpeg>Use FFmpeg for wave extraction</WaveformUseFFmpeg>
-    <DownloadFFmpeg>Download FFmpeg</DownloadFFmpeg>
+    <DownloadX>Download {0}</DownloadX>
     <WaveformFFmpegPath>Path to FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Browse to FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Browse to VLC portable</WaveformBrowseToVLC>
@@ -2243,6 +2270,13 @@ can edit in same subtitle file (collaboration)</Information>
     <ContinuationStyleNoneTrailingEllipsis>None, ellipsis for pauses</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Dash</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Dash, but dots for pauses</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>Cps/line-length</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>Count all characters</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpace>Count all except space</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignore Arabic diacritics</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignore Arabic diacritics/space</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
@@ -2318,8 +2352,11 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustExtendNextLineStartToCurrentEnd>Extend next line's start to current's end</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Re-calculate duration of current subtitle (based on optimal reading speed)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Re-calculate duration of current subtitle (based on minimum reading speed)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
+    <MergeDialogWithNext>Merge dialog with next (insert dashes)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>Merge dialog with previous (insert dashes)</MergeDialogWithPrevious>
     <GoToNext>Go to next line</GoToNext>
     <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>
@@ -2349,6 +2386,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AlignmentN9>Alignment top right - {\an9}</AlignmentN9>
     <ColorX>Color {0} ({1})</ColorX>
     <CopyTextOnly>Copy text only to clipboard (selected lines)</CopyTextOnly>
+    <CopyPlainText>Copy plain text to clipboard (selected lines)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Fix RTL via Unicode control characters</FixRTLViaUnicodeChars>
@@ -2517,7 +2555,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>Download {0}</XDownload>
     <XDownloadFailed>Unable to download {0} - please re-try later!</XDownloadFailed>
     <XDownloadOk>{0} was downloaded and is ready for use.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2536,7 +2573,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
     <AllLines>&amp;All lines</AllLines>
     <SelectedLinesOnly>&amp;Selected lines only</SelectedLinesOnly>
-    <SelectedLinesAndForward>Selected line(s) and &amp;forward</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Selected and subse&amp;quent lines</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>History (for undo)</Title>
@@ -2694,6 +2731,10 @@ Continue?</RestoreDefaultSettingsMsg>
     <WrapStyle>Wrap style</WrapStyle>
     <Collision>Collision</Collision>
     <ScaleBorderAndShadow>Scale border and shadow</ScaleBorderAndShadow>
+    <WrapStyle0>0: Smart wrapping, top line is wider</WrapStyle0>
+    <WrapStyle1>1: End-of-line word wrapping, only \N breaks</WrapStyle1>
+    <WrapStyle2>2: No word wrapping, both \n and \N break</WrapStyle2>
+    <WrapStyle3>3: Smart wrapping, bottom line is wider</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Advanced Sub Station Alpha styles</Title>

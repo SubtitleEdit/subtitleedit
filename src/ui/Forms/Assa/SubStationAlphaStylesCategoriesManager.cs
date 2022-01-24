@@ -1,13 +1,13 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms.Styles
+namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public sealed partial class SubStationAlphaStylesCategoriesManager : Form
     {
@@ -42,8 +42,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public SubStationAlphaStylesCategoriesManager(List<AssaStorageCategory> currentAssaCategories, string focusCategory)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            UiUtil.FixLargeFonts(this, buttonOK);
             InitializeLanguage();
             SetControlsSize();
 
@@ -423,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             subNode = styleNode.SelectSingleNode("FontSize");
                             if (subNode != null)
                             {
-                                style.FontSize = Convert.ToSingle(subNode.InnerText);
+                                style.FontSize = Convert.ToDecimal(subNode.InnerText);
                             }
 
                             subNode = styleNode.SelectSingleNode("Primary");

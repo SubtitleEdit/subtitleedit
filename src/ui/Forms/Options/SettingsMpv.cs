@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
+                _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv2-" + IntPtr.Size * 8 + ".zip?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
 
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;

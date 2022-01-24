@@ -10,13 +10,19 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static int Resample(decimal source, decimal target, int v)
         {
             var factor = target / source;
-            return (int)Math.Round(factor * v);
+            return (int)Math.Round(factor * v, MidpointRounding.AwayFromZero);
         }
 
         public static float Resample(decimal source, decimal target, float v)
         {
             var factor = (float)(target / source);
-            return factor * v;
+            return (float)Math.Round(factor * v, 1, MidpointRounding.AwayFromZero);
+        }
+
+        public static decimal Resample(decimal source, decimal target, decimal v)
+        {
+            var factor = (target / source);
+            return (decimal)Math.Round(factor * v, 1, MidpointRounding.AwayFromZero);
         }
 
         public static string ResampleOverrideTagsFont(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)
@@ -88,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     value = s.Substring(0, endMatch.Index);
                     s = s.Substring(endMatch.Index);
                 }
-                else 
+                else
                 {
                     s = string.Empty;
                 }
@@ -111,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 var state = "start";
-                for (int i = 0; i < arr.Length; i++)
+                for (var i = 0; i < arr.Length; i++)
                 {
                     var element = arr[i];
                     if (state == "start" && "mnlbspc".Contains(element) && element.Length == 1)
@@ -121,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (state == "start")
                     {
-                        if (float.TryParse(element, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))
+                        if (decimal.TryParse(element, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))
                         {
                             var x = Resample(sourceWidth, targetWidth, number);
                             sb.Append(x.ToString("0.###", CultureInfo.InvariantCulture));
@@ -136,7 +142,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (state == "y")
                     {
-                        if (float.TryParse(element, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))
+                        if (decimal.TryParse(element, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var number))
                         {
                             var y = Resample(sourceHeight, targetHeight, number);
                             sb.Append(y.ToString("0.###", CultureInfo.InvariantCulture));
@@ -176,10 +182,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
                 var arr = value.Split(',');
                 if (arr.Length == 4 &&
-                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
-                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y1) &&
-                    float.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x2) &&
-                    float.TryParse(arr[3], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y2))
+                    decimal.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
+                    decimal.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y1) &&
+                    decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x2) &&
+                    decimal.TryParse(arr[3], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y2))
                 {
                     var resizedX1 = Resample(sourceWidth, targetWidth, x1);
                     var resizedY1 = Resample(sourceHeight, targetHeight, y1);
@@ -212,12 +218,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
                 var arr = value.Split(',');
                 if (arr.Length == 6 &&
-                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
-                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y1) &&
-                    float.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x2) &&
-                    float.TryParse(arr[3], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y2) &&
-                    float.TryParse(arr[4], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var t1) &&
-                    float.TryParse(arr[5], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var t2))
+                    decimal.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x1) &&
+                    decimal.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y1) &&
+                    decimal.TryParse(arr[2], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x2) &&
+                    decimal.TryParse(arr[3], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y2) &&
+                    decimal.TryParse(arr[4], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var t1) &&
+                    decimal.TryParse(arr[5], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var t2))
                 {
                     var resizedX1 = Resample(sourceWidth, targetWidth, x1);
                     var resizedY1 = Resample(sourceHeight, targetHeight, y1);
@@ -252,8 +258,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var value = match.Value.Substring(tag.Length + 2, match.Value.Length - tag.Length - 3).RemoveChar(' ');
                 var arr = value.Split(',');
                 if (arr.Length == 2 &&
-                    float.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x) &&
-                    float.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y))
+                    decimal.TryParse(arr[0], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var x) &&
+                    decimal.TryParse(arr[1], NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var y))
                 {
                     var resizedX = Resample(sourceWidth, targetWidth, x);
                     var resizedY = Resample(sourceHeight, targetHeight, y);
@@ -280,7 +286,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (match.Success)
             {
                 var value = match.Value.Substring(tag.Length + 1, match.Value.Length - tag.Length - 2);
-                if (float.TryParse(value, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var d))
+                if (decimal.TryParse(value, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var d))
                 {
                     var resizedValue = Resample(sourceHeight, targetHeight, d);
                     s = s.Remove(match.Index, match.Value.Length);

@@ -226,10 +226,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static string AutoBreakIfNeeded(string s)
         {
-            bool doBreak = false;
+            var doBreak = false;
             foreach (var line in s.SplitToLines())
             {
-                if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
                 {
                     doBreak = true;
                     break;
@@ -238,6 +238,5 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             return doBreak ? Utilities.AutoBreakLine(s) : s;
         }
-
     }
 }

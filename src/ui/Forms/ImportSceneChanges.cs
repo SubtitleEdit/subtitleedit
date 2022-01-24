@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSeconds.Text = LanguageSettings.Current.ImportSceneChanges.Seconds;
             radioButtonMilliseconds.Text = LanguageSettings.Current.ImportSceneChanges.Milliseconds;
             groupBoxTimeCodes.Text = LanguageSettings.Current.ImportSceneChanges.TimeCodes;
-            buttonDownloadFfmpeg.Text = LanguageSettings.Current.Settings.DownloadFFmpeg;
+            buttonDownloadFfmpeg.Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg");
             buttonImportWithFfmpeg.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             labelFfmpegThreshold.Text = LanguageSettings.Current.ImportSceneChanges.Sensitivity;
             labelThresholdDescription.Text = LanguageSettings.Current.ImportSceneChanges.SensitivityDescription;

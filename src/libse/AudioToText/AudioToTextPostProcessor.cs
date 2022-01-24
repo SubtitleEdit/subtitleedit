@@ -1,46 +1,64 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Dictionaries;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
+namespace Nikse.SubtitleEdit.Core.AudioToText
 {
-    public class SubtitleGenerator
+    public class AudioToTextPostProcessor
     {
-        private readonly List<ResultText> _resultTexts;
+        private List<ResultText> _resultTexts;
 
         /// <summary>
-        /// Set period if distance to next subtitle is more than this value in milliseconds
+        /// Set period if distance to next subtitle is more than this value in milliseconds.
         /// </summary>
-        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; }
+        public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 300;
+        public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 500;
 
-        public SubtitleGenerator(List<ResultText> resultTexts)
+        public int ParagraphMaxChars { get; set; } = 86;
+
+        public string TwoLetterLanguageCode { get; private set; }
+
+
+        public AudioToTextPostProcessor(string twoLetterLanguageCode)
         {
-            _resultTexts = resultTexts;
-            SetPeriodIfDistanceToNextIsMoreThan = 250;
+            TwoLetterLanguageCode = twoLetterLanguageCode;
         }
 
-        public Subtitle Generate(string language)
+        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing)
         {
+            _resultTexts = resultTexts;
             var subtitle = new Subtitle();
             foreach (var resultText in _resultTexts)
             {
-                subtitle.Paragraphs.Add(new Paragraph(resultText.Text, resultText.Start * 1000.0, resultText.End * 1000.0));
+                if (usePostProcessing && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.End - resultText.Start > 1)
+                {
+                    continue;
+                }
+
+                subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
             }
 
-            AddPeriods(subtitle, language);
+            if (usePostProcessing)
+            {
+                subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
+                subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
+                subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
+                subtitle = FixShortDuration(subtitle);
+            }
 
-            //  subtitle = MergeShortLines(subtitle, language);
-
-            FixCasing(subtitle, language);
-
+            subtitle.Renumber();
             return subtitle;
         }
 
-        private void AddPeriods(Subtitle subtitle, string language)
+        private Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
-            //TODO: check of English non-break words
+            var englishSkipLastWords = new string[] { "with", "however" };
+            var englishSkipFirstWords = new string[] { "to", "and", "but" };
 
+            var subtitle = new Subtitle(inputSubtitle);
             for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
             {
                 var paragraph = subtitle.Paragraphs[index];
@@ -51,7 +69,21 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                     !paragraph.Text.EndsWith('?') &&
                     !paragraph.Text.EndsWith(':'))
                 {
-                    paragraph.Text += ".";
+                    if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThanAlways)
+                    {
+                        paragraph.Text += ".";
+                    }
+                    else
+                    {
+                        var lastWord = GetLastWord(paragraph.Text);
+                        var nextFirstWord = GetFirstWord(next.Text);
+                        if (TwoLetterLanguageCode == "en" && (englishSkipLastWords.Contains(lastWord) || englishSkipFirstWords.Contains(nextFirstWord)))
+                        {
+                            continue;
+                        }
+
+                        paragraph.Text += ".";
+                    }
                 }
             }
 
@@ -63,18 +95,31 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }
+
+            return subtitle;
+        }
+
+        private static string GetFirstWord(string text)
+        {
+            var arr = text.Split(' ', '\r', '\n', '\t', ',');
+            return arr.Length == 0 ? string.Empty : arr[0];
+        }
+
+        private static string GetLastWord(string text)
+        {
+            var arr = text.Split(' ', '\r', '\n', '\t', ',');
+            return arr.Length == 0 ? string.Empty : arr[arr.Length - 1];
         }
 
         private Subtitle MergeShortLines(Subtitle subtitle, string language)
         {
-            int maxMillisecondsBetweenLines = 100;
-            int maxCharacters = 90;
+            var maxMillisecondsBetweenLines = 100;
             const bool onlyContinuousLines = true;
 
             var mergedSubtitle = new Subtitle();
-            bool lastMerged = false;
+            var lastMerged = false;
             Paragraph p = null;
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
                 {
@@ -84,14 +129,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                 var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
-                    if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines))
+                    if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, ParagraphMaxChars, onlyContinuousLines))
                     {
                         if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
                             GetEndTag(p.Text) == GetEndTag(next.Text))
                         {
-                            string s1 = p.Text.Trim();
+                            var s1 = p.Text.Trim();
                             s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
-                            string s2 = next.Text.Trim();
+                            var s2 = next.Text.Trim();
                             s2 = s2.Substring(GetStartTag(s2).Length);
                             p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
                         }
@@ -113,6 +158,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                     lastMerged = false;
                 }
             }
+
             if (!lastMerged)
             {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
@@ -121,8 +167,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             return mergedSubtitle;
         }
 
-        private static void FixCasing(Subtitle subtitle, string language)
+        private static Subtitle FixCasing(Subtitle inputSubtitle, string language)
         {
+            var subtitle = new Subtitle(inputSubtitle);
+
             // fix casing normal
             var fixCasing = new FixCasing(language);
             fixCasing.Fix(subtitle);
@@ -132,18 +180,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             var nameListInclMulti = nameList.GetAllNames();
             foreach (var paragraph in subtitle.Paragraphs)
             {
-                string text = paragraph.Text;
-                string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                if (textNoTags != textNoTags.ToUpperInvariant())
+                var text = paragraph.Text;
+                var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+                if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
                 {
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        var st = new StrippableText(text);
-                        st.FixCasing(nameListInclMulti, true, false, false, string.Empty);
-                        paragraph.Text = st.MergedString;
-                    }
+                    var st = new StrippableText(text);
+                    st.FixCasing(nameListInclMulti, true, false, false, string.Empty);
+                    paragraph.Text = st.MergedString;
                 }
             }
+
+            return subtitle;
         }
 
         private static string GetEndTag(string text)
@@ -159,8 +206,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                 return string.Empty;
             }
 
-            string endTag = string.Empty;
-            int start = text.LastIndexOf("</", StringComparison.Ordinal);
+            var endTag = string.Empty;
+            var start = text.LastIndexOf("</", StringComparison.Ordinal);
             if (start > 0 && start >= text.Length - 8)
             {
                 endTag = text.Substring(start);
@@ -181,14 +228,21 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                 return string.Empty;
             }
 
-            string startTag = string.Empty;
-            int end = text.IndexOf('>');
+            var startTag = string.Empty;
+            var end = text.IndexOf('>');
             if (end > 0 && end < 25)
             {
                 startTag = text.Substring(0, end + 1);
             }
+
             return startTag;
         }
 
+        private static Subtitle FixShortDuration(Subtitle inputSubtitle)
+        {
+            var subtitle = new Subtitle(inputSubtitle);
+            new FixShortDisplayTimes().Fix(subtitle, new EmptyFixCallback());
+            return subtitle;
+        }
     }
 }

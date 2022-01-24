@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Forms.Assa;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         };
 
         public string NewFooter { get; private set; }
-        private bool _loading = true;
+        private bool _loading;
 
         public Attachments(string source)
         {
@@ -35,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            _loading = true;
             labelInfo.Visible = false;
             textBoxInfo.Visible = false;
             textBoxInfo.ReadOnly = true;
@@ -62,6 +62,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             toolStripMenuItemStorageAttach.Text = LanguageSettings.Current.AssaAttachments.AttachFiles;
             importToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
             toolStripMenuItemStorageExport.Text = LanguageSettings.Current.MultipleReplace.Export;
+            columnHeaderFileName.Text = LanguageSettings.Current.RestoreAutoBackup.FileName;
+            columnHeaderType.Text = LanguageSettings.Current.PluginsGet.Type;
+            columnHeaderFileSize.Text = LanguageSettings.Current.General.Size;
 
             Text = LanguageSettings.Current.AssaAttachments.Title;
             buttonAttachFile.Text = LanguageSettings.Current.AssaAttachments.AttachFiles;

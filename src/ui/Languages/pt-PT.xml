@@ -95,6 +95,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Collapse>Recolher</Collapse>
     <ShortcutX>Atalho: {0}</ShortcutX>
     <ExampleX>Exemplo: {0}</ExampleX>
+    <Reset>Repor</Reset>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -171,6 +172,17 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <FixesAvailable>Correcções disponíveis: {0}</FixesAvailable>
     <UnableToFix>Incapaz de corrigir: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Áudio/vídeo para texto</Title>
+    <Info>Gerar texto a partir de áudio via reconhecimento de voz Vosk/Kaldi</Info>
+    <VoskWebsite>Website do Vosk</VoskWebsite>
+    <Models>Modelos</Models>
+    <ChooseModel>Escolher modelo</ChooseModel>
+    <OpenModelsFolder>Abrir pasta de modelos</OpenModelsFolder>
+    <LoadingVoskModel>A carregar o modelo de reconhecimento de voz Vosk...</LoadingVoskModel>
+    <Transcribing>A transcrever áudio para texto...</Transcribing>
+    <UsePostProcessing>Usar pós-processamento (combinar linhas, corrigir maiúsculas/minúsculas, pontuação e mais)</UsePostProcessing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
     <AttachFiles>Anexar ficheiros...</AttachFiles>
@@ -210,14 +222,31 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <TakePosFromVideo>Assumir a posição do vídeo</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
-    <Title>Alterar a resolução do script</Title>
+    <Title>Alterar a resolução do script ASSA</Title>
     <SourceVideoRes>Resolução do vídeo de origem</SourceVideoRes>
     <TargetVideoRes>Resolução do vídeo de destino</TargetVideoRes>
     <ChangeResolutionMargins>Alterar resolução para margem</ChangeResolutionMargins>
     <ChangeResolutionFontSize>Alterar a resolução para o tamanho do tipo de letra</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Alterar a resolução para a posição</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Alterar a resolução para desenho</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>A fonte e a resolução de destino são as mesmas - nada a fazer.</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>Gerar caixa de fundo</Title>
+    <Padding>Preenchimento</Padding>
+    <FillWidth>Largura de preenchimento</FillWidth>
+    <Drawing>Desenho</Drawing>
+    <BoxColor>Cor da caixa</BoxColor>
+    <Radius>Raio</Radius>
+    <Step>Fase</Step>
+    <Spikes>Picos</Spikes>
+    <Bubbles>Bolhas</Bubbles>
+    <Circle>Círculo</Circle>
+    <MarginX>MargemX</MarginX>
+    <MarginY>MargemY</MarginY>
+    <OnlyDrawing>Apenas desenho</OnlyDrawing>
+    <DrawingFile>Ficheiro de desenho</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Definir posição</SetPosition>
     <VideoResolutionX>Resolução do vídeo: {0}</VideoResolutionX>
@@ -230,14 +259,6 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <RotateXAxis>Rodar o eixo {0}</RotateXAxis>
     <DistortX>Distorcer {0}</DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>Áudio para texto</Title>
-    <ExtractingAudioUsingX>Extrair áudio utilizando {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Extrair texto do áudio utilizando {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Extrair texto através da {0} progressão: {1}%</ProgessViaXy>
-    <ShowLess>Mostrar menos  ▲</ShowLess>
-    <ShowMore>Mostrar mais  ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto-ajustar linhas seleccionadas</TitleAutoBreak>
     <TitleUnbreak>Remover quebras de linha das linhas seleccionadas</TitleUnbreak>
@@ -798,12 +819,13 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <CheckeredImage>Imagem axadrezada</CheckeredImage>
     <SolidColor>Cor sólida</SolidColor>
     <DurationInMinutes>Duração em minutos</DurationInMinutes>
+    <Background>Fundo</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Gerar vídeo com legenda embutida</Title>
     <InfoAssaOff>Nota: suporta o estilo de Advanced Substation Alpha.</InfoAssaOff>
     <InfoAssaOn>Nota: o estilo de Advanced Substation Alpha será usado :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" gerado com legenda embutida.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" gerado com legenda embutida em {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Tempo restante: {0} minutos</TimeRemainingMinutes>
     <TimeRemainingSeconds>Tempo restante: {0} segundos</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Tempo restante: {0} minutos e {1} segundos</TimeRemainingMinutesAndSeconds>
@@ -814,6 +836,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Encoding>Codificação</Encoding>
     <BitRate>Taxa de bits</BitRate>
     <SampleRate>Taxa de amostra</SampleRate>
+    <Audio>Áudio</Audio>
     <Stereo>Estéreo</Stereo>
     <Preset>Predefinição</Preset>
     <Crf>CRF</Crf>
@@ -1110,7 +1133,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <OpenContainingFolder>Abrir pasta</OpenContainingFolder>
         <Compare>&amp;Comparar...</Compare>
         <Statistics>Estatís&amp;tica...</Statistics>
-        <Plugins>Plugins...</Plugins>
+        <Plugins>&amp;Plugins...</Plugins>
         <ImportSubtitleFromVideoFile>Legenda do ficheiro de vídeo...</ImportSubtitleFromVideoFile>
         <ImportOcrFromDvd>Legenda de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Legenda VobSub (sub/idx) para OCR...</ImportOcrVobSubSubtitle>
@@ -1219,6 +1242,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda embutida...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>Vídeo/áudio para texto...</VideoAudioToText>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportSceneChanges>Gerar/importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveOrExportSceneChanges>Remover/exportar mudanças de cena...</RemoveOrExportSceneChanges>
@@ -1361,6 +1385,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SetPosition>Definir posição...</SetPosition>
         <GenerateProgressBar>Gerar barra de progressão...</GenerateProgressBar>
         <AssaResolutionChanger>Alterar a resolução do script ASSA...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Gerar caixa de fundo...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
@@ -1903,6 +1928,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <RenameGroup>Renomear grupo...</RenameGroup>
     <NewGroup>Novo grupo...</NewGroup>
     <NothingToImport>Nada para importar</NothingToImport>
+    <RuleInfo>Informação sobre regras</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
@@ -2053,6 +2079,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Find>Localizar</Find>
     <Replace>Substituir</Replace>
     <VisualSync>Sincronia visual</VisualSync>
+    <BurnIn>Integração</BurnIn>
     <SpellCheck>Verificação ortográfica</SpellCheck>
     <NetflixQualityCheck>Controlo de qualidade Netflix</NetflixQualityCheck>
     <SettingsName>Definições</SettingsName>
@@ -2187,8 +2214,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
-    <WaveformUseFFmpeg>Usar o FFmpeg para extrair o áudio onda</WaveformUseFFmpeg>
-    <DownloadFFmpeg>Transferir o FFmpeg</DownloadFFmpeg>
+    <WaveformUseFFmpeg>Usar o FFmpeg para extrair a onda áudio</WaveformUseFFmpeg>
+    <DownloadX>Transferir o {0}</DownloadX>
     <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
@@ -2319,8 +2346,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustExtendNextLineStartToCurrentEnd>Prolongar o início da linha seguinte até ao fim da actual</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Recalcular a duração da legenda actual (com base na velocidade de leitura ideal)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Recalcular a duração da legenda actual (com base na velocidade de leitura mínima)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>Inserir nova linha com tecla "Page Down", definir tempo final com tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir travessões)</MergeDialog>
+    <MergeDialogWithNext>Combinar os diálogos com a seguinte (inserir travessões)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>Combinar os diálogos com a anterior (inserir travessões)</MergeDialogWithPrevious>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToNextPlayTranslate>Ir para a linha seguinte (e reproduzir no 'Modo de tradução')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Ir para a linha seguinte e pôr o cursor no fim</GoToNextCursorAtEnd>
@@ -2349,7 +2379,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AlignmentN8>Alinhamento superior central - {\an8}</AlignmentN8>
     <AlignmentN9>Alinhamento superior direito - {\an9}</AlignmentN9>
     <ColorX>Cor {0} ({1})</ColorX>
-    <CopyTextOnly>Copiar apenas o texto (linhas seleccionadas)</CopyTextOnly>
+    <CopyTextOnly>Copiar apenas o texto para a àrea de transferência (linhas seleccionadas)</CopyTextOnly>
+    <CopyPlainText>Copiar texto simples para a àrea de transferência (linhas seleccionadas)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Corrigir RTL através de controlo de caracteres Unicode</FixRTLViaUnicodeChars>
@@ -2453,6 +2484,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
     <ListViewGoToNextError>Ir para o erro seguinte</ListViewGoToNextError>
     <ListViewListErrors>Listar erros</ListViewListErrors>
+    <ListViewListSortByX>Ordenar por {0}</ListViewListSortByX>
     <ShowStyleManager>Mostrar gestor de estilo</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Mover a última palavra até à próxima linha da legenda</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima linha da legenda</MainTextBoxMoveFirstWordFromNextUp>
@@ -2517,7 +2549,6 @@ Continuar?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>O mpv lib foi transferido e está pronto para ser utilizado.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>Transferir o {0}</XDownload>
     <XDownloadFailed>Não é possível transferir o {0} - tente novamente mais tarde!</XDownloadFailed>
     <XDownloadOk>O {0} foi transferido e está pronto para ser utilizado.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2535,8 +2566,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ShowLater>Mostrar &amp;depois</ShowLater>
     <TotalAdjustmentX>Total de ajustes: {0}</TotalAdjustmentX>
     <AllLines>&amp;Todas as linhas</AllLines>
-    <SelectedLinesOnly>Só linhas seleccionadas</SelectedLinesOnly>
-    <SelectedLinesAndForward>Linha(s) e proseguir</SelectedLinesAndForward>
+    <SelectedLinesOnly>&amp;Só linhas seleccionadas</SelectedLinesOnly>
+    <SelectedLinesAndForward>Linhas seleccionadas e subse&amp;quentes</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Histórico (para anular)</Title>
@@ -2694,6 +2725,10 @@ Continuar?</RestoreDefaultSettingsMsg>
     <WrapStyle>Estilo moldado</WrapStyle>
     <Collision>Colisão</Collision>
     <ScaleBorderAndShadow>Reduzir o contorno e sombreado</ScaleBorderAndShadow>
+    <WrapStyle0>0: Quebra de linha inteligente, a linha superior é mais larga</WrapStyle0>
+    <WrapStyle1>1: Quebra de linha de palavras em fim-de-linha, apenas \N quebra</WrapStyle1>
+    <WrapStyle2>2: Sem quebra de linha de palavras, ambas \n e \N quebram</WrapStyle2>
+    <WrapStyle3>3: Quebra de linha inteligente, a linha inferior é mais larga</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Estilos Advanced Sub Station Alpha</Title>
@@ -2995,13 +3030,13 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChangesFromSelection>Remover mudanças de cena da selecção</RemoveSceneChangesFromSelection>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
-    <InsertSubtitleHere>Inserir legendagem aqui...</InsertSubtitleHere>
+    <InsertSubtitleHere>Inserir legenda aqui...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Adivinhar os tempos</Title>
-    <StartFrom>Iniciar apartir de:</StartFrom>
+    <StartFrom>Iniciar a partir de:</StartFrom>
     <CurrentVideoPosition>Posição de vídeo actual</CurrentVideoPosition>
     <Beginning>Início</Beginning>
     <DeleteLines>Eliminar linhas</DeleteLines>

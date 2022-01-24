@@ -450,6 +450,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 buttonExpandSelection_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                checkBoxItalic.Checked = !checkBoxItalic.Checked;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+            {
+                checkBoxAutoSubmitOfFirstChar.Checked = !checkBoxAutoSubmitOfFirstChar.Checked;
+                e.SuppressKeyPress = true;
+            }
         }
 
         private static bool IsMatchPointForeGround(NOcrPoint op, bool loose, NikseBitmap nbmp, NOcrChar nOcrChar)

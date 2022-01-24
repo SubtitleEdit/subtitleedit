@@ -98,6 +98,7 @@
             public string Collapse { get; set; }
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
+            public string Reset { get; set; }
         }
 
         public class About
@@ -173,6 +174,19 @@
             public string UnableToFix { get; set; }
         }
 
+        public class AudioToText
+        {
+            public string Title { get; set; }
+            public string Info { get; set; }
+            public string VoskWebsite { get; set; }
+            public string Models { get; set; }
+            public string ChooseModel { get; set; }
+            public string OpenModelsFolder { get; set; }
+            public string LoadingVoskModel { get; set; }
+            public string Transcribing { get; set; }
+            public string UsePostProcessing { get; set; }
+        }
+
         public class AssaAttachments
         {
             public string Title { get; set; }
@@ -226,6 +240,25 @@
             public string ChangeResolutionFontSize { get; set; }
             public string ChangeResolutionPositions { get; set; }
             public string ChangeResolutionDrawing { get; set; }
+            public string SourceAndTargetEqual { get; set; }
+        }
+
+        public class AssaSetBackgroundBox
+        {
+            public string Title { get; set; }
+            public string Padding { get; set; }
+            public string FillWidth { get; set; }
+            public string Drawing { get; set; }
+            public string BoxColor { get; set; }
+            public string Radius { get; set; }
+            public string Step { get; set; }
+            public string Spikes { get; set; }
+            public string Bubbles { get; set; }
+            public string Circle { get; set; }
+            public string MarginX { get; set; }
+            public string MarginY { get; set; }
+            public string OnlyDrawing { get; set; }
+            public string DrawingFile { get; set; }
         }
 
         public class AssaSetPosition
@@ -240,16 +273,6 @@
             public string ResolutionMissing { get; set; }
             public string RotateXAxis { get; set; }
             public string DistortX { get; set; }
-        }
-
-        public class AudioToText
-        {
-            public string Title { get; set; }
-            public string ExtractingAudioUsingX { get; set; }
-            public string ExtractingTextUsingX { get; set; }
-            public string ProgessViaXy { get; set; }
-            public string ShowLess { get; set; }
-            public string ShowMore { get; set; }
         }
 
         public class AutoBreakUnbreakLines
@@ -876,6 +899,7 @@
             public string CheckeredImage { get; set; }
             public string SolidColor { get; set; }
             public string DurationInMinutes { get; set; }
+            public string Background { get; set; }
         }
 
         public class GenerateVideoWithBurnedInSubs
@@ -883,7 +907,7 @@
             public string Title { get; set; }
             public string InfoAssaOff { get; set; }
             public string InfoAssaOn { get; set; }
-            public string XGeneratedWithBurnedInSubs { get; set; }
+            public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
             public string TimeRemainingSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
@@ -894,6 +918,7 @@
             public string Encoding { get; set; }
             public string BitRate { get; set; }
             public string SampleRate { get; set; }
+            public string Audio { get; set; }
             public string Stereo { get; set; }
             public string Preset { get; set; }
             public string Crf { get; set; }
@@ -1597,6 +1622,7 @@
                     public string GenerateTextFromVideo { get; set; }
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
+                    public string VideoAudioToText { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveOrExportSceneChanges { get; set; }
@@ -1751,6 +1777,7 @@
                     public string SetPosition { get; set; }
                     public string GenerateProgressBar { get; set; }
                     public string AssaResolutionChanger { get; set; }
+                    public string AssaGenerateBackgroundBox { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
@@ -2052,6 +2079,7 @@
             public string RenameGroup { get; set; }
             public string NewGroup { get; set; }
             public string NothingToImport { get; set; }
+            public string RuleInfo { get; set; }
         }
 
         public class NetworkChat
@@ -2228,6 +2256,7 @@
             public string Find { get; set; }
             public string Replace { get; set; }
             public string VisualSync { get; set; }
+            public string BurnIn { get; set; }
             public string SpellCheck { get; set; }
             public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
@@ -2366,7 +2395,7 @@
             public string SpectrogramOneColorGradient { get; set; }
             public string SpectrogramClassic { get; set; }
             public string WaveformUseFFmpeg { get; set; }
-            public string DownloadFFmpeg { get; set; }
+            public string DownloadX { get; set; }
             public string WaveformFFmpegPath { get; set; }
             public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }
@@ -2422,6 +2451,13 @@
             public string ContinuationStyleNoneTrailingEllipsis { get; set; }
             public string ContinuationStyleLeadingTrailingDash { get; set; }
             public string ContinuationStyleLeadingTrailingDashDots { get; set; }
+            public string CpsLineLengthStyle { get; set; }
+            public string CpsLineLengthStyleCalcAll { get; set; }
+            public string CpsLineLengthStyleCalcNoSpace { get; set; }
+            public string CpsLineLengthStyleCalcCjk { get; set; }
+            public string CpsLineLengthStyleCalcCjkNoSpace { get; set; }
+            public string CpsLineLengthStyleCalcIgnoreArabicDiacritics { get; set; }
+            public string CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
@@ -2499,8 +2535,11 @@
             public string AdjustExtendNextLineStartToCurrentEnd { get; set; }
             public string RecalculateDurationOfCurrentSubtitle { get; set; }
             public string RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed { get; set; }
+            public string RecalculateDurationOfCurrentSubtitleByMinReadingSpeed { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
+            public string MergeDialogWithNext { get; set; }
+            public string MergeDialogWithPrevious { get; set; }
             public string GoToNext { get; set; }
             public string GoToNextPlayTranslate { get; set; }
             public string GoToNextCursorAtEnd { get; set; }
@@ -2530,6 +2569,7 @@
             public string AlignmentN9 { get; set; }
             public string ColorX { get; set; }
             public string CopyTextOnly { get; set; }
+            public string CopyPlainText { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }
             public string FixRTLViaUnicodeChars { get; set; }
@@ -2699,7 +2739,6 @@
 
         public class SettingsFfmpeg
         {
-            public string XDownload { get; set; }
             public string XDownloadFailed { get; set; }
             public string XDownloadOk { get; set; }
         }
@@ -2898,6 +2937,10 @@
             public string WrapStyle { get; set; }
             public string Collision { get; set; }
             public string ScaleBorderAndShadow { get; set; }
+            public string WrapStyle0 { get; set; }
+            public string WrapStyle1 { get; set; }
+            public string WrapStyle2 { get; set; }
+            public string WrapStyle3 { get; set; }
         }
 
         public class SubStationAlphaStyles

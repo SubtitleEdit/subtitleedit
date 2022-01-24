@@ -5,12 +5,14 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class AdvancedSubStationAlpha : SubtitleFormat
     {
+        private static readonly Regex ScriptTypeFinder = new Regex("ScriptType: *v4.00", RegexOptions.Compiled);
         public string Errors { get; private set; }
 
         public static string DefaultStyle
@@ -97,8 +99,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
 ScriptType: v4.00+
-Collisions: Normal
 PlayDepth: 0
+ScaledBorderAndShadow: Yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -112,10 +114,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             bool fromTtml = false;
             string header = $@"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
-Title: {0}
+Title: {{0}}
 ScriptType: v4.00+
-Collisions: Normal
 PlayDepth: 0
+ScaledBorderAndShadow: Yes
 
 [V4+ Styles]
 {SsaStyle.DefaultAssStyleFormat}
@@ -233,6 +235,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
         {
             var scriptInfo = string.Empty;
+            header = FixScriptType(header);
             if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00") &&
@@ -288,6 +291,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromAdvancedSubStationAlpha(string header, List<SsaStyle> styles)
         {
             var scriptInfo = string.Empty;
+            header = FixScriptType(header);
+
             if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00+"))
@@ -341,6 +346,20 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 {SsaStyle.DefaultAssStyleFormat}
 {style.ToString().Trim() + Environment.NewLine}
 [Events]");
+        }
+
+        private static string FixScriptType(string header)
+        {
+            if (header != null && !header.Contains("ScriptType: v4.00+"))
+            {
+                var match = ScriptTypeFinder.Match(header);
+                if (match.Success)
+                {
+                    header = header.Remove(match.Index, match.Length).Insert(match.Index, "ScriptType: v4.00+");
+                }
+            }
+
+            return header;
         }
 
         private static void LoadStylesFromSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
@@ -853,7 +872,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var styles = new List<SsaStyle>();
             foreach (var styleName in GetStylesFromHeader(header))
             {
-                styles.Add(AdvancedSubStationAlpha.GetSsaStyle(styleName, header));
+                styles.Add(GetSsaStyle(styleName, header));
             }
             return styles;
         }
@@ -1702,13 +1721,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         }
 
         private static string NormalizeNewLines(string text)
-        { 
+        {
             return text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var paragraphs = subtitle.Paragraphs.Where(p => !p.IsComment).Select(p=> new Paragraph(p)).ToList();
+            var paragraphs = subtitle.Paragraphs.Where(p => !p.IsComment).Select(p => new Paragraph(p)).ToList();
             subtitle.Paragraphs.Clear();
             subtitle.Paragraphs.AddRange(paragraphs);
 
@@ -2499,7 +2518,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (i == fontsizeIndex)
                             {
-                                if (float.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fOut))
+                                if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fOut))
                                 {
                                     style.FontSize = fOut;
                                 }
@@ -2624,6 +2643,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
 
             return new SsaStyle { Name = styleName };
+        }
+
+        public static string UpdateOrAddStyle(string header, SsaStyle style)
+        {
+            var styles = GetSsaStylesFromHeader(header).Where(p => p.Name != style.Name).ToList();
+            styles.Add(style);
+            return GetHeaderAndStylesFromAdvancedSubStationAlpha(header, styles);
         }
     }
 }

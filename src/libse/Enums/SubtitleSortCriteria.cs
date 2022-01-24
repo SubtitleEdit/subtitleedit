@@ -6,6 +6,7 @@
         StartTime,
         EndTime,
         Duration,
+        Gap,
         Text,
         TextMaxLineLength,
         TextTotalLength,
