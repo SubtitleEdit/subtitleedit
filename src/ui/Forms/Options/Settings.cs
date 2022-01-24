@@ -385,13 +385,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBFixCommonErrors.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBRemoveTextForHi.Text = LanguageSettings.Current.General.Visible;
             checkBoxVisualSync.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBBurnIn.Text = LanguageSettings.Current.General.Visible;
             checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
-            checkBoxHelp.Text = LanguageSettings.Current.General.Visible; 
+            checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
 
             // Toolbar icons first row
-            labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right)  + 18;
+            labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
             pictureBoxOpen.Left = labelTBOpen.Left;
             checkBoxToolbarOpen.Left = labelTBOpen.Left;
 
@@ -746,6 +747,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
             labelContinuationStyle.Text = language.ContinuationStyle;
+            labelCpsLineLenCalc.Text = language.CpsLineLengthStyle;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
@@ -769,7 +771,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxToolsBreakPreferBottomHeavy.Text = language.BreakPreferBottomHeavy;
             numericUpDownToolsBreakPreferBottomHeavy.Left = checkBoxToolsBreakPreferBottomHeavy.Left + checkBoxToolsBreakPreferBottomHeavy.Width + 9;
             labelToolsBreakBottomHeavyPercent.Left = numericUpDownToolsBreakPreferBottomHeavy.Left + numericUpDownToolsBreakPreferBottomHeavy.Width + 2;
-            checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = LanguageSettings.Current.VobSubOcr.Edit;
 
             groupBoxMiscellaneous.Text = language.Miscellaneous;
@@ -908,6 +909,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
             SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
+            SetCpsLineLengthStyle(Configuration.Settings.General.CpsLineLengthStrategy);
 
             UpdateProfileNames(gs.Profiles);
 
@@ -961,7 +963,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxToolsBreakByPixelWidth.Checked = toolsSettings.AutoBreakUsePixelWidth;
             checkBoxToolsBreakPreferBottomHeavy.Checked = toolsSettings.AutoBreakPreferBottomHeavy;
             numericUpDownToolsBreakPreferBottomHeavy.Value = (decimal)toolsSettings.AutoBreakPreferBottomPercent;
-            checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
             comboBoxBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
@@ -1161,6 +1162,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
                     break;
+            }
+        }
+
+        private void SetCpsLineLengthStyle(string cpsLineLengthStyle)
+        {
+            comboBoxCpsLineLenCalc.Items.Clear();
+            foreach (var calc in CpsLineLength.List())
+            {
+                comboBoxCpsLineLenCalc.Items.Add(calc);
+                if (cpsLineLengthStyle == calc.Code)
+                {
+                    comboBoxCpsLineLenCalc.SelectedIndex = comboBoxCpsLineLenCalc.Items.Count - 1;
+                }
+            }
+
+            if (comboBoxCpsLineLenCalc.SelectedIndex < 0)
+            {
+                comboBoxCpsLineLenCalc.SelectedIndex = 0;
             }
         }
 
@@ -2018,6 +2037,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             gs.DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             gs.ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
+            gs.CpsLineLengthStrategy = (comboBoxCpsLineLenCalc.SelectedItem as CpsLineLength)?.Code;
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -2038,7 +2058,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.Tools.BDOpenIn = comboBoxBDOpensIn.SelectedIndex == 0 ? "OCR" : "EDIT";
             Configuration.Settings.General.AllowLetterShortcutsInTextBox = checkBoxShortcutsAllowLetterOrNumberInTextBox.Checked;
 
-            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
@@ -3483,8 +3502,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             SetDialogStyle(profile.DialogStyle);
             SetContinuationStyle(profile.ContinuationStyle);
-
-            checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
+            SetCpsLineLengthStyle(profile.CpsLineLengthStrategy);
             _oldProfileId = profile.Id;
             _editProfileOn = false;
         }
@@ -3504,7 +3522,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _rulesProfiles[idx].MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
             _rulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
-            _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
+            _rulesProfiles[idx].CpsLineLengthStrategy = (comboBoxCpsLineLenCalc.SelectedItem as CpsLineLength)?.Code;
             _rulesProfiles[idx].MergeLinesShorterThan = int.Parse(comboBoxMergeShortLineLength.Text, CultureInfo.InvariantCulture);
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             _rulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);

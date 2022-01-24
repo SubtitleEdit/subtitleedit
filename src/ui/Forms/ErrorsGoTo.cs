@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
             var s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
             foreach (var line in s.SplitToLines())
             {
-                var count = line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+                var count = line.CountCharacters();
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength)
                 {
                     errors.Add($"Line too long: {count} > {Configuration.Settings.General.SubtitleLineMaximumLength}");
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var noOfLines = paragraph.NumberOfLines;
-            if (s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+            if (s.CountCharacters() <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
             {
                 if (noOfLines > Configuration.Settings.General.MaxNumberOfLines)
                 {

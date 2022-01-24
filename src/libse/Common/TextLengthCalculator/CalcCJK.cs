@@ -1,18 +1,18 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
-    public class CalcCJK : ICalcLength
+    public class CalcCjk : ICalcLength
     {
         /// <summary>
         /// Calculate all text including space (tags are not counted).
         /// </summary>
-        public decimal CalculateLength(string text)
+        public decimal CountCharacters(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return 0;
             }
 
-            const string chineseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
+            const string japaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             var count = 0m;
@@ -59,7 +59,7 @@
                     var number = char.GetNumericValue(ch);
                     if (number >= 0x4E00 && number <= 0x2FA1F)
                     {
-                        if (chineseHalfWidthCharacters.Contains(ch))
+                        if (japaneseHalfWidthCharacters.Contains(ch))
                         {
                             count += 0.5m;
                         }

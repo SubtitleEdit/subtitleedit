@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds, onlyOptimal);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-            var numberOfCharacters = p.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace, Configuration.Settings.General.IgnoreArabicDiacritics);
+            var numberOfCharacters = p.Text.CountCharacters();
             while (Utilities.GetCharactersPerSecond(p, numberOfCharacters) > maxCharactersPerSecond)
             {
                 duration++;

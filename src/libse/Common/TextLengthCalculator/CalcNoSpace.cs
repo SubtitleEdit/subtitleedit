@@ -5,7 +5,7 @@
         /// <summary>
         /// Calculate all text excluding space (tags are not counted).
         /// </summary>
-        public decimal CalculateLength(string text)
+        public decimal CountCharacters(string text)
         {
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';

@@ -685,9 +685,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixLargeFonts(Control mainCtrl, Control ctrl)
         {
-            using (Graphics graphics = mainCtrl.CreateGraphics())
+            using (var graphics = mainCtrl.CreateGraphics())
             {
-                SizeF textSize = graphics.MeasureString(ctrl.Text, ctrl.Font);
+                var textSize = graphics.MeasureString(ctrl.Text, ctrl.Font);
                 if (textSize.Height > ctrl.Height - 4)
                 {
                     SetButtonHeight(mainCtrl, (int)Math.Round(textSize.Height + 7.5), 1);
@@ -698,7 +698,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void SetSaveDialogFilter(SaveFileDialog saveFileDialog, SubtitleFormat currentFormat)
         {
             var sb = new StringBuilder();
-            int index = 0;
+            var index = 0;
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
                 sb.Append(format.Name + "|*" + format.Extension + "|");
@@ -717,9 +717,9 @@ namespace Nikse.SubtitleEdit.Logic
             var lines = text.SplitToLines();
             const int max = 3;
             var sb = new StringBuilder();
-            for (int i = 0; i < lines.Count; i++)
+            for (var i = 0; i < lines.Count; i++)
             {
-                string line = lines[i];
+                var line = lines[i];
                 if (i > 0)
                 {
                     sb.Append('/');
@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                var count = line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+                var count = line.CountCharacters();
                 sb.Append(count);
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
@@ -748,9 +748,9 @@ namespace Nikse.SubtitleEdit.Logic
             var lines = text.SplitToLines();
             const int max = 3;
             var sb = new StringBuilder();
-            for (int i = 0; i < lines.Count; i++)
+            for (var i = 0; i < lines.Count; i++)
             {
-                string line = lines[i];
+                var line = lines[i];
                 if (i > 0)
                 {
                     sb.Append('/');
@@ -763,13 +763,14 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                int lineWidth = TextWidth.CalcPixelWidth(line);
+                var lineWidth = TextWidth.CalcPixelWidth(line);
                 sb.Append(lineWidth);
                 if (lineWidth > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
                 {
                     label.ForeColor = Color.Red;
                 }
             }
+
             label.Text = sb.ToString();
         }
 

@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
         public int MinimumMillisecondsBetweenLines { get; set; }
-        public bool CpsIncludesSpace { get; set; }
+        public string CpsLineLengthStrategy { get; set; }
         public int MaxNumberOfLines { get; set; }
         public int MergeLinesShorterThan { get; set; }
         public DialogType DialogStyle { get; set; }
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             SubtitleMinimumDisplayMilliseconds = profile.SubtitleMinimumDisplayMilliseconds;
             SubtitleMaximumDisplayMilliseconds = profile.SubtitleMaximumDisplayMilliseconds;
             MinimumMillisecondsBetweenLines = profile.MinimumMillisecondsBetweenLines;
-            CpsIncludesSpace = profile.CpsIncludesSpace;
+            CpsLineLengthStrategy = profile.CpsLineLengthStrategy;
             MaxNumberOfLines = profile.MaxNumberOfLines;
             MergeLinesShorterThan = profile.MergeLinesShorterThan;
             DialogStyle = profile.DialogStyle;
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 sb.Append("{\"name\":\"" + Json.EncodeJsonText(p.Name) + "\", " +
                           "\"maxNumberOfLines\":\"" + p.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture) + "\"," +
-                          "\"cpsIncludesSpace\":\"" + p.CpsIncludesSpace.ToString(CultureInfo.InvariantCulture) + "\"," +
+                          "\"cpsLineLengthStrategy\":\"" + p.CpsLineLengthStrategy + "\"," +
                           "\"mergeLinesShorterThan\":\"" + p.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"minimumMillisecondsBetweenLines\":\"" + p.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"subtitleLineMaximumLength\":\"" + p.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture) + "\"," +
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var name = Json.DecodeJsonText(Json.ReadTag(p, "name"));
                 var maxNumberOfLines = Convert.ToInt32(Json.ReadTag(p, "maxNumberOfLines"), CultureInfo.InvariantCulture);
-                var cpsIncludesSpace = Convert.ToBoolean(Json.ReadTag(p, "cpsIncludesSpace"), CultureInfo.InvariantCulture);
+                var cpsLineLengthStrategy = Json.ReadTag(p, "cpsLineLengthStrategy");
                 var mergeLinesShorterThan = Convert.ToInt32(Json.ReadTag(p, "mergeLinesShorterThan"), CultureInfo.InvariantCulture);
                 var minimumMillisecondsBetweenLines = Convert.ToInt32(Json.ReadTag(p, "minimumMillisecondsBetweenLines"), CultureInfo.InvariantCulture);
                 var subtitleLineMaximumLength = Convert.ToInt32(Json.ReadTag(p, "subtitleLineMaximumLength"), CultureInfo.InvariantCulture);
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     Name = name,
                     MaxNumberOfLines = maxNumberOfLines,
-                    CpsIncludesSpace = cpsIncludesSpace,
+                    CpsLineLengthStrategy = cpsLineLengthStrategy,
                     MergeLinesShorterThan = mergeLinesShorterThan,
                     MinimumMillisecondsBetweenLines = minimumMillisecondsBetweenLines,
                     SubtitleLineMaximumLength = subtitleLineMaximumLength,

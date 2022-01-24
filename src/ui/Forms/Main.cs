@@ -5195,10 +5195,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSettings()
         {
-            string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
-            string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
-            string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
-            bool oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
+            var oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
+            var oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
+            var oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
+            var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CpsLineLengthStrategy;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
                                              Configuration.Settings.General.SubtitleTextBoxFontBold +
                                              Configuration.Settings.General.CenterSubtitleInTextBox +
@@ -5378,7 +5378,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
 
             if (oldListViewLineSeparatorString != Configuration.Settings.General.ListViewLineSeparatorString ||
-                oldCpsWhiteSpaceSetting != Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
+                oldCpsWhiteSpaceSetting != Configuration.Settings.General.CpsLineLengthStrategy)
             {
                 SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);
                 SaveSubtitleListviewIndices();
@@ -9850,7 +9850,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplitLine.Visible = false;
 
             var s = text.Replace(Environment.NewLine, " ");
-            var len = text.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+            var len = text.CountCharacters();
 
             int numberOfLines = Utilities.GetNumberOfLines(text.Trim());
             int maxLines = int.MaxValue;
@@ -9864,8 +9864,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2) &&
                     splitLines.Count == 2 && splitLines[0].StartsWith('-') && splitLines[1].StartsWith('-') &&
-                    (splitLines[0].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength ||
-                     splitLines[1].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
+                    (splitLines[0].CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength ||
+                     splitLines[1].CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     if (buttonUnBreak.Visible)
                     {
@@ -9934,7 +9934,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle, 50);
                         var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
-                        if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
+                        if (abl.Count > maxLines || abl.Any(li => li.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength))
                         {
                             buttonSplitLine.Visible = buttonAutoBreak.Visible;
                         }
@@ -9958,7 +9958,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle, 50);
                 var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
-                if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength) &&
+                if (abl.Count > maxLines || abl.Any(li => li.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength) &&
                     !textBoxListViewTextOriginal.Visible)
                 {
                     buttonSplitLine.Visible = buttonAutoBreak.Visible;
@@ -28679,7 +28679,7 @@ namespace Nikse.SubtitleEdit.Forms
             int pos = textBox.SelectionStart;
             var textNoHtml = HtmlUtil.RemoveHtmlTags(text, true);
             var s = textNoHtml.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-            int totalLength = s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+            var totalLength = s.CountCharacters();
             string totalL;
 
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)

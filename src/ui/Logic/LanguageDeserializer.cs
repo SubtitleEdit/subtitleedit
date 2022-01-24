@@ -6181,6 +6181,27 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ContinuationStyleLeadingTrailingDashDots":
                     language.Settings.ContinuationStyleLeadingTrailingDashDots = reader.Value;
                     break;
+                case "Settings/CpsLineLengthStyle":
+                    language.Settings.CpsLineLengthStyle = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcAll":
+                    language.Settings.CpsLineLengthStyleCalcAll = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcNoSpace":
+                    language.Settings.CpsLineLengthStyleCalcNoSpace = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcCjk":
+                    language.Settings.CpsLineLengthStyleCalcCjk = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcCjkNoSpace":
+                    language.Settings.CpsLineLengthStyleCalcCjkNoSpace = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacritics":
+                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacritics = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace":
+                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace = reader.Value;
+                    break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;
                     break;

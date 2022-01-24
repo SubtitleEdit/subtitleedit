@@ -14,16 +14,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.BreakLongLine;
-            int noOfLongLines = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.BreakLongLine;
+            var noOfLongLines = 0;
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 var lines = p.Text.SplitToLines();
-                bool tooLong = false;
-                foreach (string line in lines)
+                var tooLong = false;
+                foreach (var line in lines)
                 {
-                    if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
                         break;
