@@ -1502,7 +1502,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public static string KoreanLetters = "가나다라마바사아자차카타파하아야어여오요우유으이";
+        public static string KoreanLetters = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
         public static string JapaneseLetters = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
 
         public static string GetEncodingViaLetter(string text)
