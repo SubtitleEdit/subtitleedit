@@ -60,15 +60,10 @@
                     {
                         count += 0.5m;
                     }
-                    else if (LanguageAutoDetect.JapaneseLetters.Contains(ch))
-                    {
-                        count++;
-                    }
-                    else if (LanguageAutoDetect.KoreanLetters.Contains(ch))
-                    {
-                        count++;
-                    }
-                    else if (CalcCjk.IsCjk(ch))
+                    else if (CalcCjk.ChineseFullWidthPunctuations.Contains(ch) ||
+                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                             CalcCjk.IsCjk(ch))
                     {
                         count++;
                     }
