@@ -234,8 +234,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BoxColor>박스 색상</BoxColor>
     <Radius>반지름</Radius>
     <Step>단계</Step>
-    <MaxSpike>스파이크(최대)</MaxSpike>
     <Spikes>스파이크</Spikes>
+    <Bubbles>거품</Bubbles>
     <Circle>원형</Circle>
     <MarginX>X여백</MarginX>
     <MarginY>Y여백</MarginY>
@@ -819,7 +819,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>자막 입혀진 비디오 파일 생성</Title>
     <InfoAssaOff>참고: Advanced Substation Alpha 스타일이 지원됨.</InfoAssaOff>
     <InfoAssaOn>참고: Advanced Substation Alpha 스타일링이 사용됩니다:)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubsInX>자막 입혀진 비디오 파일 "{0}" 만들기 완료! - (경과시간 {1})</XGeneratedWithBurnedInSubsInX>
+    <XGeneratedWithBurnedInSubsInX>생성 완료! - "{0}" (경과시간: {1})</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>남은 시간: {0} 분</TimeRemainingMinutes>
     <TimeRemainingSeconds>남은 시간: {0} 초</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>남은 시간: {0} 분 {1} 초</TimeRemainingMinutesAndSeconds>
@@ -2077,6 +2077,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Find>찾기</Find>
     <Replace>바꾸기</Replace>
     <VisualSync>시각 동기화</VisualSync>
+    <BurnIn>비디오 굽기</BurnIn>
     <SpellCheck>맞춤법</SpellCheck>
     <NetflixQualityCheck>넷플릭스 품질 검사</NetflixQualityCheck>
     <SettingsName>환경 설정</SettingsName>
@@ -2260,14 +2261,22 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DialogStyleDashSecondLineWithoutSpace>두번째 줄에 공백없는 대시</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>연속 스타일</ContinuationStyle>
     <ContinuationStyleNone>없음</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>없음, 일시 정지를 위한 점 (후행만)</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>없음, 일시 정지를 위한 점</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingDots>없음, 일시 중지를 위한 점 (후행만)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>없음, 일시 중지를 위한 점</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>점 (후행만)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>점</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>줄임표</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>없음, 일시 중지를 위한 줄임표</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>줄임표 (후행만)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>대시</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>대시, 하지만 일시 정지을 위한 점</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>대시, 하지만 일시 중지에는 점</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>초당 문자 수/줄 길이</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>모든 문자 수</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpace>모든 공백을 제외한 수</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, 라틴어 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, 라틴어 0.5, 공백 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>아랍어 분음부 무시</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>아랍어 분음부/공백 무시</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
@@ -2722,10 +2731,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WrapStyle>줄바꿈 스타일</WrapStyle>
     <Collision>충돌</Collision>
     <ScaleBorderAndShadow>테두리 및 그림자 조절</ScaleBorderAndShadow>
-    <WrapStyle0>0: 스마트 줄바꿈,  윗 줄이 넓음</WrapStyle0>
-    <WrapStyle1>1: 줄의 끝 단어 줄바꿈,  \N 만 줄바꿈</WrapStyle1>
-    <WrapStyle2>2: 단어 줄바꿈 안함,  \n 및 \N 둘다 줄바꿈</WrapStyle2>
-    <WrapStyle3>3: 스마트 줄바꿈,  아래 줄이 넓음</WrapStyle3>
+    <WrapStyle0>0: 스마트 줄바꿈, 윗 줄이 넓게</WrapStyle0>
+    <WrapStyle1>1: 줄의 끝 단어 줄바꿈,  \N 만</WrapStyle1>
+    <WrapStyle2>2: 단어 줄바꿈 안함,  \n 및 \N 둘다</WrapStyle2>
+    <WrapStyle3>3: 스마트 줄바꿈, 아래 줄이 넓게</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>* Advanced Sub Station Alpha의 스타일</Title>

@@ -46,10 +46,6 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 {
                     htmlTagOn = true;
                 }
-                else if (JapaneseHalfWidthCharacters.Contains(ch))
-                {
-                    count += 0.5m;
-                }
                 else if (!char.IsControl(ch) &&
                          ch != zeroWidthSpace &&
                          ch != zeroWidthNoBreakSpace &&
@@ -61,7 +57,14 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    if (IsCjk(ch))
+                    if (JapaneseHalfWidthCharacters.Contains(ch))
+                    {
+                        count += 0.5m;
+                    }
+                    else if (ChineseFullWidthPunctuations.Contains(ch) ||
+                             LanguageAutoDetect.JapaneseLetters.Contains(ch) ||
+                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                             IsCjk(ch))
                     {
                         count++;
                     }
@@ -77,15 +80,19 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 
 
         public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
+        public const string ChineseFullWidthPunctuations = "，。、：；？！…“”—‘’（）【】「」『』〔〕《》〈〉";
 
-        public static readonly Regex CjkCharRegex = new Regex(@"\p{IsCJKUnifiedIdeographs}", RegexOptions.Compiled);
+        public static readonly Regex CjkCharRegex = new Regex(@"\p{IsHangulJamo}|" +
+                                                              @"\p{IsCJKRadicalsSupplement}|" +
+                                                              @"\p{IsCJKSymbolsandPunctuation}|" +
+                                                              @"\p{IsEnclosedCJKLettersandMonths}|" +
+                                                              @"\p{IsCJKCompatibility}|" +
+                                                              @"\p{IsCJKUnifiedIdeographsExtensionA}|" +
+                                                              @"\p{IsCJKUnifiedIdeographs}|" +
+                                                              @"\p{IsHangulSyllables}|" +
+                                                              @"\p{IsCJKCompatibilityForms}", RegexOptions.Compiled);
         public static bool IsCjk(char c)
         {
-            if (c == '。' || c == '，')
-            {
-                return true;
-            }
-
             return CjkCharRegex.IsMatch(c.ToString());
         }
     }

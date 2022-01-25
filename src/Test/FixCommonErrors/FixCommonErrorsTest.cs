@@ -482,7 +482,7 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
                 const string input = "l-l'll see you.";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
-                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", null, new HashSet<string>());
                 Assert.AreEqual(res, "I-I'll see you.");
             }
         }
@@ -495,7 +495,7 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
                 const string input = "Foobar\r\n<i>-";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
-                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", null, new HashSet<string>());
                 Assert.AreEqual(res, "Foobar\r\n<i>-");
             }
         }
@@ -508,7 +508,7 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
                 const string input = "i.e., your killer.";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "not there", form);
-                var res = ofe.FixOcrErrors(input, 1, "Ends with comma,", false, Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.AutoGuessLevel.Cautious);
+                var res = ofe.FixOcrErrors(input, 1, "Ends with comma,", null, false, Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.AutoGuessLevel.Cautious);
                 Assert.AreEqual(res, "i.e., your killer.");
             }
         }
@@ -521,7 +521,7 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
                 const string input = "www.addic7ed.com";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
-                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", null, new HashSet<string>());
                 Assert.AreEqual(res, input);
             }
         }
