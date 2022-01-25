@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
                 }
 
-                if (controller.Language == "ja" || controller.Language == "ko")
+                if (controller.Language == "ko")
                 {
                     calc = CalcFactory.MakeCalculator(nameof(CalcCjk));
                 }

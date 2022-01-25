@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Globalization;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
@@ -37,6 +38,13 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                                 controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), comment, line.Length.ToString(CultureInfo.InvariantCulture));
                             }
                         }
+                    }
+                    else if (controller.Language == "ko" && line.CountCharacters(nameof(CalcCjk)) > controller.SingleLineMaxLength)
+                    {
+                        var fixedParagraph = new Paragraph(p, false);
+                        fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
+                        var comment = "Single line length > " + controller.SingleLineMaxLength;
+                        controller.AddRecord(p, fixedParagraph, comment, line.CountCharacters(nameof(CalcCjk)).ToString(CultureInfo.InvariantCulture));
                     }
                     else if (line.CountCharacters() > controller.SingleLineMaxLength)
                     {
