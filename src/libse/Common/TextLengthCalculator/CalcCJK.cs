@@ -46,6 +46,10 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 {
                     htmlTagOn = true;
                 }
+                else if (JapaneseHalfWidthCharacters.Contains(ch))
+                {
+                    count += 0.5m;
+                }
                 else if (!char.IsControl(ch) &&
                          ch != zeroWidthSpace &&
                          ch != zeroWidthNoBreakSpace &&
@@ -57,16 +61,9 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    if (IsChinese(ch))
+                    if (IsCjk(ch))
                     {
-                        if (JapaneseHalfWidthCharacters.Contains(ch))
-                        {
-                            count += 0.5m;
-                        }
-                        else
-                        {
-                            count++;
-                        }
+                        count++;
                     }
                     else
                     {
@@ -82,8 +79,13 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
 
         public static readonly Regex CjkCharRegex = new Regex(@"\p{IsCJKUnifiedIdeographs}", RegexOptions.Compiled);
-        public static bool IsChinese(char c)
+        public static bool IsCjk(char c)
         {
+            if (c == '。' || c == '，')
+            {
+                return true;
+            }
+
             return CjkCharRegex.IsMatch(c.ToString());
         }
     }

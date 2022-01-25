@@ -44,6 +44,10 @@
                 {
                     htmlTagOn = true;
                 }
+                else if (CalcCjk.JapaneseHalfWidthCharacters.Contains(ch))
+                {
+                    count += 0.5m;
+                }
                 else if (!char.IsControl(ch) &&
                          ch != ' ' &&
                          ch != zeroWidthSpace &&
@@ -56,16 +60,9 @@
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    if (CalcCjk.IsChinese(ch))
+                    if (CalcCjk.IsCjk(ch))
                     {
-                        if (CalcCjk.JapaneseHalfWidthCharacters.Contains(ch))
-                        {
-                            count += 0.5m;
-                        }
-                        else
-                        {
-                            count++;
-                        }
+                        count++;
                     }
                     else
                     {
@@ -73,7 +70,7 @@
                     }
                 }
             }
-            
+
             return count;
         }
     }
