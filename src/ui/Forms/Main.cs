@@ -9235,7 +9235,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelDuration.ForeColor = slightDarker;
                 }
 
-                textBoxListViewText.ContextMenuStrip = null; 
+                textBoxListViewText.ContextMenuStrip = null;
 
             }
             else if (!numericUpDownDuration.Enabled)
@@ -19226,7 +19226,14 @@ namespace Nikse.SubtitleEdit.Forms
                         tmp.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
                     }
 
-                    ClipboardSetText(tmp.ToText(new SubRip()).TrimEnd());
+                    if (IsAssa())
+                    {
+                        ClipboardSetText(tmp.ToText(new AdvancedSubStationAlpha()).TrimEnd());
+                    }
+                    else
+                    {
+                        ClipboardSetText(tmp.ToText(new SubRip()).TrimEnd());
+                    }
                 }
 
                 e.SuppressKeyPress = true;
@@ -19326,8 +19333,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var text = Clipboard.GetText();
                     var tmp = new Subtitle();
-                    var format = new SubRip();
+                    SubtitleFormat format = new SubRip();
                     var list = new List<string>(text.SplitToLines());
+                    if (new AdvancedSubStationAlpha().IsMine(list, null))
+                    {
+                        format = new AdvancedSubStationAlpha();
+                    }
                     format.LoadSubtitle(tmp, list, null);
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
                     {

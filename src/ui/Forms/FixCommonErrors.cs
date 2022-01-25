@@ -737,7 +737,15 @@ namespace Nikse.SubtitleEdit.Forms
             for (var i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 var p = Subtitle.Paragraphs[i];
-                var text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+
+                var lastLastP = Subtitle.GetParagraphOrDefault(i - 2);
+                string lastLastLine = null;
+                if (lastLastP != null && !string.IsNullOrEmpty(lastLastP.Text))
+                {
+                    lastLastLine = lastLastP.Text;
+                }
+
+                var text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, lastLastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                 lastLine = text;
                 if (AllowFix(p, fixAction) && p.Text != text)
                 {
