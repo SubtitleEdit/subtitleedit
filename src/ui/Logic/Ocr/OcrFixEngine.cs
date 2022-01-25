@@ -1552,6 +1552,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             var guesses = new List<string>();
 
+                            if (!correct && word.Length > 3 && _nameListObj.ContainsCaseInsensitive(word, out var newName))
+                            {
+                                guesses.Add(newName);
+                            }
+
                             // Name starting with "l" instead of 'I'
                             if (word.StartsWith('l') && word.Length > 3 && !_nameList.Contains(word))
                             {
@@ -1824,7 +1829,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     result.Fixed = true;
                     try
                     {
-                        string s = _spellCheck.Word.Trim();
+                        var s = _spellCheck.Word.Trim();
                         _nameListObj?.Add(s);
                         if (s.Contains(' '))
                         {
