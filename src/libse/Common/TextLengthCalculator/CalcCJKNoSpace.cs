@@ -44,10 +44,6 @@
                 {
                     htmlTagOn = true;
                 }
-                else if (CalcCjk.JapaneseHalfWidthCharacters.Contains(ch))
-                {
-                    count += 0.5m;
-                }
                 else if (!char.IsControl(ch) &&
                          ch != ' ' &&
                          ch != zeroWidthSpace &&
@@ -60,7 +56,19 @@
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    if (CalcCjk.IsCjk(ch))
+                    if (CalcCjk.JapaneseHalfWidthCharacters.Contains(ch))
+                    {
+                        count += 0.5m;
+                    }
+                    else if (LanguageAutoDetect.JapaneseLetters.Contains(ch))
+                    {
+                        count++;
+                    }
+                    else if (LanguageAutoDetect.KoreanLetters.Contains(ch))
+                    {
+                        count++;
+                    }
+                    else if (CalcCjk.IsCjk(ch))
                     {
                         count++;
                     }
