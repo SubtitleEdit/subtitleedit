@@ -61,15 +61,10 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                     {
                         count += 0.5m;
                     }
-                    else if (LanguageAutoDetect.JapaneseLetters.Contains(ch))
-                    {
-                        count++;
-                    }
-                    else if (LanguageAutoDetect.KoreanLetters.Contains(ch))
-                    {
-                        count++;
-                    }
-                    else if (IsCjk(ch))
+                    else if (ChineseFullWidthPunctuations.Contains(ch) ||
+                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                    IsCjk(ch))
                     {
                         count++;
                     }
@@ -85,6 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 
 
         public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
+        public const string ChineseFullWidthPunctuations = "，。、：；？！…“”—‘’（）【】「」『』〔〕《》〈〉";
 
         public static readonly Regex CjkCharRegex = new Regex(@"\p{IsCJKUnifiedIdeographs}", RegexOptions.Compiled);
         public static bool IsCjk(char c)
