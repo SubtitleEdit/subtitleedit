@@ -5161,6 +5161,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _mainOcrTimerMax = max;
             _mainOcrIndex = (int)numericUpDownStartNumber.Value - 1;
+            if (_mainOcrIndex > 0)
+            {
+                var lastP = _subtitle.GetParagraphOrDefault(_mainOcrIndex - 1);
+                if (lastP != null && !string.IsNullOrEmpty(lastP.Text))
+                {
+                    _lastLine = lastP.Text;
+                }
+            }
+
             _mainOcrTimer = new Timer();
             _mainOcrTimer.Tick += mainOcrTimer_Tick;
             _mainOcrTimer.Interval = 5;
