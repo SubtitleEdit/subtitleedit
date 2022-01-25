@@ -294,8 +294,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public bool ContainsCaseInsensitive(string name)
+        public bool ContainsCaseInsensitive(string name, out string newName)
         {
+            newName = null;
             if (string.IsNullOrEmpty(name))
             {
                 return false;
@@ -305,6 +306,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
                 {
+                    newName = n;
                     return true;
                 }
             }
