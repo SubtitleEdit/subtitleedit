@@ -46,10 +46,6 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                 {
                     htmlTagOn = true;
                 }
-                else if (JapaneseHalfWidthCharacters.Contains(ch))
-                {
-                    count += 0.5m;
-                }
                 else if (!char.IsControl(ch) &&
                          ch != zeroWidthSpace &&
                          ch != zeroWidthNoBreakSpace &&
@@ -61,7 +57,19 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    if (IsCjk(ch))
+                    if (JapaneseHalfWidthCharacters.Contains(ch))
+                    {
+                        count += 0.5m;
+                    }
+                    else if (LanguageAutoDetect.JapaneseLetters.Contains(ch))
+                    {
+                        count++;
+                    }
+                    else if (LanguageAutoDetect.KoreanLetters.Contains(ch))
+                    {
+                        count++;
+                    }
+                    else if (IsCjk(ch))
                     {
                         count++;
                     }

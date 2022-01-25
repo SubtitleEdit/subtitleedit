@@ -1502,6 +1502,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        public static string KoreanLetters = "가나다라마바사아자차카타파하아야어여오요우유으이";
+        public static string JapaneseLetters = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
+
         public static string GetEncodingViaLetter(string text)
         {
             var dictionary = new Dictionary<string, int>();
@@ -1519,7 +1522,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Korean
             count = 0;
-            foreach (var letter in "가나다라마바사아자차카타파하아야어여오요우유으이")
+            foreach (var letter in KoreanLetters)
             {
                 if (text.Contains(letter))
                 {
@@ -1530,7 +1533,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Japanese
             count = 0;
-            foreach (var letter in "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん")
+            foreach (var letter in JapaneseLetters)
             {
                 if (text.Contains(letter))
                 {
