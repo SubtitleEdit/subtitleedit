@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
+﻿using System.Text.RegularExpressions;
+
+namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
     public class CalcCjk : ICalcLength
     {
@@ -12,7 +14,6 @@
                 return 0;
             }
 
-            const string japaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             var count = 0m;
@@ -56,10 +57,9 @@
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    var number = char.GetNumericValue(ch);
-                    if (number >= 0x4E00 && number <= 0x2FA1F)
+                    if (IsChinese(ch))
                     {
-                        if (japaneseHalfWidthCharacters.Contains(ch))
+                        if (JapaneseHalfWidthCharacters.Contains(ch))
                         {
                             count += 0.5m;
                         }
@@ -74,8 +74,17 @@
                     }
                 }
             }
-            
+
             return count;
+        }
+
+
+        public const string JapaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
+
+        public static readonly Regex CjkCharRegex = new Regex(@"\p{IsCJKUnifiedIdeographs}", RegexOptions.Compiled);
+        public static bool IsChinese(char c)
+        {
+            return CjkCharRegex.IsMatch(c.ToString());
         }
     }
 }
