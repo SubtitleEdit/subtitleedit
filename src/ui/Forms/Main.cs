@@ -19228,6 +19228,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (IsAssa())
                     {
+                        tmp.Header = _subtitle.Header;
                         ClipboardSetText(tmp.ToText(new AdvancedSubStationAlpha()).TrimEnd());
                     }
                     else
@@ -19331,6 +19332,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Clipboard.ContainsText())
                 {
+                    var isAssa = IsAssa();
                     var text = Clipboard.GetText();
                     var tmp = new Subtitle();
                     SubtitleFormat format = new SubRip();
@@ -19353,6 +19355,26 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (firstIndex <= _subtitle.Paragraphs.Count - 2 && _subtitle.Paragraphs[firstIndex + 1].StartTime.TotalMilliseconds < tmp.Paragraphs[0].StartTime.TotalMilliseconds)
                         { // inserting between two subtitle... with overlapping codes
                             addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + MinGapBetweenLines;
+                        }
+
+                        if (isAssa && format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                        {
+                            addMs = 0;
+
+                            if (string.IsNullOrWhiteSpace(_subtitle.Header))
+                            {
+                                _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                            }
+
+                            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                            foreach (var tmpParagraph in tmp.Paragraphs)
+                            {
+                                if (!string.IsNullOrWhiteSpace(tmpParagraph.Extra) && !styles.Any(p => p.Equals(tmpParagraph.Extra, StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    var s = AdvancedSubStationAlpha.GetSsaStyle(tmpParagraph.Extra, tmp.Header);
+                                    _subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(s, _subtitle.Header);
+                                }
+                            }
                         }
 
                         var selectIndices = new List<int>();
@@ -19523,6 +19545,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.X && e.Modifiers == Keys.Control) //Ctrl+X = Cut to clipboard
             {
                 var tmp = new Subtitle();
+                tmp.Header = _subtitle?.Header;
                 foreach (int i in SubtitleListview1.SelectedIndices)
                 {
                     var p = _subtitle.GetParagraphOrDefault(i);
@@ -19533,7 +19556,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 e.SuppressKeyPress = true;
-                _cutText = tmp.ToText(new SubRip());
+                _cutText = IsAssa() ? tmp.ToText(new AdvancedSubStationAlpha()) : tmp.ToText(new SubRip());
                 ToolStripMenuItemDeleteClick(null, null);
             }
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
@@ -30030,7 +30053,12 @@ namespace Nikse.SubtitleEdit.Forms
             string text = Clipboard.GetText();
             var tmp = new Subtitle();
             var list = new List<string>(text.SplitToLines());
-            new SubRip().LoadSubtitle(tmp, list, null);
+            SubtitleFormat format = new SubRip();
+            if (new AdvancedSubStationAlpha().IsMine(list, null))
+            {
+                format = new AdvancedSubStationAlpha();
+            }
+            format.LoadSubtitle(tmp, list, null);
             if (tmp.Paragraphs.Count == 0)
             {
                 tmp = SubtitleFormat.LoadSubtitleFromLines(list, null) ?? new Subtitle();
@@ -30151,6 +30179,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
+                        var isAssa = IsAssa();
+                        var assaStyles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                         for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                         {
                             if (index + i < _subtitle.Paragraphs.Count)
@@ -30160,6 +30190,19 @@ namespace Nikse.SubtitleEdit.Forms
                                     _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                                     _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
                                     _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
+                                    if (isAssa && format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                                    {
+                                        _subtitle.Paragraphs[index + i].Extra = tmp.Paragraphs[i].Extra;
+                                        _subtitle.Paragraphs[index + i].Actor = tmp.Paragraphs[i].Actor;
+
+                                        if (!string.IsNullOrWhiteSpace(tmp.Paragraphs[i].Extra) && 
+                                            !assaStyles.Any(p => p.Equals(tmp.Paragraphs[i].Extra, StringComparison.OrdinalIgnoreCase)))
+                                        {
+                                            var s = AdvancedSubStationAlpha.GetSsaStyle(tmp.Paragraphs[i].Extra, tmp.Header);
+                                            _subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(s, _subtitle.Header);
+                                            assaStyles.Add(s.Name);
+                                        }
+                                    }
                                 }
                                 else if (form.PasteTimeCodesOnly)
                                 {
