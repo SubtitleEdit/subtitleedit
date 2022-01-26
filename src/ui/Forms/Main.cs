@@ -9676,7 +9676,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ShowLineInformationListView();
-            if (_subtitle.Paragraphs.Count > 0)
+            if (_subtitle?.Paragraphs.Count > 0)
             {
                 int firstSelectedIndex = 0;
                 if (SubtitleListview1.SelectedIndices.Count > 0)
@@ -9693,7 +9693,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool showSource = false;
 
-                    var last = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                    var last = _subtitle?.GetParagraphOrDefault(_subtitleListViewIndex);
                     if (last != null && textBoxListViewText.Text != last.Text)
                     {
                         last.Text = textBoxListViewText.Text.TrimEnd();
@@ -9702,20 +9702,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var startTime = timeUpDownStartTime.TimeCode;
-                    if (startTime != null)
+                    if (startTime != null && last != null && _subtitle != null &&
+                        Math.Abs(last.StartTime.TotalMilliseconds - startTime.TotalMilliseconds) > 0.5)
                     {
-                        if (Math.Abs(last.StartTime.TotalMilliseconds - startTime.TotalMilliseconds) > 0.5)
-                        {
-                            var dur = last.Duration.TotalMilliseconds;
-                            last.StartTime.TotalMilliseconds = startTime.TotalMilliseconds;
-                            last.EndTime.TotalMilliseconds = startTime.TotalMilliseconds + dur;
-                            SubtitleListview1.SetStartTimeAndDuration(_subtitleListViewIndex, last, _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1), _subtitle.GetParagraphOrDefault(_subtitleListViewIndex - 1));
-                            showSource = true;
-                        }
+                        var dur = last.Duration.TotalMilliseconds;
+                        last.StartTime.TotalMilliseconds = startTime.TotalMilliseconds;
+                        last.EndTime.TotalMilliseconds = startTime.TotalMilliseconds + dur;
+                        SubtitleListview1.SetStartTimeAndDuration(_subtitleListViewIndex, last, _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1), _subtitle.GetParagraphOrDefault(_subtitleListViewIndex - 1));
+                        showSource = true;
                     }
 
                     var duration = GetDurationInMilliseconds();
-                    if (duration > 0 && duration < 100000 && Math.Abs(duration - last.Duration.TotalMilliseconds) > 0.5)
+                    if (duration > 0 && duration < 100000 && Math.Abs(duration - last.Duration.TotalMilliseconds) > 0.5 && _subtitle != null)
                     {
                         last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + duration;
                         SubtitleListview1.SetDuration(_subtitleListViewIndex, last, _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1));
@@ -9728,7 +9726,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                var p = _subtitle?.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
                     if (IsLiveSpellCheckEnabled)
@@ -30195,7 +30193,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         _subtitle.Paragraphs[index + i].Extra = tmp.Paragraphs[i].Extra;
                                         _subtitle.Paragraphs[index + i].Actor = tmp.Paragraphs[i].Actor;
 
-                                        if (!string.IsNullOrWhiteSpace(tmp.Paragraphs[i].Extra) && 
+                                        if (!string.IsNullOrWhiteSpace(tmp.Paragraphs[i].Extra) &&
                                             !assaStyles.Any(p => p.Equals(tmp.Paragraphs[i].Extra, StringComparison.OrdinalIgnoreCase)))
                                         {
                                             var s = AdvancedSubStationAlpha.GetSsaStyle(tmp.Paragraphs[i].Extra, tmp.Header);
