@@ -5152,6 +5152,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ModifySelection/Bookmarked":
                     language.ModifySelection.Bookmarked = reader.Value;
                     break;
+                case "ModifySelection/BlankLines":
+                    language.ModifySelection.BlankLines = reader.Value;
+                    break;
                 case "MultipleReplace/Title":
                     language.MultipleReplace.Title = reader.Value;
                     break;
