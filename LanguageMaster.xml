@@ -1895,6 +1895,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
     <Bookmarked>Bookmarked</Bookmarked>
+    <BlankLines>Blank lines</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multiple replace</Title>
