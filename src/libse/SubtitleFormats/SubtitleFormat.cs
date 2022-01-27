@@ -80,6 +80,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DvdSubtitleSystem(),
                     new DvSubtitle(),
                     new Ebu(),
+                    new Edius4Frames(),
+                    new Edius4Ms(),
                     new Edl(),
                     new Eeg708(),
                     new ElrPrint(),
