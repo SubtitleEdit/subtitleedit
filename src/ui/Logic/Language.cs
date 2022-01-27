@@ -2194,7 +2194,8 @@ namespace Nikse.SubtitleEdit.Logic
                 DurationLessThan = "Duration less than",
                 DurationGreaterThan = "Duration greater than",
                 MoreThanTwoLines = "More than two lines",
-                Bookmarked = "Bookmarked"
+                Bookmarked = "Bookmarked",
+                BlankLines = "Blank lines"
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace
