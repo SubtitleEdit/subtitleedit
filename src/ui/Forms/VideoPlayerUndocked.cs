@@ -137,6 +137,16 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoPlayerContainer.CurrentPosition -= 2;
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == Keys.Up)
+            {
+                _videoPlayerContainer.Volume += 2;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == Keys.Down)
+            {
+                _videoPlayerContainer.Volume -= 2;
+                e.SuppressKeyPress = true;
+            }
             else
             {
                 _mainForm.MainKeyDown(sender, e);

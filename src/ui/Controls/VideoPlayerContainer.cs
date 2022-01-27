@@ -1674,13 +1674,13 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetVolumeBarPosition(int mouseX)
         {
-            int max = _pictureBoxVolumeBarBackground.Width - 18;
+            var max = _pictureBoxVolumeBarBackground.Width - 18;
             if (mouseX > max)
             {
                 mouseX = max;
             }
 
-            double percent = (mouseX * 100.0) / max;
+            var percent = (mouseX * 100.0) / max;
             _pictureBoxVolumeBar.Width = (int)(max * percent / 100.0);
             if (_videoPlayer != null)
             {
@@ -1708,11 +1708,14 @@ namespace Nikse.SubtitleEdit.Controls
             if (VideoPlayer == null)
             {
                 _pictureBoxVolumeBar.Width = 0;
+                _labelVolume.Text = "0%";
             }
             else
             {
-                int max = _pictureBoxVolumeBarBackground.Width - 18;
-                _pictureBoxVolumeBar.Width = (int)(max * Volume / 100.0);
+                var v = Volume;
+                var max = _pictureBoxVolumeBarBackground.Width - 18;
+                _pictureBoxVolumeBar.Width = (int)(max * v / 100.0);
+                _labelVolume.Text = v + "%";
             }
         }
 
