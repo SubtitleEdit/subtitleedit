@@ -1894,6 +1894,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
     <Bookmarked>북마크됨</Bookmarked>
+    <BlankLines>빈 줄</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>다중 바꾸기</Title>
