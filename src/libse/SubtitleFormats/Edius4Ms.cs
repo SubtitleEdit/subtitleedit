@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -15,10 +16,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var xmlStructure =
-@"<?xml version='1.0' encoding='UTF-16' standalone='no' ?>
+@"<?xml version='1.0' encoding='UTF-8' standalone='no' ?>
 <edius:markerInfo xmlns:edius='http://www.grassvalley.com/ns/edius/markerListInfo'>
 	<edius:formatVersion>4</edius:formatVersion>
-	<edius:CreateDate>Thu Jan 27 13:54:09 2022</edius:CreateDate>
+	<edius:CreateDate>" + DateTime.Now.ToString("ddd MMM dd HH:mm:ss yyy") + @"</edius:CreateDate>
 	<edius:markerLists>
 	</edius:markerLists>
 </edius:markerInfo>".Replace('\'', '"');
