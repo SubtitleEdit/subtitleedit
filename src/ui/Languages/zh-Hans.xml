@@ -237,8 +237,8 @@ Command line: {1} {2}
     <BoxColor>边框颜色</BoxColor>
     <Radius>半径</Radius>
     <Step>步长</Step>
-    <MaxSpike>最大峰值</MaxSpike>
     <Spikes>峰值</Spikes>
+    <Bubbles>气泡</Bubbles>
     <Circle>圆</Circle>
     <MarginX>X边距</MarginX>
     <MarginY>Y边距</MarginY>
@@ -1297,7 +1297,6 @@ Command line: {1} {2}
         <FixCommonErrors>修正常规错误</FixCommonErrors>
         <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
-        <BurnIn>内嵌字幕</BurnIn>
         <SpellCheck>拼写检查</SpellCheck>
         <NetflixQualityCheck>Netflix字幕质量检查</NetflixQualityCheck>
         <Settings>设置</Settings>
@@ -1888,6 +1887,7 @@ Command line: {1} {2}
     <DurationGreaterThan>时长大于</DurationGreaterThan>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
     <Bookmarked>已收藏</Bookmarked>
+    <BlankLines>空行</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>多项替换</Title>
@@ -2069,6 +2069,7 @@ Command line: {1} {2}
     <Find>查找</Find>
     <Replace>替换</Replace>
     <VisualSync>影音对照同步</VisualSync>
+    <BurnIn>内嵌字幕</BurnIn>
     <SpellCheck>拼写检查</SpellCheck>
     <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
@@ -2258,8 +2259,16 @@ Command line: {1} {2}
     <ContinuationStyleLeadingTrailingDots>点</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>无, 但在停顿处加省略号</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>Cps/行长</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpace>统计除空格外的所有字符</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1，拉丁文 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1，拉丁文 0.5，空格 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>忽略阿拉伯语变音符号</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>忽略阿拉伯语变音符号/空格</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsReplace>要替换的音乐符号（用逗号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
