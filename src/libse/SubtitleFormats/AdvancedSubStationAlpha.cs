@@ -71,10 +71,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }
-            else if (!all.Contains("dialog:", StringComparison.OrdinalIgnoreCase) && !all.Contains("dialogue:", StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
             else if (!all.Contains("[V4+ Styles]") && new SubStationAlpha().IsMine(lines, fileName))
             {
                 return false;
