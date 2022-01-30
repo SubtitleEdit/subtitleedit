@@ -20180,6 +20180,21 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.Focus();
             }
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 8)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        ShowSubtitle();
+                        mediaPlayer.Play();
+                        _endSeconds = p.EndTime.TotalSeconds;
+                        _playSelectionIndex = _subtitle.GetIndex(p);
+                    }
+                }
+            }
         }
 
         private void AddWordToNameListToolStripMenuItemClick(object sender, EventArgs e)

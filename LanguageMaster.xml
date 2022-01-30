@@ -2142,6 +2142,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainListViewNothing>Nothing</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Go to video position and play</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Go to video position, play current, and pause</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Go to edit text box</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video position - 1 s and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video position - 0.5 s and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>

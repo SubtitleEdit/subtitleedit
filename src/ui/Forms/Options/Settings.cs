@@ -804,6 +804,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewVideoGoToPositionMinus1SecAndPlay);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditTextAndPause);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditText);
+            comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewVideoGoToPositionAndPlayCurrentAndPause);
 
             comboBoxSaveAsFileNameFrom.Items.Clear();
             comboBoxSaveAsFileNameFrom.Items.Add(language.VideoFileName);
