@@ -2322,6 +2322,7 @@
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
+            public string MainListViewVideoGoToPositionAndPlayCurrentAndPause { get; set; }
             public string MainListViewEditText { get; set; }
             public string MainListViewVideoGoToPositionMinus1SecAndPause { get; set; }
             public string MainListViewVideoGoToPositionMinusHalfSecAndPause { get; set; }

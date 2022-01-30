@@ -5797,6 +5797,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainListViewVideoGoToPositionAndPlay":
                     language.Settings.MainListViewVideoGoToPositionAndPlay = reader.Value;
                     break;
+                case "Settings/MainListViewVideoGoToPositionAndPlayCurrentAndPause":
+                    language.Settings.MainListViewVideoGoToPositionAndPlayCurrentAndPause = reader.Value;
+                    break;
                 case "Settings/MainListViewEditText":
                     language.Settings.MainListViewEditText = reader.Value;
                     break;
