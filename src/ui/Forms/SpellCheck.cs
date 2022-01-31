@@ -139,7 +139,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadImageSub(string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && FileUtil.IsBluRaySup(fileName))
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            if (FileUtil.IsBluRaySup(fileName))
             {
                 _imageSubFileName = fileName;
                 if (_binSubtitles == null)
@@ -153,11 +158,32 @@ namespace Nikse.SubtitleEdit.Forms
                 var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(_imageSubFileName, new StringBuilder());
                 BinEdit.FixShortDisplayTimes(bluRaySubtitles);
                 _binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
+                return;
             }
-            else
+
+            if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
             {
-                pictureBoxBdSup.Visible = false;
+                _binSubtitles = new List<IBinaryParagraphWithPosition>();
+                var bdnXml = new BdnXml();
+                var enc = LanguageAutoDetect.GetEncodingFromFile(fileName, true);
+                var list = new List<string>(File.ReadAllLines(fileName, enc));
+                if (bdnXml.IsMine(list, fileName))
+                {
+                    _subtitle = new Subtitle();
+                    bdnXml.LoadSubtitle(_subtitle, list, fileName);
+                    _binSubtitles = new List<IBinaryParagraphWithPosition>();
+                    var res = BinEdit.BdnXmlParagraph.GetResolution(fileName);
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        IBinaryParagraphWithPosition bp = new BinEdit.BdnXmlParagraph(p, fileName, res.Width, res.Height);
+                        _binSubtitles.Add(bp);
+                    }
+
+                    return;
+                }
             }
+
+            pictureBoxBdSup.Visible = false;
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
@@ -340,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
+            else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen))
             {
                 e.SuppressKeyPress = true;
                 BeginInvoke(new Action(() =>
@@ -349,7 +375,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
                         openFileDialog1.FileName = string.Empty;
-                        openFileDialog1.Filter = "BD sup|*.sup";
+                        openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup";
                         openFileDialog1.FileName = string.Empty;
                         if (openFileDialog1.ShowDialog() != DialogResult.OK)
                         {
