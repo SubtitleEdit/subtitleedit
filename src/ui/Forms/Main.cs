@@ -23696,7 +23696,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var selectedIndices = SubtitleListview1.GetSelectedIndices();
                 if (selectedIndices.Length == 1)
                 {
-                    toolStripSelected.Text = profile + string.Format("{0}/{1}", 1, _subtitle.Paragraphs.Count);
+                    toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedIndices[0] + 1, _subtitle.Paragraphs.Count);
                 }
                 else if (selectedIndices.Length >= 2 && selectedIndices.Length <= 4)
                 {
@@ -23713,16 +23713,16 @@ namespace Nikse.SubtitleEdit.Forms
                         var minMs = list.Min(px => px.StartTime.TotalMilliseconds);
                         var maxMs = list.Max(px => px.EndTime.TotalMilliseconds);
                         var mergedTime = new TimeCode(maxMs - minMs);
-                        toolStripSelected.Text = profile + string.Format("{0}/{1}  {2}", selectedIndices.Length, _subtitle.Paragraphs.Count, mergedTime.ToShortDisplayString());
+                        toolStripSelected.Text = profile + string.Format(_language.XLinesSelected + "/{1}  {2}", selectedIndices.Length, _subtitle.Paragraphs.Count, mergedTime.ToShortDisplayString());
                     }
                     else
                     {
-                        toolStripSelected.Text = profile + string.Format("{0}/{1}", selectedIndices.Length, _subtitle.Paragraphs.Count);
+                        toolStripSelected.Text = profile + string.Format(_language.XLinesSelected + "/{1}", selectedIndices.Length, _subtitle.Paragraphs.Count);
                     }
                 }
                 else
                 {
-                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, selectedIndices.Length);
+                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected + "/{1}", selectedIndices.Length, _subtitle.Paragraphs.Count);
                 }
             }
 
