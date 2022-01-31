@@ -1896,6 +1896,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
     <Bookmarked>Marcador</Bookmarked>
+    <BlankLines>Linhas em branco</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
@@ -2137,16 +2138,17 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SetAssaResolution>Definir resolução ASSA (PlayResX/PlayResY)</SetAssaResolution>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Guardar como..." usa o nome do ficheiro de:</SaveAsFileNameFrom>
-    <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Escolher as colunas visíveis da lista</MainListViewColumnsInfo>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>... para posição do vídeo e reproduzir</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewEditText>... para o quadro de edição de texto</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>... para posição do vídeo - 1 seg e pausar</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>... para posição do vídeo - 0.5 seg e pausar</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>... para posição do vídeo - 1 seg e reproduzir</MainListViewVideoGoToPositionMinus1SecAndPlay>
-    <MainListViewEditTextAndPause>... para o quadro de edição de texto, e pausar na posição do vídeo</MainListViewEditTextAndPause>
+    <MainListViewVideoGoToPositionAndPause>Ir para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Ir para posição do vídeo e reproduzir</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Ir para posição do vídeo, reproduzir actual e pausar</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
+    <MainListViewEditText>Ir para o quadro de edição de texto</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Ir para posição do vídeo - 1 seg e pausar</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ir para posição do vídeo - 0.5 seg e pausar</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Ir para posição do vídeo - 1 seg e reproduzir</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Ir para o quadro de edição de texto e pausar na posição do vídeo</MainListViewEditTextAndPause>
     <VideoFileName>Nome do ficheiro de vídeo</VideoFileName>
     <ExistingFileName>Nome do ficheiro existente</ExistingFileName>
     <AutoBackup>Cópia auto</AutoBackup>
