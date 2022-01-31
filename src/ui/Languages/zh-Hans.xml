@@ -2132,6 +2132,7 @@ Command line: {1} {2}
     <MainListViewNothing>无</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>转到视频位置并暂停</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>转到视频位置并播放</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>转到视频位置，播放当前行并暂停</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>转到编辑文本框</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>转到视频位置 - 1 秒并暂停</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>转到视频位置 - 0.5 秒并暂停</MainListViewVideoGoToPositionMinusHalfSecAndPause>
