@@ -55,7 +55,7 @@
             this.listViewProfiles.Location = new System.Drawing.Point(12, 12);
             this.listViewProfiles.MultiSelect = false;
             this.listViewProfiles.Name = "listViewProfiles";
-            this.listViewProfiles.Size = new System.Drawing.Size(661, 197);
+            this.listViewProfiles.Size = new System.Drawing.Size(773, 470);
             this.listViewProfiles.TabIndex = 11;
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
@@ -65,7 +65,7 @@
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "Name";
-            this.columnHeaderName.Width = 150;
+            this.columnHeaderName.Width = 225;
             // 
             // columnHeaderMaxLength
             // 
@@ -92,7 +92,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(598, 215);
+            this.buttonCancel.Location = new System.Drawing.Point(710, 488);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 207;
@@ -104,7 +104,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(517, 215);
+            this.buttonOK.Location = new System.Drawing.Point(629, 488);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 206;
@@ -116,7 +116,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(685, 248);
+            this.ClientSize = new System.Drawing.Size(797, 521);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listViewProfiles);
@@ -128,9 +128,9 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ProfileChoose";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProfileChoose_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.ProfileChoose_ResizeEnd);
             this.Shown += new System.EventHandler(this.ProfileChoose_Shown);
+            this.ResizeEnd += new System.EventHandler(this.ProfileChoose_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProfileChoose_KeyDown);
             this.ResumeLayout(false);
 
         }
