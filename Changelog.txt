@@ -14,6 +14,7 @@
    * Add shortcut for re-calc duration to min - thx m0ck69
    * Add shortcut for edit of bookmark - thx OmrSi
    * Add shortcut for copy plain text - thx OmrSi
+   * Click "New" while holding down "shift" will keep video - thx Andrebavila
    * Add "continuation style" "trailing ellipsis only" - thx Joel
    * Add "Sort by Gap" - thx Andrebavila
    * Add new image subtitle format TTML with inline base64 images - thx mat
@@ -57,6 +58,7 @@
    * Improve UI regarding empty subtitle a little - txh darnn
    * Some improvements for OCR fix engine - thx Janusz
    * Add blank lines to Modify selection - thx OmrSi
+   * Allow for having a bd .sup file in spell check - thx cyzs233
 * FIXED:
    * Fix bug in BD SUP reading w missing lines - thx peter-qgd
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci
