@@ -2141,6 +2141,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MainListViewNothing>아무것도 안 함</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>비디오를 선택 지점으로 이동하고 일시 중지</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>비디오를 선택 지점으로 이동하고 재생</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>선택한 자막을 재생하고 일시 중지</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>텍스트 입력 창으로 이동</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>비디오를 -1초 이동하고 일시 중지</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>비디오를 -0.5초 이동하고 일시 중지</MainListViewVideoGoToPositionMinusHalfSecAndPause>
