@@ -4978,9 +4978,9 @@ namespace Nikse.SubtitleEdit.Forms
             FileNew();
         }
 
-        private void ResetSubtitle(bool forceVideoReload = false)
+        private void ResetSubtitle()
         {
-            if (ModifierKeys != Keys.Shift || forceVideoReload)
+            if (ModifierKeys != Keys.Shift)
             {
                 VideoFileName = null;
                 _videoInfo = null;
@@ -5024,7 +5024,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper = null;
             _spellCheckForm = null;
 
-            if (ModifierKeys != Keys.Shift || forceVideoReload)
+            if (ModifierKeys != Keys.Shift)
             {
                 VideoFileName = null;
                 _videoInfo = null;
@@ -5050,16 +5050,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _sourceViewChange = false;
-
-            //harboe _subtitleListViewIndex = -1;
-            //textBoxListViewText.Text = string.Empty;
-            //textBoxListViewTextOriginal.Text = string.Empty;
-            //textBoxListViewText.Enabled = false;
-            //textBoxListViewText.BackColor = SystemColors.ActiveBorder;
-            //textBoxListViewTextOriginal.BackColor = SystemColors.ActiveBorder;
-            //labelTextLineLengths.Text = string.Empty;
-            //labelCharactersPerSecond.Text = string.Empty;
-            //labelTextLineTotal.Text = string.Empty;
             EnableOrDisableEditControls();
 
             _listViewTextUndoLast = null;
@@ -5125,7 +5115,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(_language.BeforeNew);
                 toolStripStatusLabelProgress.Visible = false;
-                ResetSubtitle(true);
+                ResetSubtitle();
                 CheckSecondSubtitleReset();
             }
         }
@@ -6980,8 +6970,6 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
                     _sourceViewChange = false;
                     _subtitle.Paragraphs.Clear();
-                    //harboe textBoxListViewText.Text = string.Empty;
-                    //textBoxListViewText.Enabled = false;
                     EnableOrDisableEditControls();
                 }
 
