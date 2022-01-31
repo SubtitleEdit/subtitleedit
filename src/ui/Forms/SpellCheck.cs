@@ -1,9 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.BinaryEdit;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -11,6 +13,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -30,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
         public string ChangeWholeText => textBoxWholeText.Text;
         public bool AutoFixNames => checkBoxAutoChangeNames.Checked;
-        private SubtitleFormat _subtitleFormat;
+        private readonly SubtitleFormat _subtitleFormat;
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
         private HashSet<string> _skipOneList = new HashSet<string>();
@@ -55,6 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string _languageName;
         private Main _mainWindow;
         private string _currentDictionary;
+        private string _imageSubFileName;
+        private List<IBinaryParagraphWithPosition> _binSubtitles;
 
         public class SuggestionParameter
         {
@@ -76,25 +81,27 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                string name = comboBoxDictionaries.SelectedItem.ToString();
-                int start = name.LastIndexOf('[');
-                int end = name.LastIndexOf(']');
-                if (start >= 0 && end > start)
+                var name = comboBoxDictionaries.SelectedItem.ToString();
+                var start = name.LastIndexOf('[');
+                var end = name.LastIndexOf(']');
+                if (start < 0 || end <= start)
                 {
-                    start++;
-                    name = name.Substring(start, end - start);
-                    return name;
+                    return null;
                 }
-                return null;
+
+                start++;
+                name = name.Substring(start, end - start);
+                return name;
             }
         }
 
-        public SpellCheck(SubtitleFormat subtitleFormat)
+        public SpellCheck(SubtitleFormat subtitleFormat, string imageSubFileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             _subtitleFormat = subtitleFormat;
+            _imageSubFileName = imageSubFileName;
             labelActionInfo.Text = string.Empty;
             Text = LanguageSettings.Current.SpellCheck.Title;
             labelFullText.Text = LanguageSettings.Current.SpellCheck.FullText;
@@ -126,6 +133,31 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.FixLargeFonts(this, buttonAbort);
             richTextBoxParagraph.DetectUrls = false;
+
+            LoadImageSub(_imageSubFileName);
+        }
+
+        private void LoadImageSub(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName) && FileUtil.IsBluRaySup(fileName))
+            {
+                _imageSubFileName = fileName;
+                if (_binSubtitles == null)
+                {
+                    Width += 200;
+                }
+
+                groupBoxSuggestions.Top = groupBoxWordNotFound.Top;
+                groupBoxSuggestions.Height = buttonAbort.Top - groupBoxSuggestions.Top - 15;
+                pictureBoxBdSup.Visible = true;
+                var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(_imageSubFileName, new StringBuilder());
+                BinEdit.FixShortDisplayTimes(bluRaySubtitles);
+                _binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
+            }
+            else
+            {
+                pictureBoxBdSup.Visible = false;
+            }
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
@@ -155,29 +187,79 @@ namespace Nikse.SubtitleEdit.Forms
             ShowActiveWordWithColor(word);
             Action = SpellCheckAction.Skip;
             DialogResult = DialogResult.None;
+
+            DisplayImageSub();
+        }
+
+        private void DisplayImageSub()
+        {
+            if (_binSubtitles != null)
+            {
+                pictureBoxBdSup.Image?.Dispose();
+                var imageSub = _binSubtitles.FirstOrDefault(p => Math.Abs(p.StartTimeCode.TotalMilliseconds - _currentParagraph.StartTime.TotalMilliseconds) < 0.01);
+                if (imageSub == null && _subtitle.Paragraphs.Count == _binSubtitles.Count)
+                {
+                    imageSub = _binSubtitles[_currentIndex];
+                }
+
+                if (imageSub == null)
+                {
+                    var mean = _currentParagraph.StartTime.TotalMilliseconds + _currentParagraph.Duration.TotalMilliseconds / 2;
+                    imageSub = _binSubtitles.FirstOrDefault(p => mean >= p.StartTimeCode.TotalMilliseconds && mean <= _currentParagraph.EndTime.TotalMilliseconds);
+                }
+
+                if (imageSub != null)
+                {
+                    var charImage = imageSub.GetBitmap();
+                    var n = new NikseBitmap(charImage);
+                    n.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
+                    n.CropTop(2, Color.FromArgb(0, 0, 0, 0));
+                    n.CropSidesAndBottom(2, Color.Transparent, true);
+                    n.CropTop(2, Color.Transparent);
+                    charImage.Dispose();
+                    charImage = n.GetBitmap();
+
+                    var w = Width - pictureBoxBdSup.Left - 20;
+                    var h = groupBoxSuggestions.Top - pictureBoxBdSup.Top - 7;
+                    pictureBoxBdSup.Image = charImage;
+                    if (charImage.Width > w || charImage.Height > h)
+                    {
+                        pictureBoxBdSup.SizeMode = PictureBoxSizeMode.Zoom;
+                        pictureBoxBdSup.Width = w;
+                        pictureBoxBdSup.Height = h;
+                    }
+                    else
+                    {
+                        pictureBoxBdSup.SizeMode = PictureBoxSizeMode.AutoSize;
+                    }
+
+                    pictureBoxBdSup.Visible = true;
+                    pictureBoxBdSup.BringToFront();
+                }
+            }
         }
 
         private string[] LoadWordSplitList(string languageName)
         {
             if (languageName == null)
             {
-                return Array.Empty<string>(); 
+                return Array.Empty<string>();
             }
 
             var twoLetterLanguageName = languageName.Trim('[');
-            if (twoLetterLanguageName == null || twoLetterLanguageName.Length < 2)
+            if (twoLetterLanguageName.Length < 2)
             {
                 return Array.Empty<string>();
             }
 
-            twoLetterLanguageName = twoLetterLanguageName.Substring(0,2);   
+            twoLetterLanguageName = twoLetterLanguageName.Substring(0, 2);
             if (_wordSplitListLanguage == languageName)
             {
                 return _wordSplitList;
             }
 
             _wordSplitListLanguage = languageName;
-            var threeLetterIsoLanguageName  = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageName);
+            var threeLetterIsoLanguageName = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageName);
             var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
             if (!File.Exists(fileName))
             {
@@ -257,6 +339,27 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonUndo_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
+            {
+                e.SuppressKeyPress = true;
+                BeginInvoke(new Action(() =>
+                {
+                    using (var openFileDialog1 = new OpenFileDialog())
+                    {
+                        openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                        openFileDialog1.FileName = string.Empty;
+                        openFileDialog1.Filter = "BD sup|*.sup";
+                        openFileDialog1.FileName = string.Empty;
+                        if (openFileDialog1.ShowDialog() != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        LoadImageSub(openFileDialog1.FileName);
+                        DisplayImageSub();
+                    }
+                }));
             }
         }
 
@@ -906,7 +1009,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 suggestions.Insert(0, "I");
                             }
 
-                            suggestions = suggestions.Distinct().ToList();  
+                            suggestions = suggestions.Distinct().ToList();
 
                             if (DoAutoFixNames(_currentWord, suggestions))
                             {
@@ -953,7 +1056,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private bool NotSameSpecialEnding(SpellCheckWord spellCheckWord, string replaceWord)
         {
-            if (spellCheckWord.Index + spellCheckWord.Length +1 >= _currentParagraph.Text.Length)
+            if (spellCheckWord.Index + spellCheckWord.Length + 1 >= _currentParagraph.Text.Length)
             {
                 return true;
             }
