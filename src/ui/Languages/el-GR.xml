@@ -1892,6 +1892,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DurationGreaterThan>Διάρκεια μεγαλύτερη από</DurationGreaterThan>
     <MoreThanTwoLines>Πάνω από δύο γραμμές</MoreThanTwoLines>
     <Bookmarked>Σημειωμένο</Bookmarked>
+    <BlankLines>Κενές γραμμές</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Πολλαπλή αντικατάσταση</Title>
@@ -2138,6 +2139,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainListViewNothing>Τίποτα</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Μετάβαση σε θέση βίντεο και παύση</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Μετάβαση σε θέση βίντεο και αναπαραγωγή</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Μετάβαση σε θέση βίντεο, αναπαραγωγή τρέχοντος και παύση</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Μετάβαση στο πλαίσιο επεξεργασίας κειμένου</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Πήγαινε στη θέση βίντεο - 1 δευτ. και παύση</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Πήγαινε στη θέση βίντεο - 0.5 δευτ. και παύση</MainListViewVideoGoToPositionMinusHalfSecAndPause>
