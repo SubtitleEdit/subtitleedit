@@ -4069,6 +4069,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _fileName = Path.ChangeExtension(formSubOcr.FileName, GetCurrentSubtitleFormat().Extension);
                     SetTitle();
                     _converted = true;
+                    _imageSubFileName = fileName;
                 }
             }
         }
