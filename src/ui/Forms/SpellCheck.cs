@@ -375,7 +375,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
                         openFileDialog1.FileName = string.Empty;
-                        openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup";
+                        openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
                         openFileDialog1.FileName = string.Empty;
                         if (openFileDialog1.ShowDialog() != DialogResult.OK)
                         {
