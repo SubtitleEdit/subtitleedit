@@ -2621,6 +2621,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <SpacesNotAllowed>Spaces not allowed in single word!</SpacesNotAllowed>
     <UndoX>Undo: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>Open image based source file...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>

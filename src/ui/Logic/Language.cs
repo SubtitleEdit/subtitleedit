@@ -2964,6 +2964,7 @@ can edit in same subtitle file (collaboration)",
                 SpellCheckAborted = "Spell check aborted",
                 SpacesNotAllowed = "Spaces not allowed in single word!",
                 UndoX = "Undo: \"{0}\"",
+                OpenImageBasedSourceFile = "Open image based source file...",
             };
 
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
