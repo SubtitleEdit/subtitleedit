@@ -7186,6 +7186,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;
                     break;
+                case "SpellCheck/OpenImageBasedSourceFile":
+                    language.SpellCheck.OpenImageBasedSourceFile = reader.Value;
+                    break;
                 case "NetflixQualityCheck/GlyphCheckReport":
                     language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
                     break;

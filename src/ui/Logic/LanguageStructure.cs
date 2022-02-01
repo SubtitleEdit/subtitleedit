@@ -2813,6 +2813,7 @@
             public string SpellCheckAborted { get; set; }
             public string SpacesNotAllowed { get; set; }
             public string UndoX { get; set; }
+            public string OpenImageBasedSourceFile { get; set; }
         }
 
         public class NetflixQualityCheck

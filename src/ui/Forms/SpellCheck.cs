@@ -369,23 +369,25 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen))
             {
                 e.SuppressKeyPress = true;
-                BeginInvoke(new Action(() =>
-                {
-                    using (var openFileDialog1 = new OpenFileDialog())
-                    {
-                        openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
-                        openFileDialog1.FileName = string.Empty;
-                        openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
-                        openFileDialog1.FileName = string.Empty;
-                        if (openFileDialog1.ShowDialog() != DialogResult.OK)
-                        {
-                            return;
-                        }
+                BeginInvoke(new Action(OpenImageBasedSourceFile));
+            }
+        }
 
-                        LoadImageSub(openFileDialog1.FileName);
-                        DisplayImageSub();
-                    }
-                }));
+        private void OpenImageBasedSourceFile()
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
+                openFileDialog1.FileName = string.Empty;
+                if (openFileDialog1.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                LoadImageSub(openFileDialog1.FileName);
+                DisplayImageSub();
             }
         }
 
@@ -1535,6 +1537,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DoAction(SpellCheckAction.DeleteLine);
             }
+        }
+
+        private void openImagedBasedSourceFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenImageBasedSourceFile();
         }
     }
 }
