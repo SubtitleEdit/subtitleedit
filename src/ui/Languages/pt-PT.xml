@@ -2622,6 +2622,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
     <SpacesNotAllowed>Espaços não permitidos numa única palavra!</SpacesNotAllowed>
     <UndoX>Anular: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>Abrir ficheiro de origem baseado em imagem...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Caracter inválido {0} encontrado na coluna {1}</GlyphCheckReport>
