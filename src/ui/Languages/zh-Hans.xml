@@ -2610,6 +2610,7 @@ Command line: {1} {2}
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
     <SpacesNotAllowed>单一单词中不允许出现空格！</SpacesNotAllowed>
     <UndoX>撤销：{0}</UndoX>
+    <OpenImageBasedSourceFile>打开基于图像的源文件...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
