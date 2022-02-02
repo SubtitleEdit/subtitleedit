@@ -1,9 +1,7 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text;
 
@@ -13,7 +11,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
-        private readonly MemoryMappedFile _memoryMappedFile;
         private readonly Stream _stream;
         private int _pixelWidth, _pixelHeight;
         private double _frameRate;
@@ -35,26 +32,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public MatroskaFile(string path)
         {
             Path = path;
-            try
-            {
-                _memoryMappedFile = MemoryMappedFile.CreateFromFile(
-                    File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
-                    null, // no mapping to a name
-                    0L, // use the file's actual size
-                    MemoryMappedFileAccess.Read,
-#if NET40
-                    null, // not configuring security
-#endif
-                    HandleInheritability.None, // adjust as needed
-                    false); // close the previously passed in stream when done
 
-                _stream = _memoryMappedFile.CreateViewStream(0L, 0L, MemoryMappedFileAccess.Read);
-            }
-            catch // fallback, probably out of memory
-            {
-                Dispose(true);
-                _stream = new FastFileStream(path);
-            }
+            // add 16 MB buffer for parsing MKV files, to avoid the overhead of FileStream, https://www.jacksondunstan.com/articles/3568
+            _stream = new BufferedStream(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read), 16 * 1024 * 1024);
 
             // read header
             var headerElement = ReadElement();
@@ -658,19 +638,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public void Dispose()
         {
-            Dispose(true);
+            _stream?.Dispose();
             GC.SuppressFinalize(this);
         }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _stream?.Dispose();
-                _memoryMappedFile?.Dispose();
-            }
-        }
-
 
         private void ReadSegmentInfoAndTracks()
         {
