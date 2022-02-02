@@ -23386,6 +23386,7 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainerListViewAndText.SplitterMoved += splitContainerListViewAndText_SplitterMoved;
             splitContainerListViewAndText.SizeChanged += splitContainerListViewAndText_SizeChanged;
             textBoxListViewText.SizeChanged += TextBoxListViewText_SizeChanged;
+            textBoxListViewTextOriginal.SizeChanged += TextBoxListViewTextOriginal_SizeChanged;
 
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
             SetListViewStateImages();
@@ -23723,6 +23724,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxListViewText_SizeChanged(object sender, EventArgs e)
         {
             FixVerticalScrollBars(textBoxListViewText);
+        }
+
+        private void TextBoxListViewTextOriginal_SizeChanged(object sender, EventArgs e)
+        {
+            FixVerticalScrollBars(textBoxListViewTextOriginal);
         }
 
         private void InitializePlayRateDropDown()
