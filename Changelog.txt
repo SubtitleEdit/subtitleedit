@@ -88,6 +88,7 @@
    * Fix missing style column in some cases for assa - thx MMT Gouenji Tech
    * Fix for "Fix missing spaces" w font tag - thx beeeeswax
    * Fix crash when opening burn-in - thx niclainglese
+   * Fix crash in "import plain text" - thx darnn
 
 
 3.6.4 (3rd December 2021)
