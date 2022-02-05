@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ExportCheetahCap = "Cheetah CAP...",
                         ExportUltech130 = "Ultech caption...",
                         ExportCustomTextFormat = "Export custom text format...",
-                        Exit = "E&xit"
+                        Exit = "E&xit",
                     },
 
                     Edit = new LanguageStructure.Main.MainMenu.EditMenu
@@ -3330,6 +3330,7 @@ Keep changes?",
                 AlsoTrainBold = "Also train bold",
                 StartTraining = "Start training",
                 NowTraining = "Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known",
+                ImagesWithTimeCodesInFileName = "Images with time codes in file name...",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

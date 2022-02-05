@@ -59,6 +59,7 @@
    * Some improvements for OCR fix engine - thx Janusz
    * Add blank lines to Modify selection - thx OmrSi
    * Allow for having a bd .sup file in spell check - thx cyzs233
+   * Export images (for external OCR) in OCR window - thx cyzs233
 * FIXED:
    * Fix bug in BD SUP reading w missing lines - thx peter-qgd
    * Fix crash in "Set start and offset the rest" w original - thx hamilaci

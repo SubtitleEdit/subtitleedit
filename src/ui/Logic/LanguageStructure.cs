@@ -3177,6 +3177,7 @@
             public string AlsoTrainBold { get; set; }
             public string StartTraining { get; set; }
             public string NowTraining { get; set; }
+            public string ImagesWithTimeCodesInFileName { get; set; } 
         }
 
         public class VobSubOcrCharacter
