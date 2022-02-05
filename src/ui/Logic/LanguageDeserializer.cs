@@ -8086,6 +8086,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/NowTraining":
                     language.VobSubOcr.NowTraining = reader.Value;
                     break;
+                case "VobSubOcr/ImagesWithTimeCodesInFileName":
+                    language.VobSubOcr.ImagesWithTimeCodesInFileName = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;

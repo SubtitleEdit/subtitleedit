@@ -2955,6 +2955,7 @@ Keep changes?</KeepChangesMessage>
     <AlsoTrainBold>Also train bold</AlsoTrainBold>
     <StartTraining>Start training</StartTraining>
     <NowTraining>Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known</NowTraining>
+    <ImagesWithTimeCodesInFileName>Images with time codes in file name...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Manual image to text</Title>

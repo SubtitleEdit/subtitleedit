@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.vobSubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dOSTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.finalCutProImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageWithTimeCodeInFileNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorImageCompare = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInspectNOcrMatches = new System.Windows.Forms.ToolStripMenuItem();
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -229,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 386);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 408);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -298,7 +299,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.bluraySupToolStripMenuItem,
             this.vobSubToolStripMenuItem,
             this.dOSTToolStripMenuItem,
-            this.finalCutProImageToolStripMenuItem});
+            this.finalCutProImageToolStripMenuItem,
+            this.imageWithTimeCodeInFileNameToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(305, 22);
             this.toolStripMenuItemExport.Text = "Export all images as...";
@@ -306,37 +308,44 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // bDNXMLToolStripMenuItem
             // 
             this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
-            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
             this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.BDNXMLToolStripMenuItem_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItem_Click);
             // 
             // vobSubToolStripMenuItem
             // 
             this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
-            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.vobSubToolStripMenuItem.Text = "VobSub...";
             this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.VobSubToolStripMenuItem_Click);
             // 
             // dOSTToolStripMenuItem
             // 
             this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
-            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.dOSTToolStripMenuItem.Text = "DOST...";
             this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.DOSTToolStripMenuItem_Click);
             // 
             // finalCutProImageToolStripMenuItem
             // 
             this.finalCutProImageToolStripMenuItem.Name = "finalCutProImageToolStripMenuItem";
-            this.finalCutProImageToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.finalCutProImageToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.finalCutProImageToolStripMenuItem.Text = "Final Cut Pro + image...";
             this.finalCutProImageToolStripMenuItem.Click += new System.EventHandler(this.finalCutProImageToolStripMenuItem_Click);
+            // 
+            // imageWithTimeCodeInFileNameToolStripMenuItem
+            // 
+            this.imageWithTimeCodeInFileNameToolStripMenuItem.Name = "imageWithTimeCodeInFileNameToolStripMenuItem";
+            this.imageWithTimeCodeInFileNameToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.imageWithTimeCodeInFileNameToolStripMenuItem.Text = "Images with time code in file name...";
+            this.imageWithTimeCodeInFileNameToolStripMenuItem.Click += new System.EventHandler(this.imageWithTimeCodeInFileNameToolStripMenuItem_Click);
             // 
             // toolStripSeparatorImageCompare
             // 
@@ -1307,7 +1316,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.listBoxUnknownWords.HorizontalScrollbar = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(3, 3);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 149);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             this.listBoxUnknownWords.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
@@ -1733,9 +1742,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.checkBoxUseTimeCodesFromIdx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxUseTimeCodesFromIdx.AutoSize = true;
-            this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(369, 295);
+            this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(335, 295);
             this.checkBoxUseTimeCodesFromIdx.Name = "checkBoxUseTimeCodesFromIdx";
-            this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(186, 17);
             this.checkBoxUseTimeCodesFromIdx.TabIndex = 3;
             this.checkBoxUseTimeCodesFromIdx.Text = "Use lines/time codes from .idx file";
             this.checkBoxUseTimeCodesFromIdx.UseVisualStyleBackColor = true;
@@ -1778,18 +1787,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCurrentText.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxCurrentText.ContextMenuStrip = this.contextMenuStripTextBox;
+            this.textBoxCurrentText.CurrentLanguage = null;
+            this.textBoxCurrentText.CurrentLineIndex = 0;
             this.textBoxCurrentText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCurrentText.HideSelection = true;
+            this.textBoxCurrentText.IsDictionaryDownloaded = true;
+            this.textBoxCurrentText.IsSpellCheckerInitialized = false;
+            this.textBoxCurrentText.IsSpellCheckRequested = false;
+            this.textBoxCurrentText.IsWrongWord = false;
+            this.textBoxCurrentText.LanguageChanged = false;
             this.textBoxCurrentText.Location = new System.Drawing.Point(8, 214);
             this.textBoxCurrentText.Multiline = true;
             this.textBoxCurrentText.Name = "textBoxCurrentText";
             this.textBoxCurrentText.Padding = new System.Windows.Forms.Padding(1);
-            this.textBoxCurrentText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.textBoxCurrentText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Both;
             this.textBoxCurrentText.SelectedText = "";
             this.textBoxCurrentText.SelectionLength = 0;
             this.textBoxCurrentText.SelectionStart = 0;
             this.textBoxCurrentText.Size = new System.Drawing.Size(354, 77);
             this.textBoxCurrentText.TabIndex = 1;
+            this.textBoxCurrentText.TextBoxFont = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold);
             this.textBoxCurrentText.TextChanged += new System.EventHandler(this.TextBoxCurrentTextTextChanged);
             this.textBoxCurrentText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCurrentText_KeyDown);
             // 
@@ -2146,5 +2163,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem boldToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem imageWithTimeCodeInFileNameToolStripMenuItem;
     }
 }
