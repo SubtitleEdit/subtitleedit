@@ -4367,19 +4367,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 GotoSubPosAndPause();
-
-                /*if (VideoAudioTrackNumber > 0)
-                {
-                    if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
-                    {
-                        libVlc.AudioTrackNumber = VideoAudioTrackNumber;
-                    }
-                    else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
-                    {
-                        libMpv.AudioTrackNumber = VideoAudioTrackNumber;
-                    }
-                }*/
-
                 SetRecentIndices(rfe);
                 SubtitleListview1.EndUpdate();
                 if (rfe != null && !string.IsNullOrEmpty(rfe.VideoFileName))
