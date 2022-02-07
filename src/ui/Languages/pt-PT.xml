@@ -2956,6 +2956,7 @@ Manter as alterações?</KeepChangesMessage>
     <AlsoTrainBold>Também treinar negrito</AlsoTrainBold>
     <StartTraining>Iniciar o treino</StartTraining>
     <NowTraining>Agora o tipo de letra de treino '{1}'. Total de caracteres treinados: {0:#,###,##0}, {2:#,###,##0} reconhecido</NowTraining>
+    <ImagesWithTimeCodesInFileName>Imagens com os tempos no nome do ficheiro...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Imagem para texto manualmente</Title>
