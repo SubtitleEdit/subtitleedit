@@ -2820,7 +2820,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenSubtitle(string fileName, Encoding encoding)
         {
-            OpenSubtitle(fileName, encoding, null, 1, null);
+            OpenSubtitle(fileName, encoding, null, -1, null);
         }
 
         private void ResetHistory()
@@ -21313,6 +21313,18 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(5000), () => LoadVideoInfoAfterVideoFromUrlLoad());
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10000), () => LoadVideoInfoAfterVideoFromUrlLoad());
             }
+
+            if (VideoAudioTrackNumber > 0)
+            {
+                if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
+                {
+                    libVlc.AudioTrackNumber = VideoAudioTrackNumber;
+                }
+                else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv2)
+                {
+                    libMpv2.AudioTrackNumber = VideoAudioTrackNumber;
+                }
+            }
         }
 
         private void LoadVideoInfoAfterVideoFromUrlLoad()
@@ -22543,18 +22555,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 mediaPlayer.CurrentPosition = newPos;
                 ShowSubtitle();
-
-                if (VideoAudioTrackNumber > 0)
-                {
-                   if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
-                    {
-                        libVlc.AudioTrackNumber = VideoAudioTrackNumber;
-                    }
-                    else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
-                    {
-                        libMpv.AudioTrackNumber = VideoAudioTrackNumber;
-                    }
-                }
 
                 double startPos = mediaPlayer.CurrentPosition - 1;
                 if (startPos < 0)

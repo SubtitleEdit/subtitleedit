@@ -2832,7 +2832,7 @@ $HorzAlign          =   Center
                     videoFileName = listNode.Attributes["VideoFileName"].Value;
                 }
 
-                string audioTrack = "1";
+                string audioTrack = "-1";
                 if (listNode.Attributes["AudioTrack"] != null)
                 {
                     audioTrack = listNode.Attributes["AudioTrack"].Value;
