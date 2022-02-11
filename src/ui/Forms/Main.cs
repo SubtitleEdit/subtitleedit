@@ -5024,7 +5024,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
-            toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
             _findHelper = null;
             _spellCheckForm = null;
 
@@ -5033,6 +5032,7 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName = null;
                 _videoInfo = null;
                 VideoAudioTrackNumber = -1;
+                toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
                 labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
