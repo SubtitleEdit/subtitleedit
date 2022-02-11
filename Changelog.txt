@@ -79,7 +79,7 @@
    * Fix "Close video" shortcut - thx OmrSi
    * Fix double space issue for output file name in sub burn-in - thx Leon
    * Fix crash in "Batch convert" w add after sort - thx Siamak
-   * Remove beep sound with "Go to bookmark" shortcut - thx OmrSi
+   * Remove beep sound when using "Go to bookmark" shortcut - thx OmrSi
    * Fix crash in list view context menu after clearing source view - thx Leon
    * Fix crash in list view focus/select - thx Leon
    * Fix crash in modify selection w styles - thx Leon
@@ -91,6 +91,7 @@
    * Fix for "Fix missing spaces" w font tag - thx beeeeswax
    * Fix crash when opening burn-in - thx niclainglese
    * Fix crash in "import plain text" - thx darnn
+   * Fix Netflix QC when in SMPTE mode - thx  hidsonguimaraes/OmrSi
 
 
 3.6.4 (3rd December 2021)
