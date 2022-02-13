@@ -38,10 +38,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             RemoveFormatting,
             RemoveStyle,
             RedoCasing,
+            FixRtl, // Used by BatchConvert Form
+            FixRtlViaUnicodeChars,
+            RemoveUnicodeControlChars,
             ReverseRtlStartEnd,
             BridgeGaps,
             MultipleReplace,
-            FixRtl,
             SplitLongLines,
             BalanceLines,
             SetMinGap,
@@ -152,6 +154,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTimeCodes);
                 _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTexts);
                 _stdOutWriter.WriteLine("        /" + BatchAction.MergeShortLines);
+                _stdOutWriter.WriteLine("        /" + BatchAction.FixRtlViaUnicodeChars);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveUnicodeControlChars);
                 _stdOutWriter.WriteLine("        /" + BatchAction.ReverseRtlStartEnd);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveFormatting);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
@@ -1975,6 +1979,18 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 // ignore
                             }
 
+                            break;
+                        case BatchAction.FixRtlViaUnicodeChars:
+                            foreach (var p in sub.Paragraphs)
+                            {
+                                p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                            }
+                            break;
+                        case BatchAction.RemoveUnicodeControlChars:
+                            foreach (var p in sub.Paragraphs)
+                            {
+                                p.Text = Utilities.RemoveUnicodeControlChars(p.Text);
+                            }
                             break;
                     }
                 }
