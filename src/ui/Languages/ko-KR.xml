@@ -1134,7 +1134,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <ImportOcrVobSubSubtitle>OCR용 VobSub(sub/idx) 자막...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>OCR용 Blu-ray(.sup) 자막 파일...</ImportBluRaySupFile>
         <ImportBluRaySupFileEdit>편집용 Blu-ray (.sup) 자막 파일...</ImportBluRaySupFileEdit>
-        <ImportSubtitleWithManualChosenEncoding>수동으로 선택한 인코딩이 포함된 자막...</ImportSubtitleWithManualChosenEncoding>
+        <ImportSubtitleWithManualChosenEncoding>선택한 인코딩으로 자막 가져오기...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>일반 텍스트...</ImportText>
         <ImportImages>이미지...</ImportImages>
         <ImportTimecodes>타임코드...</ImportTimecodes>
@@ -2620,6 +2620,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
     <SpacesNotAllowed>한 단어에서 공백은 허용되지 않습니다!</SpacesNotAllowed>
     <UndoX>실행 취소: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>이미지 기반 소스 파일 열기...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
@@ -2952,6 +2953,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AlsoTrainBold>볼드도 연습</AlsoTrainBold>
     <StartTraining>연습 시작</StartTraining>
     <NowTraining>현재 글꼴 '{1}' 연습중입니다.  연습한 총 문자 수: {0:#,###,##0}, {2:#,###,##0} </NowTraining>
+    <ImagesWithTimeCodesInFileName>파일 이름에 타임코드를 포함한 이미지...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - 이미지 자막을 텍스트로</Title>
