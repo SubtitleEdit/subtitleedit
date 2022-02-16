@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return true;
             }
 
-            string[] parts = s.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = s.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 3 && parts[2].Length > 1 && parts[2].Length < 7)
             {
                 return true;
@@ -53,20 +53,23 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.FixMissingPeriodAtEndOfLine;
-            int missingPeriodsAtEndOfLine = 0;
+            var fixAction = Language.FixMissingPeriodAtEndOfLine;
+            var missingPeriodsAtEndOfLine = 0;
 
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 var next = subtitle.GetParagraphOrDefault(i + 1);
-                string nextText = string.Empty;
+                var nextText = string.Empty;
                 if (next != null)
                 {
                     nextText = HtmlUtil.RemoveHtmlTags(next.Text, true).TrimStart('-', '"', '„').TrimStart();
                 }
-                bool isNextClose = next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 400;
-                string tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd();
+                var isNextClose = next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 400;
+                var tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text)
+                    .Replace("\u200B", string.Empty) // Zero Width Space
+                    .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
+                    .TrimEnd();
 
                 if (IsOneLineUrl(p.Text) || p.Text.Contains(ExpectedChars) || p.Text.EndsWith('\''))
                 {
@@ -78,15 +81,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     tempNoHtml.Length > 0 &&
                     !ExpectedString1.Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
-                    string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
+                    var tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
                     {
                         //don't end the sentence if the next word is an I word as they're always capped.
-                        bool isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
-                                                                         nextText.StartsWith("I'", StringComparison.Ordinal));
+                        var isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
+                                                                        nextText.StartsWith("I'", StringComparison.Ordinal));
 
-                        bool isNextCloseAndStartsWithTitle = isNextClose && (nextText.StartsWith("Mr. ", StringComparison.Ordinal) ||
-                                                                             nextText.StartsWith("Dr. ", StringComparison.Ordinal));
+                        var isNextCloseAndStartsWithTitle = isNextClose && (nextText.StartsWith("Mr. ", StringComparison.Ordinal) ||
+                                                                            nextText.StartsWith("Dr. ", StringComparison.Ordinal));
 
                         if (!isNextCloseAndStartsWithI && !isNextCloseAndStartsWithTitle)
                         {
@@ -153,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 if (p.Text.Length > 4)
                 {
-                    int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 3, StringComparison.Ordinal);
+                    var indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 3, StringComparison.Ordinal);
                     if (indexOfNewLine < 0)
                     {
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 3, StringComparison.Ordinal);
@@ -171,9 +174,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (indexOfNewLine > 0 && char.IsUpper(char.ToUpper(p.Text[indexOfNewLine - 1])) && callbacks.AllowFix(p, fixAction))
                     {
-                        string oldText = p.Text;
+                        var oldText = p.Text;
 
-                        string text = p.Text.Substring(0, indexOfNewLine);
+                        var text = p.Text.Substring(0, indexOfNewLine);
                         var st = new StrippableText(text);
                         if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
                         {
@@ -200,7 +203,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (p.Text.EndsWith('>'))
             {
-                int lastLessThan = p.Text.LastIndexOf('<');
+                var lastLessThan = p.Text.LastIndexOf('<');
                 if (lastLessThan > 0)
                 {
                     p.Text = p.Text.Insert(lastLessThan, ".");
