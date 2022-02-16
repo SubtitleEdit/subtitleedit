@@ -2615,6 +2615,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckAborted>Ματαίωση ορθογραφικού ελέγχου</SpellCheckAborted>
     <SpacesNotAllowed>Απαγορεύονται τα κενά σε λέξη.</SpacesNotAllowed>
     <UndoX>Αναιρέθηκαν: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>Άνοιγμα πηγαίου αρχείου εικόνας…</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Μη έγκυρος χαρακτήρας {0} στη στήλη {1}</GlyphCheckReport>
@@ -2948,6 +2949,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AlsoTrainBold>Εκμάθηση έντονων</AlsoTrainBold>
     <StartTraining>Έναρξη εκμάθησης</StartTraining>
     <NowTraining>Εκμάθηση γραμματοσειράς '{1}. Σύνολο χαρακτήρων που μαθεύτηκαν: {0:#,###,##0}, {2:#,###,##0} γνωστά</NowTraining>
+    <ImagesWithTimeCodesInFileName>Εικόνες με κώδικες χρόνου σε όνομα αρχείου…</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Εικόνα σε κείμενο χειροκίνητα</Title>
