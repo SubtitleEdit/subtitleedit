@@ -1090,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             userDictionary.Add(fromWord, toWord);
             XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode(replaceListName);
 
-            if (wholeWordsNode != null)
+            if (wholeWordsNode == null)
             {
                 wholeWordsNode = userDoc.CreateElement(replaceListName);
                 userDoc.DocumentElement?.AppendChild(wholeWordsNode);
