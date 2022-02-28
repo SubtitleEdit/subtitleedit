@@ -32566,6 +32566,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
         {
             splitContainerListViewAndText_SplitterMoved(null, null);
+            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
         }
 
         private void toolStripMenuItemImportBluraySupFileForEdit_Click(object sender, EventArgs e)
