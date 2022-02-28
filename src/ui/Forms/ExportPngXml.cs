@@ -3036,8 +3036,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             .Replace('[', 'a')
                             .Replace(']', 'a')
                             .Replace('ą', 'a')
-                            .Replace('Ę', 'Ę')
-                            .Replace('Ą', 'Ą');
+                            .Replace('Ę', 'a')
+                            .Replace('Ą', 'a');
                         baseLinePadding -= (int)Math.Round(TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold));
                     }
                     else
