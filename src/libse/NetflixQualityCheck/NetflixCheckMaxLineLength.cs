@@ -39,14 +39,14 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                             }
                         }
                     }
-                    else if (controller.Language == "ko" && line.CountCharacters(nameof(CalcCjk)) > controller.SingleLineMaxLength)
+                    else if (controller.Language == "ko" && line.CountCharacters(nameof(CalcCjk), false) > controller.SingleLineMaxLength)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
                         var comment = "Single line length > " + controller.SingleLineMaxLength;
-                        controller.AddRecord(p, fixedParagraph, comment, line.CountCharacters(nameof(CalcCjk)).ToString(CultureInfo.InvariantCulture));
+                        controller.AddRecord(p, fixedParagraph, comment, line.CountCharacters(nameof(CalcCjk), false).ToString(CultureInfo.InvariantCulture));
                     }
-                    else if (line.CountCharacters() > controller.SingleLineMaxLength)
+                    else if (line.CountCharacters(false) > controller.SingleLineMaxLength)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);

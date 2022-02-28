@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                var count = line.CountCharacters();
+                var count = line.CountCharacters(false);
                 sb.Append(count);
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {

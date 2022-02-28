@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         /// <summary>
         /// Calculate all text including space (tags are not counted).
         /// </summary>
-        public decimal CountCharacters(string text)
+        public decimal CountCharacters(string text, bool forCps)
         {
             if (string.IsNullOrEmpty(text))
             {
