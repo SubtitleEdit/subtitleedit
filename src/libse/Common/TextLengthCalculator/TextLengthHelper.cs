@@ -4,9 +4,9 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 {
     public static class TextLengthHelper
     {
-        public static decimal CountCharacters(string text)
+        public static decimal CountCharacters(string text, bool forCps)
         {
-            return CalcFactory.MakeCalculator(Configuration.Settings.General.CpsLineLengthStrategy).CountCharacters(text);
+            return CalcFactory.MakeCalculator(Configuration.Settings.General.CpsLineLengthStrategy).CountCharacters(text, forCps);
         }
 
         public static bool IsKnownHtmlTag(string input, int index)

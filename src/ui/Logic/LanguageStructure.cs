@@ -2456,11 +2456,12 @@
             public string ContinuationStyleLeadingTrailingDashDots { get; set; }
             public string CpsLineLengthStyle { get; set; }
             public string CpsLineLengthStyleCalcAll { get; set; }
+            public string CpsLineLengthStyleCalcNoSpaceCpsOnly { get; set; }
             public string CpsLineLengthStyleCalcNoSpace { get; set; }
             public string CpsLineLengthStyleCalcCjk { get; set; }
             public string CpsLineLengthStyleCalcCjkNoSpace { get; set; }
-            public string CpsLineLengthStyleCalcIgnoreArabicDiacritics { get; set; }
-            public string CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace { get; set; }
+            public string CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly { get; set; }
+            public string CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }

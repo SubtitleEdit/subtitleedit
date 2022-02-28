@@ -6196,6 +6196,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CpsLineLengthStyleCalcAll":
                     language.Settings.CpsLineLengthStyleCalcAll = reader.Value;
                     break;
+                case "Settings/CpsLineLengthStyleCalcNoSpaceCpsOnly":
+                    language.Settings.CpsLineLengthStyleCalcNoSpaceCpsOnly = reader.Value;
+                    break;
                 case "Settings/CpsLineLengthStyleCalcNoSpace":
                     language.Settings.CpsLineLengthStyleCalcNoSpace = reader.Value;
                     break;
@@ -6206,10 +6209,10 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Settings.CpsLineLengthStyleCalcCjkNoSpace = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacritics":
-                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacritics = reader.Value;
+                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace":
-                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace = reader.Value;
+                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly = reader.Value;
                     break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;

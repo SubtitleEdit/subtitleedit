@@ -2,6 +2,6 @@
 {
     public interface ICalcLength
     {
-        decimal CountCharacters(string text);
+        decimal CountCharacters(string text, bool forCps);
     }
 }

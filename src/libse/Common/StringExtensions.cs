@@ -539,14 +539,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Count characters excl. white spaces, ssa-tags, html-tags, control-characters, normal spaces and
         /// Arabic diacritics depending on parameter.
         /// </summary>
-        public static int CountCharacters(this string value, string strategy)
+        public static int CountCharacters(this string value, string strategy, bool forCps)
         {
-            return (int)Math.Round(CalcFactory.MakeCalculator(strategy).CountCharacters(value), MidpointRounding.AwayFromZero);
+            return (int)Math.Round(CalcFactory.MakeCalculator(strategy).CountCharacters(value, forCps), MidpointRounding.AwayFromZero);
         }
 
-        public static decimal CountCharacters(this string value)
+        public static decimal CountCharacters(this string value, bool forCps)
         {
-            return CalcFactory.MakeCalculator(Configuration.Settings.General.CpsLineLengthStrategy).CountCharacters(value);
+            return CalcFactory.MakeCalculator(Configuration.Settings.General.CpsLineLengthStrategy).CountCharacters(value, forCps);
         }
 
         public static bool HasSentenceEnding(this string value)

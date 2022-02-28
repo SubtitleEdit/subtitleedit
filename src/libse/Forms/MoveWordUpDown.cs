@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var doBreak = false;
             foreach (var line in s.SplitToLines())
             {
-                if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
+                if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
                 {
                     doBreak = true;
                     break;

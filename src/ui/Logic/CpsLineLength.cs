@@ -11,16 +11,18 @@ namespace Nikse.SubtitleEdit.Logic
         {
             switch (Code)
             {
+                case nameof(CalcNoSpaceCpsOnly):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcNoSpaceCpsOnly;
                 case nameof(CalcNoSpace):
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcNoSpace;
                 case nameof(CalcCjk):
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcCjk;
                 case nameof(CalcCjkNoSpace):
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcCjkNoSpace;
-                case nameof(CalcIgnoreArabicDiacritics):
-                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacritics;
-                case nameof(CalcIgnoreArabicDiacriticsNoSpace):
-                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace;
+                case nameof(CalcIgnoreArabicDiacriticsCpsOnly):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly;
+                case nameof(CalcIgnoreArabicDiacriticsNoSpaceCpsOnly):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly;
                 default:
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcAll;
             }

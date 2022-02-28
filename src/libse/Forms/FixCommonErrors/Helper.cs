@@ -617,7 +617,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             string s = HtmlUtil.RemoveHtmlTags(text, true);
-            if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters() < Configuration.Settings.General.MergeLinesShorterThan)
+            if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false) < Configuration.Settings.General.MergeLinesShorterThan)
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
