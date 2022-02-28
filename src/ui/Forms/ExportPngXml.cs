@@ -3008,7 +3008,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K),", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
+                    baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K)Ź,Ç", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
                     PaddingDictionary.Add(paddingKey, baseLinePadding);
                 }
 
@@ -3017,7 +3017,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (lines.Count > 0)
                 {
                     var lastLine = lines[lines.Count - 1];
-                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']' }))
+                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']', 'ą', 'Ę', 'Ą' }))
                     {
                         var textNoBelow = lastLine
                             .Replace('g', 'a')
@@ -3034,7 +3034,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             .Replace('(', 'a')
                             .Replace(')', 'a')
                             .Replace('[', 'a')
-                            .Replace(']', 'a');
+                            .Replace(']', 'a')
+                            .Replace('ą', 'a')
+                            .Replace('Ę', 'Ę')
+                            .Replace('Ą', 'Ą');
                         baseLinePadding -= (int)Math.Round(TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold));
                     }
                     else
@@ -3049,7 +3052,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 if (lines.Count == 1 && parameter.JustifyTop) // align top
                 {
-                    baseLinePadding += (int)Math.Round(TextDraw.MeasureTextHeight(font, "yjK)", parameter.SubtitleFontBold));
+                    baseLinePadding += (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K)Ź,Ç", parameter.SubtitleFontBold));
                 }
 
                 // TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
