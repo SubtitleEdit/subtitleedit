@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 new TranslationPair("PERSIAN", "fa"),
                 new TranslationPair("POLISH", "pl"),
                 new TranslationPair("PORTUGUESE", "pt"),
+                new TranslationPair("PORTUGUESE (BRAZILIAN)", "pt_br"),
                 new TranslationPair("PUNJABI", "pa"),
                 new TranslationPair("ROMANIAN", "ro"),
 //                new TranslationPair("ROMANJI", "romanji"),
