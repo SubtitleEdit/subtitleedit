@@ -2263,9 +2263,10 @@ Command line: {1} {2}
     <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
-    <CpsLineLengthStyle>Cps/行长</CpsLineLengthStyle>
+    <CpsLineLengthStyle>CpS/行长</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpace>统计除空格外的所有字符</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示CpS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>统计除空格外的字符</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1，拉丁文 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1，拉丁文 0.5，空格 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>忽略阿拉伯语变音符号</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
