@@ -2279,8 +2279,8 @@ can edit in same subtitle file (collaboration)</Information>
     <CpsLineLengthStyleCalcNoSpace>Count all except space</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly>Ignore Arabic diacritics, cps only</CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly>Ignore Arabic diacritics/space, cps only</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignore Arabic diacritics</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignore Arabic diacritics/space</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
@@ -2715,6 +2715,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>Minimal gap: {0} ms</MinimalGap>
     <Export>Export...</Export>
   </Statistics>
   <SubStationAlphaProperties>

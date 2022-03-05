@@ -7432,6 +7432,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/CharactersPerSecondAverage":
                     language.Statistics.CharactersPerSecondAverage = reader.Value;
                     break;
+                case "Statistics/MinimalGap":
+                    language.Statistics.MinimalGap = reader.Value;
+                    break;
                 case "Statistics/Export":
                     language.Statistics.Export = reader.Value;
                     break;
