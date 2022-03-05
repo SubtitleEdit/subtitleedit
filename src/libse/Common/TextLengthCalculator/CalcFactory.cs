@@ -12,8 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
             new CalcNoSpace(),
             new CalcCjk(),
             new CalcCjkNoSpace(),
-            new CalcIgnoreArabicDiacriticsCpsOnly(),
-            new CalcIgnoreArabicDiacriticsNoSpaceCpsOnly()
+            new CalcIgnoreArabicDiacritics(),
+            new CalcIgnoreArabicDiacriticsNoSpace()
         };
 
         public static ICalcLength MakeCalculator(string strategy)

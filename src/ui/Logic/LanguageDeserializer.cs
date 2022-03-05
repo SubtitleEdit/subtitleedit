@@ -6209,10 +6209,10 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Settings.CpsLineLengthStyleCalcCjkNoSpace = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacritics":
-                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly = reader.Value;
+                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacritics = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace":
-                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly = reader.Value;
+                    language.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace = reader.Value;
                     break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;

@@ -19,10 +19,10 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcCjk;
                 case nameof(CalcCjkNoSpace):
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcCjkNoSpace;
-                case nameof(CalcIgnoreArabicDiacriticsCpsOnly):
-                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsCpsOnly;
-                case nameof(CalcIgnoreArabicDiacriticsNoSpaceCpsOnly):
-                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpaceCpsOnly;
+                case nameof(CalcIgnoreArabicDiacritics):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacritics;
+                case nameof(CalcIgnoreArabicDiacriticsNoSpace):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace;
                 default:
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcAll;
             }
