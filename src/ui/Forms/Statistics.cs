@@ -113,16 +113,17 @@ https://github.com/SubtitleEdit/subtitleedit
             double minimumCharsSec = 100000000;
             double maximumCharsSec = 0;
             double totalCharsSec = 0;
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            var minimalGap = double.MaxValue;
+            foreach (var p in _subtitle.Paragraphs)
             {
                 allText.Append(p.Text);
 
-                int len = GetLineLength(p);
+                var len = GetLineLength(p);
                 minimumLineLength = Math.Min(minimumLineLength, len);
                 maximumLineLength = Math.Max(len, maximumLineLength);
                 totalLineLength += len;
 
-                double duration = p.Duration.TotalMilliseconds;
+                var duration = p.Duration.TotalMilliseconds;
                 minimumDuration = Math.Min(duration, minimumDuration);
                 maximumDuration = Math.Max(duration, maximumDuration);
                 totalDuration += duration;
@@ -132,7 +133,17 @@ https://github.com/SubtitleEdit/subtitleedit
                 maximumCharsSec = Math.Max(charsSec, maximumCharsSec);
                 totalCharsSec += charsSec;
 
-                foreach (string line in p.Text.SplitToLines())
+                var next = _subtitle.GetParagraphOrDefault(_subtitle.GetIndex(p) + 1);
+                if (next != null)
+                {
+                    var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                    if (gap < minimalGap)
+                    {
+                        minimalGap = gap;
+                    }
+                }
+
+                foreach (var line in p.Text.SplitToLines())
                 {
                     var l = GetSingleLineLength(line);
                     minimumSingleLineLength = Math.Min(l, minimumSingleLineLength);
@@ -152,7 +163,7 @@ https://github.com/SubtitleEdit/subtitleedit
             }
 
             var sb = new StringBuilder();
-            int sourceLength = _subtitle.ToText(_format).Length;
+            var sourceLength = _subtitle.ToText(_format).Length;
             var allTextToLower = allText.ToString().ToLowerInvariant();
 
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
@@ -160,6 +171,15 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.ToString().CountCharacters(false)));
             sb.AppendLine(string.Format(_l.TotalDuration, new TimeCode(totalDuration).ToDisplayString()));
             sb.AppendLine(string.Format(_l.TotalCharsPerSecond, (double)allText.ToString().CountCharacters(true) / (totalDuration / TimeCode.BaseUnit)));
+            if (Math.Abs(minimalGap - double.MaxValue) < 0.1)
+            {
+                sb.AppendLine(string.Format(_l.MinimalGap, "?"));
+            }
+            else
+            {
+                sb.AppendLine(string.Format(_l.MinimalGap, minimalGap));
+            }
+
             sb.AppendLine(string.Format(_l.TotalWords, _totalWords));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allTextToLower, "<i>")));
             sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allTextToLower, "<b>")));
@@ -170,7 +190,7 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthAverage, totalLineLength / _subtitle.Paragraphs.Count));
-            sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (((double)totalSingleLines) / _subtitle.Paragraphs.Count)));
+            sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (double)totalSingleLines / _subtitle.Paragraphs.Count));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(minimumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
@@ -216,7 +236,7 @@ https://github.com/SubtitleEdit/subtitleedit
         private string GetIndicesWithDuration(double duration)
         {
             var indices = new List<string>();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
                 if (Math.Abs(p.Duration.TotalMilliseconds - duration) < 0.01)
@@ -235,7 +255,7 @@ https://github.com/SubtitleEdit/subtitleedit
         private string GetIndicesWithCps(double cps)
         {
             var indices = new List<string>();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
                 if (Math.Abs(Utilities.GetCharactersPerSecond(p) - cps) < 0.01)
@@ -254,7 +274,7 @@ https://github.com/SubtitleEdit/subtitleedit
         private string GetIndicesWithLength(int length)
         {
             var indices = new List<string>();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
                 if (GetLineLength(p) == length)
@@ -273,7 +293,7 @@ https://github.com/SubtitleEdit/subtitleedit
         private string GetIndicesWithSingleLineLength(int length)
         {
             var indices = new List<string>();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
                 foreach (var line in p.Text.SplitToLines())
