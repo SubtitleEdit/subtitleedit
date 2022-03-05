@@ -3070,6 +3070,7 @@ can edit in same subtitle file (collaboration)",
                 CharactersPerSecondMinimum = "Characters/sec - minimum: {0:0.000}",
                 CharactersPerSecondMaximum = "Characters/sec - maximum: {0:0.000}",
                 CharactersPerSecondAverage = "Characters/sec - average: {0:0.000}",
+                MinimalGap = "Minimal gap: {0} ms",
                 Export = "Export...",
             };
 
