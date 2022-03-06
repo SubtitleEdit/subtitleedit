@@ -2272,6 +2272,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ContinuationStyleLeadingTrailingDashDots>Παύλα, τελείες για παύσεις</ContinuationStyleLeadingTrailingDashDots>
     <CpsLineLengthStyle>Χαρακτήρες ανά δευτ./μήκος γραμμής</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Υπολογισμός όλων των χαρακτήρων</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Υπολογισμός όλων πλην κενών, χαρ. ανά δευτ. μόνο</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Υπολογισμός όλων πλην κενών</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, λατινικοί 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, λατινικοί 0,5, κενό 0</CpsLineLengthStyleCalcCjkNoSpace>
