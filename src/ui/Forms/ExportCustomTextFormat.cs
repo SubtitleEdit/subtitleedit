@@ -117,6 +117,8 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{cps-comma}", "{10}");
             s = s.Replace("{cps-period}", "{11}");
             s = s.Replace("{text-length}", "{12}");
+            s = s.Replace("{text-length-br0}", "{13}");
+            s = s.Replace("{text-length-br1}", "{14}");
             s = s.Replace("{tab}", "\t");
             return s;
         }
@@ -311,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, string actor, TimeCode duration, string timeCodeTemplate, double cps)
         {
-            string d = duration.ToString();
+            var d = duration.ToString();
             if (timeCodeTemplate == "ff" || timeCodeTemplate == "f")
             {
                 d = SubtitleFormat.MillisecondsToFrames(duration.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
@@ -388,10 +390,15 @@ namespace Nikse.SubtitleEdit.Forms
                 line2 = lines[1];
             }
 
-            string s = template;
+            var s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2, cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","), cps.ToString(CultureInfo.InvariantCulture), text.Length);
+            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2, 
+                              cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","), 
+                              cps.ToString(CultureInfo.InvariantCulture), 
+                              text.Length, 
+                              text.RemoveChar('\r','\n').Length,
+                              text.RemoveChar('\r', '\n').Length + lines.Count -1);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;
