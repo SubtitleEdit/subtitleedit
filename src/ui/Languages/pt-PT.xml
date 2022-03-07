@@ -2716,6 +2716,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>Intervalo mínimo: {0} ms</MinimalGap>
     <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
