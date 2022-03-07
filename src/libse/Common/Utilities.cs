@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public static bool IsNumber(string s)
+        public static bool IsNumber(string s) 
         {
             s = s.Trim('$', '£', '¥', '%', '*');
             if (RegexIsNumber.IsMatch(s))
