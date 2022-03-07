@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 string replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
                                 findWhat = RegexUtils.FixNewLine(findWhat);
                                 string searchType = rule.SearchType;
-                                var ruleInfo = string.IsNullOrEmpty(rule.Description) ? $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule)}" : $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule) + 1}. {rule.Description}";
+                                var ruleInfo = string.IsNullOrEmpty(rule.Description) ? $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule) + 1}" : $"Group name: {group.Name} - Rule number: {group.Rules.IndexOf(rule) + 1}. {rule.Description}";
                                 var mpi = new ReplaceExpression(findWhat, replaceWith, searchType, ruleInfo);
                                 replaceExpressions.Add(mpi);
                                 if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
