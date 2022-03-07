@@ -59,8 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph p = null;
-            string positionInfo = string.Empty;
-            bool hadEmptyLine = false;
+            var positionInfo = string.Empty;
+            var hadEmptyLine = false;
+            int numbers = 0;
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
@@ -72,8 +73,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     isNextTimeCode = next.Contains("-->");
                 }
 
-                string s = line;
-                bool isTimeCode = line.Contains("-->");
+                var s = line;
+                var isTimeCode = line.Contains("-->");
                 if (isTimeCode && RegexTimeCodesMiddle.IsMatch(s))
                 {
                     s = "00:" + s; // start is without hours, end is with hours
@@ -84,6 +85,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = "00:" + s.Replace("--> ", "--> 00:");
                 }
 
+                if (isNextTimeCode && Utilities.IsNumber(s))
+                {
+                    numbers++;
+                }
 
                 if (isNextTimeCode && Utilities.IsNumber(s) && p?.Text.Length > 0)
                 {
@@ -128,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (p != null)
                 {
-                    string text = positionInfo + line.Trim();
+                    var text = positionInfo + line.Trim();
                     if (string.IsNullOrEmpty(text))
                     {
                         hadEmptyLine = true;
@@ -162,6 +167,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 paragraph.Text = WebVTT.ColorWebVttToHtml(paragraph.Text);
                 paragraph.Text = System.Net.WebUtility.HtmlDecode(paragraph.Text);
+            }
+
+            if (numbers == 0 || numbers < subtitle.Paragraphs.Count / 2 && !new WebVTT().IsMine(lines, fileName))
+            {
+                _errorCount = subtitle.Paragraphs.Count + 1;
             }
 
             subtitle.Renumber();
