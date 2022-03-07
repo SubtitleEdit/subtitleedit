@@ -2272,6 +2272,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ContinuationStyleLeadingTrailingDashDots>Παύλα, τελείες για παύσεις</ContinuationStyleLeadingTrailingDashDots>
     <CpsLineLengthStyle>Χαρακτήρες ανά δευτ./μήκος γραμμής</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Υπολογισμός όλων των χαρακτήρων</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Υπολογισμός όλων πλην κενών, χαρ. ανά δευτ. μόνο</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Υπολογισμός όλων πλην κενών</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, λατινικοί 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, λατινικοί 0,5, κενό 0</CpsLineLengthStyleCalcCjkNoSpace>
@@ -2708,6 +2709,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CharactersPerSecondMinimum>Χαρακτήρες/ δευτ - ελάχιστοι: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Χαρακτήρες/ δευτ - μέγιστοι: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Χαρακτήρες/ δευτ - μέσοι: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>Ελάχιστο κενό: {0} χιλ. δευτ.</MinimalGap>
     <Export>Εξαγωγή…</Export>
   </Statistics>
   <SubStationAlphaProperties>
