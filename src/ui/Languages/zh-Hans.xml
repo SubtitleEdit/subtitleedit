@@ -2263,9 +2263,9 @@ Command line: {1} {2}
     <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
-    <CpsLineLengthStyle>CpS/行长</CpsLineLengthStyle>
+    <CpsLineLengthStyle>每秒字频/行长</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示CpS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示每秒字频</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>统计除空格外的字符</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1，拉丁文 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1，拉丁文 0.5，空格 0</CpsLineLengthStyleCalcCjkNoSpace>
@@ -2704,6 +2704,7 @@ Command line: {1} {2}
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>最小间隔: {0} 毫秒</MinimalGap>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2943,6 +2944,7 @@ Command line: {1} {2}
     <AlsoTrainBold>并且训练粗体</AlsoTrainBold>
     <StartTraining>开始训练</StartTraining>
     <NowTraining>正在训练字体 '{1}', 已训练字符数: {0:#,###,##0}, 已获知 {2:#,###,##0}</NowTraining>
+    <ImagesWithTimeCodesInFileName>文件名中带有时间码的图像...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
