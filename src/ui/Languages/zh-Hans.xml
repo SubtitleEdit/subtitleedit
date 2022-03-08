@@ -2263,7 +2263,7 @@ Command line: {1} {2}
     <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
-    <CpsLineLengthStyle>CpS/行长</CpsLineLengthStyle>
+    <CpsLineLengthStyle>每秒字频/行长</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示每秒字频</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>统计除空格外的字符</CpsLineLengthStyleCalcNoSpace>
