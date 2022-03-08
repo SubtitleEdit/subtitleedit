@@ -395,13 +395,13 @@ namespace Nikse.SubtitleEdit.Forms
             var s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2, 
-                              cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","), 
-                              cps.ToString(CultureInfo.InvariantCulture), 
-                              text.Length, 
-                              p.Text.RemoveChar('\r','\n').Length,
-                              p.Text.RemoveChar('\r', '\n').Length + lines.Count -1,
-                              p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1);
+            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2,
+                              cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","),
+                              cps.ToString(CultureInfo.InvariantCulture),
+                              text.Length,
+                              p.Text.RemoveChar('\r', '\n').Length,
+                              p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1,
+                              p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;
