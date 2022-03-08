@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
                         translationText = trans.Text;
                     }
                 }
-                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Actor, p.Duration, arr[3], Utilities.GetCharactersPerSecond(p));
+                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Actor, p.Duration, arr[3], p);
                 sb.Append(paragraph);
             }
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
