@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Processor
 {
-
     public class SentenceMergingTranslationProcessor : AbstractTranslationProcessor<SentenceMergingTranslationProcessor.Sentence>
     {
         private static readonly char[] SentenceDelimiterAfterChars = { '.', '?', '!', ')' };

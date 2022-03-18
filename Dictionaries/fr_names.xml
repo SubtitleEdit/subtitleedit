@@ -52,7 +52,6 @@
   <name>Adrastée</name>
   <name>Adrehilde</name>
   <name>Adrien</name>
-  <name>Adrienne</name>
   <name>Aelis</name>
   <name>Afghanistan</name>
   <name>Afrique</name>
@@ -83,7 +82,6 @@
   <name>Aimable</name>
   <name>Aimé</name>
   <name>Aimée</name>
-  <name>Alaine</name>
   <name>Alban</name>
   <name>Albane</name>
   <name>Albanie</name>
@@ -187,15 +185,12 @@
   <name>Anémone</name>
   <name>Angadrême</name>
   <name>Angelin</name>
-  <name>Angeline</name>
   <name>Angélique</name>
   <name>Angilbe</name>
   <name>Angilberte</name>
   <name>Angilran</name>
   <name>Anglebert</name>
-  <name>Angola</name>
   <name>Angoustan</name>
-  <name>Anguilla</name>
   <name>Anicet</name>
   <name>Anicette</name>
   <name>Anis</name>
@@ -264,7 +259,6 @@
   <name>Arthaud</name>
   <name>Arthème</name>
   <name>Arthurine</name>
-  <name>Aruba</name>
   <name>Ascelin</name>
   <name>Asceline</name>
   <name>Asie</name>
@@ -335,9 +329,7 @@
   <name>Azeline</name>
   <name>Azelle</name>
   <name>Azerbaïdjan</name>
-  <name>Bahamas</name>
   <name>Bahreïn</name>
-  <name>Bangladesh</name>
   <name>Baptiste</name>
   <name>Barbade</name>
   <name>Barbe</name>
@@ -350,7 +342,6 @@
   <name>Béatrice</name>
   <name>Béatrix</name>
   <name>Belgique</name>
-  <name>Belize</name>
   <name>Bénédicte</name>
   <name>Bénigne</name>
   <name>Bénin</name>
@@ -372,7 +363,6 @@
   <name>Bosnie-Herzégovine</name>
   <name>Botswana</name>
   <name>Bouchard</name>
-  <name>Brazzaville</name>
   <name>Brésil</name>
   <name>Brigitte</name>
   <name>Brunehaut</name>
@@ -381,8 +371,6 @@
   <name>Brunon</name>
   <name>Bruxelles</name>
   <name>Bulgarie</name>
-  <name>Burkina Faso</name>
-  <name>Burundi</name>
   <name>Calixte</name>
   <name>Calliste</name>
   <name>Cambodge</name>
@@ -438,7 +426,6 @@
   <name>Colombie</name>
   <name>Côme</name>
   <name>Comores</name>
-  <name>Congo</name>
   <name>Congo belge</name>
   <name>Congo-Brazzaville</name>
   <name>Congo-Kinshasa</name>
@@ -454,10 +441,8 @@
   <name>Corentin</name>
   <name>Corentine</name>
   <name>Cosette</name>
-  <name>Costa Rica</name>
   <name>Côte d’Ivoire</name>
   <name>Croatie</name>
-  <name>Cuba</name>
   <name>Curaçao</name>
   <name>Cyprien</name>
   <name>Cyriaque</name>
@@ -474,8 +459,6 @@
   <name>Diego Garcia</name>
   <name>Dieudonné</name>
   <name>Dieudonnée</name>
-  <name>Djibouti</name>
-  <name>Dominique</name>
   <name>Doriane</name>
   <name>Dorianne</name>
   <name>Dorine</name>
@@ -558,7 +541,6 @@
   <name>Fortuné</name>
   <name>Fortunée</name>
   <name>Foulques</name>
-  <name>France</name>
   <name>Francia</name>
   <name>Franck</name>
   <name>Françoise</name>
@@ -567,7 +549,6 @@
   <name>Fulcran</name>
   <name>Fulgence</name>
   <name>Gabin</name>
-  <name>Gabon</name>
   <name>Gabonais</name>
   <name>Gabonaise</name>
   <name>Gabonaises</name>
@@ -597,9 +578,7 @@
   <name>Germaine</name>
   <name>Gertrude</name>
   <name>Gervais</name>
-  <name>Ghana</name>
   <name>Ghislain</name>
-  <name>Gibraltar</name>
   <name>Gilles</name>
   <name>Girart</name>
   <name>Gisèle</name>
@@ -612,9 +591,6 @@
   <name>Grégoire</name>
   <name>Grenade</name>
   <name>Groenland</name>
-  <name>Guadeloupe</name>
-  <name>Guam</name>
-  <name>Guatemala</name>
   <name>Guenièvre</name>
   <name>Guérin</name>
   <name>Guernesey</name>
@@ -629,12 +605,10 @@
   <name>Gustave</name>
   <name>Gustavine</name>
   <name>Guy</name>
-  <name>Guyana</name>
   <name>Guyane française</name>
   <name>Guyot</name>
   <name>Gwenael</name>
   <name>Gwenaëlle</name>
-  <name>Gwendoline</name>
   <name>Gwladys</name>
   <name>Haïti</name>
   <name>Hardouin</name>
@@ -650,7 +624,6 @@
   <name>Hildebert</name>
   <name>Hincmar</name>
   <name>Honduras</name>
-  <name>Hong Kong</name>
   <name>Hongrie</name>
   <name>Honoré</name>
   <name>Hortense</name>
@@ -696,7 +669,6 @@
   <name>Israël</name>
   <name>Italie</name>
   <name>Jacinthe</name>
-  <name>Jacqueline</name>
   <name>Jade</name>
   <name>Jamaïque</name>
   <name>Japhet</name>
@@ -706,14 +678,12 @@
   <name>Jeannot</name>
   <name>Jérémie</name>
   <name>Jérôme</name>
-  <name>Jersey</name>
   <name>Joanny</name>
   <name>Job</name>
   <name>Jocelyn</name>
   <name>Jocelyne</name>
   <name>Joël</name>
   <name>Joëlle</name>
-  <name>Johan</name>
   <name>Jordanie</name>
   <name>Joséphine</name>
   <name>Josse</name>
@@ -725,18 +695,12 @@
   <name>Juste</name>
   <name>Justine</name>
   <name>Karine</name>
-  <name>Kazakhstan</name>
-  <name>Kenya</name>
   <name>Kilian</name>
-  <name>Kinshasa</name>
   <name>Kirghizistan</name>
-  <name>Kiribati</name>
-  <name>Kosovo</name>
   <name>Koweït</name>
   <name>La Réunion</name>
   <name>Lætitia</name>
   <name>Lambert</name>
-  <name>Laos</name>
   <name>Laure</name>
   <name>Laureene</name>
   <name>Laureline</name>
@@ -753,7 +717,6 @@
   <name>Léonie</name>
   <name>Léonne</name>
   <name>Léopold</name>
-  <name>Lesotho</name>
   <name>Létaud</name>
   <name>Lettonie</name>
   <name>Leu</name>
@@ -762,7 +725,6 @@
   <name>Liban</name>
   <name>Libéria</name>
   <name>Libye</name>
-  <name>Liechtenstein</name>
   <name>Liège</name>
   <name>Liège-Bastogne-Liège</name>
   <name>Liétald</name>
@@ -781,11 +743,9 @@
   <name>Ludivine</name>
   <name>Ludolphe</name>
   <name>Ludovic</name>
-  <name>Luxembourg</name>
   <name>Lydie</name>
   <name>Macao</name>
   <name>Macédoine du Nord</name>
-  <name>Madagascar</name>
   <name>Madyson</name>
   <name>Maëlys</name>
   <name>Magali</name>
@@ -794,10 +754,8 @@
   <name>Mahaut</name>
   <name>Malaisie</name>
   <name>Malaury</name>
-  <name>Malawi</name>
   <name>Maldives</name>
   <name>Malhaury</name>
-  <name>Mali</name>
   <name>Mallaury</name>
   <name>Malo</name>
   <name>Malte</name>
@@ -817,22 +775,18 @@
   <name>Maroc</name>
   <name>Marthe</name>
   <name>Martine</name>
-  <name>Martinique</name>
   <name>Mathias</name>
   <name>Mathieu</name>
   <name>Mathurin</name>
-  <name>Matthias</name>
   <name>Matthieu</name>
   <name>Maud</name>
   <name>Maugis</name>
-  <name>Maurice</name>
   <name>Mauricet</name>
   <name>Mauricette</name>
   <name>Mauritanie</name>
   <name>Maxence</name>
   <name>Maximilien</name>
   <name>Mayeul</name>
-  <name>Mayotte</name>
   <name>Médéric</name>
   <name>Mélanésie</name>
   <name>Mélina</name>
@@ -853,12 +807,9 @@
   <name>Moïse</name>
   <name>Moïsette</name>
   <name>Moldavie</name>
-  <name>Monaco</name>
   <name>Mongolie</name>
   <name>Monténégro</name>
-  <name>Montserrat</name>
   <name>Morgane</name>
-  <name>Mozambique</name>
   <name>Murielle</name>
   <name>Myanmar</name>
   <name>Mylène</name>
@@ -868,15 +819,11 @@
   <name>Nathalie</name>
   <name>Nations Unies</name>
   <name>Naudet</name>
-  <name>Nauru</name>
   <name>Néhémie</name>
   <name>Népal</name>
   <name>Nestor</name>
-  <name>Nicaragua</name>
   <name>Nicci</name>
-  <name>Niger</name>
   <name>Nigéria</name>
-  <name>Niue</name>
   <name>Noé</name>
   <name>Noël</name>
   <name>Noëlle</name>
@@ -899,7 +846,6 @@
   <name>Oger</name>
   <name>Olive</name>
   <name>Olympe</name>
-  <name>Oman</name>
   <name>Ophélie</name>
   <name>Orlane</name>
   <name>Othon</name>
@@ -908,12 +854,9 @@
   <name>Ouzbékistan</name>
   <name>Ozanne</name>
   <name>Pacôme</name>
-  <name>Pakistan</name>
   <name>Palaos</name>
   <name>Palestine</name>
-  <name>Panama</name>
   <name>Papouasie-Nouvelle-Guinée</name>
-  <name>Paraguay</name>
   <name>Pascale</name>
   <name>Pascaline</name>
   <name>Paterne</name>
@@ -943,12 +886,10 @@
   <name>Polynésie française</name>
   <name>Porto Rico</name>
   <name>Port-Saint-Louis-du-Rhône</name>
-  <name>Portugal</name>
   <name>Primerose</name>
   <name>Priscille</name>
   <name>Prosper</name>
   <name>Pulchérie</name>
-  <name>Qatar</name>
   <name>R.A.S. chinoise de Hong Kong</name>
   <name>R.A.S. chinoise de Macao</name>
   <name>R.-U.</name>
@@ -991,7 +932,6 @@
   <name>Roumanie</name>
   <name>Royaume-Uni</name>
   <name>Russie</name>
-  <name>Rwanda</name>
   <name>Sabine</name>
   <name>Sahara occidental</name>
   <name>Saint-Barthélemy</name>
@@ -1003,8 +943,6 @@
   <name>Saint-Pierre-et-Miquelon</name>
   <name>Saint-Vincent-et-les-Grenadines</name>
   <name>Salomé</name>
-  <name>Salvador</name>
-  <name>Samoa</name>
   <name>Samoa américaines</name>
   <name>Sandrine</name>
   <name>Sao Tomé-et-Principe</name>
@@ -1016,10 +954,8 @@
   <name>Serge</name>
   <name>Séverin</name>
   <name>Séverine</name>
-  <name>Seychelles</name>
   <name>Sibylle</name>
   <name>Sidoine</name>
-  <name>Sierra Leone</name>
   <name>Sigebert</name>
   <name>Sigismond</name>
   <name>Siméon</name>
@@ -1036,18 +972,15 @@
   <name>Somalie</name>
   <name>Soudan</name>
   <name>Soudan du Sud</name>
-  <name>Sri Lanka</name>
   <name>Stanislas</name>
   <name>Stéphan</name>
   <name>Stéphane</name>
   <name>Stéphanie</name>
   <name>Suède</name>
   <name>Suisse</name>
-  <name>Suriname</name>
   <name>Suzette</name>
   <name>Suzon</name>
   <name>Svalbard et Jan Mayen</name>
-  <name>Swaziland</name>
   <name>Sylvain</name>
   <name>Sylvestre</name>
   <name>Sylviane</name>
@@ -1083,10 +1016,7 @@
   <name>Timothée</name>
   <name>Tiphaine</name>
   <name>Titien</name>
-  <name>Togo</name>
-  <name>Tokelau</name>
   <name>Tolstoï</name>
-  <name>Tonga</name>
   <name>Tonnin</name>
   <name>Trajan</name>
   <name>Trinité</name>
@@ -1096,26 +1026,21 @@
   <name>Turkménistan</name>
   <name>Turold</name>
   <name>Turquie</name>
-  <name>Tuvalu</name>
   <name>Ukraine</name>
   <name>Ulrich</name>
   <name>Ulysse</name>
   <name>Union européenne</name>
   <name>Urbain</name>
-  <name>Uruguay</name>
   <name>Uther</name>
   <name>Valentin</name>
   <name>Valère</name>
   <name>Valérie</name>
   <name>Valéry</name>
-  <name>Vanuatu</name>
   <name>Venceslas</name>
-  <name>Venezuela</name>
   <name>Victoire</name>
   <name>Victorin</name>
   <name>Victorine</name>
   <name>Vienne</name>
-  <name>Vietnam</name>
   <name>Vinciane</name>
   <name>Violette</name>
   <name>Virginie</name>
@@ -1142,10 +1067,8 @@
   <name>Yvon</name>
   <name>Zacharie</name>
   <name>Zaché</name>
-  <name>Zaïre</name>
   <name>Zambie</name>
   <name>Zéphir</name>
   <name>Zéphirin</name>
-  <name>Zimbabwe</name>
   <name>Zoé</name>
 </names>
