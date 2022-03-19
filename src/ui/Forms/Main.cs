@@ -27134,6 +27134,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemImportChapters.Visible = false;
             }
+
+            videoaudioToTextToolStripMenuItem.Visible = Configuration.IsRunningOnWindows;
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
