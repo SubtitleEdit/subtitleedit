@@ -51,8 +51,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             try
             {
                 _changeLog = GetStringFromResponse(result);
-                LatestChangeLog = GetLastestChangeLog(_changeLog);
-                LatestVersionNumber = GetLastestVersionNumber(LatestChangeLog);
+                LatestChangeLog = GetLatestChangeLog(_changeLog);
+                LatestVersionNumber = GetLatestVersionNumber(LatestChangeLog);
             }
             catch (Exception exception)
             {
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private static string GetLastestVersionNumber(string latestChangeLog)
+        private static string GetLatestVersionNumber(string latestChangeLog)
         {
             foreach (string line in latestChangeLog.Replace(Environment.NewLine, "\n").Split('\n'))
             {
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return null;
         }
 
-        private static string GetLastestChangeLog(string changeLog)
+        private static string GetLatestChangeLog(string changeLog)
         {
             bool releaseOn = false;
             var sb = new StringBuilder();
