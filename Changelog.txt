@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.5 (xth March 2022) BETA
+3.6.5 (19th March 2022)
 * NEW:
    * Add audio to text (speech recognition) via Vosk/Kaldi
    * Split of words-without-spaces (via dictionary) in FCE/OCR - thx Dnkhatri
