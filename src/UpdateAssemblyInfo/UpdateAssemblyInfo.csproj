@@ -12,7 +12,7 @@
     <RootNamespace>UpdateAssemblyInfo</RootNamespace>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
