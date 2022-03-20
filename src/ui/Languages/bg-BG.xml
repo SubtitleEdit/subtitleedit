@@ -1897,6 +1897,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationGreaterThan>Продължителност по-голяма от</DurationGreaterThan>
     <MoreThanTwoLines>Повече от два реда</MoreThanTwoLines>
     <Bookmarked>Маркирани</Bookmarked>
+    <BlankLines>Празни редове</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Множествена замяна</Title>
@@ -2143,6 +2144,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainListViewNothing>Нищо</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Преминаване до позицията на видеото и пауза</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Преминаване до позицията на видеото и възпроизвеждане</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Преминаване до позицията на видеото, възпроизвеждане на текущото и пауза</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Преминаване до панела за редактиране на текст</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Преминаване на видео позиция - 1 сек и пауза</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Преминаване на видео позиция - 0,5 сек и пауза</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2275,8 +2277,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <ContinuationStyleLeadingTrailingDash>Тире</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Тире, освен точки за паузи</ContinuationStyleLeadingTrailingDashDots>
     <CpsLineLengthStyle>Cps/дължина на реда</CpsLineLengthStyle>
-    <CpsLineLengthStyleCalcAll>Преброй всички символи</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpace>Преброй всички, без интервалите</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcAll>Преброяване на всички символи</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Преброяване на всички, без интервалите, само cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>Преброяване на всички, без интервалите</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, латински 0,5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латински 0,5, интервал 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Игнорирай Арабските диакритични символи</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
@@ -2623,6 +2626,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheckAborted>Проверката на правопис е прекратена</SpellCheckAborted>
     <SpacesNotAllowed>Интервали не са позволени в една дума!</SpacesNotAllowed>
     <UndoX>Отмяна: "{0}"</UndoX>
+    <OpenImageBasedSourceFile></OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Невалидни символи {0} намерени в колона {1}</GlyphCheckReport>
@@ -2715,6 +2719,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CharactersPerSecondMinimum>Символи/сек - минимум: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Символи/сек - максимум: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Символи/сек - средно: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>Минимално разстояние: {0} мс</MinimalGap>
     <Export>Експорт...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2955,6 +2960,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AlsoTrainBold>Също така тренирайте удебелен</AlsoTrainBold>
     <StartTraining>Започнете да тренирате</StartTraining>
     <NowTraining>Шрифт за обучение '{1}'. Общо обучени символи: {0:#,###,##0}, {2:#,###,##0} известни</NowTraining>
+    <ImagesWithTimeCodesInFileName>Изображения с времеви кодове в името на файла...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub – Ръчно изображение към текст</Title>
