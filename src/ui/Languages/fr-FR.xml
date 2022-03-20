@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.4</Version>
+    <Version>3.6.5</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated by 22/01/11)</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -95,7 +95,7 @@
     <ShortcutX>Raccourci : {0}</ShortcutX>
     <ExampleX>Exemple : {0}</ExampleX>
   </General>
-    <Reset>Rétablir</Reset>
+  <Reset>Rétablir</Reset>
   <About>
     <Title>A propos de Subtitle Edit</Title>
     <AboutText1>Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
@@ -173,7 +173,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio/vidéo vers texte</Title>
-    <Info>Générer un texte depuis l'audio via la reconnaissance vocale &quot;Vosk/Kaldi&quot;</Info>
+    <Info>Générer un texte depuis l'audio via la reconnaissance vocale "Vosk/Kaldi"</Info>
     <VoskWebsite>Site Vosk</VoskWebsite>
     <Models>Modèles</Models>
     <ChooseModel>Choisir un modèle</ChooseModel>

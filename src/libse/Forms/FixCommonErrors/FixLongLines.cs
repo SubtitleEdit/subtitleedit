@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var tooLong = false;
                 foreach (var line in lines)
                 {
-                    if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
                         break;

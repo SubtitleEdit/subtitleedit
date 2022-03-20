@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
@@ -244,9 +245,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             string dicFileName = null;
-            foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
+            foreach (var dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
             {
-                string name = Path.GetFileNameWithoutExtension(dic);
+                var name = Path.GetFileNameWithoutExtension(dic);
                 if (!string.IsNullOrEmpty(name) && !name.StartsWith("hyph", StringComparison.Ordinal))
                 {
                     try
@@ -288,7 +289,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 _fiveLetterWordListLanguageName = _fiveLetterWordListLanguageName.Substring(0, 5);
             }
 
-            string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
+            var dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
             if (resetSkipList)
             {
                 _wordSkipList = new HashSet<string> { Configuration.Settings.Tools.MusicSymbol, "*", "%", "#", "+", "$" };
@@ -304,8 +305,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _abbreviationList = new HashSet<string>();
             _wordSplitList = LoadWordSplitList(threeLetterIsoLanguageName, _nameListObj);
 
-            bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
-            foreach (string name in _nameList)
+            var isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
+            foreach (var name in _nameList)
             {
                 _nameListUppercase.Add(name.ToUpperInvariant());
                 if (isEnglish)
@@ -354,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // Load user words
             _userWordList = new HashSet<string>();
             _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
-            foreach (string name in _userWordList)
+            foreach (var name in _userWordList)
             {
                 if (name.EndsWith('.'))
                 {
@@ -421,7 +422,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             get
             {
-                string[] parts = _spellCheckDictionaryName?.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = _spellCheckDictionaryName?.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
                 if (parts?.Length > 0)
                 {
                     return parts[parts.Length - 1];
@@ -431,7 +432,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public string FixOcrErrors(string input, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
+        public string FixOcrErrors(string input, int index, string lastLine, string lastLastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var text = input;
             while (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
@@ -514,13 +515,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             text = ReplaceWordsBeforeLineFixes(text);
 
-            text = FixCommonOcrLineErrors(text, lastLine);
+            text = FixCommonOcrLineErrors(text, lastLine, lastLastLine);
 
             // check words split by only space and new line (as other split chars might by a part of from-replace-string, like "\/\/e're" contains slash)
             sb = new StringBuilder();
             var word = new StringBuilder();
             string lastWord = null;
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (text[i] != '.' && "\r\n ".Contains(text[i]))
                 {
@@ -547,7 +548,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             sb = new StringBuilder();
             word = new StringBuilder();
             lastWord = null;
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (text[i] != '.' && _expectedChars.Contains(text[i]))
                 {
@@ -569,13 +570,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 FixOcrErrorsWord(lastWord, word, sb);
             }
 
-            text = FixCommonOcrLineErrors(sb.ToString(), lastLine);
+            text = FixCommonOcrLineErrors(sb.ToString(), lastLine, lastLastLine);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
-                    string oldText = text;
+                    var oldText = text;
                     text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexUtils.LittleIRegex, oldText, text, 'i');
                     text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
@@ -663,9 +664,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public static string FixFrenchLApostrophe(string input, string tag, string lastLine)
         {
             var text = input;
-            bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
-                                    lastLine.EndsWith(".</i>", StringComparison.Ordinal) || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
-                                    lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
+            var endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
+                                   lastLine.EndsWith(".</i>", StringComparison.Ordinal) || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
+                                   lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
             if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (endingBeforeThis || char.IsUpper(text[2]))
@@ -772,7 +773,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string lastWord = null;
             var sb = new StringBuilder();
             var word = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (_expectedCharsNoComma.Contains(text[i])) // fix e.g. "don,t"
                 {
@@ -826,7 +827,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             text = sb.ToString();
             sb = new StringBuilder();
             word = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (_expectedChars.Contains(text[i])) // removed $
                 {
@@ -855,17 +856,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             if (word.Length > 0) // last word
             {
-                string fixedWord = _ocrFixReplaceList.FixCommonWordErrorsQuick(word.ToString());
+                var fixedWord = _ocrFixReplaceList.FixCommonWordErrorsQuick(word.ToString());
                 sb.Append(fixedWord);
             }
             return sb.ToString();
         }
 
-        private string FixCommonOcrLineErrors(string input, string lastLine)
+        private string FixCommonOcrLineErrors(string input, string lastLine, string lastLastLine)
         {
             var text = input;
             text = FixOcrErrorViaLineReplaceList(text);
-            text = FixOcrErrorsViaHardcodedRules(text, lastLine, _abbreviationList);
+            text = FixOcrErrorsViaHardcodedRules(text, lastLine, lastLastLine, _abbreviationList);
             text = FixOcrErrorViaLineReplaceList(text);
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -885,10 +886,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 // e.g. "selectionsu." -> "selections..."
                 if (text.EndsWith("u.", StringComparison.Ordinal) && _hunspell != null)
                 {
-                    string[] words = text.Split(new[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    var words = text.Split(new[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (words.Length > 0)
                     {
-                        string lastWord = words[words.Length - 1].Trim();
+                        var lastWord = words[words.Length - 1].Trim();
                         if (lastWord.Length > 2 &&
                             char.IsLower(lastWord[0]) &&
                             !IsWordOrWordsCorrect(lastWord) &&
@@ -913,9 +914,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             var sb = new StringBuilder();
             var lines = input.SplitToLines();
-            for (int i = 0; i < lines.Count; i++)
+            for (var i = 0; i < lines.Count; i++)
             {
-                string l = lines[i];
+                var l = lines[i];
 
                 if (i > 0)
                 {
@@ -955,7 +956,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             if (abbreviationList != null)
             {
-                foreach (string abbreviation in abbreviationList)
+                foreach (var abbreviation in abbreviationList)
                 {
                     if (line.EndsWith(" " + abbreviation, StringComparison.OrdinalIgnoreCase))
                     {
@@ -966,7 +967,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return false;
         }
 
-        public string FixOcrErrorsViaHardcodedRules(string input, string lastLine, HashSet<string> abbreviationList)
+        public string FixOcrErrorsViaHardcodedRules(string input, string lastLine, string lastLastLine, HashSet<string> abbreviationList)
         {
             var text = input;
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -993,7 +994,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Remove(0, 1);
             }
 
-            bool hasDotDot = text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal);
+            var hasDotDot = text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal);
             if (hasDotDot)
             {
                 if (text.Length > 5 && text.StartsWith("..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(text[2]))
@@ -1176,48 +1177,61 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var st = new StrippableText(text);
                 if (lastLine == null || !lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList))
                 {
-                    if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') &&
+                    var skip = lastLine != null &&
+                                   (lastLine.EndsWith("...", StringComparison.Ordinal) || lastLine.EndsWith("…")) &&
+                                   Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingDots;
+
+                    if (!skip && lastLine != null &&
+                        (lastLine.EndsWith("...", StringComparison.Ordinal) || lastLine.EndsWith("…")) &&
+                        Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingEllipsis)
+                    {
+                        skip = true;
+                    }
+
+                    if (!skip && HtmlUtil.StartsWithUrl(st.StrippedText))
+                    {
+                        skip = true;
+                    }
+
+                    if (!skip && st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') &&
                         !st.Pre.Contains("...", StringComparison.Ordinal) &&
                         !st.Pre.Contains('…'))
                     {
-                        if (!HtmlUtil.StartsWithUrl(st.StrippedText))
+                        var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
+                        if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && (st.StrippedText[1] == ' ' || char.IsLower(st.StrippedText[1])))
                         {
-                            var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
-                            if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && (st.StrippedText[1] == ' ' || char.IsLower(st.StrippedText[1])))
-                            {
-                                uppercaseLetter = 'I';
-                            }
-                            if (st.StrippedText.Length == 1 && uppercaseLetter == 'L')
-                            {
-                                uppercaseLetter = 'I';
-                            }
-
-                            if ((st.StrippedText.StartsWith("lo ", StringComparison.Ordinal) || st.StrippedText.Equals("lo.", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("ita", StringComparison.Ordinal))
-                            {
-                                uppercaseLetter = 'I';
-                            }
-
-                            if ((st.StrippedText.StartsWith("k ", StringComparison.Ordinal) || st.StrippedText.StartsWith("m ", StringComparison.Ordinal) || st.StrippedText.StartsWith("n ", StringComparison.Ordinal) || st.StrippedText.StartsWith("r ", StringComparison.Ordinal) || st.StrippedText.StartsWith("s ", StringComparison.Ordinal) || st.StrippedText.StartsWith("t ", StringComparison.Ordinal)) &&
-                                st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName.Equals("nld", StringComparison.Ordinal))
-                            {
-                                uppercaseLetter = st.StrippedText[0];
-                            }
-
-                            if ((st.StrippedText.StartsWith("l-I'll ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-l'll ", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("eng", StringComparison.Ordinal))
-                            {
-                                uppercaseLetter = 'I';
-                                st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
-                            }
-
-                            st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
-                            text = st.Pre + st.StrippedText + st.Post;
+                            uppercaseLetter = 'I';
                         }
+                        if (st.StrippedText.Length == 1 && uppercaseLetter == 'L')
+                        {
+                            uppercaseLetter = 'I';
+                        }
+
+                        if ((st.StrippedText.StartsWith("lo ", StringComparison.Ordinal) || st.StrippedText.Equals("lo.", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("ita", StringComparison.Ordinal))
+                        {
+                            uppercaseLetter = 'I';
+                        }
+
+                        if ((st.StrippedText.StartsWith("k ", StringComparison.Ordinal) || st.StrippedText.StartsWith("m ", StringComparison.Ordinal) || st.StrippedText.StartsWith("n ", StringComparison.Ordinal) || st.StrippedText.StartsWith("r ", StringComparison.Ordinal) || st.StrippedText.StartsWith("s ", StringComparison.Ordinal) || st.StrippedText.StartsWith("t ", StringComparison.Ordinal)) &&
+                            st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName.Equals("nld", StringComparison.Ordinal))
+                        {
+                            uppercaseLetter = st.StrippedText[0];
+                        }
+
+                        if ((st.StrippedText.StartsWith("l-I'll ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-l'll ", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("eng", StringComparison.Ordinal))
+                        {
+                            uppercaseLetter = 'I';
+                            st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
+                        }
+
+                        st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
+                        text = st.Pre + st.StrippedText + st.Post;
                     }
                 }
             }
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
-            if ((lastLine == null || !lastLine.Contains('"')) &&
+            if ((lastLine == null || !lastLine.Contains('"')) && (lastLastLine == null || !lastLastLine.Contains('"')) &&
                 text.EndsWith("\".", StringComparison.Ordinal) && text.IndexOf('"') == text.LastIndexOf('"') && text.Length > 3)
             {
                 var lastChar = text[text.Length - 3];
@@ -1538,6 +1552,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             var guesses = new List<string>();
 
+                            if (!correct && word.Length > 3 && _nameListObj.ContainsCaseInsensitive(word, out var newName))
+                            {
+                                guesses.Add(newName);
+                            }
+
                             // Name starting with "l" instead of 'I'
                             if (word.StartsWith('l') && word.Length > 3 && !_nameList.Contains(word))
                             {
@@ -1810,7 +1829,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     result.Fixed = true;
                     try
                     {
-                        string s = _spellCheck.Word.Trim();
+                        var s = _spellCheck.Word.Trim();
                         _nameListObj?.Add(s);
                         if (s.Contains(' '))
                         {

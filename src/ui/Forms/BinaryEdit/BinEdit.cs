@@ -443,7 +443,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             Text = Path.GetFileName(fileName) + " - " + LanguageSettings.Current.General.Title;
         }
 
-        private void FixShortDisplayTimes(List<BluRaySupParser.PcsData> bluRaySubtitles)
+        public static void FixShortDisplayTimes(List<BluRaySupParser.PcsData> bluRaySubtitles)
         {
             for (int i = 0; i < bluRaySubtitles.Count; i++)
             {

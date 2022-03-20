@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                var count = line.CountCharacters();
+                var count = line.CountCharacters(false);
                 sb.Append(count);
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
@@ -1366,6 +1366,8 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
                 case ContinuationStyle.NoneEllipsisForPauses:
                     return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
+                case ContinuationStyle.OnlyTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
             }

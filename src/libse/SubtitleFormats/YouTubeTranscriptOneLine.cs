@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            const string writeFormat = "{0}{1}";
-            foreach (Paragraph p in subtitle.Paragraphs)
+            const string writeFormat = "{0} {1}";
+            foreach (var p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
             }
@@ -35,12 +35,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             char[] trimChars = { '–', '.', ';', ':' };
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (RegexTimeCodes.IsMatch(line))
                 {
-                    int splitter = line.IndexOf(':') + 3;
-                    string text = line.Remove(0, splitter);
+                    var splitter = line.IndexOf(':') + 3;
+                    var text = line.Remove(0, splitter);
                     var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(), text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim(trimChars).Trim();
@@ -54,7 +54,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount += 2;
                 }
             }
-            foreach (Paragraph p2 in subtitle.Paragraphs)
+
+            foreach (var p2 in subtitle.Paragraphs)
             {
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
@@ -64,13 +65,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string s)
         {
-            string[] parts = s.Split(':');
+            var parts = s.Split(':');
 
-            string minutes = parts[0];
-            string seconds = parts[1];
+            var minutes = parts[0];
+            var seconds = parts[1];
 
             return new TimeCode(0, int.Parse(minutes), int.Parse(seconds), 0);
         }
-
     }
 }

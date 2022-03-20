@@ -48,10 +48,13 @@
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
+            this.pictureBoxBdSup = new System.Windows.Forms.PictureBox();
+            this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
             this.groupBoxEditWholeText.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonAddToDictionary
@@ -80,6 +83,8 @@
             // 
             // comboBoxDictionaries
             // 
+            this.comboBoxDictionaries.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(412, 32);
@@ -114,34 +119,35 @@
             this.addXToNamesnoiseListToolStripMenuItem,
             this.addXToUserDictionaryToolStripMenuItem,
             this.toolStripSeparator1,
-            this.deleteToolStripMenuItem});
+            this.deleteToolStripMenuItem,
+            this.openImagedBasedSourceFileToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(209, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(247, 120);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
             // addXToNamesnoiseListToolStripMenuItem
             // 
             this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
-            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
             this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNamesNoiseListToolStripMenuItemClick);
             // 
             // addXToUserDictionaryToolStripMenuItem
             // 
             this.addXToUserDictionaryToolStripMenuItem.Name = "addXToUserDictionaryToolStripMenuItem";
-            this.addXToUserDictionaryToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.addXToUserDictionaryToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.addXToUserDictionaryToolStripMenuItem.Text = "Add x to user dictionary";
             this.addXToUserDictionaryToolStripMenuItem.Click += new System.EventHandler(this.AddXToUserDictionaryToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(243, 6);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.deleteToolStripMenuItem.Text = "Delete...";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -297,15 +303,16 @@
             // 
             // groupBoxSuggestions
             // 
-            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.checkBoxAutoChangeNames);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
-            this.groupBoxSuggestions.Location = new System.Drawing.Point(412, 75);
+            this.groupBoxSuggestions.Location = new System.Drawing.Point(412, 60);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(289, 312);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(289, 327);
             this.groupBoxSuggestions.TabIndex = 1;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -314,7 +321,7 @@
             // 
             this.checkBoxAutoChangeNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoChangeNames.AutoSize = true;
-            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(20, 282);
+            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(20, 297);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
             this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(221, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
@@ -394,6 +401,21 @@
             this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
             this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
+            // pictureBoxBdSup
+            // 
+            this.pictureBoxBdSup.Location = new System.Drawing.Point(412, 60);
+            this.pictureBoxBdSup.Name = "pictureBoxBdSup";
+            this.pictureBoxBdSup.Size = new System.Drawing.Size(283, 119);
+            this.pictureBoxBdSup.TabIndex = 41;
+            this.pictureBoxBdSup.TabStop = false;
+            // 
+            // openImagedBasedSourceFileToolStripMenuItem
+            // 
+            this.openImagedBasedSourceFileToolStripMenuItem.Name = "openImagedBasedSourceFileToolStripMenuItem";
+            this.openImagedBasedSourceFileToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.openImagedBasedSourceFileToolStripMenuItem.Text = "Open imaged based source file...";
+            this.openImagedBasedSourceFileToolStripMenuItem.Click += new System.EventHandler(this.openImagedBasedSourceFileToolStripMenuItem_Click);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -410,6 +432,7 @@
             this.Controls.Add(this.richTextBoxParagraph);
             this.Controls.Add(this.groupBoxWordNotFound);
             this.Controls.Add(this.groupBoxEditWholeText);
+            this.Controls.Add(this.pictureBoxBdSup);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
@@ -428,8 +451,10 @@
             this.groupBoxSuggestions.PerformLayout();
             this.groupBoxEditWholeText.ResumeLayout(false);
             this.groupBoxEditWholeText.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -466,5 +491,7 @@
         private System.Windows.Forms.ToolStripMenuItem addXToUserDictionaryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBoxBdSup;
+        private System.Windows.Forms.ToolStripMenuItem openImagedBasedSourceFileToolStripMenuItem;
     }
 }

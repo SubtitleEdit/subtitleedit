@@ -297,7 +297,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             "všeč", "videti", "stanovanje", "službo", "prosim", "naredila", "moram", "domov", "Vrzi", "Povej", "številko", "zaporu",
             "ugrabila", "ubila", "tvoja", "tudi", "tečna", "stvari", "rusko", "povedala", "obraz", "nalogo", "mislim", "govoriš",
             "Seveda", "Razmišljam", "Potem", "Nič", "Nisem", "Mogoče", "žensko", "žalostna", "človek", "Čisto", "znaš",
-            "zlomi", "zgodilo", "zdaj", "zajtrk", "utrujena","ustrelila", "srečna", "čarovnik", "zaživeti"
+            "zlomi", "zgodilo", "zdaj", "zajtrk", "utrujena","ustrelila", "srečna", "čarovnik", "zaživeti",
+            "Torej", "plasti","kanjon", "več", "prišlo", "presenečeni", "največje"
         };
 
         private static readonly string[] AutoDetectWordsLatvian =
@@ -1502,6 +1503,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
+        public static string KoreanLetters = "가나다라마바사아자차카타파하아야어여오요우유으이대한민국활화산동물들천국의섬유독춤을춥니다";
+        public static string JapaneseLetters = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん";
+
         public static string GetEncodingViaLetter(string text)
         {
             var dictionary = new Dictionary<string, int>();
@@ -1519,7 +1523,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Korean
             count = 0;
-            foreach (var letter in "가나다라마바사아자차카타파하아야어여오요우유으이")
+            foreach (var letter in KoreanLetters)
             {
                 if (text.Contains(letter))
                 {
@@ -1530,7 +1534,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // Japanese
             count = 0;
-            foreach (var letter in "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん")
+            foreach (var letter in JapaneseLetters)
             {
                 if (text.Contains(letter))
                 {

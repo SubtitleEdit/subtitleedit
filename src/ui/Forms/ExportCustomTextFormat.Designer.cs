@@ -55,6 +55,11 @@
             this.tabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.textline2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cpsperiodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cpsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textlengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textlengthnobrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textlengthbr1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelHeader = new System.Windows.Forms.Label();
             this.textBoxHeader = new System.Windows.Forms.TextBox();
             this.contextMenuStripHeader = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -65,9 +70,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
-            this.cpsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textlengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cpsperiodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textlengthbr2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -256,9 +259,13 @@
             this.textline2ToolStripMenuItem,
             this.cpsperiodToolStripMenuItem,
             this.cpsToolStripMenuItem,
-            this.textlengthToolStripMenuItem});
+            this.textlengthToolStripMenuItem,
+            this.textlengthnobrToolStripMenuItem,
+            this.textlengthbr1ToolStripMenuItem,
+            this.textlengthbr2ToolStripMenuItem});
             this.contextMenuStripParagraph.Name = "contextMenuStrip1";
-            this.contextMenuStripParagraph.Size = new System.Drawing.Size(147, 290);
+            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 378);
+            this.contextMenuStripParagraph.Text = "{text-length-br1}";
             // 
             // insertHHMMSSMSToolStripMenuItem
             // 
@@ -329,6 +336,41 @@
             this.textline2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.textline2ToolStripMenuItem.Text = "{text-line-2}";
             this.textline2ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // cpsperiodToolStripMenuItem
+            // 
+            this.cpsperiodToolStripMenuItem.Name = "cpsperiodToolStripMenuItem";
+            this.cpsperiodToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cpsperiodToolStripMenuItem.Text = "{cps-period}";
+            this.cpsperiodToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // cpsToolStripMenuItem
+            // 
+            this.cpsToolStripMenuItem.Name = "cpsToolStripMenuItem";
+            this.cpsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cpsToolStripMenuItem.Text = "{cps-comma}";
+            this.cpsToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // textlengthToolStripMenuItem
+            // 
+            this.textlengthToolStripMenuItem.Name = "textlengthToolStripMenuItem";
+            this.textlengthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textlengthToolStripMenuItem.Text = "{text-length}";
+            this.textlengthToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // textlengthnobrToolStripMenuItem
+            // 
+            this.textlengthnobrToolStripMenuItem.Name = "textlengthnobrToolStripMenuItem";
+            this.textlengthnobrToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textlengthnobrToolStripMenuItem.Text = "{text-length-br0}";
+            this.textlengthnobrToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // textlengthbr1ToolStripMenuItem
+            // 
+            this.textlengthbr1ToolStripMenuItem.Name = "textlengthbr1ToolStripMenuItem";
+            this.textlengthbr1ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textlengthbr1ToolStripMenuItem.Text = "{text-length-br1}";
+            this.textlengthbr1ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // labelHeader
             // 
@@ -426,26 +468,12 @@
             this.textBoxPreview.Size = new System.Drawing.Size(340, 374);
             this.textBoxPreview.TabIndex = 0;
             // 
-            // cpsToolStripMenuItem
+            // textlengthbr2ToolStripMenuItem
             // 
-            this.cpsToolStripMenuItem.Name = "cpsToolStripMenuItem";
-            this.cpsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.cpsToolStripMenuItem.Text = "{cps-comma}";
-            this.cpsToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
-            // 
-            // textlengthToolStripMenuItem
-            // 
-            this.textlengthToolStripMenuItem.Name = "textlengthToolStripMenuItem";
-            this.textlengthToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.textlengthToolStripMenuItem.Text = "{text-length}";
-            this.textlengthToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
-            // 
-            // cpsperiodToolStripMenuItem
-            // 
-            this.cpsperiodToolStripMenuItem.Name = "cpsperiodToolStripMenuItem";
-            this.cpsperiodToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.cpsperiodToolStripMenuItem.Text = "{cps-period}";
-            this.cpsperiodToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            this.textlengthbr2ToolStripMenuItem.Name = "textlengthbr2ToolStripMenuItem";
+            this.textlengthbr2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textlengthbr2ToolStripMenuItem.Text = "{text-length-br2}";
+            this.textlengthbr2ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // ExportCustomTextFormat
             // 
@@ -518,5 +546,8 @@
         private System.Windows.Forms.ToolStripMenuItem cpsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textlengthToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cpsperiodToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem textlengthnobrToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem textlengthbr1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem textlengthbr2ToolStripMenuItem;
     }
 }

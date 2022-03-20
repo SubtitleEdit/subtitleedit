@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ExportCheetahCap = "Cheetah CAP...",
                         ExportUltech130 = "Ultech caption...",
                         ExportCustomTextFormat = "Export custom text format...",
-                        Exit = "E&xit"
+                        Exit = "E&xit",
                     },
 
                     Edit = new LanguageStructure.Main.MainMenu.EditMenu
@@ -2194,7 +2194,8 @@ namespace Nikse.SubtitleEdit.Logic
                 DurationLessThan = "Duration less than",
                 DurationGreaterThan = "Duration greater than",
                 MoreThanTwoLines = "More than two lines",
-                Bookmarked = "Bookmarked"
+                Bookmarked = "Bookmarked",
+                BlankLines = "Blank lines"
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace
@@ -2473,6 +2474,7 @@ can edit in same subtitle file (collaboration)",
                 MainListViewNothing = "Nothing",
                 MainListViewVideoGoToPositionAndPause = "Go to video position and pause",
                 MainListViewVideoGoToPositionAndPlay = "Go to video position and play",
+                MainListViewVideoGoToPositionAndPlayCurrentAndPause = "Go to video position, play current, and pause",
                 MainListViewEditText = "Go to edit text box",
                 MainListViewVideoGoToPositionMinus1SecAndPause = "Go to video position - 1 s and pause",
                 MainListViewVideoGoToPositionMinusHalfSecAndPause = "Go to video position - 0.5 s and pause",
@@ -2593,6 +2595,7 @@ can edit in same subtitle file (collaboration)",
                 ContinuationStyle = "Continuation style",
                 CpsLineLengthStyle = "Cps/line-length",
                 CpsLineLengthStyleCalcAll = "Count all characters",
+                CpsLineLengthStyleCalcNoSpaceCpsOnly = "Count all except space, cps only",
                 CpsLineLengthStyleCalcNoSpace = "Count all except space",
                 CpsLineLengthStyleCalcCjk = "CJK 1, latin 0.5",
                 CpsLineLengthStyleCalcCjkNoSpace = "CJK 1, latin 0.5, space 0",
@@ -2603,6 +2606,7 @@ can edit in same subtitle file (collaboration)",
                 ContinuationStyleNoneLeadingTrailingDots = "None, dots for pauses",
                 ContinuationStyleNoneTrailingEllipsis = "None, ellipsis for pauses",
                 ContinuationStyleOnlyTrailingDots = "Dots (trailing only)",
+                ContinuationStyleOnlyTrailingEllipsis = "Ellipsis (trailing only)",
                 ContinuationStyleLeadingTrailingDots = "Dots",
                 ContinuationStyleLeadingTrailingEllipsis = "Ellipsis",
                 ContinuationStyleLeadingTrailingDash = "Dash",
@@ -2961,6 +2965,7 @@ can edit in same subtitle file (collaboration)",
                 SpellCheckAborted = "Spell check aborted",
                 SpacesNotAllowed = "Spaces not allowed in single word!",
                 UndoX = "Undo: \"{0}\"",
+                OpenImageBasedSourceFile = "Open image based source file...",
             };
 
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
@@ -3065,6 +3070,7 @@ can edit in same subtitle file (collaboration)",
                 CharactersPerSecondMinimum = "Characters/sec - minimum: {0:0.000}",
                 CharactersPerSecondMaximum = "Characters/sec - maximum: {0:0.000}",
                 CharactersPerSecondAverage = "Characters/sec - average: {0:0.000}",
+                MinimalGap = "Minimal gap: {0} ms",
                 Export = "Export...",
             };
 
@@ -3326,6 +3332,7 @@ Keep changes?",
                 AlsoTrainBold = "Also train bold",
                 StartTraining = "Start training",
                 NowTraining = "Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known",
+                ImagesWithTimeCodesInFileName = "Images with time codes in file name...",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

@@ -20,43 +20,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var oldText = p.Text;
                 var text = p.Text;
                 var noHtml = HtmlUtil.RemoveHtmlTags(text, true).TrimStart();
-                var count = Utilities.CountTagInText(text, '-');
-                if (count == 0 || !noHtml.StartsWith('-'))
+
+
+                var count = Utilities.CountTagInText(text, '-') + Utilities.CountTagInText(text, '‐');
+                if (count == 0 || !noHtml.StartsWith('-') && !noHtml.StartsWith('‐'))
                 {
                     continue;
                 }
 
-                if (count == 1)
-                {
-                    text = RemoveFirstDash(text);
-                }
-                else if (count > 1)
-                {
-                    var lines = noHtml.SplitToLines();
-                    if (lines.Count == 1)
-                    {
-                        if (!noHtml.Contains(". -") && !noHtml.Contains("! -") && !noHtml.Contains("? -"))
-                        {
-                            text = RemoveFirstDash(text);
-                        }
-                    }
-                    else if (lines.Count == 2)
-                    {
-                        if (!noHtml.Contains(". -") && !noHtml.Contains("! -") && !noHtml.Contains("? -") && !lines[1].StartsWith('-'))
-                        {
-                            text = RemoveFirstDash(text);
-                        }
-                    }
-                    else if (lines.Count == 3)
-                    {
-                        if (!noHtml.Contains(". -") && !noHtml.Contains("! -") && !noHtml.Contains("? -") && 
-                            !lines[1].StartsWith('-') && 
-                            !lines[2].StartsWith('-'))
-                        {
-                            text = RemoveFirstDash(text);
-                        }
-                    }
-                }
+                // test the two different dashes
+                text = RemoveDash(text, noHtml, '-'); 
+                text = RemoveDash(text, noHtml, '‐');
 
                 if (oldText != text && callbacks.AllowFix(p, fixAction))
                 {
@@ -68,9 +42,47 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(noOfFixes, Language.RemoveDialogFirstInNonDialogs);
         }
 
-        private static string RemoveFirstDash(string text)
+        private static string RemoveDash(string text, string noHtml, char dashChar)
         {
-            var idx = text.IndexOf('-');
+            var count = Utilities.CountTagInText(text, dashChar);
+            if (count == 1)
+            {
+                text = RemoveFirstDash(text, dashChar);
+            }
+            else if (count > 1)
+            {
+                var lines = noHtml.SplitToLines();
+                if (lines.Count == 1)
+                {
+                    if (!noHtml.Contains(". " + dashChar) && !noHtml.Contains("! " + dashChar) && !noHtml.Contains("? " + dashChar))
+                    {
+                        text = RemoveFirstDash(text, dashChar);
+                    }
+                }
+                else if (lines.Count == 2)
+                {
+                    if (!noHtml.Contains(". " + dashChar) && !noHtml.Contains("! " + dashChar) && !noHtml.Contains("? " + dashChar) && !lines[1].StartsWith(dashChar))
+                    {
+                        text = RemoveFirstDash(text, dashChar);
+                    }
+                }
+                else if (lines.Count == 3)
+                {
+                    if (!noHtml.Contains(". " + dashChar) && !noHtml.Contains("! " + dashChar) && !noHtml.Contains("? " + dashChar) &&
+                        !lines[1].StartsWith(dashChar) &&
+                        !lines[2].StartsWith(dashChar))
+                    {
+                        text = RemoveFirstDash(text, dashChar);
+                    }
+                }
+            }
+
+            return text;
+        }
+
+        private static string RemoveFirstDash(string text, char dashChar)
+        {
+            var idx = text.IndexOf(dashChar);
             if (idx + 1 < text.Length && text[idx + 1] == ' ')
             {
                 text = text.Remove(idx + 1, 1);

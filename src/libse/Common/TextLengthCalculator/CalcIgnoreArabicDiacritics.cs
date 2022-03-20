@@ -3,9 +3,9 @@
     public class CalcIgnoreArabicDiacritics : ICalcLength
     {
         /// <summary>
-        /// Calculate all text including space (tags are not counted).
+        /// Calculate all text excluding Arabic Diacritics (tags are not counted).
         /// </summary>
-        public decimal CountCharacters(string text)
+        public decimal CountCharacters(string text, bool forCps)
         {
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';

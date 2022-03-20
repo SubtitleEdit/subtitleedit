@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Logic
         {
             switch (Code)
             {
+                case nameof(CalcNoSpaceCpsOnly):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcNoSpaceCpsOnly;
                 case nameof(CalcNoSpace):
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcNoSpace;
                 case nameof(CalcCjk):

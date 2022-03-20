@@ -2,7 +2,7 @@
 <Language Name="Korean (한국어)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.4</Version>
+    <Version>3.6.5</Version>
     <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
@@ -234,8 +234,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BoxColor>박스 색상</BoxColor>
     <Radius>반지름</Radius>
     <Step>단계</Step>
-    <MaxSpike>스파이크(최대)</MaxSpike>
     <Spikes>스파이크</Spikes>
+    <Bubbles>거품</Bubbles>
     <Circle>원형</Circle>
     <MarginX>X여백</MarginX>
     <MarginY>Y여백</MarginY>
@@ -819,7 +819,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>자막 입혀진 비디오 파일 생성</Title>
     <InfoAssaOff>참고: Advanced Substation Alpha 스타일이 지원됨.</InfoAssaOff>
     <InfoAssaOn>참고: Advanced Substation Alpha 스타일링이 사용됩니다:)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubsInX>자막 입혀진 비디오 파일 "{0}" 만들기 완료! - (경과시간 {1})</XGeneratedWithBurnedInSubsInX>
+    <XGeneratedWithBurnedInSubsInX>생성 완료! - "{0}" (경과시간: {1})</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>남은 시간: {0} 분</TimeRemainingMinutes>
     <TimeRemainingSeconds>남은 시간: {0} 초</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>남은 시간: {0} 분 {1} 초</TimeRemainingMinutesAndSeconds>
@@ -1134,7 +1134,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <ImportOcrVobSubSubtitle>OCR용 VobSub(sub/idx) 자막...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>OCR용 Blu-ray(.sup) 자막 파일...</ImportBluRaySupFile>
         <ImportBluRaySupFileEdit>편집용 Blu-ray (.sup) 자막 파일...</ImportBluRaySupFileEdit>
-        <ImportSubtitleWithManualChosenEncoding>수동으로 선택한 인코딩이 포함된 자막...</ImportSubtitleWithManualChosenEncoding>
+        <ImportSubtitleWithManualChosenEncoding>선택한 인코딩으로 자막 가져오기...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>일반 텍스트...</ImportText>
         <ImportImages>이미지...</ImportImages>
         <ImportTimecodes>타임코드...</ImportTimecodes>
@@ -1894,6 +1894,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
     <Bookmarked>북마크됨</Bookmarked>
+    <BlankLines>빈 줄</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>다중 바꾸기</Title>
@@ -2077,6 +2078,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Find>찾기</Find>
     <Replace>바꾸기</Replace>
     <VisualSync>시각 동기화</VisualSync>
+    <BurnIn>비디오 굽기</BurnIn>
     <SpellCheck>맞춤법</SpellCheck>
     <NetflixQualityCheck>넷플릭스 품질 검사</NetflixQualityCheck>
     <SettingsName>환경 설정</SettingsName>
@@ -2139,6 +2141,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MainListViewNothing>아무것도 안 함</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>비디오를 선택 지점으로 이동하고 일시 중지</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>비디오를 선택 지점으로 이동하고 재생</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>선택한 자막을 재생하고 일시 중지</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>텍스트 입력 창으로 이동</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>비디오를 -1초 이동하고 일시 중지</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>비디오를 -0.5초 이동하고 일시 중지</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2260,14 +2263,23 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DialogStyleDashSecondLineWithoutSpace>두번째 줄에 공백없는 대시</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>연속 스타일</ContinuationStyle>
     <ContinuationStyleNone>없음</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>없음, 일시 정지를 위한 점 (후행만)</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>없음, 일시 정지를 위한 점</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingDots>없음, 일시 중지를 위한 점 (후행만)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>없음, 일시 중지를 위한 점</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>점 (후행만)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>점</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>줄임표</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>없음, 일시 중지를 위한 줄임표</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>줄임표 (후행만)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>대시</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>대시, 하지만 일시 정지을 위한 점</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>대시, 하지만 일시 중지에는 점</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>초당 문자 수/줄 길이</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>모든 문자 수</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>모든 공백을 제외한 수, 초당 문자만</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>모든 공백을 제외한 수</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, 라틴어 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, 라틴어 0.5, 공백 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>아랍어 분음부 무시</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>아랍어 분음부/공백 무시</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
@@ -2609,6 +2621,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
     <SpacesNotAllowed>한 단어에서 공백은 허용되지 않습니다!</SpacesNotAllowed>
     <UndoX>실행 취소: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>이미지 기반 소스 파일 열기...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
@@ -2701,6 +2714,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>최소 간격: {0} ms</MinimalGap>
     <Export>내보내기</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2722,10 +2736,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WrapStyle>줄바꿈 스타일</WrapStyle>
     <Collision>충돌</Collision>
     <ScaleBorderAndShadow>테두리 및 그림자 조절</ScaleBorderAndShadow>
-    <WrapStyle0>0: 스마트 줄바꿈,  윗 줄이 넓음</WrapStyle0>
-    <WrapStyle1>1: 줄의 끝 단어 줄바꿈,  \N 만 줄바꿈</WrapStyle1>
-    <WrapStyle2>2: 단어 줄바꿈 안함,  \n 및 \N 둘다 줄바꿈</WrapStyle2>
-    <WrapStyle3>3: 스마트 줄바꿈,  아래 줄이 넓음</WrapStyle3>
+    <WrapStyle0>0: 스마트 줄바꿈, 윗 줄이 넓게</WrapStyle0>
+    <WrapStyle1>1: 줄의 끝 단어 줄바꿈,  \N 만</WrapStyle1>
+    <WrapStyle2>2: 단어 줄바꿈 안함,  \n 및 \N 둘다</WrapStyle2>
+    <WrapStyle3>3: 스마트 줄바꿈, 아래 줄이 넓게</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>* Advanced Sub Station Alpha의 스타일</Title>
@@ -2941,6 +2955,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AlsoTrainBold>볼드도 연습</AlsoTrainBold>
     <StartTraining>연습 시작</StartTraining>
     <NowTraining>현재 글꼴 '{1}' 연습중입니다.  연습한 총 문자 수: {0:#,###,##0}, {2:#,###,##0} </NowTraining>
+    <ImagesWithTimeCodesInFileName>파일 이름에 타임코드를 포함한 이미지...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - 이미지 자막을 텍스트로</Title>

@@ -1289,6 +1289,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 7;
                 case ContinuationStyle.NoneEllipsisForPauses:
                     return 8;
+                case ContinuationStyle.OnlyTrailingEllipsis:
+                    return 9;
                 default:
                     return 0;
             }
@@ -1314,6 +1316,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return ContinuationStyle.LeadingTrailingEllipsis;
                 case 8:
                     return ContinuationStyle.NoneEllipsisForPauses;
+                case 9:
+                    return ContinuationStyle.OnlyTrailingEllipsis;
                 default:
                     return ContinuationStyle.None;
             }
@@ -1321,11 +1325,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
         {
-            string line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit,";
-            string line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
-            string line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
-            string linePause = "(...)";
-            string line4 = "mauris mollis consectetur nibh,\nnec congue est viverra quis.";
+            var line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit,";
+            var line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
+            var line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
+            var linePause = "(...)";
+            var line4 = "mauris mollis consectetur nibh,\nnec congue est viverra quis.";
 
             var profile = GetContinuationProfile(continuationStyle);
 
@@ -1451,6 +1455,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         GapSuffixReplaceComma = true,
                         GapPrefix = "...",
                         GapPrefixAddSpace = false
+                    };
+                case ContinuationStyle.OnlyTrailingEllipsis:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "…",
+                        SuffixApplyIfComma = true,
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = true,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = false
                     };
                 default:
                     return new ContinuationProfile

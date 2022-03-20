@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
         public string VideoFileName { get; set; }
+        public int AudioTrack { get; set; }
         public int FirstVisibleIndex { get; set; }
         public int FirstSelectedIndex { get; set; }
         public long VideoOffsetInMs { get; set; }
@@ -38,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             Files = new List<RecentFileEntry>();
         }
 
-        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset, bool isSmpte)
+        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, int audioTrack, string originalFileName, long videoOffset, bool isSmpte)
         {
             Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
 
@@ -57,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var existingEntry = GetRecentFile(fileName, originalFileName);
             if (existingEntry == null)
             {
-                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, AudioTrack = audioTrack, OriginalFileName = originalFileName });
             }
             else
             {
@@ -65,6 +66,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 existingEntry.FirstSelectedIndex = firstSelectedIndex;
                 existingEntry.FirstVisibleIndex = firstVisibleIndex;
                 existingEntry.VideoFileName = videoFileName;
+                existingEntry.AudioTrack = audioTrack;
                 existingEntry.OriginalFileName = originalFileName;
                 existingEntry.VideoOffsetInMs = videoOffset;
                 existingEntry.VideoIsSmpte = isSmpte;
@@ -73,14 +75,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             Files = Files.Take(MaxRecentFiles).ToList();
         }
 
-        public void Add(string fileName, string videoFileName, string originalFileName)
+        public void Add(string fileName, string videoFileName, int audioTrack, string originalFileName)
         {
             Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
 
             var existingEntry = GetRecentFile(fileName, originalFileName);
             if (existingEntry == null)
             {
-                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, AudioTrack = audioTrack, OriginalFileName = originalFileName});
             }
             else
             {
@@ -2830,6 +2832,12 @@ $HorzAlign          =   Center
                     videoFileName = listNode.Attributes["VideoFileName"].Value;
                 }
 
+                string audioTrack = "-1";
+                if (listNode.Attributes["AudioTrack"] != null)
+                {
+                    audioTrack = listNode.Attributes["AudioTrack"].Value;
+                }
+
                 string originalFileName = null;
                 if (listNode.Attributes["OriginalFileName"] != null)
                 {
@@ -2848,7 +2856,7 @@ $HorzAlign          =   Center
                     bool.TryParse(listNode.Attributes["IsSmpte"].Value, out isSmpte);
                 }
 
-                settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex, CultureInfo.InvariantCulture), FirstSelectedIndex = int.Parse(firstSelectedIndex, CultureInfo.InvariantCulture), VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset, VideoIsSmpte = isSmpte });
+                settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex, CultureInfo.InvariantCulture), FirstSelectedIndex = int.Parse(firstSelectedIndex, CultureInfo.InvariantCulture), VideoFileName = videoFileName, AudioTrack = int.Parse(audioTrack, CultureInfo.InvariantCulture), OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset, VideoIsSmpte = isSmpte });
             }
 
             // General
@@ -9237,6 +9245,7 @@ $HorzAlign          =   Center
                     if (item.VideoFileName != null)
                     {
                         textWriter.WriteAttributeString("VideoFileName", item.VideoFileName);
+                        textWriter.WriteAttributeString("AudioTrack", item.AudioTrack.ToString(CultureInfo.InvariantCulture));
                     }
 
                     textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));

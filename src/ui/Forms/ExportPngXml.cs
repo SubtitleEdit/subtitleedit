@@ -2760,8 +2760,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return string.Empty;
             }
 
-            var s = fontContent.Substring(idx + tag.Length).Trim(' ', '"','\"');
-            var end = s.IndexOfAny(new[] { '"', '\''});
+            var s = fontContent.Substring(idx + tag.Length).Trim(' ', '"', '\"');
+            var end = s.IndexOfAny(new[] { '"', '\'' });
             if (end < 0)
             {
                 return s;
@@ -3008,7 +3008,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yjK)", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
+                    baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K)Ź,Ç", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
                     PaddingDictionary.Add(paddingKey, baseLinePadding);
                 }
 
@@ -3017,9 +3017,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (lines.Count > 0)
                 {
                     var lastLine = lines[lines.Count - 1];
-                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']' }))
+                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']', 'ą', 'Ę', 'Ą' }))
                     {
-                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a').Replace('/', 'a').Replace('(', 'a').Replace(')', 'a').Replace('[', 'a').Replace(']', 'a');
+                        var textNoBelow = lastLine
+                            .Replace('g', 'a')
+                            .Replace('j', 'a')
+                            .Replace('p', 'a')
+                            .Replace('q', 'a')
+                            .Replace('y', 'a')
+                            .Replace(',', 'a')
+                            .Replace('ý', 'a')
+                            .Replace('ę', 'a')
+                            .Replace('ç', 'a')
+                            .Replace('Ç', 'a')
+                            .Replace('/', 'a')
+                            .Replace('(', 'a')
+                            .Replace(')', 'a')
+                            .Replace('[', 'a')
+                            .Replace(']', 'a')
+                            .Replace('ą', 'a')
+                            .Replace('Ę', 'a')
+                            .Replace('Ą', 'a');
                         baseLinePadding -= (int)Math.Round(TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold));
                     }
                     else
@@ -3034,7 +3052,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 if (lines.Count == 1 && parameter.JustifyTop) // align top
                 {
-                    baseLinePadding += (int)Math.Round(TextDraw.MeasureTextHeight(font, "yjK)", parameter.SubtitleFontBold));
+                    baseLinePadding += (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K)Ź,Ç", parameter.SubtitleFontBold));
                 }
 
                 // TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
@@ -3681,7 +3699,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    nbmp.CropSidesAndBottom(_boxBorderSize, parameter.BackgroundColor, true);
+                    nbmp.CropSidesAndBottom(_boxBorderSize + baseLinePadding, parameter.BackgroundColor, true);
                     nbmp.CropTop(_boxBorderSize, parameter.BackgroundColor);
                 }
 

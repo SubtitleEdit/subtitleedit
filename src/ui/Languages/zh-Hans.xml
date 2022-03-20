@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.4</Version>
+    <Version>3.6.5</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -237,8 +237,8 @@ Command line: {1} {2}
     <BoxColor>边框颜色</BoxColor>
     <Radius>半径</Radius>
     <Step>步长</Step>
-    <MaxSpike>最大峰值</MaxSpike>
     <Spikes>峰值</Spikes>
+    <Bubbles>气泡</Bubbles>
     <Circle>圆</Circle>
     <MarginX>X边距</MarginX>
     <MarginY>Y边距</MarginY>
@@ -1297,7 +1297,6 @@ Command line: {1} {2}
         <FixCommonErrors>修正常规错误</FixCommonErrors>
         <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
-        <BurnIn>内嵌字幕</BurnIn>
         <SpellCheck>拼写检查</SpellCheck>
         <NetflixQualityCheck>Netflix字幕质量检查</NetflixQualityCheck>
         <Settings>设置</Settings>
@@ -1888,6 +1887,7 @@ Command line: {1} {2}
     <DurationGreaterThan>时长大于</DurationGreaterThan>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
     <Bookmarked>已收藏</Bookmarked>
+    <BlankLines>空行</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>多项替换</Title>
@@ -2069,6 +2069,7 @@ Command line: {1} {2}
     <Find>查找</Find>
     <Replace>替换</Replace>
     <VisualSync>影音对照同步</VisualSync>
+    <BurnIn>内嵌字幕</BurnIn>
     <SpellCheck>拼写检查</SpellCheck>
     <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
@@ -2131,6 +2132,7 @@ Command line: {1} {2}
     <MainListViewNothing>无</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>转到视频位置并暂停</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>转到视频位置并播放</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>转到视频位置，播放当前行并暂停</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>转到编辑文本框</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>转到视频位置 - 1 秒并暂停</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>转到视频位置 - 0.5 秒并暂停</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2258,8 +2260,17 @@ Command line: {1} {2}
     <ContinuationStyleLeadingTrailingDots>点</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>无, 但在停顿处加省略号</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>每秒字频/行长</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示每秒字频</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>统计除空格外的字符</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1，拉丁文 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1，拉丁文 0.5，空格 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>忽略阿拉伯语变音符号</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>忽略阿拉伯语变音符号/空格</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsReplace>要替换的音乐符号（用逗号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
@@ -2600,6 +2611,7 @@ Command line: {1} {2}
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
     <SpacesNotAllowed>单一单词中不允许出现空格！</SpacesNotAllowed>
     <UndoX>撤销：{0}</UndoX>
+    <OpenImageBasedSourceFile>打开基于图像的源文件...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
@@ -2692,6 +2704,7 @@ Command line: {1} {2}
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>最小间隔: {0} 毫秒</MinimalGap>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2931,6 +2944,7 @@ Command line: {1} {2}
     <AlsoTrainBold>并且训练粗体</AlsoTrainBold>
     <StartTraining>开始训练</StartTraining>
     <NowTraining>正在训练字体 '{1}', 已训练字符数: {0:#,###,##0}, 已获知 {2:#,###,##0}</NowTraining>
+    <ImagesWithTimeCodesInFileName>文件名中带有时间码的图像...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>

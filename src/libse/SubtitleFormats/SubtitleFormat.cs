@@ -80,6 +80,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DvdSubtitleSystem(),
                     new DvSubtitle(),
                     new Ebu(),
+                    new Edius4Frames(),
+                    new Edius4Ms(),
+                    new EdiusMarkerList2Frames(),
+                    new EdiusMarkerList2Ms(),
+                    new EdiusMarkerList3Frames(),
+                    new EdiusMarkerList3Ms(),
                     new Edl(),
                     new Eeg708(),
                     new ElrPrint(),
@@ -451,7 +457,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
+            var frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
             {
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
@@ -462,12 +468,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
         }
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
+            var ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
             return Math.Min(ms, 999);
         }
 
@@ -663,7 +669,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static SubtitleFormat FromName(string formatName, SubtitleFormat defaultFormat)
         {
-            string trimmedFormatName = formatName.Trim();
+            var trimmedFormatName = formatName.Trim();
             foreach (var format in AllSubtitleFormats)
             {
                 if (format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
@@ -676,7 +682,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return defaultFormat;
         }
 
-        private static IList<SubtitleFormat> GetOrderedFormatsList(IList<SubtitleFormat> unorderedFormatsList)
+        private static IList<SubtitleFormat> GetOrderedFormatsList(IEnumerable<SubtitleFormat> unorderedFormatsList)
         {
             IEnumerable<SubtitleFormat> newSelectedFormats = new[] { Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.DefaultSubtitleFormat) };
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FavoriteSubtitleFormats))

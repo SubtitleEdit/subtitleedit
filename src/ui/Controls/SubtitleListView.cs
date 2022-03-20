@@ -1542,14 +1542,14 @@ namespace Nikse.SubtitleEdit.Controls
                 string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                 foreach (string line in s.SplitToLines())
                 {
-                    if (line.CountCharacters() > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters(false) > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         return;
                     }
                 }
                 int noOfLines = paragraph.NumberOfLines;
-                if (s.CountCharacters() <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+                if (s.CountCharacters(false) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                 {
                     if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                     {
@@ -1707,7 +1707,13 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            int bottomIndex = TopItem.Index + (Height - 30) / GetItemRect(0).Height;
+            var itemHeight = GetItemRect(0).Height;
+            if (itemHeight == 0)
+            {
+                return;
+            }
+
+            int bottomIndex = TopItem.Index + (Height - 30) / itemHeight;
             int itemsBeforeAfterCount = (bottomIndex - TopItem.Index) / 2 - 1;
             if (itemsBeforeAfterCount < 0)
             {

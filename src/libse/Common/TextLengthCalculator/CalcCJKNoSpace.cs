@@ -5,14 +5,13 @@
         /// <summary>
         /// Calculate all text including space (tags are not counted).
         /// </summary>
-        public decimal CountCharacters(string text)
+        public decimal CountCharacters(string text, bool forCps)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return 0;
             }
 
-            const string japaneseHalfWidthCharacters = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ";
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             var count = 0m;
@@ -57,17 +56,16 @@
                          ch != '\u202D' &&
                          ch != '\u202E')
                 {
-                    var number = char.GetNumericValue(ch);
-                    if (number >= 0x4E00 && number <= 0x2FA1F)
+                    if (CalcCjk.JapaneseHalfWidthCharacters.Contains(ch))
                     {
-                        if (japaneseHalfWidthCharacters.Contains(ch))
-                        {
-                            count += 0.5m;
-                        }
-                        else
-                        {
-                            count++;
-                        }
+                        count += 0.5m;
+                    }
+                    else if (CalcCjk.ChineseFullWidthPunctuations.Contains(ch) ||
+                             LanguageAutoDetect.JapaneseLetters.Contains(ch) ||
+                             LanguageAutoDetect.KoreanLetters.Contains(ch) ||
+                             CalcCjk.IsCjk(ch))
+                    {
+                        count++;
                     }
                     else
                     {
@@ -75,7 +73,7 @@
                     }
                 }
             }
-            
+
             return count;
         }
     }

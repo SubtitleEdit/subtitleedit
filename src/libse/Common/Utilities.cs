@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public static bool IsNumber(string s)
+        public static bool IsNumber(string s) 
         {
             s = s.Trim('$', '£', '¥', '%', '*');
             if (RegexIsNumber.IsMatch(s))
@@ -553,7 +553,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             string s = RemoveLineBreaks(text);
-            if (s.CountCharacters() < mergeLinesShorterThan)
+            if (s.CountCharacters(false) < mergeLinesShorterThan)
             {
                 var lastIndexOfDash = s.LastIndexOf(" -", StringComparison.Ordinal);
                 if (Configuration.Settings.Tools.AutoBreakDashEarly && lastIndexOfDash > 4 && s.Substring(0, lastIndexOfDash).HasSentenceEnding(language))
@@ -915,7 +915,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 optimalCharactersPerSecond = 14.7;
             }
 
-            var duration = (double)text.CountCharacters() / optimalCharactersPerSecond * TimeCode.BaseUnit;
+            var duration = (double)text.CountCharacters(true) / optimalCharactersPerSecond * TimeCode.BaseUnit;
 
             if (!onlyOptimal)
             {
@@ -977,21 +977,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return 999;
             }
 
-            return (double)paragraph.Text.CountCharacters() / duration.TotalSeconds;
+            return (double)paragraph.Text.CountCharacters(true) / duration.TotalSeconds;
         }
 
-        public static double GetCharactersPerSecond(Paragraph paragraph, ICalcLength calc)
-        {
-            var duration = paragraph.Duration;
-            if (duration.TotalMilliseconds < 1)
-            {
-                return 999;
-            }
-
-            return (double)calc.CountCharacters(paragraph.Text) / duration.TotalSeconds;
-        }
-
-        public static double GetCharactersPerSecond(Paragraph paragraph, int numberOfCharacters)
+        public static double GetCharactersPerSecond(Paragraph paragraph, double numberOfCharacters)
         {
             var duration = paragraph.Duration;
             if (duration.TotalMilliseconds < 1)
@@ -1002,7 +991,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             return numberOfCharacters / duration.TotalSeconds;
         }
 
-        public static double GetCharactersPerSecond(Paragraph paragraph, decimal numberOfCharacters)
+
+        public static double GetCharactersPerSecond(Paragraph paragraph, ICalcLength calc)
         {
             var duration = paragraph.Duration;
             if (duration.TotalMilliseconds < 1)
@@ -1010,7 +1000,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return 999;
             }
 
-            return (double)numberOfCharacters / duration.TotalSeconds;
+            return (double)calc.CountCharacters(paragraph.Text, true) / duration.TotalSeconds;
         }
 
         public static bool IsRunningOnMono()

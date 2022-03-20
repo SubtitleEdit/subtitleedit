@@ -5152,6 +5152,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ModifySelection/Bookmarked":
                     language.ModifySelection.Bookmarked = reader.Value;
                     break;
+                case "ModifySelection/BlankLines":
+                    language.ModifySelection.BlankLines = reader.Value;
+                    break;
                 case "MultipleReplace/Title":
                     language.MultipleReplace.Title = reader.Value;
                     break;
@@ -5794,6 +5797,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainListViewVideoGoToPositionAndPlay":
                     language.Settings.MainListViewVideoGoToPositionAndPlay = reader.Value;
                     break;
+                case "Settings/MainListViewVideoGoToPositionAndPlayCurrentAndPause":
+                    language.Settings.MainListViewVideoGoToPositionAndPlayCurrentAndPause = reader.Value;
+                    break;
                 case "Settings/MainListViewEditText":
                     language.Settings.MainListViewEditText = reader.Value;
                     break;
@@ -6175,6 +6181,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ContinuationStyleNoneTrailingEllipsis":
                     language.Settings.ContinuationStyleNoneTrailingEllipsis = reader.Value;
                     break;
+                case "Settings/ContinuationStyleOnlyTrailingEllipsis":
+                    language.Settings.ContinuationStyleOnlyTrailingEllipsis = reader.Value;
+                    break;
                 case "Settings/ContinuationStyleLeadingTrailingDash":
                     language.Settings.ContinuationStyleLeadingTrailingDash = reader.Value;
                     break;
@@ -6186,6 +6195,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/CpsLineLengthStyleCalcAll":
                     language.Settings.CpsLineLengthStyleCalcAll = reader.Value;
+                    break;
+                case "Settings/CpsLineLengthStyleCalcNoSpaceCpsOnly":
+                    language.Settings.CpsLineLengthStyleCalcNoSpaceCpsOnly = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyleCalcNoSpace":
                     language.Settings.CpsLineLengthStyleCalcNoSpace = reader.Value;
@@ -7177,6 +7189,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;
                     break;
+                case "SpellCheck/OpenImageBasedSourceFile":
+                    language.SpellCheck.OpenImageBasedSourceFile = reader.Value;
+                    break;
                 case "NetflixQualityCheck/GlyphCheckReport":
                     language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
                     break;
@@ -7416,6 +7431,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Statistics/CharactersPerSecondAverage":
                     language.Statistics.CharactersPerSecondAverage = reader.Value;
+                    break;
+                case "Statistics/MinimalGap":
+                    language.Statistics.MinimalGap = reader.Value;
                     break;
                 case "Statistics/Export":
                     language.Statistics.Export = reader.Value;
@@ -8073,6 +8091,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "VobSubOcr/NowTraining":
                     language.VobSubOcr.NowTraining = reader.Value;
+                    break;
+                case "VobSubOcr/ImagesWithTimeCodesInFileName":
+                    language.VobSubOcr.ImagesWithTimeCodesInFileName = reader.Value;
                     break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;

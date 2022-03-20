@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
         public static List<ICalcLength> Calculators = new List<ICalcLength>
         {
             new CalcAll(),
+            new CalcNoSpaceCpsOnly(),
             new CalcNoSpace(),
             new CalcCjk(),
             new CalcCjkNoSpace(),

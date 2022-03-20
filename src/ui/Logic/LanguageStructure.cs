@@ -2045,6 +2045,7 @@
             public string DurationGreaterThan { get; set; }
             public string MoreThanTwoLines { get; set; }
             public string Bookmarked { get; set; }
+            public string BlankLines { get; set; }
         }
 
         public class MultipleReplace
@@ -2321,6 +2322,7 @@
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
+            public string MainListViewVideoGoToPositionAndPlayCurrentAndPause { get; set; }
             public string MainListViewEditText { get; set; }
             public string MainListViewVideoGoToPositionMinus1SecAndPause { get; set; }
             public string MainListViewVideoGoToPositionMinusHalfSecAndPause { get; set; }
@@ -2449,10 +2451,12 @@
             public string ContinuationStyleLeadingTrailingDots { get; set; }
             public string ContinuationStyleLeadingTrailingEllipsis { get; set; }
             public string ContinuationStyleNoneTrailingEllipsis { get; set; }
+            public string ContinuationStyleOnlyTrailingEllipsis { get; set; }
             public string ContinuationStyleLeadingTrailingDash { get; set; }
             public string ContinuationStyleLeadingTrailingDashDots { get; set; }
             public string CpsLineLengthStyle { get; set; }
             public string CpsLineLengthStyleCalcAll { get; set; }
+            public string CpsLineLengthStyleCalcNoSpaceCpsOnly { get; set; }
             public string CpsLineLengthStyleCalcNoSpace { get; set; }
             public string CpsLineLengthStyleCalcCjk { get; set; }
             public string CpsLineLengthStyleCalcCjkNoSpace { get; set; }
@@ -2810,6 +2814,7 @@
             public string SpellCheckAborted { get; set; }
             public string SpacesNotAllowed { get; set; }
             public string UndoX { get; set; }
+            public string OpenImageBasedSourceFile { get; set; }
         }
 
         public class NetflixQualityCheck
@@ -2914,6 +2919,7 @@
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }
+            public string MinimalGap { get; set; }
             public string Export { get; set; }
         }
 
@@ -3173,6 +3179,7 @@
             public string AlsoTrainBold { get; set; }
             public string StartTraining { get; set; }
             public string NowTraining { get; set; }
+            public string ImagesWithTimeCodesInFileName { get; set; } 
         }
 
         public class VobSubOcrCharacter

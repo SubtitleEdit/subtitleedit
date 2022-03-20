@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.4</Version>
+    <Version>3.6.5</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی</TranslatedBy>
     <CultureName>fa-IR</CultureName>
-    <HelpFile>فایل راهنما</HelpFile>
+    <HelpFile />
     <Ok>تائید</Ok>
     <Cancel>لغو</Cancel>
     <Apply>اعمال</Apply>
