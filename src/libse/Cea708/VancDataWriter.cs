@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Cea708.Commands;
 using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -30,8 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public static string GenerateEmpty(int counter)
         {
-            var bytes = new List<byte>();
-            var smpte291M = new Smpte291M(counter, 20, bytes.ToArray());
+            var smpte291M = new Smpte291M(counter, 20, Array.Empty<byte>());
             //smpte291M.CcDataSectionCcData.CcData[2].Valid = false;
             //smpte291M.CcDataSectionCcData.CcData[2].Type = 2;
             //smpte291M.CcDataSectionCcData.CcData[2].Data1 = 0;

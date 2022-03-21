@@ -2,7 +2,7 @@
 {
     public class EndOfText : ICea708Command
     {
-        public static readonly int Id = 0x03;
+        public const int Id = 0x03;
 
         public int LineIndex { get; set; }
 

@@ -2,7 +2,7 @@
 {
     public class SetPenLocation : ICea708Command
     {
-        public static readonly int Id = 0x92;
+        public const int Id = 0x92;
 
         public int LineIndex { get; set; }
 

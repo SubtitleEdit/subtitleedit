@@ -2,7 +2,7 @@
 {
     public class Reset : ICea708Command
     {
-        public static readonly int Id = 0x8F;
+        public const int Id = 0x8F;
 
         public int LineIndex { get; set; }
 

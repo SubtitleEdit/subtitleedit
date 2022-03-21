@@ -65,6 +65,13 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public byte[] GetBytes()
         {
             var elementBytes = new List<byte>();
+            elementBytes.Add(Id);
+            elementBytes.Add((byte)(0b10000000 |
+                       (ServiceCount & 0b00001111) |
+                       (Complete ? 0b00010000 : 0) |
+                       (Change ? 0b00100000 : 0) |
+                       (Start ? 0b01000000 : 0)));
+
             foreach (var element in CcServiceInfoSectionElements)
             {
                 elementBytes.Add((byte)(0b11100000 | (element.CaptionServiceNumber & 0b00011111)));
@@ -74,15 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 }
             }
 
-            return new[]
-            {
-                Id,
-                (byte)(0b10000000 |
-                       (ServiceCount & 0b00001111) |
-                       (Complete ? 0b00010000 : 0) |
-                       (Change ? 0b00100000 : 0) |
-                       (Start ? 0b01000000 : 0)),
-            }.Concat(elementBytes).ToArray();
+            return elementBytes.ToArray();
         }
     }
 }

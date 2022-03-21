@@ -2,7 +2,7 @@
 {
     public class SetWindowAttributes : ICea708Command
     {
-        public static readonly int Id = 0x97;
+        public const int Id = 0x97;
 
         public int LineIndex { get; set; }
 

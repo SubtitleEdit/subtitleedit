@@ -2,8 +2,8 @@
 {
     public class DefineWindow : ICea708Command
     {
-        public static readonly int IdStart = 0x98;
-        public static readonly int IdEnd = 0x9F;
+        public const int IdStart = 0x98;
+        public const int IdEnd = 0x9F;
 
         public int LineIndex { get; set; }
 

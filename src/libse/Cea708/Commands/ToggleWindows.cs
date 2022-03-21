@@ -2,7 +2,7 @@
 {
     public class ToggleWindows : ICea708Command
     {
-        public static readonly int Id = 0x8B;
+        public const int Id = 0x8B;
 
         public int LineIndex { get; set; }
 

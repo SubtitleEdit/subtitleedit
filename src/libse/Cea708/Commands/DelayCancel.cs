@@ -2,7 +2,7 @@
 {
     public class DelayCancel : ICea708Command
     {
-        public static readonly int Id = 0x8E;
+        public const int Id = 0x8E;
 
         public int LineIndex { get; set; }
 

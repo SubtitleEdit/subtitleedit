@@ -2,8 +2,8 @@
 {
     public class SetCurrentWindow : ICea708Command
     {
-        public static readonly int IdStart = 0x80;
-        public static readonly int IdEnd = 0x87;
+        public const int IdStart = 0x80;
+        public const int IdEnd = 0x87;
 
         public int Id { get; set; }
         public int LineIndex { get; set; }

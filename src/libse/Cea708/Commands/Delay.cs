@@ -2,7 +2,7 @@
 {
     public class Delay : ICea708Command
     {
-        public static readonly int Id = 0x8D;
+        public const int Id = 0x8D;
 
         public int LineIndex { get; set; }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CcDataType = Nikse.SubtitleEdit.Core.Cea708.CcData;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -18,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public int GetLength()
         {
-            return 2 + CcData.Length * 3;
+            return 2 + CcData.Length * CcDataType.BytesLength;
         }
 
         public CcDataSection(byte[] bytes, int index)
@@ -34,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
                 CcData[i] = new CcData
                 {
                     Valid = (bytes[index + i * 3 + 2] & 0b00000100) > 0,
-                    Type = bytes[index + i * 3 + 2] & 0b00000011,
+                    Type = (byte)(bytes[index + i * 3 + 2] & 0b00000011),
                     Data1 = bytes[index + i * 3 + 3],
                     Data2 = bytes[index + i * 3 + 4]
                 };
@@ -120,47 +121,34 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public string GetText(int lineIndex, CommandState state, bool flush)
         {
-            var hex = new StringBuilder();
+            var bytes = new List<byte>();
             foreach (var cc in CcData)
             {
                 if (cc.Valid && cc.Type == 2)
                 {
-                    hex.Append($"{cc.Data1:X2}{cc.Data2:X2}");
+                    bytes.Add(cc.Data1);
+                    bytes.Add(cc.Data2);
                 }
             }
 
-            var text = Cea708.Decode(lineIndex, HexStringToByteArray(hex.ToString()), state, flush);
-            return text;
-        }
-
-        private static byte[] HexStringToByteArray(string hex)
-        {
-            var numberChars = hex.Length;
-            var bytes = new byte[numberChars / 2];
-            for (var i = 0; i < numberChars; i += 2)
-            {
-                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-            }
-
-            return bytes;
+            return Cea708.Decode(lineIndex, bytes.ToArray(), state, flush);
         }
 
         public byte[] GetBytes()
         {
-            var ccDataBytes = new List<byte>();
-            foreach (var ccData in CcData)
-            {
-                ccDataBytes.AddRange(ccData.GetBytes());
-            }
-
-            return new[]
-            {
-                (byte)DataSection,
-                (byte)((ProcessEmData ? 0b10000000 : 0) |
+            var ccDataLen = CcData.Length;
+            var ccDataBytes = new byte[2 + ccDataLen * CcDataType.BytesLength];
+            ccDataBytes[0] = (byte)DataSection;
+            ccDataBytes[1] = (byte)((ProcessEmData ? 0b10000000 : 0) |
                        (ProcessCcData ? 0b01000000 : 0) |
                        (AdditionalData ? 0b00100000 : 0) |
-                       CcData.Length),
-            }.Concat(ccDataBytes).ToArray();
+                       ccDataLen);
+            for (int i = 0; i < ccDataLen; i++)
+            {
+                Array.Copy(CcData[i].GetBytes(), 0, ccDataBytes, 2 + i * CcDataType.BytesLength, CcDataType.BytesLength);
+            }
+
+            return ccDataBytes;
         }
     }
 }

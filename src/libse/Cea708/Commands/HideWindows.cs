@@ -2,7 +2,7 @@
 {
     public class HideWindows : ICea708Command
     {
-        public static readonly int Id = 0x8A;
+        public const int Id = 0x8A;
 
         public int LineIndex { get; set; }
 

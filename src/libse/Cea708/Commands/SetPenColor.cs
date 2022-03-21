@@ -2,7 +2,7 @@
 {
     public class SetPenColor : ICea708Command
     {
-        public static readonly int Id = 0x91;
+        public const int Id = 0x91;
 
         public int LineIndex { get; set; }
 

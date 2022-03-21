@@ -2,7 +2,7 @@
 {
     public class DisplayWindows : ICea708Command
     {
-        public static readonly int Id = 0x89;
+        public const int Id = 0x89;
 
         public int LineIndex { get; set; }
 
