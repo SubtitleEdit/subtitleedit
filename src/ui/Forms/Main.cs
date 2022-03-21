@@ -3798,12 +3798,12 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxSource.Text = newSubtitle.ToText(format);
                 }
 
+                _subtitleListViewIndex = -1;
                 SubtitleListview1.Fill(newSubtitle, _subtitleOriginal);
                 _subtitle = newSubtitle;
                 if (SubtitleListview1.Items.Count > 0)
                 {
-                    SubtitleListview1.Items[0].Selected = true;
-                    SubtitleListview1.Items[0].Focused = true;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 }
 
                 _findHelper = null;
