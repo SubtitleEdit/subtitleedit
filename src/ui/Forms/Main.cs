@@ -3706,6 +3706,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (format != null)
             {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+
                 RemoveOriginal(true, false);
                 //if (!format.HasStyleSupport) -- remove -- see https://www.nikse.dk/Home/Details/637741307830000000
                 //{
@@ -3801,10 +3803,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.Fill(newSubtitle, _subtitleOriginal);
                 _subtitle = newSubtitle;
-                if (SubtitleListview1.Items.Count > 0)
-                {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
-                }
+               
 
                 _findHelper = null;
                 _spellCheckForm = null;
@@ -3966,6 +3965,14 @@ namespace Nikse.SubtitleEdit.Forms
                             RestoreSubtitleListviewIndices();
                         }
                     }
+                }
+
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+
+                _subtitleListViewIndex = -1;
+                if (SubtitleListview1.Items.Count > 0)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 }
             }
             else
