@@ -729,6 +729,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _ocrFixEngine?.Dispose();
                 _ocrFixEngineLanguage = threeLetterIsoLanguageName;
                 _ocrFixEngine = new OcrFixEngine(_ocrFixEngineLanguage, null, this);
+                var error = _ocrFixEngine.GetOcrFixReplaceListError();
+                if (error != null)
+                {
+                    MessageBox.Show(error);
+                }
             }
 
             var fixAction = _language.FixCommonOcrErrors;
