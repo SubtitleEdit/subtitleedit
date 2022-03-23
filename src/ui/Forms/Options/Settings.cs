@@ -4002,12 +4002,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var iconFileNames = Directory.GetFiles(iconDir, "*.ico");
             imageListFileTypeAssociations.Images.Clear();
             listViewFileTypeAssociations.HeaderStyle = ColumnHeaderStyle.None;
-            //listViewFileTypeAssociations.LargeImageList = imageListFileTypeAssociations;
             listViewFileTypeAssociations.SmallImageList = imageListFileTypeAssociations;
             listViewFileTypeAssociations.BeginUpdate();
             listViewFileTypeAssociations.Items.Clear();
             foreach (var iconFileName in iconFileNames)
             {
+                if (iconFileName.EndsWith("uninstall.ico", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 var friendlyName = "." + Path.GetFileNameWithoutExtension(iconFileName).ToUpperInvariant();
                 var icon = new Icon(iconFileName);
                 imageListFileTypeAssociations.Images.Add(icon);
