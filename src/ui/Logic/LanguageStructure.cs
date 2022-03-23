@@ -1490,6 +1490,7 @@
             public string ShowVideoControls { get; set; }
             public string HideVideoControls { get; set; }
             public string GeneratingWaveformInBackground { get; set; }
+            public string AutoBackupSaved { get; set; }
 
             public class MainMenu
             {
@@ -2315,6 +2316,7 @@
             public string ApplyAssaOverrideTags { get; set; }
             public string SetAssaPosition { get; set; }
             public string SetAssaResolution { get; set; }
+            public string TakeAutoBackup { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string SaveAsFileNameFrom { get; set; }
             public string MainListViewDoubleClickAction { get; set; }

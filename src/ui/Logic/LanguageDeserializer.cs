@@ -3781,6 +3781,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/GeneratingWaveformInBackground":
                     language.Main.GeneratingWaveformInBackground = reader.Value;
                     break;
+                case "Main/AutoBackupSaved":
+                    language.Main.AutoBackupSaved = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -5775,6 +5778,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/SetAssaResolution":
                     language.Settings.SetAssaResolution = reader.Value;
+                    break;
+                case "Settings/TakeAutoBackup":
+                    language.Settings.TakeAutoBackup = reader.Value;
                     break;
                 case "Settings/ShowLineBreaksAs":
                     language.Settings.ShowLineBreaksAs = reader.Value;

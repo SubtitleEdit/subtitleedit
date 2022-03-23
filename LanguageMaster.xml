@@ -1736,6 +1736,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ShowVideoControls>Show video controls</ShowVideoControls>
     <HideVideoControls>Hide video controls</HideVideoControls>
     <GeneratingWaveformInBackground>Generating waveform in background...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Auto-backup saved</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -2135,6 +2136,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ApplyAssaOverrideTags>Apply ASSA override tags to selection</ApplyAssaOverrideTags>
     <SetAssaPosition>Set/get ASSA position</SetAssaPosition>
     <SetAssaResolution>Set ASSA resolution (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>Take auto-backup now</TakeAutoBackup>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Save as..." uses file name from</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
