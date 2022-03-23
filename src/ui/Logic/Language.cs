@@ -1638,6 +1638,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ShowVideoControls = "Show video controls",
                 HideVideoControls = "Hide video controls",
                 GeneratingWaveformInBackground = "Generating waveform in background...",
+                AutoBackupSaved = "Auto-backup saved",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -2467,6 +2468,7 @@ can edit in same subtitle file (collaboration)",
                 ApplyAssaOverrideTags = "Apply ASSA override tags to selection",
                 SetAssaPosition = "Set/get ASSA position",
                 SetAssaResolution = "Set ASSA resolution (PlayResX/PlayResY)",
+                TakeAutoBackup = "Take auto-backup now",
                 ShowLineBreaksAs = "Show line breaks in list view as",
                 SaveAsFileNameFrom = "\"Save as...\" uses file name from",
                 MainListViewDoubleClickAction = "Double-clicking line in main window list view will",

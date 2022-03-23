@@ -3803,7 +3803,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.Fill(newSubtitle, _subtitleOriginal);
                 _subtitle = newSubtitle;
-               
+
 
                 _findHelper = null;
                 _spellCheckForm = null;
@@ -15913,6 +15913,29 @@ namespace Nikse.SubtitleEdit.Forms
                 SetAssaResolution(_subtitle);
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralTakeAutoBackupNow == e.KeyData)
+            {
+                var saveFormat = GetCurrentSubtitleFormat();
+                if (!saveFormat.IsTextBased)
+                {
+                    saveFormat = new SubRip();
+                }
+
+                if (_subtitle != null)
+                {
+                    if (SaveAutoBackup(_subtitle, saveFormat, _subtitle.ToText(saveFormat)))
+                    {
+                        ShowStatus(_language.AutoBackupSaved);
+                    }
+                }
+
+                if (_subtitleOriginal != null)
+                {
+                    SaveAutoBackup(_subtitle, saveFormat, _subtitleOriginal.ToText(saveFormat));
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainToggleFocus == e.KeyData)
             {
                 if (InListView)
@@ -24649,41 +24672,8 @@ namespace Nikse.SubtitleEdit.Forms
                      !string.IsNullOrEmpty(_textAutoBackup) && currentText.Trim() != _textAutoBackup.Trim() && !string.IsNullOrWhiteSpace(currentText)) &&
                     _lastWrittenAutoBackup != currentText)
                 {
-                    if (!Directory.Exists(Configuration.AutoBackupDirectory))
-                    {
-                        try
-                        {
-                            Directory.CreateDirectory(Configuration.AutoBackupDirectory);
-                        }
-                        catch (Exception exception)
-                        {
-                            MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
-                            return;
-                        }
-                    }
-
-                    string title = string.Empty;
-                    if (!string.IsNullOrEmpty(_fileName))
-                    {
-                        title = "_" + Path.GetFileNameWithoutExtension(_fileName);
-                    }
-
-                    string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, saveFormat.Extension);
-                    try
-                    {
-                        File.WriteAllText(fileName, currentText);
-                        _lastWrittenAutoBackup = currentText;
-                    }
-                    catch (Exception exception)
-                    {
-                        if (_showAutoBackupError)
-                        {
-                            MessageBox.Show("Unable to save auto-backup to file: " + fileName + Environment.NewLine +
-                                            Environment.NewLine +
-                                            exception.Message + Environment.NewLine + exception.StackTrace);
-                            _showAutoBackupError = false;
-                        }
-                    }
+                    SaveAutoBackup(_subtitle, saveFormat, currentText);
+                    _lastWrittenAutoBackup = currentText;
 
                     if (!_cleanupHasRun)
                     {
@@ -24715,31 +24705,57 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.General.AutoSave ||
                         !string.IsNullOrEmpty(_textAutoBackupOriginal) && currentTextOriginal.Trim() != _textAutoBackupOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextOriginal))
                     {
-                        if (!Directory.Exists(Configuration.AutoBackupDirectory))
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(Configuration.AutoBackupDirectory);
-                            }
-                            catch (Exception exception)
-                            {
-                                MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
-                                return;
-                            }
-                        }
-
-                        string title = string.Empty;
-                        if (!string.IsNullOrEmpty(_subtitleOriginalFileName))
-                        {
-                            title = "_" + Path.GetFileNameWithoutExtension(_subtitleOriginalFileName);
-                        }
-
-                        string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, "_Original" + title, saveFormat.Extension);
-                        File.WriteAllText(fileName, currentTextOriginal);
+                        SaveAutoBackup(_subtitleOriginal, saveFormat, currentTextOriginal);
                     }
                 }
 
                 _textAutoBackupOriginal = currentTextOriginal;
+            }
+        }
+
+        private bool SaveAutoBackup(Subtitle subtitle, SubtitleFormat saveFormat, string currentText)
+        {
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(Configuration.AutoBackupDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(Configuration.AutoBackupDirectory);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
+                    return false;
+                }
+            }
+
+            string title = string.Empty;
+            if (!string.IsNullOrEmpty(subtitle.FileName))
+            {
+                title = "_" + Path.GetFileNameWithoutExtension(subtitle.FileName);
+            }
+
+            string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, saveFormat.Extension);
+            try
+            {
+                File.WriteAllText(fileName, currentText);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                if (_showAutoBackupError)
+                {
+                    MessageBox.Show("Unable to save auto-backup to file: " + fileName + Environment.NewLine +
+                                    Environment.NewLine +
+                                    exception.Message + Environment.NewLine + exception.StackTrace);
+                    _showAutoBackupError = false;
+                }
+
+                return false;
             }
         }
 
@@ -24794,6 +24810,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch
                     {
+                        // ignore
                     }
 
                     MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
