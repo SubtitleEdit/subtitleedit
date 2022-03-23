@@ -146,6 +146,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             UnknownWordsFound = new List<LogItem>();
         }
 
+        public string GetOcrFixReplaceListError()
+        {
+            if (_ocrFixReplaceList == null)
+            {
+                return null;
+            }
+
+            var errorMessage = _ocrFixReplaceList.ErrorMessage;
+            _ocrFixReplaceList.ErrorMessage = null;
+            return errorMessage;
+        }
+
         private void LoadSpellingDictionaries(string threeLetterIsoLanguageName, string hunspellName)
         {
             string dictionaryFolder = Utilities.DictionaryFolder;

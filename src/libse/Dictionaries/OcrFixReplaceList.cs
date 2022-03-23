@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
 
+        public string ErrorMessage { get; set; }
+
         public OcrFixReplaceList(string replaceListXmlFileName)
         {
             _replaceListXmlFileName = replaceListXmlFileName;
@@ -994,9 +996,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     doc.Load(_replaceListXmlFileName);
                 }
-                catch
+                catch (Exception exception)
                 {
                     doc.LoadXml(xmlText);
+                    ErrorMessage = $"Unable to load ocr replace list {_replaceListXmlFileName}: " + exception.Message;
                 }
             }
             else
@@ -1018,9 +1021,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     doc.Load(ReplaceListXmlFileNameUser);
                 }
-                catch
+                catch (Exception exception)
                 {
                     doc.LoadXml(xmlText);
+                    ErrorMessage = $"Unable to load ocr replace list {ReplaceListXmlFileNameUser}: " + exception.Message;
                 }
             }
             else
@@ -1105,7 +1109,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 newNode.Attributes.Append(aFrom);
                 newNode.Attributes.Append(aTo);
-                wholeWordsNode?.AppendChild(newNode);
+                wholeWordsNode.AppendChild(newNode);
                 userDoc.Save(ReplaceListXmlFileNameUser);
             }
 
