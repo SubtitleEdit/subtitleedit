@@ -1728,6 +1728,7 @@ Command line: {1} {2}
     <ShowVideoControls>显示视频控件</ShowVideoControls>
     <HideVideoControls>隐藏视频控件</HideVideoControls>
     <GeneratingWaveformInBackground>在后台生成波形...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>自动备份 已保存</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2125,6 +2126,7 @@ Command line: {1} {2}
     <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
     <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
     <SetAssaResolution>设置ASSA分辨率(PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>立即生成自动备份</TakeAutoBackup>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
