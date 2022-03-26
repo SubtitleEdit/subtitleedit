@@ -121,7 +121,7 @@ Command line: {1} {2}</WaveFileNotFound>
 
 Command line: {1} {2}
 
-Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
+Napomena: Provjeri slobodan prostor na disku.</WaveFileMalformed>
     <LowDiskSpace>JAKO MALO PROSTORA NA DISKU!</LowDiskSpace>
     <FreeDiskSpace>{0} slobodno</FreeDiskSpace>
   </AddWaveform>
