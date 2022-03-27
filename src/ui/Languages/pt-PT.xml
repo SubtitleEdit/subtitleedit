@@ -882,7 +882,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <ProcessorSingle>Sem combinações</ProcessorSingle>
     <AutoTranslateViaCopyPaste>Tradução automática via copiar/colar</AutoTranslateViaCopyPaste>
     <CopyPasteMaxSize>Tamanho máximo de texto</CopyPasteMaxSize>
-    <AutoCopyToClipboard>Cópia automáticamente</AutoCopyToClipboard>
+    <AutoCopyToClipboard>Copiar automaticamente para a área de transferência</AutoCopyToClipboard>
     <AutoCopyLineSeparator>Separador de linha</AutoCopyLineSeparator>
     <TranslateBlockXOfY>Traduzir bloco {0} de {1}</TranslateBlockXOfY>
     <TranslateBlockInfo>Ir ao tradutor e colar o texto, copiar o resultado e clicar no botão abaixo</TranslateBlockInfo>
@@ -1737,6 +1737,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <ShowVideoControls>Mostrar controlos de vídeo</ShowVideoControls>
     <HideVideoControls>Ocultar controlos de vídeo</HideVideoControls>
     <GeneratingWaveformInBackground>A gerar forma de onda em segundo plano...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Cópia de segurança automática guardada</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -2028,7 +2029,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restaurar a cópia de segurança automática</Title>
-    <Information>Abrir cópia guardada</Information>
+    <Information>Abrir cópia de segurança guardada automaticamente</Information>
     <DateAndTime>Data e hora</DateAndTime>
     <FileName>Nome do ficheiro</FileName>
     <Extension>Extensão</Extension>
@@ -2136,6 +2137,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ApplyAssaOverrideTags>Aplicar etiquetas de substituição ASSA à selecção</ApplyAssaOverrideTags>
     <SetAssaPosition>Definir/obter posição ASSA</SetAssaPosition>
     <SetAssaResolution>Definir resolução ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>Efectuar agora a cópia de segurança automática</TakeAutoBackup>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Guardar como..." usa o nome do ficheiro de:</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal</MainListViewDoubleClickAction>
@@ -2151,7 +2153,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainListViewEditTextAndPause>Ir para o quadro de edição de texto e pausar na posição do vídeo</MainListViewEditTextAndPause>
     <VideoFileName>Nome do ficheiro de vídeo</VideoFileName>
     <ExistingFileName>Nome do ficheiro existente</ExistingFileName>
-    <AutoBackup>Cópia auto</AutoBackup>
+    <AutoBackup>Cópia de segurança automática</AutoBackup>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
