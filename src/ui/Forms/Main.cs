@@ -15929,9 +15929,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (_subtitleOriginal != null)
+                if (_subtitleOriginalFileName != null && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
-                    SaveAutoBackup(_subtitle, saveFormat, _subtitleOriginal.ToText(saveFormat));
+                    SaveAutoBackup(_subtitleOriginal, saveFormat, _subtitleOriginal.ToText(saveFormat));
                 }
 
                 e.SuppressKeyPress = true;
