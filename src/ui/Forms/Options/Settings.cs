@@ -751,6 +751,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
+            checkBoxUseWordSplitList.Text = language.UseWordSplitList;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = language.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Text = language.FixCommonErrorsSkipStepOne;
             groupBoxSpellCheck.Text = language.SpellCheck;
@@ -948,6 +949,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
+            checkBoxUseWordSplitList.Checked = toolsSettings.OcrUseWordSplitList;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked = toolsSettings.FixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Checked = toolsSettings.FixCommonErrorsSkipStepOne;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNameCasing;
@@ -2062,6 +2064,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.General.AllowLetterShortcutsInTextBox = checkBoxShortcutsAllowLetterOrNumberInTextBox.Checked;
 
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
+            toolsSettings.OcrUseWordSplitList = checkBoxUseWordSplitList.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();

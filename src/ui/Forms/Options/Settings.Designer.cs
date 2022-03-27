@@ -279,6 +279,7 @@
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseWordSplitList = new System.Windows.Forms.CheckBox();
             this.buttonFixContinuationStyleSettings = new System.Windows.Forms.Button();
             this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
@@ -3490,9 +3491,9 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(0, 348);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(0, 381);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 172);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 139);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -3549,6 +3550,7 @@
             // 
             // groupBoxFixCommonErrors
             // 
+            this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxUseWordSplitList);
             this.groupBoxFixCommonErrors.Controls.Add(this.buttonFixContinuationStyleSettings);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFceSkipStep1);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixShortDisplayTimesAllowMoveStartTime);
@@ -3559,17 +3561,27 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(0, 123);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 225);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 252);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
             // 
+            // checkBoxUseWordSplitList
+            // 
+            this.checkBoxUseWordSplitList.AutoSize = true;
+            this.checkBoxUseWordSplitList.Location = new System.Drawing.Point(15, 137);
+            this.checkBoxUseWordSplitList.Name = "checkBoxUseWordSplitList";
+            this.checkBoxUseWordSplitList.Size = new System.Drawing.Size(231, 17);
+            this.checkBoxUseWordSplitList.TabIndex = 3;
+            this.checkBoxUseWordSplitList.Text = "Fix common OCR errors - use word split list";
+            this.checkBoxUseWordSplitList.UseVisualStyleBackColor = true;
+            // 
             // buttonFixContinuationStyleSettings
             // 
-            this.buttonFixContinuationStyleSettings.Location = new System.Drawing.Point(15, 189);
+            this.buttonFixContinuationStyleSettings.Location = new System.Drawing.Point(16, 212);
             this.buttonFixContinuationStyleSettings.Name = "buttonFixContinuationStyleSettings";
             this.buttonFixContinuationStyleSettings.Size = new System.Drawing.Size(271, 23);
-            this.buttonFixContinuationStyleSettings.TabIndex = 37;
+            this.buttonFixContinuationStyleSettings.TabIndex = 6;
             this.buttonFixContinuationStyleSettings.Text = "Edit settings for fixing continuation style...";
             this.buttonFixContinuationStyleSettings.UseVisualStyleBackColor = true;
             this.buttonFixContinuationStyleSettings.Click += new System.EventHandler(this.buttonFixContinuationStyleSettings_Click);
@@ -3577,20 +3589,20 @@
             // checkBoxFceSkipStep1
             // 
             this.checkBoxFceSkipStep1.AutoSize = true;
-            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 161);
+            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 185);
             this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
             this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxFceSkipStep1.TabIndex = 36;
+            this.checkBoxFceSkipStep1.TabIndex = 5;
             this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
             this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixShortDisplayTimesAllowMoveStartTime
             // 
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.AutoSize = true;
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 138);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 162);
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 35;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 4;
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
             // 
@@ -3623,7 +3635,7 @@
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
-            this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(274, 21);
+            this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(275, 21);
             this.textBoxMusicSymbolsToReplace.TabIndex = 0;
             // 
             // labelToolsMusicSymbolsToReplace
@@ -5118,9 +5130,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelWaveform);
@@ -5658,5 +5670,6 @@
         private System.Windows.Forms.CheckBox checkBoxTBBurnIn;
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
+        private System.Windows.Forms.CheckBox checkBoxUseWordSplitList;
     }
 }
