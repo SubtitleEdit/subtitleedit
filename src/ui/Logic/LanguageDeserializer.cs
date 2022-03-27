@@ -6229,6 +6229,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/FixCommonOcrErrorsUseHardcodedRules":
                     language.Settings.FixCommonOcrErrorsUseHardcodedRules = reader.Value;
                     break;
+                case "Settings/UseWordSplitList":
+                    language.Settings.UseWordSplitList = reader.Value;
+                    break;
                 case "Settings/FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime":
                     language.Settings.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime = reader.Value;
                     break;
