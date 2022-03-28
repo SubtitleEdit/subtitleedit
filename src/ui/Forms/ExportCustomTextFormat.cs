@@ -2,7 +2,10 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -11,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public const string EnglishDoNotModify = "[Do not modify]";
         public string FormatOk { get; set; }
+        private static readonly Regex CurlyCodePattern = new Regex("{\\d+}", RegexOptions.Compiled);
 
         public ExportCustomTextFormat(string format)
         {
@@ -393,8 +397,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var s = template;
-            s = s.Replace("{{", "@@@@_@@@{");
-            s = s.Replace("}}", "}@@@_@@@@");
+            var replaceStart = GetReplaceChar(s);
+            var replaceEnd = GetReplaceChar(s + replaceStart);
+            s = PreBeginCurly(s, replaceStart);
+            s = PreEndCurly(s, replaceEnd);
             s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2,
                               cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","),
                               cps.ToString(CultureInfo.InvariantCulture),
@@ -402,9 +408,112 @@ namespace Nikse.SubtitleEdit.Forms
                               p.Text.RemoveChar('\r', '\n').Length,
                               p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1,
                               p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2);
-            s = s.Replace("@@@@_@@@", "{");
-            s = s.Replace("@@@_@@@@", "}");
+            s = PostCurly(s, replaceStart, replaceEnd);
             return s;
+        }
+
+        private static string GetReplaceChar(string s)
+        {
+            var chars = new List<char> { '@', '¤', '%', '=', '+', 'æ', 'Æ', '`', '*', ';' };
+
+            foreach (var c in chars)
+            {
+                if (!s.Contains(c))
+                {
+                    return c.ToString();
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static string PreBeginCurly(string s, string replaceStart)
+        {
+            if (string.IsNullOrEmpty(replaceStart))
+            {
+                return s;
+            }
+
+            var indices = GetCurlyBeginIndexesReversed(s);
+            for (int i = 0; i < indices.Count; i++)
+            {
+                var idx = indices[i];
+                s = s.Remove(idx, 1);
+                s = s.Insert(idx, replaceStart);
+            }
+
+            return s;
+        }
+
+        private static string PreEndCurly(string s, string replaceEnd)
+        {
+            if (string.IsNullOrEmpty(replaceEnd))
+            {
+                return s;
+            }
+
+            var indices = GetCurlyEndIndexesReversed(s);
+            for (int i = 0; i < indices.Count; i++)
+            {
+                var idx = indices[i];
+                s = s.Remove(idx, 1);
+                s = s.Insert(idx, replaceEnd);
+            }
+
+            return s;
+        }
+
+        private static string PostCurly(string s, string replaceStart, string replaceEnd)
+        {
+            if (!string.IsNullOrEmpty(replaceStart))
+            {
+                s = s.Replace(replaceStart, "{");
+            }
+
+            if (!string.IsNullOrEmpty(replaceEnd))
+            {
+                s = s.Replace(replaceEnd, "}");
+            }
+
+            return s;
+        }
+
+        private static List<int> GetCurlyBeginIndexesReversed(string s)
+        {
+            var matchIndices = CurlyCodePattern.Matches(s)
+                .Cast<Match>()
+                .Select(m => m.Index)
+                .ToList();
+            var list = new List<int>();
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                var c = s[i];
+                if (c == '{' && !matchIndices.Contains(i))
+                {
+                    list.Add(i);
+                }
+            }
+
+            return list;
+        }
+
+        private static List<int> GetCurlyEndIndexesReversed(string s)
+        {
+            var matchIndices = CurlyCodePattern.Matches(s)
+                .Cast<Match>()
+                .Select(m => m.Index + m.Length - 1)
+                .ToList();
+            var list = new List<int>();
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                var c = s[i];
+                if (c == '}' && !matchIndices.Contains(i))
+                {
+                    list.Add(i);
+                }
+            }
+
+            return list;
         }
     }
 }
