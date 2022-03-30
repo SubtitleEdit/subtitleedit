@@ -16,8 +16,14 @@
             new DownloadModel
             {
                 TwoLetterLanguageCode = "en",
-                LanguageName = "English",
+                LanguageName = "English (medium size, 128 MB)",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-en-us-0.22-lgraph.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "en",
+                LanguageName = "English (very large, 1.8 GB)",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip",
             },
             new DownloadModel
             {
@@ -126,6 +132,12 @@
                 TwoLetterLanguageCode = "ca",
                 LanguageName = "Catalan",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-ca-0.4.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "hi",
+                LanguageName = "Hindi",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-hi-0.22.zip",
             },
         };
     }
