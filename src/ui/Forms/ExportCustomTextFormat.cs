@@ -32,10 +32,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxNewLine.Items.Add("{cr}");
 
             comboBoxTimeCode.Text = "hh:mm:ss,zzz";
+            textBoxFileExtension.Text = "txt";
             if (!string.IsNullOrEmpty(format))
             {
                 var arr = format.Split('Æ');
-                if (arr.Length == 6)
+                if (arr.Length >= 6)
                 {
                     textBoxName.Text = arr[0];
                     textBoxHeader.Text = arr[1];
@@ -48,6 +49,11 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxParagraph.Text = arr[2];
                     comboBoxNewLine.Text = arr[4].Replace(EnglishDoNotModify, l.DoNotModify);
                     textBoxFooter.Text = arr[5];
+
+                    if (arr.Length >= 7)
+                    {
+                        textBoxFileExtension.Text = arr[6];
+                    }
                 }
             }
             GeneratePreview();
@@ -60,6 +66,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelHeader.Text = l.Header;
             labelTextLine.Text = l.TextLine;
             labelFooter.Text = l.Footer;
+            labelFileExt.Text = l.FileExtension;
+            textBoxFileExtension.Left = labelFileExt.Right + 5;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
@@ -281,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(LanguageSettings.Current.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify) + "Æ" + textBoxFooter.Text;
+            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(LanguageSettings.Current.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify) + "Æ" + textBoxFooter.Text + "Æ" + textBoxFileExtension.Text.Trim('.', ' ');
             DialogResult = DialogResult.OK;
         }
 

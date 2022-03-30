@@ -592,6 +592,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TimeCode>Time code</TimeCode>
     <NewLine>New line</NewLine>
     <Footer>Footer</Footer>
+    <FileExtension>File extension</FileExtension>
     <DoNotModify>[Do not modify]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>

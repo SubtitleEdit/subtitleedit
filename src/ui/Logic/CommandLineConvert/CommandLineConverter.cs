@@ -1829,7 +1829,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                             title = Path.GetFileNameWithoutExtension(fileName);
                                         }
 
-                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ExportCustomText.GetFileExtension(template), outputFolder, overwrite);
                                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                                         FileUtil.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);
                                         _stdOutWriter?.WriteLine(" done.");
