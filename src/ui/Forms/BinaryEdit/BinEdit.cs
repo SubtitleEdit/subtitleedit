@@ -2940,7 +2940,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
-                extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
 
                 if (index == idx)
                 {
@@ -2964,7 +2964,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
-                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
 
                 if (index == idx)
                 {
@@ -3275,15 +3275,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 case ContentAlignment.BottomLeft:
                     extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
                     break;
                 case ContentAlignment.BottomCenter:
                     extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
                     break;
                 case ContentAlignment.BottomRight:
                     extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
                     break;
                 case ContentAlignment.MiddleLeft:
                     extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
@@ -3299,15 +3299,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     break;
                 case ContentAlignment.TopLeft:
                     extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
                     break;
                 case ContentAlignment.TopCenter:
                     extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
                     break;
                 case ContentAlignment.TopRight:
                     extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
                     break;
             }
         }

@@ -34,20 +34,23 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.panelImageBackgroundColor = new System.Windows.Forms.Panel();
             this.buttonImageBackgroundColor = new System.Windows.Forms.Button();
             this.groupBoxMargins = new System.Windows.Forms.GroupBox();
-            this.numericUpDownMarginVertical = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMarginTop = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownMarginRight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownMarginLeft = new System.Windows.Forms.NumericUpDown();
-            this.labelMarginVertical = new System.Windows.Forms.Label();
+            this.labelMarginTop = new System.Windows.Forms.Label();
             this.labelMarginRight = new System.Windows.Forms.Label();
             this.labelMarginLeft = new System.Windows.Forms.Label();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.numericUpDownMarginBottom = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginBottom = new System.Windows.Forms.Label();
             this.groupBoxMargins.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginLeft)).BeginInit();
             this.groupBoxColors.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).BeginInit();
             this.SuspendLayout();
             // 
             // panelBackgroundColor
@@ -90,10 +93,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             // 
             // groupBoxMargins
             // 
-            this.groupBoxMargins.Controls.Add(this.numericUpDownMarginVertical);
+            this.groupBoxMargins.Controls.Add(this.numericUpDownMarginBottom);
+            this.groupBoxMargins.Controls.Add(this.labelMarginBottom);
+            this.groupBoxMargins.Controls.Add(this.numericUpDownMarginTop);
             this.groupBoxMargins.Controls.Add(this.numericUpDownMarginRight);
             this.groupBoxMargins.Controls.Add(this.numericUpDownMarginLeft);
-            this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
+            this.groupBoxMargins.Controls.Add(this.labelMarginTop);
             this.groupBoxMargins.Controls.Add(this.labelMarginRight);
             this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
             this.groupBoxMargins.Location = new System.Drawing.Point(7, 134);
@@ -103,17 +108,17 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.groupBoxMargins.TabStop = false;
             this.groupBoxMargins.Text = "Margins";
             // 
-            // numericUpDownMarginVertical
+            // numericUpDownMarginTop
             // 
-            this.numericUpDownMarginVertical.Location = new System.Drawing.Point(188, 33);
-            this.numericUpDownMarginVertical.Maximum = new decimal(new int[] {
+            this.numericUpDownMarginTop.Location = new System.Drawing.Point(188, 33);
+            this.numericUpDownMarginTop.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDownMarginVertical.Name = "numericUpDownMarginVertical";
-            this.numericUpDownMarginVertical.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownMarginVertical.TabIndex = 5;
+            this.numericUpDownMarginTop.Name = "numericUpDownMarginTop";
+            this.numericUpDownMarginTop.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownMarginTop.TabIndex = 5;
             // 
             // numericUpDownMarginRight
             // 
@@ -139,14 +144,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.numericUpDownMarginLeft.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownMarginLeft.TabIndex = 1;
             // 
-            // labelMarginVertical
+            // labelMarginTop
             // 
-            this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(185, 16);
-            this.labelMarginVertical.Name = "labelMarginVertical";
-            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
-            this.labelMarginVertical.TabIndex = 4;
-            this.labelMarginVertical.Text = "Vertical";
+            this.labelMarginTop.AutoSize = true;
+            this.labelMarginTop.Location = new System.Drawing.Point(185, 16);
+            this.labelMarginTop.Name = "labelMarginTop";
+            this.labelMarginTop.Size = new System.Drawing.Size(26, 13);
+            this.labelMarginTop.TabIndex = 4;
+            this.labelMarginTop.Text = "Top";
             // 
             // labelMarginRight
             // 
@@ -204,6 +209,27 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // numericUpDownMarginBottom
+            // 
+            this.numericUpDownMarginBottom.Location = new System.Drawing.Point(274, 33);
+            this.numericUpDownMarginBottom.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownMarginBottom.Name = "numericUpDownMarginBottom";
+            this.numericUpDownMarginBottom.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownMarginBottom.TabIndex = 7;
+            // 
+            // labelMarginBottom
+            // 
+            this.labelMarginBottom.AutoSize = true;
+            this.labelMarginBottom.Location = new System.Drawing.Point(271, 16);
+            this.labelMarginBottom.Name = "labelMarginBottom";
+            this.labelMarginBottom.Size = new System.Drawing.Size(40, 13);
+            this.labelMarginBottom.TabIndex = 6;
+            this.labelMarginBottom.Text = "Bottom";
+            // 
             // BinEditSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,10 +251,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinEditSettings_KeyDown);
             this.groupBoxMargins.ResumeLayout(false);
             this.groupBoxMargins.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginLeft)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -240,14 +267,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Panel panelImageBackgroundColor;
         private System.Windows.Forms.Button buttonImageBackgroundColor;
         private System.Windows.Forms.GroupBox groupBoxMargins;
-        private System.Windows.Forms.NumericUpDown numericUpDownMarginVertical;
+        private System.Windows.Forms.NumericUpDown numericUpDownMarginTop;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginRight;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginLeft;
-        private System.Windows.Forms.Label labelMarginVertical;
+        private System.Windows.Forms.Label labelMarginTop;
         private System.Windows.Forms.Label labelMarginRight;
         private System.Windows.Forms.Label labelMarginLeft;
         private System.Windows.Forms.GroupBox groupBoxColors;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
+        private System.Windows.Forms.Label labelMarginBottom;
     }
 }

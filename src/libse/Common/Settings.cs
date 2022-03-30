@@ -280,7 +280,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string ExportPenLineJoin { get; set; }
         public Color BinEditBackgroundColor { get; set; }
         public Color BinEditImageBackgroundColor { get; set; }
-        public int BinEditVerticalMargin { get; set; }
+        public int BinEditTopMargin { get; set; }
+        public int BinEditBottomMargin { get; set; }
         public int BinEditLeftMargin { get; set; }
         public int BinEditRightMargin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
@@ -495,7 +496,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             ExportLastBorderWidth = 4;
             BinEditBackgroundColor = Color.Black;
             BinEditImageBackgroundColor = Color.Blue;
-            BinEditVerticalMargin = 10;
+            BinEditTopMargin = 10;
+            BinEditBottomMargin = 10;
             BinEditLeftMargin = 10;
             BinEditRightMargin = 10;
             BridgeGapMilliseconds = 100;
@@ -5210,10 +5212,16 @@ $HorzAlign          =   Center
                 settings.Tools.BinEditImageBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
-            subNode = node.SelectSingleNode("BinEditVerticalMargin");
+            subNode = node.SelectSingleNode("BinEditTopMargin");
             if (subNode != null)
             {
-                settings.Tools.BinEditVerticalMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.BinEditTopMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BinEditBottomMargin");
+            if (subNode != null)
+            {
+                settings.Tools.BinEditBottomMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BinEditLeftMargin");
@@ -9681,7 +9689,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
                 textWriter.WriteElementString("BinEditBackgroundColor", settings.Tools.BinEditBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditImageBackgroundColor", settings.Tools.BinEditImageBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BinEditVerticalMargin", settings.Tools.BinEditVerticalMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditTopMargin", settings.Tools.BinEditTopMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BinEditBottomMargin", settings.Tools.BinEditBottomMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditLeftMargin", settings.Tools.BinEditLeftMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BinEditRightMargin", settings.Tools.BinEditRightMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
