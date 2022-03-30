@@ -317,7 +317,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 CleanUp();
                 var log = new StringBuilder();
+                var oldSkipMerge = Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge;
+                var oldForceMergeAll = Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll;
+                Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge = true;
+                Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll = false;
                 var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+                Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge = oldSkipMerge;
+                Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll = oldForceMergeAll;
                 FixShortDisplayTimes(bluRaySubtitles);
                 _subtitle = new Subtitle();
                 _extra = new List<Extra>();
