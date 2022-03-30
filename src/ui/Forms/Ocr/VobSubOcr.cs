@@ -7320,7 +7320,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var tempOcrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr);
-            var error = _ocrFixEngine.GetOcrFixReplaceListError();
+            var error = _ocrFixEngine?.GetOcrFixReplaceListError();
             if (error != null)
             {
                 MessageBox.Show(error);
