@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxTemplate = new System.Windows.Forms.GroupBox();
+            this.textBoxFileExtension = new System.Windows.Forms.TextBox();
+            this.labelFileExt = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
             this.comboBoxNewLine = new System.Windows.Forms.ComboBox();
@@ -71,8 +73,6 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
-            this.textBoxFileExtension = new System.Windows.Forms.TextBox();
-            this.labelFileExt = new System.Windows.Forms.Label();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -104,6 +104,24 @@
             this.groupBoxTemplate.TabIndex = 0;
             this.groupBoxTemplate.TabStop = false;
             this.groupBoxTemplate.Text = "Current template";
+            // 
+            // textBoxFileExtension
+            // 
+            this.textBoxFileExtension.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFileExtension.Location = new System.Drawing.Point(87, 418);
+            this.textBoxFileExtension.Name = "textBoxFileExtension";
+            this.textBoxFileExtension.Size = new System.Drawing.Size(75, 20);
+            this.textBoxFileExtension.TabIndex = 13;
+            // 
+            // labelFileExt
+            // 
+            this.labelFileExt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelFileExt.AutoSize = true;
+            this.labelFileExt.Location = new System.Drawing.Point(7, 421);
+            this.labelFileExt.Name = "labelFileExt";
+            this.labelFileExt.Size = new System.Drawing.Size(71, 13);
+            this.labelFileExt.TabIndex = 12;
+            this.labelFileExt.Text = "File extension";
             // 
             // textBoxName
             // 
@@ -478,22 +496,6 @@
             this.textBoxPreview.ReadOnly = true;
             this.textBoxPreview.Size = new System.Drawing.Size(340, 432);
             this.textBoxPreview.TabIndex = 0;
-            // 
-            // textBoxFileExtension
-            // 
-            this.textBoxFileExtension.Location = new System.Drawing.Point(87, 418);
-            this.textBoxFileExtension.Name = "textBoxFileExtension";
-            this.textBoxFileExtension.Size = new System.Drawing.Size(75, 20);
-            this.textBoxFileExtension.TabIndex = 13;
-            // 
-            // labelFileExt
-            // 
-            this.labelFileExt.AutoSize = true;
-            this.labelFileExt.Location = new System.Drawing.Point(7, 421);
-            this.labelFileExt.Name = "labelFileExt";
-            this.labelFileExt.Size = new System.Drawing.Size(71, 13);
-            this.labelFileExt.TabIndex = 12;
-            this.labelFileExt.Text = "File extension";
             // 
             // ExportCustomTextFormat
             // 
