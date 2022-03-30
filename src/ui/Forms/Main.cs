@@ -31523,6 +31523,12 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonAssProperties.Visible = true;
                 toolStripButtonAssAttachments.Visible = true;
             }
+
+            toolStripButtonIttProperties.Visible = formatType == typeof(ItunesTimedText);
+            if (toolStripButtonIttProperties.Visible)
+            {
+                toolStripButtonIttProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, _currentSubtitleFormat?.Name);
+            }
         }
 
         private void NetflixGlyphCheck(bool isSaving)
