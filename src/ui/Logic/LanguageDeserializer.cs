@@ -1546,6 +1546,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportCustomTextFormat/Footer":
                     language.ExportCustomTextFormat.Footer = reader.Value;
                     break;
+                case "ExportCustomTextFormat/FileExtension":
+                    language.ExportCustomTextFormat.FileExtension = reader.Value;
+                    break;
                 case "ExportCustomTextFormat/DoNotModify":
                     language.ExportCustomTextFormat.DoNotModify = reader.Value;
                     break;

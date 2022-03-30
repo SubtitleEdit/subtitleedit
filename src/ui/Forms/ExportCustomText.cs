@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle = original;
                 _translated = subtitle;
             }
+
             _title = title;
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
@@ -48,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _templates.Add(template);
                 }
             }
+
             ShowTemplates(_templates);
 
             var l = LanguageSettings.Current.ExportCustomText;
@@ -76,16 +78,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowTemplates(List<string> templates)
         {
             listViewTemplates.Items.Clear();
-            foreach (string s in templates)
+            foreach (var s in templates)
             {
                 var arr = s.Split('Æ');
-                if (arr.Length == 6)
+                if (arr.Length >= 6)
                 {
                     var lvi = new ListViewItem(arr[0]);
                     lvi.SubItems.Add(arr[2].Replace(Environment.NewLine, "<br />"));
                     listViewTemplates.Items.Add(lvi);
                 }
             }
+
             if (listViewTemplates.Items.Count > 0)
             {
                 listViewTemplates.Items[0].Selected = true;
@@ -111,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -132,22 +136,25 @@ namespace Nikse.SubtitleEdit.Forms
                             form.FormatOk = name + form.FormatOk;
                             i++;
                         }
+
                         _templates.Add(form.FormatOk);
                         ShowTemplates(_templates);
                         listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
                     }
                 }
             }
+
             SaveTemplates();
         }
 
         private void SaveTemplates()
         {
             var sb = new StringBuilder();
-            foreach (string template in _templates)
+            foreach (var template in _templates)
             {
                 sb.Append(template + 'æ');
             }
+
             Configuration.Settings.Tools.ExportCustomTemplates = sb.ToString().TrimEnd('æ');
         }
 
@@ -203,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
             if (!string.IsNullOrEmpty(_title))
             {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + ".txt";
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + GetFileExtension();
             }
 
             saveFileDialog1.Filter = LanguageSettings.Current.General.AllFiles + "|*.*";
@@ -240,6 +247,28 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return exception.Message;
             }
+        }
+
+        private string GetFileExtension()
+        {
+            if (listViewTemplates.SelectedItems.Count > 0)
+            {
+                var idx = listViewTemplates.SelectedItems[0].Index;
+                return GetFileExtension(_templates[idx]);
+            }
+
+            return ".txt";
+        }
+
+        internal static string GetFileExtension(string templateString)
+        {
+            var arr = templateString.Split('Æ');
+            if (arr.Length == 7)
+            {
+                return "." + arr[6].Trim('.', ' ');
+            }
+
+            return ".txt";
         }
 
         internal static string GenerateCustomText(Subtitle subtitle, Subtitle translation, string title, string templateString)

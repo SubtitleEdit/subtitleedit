@@ -798,6 +798,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TimeCode = "Time code",
                 NewLine = "New line",
                 Footer = "Footer",
+                FileExtension = "File extension",
                 DoNotModify = "[Do not modify]",
             };
 
