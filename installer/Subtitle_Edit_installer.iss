@@ -456,63 +456,60 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 
 
 [Registry]
-Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit"; ValueData: "{app}\SubtitleEdit.exe";  Flags: uninsdeletekey; ValueType: string; ValueName: ""
-Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""
-
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass"; ValueData: "Advanced Sub Station Alpha subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "SubtitleEdit.ass"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "SubtitleEdit.ass"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('ass')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.dfxp"; ValueData: "Distribution Format Exchange Profile subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.dfxp\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKCU ; Subkey: "Software\Classes\.dfxp"; ValueData: "SubtitleEdit.dfxp"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.dfxp\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\dfxp.ico"; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\.dfxp"; ValueData: "SubtitleEdit.dfxp"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('dfxp')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sbv"; ValueData: "SBV subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sbv\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKCU ; Subkey: "Software\Classes\.sbv"; ValueData: "SubtitleEdit.sbv"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sbv\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sbv.ico"; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\.sbv"; ValueData: "SubtitleEdit.sbv"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('sbv')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.srt"; ValueData: "SubRip subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.srt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKCU ; Subkey: "Software\Classes\.srt"; ValueData: "SubtitleEdit.srt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\srt.ico"; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\.srt"; ValueData: "SubtitleEdit.srt"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('srt')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ssa"; ValueData: "Sub Station Alpha subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ssa\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKCU ; Subkey: "Software\Classes\.ssa"; ValueData: "SubtitleEdit.ssa"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ssa\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ssa.ico"; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\.ssa"; ValueData: "SubtitleEdit.ssa"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('ssa')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.stl"; ValueData: "STL subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.stl\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKCU ; Subkey: "Software\Classes\.stl"; ValueData: "SubtitleEdit.stl"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.stl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\stl.ico"; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\.stl"; ValueData: "SubtitleEdit.stl"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('stl')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sub"; ValueData: "SUB subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sub\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKCU ; Subkey: "Software\Classes\.sub"; ValueData: "SubtitleEdit.sub"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sub.ico"; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\.sub"; ValueData: "SubtitleEdit.sub"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('sub')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sup"; ValueData: "Blu-ray PGS subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sup\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKCU ; Subkey: "Software\Classes\.sup"; ValueData: "SubtitleEdit.sup"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sup.ico"; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\.sup"; ValueData: "SubtitleEdit.sup"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('sup')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.vtt"; ValueData: "Web Video Text Tracks (WebVTT) subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.vtt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKCU ; Subkey: "Software\Classes\.vtt"; ValueData: "SubtitleEdit.vtt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\.vtt"; ValueData: "SubtitleEdit.vtt"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('vtt')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.smi"; ValueData: "SAMI subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.smi\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
-Root: HKCU ; Subkey: "Software\Classes\.smi"; ValueData: "SubtitleEdit.smi"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.smi\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\smi.ico"; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\.smi"; ValueData: "SubtitleEdit.smi"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('smi')
 
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.itt"; ValueData: "iTunes Timed Text subtitles";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.itt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
-Root: HKCU ; Subkey: "Software\Classes\.itt"; ValueData: "SubtitleEdit.itt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.itt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\itt.ico"; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\.itt"; ValueData: "SubtitleEdit.itt"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('itt')
 
 ; Add .ass (Advanced SubStation Alpha) to the SE-supported file types
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ass"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
