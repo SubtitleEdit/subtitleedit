@@ -63,45 +63,45 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (ext.Equals(".srt", StringComparison.OrdinalIgnoreCase))
             {
-                return "SubRip subtitles";
+                return "SubRip subtitle file";
             }
 
             if (ext.Equals(".ass", StringComparison.OrdinalIgnoreCase))
             {
-                return "Advanced Sub Station Alpha subtitles";
+                return "Advanced Sub Station Alpha subtitle file";
             }
 
             if (ext.Equals(".dfxp", StringComparison.OrdinalIgnoreCase))
             {
-                return "Distribution Format Exchange Profile subtitles";
+                return "Distribution Format Exchange Profile subtitle file";
             }
 
             if (ext.Equals(".ssa", StringComparison.OrdinalIgnoreCase))
             {
-                return "Sub Station Alpha subtitles";
+                return "Sub Station Alpha subtitle file";
             }
 
             if (ext.Equals(".sup", StringComparison.OrdinalIgnoreCase))
             {
-                return "Blu-ray PGS subtitles";
+                return "Blu-ray PGS subtitle file";
             }
 
             if (ext.Equals(".vtt", StringComparison.OrdinalIgnoreCase))
             {
-                return "Web Video Text Tracks (WebVTT) subtitles";
+                return "Web Video Text Tracks (WebVTT) subtitle file";
             }
 
             if (ext.Equals(".smi", StringComparison.OrdinalIgnoreCase))
             {
-                return "SAMI subtitles";
+                return "SAMI subtitle file";
             }
 
             if (ext.Equals(".itt", StringComparison.OrdinalIgnoreCase))
             {
-                return "iTunes Timed Text subtitles";
+                return "iTunes Timed Text subtitle file";
             }
 
-            return $"{ext.TrimStart('.')} subtitles";
+            return $"{ext.TrimStart('.')} subtitle file";
         }
 
         internal static void DeleteFileAssociationViaRegistry(string ext, string appName)
