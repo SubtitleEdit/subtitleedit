@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 var cmdObject = cmd.GetValue("");
-                if (cmdObject != null && cmdObject is string cmdString)
+                if (cmdObject is string cmdString)
                 {
                     var ix = cmdString.IndexOf("SubtitleEdit.exe");
                     if (ix >= 0)
@@ -53,20 +53,64 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static void SetFileAssociationViaRegistry(string ext, string exeFileName, string iconFileName, string appName)
         {
-            Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}", "", $"{ext.TrimStart('.')} subtitle file");
+            Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}", "", $"{GetFriendlyName(ext)} subtitle file");
             Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}\\DefaultIcon", "", iconFileName);
-            //            Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}", "FriendlyTypeName", "My Friendly Type Name");
             Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{appName}{ext}\\shell\\open\\command", "", $"\"{exeFileName.Trim('"')}\" \"%1\"");
             Registry.SetValue($"HKEY_CURRENT_USER\\Software\\Classes\\{ext}", "", $"{appName}{ext}");
         }
 
+        private static string GetFriendlyName(string ext)
+        {
+            if (ext.Equals(".srt", StringComparison.OrdinalIgnoreCase))
+            {
+                return "SubRip subtitles";
+            }
+
+            if (ext.Equals(".ass", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Advanced Sub Station Alpha subtitles";
+            }
+
+            if (ext.Equals(".dfxp", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Distribution Format Exchange Profile subtitles";
+            }
+
+            if (ext.Equals(".ssa", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Sub Station Alpha subtitles";
+            }
+
+            if (ext.Equals(".sup", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Blu-ray PGS subtitles";
+            }
+
+            if (ext.Equals(".vtt", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Web Video Text Tracks (WebVTT) subtitles";
+            }
+
+            if (ext.Equals(".smi", StringComparison.OrdinalIgnoreCase))
+            {
+                return "SAMI subtitles";
+            }
+
+            if (ext.Equals(".itt", StringComparison.OrdinalIgnoreCase))
+            {
+                return "iTunes Timed Text subtitles";
+            }
+
+            return $"{ext.TrimStart('.')} subtitles";
+        }
+
         internal static void DeleteFileAssociationViaRegistry(string ext, string appName)
         {
-            using (RegistryKey regkey = Registry.CurrentUser.OpenSubKey(@"Software\Classes\", true))
+            using (var registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Classes\", true))
             {
-                if (regkey != null && regkey.OpenSubKey($"{appName}{ext}") != null)
+                if (registryKey?.OpenSubKey($"{appName}{ext}") != null)
                 {
-                    regkey.DeleteSubKeyTree($"{appName}{ext}");
+                    registryKey.DeleteSubKeyTree($"{appName}{ext}");
                 }
             }
         }
