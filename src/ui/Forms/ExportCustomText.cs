@@ -207,13 +207,17 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var fileExt = GetFileExtension();
             saveFileDialog1.Title = LanguageSettings.Current.ExportCustomText.SaveSubtitleAs;
             if (!string.IsNullOrEmpty(_title))
             {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + GetFileExtension();
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + fileExt;
             }
 
-            saveFileDialog1.Filter = LanguageSettings.Current.General.AllFiles + "|*.*";
+            saveFileDialog1.Filter = 
+                fileExt.TrimStart('.') + "|*" + fileExt + "|" +
+                LanguageSettings.Current.General.AllFiles + "|*.*";
+            
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 try
