@@ -11,21 +11,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static bool GetChecked(string ext, string appName)
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey($"Software\\Classes\\{appName}{ext}"))
+            using (var key = Registry.CurrentUser.OpenSubKey($"Software\\Classes\\{appName}{ext}"))
             {
-                if (key == null)
-                {
-                    return false;
-                }
+                var defaultIcon = key?.OpenSubKey("DefaultIcon");
 
-                var defaultIcon = key.OpenSubKey("DefaultIcon");
-                if (defaultIcon == null)
-                {
-                    return false;
-                }
-
-                var iconFileNameObject = defaultIcon.GetValue("");
-                if (iconFileNameObject == null || !(iconFileNameObject is string iconFileName) || !File.Exists(iconFileName))
+                var iconFileNameObject = defaultIcon?.GetValue("");
+                if (!(iconFileNameObject is string iconFileName) || !File.Exists(iconFileName))
                 {
                     return false;
                 }
@@ -39,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var cmdObject = cmd.GetValue("");
                 if (cmdObject is string cmdString)
                 {
-                    var ix = cmdString.IndexOf("SubtitleEdit.exe");
+                    var ix = cmdString.IndexOf("SubtitleEdit.exe", StringComparison.Ordinal);
                     if (ix >= 0)
                     {
                         var exeFileName = cmdString.Substring(0, ix + "SubtitleEdit.exe".Length).Trim('"');
