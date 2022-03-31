@@ -4022,7 +4022,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 var item = new ListViewItem(string.Empty);
                 item.SubItems.Add(friendlyName);
                 item.ImageIndex = imageListFileTypeAssociations.Images.Count - 1;
-                item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "Subtitle Edit");
+                item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "SubtitleEdit");
                 item.Tag = iconFileName;
                 listViewFileTypeAssociations.Items.Add(item);
             }
