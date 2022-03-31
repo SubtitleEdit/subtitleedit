@@ -4038,11 +4038,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (item.Checked)
                 {
                     var iconFileName = (string)item.Tag;
-                    FileTypeAssociations.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "Subtitle Edit");
+                    FileTypeAssociations.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "SubtitleEdit");
                 }
                 else
                 {
-                    FileTypeAssociations.DeleteFileAssociationViaRegistry(ext, "Subtitle Edit");
+                    FileTypeAssociations.DeleteFileAssociationViaRegistry(ext, "SubtitleEdit");
                 }
             }
 
