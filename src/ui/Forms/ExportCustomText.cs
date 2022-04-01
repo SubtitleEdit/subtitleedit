@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     var arr = form.FormatOk.Split('Æ');
-                    if (arr.Length == 6)
+                    if (arr.Length >= 6)
                     {
                         string name = arr[0];
                         int i = 1;
