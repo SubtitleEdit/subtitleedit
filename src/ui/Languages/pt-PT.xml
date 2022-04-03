@@ -589,10 +589,11 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Title>Modelo personalizado de formato de texto</Title>
     <Template>Modelo</Template>
     <Header>Cabeçalho</Header>
-    <TextLine>Linha de texto (paragrafo)</TextLine>
+    <TextLine>Linha de texto (parágrafo)</TextLine>
     <TimeCode>Tempos</TimeCode>
     <NewLine>Nova linha</NewLine>
     <Footer>Rodapé</Footer>
+    <FileExtension>Extensão do ficheiro</FileExtension>
     <DoNotModify>[Não alterar]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
