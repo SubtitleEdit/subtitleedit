@@ -850,6 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSpellCheck.Name = "toolStripButtonSpellCheck";
             this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonSpellCheck.Text = "Spell check";
+            this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.SpellCheckToolStripMenuItemClick);
             // 
             // toolStripButtonIttProperties
             // 
