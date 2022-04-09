@@ -34,8 +34,14 @@
             new DownloadModel
             {
                 TwoLetterLanguageCode = "fr",
-                LanguageName = "French",
+                LanguageName = "French (small, 39 MB)",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-fr-pguyot-0.3.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "fr",
+                LanguageName = "French (large, 1.4 GB)",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-fr-0.22.zip",
             },
             new DownloadModel
             {
@@ -46,8 +52,14 @@
             new DownloadModel
             {
                 TwoLetterLanguageCode = "de",
-                LanguageName = "German",
+                LanguageName = "German (small, 45 MB)",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-de-0.15.zip",
+            },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "de",
+                LanguageName = "German (large, 1.9 GB)" ,
+                Url = "https://alphacephei.com/vosk/models/vosk-model-de-0.21.zip",
             },
             new DownloadModel
             {
