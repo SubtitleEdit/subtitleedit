@@ -9,6 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeFrameRate : PositionAndSizeForm
     {
+        public double OldFrameRate { get; set; }
+        public double NewFrameRate { get; set; }
+
         public ChangeFrameRate()
         {
             UiUtil.PreInitialize(this);
@@ -38,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void InitializeCombobox(ComboBox comboBox)
+        private static void InitializeCombobox(ComboBox comboBox)
         {
             comboBox.BeginUpdate();
             comboBox.Items.Clear();
@@ -98,9 +101,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _) &&
-                double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
+            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var from) &&
+                double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var to))
             {
+                OldFrameRate = from;
+                NewFrameRate = to;
                 DialogResult = DialogResult.OK;
             }
             else
@@ -111,15 +116,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSwap_Click(object sender, EventArgs e)
         {
-            string oldFrameRate = comboBoxFrameRateFrom.Text;
-            string newFrameRate = comboBoxFrameRateTo.Text;
+            var oldFrameRate = comboBoxFrameRateFrom.Text;
+            var newFrameRate = comboBoxFrameRateTo.Text;
 
             comboBoxFrameRateFrom.Text = newFrameRate;
             comboBoxFrameRateTo.Text = oldFrameRate;
         }
-
-        public double OldFrameRate => double.Parse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-
-        public double NewFrameRate => double.Parse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
     }
 }
