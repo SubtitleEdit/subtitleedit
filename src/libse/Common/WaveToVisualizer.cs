@@ -916,6 +916,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                     Directory.CreateDirectory(dir);
                 }
 
+                if (videoFileName != null && (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                              videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return Path.Combine(dir, $"{MovieHasher.GenerateHashFromString(videoFileName)}.wav");
+                }
+
                 string spectrogramFolder;
                 if (trackNumber > 0)
                 {
