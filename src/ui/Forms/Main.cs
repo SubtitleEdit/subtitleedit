@@ -4558,6 +4558,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (rfe.VideoOffsetInMs != 0)
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                _subtitleListViewIndex = -1;
                 _changeSubtitleHash = GetFastSubtitleHash();
                 if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
