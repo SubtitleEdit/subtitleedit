@@ -1151,6 +1151,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mts");
             AddExtension(sb, ".m2ts");
             AddExtension(sb, ".m4s");
+            AddExtension(sb, ".se-job");
 
             sb.Append('|');
             sb.Append(LanguageSettings.Current.General.AllFiles);

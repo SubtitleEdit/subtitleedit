@@ -5130,8 +5130,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
