@@ -1,5 +1,36 @@
 ﻿Subtitle Edit Changelog
 
+3.6.6 (xth May 2022) BETA
+* NEW:
+   * Add toobar icon for iTT properties - thx Leon
+   * Add new sub format - thx Sergiy
+   * Option to turn off "word split list" in UI 
+   * Custom file ext for custom text formats - thx Leon
+   * Add shortcut for speech recog - thx lambdacore12
+* IMPROVED:
+   * Update Bulgarian translation - thx Калин
+   * Update Hungarian translation - thx Zityi
+   * Update Chinese translation - thx nkh0472
+   * Update Portuguese translation - thx hugok79
+   * Update dotnet framework to 4.8
+   * Add some new English names - thx Omair
+   * Add some err msg if user ocr fix replacelist invalid - thx sialivi
+   * Improve burn-in settings - thx Leon 
+   * Support curly brackets in export custom text - thx Leon
+   * BD edit - always open bdsup raw (no merging)
+   * Use "UTF-8" in uppercase for .itt files - thx Murat
+   * Separate vertical margins in BD sup editor - thx von Suppé
+   * Add new models for audio-to-text - thx Stefan
+* FIXED:
+   * Fix selected line update after load of new sub - thx Jamakmake
+   * Remove wrong ocr replace rule - thx Omair
+   * Minor fixes for installer file associations - thx darkred / in4u / BKR-TN
+   * Fix for auto-backup origianl - thx OmrSi
+   * Make "Ignore formatting" work in compare text box coloring - thx Martin
+   * Waveform fix for woking with online video files - thx Dheeraj
+   * Fix bug when opening a file with video offset - thx OmrSi
+
+
 3.6.5 (19th March 2022)
 * NEW:
    * Add audio to text (speech recognition) via Vosk/Kaldi
