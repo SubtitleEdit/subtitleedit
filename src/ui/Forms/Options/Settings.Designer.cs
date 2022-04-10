@@ -694,7 +694,7 @@
             // comboBoxCpsLineLenCalc
             // 
             this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 200;
             this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
             this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(203, 351);
             this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
