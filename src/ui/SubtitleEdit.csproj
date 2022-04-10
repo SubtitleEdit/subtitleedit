@@ -420,6 +420,12 @@
     <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.Designer.cs">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SeJobs\SeJobExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SeJobs\SeJobExport.Designer.cs">
+      <DependentUpon>SeJobExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TimedTextPropertiesItunes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1311,6 +1317,11 @@
     <Compile Include="Logic\Ocr\Tesseract\TesseractMultiRunner.cs" />
     <Compile Include="Logic\RtfTextConverterRichTextBox.cs" />
     <Compile Include="Logic\MainShortcuts.cs" />
+    <Compile Include="Logic\SeJob\SeJobHandler.cs" />
+    <Compile Include="Logic\SeJob\SeJobBookmark.cs" />
+    <Compile Include="Logic\SeJob\SeJobModel.cs" />
+    <Compile Include="Logic\SeJob\SeJobRules.cs" />
+    <Compile Include="Logic\SeJob\SeJobWaveform.cs" />
     <Compile Include="Logic\SetRtbHtml.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
     <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
@@ -1515,6 +1526,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SeJobs\SeJobExport.resx">
+      <DependentUpon>SeJobExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextPropertiesItunes.resx">
       <DependentUpon>TimedTextPropertiesItunes.cs</DependentUpon>

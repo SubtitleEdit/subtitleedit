@@ -243,6 +243,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return peakGenerator.LoadPeaks();
             }
         }
+
+        public static WavePeakData FromStream(Stream stream)
+        {
+            using (var peakGenerator = new WavePeakGenerator(stream))
+            {
+                return peakGenerator.LoadPeaks();
+            }
+        }
     }
 
     public class SpectrogramData : IDisposable
@@ -433,7 +441,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Generates peaks and saves them to disk.
         /// </summary>
         /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
-        /// <param name="peakFileName">Path of the output file</param>
+        /// <param name="peakFileName">Path of the output file (writing is skipped if null/empty)</param>
         public WavePeakData GeneratePeaks(int delayInMilliseconds, string peakFileName)
         {
             int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, _header.SampleRate);
@@ -518,19 +526,27 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // save results to file
-            using (var stream = File.Create(peakFileName))
+            if (!string.IsNullOrWhiteSpace(peakFileName))
             {
-                WaveHeader.WriteHeader(stream, peaksPerSecond, 2, 16, peaks.Count);
-                byte[] buffer = new byte[4];
-                foreach (var peak in peaks)
+                using (var stream = File.Create(peakFileName))
                 {
-                    WriteValue16Bit(buffer, 0, peak.Max);
-                    WriteValue16Bit(buffer, 2, peak.Min);
-                    stream.Write(buffer, 0, 4);
+                    WriteWaveformData(stream, peaksPerSecond, peaks);
                 }
             }
 
             return new WavePeakData(peaksPerSecond, peaks);
+        }
+
+        public static void WriteWaveformData(Stream stream, int sampleRate, List<WavePeak> peaks)
+        {
+            WaveHeader.WriteHeader(stream, sampleRate, 2, 16, peaks.Count);
+            var buffer = new byte[4];
+            foreach (var peak in peaks)
+            {
+                WriteValue16Bit(buffer, 0, peak.Max);
+                WriteValue16Bit(buffer, 2, peak.Min);
+                stream.Write(buffer, 0, 4);
+            }
         }
 
         public static WavePeakData GenerateEmptyPeaks(string peakFileName, int totalSeconds)
