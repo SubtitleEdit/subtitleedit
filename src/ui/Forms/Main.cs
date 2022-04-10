@@ -17144,6 +17144,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainVideoAudioToText)
+            {
+                videoaudioToTextToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainVideoToggleBrightness)
             {
                 if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
