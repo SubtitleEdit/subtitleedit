@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -19,14 +20,30 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 return;
             }
 
-            Buffer = new byte[maximumLength - 4];
+            Buffer = new byte[8];
             var readCount = fs.Read(Buffer, 0, Buffer.Length);
-            var versionAndFlags = GetUInt(0);
-            var version = versionAndFlags >> 24;
-            var flags = versionAndFlags & 0xFFFFFF;
+            if (readCount < Buffer.Length)
+            {
+                return;
+            }
 
+            var versionAndFlags = GetUInt(0);
+            var flags = versionAndFlags & 0xFFFFFF;
             var sampleCount = GetUInt(4);
-            int pos = 8;
+            if (sampleCount == 0)
+            {
+                return;
+            }
+
+            var sampleLength = Math.Min(sampleCount * 16 + 24, maximumLength);
+            Buffer = new byte[sampleLength];
+            readCount = fs.Read(Buffer, 0, Buffer.Length);
+            if (readCount < 4)
+            {
+                return;
+            }
+
+            var pos = 0;
 
             if ((flags & 0x000001) > 0)
             {
@@ -81,9 +98,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 // read "sample_time_offset" if present
                 if ((flags & 0x000800) > 0)
                 {
-                    sample.TimeOffset = version == 0 ? GetUInt(pos) : (uint)GetUInt(pos);
+                    sample.TimeOffset = GetUInt(pos);
                     pos += 4;
                 }
+
                 Samples.Add(sample);
             }
         }
