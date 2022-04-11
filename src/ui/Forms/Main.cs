@@ -4134,7 +4134,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WavePeaks = new WavePeakData((int)Math.Round(seJob.Waveform.SampleRate, MidpointRounding.AwayFromZero), list);
 
                 var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
-                string peakWaveFileName = Path.Combine(dir, $"{seJob.VideoHash}.wav");
+                var peakWaveFileName = Path.Combine(dir, $"{seJob.VideoHash}.wav");
                 if (!File.Exists(peakWaveFileName))
                 {
                     using (var stream = File.Create(peakWaveFileName))
@@ -4148,14 +4148,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 audioVisualizer.SceneChanges = seJob.SceneChanges;
                 var dir = Configuration.SceneChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
-                string sceneChangesFileName = Path.Combine(dir, $"{seJob.VideoHash}.scenechanges");
-
-                // save to SE folder + load
+                var sceneChangesFileName = Path.Combine(dir, $"{seJob.VideoHash}.scenechanges");
+                SceneChangeHelper.SaveSceneChanges(sceneChangesFileName, audioVisualizer.SceneChanges);
             }
 
             if (seJob.Rules != null)
             {
-                var rule = Configuration.Settings.General.Profiles.FirstOrDefault(p=>
+                var profile = Configuration.Settings.General.Profiles.FirstOrDefault(p =>
                     p.MaxNumberOfLines == seJob.Rules.MaxNumberOfLines &&
                     p.SubtitleLineMaximumLength == seJob.Rules.SubtitleLineMaximumLength &&
                     p.SubtitleMaximumCharactersPerSeconds == seJob.Rules.SubtitleMaximumCharactersPerSeconds &&
@@ -4164,7 +4163,31 @@ namespace Nikse.SubtitleEdit.Forms
                     p.MinimumMillisecondsBetweenLines == seJob.Rules.MinimumMillisecondsBetweenLines &&
                     p.SubtitleMaximumWordsPerMinute == seJob.Rules.SubtitleMaximumWordsPerMinute &&
                     p.SubtitleOptimalCharactersPerSeconds == seJob.Rules.SubtitleOptimalCharactersPerSeconds);
-                // find matching or create new profile rule
+                if (profile == null)
+                {
+                    var profileName = "SeJob " + seJob.JobName;
+                    if (string.IsNullOrWhiteSpace(seJob.JobName) || Configuration.Settings.General.Profiles.Any(p => p.Name.Equals(profileName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        profileName = "SeJob " + seJob.JobId;
+                    }
+
+                    profile = new RulesProfile(Configuration.Settings.General.Profiles.First());
+                    profile.Name = profileName;
+                    profile.MaxNumberOfLines = seJob.Rules.MaxNumberOfLines;
+                    profile.SubtitleLineMaximumLength = seJob.Rules.SubtitleLineMaximumLength;
+                    profile.SubtitleMaximumCharactersPerSeconds = seJob.Rules.SubtitleMaximumCharactersPerSeconds;
+                    profile.SubtitleMinimumDisplayMilliseconds = seJob.Rules.SubtitleMinimumDisplayMilliseconds;
+                    profile.SubtitleMaximumDisplayMilliseconds = seJob.Rules.SubtitleMaximumDisplayMilliseconds;
+                    profile.MinimumMillisecondsBetweenLines = seJob.Rules.MinimumMillisecondsBetweenLines;
+                    profile.SubtitleMaximumWordsPerMinute = seJob.Rules.SubtitleMaximumWordsPerMinute;
+                    profile.SubtitleOptimalCharactersPerSeconds = seJob.Rules.SubtitleOptimalCharactersPerSeconds;
+
+                    LoadProfile(profile.Name, seJob);
+                }
+                else
+                {
+                    LoadProfile(profile.Name, seJob);
+                }
             }
 
             _subtitleListViewIndex = -1;
@@ -4184,6 +4207,26 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleOriginalFileName = seJob.SubtitleFileNameOriginal;
             SetTitle();
             return true;
+        }
+
+        private void LoadProfile(string profileName, SeJobModel seJob)
+        {
+            var profile = Configuration.Settings.General.Profiles.FirstOrDefault(p => p.Name == profileName);
+            if (profile == null)
+            {
+                return;
+            }
+
+            var g = Configuration.Settings.General;
+            g.CurrentProfile = profileName;
+            g.MaxNumberOfLines = seJob.Rules.MaxNumberOfLines;
+            g.SubtitleLineMaximumLength = seJob.Rules.SubtitleLineMaximumLength;
+            g.SubtitleMaximumCharactersPerSeconds = (double)seJob.Rules.SubtitleMaximumCharactersPerSeconds;
+            g.SubtitleMinimumDisplayMilliseconds = seJob.Rules.SubtitleMinimumDisplayMilliseconds;
+            g.SubtitleMaximumDisplayMilliseconds = seJob.Rules.SubtitleMaximumDisplayMilliseconds;
+            g.MinimumMillisecondsBetweenLines = seJob.Rules.MinimumMillisecondsBetweenLines;
+            g.SubtitleMaximumWordsPerMinute = (double)seJob.Rules.SubtitleMaximumWordsPerMinute;
+            g.SubtitleOptimalCharactersPerSeconds = (double)seJob.Rules.SubtitleOptimalCharactersPerSeconds;
         }
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
