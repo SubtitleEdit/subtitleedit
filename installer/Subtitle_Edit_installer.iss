@@ -456,7 +456,7 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 
 
 [Registry]
-Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass"; ValueData: "Advanced Sub Station Alpha subtitle file;  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass"; ValueData: "Advanced Sub Station Alpha subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
 Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
 Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "SubtitleEdit.ass"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('ass')
