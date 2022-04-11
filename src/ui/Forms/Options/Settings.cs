@@ -1246,7 +1246,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        ShortcutNode _shortcuts = new ShortcutNode("root");
+        private ShortcutNode _shortcuts = new ShortcutNode("root");
 
         private void MakeShortcutsTreeView(LanguageStructure.Settings language)
         {
