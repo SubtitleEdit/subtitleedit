@@ -4206,6 +4206,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fileName = seJob.SubtitleFileName;
             _subtitleOriginalFileName = seJob.SubtitleFileNameOriginal;
             SetTitle();
+            SubtitleListview1.SelectIndexAndEnsureVisible(0);
             return true;
         }
 
@@ -11372,6 +11373,7 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 }
 
+                _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                 UpdateSourceView();
                 ShowStatus(_language.LineSplitted);
@@ -11423,6 +11425,13 @@ namespace Nikse.SubtitleEdit.Forms
                     pre = currentParagraph.Text.Substring(0, endIdx + 1);
                     nextParagraph.Text = pre + nextParagraph.Text;
                 }
+            }
+            else if (currentParagraph.Text.Contains("{\\i1}", StringComparison.Ordinal) && 
+                     !currentParagraph.Text.Contains("{\\i0}", StringComparison.Ordinal) &&
+                     nextParagraph.Text.Contains("{\\i0}", StringComparison.Ordinal))
+            {
+                currentParagraph.Text += "{\\i0}";
+                nextParagraph.Text = "{\\i1}" + nextParagraph.Text;
             }
         }
 
@@ -11790,6 +11799,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var currentParagraph = _subtitle.Paragraphs[firstIndex];
                 string text = sb.ToString();
                 text = HtmlUtil.FixInvalidItalicTags(text);
+                text = FixAssaTagsAfterMerge(text);
                 text = ChangeAllLinesTagsToSingleTag(text, "i");
                 text = ChangeAllLinesTagsToSingleTag(text, "b");
                 text = ChangeAllLinesTagsToSingleTag(text, "u");
@@ -11926,6 +11936,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private static string FixAssaTagsAfterMerge(string text)
+        {
+            return text
+                .Replace("{\\i0}{\\i1}", "")
+                .Replace("{\\i0} {\\i1}", " ")
+                .Replace($"{{\\i0}}{Environment.NewLine}{{\\i1}}", Environment.NewLine);
+        }
+
         private static string ChangeAllLinesTagsToSingleTag(string text, string tag)
         {
             if (!text.Contains("<" + tag + ">"))
@@ -12050,6 +12068,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
 
+                                original.Text = FixAssaTagsAfterMerge(original.Text);
                                 original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
                                 original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
                                 original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
@@ -12111,6 +12130,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                  RemoveAssStartAlignmentTag(nextParagraph.Text).Trim()).Trim();
                     }
 
+                    currentParagraph.Text = FixAssaTagsAfterMerge(currentParagraph.Text);
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "i");
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "b");
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "u");
