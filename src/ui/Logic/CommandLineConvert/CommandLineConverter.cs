@@ -1349,6 +1349,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var ebuOriginal = new Ebu();
                             var temp = new Subtitle();
                             ebuOriginal.LoadSubtitle(temp, null, ebuHeaderFile);
+                            sub.Header = ebuOriginal.Header.ToString();
                             ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
                         }
                         else if (format != null && format.GetType() == typeof(Ebu))
