@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -546,7 +547,7 @@ namespace Nikse.SubtitleEdit.Controls
         //private readonly List<long> _ticks = new List<long>();
         internal void WaveformPaint(object sender, PaintEventArgs e)
         {
-            //_sw = Stopwatch.StartNew();
+//            _sw = Stopwatch.StartNew();
             var graphics = e.Graphics;
             if (_wavePeaks != null)
             {
@@ -1138,21 +1139,25 @@ namespace Nikse.SubtitleEdit.Controls
 
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private double RelativeXPositionToSeconds(int x)
         {
             return _startPositionSeconds + (double)x / _wavePeaks.SampleRate / _zoomFactor;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int SecondsToXPosition(double seconds)
         {
             return (int)Math.Round(seconds * _wavePeaks.SampleRate * _zoomFactor);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int SecondsToSampleIndex(double seconds)
         {
             return (int)Math.Round(seconds * _wavePeaks.SampleRate);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private double SampleIndexToSeconds(int index)
         {
             return (double)index / _wavePeaks.SampleRate;
