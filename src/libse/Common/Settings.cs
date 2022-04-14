@@ -1353,6 +1353,10 @@ $HorzAlign          =   Center
         public Color LastColorPickerColor1 { get; set; }
         public Color LastColorPickerColor2 { get; set; }
         public Color LastColorPickerColor3 { get; set; }
+        public Color LastColorPickerColor4 { get; set; }
+        public Color LastColorPickerColor5 { get; set; }
+        public Color LastColorPickerColor6 { get; set; }
+        public Color LastColorPickerColor7 { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -1492,6 +1496,10 @@ $HorzAlign          =   Center
             LastColorPickerColor1 = Color.Red;
             LastColorPickerColor2 = Color.Green;
             LastColorPickerColor3 = Color.Blue;
+            LastColorPickerColor4 = Color.White;
+            LastColorPickerColor5 = Color.Black;
+            LastColorPickerColor6 = Color.Cyan;
+            LastColorPickerColor7 = Color.DarkOrange;
             UseDarkTheme = false;
             DarkThemeShowListViewGridLines = false;
             AutoSetVideoSmpteForTtml = true;
@@ -4032,10 +4040,28 @@ $HorzAlign          =   Center
                 settings.General.LastColorPickerColor2 = FromHtml(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("LastColorPickerColor3");
+            subNode = node.SelectSingleNode("LastColorPickerColor4");
             if (subNode != null)
             {
-                settings.General.LastColorPickerColor3 = FromHtml(subNode.InnerText);
+                settings.General.LastColorPickerColor4 = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor5");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor5 = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor6");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor6 = FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("LastColorPickerColor7");
+            if (subNode != null)
+            {
+                settings.General.LastColorPickerColor7 = FromHtml(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("DarkThemeBackColor");
@@ -9491,6 +9517,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastColorPickerColor1", ToHtml(settings.General.LastColorPickerColor1));
                 textWriter.WriteElementString("LastColorPickerColor2", ToHtml(settings.General.LastColorPickerColor2));
                 textWriter.WriteElementString("LastColorPickerColor3", ToHtml(settings.General.LastColorPickerColor3));
+                textWriter.WriteElementString("LastColorPickerColor4", ToHtml(settings.General.LastColorPickerColor4));
+                textWriter.WriteElementString("LastColorPickerColor5", ToHtml(settings.General.LastColorPickerColor5));
+                textWriter.WriteElementString("LastColorPickerColor6", ToHtml(settings.General.LastColorPickerColor6));
+                textWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
                 textWriter.WriteElementString("DarkThemeBackColor", settings.General.DarkThemeBackColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DarkThemeForeColor", settings.General.DarkThemeForeColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
