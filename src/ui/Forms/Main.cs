@@ -15471,6 +15471,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SetTitle();
                     _converted = true;
 
+                    _imageSubFileName = vobSubOcr.FileName;
+
                     Configuration.Settings.Save();
                 }
                 else
