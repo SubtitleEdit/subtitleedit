@@ -836,7 +836,6 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this._tbValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion Windows Form Designer generated code
@@ -877,7 +876,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LastColorPickerColor4 = colorList[3];
             Configuration.Settings.General.LastColorPickerColor5 = colorList[4];
             Configuration.Settings.General.LastColorPickerColor6 = colorList[5];
-            Configuration.Settings.General.LastColorPickerColor7 = colorList[6]; 
+            Configuration.Settings.General.LastColorPickerColor7 = colorList[6];
 
             DialogResult = DialogResult.OK;
         }
