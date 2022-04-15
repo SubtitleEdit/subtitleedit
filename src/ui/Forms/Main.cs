@@ -9949,7 +9949,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
-                    FixVerticalScrollBars(textBoxListViewText);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                     {
@@ -10213,40 +10212,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
-        private void FixVerticalScrollBars(SETextBox tb)
-        {
-            if (!tb.Visible)
-            {
-                return;
-            }
-
-            var noOfNewLines = Utilities.GetNumberOfLines(tb.Text.TrimEnd());
-            try
-            {
-                if (noOfNewLines <= 2 && tb.Text.Length <= 70 && tb.TextBoxFont.Size < 15 && tb.Width > 300)
-                {
-                    tb.ScrollBars = RichTextBoxScrollBars.None;
-                }
-                else if (noOfNewLines > 20 || tb.Text.Length > 999)
-                {
-                    tb.ScrollBars = RichTextBoxScrollBars.Vertical;
-                }
-                else
-                {
-                    var calculatedHeight = TextRenderer.MeasureText(
-                         tb.Text,
-                         tb.TextBoxFont,
-                         new Size(tb.Width, 1000),
-                         TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
-                    tb.ScrollBars = calculatedHeight > tb.Height ? RichTextBoxScrollBars.Vertical : RichTextBoxScrollBars.None;
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
         {
             var idx = _subtitleListViewIndex;
@@ -10297,7 +10262,6 @@ namespace Nikse.SubtitleEdit.Forms
             _listViewTextUndoIndex = _subtitleListViewIndex;
 
             StartUpdateListSyntaxColoring();
-            FixVerticalScrollBars(textBoxListViewText);
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
         }
 
@@ -10383,7 +10347,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Empty;
 
                 StartUpdateListSyntaxColoring();
-                FixVerticalScrollBars(textBoxListViewTextOriginal);
             }
         }
 
@@ -23670,8 +23633,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             splitContainerListViewAndText.SplitterMoved += splitContainerListViewAndText_SplitterMoved;
             splitContainerListViewAndText.SizeChanged += splitContainerListViewAndText_SizeChanged;
-            textBoxListViewText.SizeChanged += TextBoxListViewText_SizeChanged;
-            textBoxListViewTextOriginal.SizeChanged += TextBoxListViewTextOriginal_SizeChanged;
 
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
             SetListViewStateImages();
@@ -24014,16 +23975,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _timerSlow.Start();
-        }
-
-        private void TextBoxListViewText_SizeChanged(object sender, EventArgs e)
-        {
-            FixVerticalScrollBars(textBoxListViewText);
-        }
-
-        private void TextBoxListViewTextOriginal_SizeChanged(object sender, EventArgs e)
-        {
-            FixVerticalScrollBars(textBoxListViewTextOriginal);
         }
 
         private void InitializePlayRateDropDown()
@@ -27444,7 +27395,6 @@ namespace Nikse.SubtitleEdit.Forms
                     original.Text = text;
                     UpdateListViewTextInfo(labelTextOriginalLineLengths, labelOriginalSingleLine, labelOriginalSingleLinePixels, labelTextOriginalLineTotal, labelOriginalCharactersPerSecond, original, textBoxListViewTextOriginal);
                     SubtitleListview1.SetOriginalText(_subtitleListViewIndex, text);
-                    FixVerticalScrollBars(textBoxListViewTextOriginal);
                 }
             }
         }
