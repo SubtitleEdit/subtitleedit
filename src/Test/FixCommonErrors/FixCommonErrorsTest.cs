@@ -1759,6 +1759,15 @@ namespace Test.FixCommonErrors
             Assert.AreEqual(result, "WOMAN 2: <i>24 hours a day at BabyC.</i>");
         }
 
+
+        [TestMethod]
+        public void FixEllipsesStartItalic6()
+        {
+            var result = Helper.FixEllipsesStartHelper("{\\i1}...But that is true.{\\i0}");
+            Assert.AreEqual(result, "{\\i1}But that is true.{\\i0}");
+        }
+
+
         [TestMethod]
         public void FixEllipsesStartFont1()
         {

@@ -843,7 +843,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return string.Empty;
             }
 
-            if (Settings.RemoveWhereContains)
+            if (Settings.RemoveWhereContains && Settings.RemoveIfTextContains != null)
             {
                 foreach (var removeIfTextContain in Settings.RemoveIfTextContains)
                 {
