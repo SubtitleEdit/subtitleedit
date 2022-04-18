@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using System;
+using System.Collections.Generic;
 
 namespace Test.Logic.Forms
 {
@@ -1268,6 +1269,8 @@ namespace Test.Logic.Forms
             target.Settings.CustomStart = "♪";
             target.Settings.CustomEnd = "♪";
             target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveIfTextContains = new List<string>();
+            target.Settings.RemoveWhereContains = false;
             string text = "<i>- ♪♪[Continues ]</i>" + Environment.NewLine + "- It's pretty strong stuff.";
             const string expected = "It's pretty strong stuff.";
             string actual = target.RemoveTextFromHearImpaired(text);
