@@ -2438,6 +2438,7 @@ Command line: {1} {2}
     <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
+    <VideoAudioToText>视频/音频到文本（语音识别）</VideoAudioToText>
     <VideoToggleBrightness>切换亮度（仅限mpv）</VideoToggleBrightness>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
