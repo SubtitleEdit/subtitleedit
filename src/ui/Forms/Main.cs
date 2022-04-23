@@ -4627,6 +4627,20 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.CurrentVideoIsSmpte = true;
                 }
             }
+
+            if (!Configuration.Settings.General.DisableVideoAutoLoading &&
+                rfe.VideoFileName != null && rfe.VideoFileName.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+                Configuration.IsRunningOnWindows)
+            {
+                var isMpvAvailable = LibMpvDynamic.IsInstalled;
+                var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
+                var allOk = isYouTubeDlInstalled && isMpvAvailable;
+
+                if (allOk)
+                {
+                    OpenVideoFromUrl(rfe.VideoFileName);
+                }
+            }
         }
 
         private void GotoSubPosAndPause()
@@ -11389,7 +11403,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nextParagraph.Text = pre + nextParagraph.Text;
                 }
             }
-            else if (currentParagraph.Text.Contains("{\\i1}", StringComparison.Ordinal) && 
+            else if (currentParagraph.Text.Contains("{\\i1}", StringComparison.Ordinal) &&
                      !currentParagraph.Text.Contains("{\\i0}", StringComparison.Ordinal) &&
                      nextParagraph.Text.Contains("{\\i0}", StringComparison.Ordinal))
             {
