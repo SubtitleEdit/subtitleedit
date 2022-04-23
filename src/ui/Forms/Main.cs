@@ -32885,21 +32885,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (paragraphs.Count == selectedLines.Paragraphs.Count)
                         {
-                            translateDialog.Initialize(new Subtitle(paragraphs), selectedLines, title, GetCurrentEncoding());
+                            translateDialog.Initialize(new Subtitle(paragraphs), selectedLines, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
                         }
                         else
                         {
-                            translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding());
+                            translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
                         }
                     }
                     else
                     {
-                        translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding());
+                        translateDialog.Initialize(selectedLines, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
                     }
                 }
                 else
                 {
-                    translateDialog.Initialize(_subtitle, null, title, GetCurrentEncoding());
+                    translateDialog.Initialize(_subtitle, null, title, GetCurrentEncoding(), GetCurrentSubtitleFormat());
                 }
 
                 if (translateDialog.ShowDialog(this) == DialogResult.OK)
