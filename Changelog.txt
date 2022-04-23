@@ -16,19 +16,26 @@
    * Add some new English names - thx Omair
    * Add some err msg if user ocr fix replacelist invalid - thx sialivi
    * Improve burn-in settings - thx Leon 
+   * Add AMD support (hevc_amf + h264_amf) for burn-in - thx MMT Gouenji - Tech
    * Support curly brackets in export custom text - thx Leon
    * BD edit - always open bdsup raw (no merging)
    * Use "UTF-8" in uppercase for .itt files - thx Murat
    * Separate vertical margins in BD sup editor - thx von Suppé
    * Add new models for audio-to-text - thx Stefan
+   * Improve ASSA support for "Remove Leading '...'" - thx von Suppé
+   * Add 4 extra colors to recent colors in color picker
+   * Add a little vobsub support in spellcheck - thx cyzs233
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
+   * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
    * Remove wrong ocr replace rule - thx Omair
    * Minor fixes for installer file associations - thx darkred / in4u / BKR-TN
    * Fix for auto-backup origianl - thx OmrSi
    * Make "Ignore formatting" work in compare text box coloring - thx Martin
    * Waveform fix for woking with online video files - thx Dheeraj
    * Fix bug when opening a file with video offset - thx OmrSi
+   * Do not reapeat colors in color picker - thx SDH Marven
+   * Fix cmd line convert issue with ebu stil headerfile - thx Rumczeis
 
 
 3.6.5 (19th March 2022)
