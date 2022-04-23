@@ -479,7 +479,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
 
             var formatType = _subtitleFormat.GetType();
-            if (formatType == typeof(AdvancedSubStationAlpha))
+            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
             {
                 cleanText = cleanText.Replace("{i1}", "{\\i1}");
                 cleanText = cleanText.Replace("{i0}", "{\\i0}");
