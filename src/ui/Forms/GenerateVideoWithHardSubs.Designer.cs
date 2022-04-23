@@ -237,7 +237,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPreviewPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPreviewPleaseWait.TabIndex = 7;
             this.labelPreviewPleaseWait.Text = "Please wait...";
-            this.labelPreviewPleaseWait.Click += new System.EventHandler(this.labelPreviewPleaseWait_Click);
             // 
             // checkBoxAlignRight
             // 
@@ -467,7 +466,9 @@ namespace Nikse.SubtitleEdit.Forms
             "libx265",
             "libvpx-vp9",
             "h264_nvenc",
-            "hevc_nvenc"});
+            "hevc_nvenc",
+            "h264_amf",
+            "hevc_amf"});
             this.comboBoxVideoEncoding.Location = new System.Drawing.Point(101, 58);
             this.comboBoxVideoEncoding.Name = "comboBoxVideoEncoding";
             this.comboBoxVideoEncoding.Size = new System.Drawing.Size(121, 21);
