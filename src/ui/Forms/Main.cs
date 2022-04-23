@@ -33529,6 +33529,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (_videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                _videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("SE cannot generate text from online video/audio");
+                return;
+            }
+
             if (!ContinueNewOrExit())
             {
                 return;
