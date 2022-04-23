@@ -506,6 +506,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 cleanText = cleanText.Replace("{pos", "{\\pos");
                 cleanText = cleanText.Replace("{fad", "{\\fad");
                 cleanText = cleanText.Replace("{move", "{\\move");
+                cleanText = cleanText.Replace("{fscx", "{\\fscx");
+                cleanText = cleanText.Replace("{fscy", "{\\fscy");
+                cleanText = cleanText.Replace("{bord", "{\\bord");
+                cleanText = cleanText.Replace("{xbord", "{\\xbord");
+                cleanText = cleanText.Replace("{ybord", "{\\ybord");
+                cleanText = cleanText.Replace("{shad", "{\\shad");
+                cleanText = cleanText.Replace("{xshad", "{\\xshad");
+                cleanText = cleanText.Replace("{yshad", "{\\yshad");
+                cleanText = cleanText.Replace("{fr", "{\\fr");
+                cleanText = cleanText.Replace("{fsp", "{\\fsp");
+                cleanText = cleanText.Replace("{fay", "{\\fay");
+                cleanText = cleanText.Replace("{fax", "{\\fax");
+                cleanText = cleanText.Replace("{org(", "{\\org(");
+                cleanText = cleanText.Replace("{t(", "{\\t(");
+                cleanText = cleanText.Replace("{clip", "{\\clip");
+                cleanText = cleanText.Replace("{iclip", "{\\iclip");
             }
 
             cleanText = cleanText.Replace("<I>", "<i>");
