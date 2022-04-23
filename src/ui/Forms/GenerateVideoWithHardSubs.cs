@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             fileName += $".{numericUpDownWidth.Value}x{numericUpDownHeight.Value}";
 
-            if (comboBoxVideoEncoding.Text == "libx265" || comboBoxVideoEncoding.Text == "hevc_nvenc")
+            if (comboBoxVideoEncoding.Text == "libx265" || comboBoxVideoEncoding.Text == "hevc_nvenc" || comboBoxVideoEncoding.Text == "hevc_amf")
             {
                 fileName += ".x265";
             }
@@ -778,6 +778,20 @@ namespace Nikse.SubtitleEdit.Forms
                     "lossless",
                 };
             }
+            else if (videoCodec == "h264_amf")
+            {
+                items = new List<string>
+                {
+                    string.Empty,
+                };
+            }
+            else if (videoCodec == "hevc_amf")
+            {
+                items = new List<string>
+                {
+                    string.Empty,
+                };
+            }
             else if (videoCodec == "libvpx-vp9")
             {
                 items = new List<string> { string.Empty };
@@ -865,6 +879,14 @@ namespace Nikse.SubtitleEdit.Forms
                     "p6",
                     "p7",
                 };
+            }
+            else if (videoCodec == "h264_amf")
+            {
+                items = new List<string> { string.Empty };
+            }
+            else if (videoCodec == "hevc_amf")
+            {
+                items = new List<string> { string.Empty };
             }
             else if (videoCodec == "libvpx-vp9")
             {
@@ -1061,11 +1083,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
             contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
-        }
-
-        private void labelPreviewPleaseWait_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
