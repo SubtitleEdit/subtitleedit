@@ -522,6 +522,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 cleanText = cleanText.Replace("{t(", "{\\t(");
                 cleanText = cleanText.Replace("{clip", "{\\clip");
                 cleanText = cleanText.Replace("{iclip", "{\\iclip");
+                cleanText = cleanText.Replace("{blur", "{\\blur");
             }
 
             cleanText = cleanText.Replace("<I>", "<i>");
