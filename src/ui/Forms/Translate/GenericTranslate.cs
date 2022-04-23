@@ -487,9 +487,25 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 cleanText = cleanText.Replace("{b0}", "{\\b0}");
                 cleanText = cleanText.Replace("{u1}", "{\\u1}");
                 cleanText = cleanText.Replace("{u0}", "{\\u0}");
+                cleanText = cleanText.Replace("{s1}", "{\\s1}");
+                cleanText = cleanText.Replace("{s0}", "{\\s0}");
                 cleanText = cleanText.Replace("{c&H", "{\\c&H");
+                cleanText = cleanText.Replace("{1&H", "{\\1c&H");
+                cleanText = cleanText.Replace("{2c&H", "{\\2c&H");
+                cleanText = cleanText.Replace("{3c&H", "{\\3c&H");
+                cleanText = cleanText.Replace("{4c&H", "{\\4c&H");
+                cleanText = cleanText.Replace("{alpha&H", "{\\alpha&H");
+                cleanText = cleanText.Replace("{1a&H", "{\\1a&H");
+                cleanText = cleanText.Replace("{2a&H", "{\\2a&H");
+                cleanText = cleanText.Replace("{3a&H", "{\\3a&H");
+                cleanText = cleanText.Replace("{4a&H", "{\\4a&H");
                 cleanText = cleanText.Replace("{fn", "{\\fn");
+                cleanText = cleanText.Replace("{fs", "{\\fs");
                 cleanText = cleanText.Replace("{an", "{\\an");
+                cleanText = cleanText.Replace("{be", "{\\be");
+                cleanText = cleanText.Replace("{pos", "{\\pos");
+                cleanText = cleanText.Replace("{fad", "{\\fad");
+                cleanText = cleanText.Replace("{move", "{\\move");
             }
 
             cleanText = cleanText.Replace("<I>", "<i>");
