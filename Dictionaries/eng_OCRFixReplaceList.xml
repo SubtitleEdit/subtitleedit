@@ -2789,6 +2789,17 @@
 		<Word from="ismy" to="is my" />
 		<Word from="bea" to="be a" />
 		<Word from="youa" to="you a" />
+		<Word from="I00se" to="loose" />
+		<Word from="0utside" to="outside" />
+		<Word from="Radi0" to="Radio" />
+		<Word from="s0" to="so" />
+		<Word from="0ff" to="off" />
+		<Word from="0rganize" to="organize" />
+		<Word from="int0" to="into" />
+		<Word from="0wn" to="own" />
+		<Word from="0rjoins" to="or joins" />
+		<Word from="0ther" to="other" />
+		<Word from="0kay" to="okay" />
 	</WholeWords>
 	<PartialWordsAlways>
 		<!-- Will be replaced always -->
