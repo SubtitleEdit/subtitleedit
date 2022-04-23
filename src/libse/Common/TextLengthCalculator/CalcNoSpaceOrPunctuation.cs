@@ -41,6 +41,7 @@
                 }
                 else if (!char.IsControl(ch) &&
                          ch != ' ' &&
+                         ch != '\t' &&
                          ch != zeroWidthSpace &&
                          ch != zeroWidthNoBreakSpace &&
                          ch != '\u200E' &&
@@ -58,16 +59,22 @@
                          ch != '\u2012' && // ‒ Figure dash (\u2012)
                          ch != '\u2013' && // – En dash (\u2013)
                          ch != '-' &&
-                         ch != ';' &&
+                         ch != '\'' &&
+                         ch != '"' &&
                          ch != ':' &&
                          ch != '(' &&
                          ch != ')' &&
+                         ch != '{' &&
+                         ch != '}' &&
                          ch != '[' &&
                          ch != ']' &&
+                         ch != '…' &&
                          ch != ',' &&
                          ch != '.' &&
                          ch != '!' &&
-                         ch != '?')
+                         ch != '?' &&
+                         ch != '¡' &&
+                         ch != '¿')
                 {
                     length++;
                 }
