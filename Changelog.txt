@@ -7,6 +7,7 @@
    * Option to turn off "word split list" in UI 
    * Custom file ext for custom text formats - thx Leon
    * Add shortcut for speech recog - thx lambdacore12
+   * Add cps calculation rule "No space/punctuation" - thx MMT Gouenji - Tech
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Hungarian translation - thx Zityi
@@ -25,6 +26,9 @@
    * Improve ASSA support for "Remove Leading '...'" - thx von Suppé
    * Add 4 extra colors to recent colors in color picker
    * Add a little vobsub support in spellcheck - thx cyzs233
+   * Add error msg for audio-to-text with online video - thx ilCosmico
+   * Try to keep assa tags after translate - thx eladkarako
+   * Remember online video for recent files (auto-reload)
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
