@@ -721,14 +721,21 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             threadEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                        if (!string.IsNullOrEmpty(paramEqual.Error))
+                        {
+                            errors.Add(paramEqual.Error);
+                        }
+
                         if (threadUnEqual.ThreadState == ThreadState.Running)
                         {
                             threadUnEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                        if (!string.IsNullOrEmpty(paramUnEqual.Error))
+                        {
+                            errors.Add(paramUnEqual.Error);
+                        }
                     }
                     else
                     {
@@ -736,14 +743,21 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             threadUnEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                        if (!string.IsNullOrEmpty(paramUnEqual.Error))
+                        {
+                            errors.Add(paramUnEqual.Error);
+                        }
+
                         if (threadEqual.ThreadState == ThreadState.Running)
                         {
                             threadEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                        if (!string.IsNullOrEmpty(paramEqual.Error))
+                        {
+                            errors.Add(paramEqual.Error);
+                        }
                     }
                 }
 
