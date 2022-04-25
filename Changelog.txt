@@ -39,7 +39,7 @@
    * Waveform fix for woking with online video files - thx Dheeraj
    * Fix bug when opening a file with video offset - thx OmrSi
    * Do not reapeat colors in color picker - thx SDH Marven
-   * Fix cmd line convert issue with ebu stil headerfile - thx Rumczeis
+   * Fix cmd line convert issue with ebu stl headerfile - thx Rumczeis
 
 
 3.6.5 (19th March 2022)
