@@ -690,6 +690,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             done = true;
                         }
 
+                        if (!done && fileName.EndsWith(".mcc", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var mcc = new MacCaption10();
+                            if (mcc.IsMine(null, fileName))
+                            {
+                                mcc.LoadSubtitle(sub, null, fileName);
+                                format = mcc;
+                            }
+                        }
+
                         if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
                         {
                             format = sub.LoadSubtitle(fileName, out _, null, true, frameRate);
