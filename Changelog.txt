@@ -2,11 +2,11 @@
 
 3.6.6 (xth May 2022) BETA
 * NEW:
-   * Add toobar icon for iTT properties - thx Leon
+   * Add toolbar icon for iTT properties - thx Leon
    * Add new sub format - thx Sergiy
    * Option to turn off "word split list" in UI 
    * Custom file ext for custom text formats - thx Leon
-   * Add shortcut for speech recog - thx lambdacore12
+   * Add shortcut for speech recognition - thx lambdacore12
    * Add cps calculation rule "No space/punctuation" - thx MMT Gouenji - Tech
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
@@ -15,7 +15,7 @@
    * Update Portuguese translation - thx hugok79
    * Update dotnet framework to 4.8
    * Add some new English names - thx Omair
-   * Add some err msg if user ocr fix replacelist invalid - thx sialivi
+   * Add err msg if user ocr fix replacelist invalid - thx sialivi
    * Improve burn-in settings - thx Leon 
    * Add AMD support (hevc_amf + h264_amf) for burn-in - thx MMT Gouenji - Tech
    * Support curly brackets in export custom text - thx Leon
@@ -29,6 +29,7 @@
    * Add error msg for audio-to-text with online video - thx ilCosmico
    * Try to keep assa tags after translate - thx eladkarako
    * Remember online video for recent files (auto-reload)
+   * Allow for large .mcc files in "cmd line convert" - thx Emerica
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
@@ -40,6 +41,7 @@
    * Fix bug when opening a file with video offset - thx OmrSi
    * Do not reapeat colors in color picker - thx SDH Marven
    * Fix cmd line convert issue with ebu stl headerfile - thx Rumczeis
+   * Fix image export missing error for last two lines - th Antoine
 
 
 3.6.5 (19th March 2022)
