@@ -274,23 +274,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("00", "Z");
         }
 
-        private static byte[] HexStringToByteArray(string hex)
+        private static byte[] HexStringToByteArray(string hexString)
         {
-            try
-            {
-                var numberChars = hex.Length;
-                var bytes = new byte[numberChars / 2];
-                for (var i = 0; i < numberChars - 1; i += 2)
-                {
-                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                }
-
-                return bytes;
-            }
-            catch
+            if (hexString.Length % 2 != 0)
             {
                 return new byte[] { };
             }
+
+            var ret = new byte[hexString.Length / 2];
+            for (var i = 0; i < ret.Length; i++)
+            {
+                int high = hexString[i * 2];
+                int low = hexString[i * 2 + 1];
+                high = (high & 0xf) + ((high & 0x40) >> 6) * 9;
+                low = (low & 0xf) + ((low & 0x40) >> 6) * 9;
+
+                ret[i] = (byte)((high << 4) | low);
+            }
+
+            return ret;
         }
     }
 }
