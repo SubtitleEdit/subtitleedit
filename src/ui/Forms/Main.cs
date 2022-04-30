@@ -19,11 +19,13 @@ using Nikse.SubtitleEdit.Forms.FormatProperties;
 using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Options;
+using Nikse.SubtitleEdit.Forms.SeJobs;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 using Nikse.SubtitleEdit.Logic.Networking;
+using Nikse.SubtitleEdit.Logic.SeJob;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -39,8 +41,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms.SeJobs;
-using Nikse.SubtitleEdit.Logic.SeJob;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -3071,6 +3071,29 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (LoadSeJob(FileUtil.ReadAllBytesShared(fileName)))
                 {
+                    return;
+                }
+            }
+
+            if (ext == ".mcc")
+            {
+                var lines = FileUtil.ReadAllTextShared(fileName, Encoding.ASCII).SplitToLines();
+                var f = new MacCaption10();
+                if (f.IsMine(lines, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, lines, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    SubtitleListview1.Fill(_subtitle);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                    SetTitle();
+                    ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                    _converted = true;
                     return;
                 }
             }
