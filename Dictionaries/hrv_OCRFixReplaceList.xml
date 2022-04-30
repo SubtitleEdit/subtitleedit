@@ -2865,6 +2865,7 @@
     <RegEx find="Drugaric" replaceWith="Prijateljic" />
     <RegEx find="dušek" replaceWith="madrac" />
     <RegEx find="Dušek" replaceWith="Madrac" />
+    <RegEx find="dqn" replaceWith="dan" />
     <RegEx find="džigeric" replaceWith="jetr" />
     <RegEx find="Džigeric" replaceWith="Jetr" />
     <RegEx find="žinovsk" replaceWith="ivovsk" />
@@ -2908,7 +2909,6 @@
     <RegEx find="([gG])ore([lt])" replaceWith="$1orje$2" />
     <!-- ne diraj! [dogorio/razgorio/ izgorio] -->
     <RegEx find="([gG])oreo" replaceWith="$1orio" />
-    <RegEx find="gpdb" replaceWith="godb" />
     <RegEx find="govren" replaceWith="govoren" />
     <RegEx find="([gG])rej(?!p)" replaceWith="$1rij" />
     <RegEx find="\b([gG])rj?e([hs])" replaceWith="$1rije$2" />
