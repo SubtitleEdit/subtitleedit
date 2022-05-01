@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Cea708
 {
@@ -54,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.Cea708
             }
 
             CcData = new CcData[ccDataCount];
-            int bytesIndex = 0;
+            var bytesIndex = 0;
             var lastContent = true;
             for (int i = 0; i < ccDataCount; i++)
             {
@@ -120,29 +119,18 @@ namespace Nikse.SubtitleEdit.Core.Cea708
 
         public string GetText(int lineIndex, CommandState state, bool flush)
         {
-            var hex = new StringBuilder();
+            var bytes = new List<byte>();
             foreach (var cc in CcData)
             {
                 if (cc.Valid && cc.Type == 2)
                 {
-                    hex.Append($"{cc.Data1:X2}{cc.Data2:X2}");
+                    bytes.Add(cc.Data1);
+                    bytes.Add(cc.Data2);
                 }
             }
 
-            var text = Cea708.Decode(lineIndex, HexStringToByteArray(hex.ToString()), state, flush);
+            var text = Cea708.Decode(lineIndex, bytes.ToArray(), state, flush);
             return text;
-        }
-
-        private static byte[] HexStringToByteArray(string hex)
-        {
-            var numberChars = hex.Length;
-            var bytes = new byte[numberChars / 2];
-            for (var i = 0; i < numberChars; i += 2)
-            {
-                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-            }
-
-            return bytes;
         }
 
         public byte[] GetBytes()
