@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
             MergeShortLinesMaxGap = 250;
-            MergeShortLinesMaxChars = 50;
+            MergeShortLinesMaxChars = 55;
             MergeShortLinesOnlyContinuous = true;
             ColumnPasteColumn = "all";
             ColumnPasteOverwriteMode = "overwrite";
