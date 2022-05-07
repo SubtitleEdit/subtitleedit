@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 
@@ -22,12 +23,17 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonDownload);
 
-            foreach (var downloadModel in DownloadModel.VoskModels)
+            var selectedIndex = 0;
+            foreach (var downloadModel in DownloadModel.VoskModels.OrderBy(p=>p.LanguageName))
             {
                 comboBoxModels.Items.Add(downloadModel);
+                if (selectedIndex == 0 && downloadModel.TwoLetterLanguageCode == "en")
+                {
+                    selectedIndex = comboBoxModels.Items.Count - 1;
+                }
             }
 
-            comboBoxModels.SelectedIndex = 0;
+            comboBoxModels.SelectedIndex = selectedIndex;
             labelPleaseWait.Text = string.Empty;
         }
 
