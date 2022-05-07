@@ -151,6 +151,12 @@
                 LanguageName = "Hindi",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-hi-0.22.zip",
             },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "cz",
+                LanguageName = "Czech",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-cs-0.4-rhasspy.zip",
+            },
         };
     }
 }
