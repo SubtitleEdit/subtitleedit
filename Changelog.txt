@@ -42,6 +42,7 @@
    * Do not reapeat colors in color picker - thx SDH Marven
    * Fix cmd line convert issue with ebu stl headerfile - thx Rumczeis
    * Fix image export missing error for last two lines - th Antoine
+   * Fix "Merge short lines" in "Batch Conv" to use UI settings - thx maharaj12 
 
 
 3.6.5 (19th March 2022)
