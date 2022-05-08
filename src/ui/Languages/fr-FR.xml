@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.5</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated by 22/01/11)</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated by 22/05/08</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -95,7 +95,7 @@
     <ShortcutX>Raccourci : {0}</ShortcutX>
     <ExampleX>Exemple : {0}</ExampleX>
   </General>
-  <Reset>Rétablir</Reset>
+    <Reset>Rétablir</Reset>
   <About>
     <Title>A propos de Subtitle Edit</Title>
     <AboutText1>Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
@@ -173,7 +173,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio/vidéo vers texte</Title>
-    <Info>Générer un texte depuis l'audio via la reconnaissance vocale "Vosk/Kaldi"</Info>
+    <Info>Générer un texte depuis l'audio via la reconnaissance vocale &quot;Vosk/Kaldi&quot;</Info>
     <VoskWebsite>Site Vosk</VoskWebsite>
     <Models>Modèles</Models>
     <ChooseModel>Choisir un modèle</ChooseModel>
@@ -238,8 +238,9 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <BoxColor>Couleur de boîte</BoxColor>
     <Radius>Rayon</Radius>
     <Step>Etape</Step>
-    <MaxSpike>Max spike</MaxSpike>
     <Spikes>Pointes</Spikes>
+    <Bubbles>Bulles</Bubbles>
+    <Circle>Cercle</Circle>
     <MarginX>Marge X</MarginX>
     <MarginY>Marge Y</MarginY>
     <OnlyDrawing>Dessin seul</OnlyDrawing>
@@ -390,8 +391,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TitleShort>Ajuster la vitesse</TitleShort>
     <Info>Modifier la vitesse des sous-titres en pourcentage</Info>
     <Custom>Personnaliser</Custom>
-    <ToDropFrame>Vers drop-frame</ToDropFrame>
-    <FromDropFrame>De drop-frame</FromDropFrame>
+    <ToDropFrame>Vers l'image balise</ToDropFrame>
+    <FromDropFrame>De l'ilage balise</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Vérifier les mises à jour</Title>
@@ -591,6 +592,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TimeCode>Horodatage</TimeCode>
     <NewLine>Saut de ligne</NewLine>
     <Footer>Pied de page</Footer>
+    <FileExtension>Extension fichier</FileExtension>
     <DoNotModify>[Ne pas modifier]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -963,7 +965,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
     <EndTime>Heure fin</EndTime>
     <FileName>Nom fichier</FileName>
     <Join>Joindre</Join>
-    <TotalNumberOfLinesX>Nombre total de lignes: {0:#,###,###}</TotalNumberOfLinesX>
+    <TotalNumberOfLinesX>Nombre total de lignes : {0:#,###,###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>Les fichiers sont déjà bien horodatés</AlreadyCorrectTimeCodes>
     <AppendTimeCodes>Ajouter l'heure de clôture du fichier précédent</AppendTimeCodes>
     <AddMs>Ajouter des msec. après chaque fichier</AddMs>
@@ -1287,8 +1289,8 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       <Help>
         <CheckForUpdates>Vérifier les mises à jour ...</CheckForUpdates>
         <Title>Aide</Title>
-        <Help>Aide</Help>
-        <About>A propos</About>
+        <Help>Aide en ligne ...</Help>
+        <About>A propos de ...</About>
       </Help>
       <ToolBar>
         <New>Nouveau</New>
@@ -1439,7 +1441,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       <SetEndTimeAndGoToNext>Fixer fin - aller au suivant</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Ajusté par rapport à l'heure de fin {0}</AdjustedViaEndTime>
       <SetEndTime>Définir l'heure de fin</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Fixer début - décaler suite</SetstartTimeAndOffsetOfRest>
+      <SetStartTimeAndOffsetTheRest>Fixer début - décaler suite</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Chercher du texte en ligne</SearchTextOnline>
       <GoogleTranslate>Traduction Google</GoogleTranslate>
       <AutoTranslate>Traduction automatique</AutoTranslate>
@@ -1734,6 +1736,7 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <ShowVideoControls>Afficher les contôles vidéo</ShowVideoControls>
     <HideVideoControls>Masquer les contôles vidéo</HideVideoControls>
     <GeneratingWaveformInBackground>Générer l'onde sonore en arrière-plan ...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Auto-sauvegardé</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
@@ -1893,6 +1896,7 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <DurationGreaterThan>Durée &gt; que</DurationGreaterThan>
     <MoreThanTwoLines>Plus de 2 lignes</MoreThanTwoLines>
     <Bookmarked>Marqué d'un signet</Bookmarked>
+    <BlankLines>Lignes vierges</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Remplacements multiples</Title>
@@ -2076,6 +2080,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <Find>Chercher</Find>
     <Replace>Remplacer</Replace>
     <VisualSync>Synchronisation visuelle</VisualSync>
+    <BurnIn>Graver</BurnIn>
     <SpellCheck>Orthographe</SpellCheck>
     <NetflixQualityCheck>Contrôle qualité Netflix</NetflixQualityCheck>
     <SettingsName>Paramètres</SettingsName>
@@ -2092,7 +2097,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ToggleView>Commuter les vues Liste/Source</ToggleView>
     <ToggleMode>Commuter les modes Traduire/Créer/Ajuster</ToggleMode>
     <TogglePreviewOnVideo>Commuter l'aperçu sur la vidéo</TogglePreviewOnVideo>
-    <Help>Aide</Help>
+    <Help>Aide en ligne</Help>
     <FontInUi>Police de l'interface utilisateur</FontInUi>
     <Appearance>Apparence</Appearance>
     <ShowFrameRate>Afficher la fréquence d'image dans la barre d'outils</ShowFrameRate>
@@ -2131,6 +2136,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ApplyAssaOverrideTags>Appliquer des balises de remplacement ASSA à la sélection</ApplyAssaOverrideTags>
     <SetAssaPosition>Définir/obtenir la position ASSA</SetAssaPosition>
     <SetAssaResolution>Définir résolution lecture (X/Y)ASSA</SetAssaResolution>
+    <TakeAutoBackup>Auto-sauvegarder maintenant</TakeAutoBackup>
     <ShowLineBreaksAs>Afficher les sauts de ligne en mode liste:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Sauver sous ..." utilise le nom de fichier :</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Double-cliquer sur une ligne dans la fenêtre principale :</MainListViewDoubleClickAction>
@@ -2138,6 +2144,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <MainListViewNothing>Rien</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Aller à la position vidéo puis pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Aller à la position vidéo puis lire</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Aller à la position vidéo, lire l'en cours puis pause</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Aller à la boite d'édition de texte</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Aller à la position vidéo -1 seconde et pause</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Aller à la position vidéo -0,5 seconde et pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2183,7 +2190,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <MainWindowVideoControls>Contrôles vidéo de la fenêtre principale</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Recherche personnalisée de texte et d'URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Apparence du spectrogramme</WaveformAppearance>
-    <WaveformGridColor>Grille</WaveformGridColor>
+    <WaveformGridColor>Coulmeur grille</WaveformGridColor>
     <WaveformShowGridLines>Afficher le quadrillage</WaveformShowGridLines>
     <WaveformShowCps>Afficher les caractères/s</WaveformShowCps>
     <WaveformShowWpm>Afficher les mots/min</WaveformShowWpm>
@@ -2250,7 +2257,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <FirstPlusX>Premier + {0}</FirstPlusX>
     <LastMinusX>Dernier - {0}</LastMinusX>
     <FixCommonerrors>Corriger erreurs</FixCommonerrors>
-    <RemoveTextForHi>Malentendants</RemoveTextForHi>
+    <RemoveTextForHi>Retirer texte malentendants</RemoveTextForHi>
     <MergeLinesShorterThan>Joindre lignes inférieures à</MergeLinesShorterThan>
     <DialogStyle>Style du dialogue</DialogStyle>
     <DialogStyleDashBothLinesWithSpace>Tiret+espace aux deux lignes</DialogStyleDashBothLinesWithSpace>
@@ -2265,11 +2272,22 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ContinuationStyleLeadingTrailingDots>Points</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>Ellipse</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>Aucun, ellipse aux pauses</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>Ellipse (en fin seulement)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Tiret</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Tiret mais points aux pauses</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>Cps/longueur ligne</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>Compter tous caractères</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Compter tou sauf blancs majuscules</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>Compter tout sauf blancs</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, blanc 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorer les diacritiques arabes</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorer les diacritiques arabes/blanc</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Pas d'espace / ponctuation ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>Symbole musical</MusicSymbol>
     <MusicSymbolsReplace>Symboles musicaux à remplacer (séparés par une virgule)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corriger les erreurs OCR - utiliser aussi les règles intégrées</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>Utiliser la liste de fractionnement de mot (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corriger durées courtes - autoriser déplacement heure début</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorer la première étape (choix des règles de correction)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Format par défaut</DefaultFormat>
@@ -2430,6 +2448,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <VideoResetSpeedAndZoom>Rétablir vitesse / zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Activer/désactiver les contrôles vidéo</MainToggleVideoControls>
     <VideoToggleContrast>Commuter contraste (mpv seul)</VideoToggleContrast>
+    <VideoAudioToText>Vidéo/audio -> texte (reconnaissance vocale)</VideoAudioToText>
     <VideoToggleBrightness>Commuter luminosité (mpv seul)</VideoToggleBrightness>
     <CustomSearch1>Traduction, recherche personnalisée 1</CustomSearch1>
     <CustomSearch2>Traduction, recherche personnalisée 2</CustomSearch2>
@@ -2510,7 +2529,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <BreakEarlyForComma>Couper tôt aux virgules</BreakEarlyForComma>
     <GoogleTranslate>Google Translate</GoogleTranslate>
     <GoogleTranslateApiKey>Clé API</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Traducteur Microsoft Bing</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Traducteur Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Comment s'inscrire ?</HowToSignUp>
     <MicrosoftTranslateApiKey>Clé</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Point de fin jeton</MicrosoftTranslateTokenEndpoint>
@@ -2540,7 +2559,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <FileTypeAssociationsUpdated>Associations de type de fichier actualisée</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
-    <DownloadMpv>Télécharger mpv lib</DownloadMpv>
+    <DownloadMpv>Télécharger "mpv lib"</DownloadMpv>
     <DownloadMpvFailed>Téléchargement de la bibliothèque mpv en échec - Réessayez plus tard !</DownloadMpvFailed>
     <DownloadMpvOk>La bibliothèque mpv est téléchargé et prête à l'emploi.</DownloadMpvOk>
   </SettingsMpv>
@@ -2608,6 +2627,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <SpellCheckAborted>Vérification d'orthographe interrompue</SpellCheckAborted>
     <SpacesNotAllowed>Les espaces ne sont pas autorisés dans un mot !</SpacesNotAllowed>
     <UndoX>Défaire : {0}</UndoX>
+    <OpenImageBasedSourceFile>Ouvrir un fichier source basé sur une image ...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Caractère invalide {0} trouvé à la colonne {1}</GlyphCheckReport>
@@ -2700,6 +2720,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Caractères/sec - minimum : {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caractères/sec - maximum : {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caractères/sec - moyen : {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>Ecart minimal : {0} ms</MinimalGap>
     <Export>Exporter ...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2941,6 +2962,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <AlsoTrainBold>Initier aussi le gras</AlsoTrainBold>
     <StartTraining>Démarrer l'initiation</StartTraining>
     <NowTraining>Initiation de la police '{1}'. Total carac. acquis : {0:#,###,##0}, {2:#,###,##0} connus</NowTraining>
+    <ImagesWithTimeCodesInFileName>Images au nom de fichier horodaté ...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversion manuelle d'image en texte</Title>
@@ -2950,7 +2972,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <Characters>Caractère(s) :</Characters>
     <CharactersAsText>Texte correspondant :</CharactersAsText>
     <Italic>Italique</Italic>
-    <Abort>Stopper</Abort>
+    <Abort>Interrompre</Abort>
     <Skip>Ignorer</Skip>
     <Nordic>Nordique</Nordic>
     <Spanish>Espagnol</Spanish>
