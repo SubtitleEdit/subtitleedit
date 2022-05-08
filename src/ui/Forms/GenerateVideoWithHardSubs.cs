@@ -980,7 +980,7 @@ namespace Nikse.SubtitleEdit.Forms
                 File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
 
                 // hardcode subtitle
-                var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".mp4");
+                var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
                 process = GetFfmpegProcess(tempVideoFileName, outputVideoFileName, assaTempFileName);
                 process.Start();
                 process.BeginOutputReadLine();
@@ -991,18 +991,46 @@ namespace Nikse.SubtitleEdit.Forms
                     Application.DoEvents();
                 }
 
+
+
                 Cursor = Cursors.Default;
-                var bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, "00:00:01");
-                using (var bmp = new Bitmap(bmpFileName))
+                string bmpFileName = string.Empty;
+
+                try
                 {
-                    using (var form = new ExportPngXmlPreview(bmp))
+                    bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, "00:00:01");
+                    using (var bmp = new Bitmap(bmpFileName))
                     {
-                        form.AllowNext = false;
-                        form.AllowPrevious = false;
-                        labelPreviewPleaseWait.Visible = false;
-                        form.ShowDialog(this);
+                        using (var form = new ExportPngXmlPreview(bmp))
+                        {
+                            form.AllowNext = false;
+                            form.AllowPrevious = false;
+                            labelPreviewPleaseWait.Visible = false;
+                            form.ShowDialog(this);
+                        }
                     }
                 }
+                catch
+                {
+                    if (comboBoxVideoEncoding.Text.EndsWith("_amf"))
+                    {
+                        MessageBox.Show("Unable to generate video with AMD hardware acceleration!");
+                    }
+                    else if (comboBoxVideoEncoding.Text.EndsWith("_nvenc"))
+                    {
+                        MessageBox.Show("Unable to generate video with Nvidia hardware acceleration!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unable to generate video!");
+                    }
+
+                    Cursor = Cursors.Default;
+                    buttonPreview.Enabled = true;
+                    labelPreviewPleaseWait.Visible = false;
+                    return;
+                }
+                
 
                 try
                 {
