@@ -439,6 +439,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     FillListView(_subtitle);
                 }
             }
+            else if (ext == ".idx")
+            {
+                if (!ImportSubtitleFromManzanitaTransportStream(fileName))
+                {
+                    return;
+                }
+
+                _subtitle.Renumber();
+                FillListView(_subtitle);
+            }
 
             if (_subtitle != null)
             {
@@ -775,6 +785,19 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             return LoadTransportStreamSubtitle(tsParser.GetDvbSubtitles(tsParser.SubtitlePacketIds[0]));
+        }
+
+        private bool ImportSubtitleFromManzanitaTransportStream(string fileName)
+        {
+            var tsParser = new ManzanitaTransportStreamParser();
+            tsParser.Parse(fileName);
+            var subtitles = tsParser.GetDvbSup();
+            if (subtitles.Count > 0)
+            {
+                return LoadTransportStreamSubtitle(subtitles);
+            }
+
+            return false;  // no image based subtitles found
         }
 
         private bool LoadTransportStreamSubtitle(List<TransportStreamSubtitle> subtitles)
@@ -1892,7 +1915,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                      "Matroska|*.mkv;*.mks|" +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
                                      "BdnXml|*.xml|" +
-                                     "TTML base64 inline images|*.ttml";
+                                     "TTML base64 inline images|*.ttml|" +
+                                     "Manzanita MP2TSME DVB SUP|*.idx";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 OpenBinSubtitle(openFileDialog1.FileName);
