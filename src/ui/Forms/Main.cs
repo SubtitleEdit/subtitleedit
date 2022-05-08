@@ -32852,7 +32852,8 @@ namespace Nikse.SubtitleEdit.Forms
                                      "Matroska|*.mkv;*.mks|" +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
                                      "BdnXml|*.xml|" +
-                                     "TTML base64 inline images|*.ttml";
+                                     "TTML base64 inline images|*.ttml|" +
+                                     "Manzanita MP2TSME DVB SUP|*.idx";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))

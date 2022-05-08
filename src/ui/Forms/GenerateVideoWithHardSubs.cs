@@ -991,11 +991,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Application.DoEvents();
                 }
 
-
-
-                Cursor = Cursors.Default;
-                string bmpFileName = string.Empty;
-
+                string bmpFileName;
                 try
                 {
                     bmpFileName = VideoPreviewGenerator.GetScreenShot(outputVideoFileName, "00:00:01");
