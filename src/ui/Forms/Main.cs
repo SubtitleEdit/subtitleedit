@@ -2931,6 +2931,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (ext == ".idx")
+            {
+                var tsParser = new ManzanitaTransportStreamParser();
+                tsParser.Parse(fileName);
+                var subtitles = tsParser.GetDvbSup();
+                if (subtitles.Count > 0)
+                {
+                    ImportSubtitleFromManzanitaTransportStream(fileName, subtitles);
+                    return;
+                }
+            }
+
             if (((ext == ".m2ts" || ext == ".ts" || ext == ".mts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
                 (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
             {
@@ -14632,6 +14644,55 @@ namespace Nikse.SubtitleEdit.Forms
                     language = programMapTableParser.GetSubtitleLanguage(packetId);
                 }
 
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName, language);
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
+
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                    _fileName = string.Empty;
+                    if (!string.IsNullOrEmpty(formSubOcr.FileName))
+                    {
+                        var currentFormat = GetCurrentSubtitleFormat();
+                        _fileName = Utilities.GetPathAndFileNameWithoutExtension(formSubOcr.FileName) + currentFormat.Extension;
+                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                        {
+                            OpenVideo(fileName);
+                        }
+
+                        _converted = true;
+                    }
+
+                    SetTitle();
+                    Configuration.Settings.Save();
+                    return true;
+                }
+            }
+
+            _exitWhenLoaded = _loading;
+            return false;
+        }
+
+        private bool ImportSubtitleFromManzanitaTransportStream(string fileName, List<TransportStreamSubtitle> subtitles)
+        {
+            ShowStatus(_language.ParsingTransportStream);
+            Refresh();
+
+            using (var formSubOcr = new VobSubOcr())
+            {
+                string language = null;
                 formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName, language);
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
