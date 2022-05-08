@@ -258,7 +258,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     }
                                 }
 
-                                if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
+                                var preNoTags = HtmlUtil.RemoveHtmlTags(pre, true).Trim();
+                                if (temp.Length > 0 &&
+                                    (preNoTags.Length == 0 ||
+                                     preNoTags == "-" ||
+                                     preNoTags.EndsWith(". -", StringComparison.Ordinal) ||
+                                     preNoTags.EndsWith("! -", StringComparison.Ordinal) ||
+                                     preNoTags.EndsWith("? -", StringComparison.Ordinal) ||
+                                     preNoTags.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal) ||
+                                     preNoTags.HasSentenceEnding()) &&
+                                    s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
                                 {
                                     temp = char.ToUpper(temp[0]) + temp.Substring(1);
                                     doRepeat = true;
@@ -472,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var newLines = text.SplitToLines();
                     if (oldLines.Count == 2 && newLines.Count == 1 &&
                         (oldLines[0] == newLines[0] || oldLines[1] == newLines[0]))
-                    {                        
+                    {
                         return text;
                     }
 
