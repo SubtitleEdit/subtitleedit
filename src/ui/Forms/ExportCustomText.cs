@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private readonly List<string> _templates = new List<string>();
         private readonly Subtitle _subtitle;
-        private readonly Subtitle _translated;
+        private readonly Subtitle _original;
         private readonly string _title;
         private bool _batchConvert;
         public string LogMessage { get; set; }
@@ -24,15 +24,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            if (original?.Paragraphs == null || original.Paragraphs.Count == 0)
-            {
-                _subtitle = subtitle;
-            }
-            else
-            {
-                _subtitle = original;
-                _translated = subtitle;
-            }
+            _subtitle = subtitle;
+            _original = original;
 
             _title = title;
 
@@ -214,15 +207,15 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + fileExt;
             }
 
-            saveFileDialog1.Filter = 
+            saveFileDialog1.Filter =
                 fileExt.TrimStart('.') + "|*" + fileExt + "|" +
                 LanguageSettings.Current.General.AllFiles + "|*.*";
-            
+
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 try
                 {
-                    FileUtil.WriteAllText(saveFileDialog1.FileName, GenerateText(_subtitle, _translated, _title), GetCurrentEncoding());
+                    FileUtil.WriteAllText(saveFileDialog1.FileName, GenerateText(_subtitle, _original, _title), GetCurrentEncoding());
                     LogMessage = string.Format(LanguageSettings.Current.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName);
                     DialogResult = DialogResult.OK;
                 }
@@ -233,7 +226,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GenerateText(Subtitle subtitle, Subtitle translation, string title)
+        private string GenerateText(Subtitle subtitle, Subtitle original, string title)
         {
             if (listViewTemplates.SelectedItems.Count != 1)
             {
@@ -245,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 int idx = listViewTemplates.SelectedItems[0].Index;
-                return GenerateCustomText(subtitle, translation, title, _templates[idx]);
+                return GenerateCustomText(subtitle, original, title, _templates[idx]);
             }
             catch (Exception exception)
             {
@@ -275,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
             return ".txt";
         }
 
-        internal static string GenerateCustomText(Subtitle subtitle, Subtitle translation, string title, string templateString)
+        internal static string GenerateCustomText(Subtitle subtitle, Subtitle original, string title, string templateString)
         {
             var arr = templateString.Split('Æ');
             var sb = new StringBuilder();
@@ -297,16 +290,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 text = ExportCustomTextFormat.GetText(text, arr[4]);
 
-                string translationText = string.Empty;
-                if (translation?.Paragraphs != null && translation.Paragraphs.Count > 0)
+                string originalText = string.Empty;
+                if (original?.Paragraphs != null && original.Paragraphs.Count > 0)
                 {
-                    var trans = Utilities.GetOriginalParagraph(i, p, translation.Paragraphs);
-                    if (trans != null)
+                    var originalParagraph = Utilities.GetOriginalParagraph(i, p, original.Paragraphs);
+                    if (originalParagraph != null)
                     {
-                        translationText = trans.Text;
+                        originalText = originalParagraph.Text;
                     }
                 }
-                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Actor, p.Duration, arr[3], p);
+                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, originalText, i, p.Actor, p.Duration, arr[3], p);
                 sb.Append(paragraph);
             }
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
@@ -315,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewTemplates_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxPreview.Text = GenerateText(_subtitle, _translated, _title);
+            textBoxPreview.Text = GenerateText(_subtitle, _original, _title);
             buttonSave.Enabled = listViewTemplates.SelectedItems.Count == 1;
         }
 
