@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             var s = template.Replace("{start}", "{0}");
             s = s.Replace("{end}", "{1}");
             s = s.Replace("{text}", "{2}");
-            s = s.Replace("{translation}", "{3}");
+            s = s.Replace("{original-text}", "{3}");
             s = s.Replace("{number}", "{4}");
             s = s.Replace("{number:", "{4:");
             s = s.Replace("{number-1}", "{5}");
@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
             return template;
         }
 
-        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, string actor, TimeCode duration, string timeCodeTemplate, Paragraph p)
+        internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string timeCodeTemplate, Paragraph p)
         {
             var cps = Utilities.GetCharactersPerSecond(p);
             var d = duration.ToString();
@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Forms
             var replaceEnd = GetReplaceChar(s + replaceStart);
             s = PreBeginCurly(s, replaceStart);
             s = PreEndCurly(s, replaceEnd);
-            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2,
+            s = string.Format(s, start, end, text, originalText, number + 1, number, d, actor, line1, line2,
                               cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","),
                               cps.ToString(CultureInfo.InvariantCulture),
                               text.Length,
