@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     FillListView(_subtitle);
                 }
             }
-            else if (ext == ".idx")
+            else if (FileUtil.IsManzanita(fileName))
             {
                 if (!ImportSubtitleFromManzanitaTransportStream(fileName))
                 {
@@ -1916,7 +1916,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
                                      "BdnXml|*.xml|" +
                                      "TTML base64 inline images|*.ttml|" +
-                                     "Manzanita MP2TSME DVB SUP|*.idx";
+                                     "All files|*.*";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 OpenBinSubtitle(openFileDialog1.FileName);
