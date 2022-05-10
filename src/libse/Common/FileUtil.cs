@@ -276,6 +276,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        public static bool IsManzanita(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[17];
+                var bytesRead = fs.Read(buffer, 0, buffer.Length);
+                return bytesRead == buffer.Length &&
+                       Encoding.ASCII.GetString(buffer, 0, buffer.Length) == "<private_stream_1";
+            }
+        }
+
         public static bool IsSpDvdSup(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

@@ -2931,7 +2931,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (ext == ".idx")
+            if (FileUtil.IsManzanita(fileName))
             {
                 var tsParser = new ManzanitaTransportStreamParser();
                 tsParser.Parse(fileName);
@@ -32914,7 +32914,7 @@ namespace Nikse.SubtitleEdit.Forms
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
                                      "BdnXml|*.xml|" +
                                      "TTML base64 inline images|*.ttml|" +
-                                     "Manzanita MP2TSME DVB SUP|*.idx";
+                                     "All files|*.*";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 using (var form = new BinaryEdit.BinEdit(openFileDialog1.FileName))
