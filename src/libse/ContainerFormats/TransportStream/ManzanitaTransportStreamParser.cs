@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     pes = new DvbSubPes(0, pesData);
                 }
 
+                pes.PresentationTimestamp = dataIndex.Pts;
                 _dvbSubs.Add(pes);
             }
         }
@@ -127,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 var dataIndex = new ManzanitaDataIndex();
 
-                if (pts != null && long.TryParse(pts.Value, out var ptsNumber))
+                if (pts != null && ulong.TryParse(pts.Value, out var ptsNumber))
                 {
                     dataIndex.Pts = ptsNumber;
                 }
@@ -152,7 +153,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public List<TransportStreamSubtitle> GetDvbSup()
         {
             var subtitles = new List<TransportStreamSubtitle>();
-            var seconds = 0;
             for (var i = 0; i < _dvbSubs.Count; i++)
             {
                 var pes = _dvbSubs[i];
@@ -160,24 +160,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 if (pes.ObjectDataList.Count > 0)
                 {
                     var sub = new TransportStreamSubtitle();
-                    sub.StartMilliseconds = (ulong)seconds * 1000UL;
-                    seconds += pes.PageCompositions[0].PageTimeOut;
-                    if (pes.PageCompositions.Count > 0)
-                    {
-                        sub.EndMilliseconds = sub.StartMilliseconds + (ulong)pes.PageCompositions[0].PageTimeOut * 1000UL;
-                    }
-                    else
-                    {
-                        sub.EndMilliseconds = sub.StartMilliseconds + 2500;
-                    }
-
+                    sub.StartMilliseconds = pes.PresentationTimestamp.Value / 90;
                     sub.Pes = pes;
                     subtitles.Add(sub);
                 }
-
-                if (pes.PageCompositions.Count > 0)
+                else if (subtitles.Count > 0 && subtitles[subtitles.Count-1].EndMilliseconds == 0)
                 {
-                    seconds += pes.PageCompositions[0].PageTimeOut;
+                    subtitles[subtitles.Count - 1].EndMilliseconds = pes.PresentationTimestamp.Value / 90;
                 }
             }
 

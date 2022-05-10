@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public static readonly int DefaultScreenHeight = 576;
 
         public int Length { get; }
-        public ulong? PresentationTimestamp { get; }
+        public ulong? PresentationTimestamp { get; set; }
         public ulong? DecodeTimestamp { get; }
         public int? SubPictureStreamId { get; }
         public uint StartCode { get; }
