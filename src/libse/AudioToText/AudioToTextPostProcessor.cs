@@ -126,6 +126,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                     mergedSubtitle.Paragraphs.Add(p);
                 }
+
+                if (language == "jp")
+                {
+                    ParagraphMaxChars = 20;
+                }
+
                 var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
