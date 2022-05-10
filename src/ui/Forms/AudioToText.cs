@@ -117,6 +117,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return languageCode;
                 }
+
+                if (languageCode == "jp" && (text.Contains("model-ja") || text.Contains("model-small-ja")))
+                {
+                    return languageCode;
+                }
             }
 
             return "en";

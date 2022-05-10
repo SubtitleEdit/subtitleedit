@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public static bool IsNumber(string s) 
+        public static bool IsNumber(string s)
         {
             s = s.Trim('$', '£', '¥', '%', '*');
             if (RegexIsNumber.IsMatch(s))
@@ -2868,11 +2868,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return true;
                     }
 
-                    bool isLineContinuation = s.EndsWith(',') ||
+                    var isLineContinuation = s.EndsWith(',') ||
                                               s.EndsWith('-') ||
                                               s.EndsWith("...", StringComparison.Ordinal) ||
-                                              s.EndsWith("…", StringComparison.Ordinal) || // Unicode Character 'HORIZONTAL ELLIPSIS' (U+2026)
-                                              AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
+                                              s.EndsWith("…", StringComparison.Ordinal) ||
+                                              AllLetters.Contains(s.Substring(s.Length - 1)) ||
+                                              CalcCjk.IsCjk(s[s.Length - 1]);
 
                     if (!onlyContinuationLines)
                     {
