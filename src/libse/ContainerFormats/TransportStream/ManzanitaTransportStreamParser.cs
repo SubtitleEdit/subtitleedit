@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.VobSub;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,7 +84,62 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return new List<ManzanitaDataIndex>();
             }
 
-            for (int i = 0; i < bytesRead - 20; i++)
+            startIndex = FindBinaryStartIndex(bytesRead, buffer, endTag);
+
+            xml = xml.Substring(0, endIndex + endTag.Length);
+            var xmlDoc = new XmlDocument { XmlResolver = null };
+            xmlDoc.LoadXml(xml);
+            const string ns = "http://www.manzanitasystems.com/schema/v1.03/private_stream_1";
+            var namespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
+            namespaceManager.AddNamespace("ns", ns);
+
+            var result = new List<ManzanitaDataIndex>();
+            if (xmlDoc.DocumentElement == null)
+            {
+                return result;
+            }
+
+            var dataIndexNode = xmlDoc.DocumentElement.SelectSingleNode("ns:data_index", namespaceManager);
+            if (dataIndexNode == null)
+            {
+                return result;
+            }
+
+            foreach (XmlNode node in dataIndexNode.SelectNodes("ns:packet", namespaceManager))
+            {
+                if (node.Attributes == null)
+                {
+                    continue;
+                }
+
+                var dataIndex = new ManzanitaDataIndex();
+
+                var pts = node.Attributes["pts"];
+                if (pts != null && ulong.TryParse(pts.Value, out var ptsNumber))
+                {
+                    dataIndex.Pts = ptsNumber;
+                }
+
+                var offset = node.Attributes["offset"];
+                if (offset != null && long.TryParse(offset.Value, out var offsetNumber))
+                {
+                    dataIndex.Offset = offsetNumber;
+                }
+
+                var length = node.Attributes["length"];
+                if (length != null && long.TryParse(length.Value, out var lengthNumber))
+                {
+                    dataIndex.Length = lengthNumber;
+                    result.Add(dataIndex);
+                }
+            }
+
+            return result;
+        }
+
+        private static int FindBinaryStartIndex(int bytesRead, byte[] buffer, string endTag)
+        {
+            for (var i = 0; i < bytesRead - 20; i++)
             {
                 // </private_stream_1> + 0x0a
                 // 3C 2F 70 72 69 76 61 74 65 5F 73 74 72 65 61 6D 5F 31 3E 0A
@@ -108,69 +164,63 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     buffer[i + 18] == 0x3e &&
                     buffer[i + 19] == 0x0a)
                 {
-                    startIndex = i + endTag.Length + 1;
-                    break;
+                    return i + endTag.Length + 1;
                 }
             }
 
-            xml = xml.Substring(0, endIndex + endTag.Length);
-            var xmlDoc = new XmlDocument { XmlResolver = null };
-            xmlDoc.LoadXml(xml);
-            const string ns = "http://www.manzanitasystems.com/schema/v1.03/private_stream_1";
-            var nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
-            nsmgr.AddNamespace("ns", ns);
-
-            var result = new List<ManzanitaDataIndex>();
-            var dataIndexNode = xmlDoc.DocumentElement.SelectSingleNode("ns:data_index", nsmgr);
-            foreach (XmlNode node in dataIndexNode.SelectNodes("ns:packet", nsmgr))
-            {
-                var pts = node.Attributes["pts"];
-
-                var dataIndex = new ManzanitaDataIndex();
-
-                if (pts != null && ulong.TryParse(pts.Value, out var ptsNumber))
-                {
-                    dataIndex.Pts = ptsNumber;
-                }
-
-                var offset = node.Attributes["offset"];
-                if (offset != null && long.TryParse(offset.Value, out var offsetNumber))
-                {
-                    dataIndex.Offset = offsetNumber;
-                }
-
-                var length = node.Attributes["length"];
-                if (length != null && long.TryParse(length.Value, out var lengthNumber))
-                {
-                    dataIndex.Length = lengthNumber;
-                    result.Add(dataIndex);
-                }
-            }
-
-            return result;
+            return 0;
         }
 
         public List<TransportStreamSubtitle> GetDvbSup()
         {
             var subtitles = new List<TransportStreamSubtitle>();
-            for (var i = 0; i < _dvbSubs.Count; i++)
+            foreach (var pes in _dvbSubs)
             {
-                var pes = _dvbSubs[i];
                 pes.ParseSegments();
+                if (pes.PresentationTimestamp == null)
+                {
+                    continue;
+                }
+
                 if (pes.ObjectDataList.Count > 0)
                 {
-                    var sub = new TransportStreamSubtitle();
-                    sub.StartMilliseconds = pes.PresentationTimestamp.Value / 90;
-                    sub.Pes = pes;
-                    subtitles.Add(sub);
+                    subtitles.Add(new TransportStreamSubtitle
+                    {
+                        StartMilliseconds = pes.PresentationTimestamp.Value / 90,
+                        Pes = pes
+                    });
                 }
-                else if (subtitles.Count > 0 && subtitles[subtitles.Count-1].EndMilliseconds == 0)
+                else if (subtitles.Count > 0 && subtitles[subtitles.Count - 1].EndMilliseconds == 0)
                 {
                     subtitles[subtitles.Count - 1].EndMilliseconds = pes.PresentationTimestamp.Value / 90;
+
                 }
             }
 
+            FixEmptyDurations(subtitles);
             return subtitles;
+        }
+
+        private static void FixEmptyDurations(List<TransportStreamSubtitle> subtitles)
+        {
+            for (var i = 0; i < subtitles.Count; i++)
+            {
+                var p = subtitles[i];
+                if (p.EndMilliseconds != 0)
+                {
+                    continue;
+                }
+
+                p.EndMilliseconds = p.StartMilliseconds + (ulong)Configuration.Settings.General.NewEmptyDefaultMs;
+                if (i < subtitles.Count - 1)
+                {
+                    var next = subtitles[i + 1];
+                    if (p.EndMilliseconds >= next.StartMilliseconds)
+                    {
+                        p.EndMilliseconds = next.StartMilliseconds - (ulong)Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                }
+            }
         }
     }
 }
