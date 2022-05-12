@@ -113,7 +113,9 @@ https://github.com/SubtitleEdit/subtitleedit
             double minimumCharsSec = 100000000;
             double maximumCharsSec = 0;
             double totalCharsSec = 0;
-            var minimalGap = double.MaxValue;
+            var gapMinimum = double.MaxValue;
+            var gapMaximum = 0d;
+            var gapTotal = 0d;
             foreach (var p in _subtitle.Paragraphs)
             {
                 allText.Append(p.Text);
@@ -137,10 +139,17 @@ https://github.com/SubtitleEdit/subtitleedit
                 if (next != null)
                 {
                     var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-                    if (gap < minimalGap)
+                    if (gap < gapMinimum)
                     {
-                        minimalGap = gap;
+                        gapMinimum = gap;
                     }
+
+                    if (gap > gapMaximum)
+                    {
+                        gapMaximum = gap;
+                    }
+
+                    gapTotal += gap;
                 }
 
                 foreach (var line in p.Text.SplitToLines())
@@ -171,15 +180,6 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.ToString().CountCharacters(false)));
             sb.AppendLine(string.Format(_l.TotalDuration, new TimeCode(totalDuration).ToDisplayString()));
             sb.AppendLine(string.Format(_l.TotalCharsPerSecond, (double)allText.ToString().CountCharacters(true) / (totalDuration / TimeCode.BaseUnit)));
-            if (Math.Abs(minimalGap - double.MaxValue) < 0.1)
-            {
-                sb.AppendLine(string.Format(_l.MinimalGap, "?"));
-            }
-            else
-            {
-                sb.AppendLine(string.Format(_l.MinimalGap, minimalGap));
-            }
-
             sb.AppendLine(string.Format(_l.TotalWords, _totalWords));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allTextToLower, "<i>")));
             sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allTextToLower, "<b>")));
@@ -213,6 +213,15 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec) + " (" + GetIndicesWithCps(maximumCharsSec) + ")");
             sb.AppendLine(string.Format(_l.CharactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
             sb.AppendLine();
+
+            if (_subtitle.Paragraphs.Count > 1)
+            {
+                sb.AppendLine(string.Format(_l.GapMinimum, gapMinimum) + " (" + GetIndicesWithGap(gapMinimum) + ")");
+                sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum) + ")");
+                sb.AppendLine(string.Format(_l.GapAverage, gapTotal / _subtitle.Paragraphs.Count - 1));
+                sb.AppendLine();
+            }
+
             _general = sb.ToString().Trim();
         }
 
@@ -268,6 +277,29 @@ https://github.com/SubtitleEdit/subtitleedit
                     indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
                 }
             }
+
+            return string.Join(", ", indices);
+        }
+
+        private string GetIndicesWithGap(double cps)
+        {
+            var indices = new List<string>();
+            for (var i = 0; i < _subtitle.Paragraphs.Count-1; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                var next = _subtitle.Paragraphs[i+1];
+                var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                if (Math.Abs(gap - cps) < 0.01)
+                {
+                    if (indices.Count >= NumberOfLinesToShow)
+                    {
+                        indices.Add("...");
+                        break;
+                    }
+                    indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                }
+            }
+
             return string.Join(", ", indices);
         }
 
