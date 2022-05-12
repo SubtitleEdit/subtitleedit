@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
 
             List<string> resultList = ConvertJsonObjectToStringLines(jsonResultString);
-            resultList = ProcessPostFormattings(resultList, targetLanguage, formatList);
+            resultList = ProcessPostFormatting(resultList, targetLanguage, formatList);
 
             //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
 
@@ -102,13 +101,13 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             return resultList;
         }
 
-        private static List<string> ProcessPostFormattings(List<string> lines, string targetLanguage, List<Formatting> formatList)
+        private static List<string> ProcessPostFormatting(List<string> lines, string targetLanguage, List<Formatting> formatList)
         {
             var resultList = new List<string>();
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                var s = Json.DecodeJsonText(line);
+                var s = DecodeNewLineAndEncodedChars(line);
                 s = string.Join(Environment.NewLine, s.SplitToLines());
                 s = TranslationHelper.PostTranslate(s, targetLanguage);
                 s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
@@ -128,12 +127,46 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             return resultList;
         }
 
+        public static string DecodeNewLineAndEncodedChars(string text)
+        {
+            text = text.Replace("<br />", Environment.NewLine);
+            text = text.Replace("<br>", Environment.NewLine);
+            text = text.Replace("<br/>", Environment.NewLine);
+            text = text.Replace("\\n", Environment.NewLine);
+            var sb = new StringBuilder(text.Length);
+            const string hexLetters = "01234567890abcdef";
+            var i = 0;
+            while (i < text.Length)
+            {
+                var c = text[i];
+                if (c == '\\' && i + 6 < text.Length && text[i + 1] == 'u' &&
+                        hexLetters.Contains(text[i + 2]) &&
+                        hexLetters.Contains(text[i + 3]) &&
+                        hexLetters.Contains(text[i + 4]) &&
+                        hexLetters.Contains(text[i + 5]))
+                {
+                    var unicodeString = text.Substring(i, 6);
+                    var unescaped = Regex.Unescape(unicodeString);
+                    sb.Append(unescaped);
+                    i += 5;
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+
+                i++;
+            }
+
+            return sb.ToString();
+        }
+
         private static List<string> ConvertJsonObjectToStringLines(string result)
         {
             var sbAll = new StringBuilder();
-            int count = 0;
-            int i = 1;
-            int level = result.StartsWith('[') ? 1 : 0;
+            var count = 0;
+            var i = 1;
+            var level = result.StartsWith('[') ? 1 : 0;
             while (i < result.Length - 1)
             {
                 var sb = new StringBuilder();
@@ -243,18 +276,14 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                         }
                     }
                 }
+
                 if (!added)
                 {
                     results.Add(line);
                 }
             }
 
-            if (results.Count == paragraphs.Count)
-            {
-                return results;
-            }
-
-            return input;
+            return results.Count == paragraphs.Count ? results : input;
         }
     }
 }
