@@ -2721,7 +2721,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>Minimal gap: {0} ms</MinimalGap>
+    <GapMinimum>Gap - minimum: {0:0.##} ms</GapMinimum>
+    <GapMaximum>Gap - maximum: {#,##0:0.##} ms</GapMaximum>
+    <GapAverage>Gap - average: {#,##0:0.##} ms</GapAverage>
     <Export>Export...</Export>
   </Statistics>
   <SubStationAlphaProperties>

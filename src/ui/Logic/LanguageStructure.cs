@@ -2925,7 +2925,9 @@
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }
-            public string MinimalGap { get; set; }
+            public string GapMinimum { get; set; }
+            public string GapMaximum { get; set; }
+            public string GapAverage { get; set; }
             public string Export { get; set; }
         }
 
