@@ -7,7 +7,8 @@
    * Option to turn off "word split list" in UI 
    * Custom file ext for custom text formats - thx Leon
    * Add shortcut for speech recognition - thx lambdacore12
-   * Add cps calculation rule "No space/punctuation" - thx MMT Gouenji - Tech
+   * Add CPS calculation rule "No space/punctuation" - thx MMT Gouenji - Tech
+   * Add some support for reading Manzanita dvb format - thx thehulk
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Hungarian translation - thx Zityi
@@ -31,6 +32,7 @@
    * Try to keep assa tags after translate - thx eladkarako
    * Remember online video for recent files (auto-reload)
    * Allow for large .mcc files in "cmd line convert" - thx Emerica
+   * Improve gap info in File - Statistics
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
