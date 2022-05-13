@@ -365,10 +365,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 else
                                 {
                                     string s = line;
+
+                                    var skipDoToNumbers =
+                                        indexOfColon < line.Length + 1 &&
+                                        char.IsDigit(line[indexOfColon - 1]) &&
+                                        char.IsDigit(line[indexOfColon + 1]);
+
                                     string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
-                                    if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
-                                                                           !l1Trim.EndsWith('!') &&
-                                                                           !l1Trim.EndsWith('?'))
+                                    if (!skipDoToNumbers &&
+                                        count == 1 && 
+                                        lines.Count == 2 && 
+                                        !l1Trim.EndsWith('.') &&
+                                        !l1Trim.EndsWith('!') &&
+                                        !l1Trim.EndsWith('?'))
                                     {
                                         int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
                                         if (indexOf > 0 && indexOf < indexOfColon)
