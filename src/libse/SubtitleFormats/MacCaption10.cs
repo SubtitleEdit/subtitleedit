@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Name => "MacCaption 1.0";
 
         // ANC data bytes may be represented by one ASCII character according to the following schema:
-        private static Dictionary<char, string> _ancDictionary = new Dictionary<char, string>
+        private static readonly Dictionary<char, string> AncDictionary = new Dictionary<char, string>
         {
             { 'G', "FA0000" },
             { 'H', "FA0000FA0000" },
@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (var ch in input)
             {
-                if (_ancDictionary.TryGetValue(ch, out var hexValue))
+                if (AncDictionary.TryGetValue(ch, out var hexValue))
                 {
                     sb.Append(hexValue);
                 }

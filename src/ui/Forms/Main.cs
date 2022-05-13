@@ -20946,12 +20946,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemImportTimeCodes_Click(object sender, EventArgs e)
         {
-            if (_subtitle.Paragraphs.Count < 1)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
@@ -20987,7 +20981,8 @@ namespace Nikse.SubtitleEdit.Forms
                     var formats = SubtitleFormat.GetBinaryFormats(true).Union(SubtitleFormat.GetTextOtherFormats()).Union(new SubtitleFormat[]
                     {
                         new TimeCodesOnly1(),
-                        new TimeCodesOnly2()
+                        new TimeCodesOnly2(),
+                        new TimeCodesOnly3(),
                     }).ToArray();
                     format = SubtitleFormat.LoadSubtitleFromFile(formats, openFileDialog1.FileName, timeCodeSubtitle);
                 }
@@ -20996,6 +20991,22 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ShowUnknownSubtitle(openFileDialog1.FileName);
                     return;
+                }
+
+                if (_subtitle.Paragraphs.Count < 1)
+                {
+                    foreach (var p in timeCodeSubtitle.Paragraphs)
+                    {
+                        p.Text = string.Empty;
+                    }
+
+                    _subtitle.Paragraphs.AddRange(timeCodeSubtitle.Paragraphs);
+                    _converted = true;
+                    _fileName = string.Empty;
+                    _subtitleListViewIndex = -1;
+                    ShowStatus(string.Format(_language.LoadedSubtitleX, openFileDialog1.FileName));
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
                 }
 
                 if (timeCodeSubtitle.Paragraphs.Count != _subtitle.Paragraphs.Count)
