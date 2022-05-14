@@ -3076,9 +3076,9 @@ can edit in same subtitle file (collaboration)",
                 CharactersPerSecondMinimum = "Characters/sec - minimum: {0:0.000}",
                 CharactersPerSecondMaximum = "Characters/sec - maximum: {0:0.000}",
                 CharactersPerSecondAverage = "Characters/sec - average: {0:0.000}",
-                GapMinimum = "Gap - minimum: {0:0.##} ms",
-                GapMaximum = "Gap - maximum: {#,##0:0.##} ms",
-                GapAverage = "Gap - average: {#,##0:0.##} ms",
+                GapMinimum = "Gap - minimum: {0:#,##0} ms",
+                GapMaximum = "Gap - maximum: {0:#,##0} ms",
+                GapAverage = "Gap - average: {0:#,##0.##} ms",
                 Export = "Export...",
             };
 

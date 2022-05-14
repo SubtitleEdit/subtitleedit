@@ -2710,9 +2710,9 @@ Command line: {1} {2}
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
-    <GapMinimum>间隔 - 最短: {0:0.##} ms</GapMinimum>
-    <GapMaximum>间隔 - 最长: {0:0.##} ms</GapMaximum>
-    <GapAverage>间隔 - 平均: {0:0.##} ms</GapAverage>
+    <GapMinimum>间隔 - 最短: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>间隔 - 最长: {0:#,##0} ms</GapMaximum>
+    <GapAverage>间隔 - 平均: {0:#,##0.##} ms</GapAverage>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
