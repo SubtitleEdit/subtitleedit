@@ -2720,9 +2720,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
-    <GapMinimum>간격 - 최소: {0:0.##} 밀리초</GapMinimum>
-    <GapMaximum>간격 - 최대: {#,##0:0.##} 밀리초</GapMaximum>
-    <GapAverage>간격 - 평균: {#,##0:0.##} 밀리초</GapAverage>
+    <GapMinimum>간격 - 최소: {0:#,##0} 밀리초</GapMinimum>
+    <GapMaximum>간격 - 최대: {0:#,##0} 밀리초</GapMaximum>
+    <GapAverage>간격 - 평균: {0:#,##0.##} 밀리초</GapAverage>
     <Export>내보내기</Export>
   </Statistics>
   <SubStationAlphaProperties>
