@@ -143,31 +143,51 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
 
                 var next = subtitle.GetParagraphOrDefault(i);
+                var nextNext = subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null)
                 {
                     if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, ParagraphMaxChars, onlyContinuousLines))
                     {
-                        if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
-                            GetEndTag(p.Text) == GetEndTag(next.Text))
+                        MergeNextIntoP(language, p, next);
+                        lastMerged = true;
+                    }
+                    else if (IsNextCloseAndAlone(p, next, nextNext, maxMillisecondsBetweenLines, onlyContinuousLines))
+                    {
+                        var splitDone = false;
+                        if (language != "jp" && language != "cn")
                         {
-                            var s1 = p.Text.Trim();
-                            s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
-                            var s2 = next.Text.Trim();
-                            s2 = s2.Substring(GetStartTag(s2).Length);
-                            p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
+                            var pNew = new Paragraph(p);
+                            MergeNextIntoP(language, pNew, next);
+                            var textNoHtml = HtmlUtil.RemoveHtmlTags(pNew.Text, true);
+                            var arr = textNoHtml.SplitToLines();
+                            foreach (var line in arr)
+                            {
+                                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                                {
+                                    var text = Utilities.AutoBreakLine(pNew.Text, language);
+                                    arr = text.SplitToLines();
+                                    if (arr.Count == 2)
+                                    {
+                                        p.Text = Utilities.AutoBreakLine(arr[0], language);
+                                        next.Text = Utilities.AutoBreakLine(arr[1], language);
+                                        //TODO: calc time
+                                        splitDone = true;
+                                    }
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (splitDone)
+                        {
+                            lastMerged = false;
                         }
                         else
                         {
-                            p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + next.Text, language);
+                            MergeNextIntoP(language, p, next);
+                            lastMerged = true;
                         }
-                        p.EndTime = next.EndTime;
-
-                        if (language == "jp" || language == "cn")
-                        {
-                            p.Text = p.Text.RemoveChar('\r').RemoveChar('\n').RemoveChar(' ');
-                        }
-
-                        lastMerged = true;
                     }
                     else
                     {
@@ -186,6 +206,50 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             return mergedSubtitle;
+        }
+
+        private bool IsNextCloseAndAlone(Paragraph p, Paragraph next, Paragraph nextNext, int maxMillisecondsBetweenLines, bool onlyContinuousLines)
+        {
+            if (nextNext == null || next.Text.Length > 12)
+            {
+                return false;
+            }
+
+            if (!Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, ParagraphMaxChars + 5, onlyContinuousLines))
+            {
+                return false;
+            }
+
+            if (nextNext.StartTime.TotalMilliseconds - next.EndTime.TotalMilliseconds < maxMillisecondsBetweenLines + 100)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void MergeNextIntoP(string language, Paragraph p, Paragraph next)
+        {
+            if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
+                GetEndTag(p.Text) == GetEndTag(next.Text))
+            {
+                var s1 = p.Text.Trim();
+                s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
+                var s2 = next.Text.Trim();
+                s2 = s2.Substring(GetStartTag(s2).Length);
+                p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
+            }
+            else
+            {
+                p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + next.Text, language);
+            }
+
+            p.EndTime = next.EndTime;
+
+            if (language == "jp" || language == "cn")
+            {
+                p.Text = p.Text.RemoveChar('\r').RemoveChar('\n').RemoveChar(' ');
+            }
         }
 
         private static Subtitle FixCasing(Subtitle inputSubtitle, string language)
