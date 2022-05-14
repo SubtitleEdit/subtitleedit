@@ -15,6 +15,7 @@
    * Update Chinese translation - thx nkh0472
    * Update Portuguese translation - thx hugok79
    * Update French translation - thx Pierre
+   * Update Korean translation - thx domddol
    * Update dotnet framework to 4.8
    * Add some new English names - thx Omair
    * Add err msg if user ocr fix replacelist invalid - thx sialivi
@@ -32,7 +33,9 @@
    * Try to keep assa tags after translate - thx eladkarako
    * Remember online video for recent files (auto-reload)
    * Allow for large .mcc files in "cmd line convert" - thx Emerica
-   * Improve gap info in File - Statistics
+   * Improve "gap info" in File - Statistics
+   * Allow import time codes w empty subtitle - thx Heung
+   * Improve audio to text post-processing for jp/cn - thx coastal45
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
