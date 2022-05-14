@@ -588,6 +588,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TimeCode>타임코드</TimeCode>
     <NewLine>새 라인</NewLine>
     <Footer>바닥글</Footer>
+    <FileExtension>파일 확장자</FileExtension>
     <DoNotModify>[변경 없음]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -1735,6 +1736,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ShowVideoControls>비디오 컨트롤 표시</ShowVideoControls>
     <HideVideoControls>비디오 컨트롤 숨김</HideVideoControls>
     <GeneratingWaveformInBackground>배경에 파형 생성...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>자동 백업 저장됨</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -2134,6 +2136,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ApplyAssaOverrideTags>ASSA 재정의 태그 선택 적용</ApplyAssaOverrideTags>
     <SetAssaPosition>ASSA 위치 설정/얻기</SetAssaPosition>
     <SetAssaResolution>ASSA 해상도 설정 (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>지금 자동 백업 실행</TakeAutoBackup>
     <ShowLineBreaksAs>다음 기호로 줄바꿈 표시</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"다른 이름으로 저장..."에서 사용하는 파일 이름</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>「자막 보기」에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
@@ -2280,9 +2283,11 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, 라틴어 0.5, 공백 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>아랍어 분음부 무시</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>아랍어 분음부/공백 무시</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>공백 또는 구두점()[]-:;,.!? 없음</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>단어 분할 목록 사용 (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>짧은 표시시간 수정 - 시작 시간 이동을 허용</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>1 단계 건너뛰기 (수정 규칙 선택)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>기본 자막 형식</DefaultFormat>
@@ -2443,6 +2448,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <VideoResetSpeedAndZoom>속도/줌 재설정</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
+    <VideoAudioToText>비디오/오디오를 텍스트로 (음성 인식)</VideoAudioToText>
     <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
@@ -2714,7 +2720,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>최소 간격: {0} ms</MinimalGap>
+    <GapMinimum>간격 - 최소: {0:0.##} 밀리초</GapMinimum>
+    <GapMaximum>간격 - 최대: {#,##0:0.##} 밀리초</GapMaximum>
+    <GapAverage>간격 - 평균: {#,##0:0.##} 밀리초</GapAverage>
     <Export>내보내기</Export>
   </Statistics>
   <SubStationAlphaProperties>
