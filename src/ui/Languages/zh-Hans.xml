@@ -33,7 +33,7 @@
     <CharsPerSec>字/秒</CharsPerSec>
     <WordsPerMin>词/分</WordsPerMin>
     <Actor>演员</Actor>
-    <Gap>间隙</Gap>
+    <Gap>间隔</Gap>
     <Region>区域</Region>
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
@@ -295,7 +295,7 @@ Command line: {1} {2}
     <AutoBalance>自动均排各行</AutoBalance>
     <ScanFolder>扫描文件夹...</ScanFolder>
     <Recursive>包含子文件夹</Recursive>
-    <BridgeGaps>桥接间隙</BridgeGaps>
+    <BridgeGaps>桥接间隔</BridgeGaps>
     <PlainText>纯文本</PlainText>
     <Ocr>OCR...</Ocr>
     <AddFiles>添加文件...</AddFiles>
@@ -1188,7 +1188,7 @@ Command line: {1} {2}
         <Title>工具(&amp;T)</Title>
         <AdjustDisplayDuration>调整时长(&amp;A)...</AdjustDisplayDuration>
         <ApplyDurationLimits>应用时长限制...</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>桥接字幕间隙</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>桥接字幕间隔</SubtitlesBridgeGaps>
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>
@@ -1642,7 +1642,7 @@ Command line: {1} {2}
     <MergedShortLinesX>已合并行数: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>分割长行之前</BeforeSplitLongLines>
     <LongLinesSplitX>分割后的行数: {0}</LongLinesSplitX>
-    <BeforeDurationsBridgeGap>在桥接短间隙之前</BeforeDurationsBridgeGap>
+    <BeforeDurationsBridgeGap>在桥接短间隔之前</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>设置段间最小显示时间之前</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>已更改段间最小显示时间的行数: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>导入纯文本之前</BeforeImportText>
@@ -2159,9 +2159,9 @@ Command line: {1} {2}
     <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <SplitBehavior>分割方案</SplitBehavior>
-    <SplitBehaviorPrevious>在分割点左侧插入间隙</SplitBehaviorPrevious>
-    <SplitBehaviorHalf>在分割点处均分间隙</SplitBehaviorHalf>
-    <SplitBehaviorNext>在分割点右侧插入间隙</SplitBehaviorNext>
+    <SplitBehaviorPrevious>在分割点左侧插入间隔</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>在分割点处均分间隔</SplitBehaviorHalf>
+    <SplitBehaviorNext>在分割点右侧插入间隔</SplitBehaviorNext>
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
@@ -2314,8 +2314,8 @@ Command line: {1} {2}
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点并转到下一条</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一条</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSetStartAndEndOfPrevious>设置前一条的开始和结束（减去最小间隙）</AdjustSetStartAndEndOfPrevious>
-    <AdjustSetStartAndEndOfPreviousAndGoToNext>设置前一条的开始和结束（减去最小间隙），并转到下一条</AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>设置前一条的开始和结束（减去最小间隔）</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>设置前一条的开始和结束（减去最小间隔），并转到下一条</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>所选行后移 100ms</AdjustSelected100MsBack>
     <AdjustStartXMsBack>将起始点向后移动 {0} ms</AdjustStartXMsBack>
@@ -2326,10 +2326,10 @@ Command line: {1} {2}
     <AdjustStartOneFrameForward>将起始点前移1帧</AdjustStartOneFrameForward>
     <AdjustEndOneFrameBack>将结束点后移1帧</AdjustEndOneFrameBack>
     <AdjustEndOneFrameForward>将结束点前移1帧</AdjustEndOneFrameForward>
-    <AdjustStartOneFrameBackKeepGapPrev>将起始点后移1帧 (若与前行之间的间隙较小, 则平移间隙)</AdjustStartOneFrameBackKeepGapPrev>
-    <AdjustStartOneFrameForwardKeepGapPrev>将起始点前移1帧 (若与前行之间的间隙较小, 则平移间隙)</AdjustStartOneFrameForwardKeepGapPrev>
-    <AdjustEndOneFrameBackKeepGapNext>将结束点后移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameBackKeepGapNext>
-    <AdjustEndOneFrameForwardKeepGapNext>将结束点前移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameForwardKeepGapNext>
+    <AdjustStartOneFrameBackKeepGapPrev>将起始点后移1帧 (若与前行之间的间隔较小, 则平移间隔)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>将起始点前移1帧 (若与前行之间的间隔较小, 则平移间隔)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>将结束点后移1帧 (若与后行之间的间隔较小, 则平移间隔)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>将结束点前移1帧 (若与后行之间的间隔较小, 则平移间隔)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
     <AdjustVideoSetStartForAppropriateLine>为适当的行设置开始时间</AdjustVideoSetStartForAppropriateLine>
     <AdjustVideoSetEndForAppropriateLine>为适当的行设置结束时间</AdjustVideoSetEndForAppropriateLine>
@@ -2538,9 +2538,9 @@ Command line: {1} {2}
     <UncheckInsertsLowercase>侦测并弃选小写的单行标题或歌词</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>隐藏不太可能的连续型句段</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>忽略乐符间的歌词</IgnoreLyrics>
-    <MinFrameGap>最小间隙 (帧)</MinFrameGap>
-    <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隙长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
-    <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隙值？</UseXAsNewGap>
+    <MinFrameGap>最小间隔 (帧)</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隔长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隔值？</UseXAsNewGap>
     <BDOpensIn>打开BD sup/bdn-xml文件的方式</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>编辑</BDOpensInEdit>
@@ -2710,7 +2710,9 @@ Command line: {1} {2}
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>最小间隔: {0} 毫秒</MinimalGap>
+    <GapMinimum>间隔 - 最短: {0:0.##} ms</GapMinimum>
+    <GapMaximum>间隔 - 最长: {0:0.##} ms</GapMaximum>
+    <GapAverage>间隔 - 平均: {0:0.##} ms</GapAverage>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
