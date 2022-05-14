@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public int ParagraphMaxChars { get; set; } = 86;
 
-        public string TwoLetterLanguageCode { get; private set; }
+        public string TwoLetterLanguageCode { get; }
 
 
         public AudioToTextPostProcessor(string twoLetterLanguageCode)
@@ -55,8 +55,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         private Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
-            var englishSkipLastWords = new string[] { "with", "however" };
-            var englishSkipFirstWords = new string[] { "to", "and", "but" };
+            if (language == "jp" || language == "cn")
+            {
+                return new Subtitle(inputSubtitle);
+            }
+
+            var englishSkipLastWords = new[] { "with", "however" };
+            var englishSkipFirstWords = new[] { "to", "and", "but" };
 
             var subtitle = new Subtitle(inputSubtitle);
             for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
@@ -113,8 +118,18 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         private Subtitle MergeShortLines(Subtitle subtitle, string language)
         {
-            var maxMillisecondsBetweenLines = 100;
+            const int maxMillisecondsBetweenLines = 100;
             const bool onlyContinuousLines = true;
+
+            if (language == "jp")
+            {
+                ParagraphMaxChars = 13;
+            }
+
+            if (language == "cn")
+            {
+                ParagraphMaxChars = 16;
+            }
 
             var mergedSubtitle = new Subtitle();
             var lastMerged = false;
@@ -125,11 +140,6 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 {
                     p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                     mergedSubtitle.Paragraphs.Add(p);
-                }
-
-                if (language == "jp")
-                {
-                    ParagraphMaxChars = 20;
                 }
 
                 var next = subtitle.GetParagraphOrDefault(i);
@@ -151,6 +161,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                             p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + next.Text, language);
                         }
                         p.EndTime = next.EndTime;
+
+                        if (language == "jp" || language == "cn")
+                        {
+                            p.Text = p.Text.RemoveChar('\r').RemoveChar('\n').RemoveChar(' ');
+                        }
 
                         lastMerged = true;
                     }
