@@ -2722,7 +2722,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>Intervalo mínimo: {0} ms</MinimalGap>
+    <GapMinimum>Intervalo - mínimo: {0:0.##} ms</GapMinimum>
+    <GapMaximum>Intervalo - máximo: {#,##0:0.##} ms</GapMaximum>
+    <GapAverage>Intervalo - médio: {#,##0:0.##} ms</GapAverage>
     <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
