@@ -69,19 +69,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         styleHead = x.DocumentElement.SelectSingleNode("ttml:head", xnsmgr);
                         styleHead.SelectSingleNode("ttml:styling", xnsmgr).RemoveAll();
-                        foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
+                        foreach (var styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
                         {
                             try
                             {
                                 var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
 
-                                string fontStyle = "normal";
+                                var fontStyle = "normal";
                                 if (ssaStyle.Italic)
                                 {
                                     fontStyle = "italic";
                                 }
 
-                                string fontWeight = "normal";
+                                var fontWeight = "normal";
                                 if (ssaStyle.Bold)
                                 {
                                     fontWeight = "bold";
@@ -89,7 +89,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                 AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
                                 convertedFromSubStationAlpha = true;
-
                             }
                             catch
                             {
@@ -138,8 +137,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             var div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
-            bool hasBottomCenterRegion = false;
-            bool hasTopCenterRegion = false;
+            var hasBottomCenterRegion = false;
+            var hasTopCenterRegion = false;
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttml:head/ttml:layout/ttml:region", nsmgr))
             {
                 string id = null;
@@ -163,11 +162,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            int no = 0;
+            var no = 0;
             foreach (var p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
-                string text = p.Text;
+                var text = p.Text;
 
                 XmlAttribute pid = xml.CreateAttribute("xml:id");
                 pid.InnerText = "p" + ++no;
@@ -208,9 +207,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                bool first = true;
-                bool italicOn = false;
-                foreach (string line in text.SplitToLines())
+                var first = true;
+                var italicOn = false;
+                var boldOn = false;
+                foreach (var line in text.SplitToLines())
                 {
                     if (!first)
                     {
@@ -247,14 +247,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             attr.InnerText = "bold";
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
+                            boldOn = true;
                         }
                         else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
-                            int endIndex = line.Substring(i + 1).IndexOf('>');
+                            var endIndex = line.Substring(i + 1).IndexOf('>');
                             if (endIndex > 0)
                             {
                                 skipCount = endIndex + 1;
-                                string fontContent = line.Substring(i, skipCount);
+                                var fontContent = line.Substring(i, skipCount);
                                 if (fontContent.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                                 {
                                     var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -282,6 +283,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 currentStyle = styles.Pop().CloneNode(true);
                                 currentStyle.InnerText = string.Empty;
                             }
+
                             paragraph.AppendChild(currentStyle);
                             if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                             {
@@ -305,15 +307,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 attr.InnerText = "italic";
                                 currentStyle.Attributes.Append(attr);
                             }
+                            else if (i == 0 && boldOn && !line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                styles.Push(currentStyle);
+                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                paragraph.AppendChild(currentStyle);
+                                XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
+                                attr.InnerText = "bold";
+                                currentStyle.Attributes.Append(attr);
+                            }
+
                             currentStyle.InnerText = currentStyle.InnerText + line[i];
                         }
                     }
+
                     first = false;
                 }
 
                 div.AppendChild(paragraph);
             }
-            string xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
+
+            var xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
             if (subtitle.Header == null)
             {
                 subtitle.Header = xmlString;

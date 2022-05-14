@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"start\" xml:id=\"topLeft\" />" + Environment.NewLine +
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"start\" xml:id=\"centerLeft\" />" + Environment.NewLine +
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"start\" xml:id=\"bottomLeft\" />" + Environment.NewLine +
-            // Midle column
+            // Middle column
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"center\" xml:id=\"topCenter\" />" + Environment.NewLine +
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"center\" xml:id=\"centerСenter\" />" + Environment.NewLine +
             "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"center\" xml:id=\"bottomCenter\" />" + Environment.NewLine +
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (divNode != null)
                 {
                     // Remove all but first div
-                    int innerNodeCount = 0;
+                    var innerNodeCount = 0;
                     var innerNodeList = new List<XmlNode>();
                     foreach (XmlNode innerNode in bodyNode.SelectNodes("ttml:div", nsmgr))
                     {
@@ -287,15 +287,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 body.AppendChild(div);
             }
 
-            int no = 0;
+            var no = 0;
             var headerStyles = GetStylesFromHeader(ToUtf8XmlString(xml));
             var regions = GetRegionsFromHeader(ToUtf8XmlString(xml));
             var languages = GetUsedLanguages(subtitle);
             if (languages.Count > 0)
             {
                 var divParentNode = div.ParentNode;
-
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
                     if (p.Language == null)
                     {
@@ -310,15 +309,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                foreach (string language in languages)
+                foreach (var language in languages)
                 {
                     div = xml.CreateElement("div", TtmlNamespace);
                     XmlAttribute attr = xml.CreateAttribute("xml:lang", "http://www.w3.org/XML/1998/namespace");
                     attr.Value = language;
                     div.Attributes.Append(attr);
                     divParentNode.AppendChild(div);
-                    bool firstParagraph = true;
-                    foreach (Paragraph p in subtitle.Paragraphs)
+                    var firstParagraph = true;
+                    foreach (var p in subtitle.Paragraphs)
                     {
                         if (p.Language != null && p.Language.Equals(language, StringComparison.OrdinalIgnoreCase))
                         {
@@ -346,8 +345,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else
             {
                 var divParentNode = div.ParentNode;
-
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
                     if (p.NewSection)
                     {
@@ -858,10 +856,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         "tts:textAlign"
                     };
 
-                    foreach (string effect in effectsToSave)
+                    foreach (var effect in effectsToSave)
                     {
-                        string value = LookupForAttribute(effect, node, nsmgr);
-
+                        var value = LookupForAttribute(effect, node, nsmgr);
                         if (!string.IsNullOrWhiteSpace(value))
                         {
                             SetEffect(p, effect, value);
@@ -869,11 +866,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     // Convert region to {\an} tag or add it to effects
-                    string region = LookupForAttribute("region", node, nsmgr);
+                    var region = LookupForAttribute("region", node, nsmgr);
                     if (!string.IsNullOrEmpty(region))
                     {
-                        bool regionCorrespondToTag = false;
-
+                        var regionCorrespondToTag = false;
                         var regionTags = new List<KeyValuePair<string, string>>
                         {
                             new KeyValuePair<string, string>("bottomLeft", "{\\an1}"),
@@ -1127,9 +1123,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {
-                    bool isItalic = false;
-                    bool isBold = false;
-                    bool isUnderlined = false;
+                    var isItalic = false;
+                    var isBold = false;
+                    var isUnderlined = false;
                     string fontFamily = null;
                     string color = null;
 
@@ -1137,7 +1133,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (child.Attributes["style"] != null)
                     {
-                        string styleName = child.Attributes["style"].Value;
+                        var styleName = child.Attributes["style"].Value;
                         if (styles.Contains(styleName))
                         {
                             try
