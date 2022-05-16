@@ -49,6 +49,7 @@
   <word>a.m.</word>
   <word>accelerant</word>
   <word>actinium</word>
+  <word>adenosine</word>
   <word>adorkable</word>
   <word>adrenocorticotropic</word>
   <word>advisors</word>
@@ -66,7 +67,9 @@
   <word>amnio</word>
   <word>amygdala</word>
   <word>anastomosis</word>
+  <word>angiomyolipoma</word>
   <word>anonymized</word>
+  <word>anoxic</word>
   <word>anthropomorphize</word>
   <word>antimony</word>
   <word>apologise</word>
@@ -96,6 +99,7 @@
   <word>benzilate</word>
   <word>berkelium</word>
   <word>beryllium</word>
+  <word>bioprosthetic</word>
   <word>bismuth</word>
   <word>blonde</word>
   <word>blowjobs</word>
@@ -156,6 +160,7 @@
   <word>copper</word>
   <word>copperish</word>
   <word>coronavirus</word>
+  <word>corpectomy</word>
   <word>cosy</word>
   <word>cottonoid</word>
   <word>could've</word>
@@ -172,8 +177,11 @@
   <word>cyanotic</word>
   <word>darmstadtium</word>
   <word>darndest</word>
+  <word>debride</word>
+  <word>debridement</word>
   <word>decompensating</word>
   <word>defendable</word>
+  <word>defibrillating</word>
   <word>defibrillation</word>
   <word>déjà vu</word>
   <word>dialogue</word>
@@ -182,6 +190,7 @@
   <word>disorderlies</word>
   <word>disproven</word>
   <word>disruptors</word>
+  <word>documentarian</word>
   <word>doofus</word>
   <word>douchey</word>
   <word>dreamt</word>
@@ -191,9 +200,11 @@
   <word>dysprosium</word>
   <word>easy-peasy</word>
   <word>einsteinium</word>
+  <word>electrocautery</word>
   <word>'em</word>
   <word>emoji</word>
   <word>empanadas</word>
+  <word>empyema</word>
   <word>endarterectomy</word>
   <word>endeth</word>
   <word>episiotomy</word>
@@ -213,6 +224,7 @@
   <word>falafel</word>
   <word>fallin'</word>
   <word>fanboy</word>
+  <word>fascial</word>
   <word>fasciotomy</word>
   <word>fata morgana</word>
   <word>favour</word>
@@ -269,6 +281,7 @@
   <word>helium</word>
   <word>heloooooo</word>
   <word>hematoma</word>
+  <word>hemodynamics</word>
   <word>hemostasis</word>
   <word>hiei</word>
   <word>hijab</word>
@@ -301,8 +314,10 @@
   <word>intensivist</word>
   <word>intercostal</word>
   <word>intrapericardial</word>
+  <word>intraperitoneal</word>
   <word>intubate</word>
   <word>intubated</word>
+  <word>intubations</word>
   <word>iodine</word>
   <word>iridium</word>
   <word>iron</word>
@@ -323,6 +338,7 @@
   <word>krypton</word>
   <word>kryptonite</word>
   <word>kuwabara-kun</word>
+  <word>kyphoplasties</word>
   <word>labelled</word>
   <word>laminectomy</word>
   <word>lanthanum</word>
@@ -387,6 +403,7 @@
   <word>neuropathy</word>
   <word>neuroscientific</word>
   <word>neurotypical</word>
+  <word>neurotypicals</word>
   <word>neurovascular</word>
   <word>newsfeed</word>
   <word>newsfeeds</word>
@@ -396,6 +413,7 @@
   <word>niobium</word>
   <word>nitrogen</word>
   <word>nobelium</word>
+  <word>noobs</word>
   <word>nothin</word>
   <word>now's</word>
   <word>nulled</word>
@@ -424,10 +442,13 @@
   <word>percutaneously</word>
   <word>perfusionist</word>
   <word>pericardial</word>
+  <word>periorbital</word>
   <word>pescatarian</word>
   <word>pescatarians</word>
+  <word>phenylephrine</word>
   <word>phosphorus</word>
   <word>photoshopped</word>
+  <word>photothermic</word>
   <word>piccaninny</word>
   <word>pickleback</word>
   <word>platinum</word>
@@ -535,6 +556,7 @@
   <word>sternotomy</word>
   <word>strontium</word>
   <word>subclavian</word>
+  <word>subdural</word>
   <word>subdural hematoma</word>
   <word>sudoku</word>
   <word>sulfur</word>
@@ -547,12 +569,14 @@
   <word>syncopal</word>
   <word>synovectomy</word>
   <word>synovial</word>
+  <word>tachycardic</word>
   <word>tantalum</word>
   <word>taxies</word>
   <word>teardown</word>
   <word>technetium</word>
   <word>teleporting</word>
   <word>tellurium</word>
+  <word>temporoparietal</word>
   <word>teratoma</word>
   <word>terbium</word>
   <word>terrorise</word>
@@ -572,7 +596,9 @@
   <word>thoracotomy</word>
   <word>thorium</word>
   <word>thrombectomy</word>
+  <word>thrombolysis</word>
   <word>thrombosed</word>
+  <word>throuple</word>
   <word>thulium</word>
   <word>timeline</word>
   <word>tin</word>
@@ -580,10 +606,13 @@
   <word>tittie</word>
   <word>touché</word>
   <word>transaminases</word>
+  <word>transcatheter</word>
   <word>transcervical</word>
+  <word>transcortical</word>
   <word>transcutaneous</word>
   <word>transdural</word>
   <word>transectional</word>
+  <word>transpedicular</word>
   <word>travelled</word>
   <word>trickeration</word>
   <word>trifecta</word>
@@ -606,6 +635,7 @@
   <word>vaccinologist</word>
   <word>vaginas</word>
   <word>vanadium</word>
+  <word>vascularity</word>
   <word>vegetations</word>
   <word>voicemail</word>
   <word>voila</word>
