@@ -8,7 +8,9 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -18,6 +20,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly string _videoFileName;
         private readonly string _voskFolder;
         private bool _cancel;
+        private bool _batchMode;
+        private int _batchFileNumber;
         private long _startTicks;
         private long _bytesWavTotal;
         private long _bytesWavRead;
@@ -40,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
@@ -49,6 +54,8 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxLog.Dock = DockStyle.Fill;
             labelProgress.Text = string.Empty;
             labelTime.Text = string.Empty;
+            listViewInputFiles.Items.Add(videoFileName);
+            listViewInputFiles.Visible = false;
         }
 
         private void FillModels()
@@ -83,12 +90,19 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (_batchMode)
+            {
+                GenerateBatch();
+                return;
+            }
+
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
             progressBar1.Visible = true;
             var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
             buttonGenerate.Enabled = false;
             buttonDownload.Enabled = false;
+            buttonBatchMode.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, 0);
             textBoxLog.AppendText("Wav file name: " + waveFileName);
             textBoxLog.AppendText(Environment.NewLine);
@@ -106,6 +120,71 @@ namespace Nikse.SubtitleEdit.Forms
             };
             TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked);
             DialogResult = DialogResult.OK;
+        }
+
+        private void GenerateBatch()
+        {
+            groupBoxInputFiles.Enabled = false;
+            _batchFileNumber = 0;
+            foreach (ListViewItem lvi in listViewInputFiles.Items)
+            {
+                _batchFileNumber++;
+                var videoFileName = lvi.Text;
+                listViewInputFiles.SelectedIndices.Clear();
+                lvi.Selected = true;
+                progressBar1.Maximum = 100;
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
+                var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
+                buttonGenerate.Enabled = false;
+                buttonDownload.Enabled = false;
+                buttonBatchMode.Enabled = false;
+                var waveFileName = GenerateWavFile(videoFileName, 0);
+                textBoxLog.AppendText("Wav file name: " + waveFileName);
+                textBoxLog.AppendText(Environment.NewLine);
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                var transcript = TranscribeViaVosk(waveFileName, modelFileName);
+                if (_cancel)
+                {
+                    if (!_batchMode)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+
+                    groupBoxInputFiles.Enabled = true;
+                    return;
+                }
+
+                var postProcessor = new AudioToTextPostProcessor(GetLanguage(comboBoxModels.Text))
+                {
+                    ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+                };
+                TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked);
+                SaveToSourceFolder(videoFileName);
+            }
+
+            progressBar1.Visible = false;
+            labelTime.Text = string.Empty;
+            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count));
+            groupBoxInputFiles.Enabled = true;
+            buttonGenerate.Enabled = true;
+            buttonDownload.Enabled = true;
+            buttonBatchMode.Enabled = true;
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void SaveToSourceFolder(string videoFileName)
+        {
+            var format = SubtitleFormat.FromName(Configuration.Settings.General.DefaultSubtitleFormat, new SubRip());
+            var text = TranscribedSubtitle.ToText(format);
+
+            var fileName = Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName)) + format.Extension;
+            if (File.Exists(fileName))
+            {
+                fileName = $"{Path.Combine(Utilities.GetPathAndFileNameWithoutExtension(videoFileName))}.{Guid.NewGuid().ToByteArray()}.{format.Extension}";
+            }
+
+            File.WriteAllText(fileName, text, Encoding.UTF8);
         }
 
         internal static string GetLanguage(string text)
@@ -140,6 +219,11 @@ namespace Nikse.SubtitleEdit.Forms
             rec.SetWords(true);
             var list = new List<ResultText>();
             labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
+            if (_batchMode)
+            {
+                labelProgress.Text = string.Format(LanguageSettings.Current.AudioToText.TranscribingXOfY, _batchFileNumber, listViewInputFiles.Items.Count);
+            }
+
             labelProgress.Refresh();
             Application.DoEvents();
             var buffer = new byte[4096];
@@ -408,6 +492,67 @@ namespace Nikse.SubtitleEdit.Forms
                 form.ShowDialog(this);
                 FillModels();
             }
+        }
+
+        private void buttonAddFile_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Title = LanguageSettings.Current.General.OpenVideoFileTitle;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = UiUtil.GetVideoFileFilter(true);
+                openFileDialog1.Multiselect = true;
+                if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                foreach (var fileName in openFileDialog1.FileNames)
+                {
+                    listViewInputFiles.Items.Add(fileName);
+                }
+            }
+        }
+
+        private void buttonRemoveFile_Click(object sender, EventArgs e)
+        {
+            for (var i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
+            {
+                listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
+            }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            listViewInputFiles.Items.Clear();
+        }
+
+        private void buttonBatchMode_Click(object sender, EventArgs e)
+        {
+            _batchMode = !_batchMode;
+            ShowHideBatchMode();
+        }
+
+        private void ShowHideBatchMode()
+        {
+            if (_batchMode)
+            {
+                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 450;
+                listViewInputFiles.Visible = true;
+                buttonBatchMode.Text = LanguageSettings.Current.Split.Basic;
+            }
+            else
+            {
+                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 50;
+                listViewInputFiles.Visible = false;
+                buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
+            }
+        }
+
+        private void AudioToText_Load(object sender, EventArgs e)
+        {
+            ShowHideBatchMode();
+            listViewInputFiles.Columns[0].Width = -2;
         }
     }
 }

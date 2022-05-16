@@ -326,7 +326,10 @@ namespace Nikse.SubtitleEdit.Logic
                 OpenModelsFolder = "Open models folder",
                 LoadingVoskModel = "Loading Vosk speech recognition model...",
                 Transcribing = "Transcribing audio to text...",
+                TranscribingXOfY = "Transcribing audio to text - file {0} of {1}...",
                 UsePostProcessing = "Use post-processing (line merge, fix casing, punctuation, and more)",
+                BatchMode = "Batch mode",
+                XFilesSavedToVideoSourceFolder = "{0} files saved to video source folder",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
