@@ -184,7 +184,10 @@
             public string OpenModelsFolder { get; set; }
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
+            public string TranscribingXOfY { get; set; }
+            public string XFilesSavedToVideoSourceFolder { get; set; }
             public string UsePostProcessing { get; set; }
+            public string BatchMode { get; set; }
         }
 
         public class AssaAttachments
