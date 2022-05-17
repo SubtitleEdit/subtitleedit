@@ -54,7 +54,17 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxLog.Dock = DockStyle.Fill;
             labelProgress.Text = string.Empty;
             labelTime.Text = string.Empty;
-            listViewInputFiles.Items.Add(videoFileName);
+
+            if (string.IsNullOrEmpty(videoFileName))
+            {
+                _batchMode = true;
+                buttonBatchMode.Enabled = false;
+            }
+            else
+            {
+                listViewInputFiles.Items.Add(videoFileName);
+            }
+
             listViewInputFiles.Visible = false;
         }
 
@@ -92,6 +102,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_batchMode)
             {
+                if (listViewInputFiles.Items.Count == 0)
+                {
+                    buttonAddFile_Click(null, null);
+                    return;
+                }
+
                 GenerateBatch();
                 return;
             }
@@ -160,6 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
                 TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked);
+
                 SaveToSourceFolder(videoFileName);
             }
 
