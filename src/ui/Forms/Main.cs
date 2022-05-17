@@ -18306,7 +18306,8 @@ namespace Nikse.SubtitleEdit.Forms
                         SelectListViewIndexAndEnsureVisible(i);
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                            var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[i].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                            mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                         }
 
                         return;
@@ -18331,7 +18332,8 @@ namespace Nikse.SubtitleEdit.Forms
                         SelectListViewIndexAndEnsureVisible(i);
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                            var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[i].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                            mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                         }
 
                         return;
@@ -19011,7 +19013,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SelectListViewIndexAndEnsureVisible(index);
                     if (mediaPlayer.VideoPlayer != null)
                     {
-                        mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[index].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                     }
 
                     return;
@@ -20066,7 +20069,8 @@ namespace Nikse.SubtitleEdit.Forms
                         SelectListViewIndexAndEnsureVisible(i);
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                            var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[i].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                            mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                         }
 
                         return;
