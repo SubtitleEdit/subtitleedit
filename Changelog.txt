@@ -9,6 +9,7 @@
    * Add shortcut for speech recognition - thx lambdacore12
    * Add CPS calculation rule "No space/punctuation" - thx MMT Gouenji - Tech
    * Add some support for reading Manzanita dvb format - thx thehulk
+   * Add batch audio to text (speech recognition) - thx voska7
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Hungarian translation - thx Zityi
@@ -17,6 +18,7 @@
    * Update French translation - thx Pierre
    * Update Korean translation - thx domddol
    * Update dotnet framework to 4.8
+   * Update Tesseract OCR to 5.1.0
    * Add some new English names - thx Omair
    * Add err msg if user ocr fix replacelist invalid - thx sialivi
    * Improve burn-in settings - thx Leon 
