@@ -1345,6 +1345,7 @@ $HorzAlign          =   Center
         public bool TitleBarFullFileName { get; set; } // Show full file name with path or just file name
         public bool MeasurementConverterCloseOnInsert { get; set; }
         public string MeasurementConverterCategories { get; set; }
+        public bool SubtitleTextBoxAutoVerticalScrollBars { get; set; }
         public int SubtitleTextBoxMaxHeight { get; set; }
         public bool AllowLetterShortcutsInTextBox { get; set; }
         public Color DarkThemeForeColor { get; set; }
@@ -4008,6 +4009,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MeasurementConverterCategories = subNode.InnerText.Trim();
+            }
+
+            subNode = node.SelectSingleNode("SubtitleTextBoxAutoVerticalScrollBars");
+            if (subNode != null)
+            {
+                settings.General.SubtitleTextBoxAutoVerticalScrollBars = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SubtitleTextBoxMaxHeight");
@@ -9511,6 +9518,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TitleBarFullFileName", settings.General.TitleBarFullFileName.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MeasurementConverterCloseOnInsert", settings.General.MeasurementConverterCloseOnInsert.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MeasurementConverterCategories", settings.General.MeasurementConverterCategories);
+                textWriter.WriteElementString("SubtitleTextBoxAutoVerticalScrollBars", settings.General.SubtitleTextBoxAutoVerticalScrollBars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleTextBoxMaxHeight", settings.General.SubtitleTextBoxMaxHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowLetterShortcutsInTextBox", settings.General.AllowLetterShortcutsInTextBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastColorPickerColor", ToHtml(settings.General.LastColorPickerColor));
