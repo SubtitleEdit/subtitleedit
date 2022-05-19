@@ -21256,6 +21256,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.ShowOriginalTextColumn(_languageGeneral.OriginalText);
             SubtitleListview1.AutoSizeAllColumns(this);
+            MainResize();
         }
 
         private static void InsertMissingParagraphs(Subtitle masterSubtitle, Subtitle insertIntoSubtitle)
