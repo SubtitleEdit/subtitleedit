@@ -7,7 +7,7 @@
    * Option to turn off "word split list" in UI 
    * Custom file ext for custom text formats - thx Leon
    * Add shortcut for speech recognition - thx lambdacore12
-   * Add CPS calculation rule "No space/punctuation" - thx MMT Gouenji - Tech
+   * Add CPS calculation rule "No space/punctuation" - thx MMT Gouenji-Tech
    * Add some support for reading Manzanita dvb format - thx thehulk
    * Add batch audio to text (speech recognition) - thx voska7
 * IMPROVED:
@@ -20,7 +20,7 @@
    * Update dotnet framework to 4.8
    * Update Tesseract OCR to 5.1.0
    * Add some new English names - thx Omair
-   * Add err msg if user ocr fix replacelist invalid - thx sialivi
+   * Add err msg if user OCR fix replacelist invalid - thx sialivi
    * Improve burn-in settings - thx Leon 
    * Add AMD support (hevc_amf + h264_amf) for burn-in - thx MMT Gouenji - Tech
    * Support curly brackets in export custom text - thx Leon
@@ -38,10 +38,11 @@
    * Improve "gap info" in File - Statistics
    * Allow import time codes w empty subtitle - thx Heung
    * Improve audio to text post-processing for jp/cn - thx coastal45
+   * Add Kurdish (Sorani) to GT - thx Ahmad
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
-   * Remove wrong ocr replace rule - thx Omair
+   * Remove wrong OCR replace rule - thx Omair
    * Minor fixes for installer file associations - thx darkred / in4u / BKR-TN
    * Fix for auto-backup origianl - thx OmrSi
    * Make "Ignore formatting" work in compare text box coloring - thx Martin
@@ -52,6 +53,7 @@
    * Fix image export missing error for last two lines - th Antoine
    * Fix "Batch Convert" "Merge short lines" UI settings - thx maharaj12 
    * Fix casing issue in Remove text for HI - thx Petar
+   * Fix go to next/prev/bookmark/error/empty-line in SMPTE mode - thx OmrSi
 
 
 3.6.5 (19th March 2022)
