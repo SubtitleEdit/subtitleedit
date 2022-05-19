@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 new TranslationPair("KINYARWANDA", "rw"),
                 new TranslationPair("KOREAN", "ko"),
                 new TranslationPair("KURDISH", "ku"),
+                new TranslationPair("KURDISH (SORANI)", "ckb"),
                 new TranslationPair("KYRGYZ", "ky"),
                 new TranslationPair("LAO", "lo"),
                 new TranslationPair("LATIN", "la"),
