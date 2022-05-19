@@ -23947,7 +23947,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             RemoveNotExistingFilesFromRecentFilesUI();
 
-            toolStripMenuItemExport.DropDownItems.Add("Export SE job...", null, ExportSeJobClick);
+            if (Configuration.Settings.General.ShowBetaStuff)
+            {
+                toolStripMenuItemExport.DropDownItems.Add("Export SE job...", null, ExportSeJobClick);
+            }
 
             groupBoxVideo.MouseClick += GroupBoxVideo_MouseClick;
 
