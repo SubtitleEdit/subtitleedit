@@ -28,7 +28,7 @@
             new DownloadModel
             {
                 TwoLetterLanguageCode = "cn",
-                LanguageName = "Chinese",
+                LanguageName = "Chinese (very large, 1.5G)",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-cn-kaldi-multicn-2-lgraph.zip",
             },
             new DownloadModel
