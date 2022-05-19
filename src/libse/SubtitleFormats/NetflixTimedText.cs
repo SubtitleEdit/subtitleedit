@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            bool convertedFromSubStationAlpha = false;
+            var convertedFromSubStationAlpha = false;
             if (subtitle.Header != null)
             {
                 XmlNode styleHead = null;
@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var first = true;
                 var italicOn = false;
                 var boldOn = false;
+                var fontColors = new Stack<string>();
                 foreach (var line in text.SplitToLines())
                 {
                     if (!first)
@@ -221,8 +222,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var styles = new Stack<XmlNode>();
                     XmlNode currentStyle = xml.CreateTextNode(string.Empty);
                     paragraph.AppendChild(currentStyle);
-                    int skipCount = 0;
-                    for (int i = 0; i < line.Length; i++)
+                    var skipCount = 0;
+                    for (var i = 0; i < line.Length; i++)
                     {
                         if (skipCount > 0)
                         {
@@ -251,6 +252,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
+                            var fontColorAdded = false;
                             var endIndex = line.Substring(i + 1).IndexOf('>');
                             if (endIndex > 0)
                             {
@@ -261,18 +263,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length > 0)
                                     {
-                                        string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                        var fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
                                         currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                                         paragraph.AppendChild(currentStyle);
                                         XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
                                         attr.InnerText = fontColor;
                                         currentStyle.Attributes.Append(attr);
+                                        fontColors.Push(fontColor);
+                                        fontColorAdded = true;
                                     }
                                 }
                             }
                             else
                             {
                                 skipCount = line.Length;
+                            }
+
+                            if (!fontColorAdded)
+                            {
+                                fontColors.Push(string.Empty);
+                            }
+                        }
+                        else if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            fontColors.Pop();
+                            skipCount = 6;
+
+                            currentStyle = xml.CreateTextNode(string.Empty);
+                            if (styles.Count > 0)
+                            {
+                                currentStyle = styles.Pop().CloneNode(true);
+                                currentStyle.InnerText = string.Empty;
+                            }
+
+                            if (styles.Count == 0)
+                            {
+                                currentStyle = xml.CreateTextNode(string.Empty);
+                                paragraph.AppendChild(currentStyle);
                             }
                         }
                         else if (line.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) || line.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) || line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
@@ -288,12 +315,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                             {
                                 skipCount = 6;
+                                fontColors.Pop();
                             }
                             else
                             {
                                 skipCount = 3;
                             }
-
                             italicOn = false;
                         }
                         else
@@ -316,8 +343,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 attr.InnerText = "bold";
                                 currentStyle.Attributes.Append(attr);
                             }
+                            else if (i == 0 && fontColors.Count > 0 && !line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var fontColor = fontColors.Peek();
+                                if (!string.IsNullOrEmpty(fontColor))
+                                {
+                                    styles.Push(currentStyle);
+                                    currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                    paragraph.AppendChild(currentStyle);
+                                    XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
+                                    attr.InnerText = fontColor;
+                                    currentStyle.Attributes.Append(attr);
+                                }
+                            }
 
-                            currentStyle.InnerText = currentStyle.InnerText + line[i];
+                            currentStyle.InnerText += line[i];
                         }
                     }
 
