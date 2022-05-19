@@ -181,7 +181,10 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <OpenModelsFolder>Abrir pasta de modelos</OpenModelsFolder>
     <LoadingVoskModel>A carregar o modelo de reconhecimento de voz Vosk...</LoadingVoskModel>
     <Transcribing>A transcrever áudio para texto...</Transcribing>
+    <TranscribingXOfY>A transcrever áudio para texto - ficheiro {0} de {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} ficheiros guardados na pasta de origem do vídeo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usar pós-processamento (combinar linhas, corrigir maiúsculas/minúsculas, pontuação e mais)</UsePostProcessing>
+    <BatchMode>Modo múltiplos ficheiros</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
