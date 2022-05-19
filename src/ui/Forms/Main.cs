@@ -15981,15 +15981,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralGoToPrevSubtitle == e.KeyData)
             {
-                if (AutoRepeatContinueOn || AutoRepeatOn)
-                {
-                    PlayPrevious();
-                }
-                else
-                {
-                    ButtonPreviousClick(null, null);
-                }
-
+                ButtonPreviousClick(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
