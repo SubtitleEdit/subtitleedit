@@ -54,6 +54,8 @@
    * Fix "Batch Convert" "Merge short lines" UI settings - thx maharaj12 
    * Fix casing issue in Remove text for HI - thx Petar
    * Fix go to next/prev/bookmark/error/empty-line in SMPTE mode - thx OmrSi
+   * Fix for go to pre sub title (no without play) - thx pavhofman 
+   * Fix for Netflix ttml and bold/color tags - thx wolfgang
 
 
 3.6.5 (19th March 2022)
