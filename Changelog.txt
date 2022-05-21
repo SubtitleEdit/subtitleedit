@@ -9,7 +9,7 @@
    * Add shortcut for speech recognition - thx lambdacore12
    * Add CPS calculation rule "No space/punctuation" - thx MMT Gouenji-Tech
    * Add some support for reading Manzanita dvb format - thx thehulk
-   * Add batch audio to text (speech recognition) - thx voska7
+   * Add batch audio-to-text (speech recognition) - thx voska7
 * IMPROVED:
    * Update Bulgarian translation - thx Калин
    * Update Hungarian translation - thx Zityi
@@ -39,6 +39,7 @@
    * Allow import time codes w empty subtitle - thx Heung
    * Improve audio to text post-processing for jp/cn - thx coastal45
    * Add Kurdish (Sorani) to GT - thx Ahmad
+   * Video track bar mouse wheel works as waveform - thx voblaunsane
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE
