@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _startTicks;
         private long _bytesWavTotal;
         private long _bytesWavRead;
+        private readonly List<string> _filesToDelete;
         public Subtitle TranscribedSubtitle { get; private set; }
 
         public AudioToText(string videoFileName)
@@ -54,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxLog.Dock = DockStyle.Fill;
             labelProgress.Text = string.Empty;
             labelTime.Text = string.Empty;
+            _filesToDelete = new List<string>();
 
             if (string.IsNullOrEmpty(videoFileName))
             {
@@ -142,6 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             groupBoxInputFiles.Enabled = false;
             _batchFileNumber = 0;
+            textBoxLog.AppendText("Batch mode" + Environment.NewLine);
             foreach (ListViewItem lvi in listViewInputFiles.Items)
             {
                 _batchFileNumber++;
@@ -156,8 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
                 var waveFileName = GenerateWavFile(videoFileName, 0);
-                textBoxLog.AppendText("Wav file name: " + waveFileName);
-                textBoxLog.AppendText(Environment.NewLine);
+                textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);
                 if (_cancel)
@@ -202,6 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             File.WriteAllText(fileName, text, Encoding.UTF8);
+            textBoxLog.AppendText("Subtitle written to : " + fileName + Environment.NewLine);
         }
 
         internal static string GetLanguage(string text)
@@ -310,6 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string GenerateWavFile(string videoFileName, int audioTrackNumber)
         {
             var outWaveFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+            _filesToDelete.Add(outWaveFile);
             var process = GetFfmpegProcess(videoFileName, audioTrackNumber, outWaveFile);
             process.Start();
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -437,6 +441,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.VoskModel = comboBoxModels.Text;
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
+
+            foreach (var fileName in _filesToDelete)
+            {
+                try
+                {
+                    if (File.Exists(fileName))
+                    {
+                        File.Delete(fileName);
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
         }
 
         private void AudioToText_KeyDown(object sender, KeyEventArgs e)
