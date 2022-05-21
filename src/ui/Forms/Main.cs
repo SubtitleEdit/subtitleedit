@@ -23967,7 +23967,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TrackBarWaveformPosition_MouseWheel(object sender, MouseEventArgs e)
         {
-            ((HandledMouseEventArgs)e).Handled = true;//disable default mouse wheel
+            ((HandledMouseEventArgs)e).Handled = true; //disable default mouse wheel
 
             var delta = e.Delta;
             if (!Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward)
