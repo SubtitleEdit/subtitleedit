@@ -179,7 +179,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenModelsFolder>Άνοιγμα φακέλου μοντέλων</OpenModelsFolder>
     <LoadingVoskModel>Φόρτωση μοντέλου αναγνώριση ομιλίας Vosk…</LoadingVoskModel>
     <Transcribing>Απομαγνητοφώνηση ήχου σε κείμενο…</Transcribing>
+    <TranscribingXOfY>Απομαγνητοφώνηση {0} αρχείου ήχου από {1} σε κείμενο</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>Αποθηκεύτηκαν {0} αρχεία στον φάκελο του βίντεο</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών - κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
+    <BatchMode>Ομαδική λειτουργία</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
@@ -592,6 +595,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TimeCode>Κωδικός χρόνου</TimeCode>
     <NewLine>Νέα γραμμή</NewLine>
     <Footer>Υποσέλιδο</Footer>
+    <FileExtension>Επέκταση αρχείου</FileExtension>
     <DoNotModify>[Χωρίς επεξεργασία]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -1732,6 +1736,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowVideoControls>Εμφάνιση ελέγχων βίντεο</ShowVideoControls>
     <HideVideoControls>Απόκρυψη ελέγχων βίντεο</HideVideoControls>
     <GeneratingWaveformInBackground>Δημιουργία κυματομορφής στο υπόβαθρο…</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Το αντίγραφο ασφαλείας αποθηκεύτηκε</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υποτίτλου από αρχείο Matroska</Title>
@@ -2132,6 +2137,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyAssaOverrideTags>Εφαρμογή ετικετών παράκαμψης ASSA σε επιλεγμένα</ApplyAssaOverrideTags>
     <SetAssaPosition>Ορισμός/λήψη θέσης ASSA</SetAssaPosition>
     <SetAssaResolution>Ορισμός ανάλυσης ASSA (διαστάσεις αναπαραγωγής Χ και Υ)</SetAssaResolution>
+    <TakeAutoBackup>Άνοιγμα αντίγραφου ασφαλείας</TakeAutoBackup>
     <ShowLineBreaksAs>Εμφάνιση αλλαγής γραμμής σε προβολή λίστας ως</ShowLineBreaksAs>
     <SaveAsFileNameFrom>Η "Αποθήκευση ως…" έχει το όνομα από</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Διπλό κλικ σε γραμμή στο κύριο παράθυρο προβολής λίστας</MainListViewDoubleClickAction>
@@ -2278,9 +2284,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, λατινικοί 0,5, κενό 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Αγνόηση αραβικών διακριτικών</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Αγνόηση αραβικών διακριτικών/κενών</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Αγνόηση κενού και σημείων στίξης</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>Μουσικό σύμβολο</MusicSymbol>
     <MusicSymbolsReplace>Αντικατάσταση μουσικών συμβόλων (χωρισμένα με κόμμα)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>Χρήση λίστας χωρισμού λέξης (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Διόρθωση σύντομου χρόνου εμφάνισης - αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προεπιλεγμένα)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Προεπιλεγμένη μορφή</DefaultFormat>
@@ -2441,6 +2449,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoResetSpeedAndZoom>Επαναφορά ταχύτητας/μεγένθυσης</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Εναλλαγή ελέγχων βίντεο</MainToggleVideoControls>
     <VideoToggleContrast>Εναλλαγή αντίθεσης (μόνο mpv)</VideoToggleContrast>
+    <VideoAudioToText>Βίντεο / ήχος σε κείμενο (αναγνώριση ομιλίας)</VideoAudioToText>
     <VideoToggleBrightness>Εναλλαγή φωτεινότητας (μόνο mpv)</VideoToggleBrightness>
     <CustomSearch1>Μετάφραση, προσαρμοσμένη αναζήτηση 1</CustomSearch1>
     <CustomSearch2>Μετάφραση, προσαρμοσμένη αναζήτηση 2</CustomSearch2>
@@ -2678,38 +2687,40 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Στατιστικά</Title>
     <TitleWithFileName>Στατιστικά - {0}</TitleWithFileName>
     <GeneralStatistics>Γενικά στατιστικά</GeneralStatistics>
-    <MostUsed>Περισσότερη χρήση…</MostUsed>
-    <MostUsedLines>Οι περισσότερες χρησιμοποιούμενες γραμμές</MostUsedLines>
-    <MostUsedWords>Οι περισσότερες χρησιμοποιούμενες λέξεις</MostUsedWords>
+    <MostUsed>Χρησιμοποιούνται περισσότερο…</MostUsed>
+    <MostUsedLines>Γραμμές</MostUsedLines>
+    <MostUsedWords>Λέξεις</MostUsedWords>
     <NothingFound>Δεν βρέθηκε τίποτα</NothingFound>
-    <NumberOfLinesX>Αριθμός γραμμών υποτίτλου: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Αριθμός χαρακτήρων όπως {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfLinesX>Αριθμός γραμμών υποτίτλου: {0:#,##0}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Αριθμός χαρακτήρων ως {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Αριθμός χαρακτήρων μόνο στο κείμενο: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalDuration>Συνολική διάρκεια των υποτίτλων: {0:#,##0}</TotalDuration>
     <TotalCharsPerSecond>Σύνολο χαρακτήρων/δευτερόλεπτο: {0:0.0} δευτερόλεπτα</TotalCharsPerSecond>
     <TotalWords>Σύνολο λέξεων: {0:#,##0}</TotalWords>
-    <NumberOfItalicTags>Αριθμός ετικετών πλάγιας γραφής: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Αριθμός ετικετών έντονης γραφής: {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Αριθμός ετικετών υπογραμμισμένης γραφής: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Αριθμός ετικετών γραμματοσειράς: {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Αριθμός ετικετών στοίχισης: {0}</NumberOfAlignmentTags>
-    <LineLengthMinimum>Μήκος υποτίτλου - ελάχιστο: {0}</LineLengthMinimum>
-    <LineLengthMaximum>Μήκος υποτίτλου - μέγιστο: {0}</LineLengthMaximum>
-    <LineLengthAverage>Μήκος υποτίτλου - μέσο: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Αριθμός γραμμών υποτίτλων - μέσος: {0:0.0}</LinesPerSubtitleAverage>
-    <SingleLineLengthMinimum>Μήκος μονής γραμμής - ελάχιστο: {0}</SingleLineLengthMinimum>
-    <SingleLineLengthMaximum>Μήκος μονής γραμμής - μέγιστο: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Μήκος μονής γραμμής - μέσο: {0}</SingleLineLengthAverage>
-    <SingleLineWidthMinimum>Εύρος μονής γραμμής - ελάχιστο: {0} εικονοστοιχεία</SingleLineWidthMinimum>
-    <SingleLineWidthMaximum>Εύρος μονής γραμμής - μέγιστο: {0} εικονοστοιχεία</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Εύρος μονής γραμμής - μέσο: {0} εικονοστοιχεία</SingleLineWidthAverage>
-    <DurationMinimum>Διάρκεια - ελάχιστη: {0:0.000} δευτερόλεπτα</DurationMinimum>
-    <DurationMaximum>Διάρκεια - μέγιστη: {0:0.000} δευτερόλεπτα</DurationMaximum>
-    <DurationAverage>Διάρκεια - μέση: {0:0.000} δευτερόλεπτα</DurationAverage>
-    <CharactersPerSecondMinimum>Χαρακτήρες/ δευτ - ελάχιστοι: {0:0.000}</CharactersPerSecondMinimum>
-    <CharactersPerSecondMaximum>Χαρακτήρες/ δευτ - μέγιστοι: {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Χαρακτήρες/ δευτ - μέσοι: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>Ελάχιστο κενό: {0} χιλ. δευτ.</MinimalGap>
+    <NumberOfItalicTags>Αριθμός ετικετών πλάγιας γραφής: {0:#,##0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Αριθμός ετικετών έντονης γραφής: {0:#,##0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Αριθμός ετικετών υπογράμμισης: {0:#,##0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Αριθμός ετικετών γραμματοσειράς: {0:#,##0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Αριθμός ετικετών στοίχισης: {0:#,##0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>Ελάχιστο μήκος υποτίτλου: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Μέγιστο μήκος υποτίτλου: {0}</LineLengthMaximum>
+    <LineLengthAverage>Μέσο μήκος υποτίτλου: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Μέσος αριθμός γραμμών υποτίτλων: {0:0.0}</LinesPerSubtitleAverage>
+    <SingleLineLengthMinimum>Ελάχιστο μήκος μονής γραμμής: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Μέγιστο μήκος μονής γραμμής: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>Μέσο μήκος μονής γραμμής: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Ελάχιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Μέγιστο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Μέσο εύρος μονής γραμμής: {0} εικονοστοιχεία</SingleLineWidthAverage>
+    <DurationMinimum>Ελάχιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMinimum>
+    <DurationMaximum>Μέγιστη διάρκεια: {0:0.000} δευτερόλεπτα</DurationMaximum>
+    <DurationAverage>Μέση διάρκεια: {0:0.000} δευτερόλεπτα</DurationAverage>
+    <CharactersPerSecondMinimum>Ελάχιστοι χαρακτήρες/δευτερόλεπτο: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Μέγιστοι χαρακτήρες/δευτερόλεπτο: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Μέσοι χαρακτήρες/δευτερόλεπτο: {0:0.000}</CharactersPerSecondAverage>
+    <GapMinimum>Ελάχιστο κενό: {0:#,##0} χιλ. του δευτερολέπτου</GapMinimum>
+    <GapMaximum>Μέγιστο κενό: {0:#,##0} χιλ. του δευτερολέπτου</GapMaximum>
+    <GapAverage>Μέσο κενό: {0:#,##0} χιλ. του δευτερολέπτου</GapAverage>
     <Export>Εξαγωγή…</Export>
   </Statistics>
   <SubStationAlphaProperties>
