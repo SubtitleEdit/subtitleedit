@@ -23961,6 +23961,34 @@ namespace Nikse.SubtitleEdit.Forms
             _timerSlow.Interval = 150;
             _timerSlow.Tick += _timerSlow_Tick;
             _timerSlow.Start();
+
+            trackBarWaveformPosition.MouseWheel += TrackBarWaveformPosition_MouseWheel;
+        }
+
+        private void TrackBarWaveformPosition_MouseWheel(object sender, MouseEventArgs e)
+        {
+            ((HandledMouseEventArgs)e).Handled = true;//disable default mouse wheel
+
+            var delta = e.Delta;
+            if (!Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward)
+            {
+                delta = -delta;
+            }
+
+            if (delta > 0)
+            {
+                if (trackBarWaveformPosition.Value < trackBarWaveformPosition.Maximum)
+                {
+                    trackBarWaveformPosition.Value++;
+                }
+            }
+            else
+            {
+                if (trackBarWaveformPosition.Value > trackBarWaveformPosition.Minimum)
+                {
+                    trackBarWaveformPosition.Value--;
+                }
+            }
         }
 
         private void ExportSeJobClick(object sender, EventArgs e)
@@ -33683,7 +33711,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void videoaudioToTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(_videoFileName) && 
+            if (!string.IsNullOrEmpty(_videoFileName) &&
                 (_videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                  _videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
             {
