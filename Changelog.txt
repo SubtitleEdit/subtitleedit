@@ -50,13 +50,13 @@
    * Make "Ignore formatting" work in compare text box coloring - thx Martin
    * Waveform fix for woking with online video files - thx Dheeraj
    * Fix bug when opening a file with video offset - thx OmrSi
-   * Do not reapeat colors in color picker - thx SDH Marven
+   * Do not repeat colors in color picker - thx SDH Marven
    * Fix cmd line convert issue with ebu stl headerfile - thx Rumczeis
    * Fix image export missing error for last two lines - th Antoine
-   * Fix "Batch Convert" "Merge short lines" UI settings - thx maharaj12 
+   * Fix "Batch convert" "Merge short lines" UI settings - thx maharaj12 
    * Fix casing issue in Remove text for HI - thx Petar
    * Fix go to next/prev/bookmark/error/empty-line in SMPTE mode - thx OmrSi
-   * Fix for go to pre sub title (no without play) - thx pavhofman 
+   * Fix for go to previous subtitle (without play) - thx pavhofman 
    * Fix for Netflix ttml and bold/color tags - thx wolfgang
 
 
