@@ -38,6 +38,14 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void trackBarBrightness_Scroll(object sender, EventArgs e)
         {
             Factor = trackBarBrightness.Value / 100.0m;
+            UpdatePreview();
+            numericUpDownBrightness.ValueChanged -= numericUpDownBrightness_ValueChanged;
+            numericUpDownBrightness.Value = trackBarBrightness.Value;
+            numericUpDownBrightness.ValueChanged += numericUpDownBrightness_ValueChanged;
+        }
+
+        private void UpdatePreview()
+        {
             labelChangeBrightness.Text = string.Format(LanguageSettings.Current.BinEdit.BrightnessX, trackBarBrightness.Value);
             var bmp = ChangeBrightness(_bitmap, Factor);
             pictureBoxPreview.Image?.Dispose();
@@ -67,6 +75,15 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void numericUpDownBrightness_ValueChanged(object sender, EventArgs e)
+        {
+            Factor = numericUpDownBrightness.Value / 100.0m;
+            UpdatePreview();
+            trackBarBrightness.Scroll -= trackBarBrightness_Scroll;
+            trackBarBrightness.Value = (int)Math.Round(numericUpDownBrightness.Value, MidpointRounding.AwayFromZero);
+            trackBarBrightness.Scroll += trackBarBrightness_Scroll;
         }
     }
 }
