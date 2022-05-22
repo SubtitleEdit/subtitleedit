@@ -18316,7 +18316,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SelectListViewIndexAndEnsureVisible(form.BookmarkIndex);
                     if (mediaPlayer.VideoPlayer != null)
                     {
-                        mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
+                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
+                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                     }
                 }
             }
