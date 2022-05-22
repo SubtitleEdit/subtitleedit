@@ -3656,7 +3656,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // check for all binary zeroes (I've heard about this a few times... perhaps related to crashes?)
-            if (format == null && file.Length > 50 && FileUtil.IsSubtitleFileAllBinaryZeroes(fileName))
+            if (format == null && FileUtil.IsSubtitleFileAllBinaryZeroes(fileName))
             {
                 MessageBox.Show(_language.ErrorLoadBinaryZeroes);
                 return;
