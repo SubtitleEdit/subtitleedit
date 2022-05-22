@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBoxRules = new System.Windows.Forms.GroupBox();
+            this.buttonFixesSelectAll = new System.Windows.Forms.Button();
+            this.buttonFixesInverse = new System.Windows.Forms.Button();
             this.checkBoxGapBridge = new System.Windows.Forms.CheckBox();
             this.checkBoxWhiteSpace = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxLineLength = new System.Windows.Forms.CheckBox();
@@ -59,8 +61,6 @@
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.linkLabelOpenReportFolder = new System.Windows.Forms.LinkLabel();
-            this.buttonFixesSelectAll = new System.Windows.Forms.Button();
-            this.buttonFixesInverse = new System.Windows.Forms.Button();
             this.groupBoxRules.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,6 +97,30 @@
             this.groupBoxRules.TabIndex = 0;
             this.groupBoxRules.TabStop = false;
             this.groupBoxRules.Text = "Rules";
+            // 
+            // buttonFixesSelectAll
+            // 
+            this.buttonFixesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonFixesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonFixesSelectAll.Location = new System.Drawing.Point(829, 231);
+            this.buttonFixesSelectAll.Name = "buttonFixesSelectAll";
+            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonFixesSelectAll.TabIndex = 105;
+            this.buttonFixesSelectAll.Text = "Select &all";
+            this.buttonFixesSelectAll.UseVisualStyleBackColor = true;
+            this.buttonFixesSelectAll.Click += new System.EventHandler(this.buttonFixesSelectAll_Click);
+            // 
+            // buttonFixesInverse
+            // 
+            this.buttonFixesInverse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonFixesInverse.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonFixesInverse.Location = new System.Drawing.Point(910, 231);
+            this.buttonFixesInverse.Name = "buttonFixesInverse";
+            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 23);
+            this.buttonFixesInverse.TabIndex = 106;
+            this.buttonFixesInverse.Text = "&Inverse selection";
+            this.buttonFixesInverse.UseVisualStyleBackColor = true;
+            this.buttonFixesInverse.Click += new System.EventHandler(this.buttonFixesInverse_Click);
             // 
             // checkBoxGapBridge
             // 
@@ -401,6 +425,7 @@
             this.listViewFixes.TabIndex = 1;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
+            this.listViewFixes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewFixes_ColumnClick);
             // 
             // columnHeader5
             // 
@@ -438,30 +463,6 @@
             this.linkLabelOpenReportFolder.TabStop = true;
             this.linkLabelOpenReportFolder.Text = "Open report folder";
             this.linkLabelOpenReportFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenReportFolder_LinkClicked);
-            // 
-            // buttonFixesSelectAll
-            // 
-            this.buttonFixesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonFixesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixesSelectAll.Location = new System.Drawing.Point(829, 231);
-            this.buttonFixesSelectAll.Name = "buttonFixesSelectAll";
-            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 23);
-            this.buttonFixesSelectAll.TabIndex = 105;
-            this.buttonFixesSelectAll.Text = "Select &all";
-            this.buttonFixesSelectAll.UseVisualStyleBackColor = true;
-            this.buttonFixesSelectAll.Click += new System.EventHandler(this.buttonFixesSelectAll_Click);
-            // 
-            // buttonFixesInverse
-            // 
-            this.buttonFixesInverse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonFixesInverse.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixesInverse.Location = new System.Drawing.Point(910, 231);
-            this.buttonFixesInverse.Name = "buttonFixesInverse";
-            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 23);
-            this.buttonFixesInverse.TabIndex = 106;
-            this.buttonFixesInverse.Text = "&Inverse selection";
-            this.buttonFixesInverse.UseVisualStyleBackColor = true;
-            this.buttonFixesInverse.Click += new System.EventHandler(this.buttonFixesInverse_Click);
             // 
             // NetflixFixErrors
             // 
