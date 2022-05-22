@@ -94,7 +94,7 @@
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 411);
+            this.labelProgress.Location = new System.Drawing.Point(12, 409);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 4;
@@ -205,7 +205,7 @@
             // checkBoxUsePostProcessing
             // 
             this.checkBoxUsePostProcessing.AutoSize = true;
-            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 164);
+            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 162);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
             this.checkBoxUsePostProcessing.TabIndex = 4;
@@ -233,9 +233,9 @@
             this.groupBoxInputFiles.Controls.Add(this.buttonRemoveFile);
             this.groupBoxInputFiles.Controls.Add(this.buttonAddFile);
             this.groupBoxInputFiles.Controls.Add(this.listViewInputFiles);
-            this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 211);
+            this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 200);
             this.groupBoxInputFiles.Name = "groupBoxInputFiles";
-            this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 174);
+            this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 185);
             this.groupBoxInputFiles.TabIndex = 5;
             this.groupBoxInputFiles.TabStop = false;
             this.groupBoxInputFiles.Text = "Input files";
@@ -285,7 +285,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 18);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(591, 139);
+            this.listViewInputFiles.Size = new System.Drawing.Size(591, 150);
             this.listViewInputFiles.TabIndex = 0;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
