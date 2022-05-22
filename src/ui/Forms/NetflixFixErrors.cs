@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             _loading = false;
             RuleCheckedChanged(null, null);
             UiUtil.FixLargeFonts(this, buttonOK);
+            listViewFixes.ListViewItemSorter = new ListViewSorter { ColumnNumber = 0, IsNumber = true };
         }
 
         private void RefreshCheckBoxes(string language)
@@ -114,8 +115,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.Sorted = true;
             var languageCulture = CultureInfo.GetCultureInfo(language);
-            int languageIndex = 0;
-            for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
+            var languageIndex = 0;
+            for (var i = 0; i < comboBoxLanguage.Items.Count; i++)
             {
                 var li = comboBoxLanguage.Items[i] as LanguageItem;
                 if (li.Code.TwoLetterISOLanguageName == languageCulture.TwoLetterISOLanguageName)
@@ -161,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFixToListView(Paragraph p, string action, string before, string after)
         {
-            // This code should be used when the "Applt" function is added.
+            // This code should be used when the "Apply" function is added.
             // var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
             // item.SubItems.Add(p.Number.ToString());
 
@@ -180,11 +181,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return base.ProcessDialogKey(keyData);
-        }
-
-        private void buttonCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -362,6 +358,23 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = false;
             RuleCheckedChanged(null, null);
+        }
+
+        private void listViewFixes_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var sorter = (ListViewSorter)listViewFixes.ListViewItemSorter;
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsNumber = e.Column == 0; // only index 0 is numeric
+            }
+
+            listViewFixes.Sort();
         }
     }
 }
