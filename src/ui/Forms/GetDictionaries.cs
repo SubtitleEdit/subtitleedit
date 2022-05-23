@@ -2,6 +2,8 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -25,20 +27,14 @@ namespace Nikse.SubtitleEdit.Forms
             public string NativeName { get; set; }
             public string Description { get; set; }
             public string DownloadLink { get; set; }
+            
+            /// <summary>
+            /// The text that will be displayed in combobox dropdown.
+            /// </summary>
+            public string DisplayText { get; set; }
 
-            public override string ToString()
-            {
-                var displayName = $"{Name}{(string.IsNullOrEmpty(NativeName) ? "" : $" - {NativeName}")}";
-                if (displayName.Length > 55)
-                {
-                    return displayName.Substring(0, 55) + "...";
-                }
-
-                return displayName;
-            }
+            public override string ToString() => DisplayText;
         }
-
-        private readonly IList<DictionaryItem> _dictionaryItems = new List<DictionaryItem>();
 
         private string _xmlName;
         private string _downloadLink;
@@ -72,11 +68,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadDictionaryList(string xmlResourceName)
         {
             _xmlName = xmlResourceName;
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
             var stream = asm.GetManifestResourceStream(_xmlName);
             if (stream != null)
             {
-                comboBoxDictionaries.Items.Clear();
+                var dictionaryItems = new List<DictionaryItem>();
                 var doc = new XmlDocument();
                 using (var zip = new GZipStream(stream, CompressionMode.Decompress))
                 using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
@@ -85,6 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 comboBoxDictionaries.BeginUpdate();
+                comboBoxDictionaries.Items.Clear();
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
                     string englishName = node.SelectSingleNode("EnglishName").InnerText;
@@ -99,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(downloadLink))
                     {
-                        _dictionaryItems.Add(new DictionaryItem()
+                        dictionaryItems.Add(new DictionaryItem
                         {
                             Name = englishName,
                             NativeName = nativeName,
@@ -108,7 +105,30 @@ namespace Nikse.SubtitleEdit.Forms
                         });
                     }
                 }
-                comboBoxDictionaries.Items.AddRange(_dictionaryItems.ToArray());
+
+                // ensure ellipses suffix on text overlaps
+                using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    double comboboxWidth = comboBoxDictionaries.Width;
+                    // format display value
+                    foreach (var dictionaryItem in dictionaryItems)
+                    {
+                        var text = $"{dictionaryItem.Name}{(string.IsNullOrEmpty(dictionaryItem.NativeName) ? "" : $" - {dictionaryItem.NativeName}")}";
+                        var width = graphics.MeasureString(text, comboBoxDictionaries.Font).Width;
+                        var displayText = text;
+                        if (width > comboboxWidth)
+                        {
+                            double pixelChar = width / text.Length;
+                            var charCount = (int)Math.Floor(comboboxWidth / pixelChar);
+                            displayText = text.Substring(0, charCount - 3) + "...";
+                        }
+
+                        dictionaryItem.DisplayText = displayText;
+                    }
+                }
+                
+                // ReSharper disable once CoVariantArrayConversion
+                comboBoxDictionaries.Items.AddRange(dictionaryItems.ToArray());
                 comboBoxDictionaries.EndUpdate();
                 comboBoxDictionaries.SelectedIndex = 0;
             }
