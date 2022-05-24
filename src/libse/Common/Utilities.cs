@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+﻿using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -764,26 +764,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
             {
-                var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
-                var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
-                if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
-                {
-                    var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
-                    if (startTagIndex >= 0)
-                    {
-                        if (p0Index > p1Index)
-                        {
-                            s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
-                        }
-                        else
-                        {
-                            s = s.Remove(startTagIndex);
-                        }
-                    }
-                }
+                s = AdvancedSubStationAlpha.RemoveDrawingTag(s);
             }
 
-            int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            var k = s.IndexOf("{\\", StringComparison.Ordinal);
             var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
             if (k == -1 || karaokeStart >= 0 && karaokeStart < k)
             {
@@ -792,7 +776,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k + 1);
+                var l = s.IndexOf('}', k + 1);
                 if (l < k)
                 {
                     break;
