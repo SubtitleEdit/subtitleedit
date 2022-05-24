@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // ensure ellipses suffix on text overlaps
                 using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
                 {
-                    double comboboxWidth = comboBoxDictionaries.Width;
+                    double comboboxWidth = comboBoxDictionaries.DropDownWidth;
                     // format display value
                     foreach (var dictionaryItem in dictionaryItems)
                     {
