@@ -1806,6 +1806,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     }
 
                     p.Text = GetFormattedText(p.Text);
+                    p.Text = RemoveDrawingTag(p.Text);
 
                     var indexOfBegin = p.Text.IndexOf('{');
                     var pre = string.Empty;
@@ -1839,11 +1840,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
                         var indexOfEnd = p.Text.IndexOf('}');
                         p.Text = p.Text.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
-
-                        s = p.Text;
-                        s = RemoveDrawingTag(s);
-
-                        p.Text = s;
 
                         indexOfBegin = p.Text.IndexOf('{');
                     }
