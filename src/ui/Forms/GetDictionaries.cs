@@ -2,8 +2,11 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -12,9 +15,27 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GetDictionaries : Form
     {
-        private List<string> _dictionaryDownloadLinks = new List<string>();
-        private List<string> _descriptions = new List<string>();
-        private List<string> _englishNames = new List<string>();
+        private class DictionaryItem
+        {
+            /// <summary>
+            /// English name
+            /// </summary>
+            public string Name { get; set; }
+            /// <summary>
+            /// Native Name
+            /// </summary>
+            public string NativeName { get; set; }
+            public string Description { get; set; }
+            public string DownloadLink { get; set; }
+            
+            /// <summary>
+            /// The text that will be displayed in combobox dropdown.
+            /// </summary>
+            public string DisplayText { get; set; }
+
+            public override string ToString() => DisplayText;
+        }
+
         private string _xmlName;
         private string _downloadLink;
         private int _testAllIndex = -1;
@@ -46,23 +67,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadDictionaryList(string xmlResourceName)
         {
-            _dictionaryDownloadLinks = new List<string>();
-            _descriptions = new List<string>();
-            _englishNames = new List<string>();
             _xmlName = xmlResourceName;
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
             var stream = asm.GetManifestResourceStream(_xmlName);
             if (stream != null)
             {
-                comboBoxDictionaries.Items.Clear();
+                var dictionaryItems = new List<DictionaryItem>();
                 var doc = new XmlDocument();
-                using (var rdr = new StreamReader(stream))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                using (var zip = new GZipStream(stream, CompressionMode.Decompress))
                 using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
                 {
                     doc.Load(reader);
                 }
 
+                comboBoxDictionaries.BeginUpdate();
+                comboBoxDictionaries.Items.Clear();
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
                     string englishName = node.SelectSingleNode("EnglishName").InnerText;
@@ -77,18 +96,40 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(downloadLink))
                     {
-                        string name = englishName;
-                        if (!string.IsNullOrEmpty(nativeName))
+                        dictionaryItems.Add(new DictionaryItem
                         {
-                            name += " - " + nativeName;
-                        }
-
-                        comboBoxDictionaries.Items.Add(name);
-                        _dictionaryDownloadLinks.Add(downloadLink);
-                        _descriptions.Add(description);
-                        _englishNames.Add(englishName);
+                            Name = englishName,
+                            NativeName = nativeName,
+                            Description = description,
+                            DownloadLink = downloadLink
+                        });
                     }
                 }
+
+                // ensure ellipses suffix on text overlaps
+                using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    double comboboxWidth = comboBoxDictionaries.DropDownWidth;
+                    // format display value
+                    foreach (var dictionaryItem in dictionaryItems)
+                    {
+                        var text = $"{dictionaryItem.Name}{(string.IsNullOrEmpty(dictionaryItem.NativeName) ? "" : $" - {dictionaryItem.NativeName}")}";
+                        var width = graphics.MeasureString(text, comboBoxDictionaries.Font).Width;
+                        var displayText = text;
+                        if (width > comboboxWidth)
+                        {
+                            double pixelChar = width / text.Length;
+                            var charCount = (int)Math.Floor(comboboxWidth / pixelChar);
+                            displayText = text.Substring(0, charCount - 3) + "...";
+                        }
+
+                        dictionaryItem.DisplayText = displayText;
+                    }
+                }
+                
+                // ReSharper disable once CoVariantArrayConversion
+                comboBoxDictionaries.Items.AddRange(dictionaryItems.ToArray());
+                comboBoxDictionaries.EndUpdate();
                 comboBoxDictionaries.SelectedIndex = 0;
             }
             comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -141,10 +182,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                int index = comboBoxDictionaries.SelectedIndex;
-                _downloadLink = _dictionaryDownloadLinks[index];
-                string url = _dictionaryDownloadLinks[index];
-                SelectedEnglishName = _englishNames[index];
+                var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
+                _downloadLink = item.DownloadLink;
+                SelectedEnglishName = item.Name;
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -152,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
-                wc.DownloadDataAsync(new Uri(url));
+                wc.DownloadDataAsync(new Uri(item.DownloadLink));
             }
             catch (Exception exception)
             {
@@ -278,8 +318,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            labelPleaseWait.Text = _descriptions[index];
+            var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
+            labelPleaseWait.Text = item.Description;
         }
 
         private void buttonDownloadAll_Click(object sender, EventArgs e)
