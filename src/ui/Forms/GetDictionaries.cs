@@ -3,10 +3,8 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -17,22 +15,11 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private class DictionaryItem
         {
-            /// <summary>
-            /// English name
-            /// </summary>
-            public string Name { get; set; }
-            /// <summary>
-            /// Native Name
-            /// </summary>
+            public string EnglishName { get; set; }
             public string NativeName { get; set; }
             public string Description { get; set; }
             public string DownloadLink { get; set; }
-            
-            /// <summary>
-            /// The text that will be displayed in combobox dropdown.
-            /// </summary>
             public string DisplayText { get; set; }
-
             public override string ToString() => DisplayText;
         }
 
@@ -84,11 +71,11 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.Items.Clear();
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
-                    string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    string nativeName = node.SelectSingleNode("NativeName").InnerText;
-                    string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
+                    var englishName = node.SelectSingleNode("EnglishName").InnerText;
+                    var nativeName = node.SelectSingleNode("NativeName").InnerText;
+                    var downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
 
-                    string description = string.Empty;
+                    var description = string.Empty;
                     if (node.SelectSingleNode("Description") != null)
                     {
                         description = node.SelectSingleNode("Description").InnerText;
@@ -98,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dictionaryItems.Add(new DictionaryItem
                         {
-                            Name = englishName,
+                            EnglishName = englishName,
                             NativeName = nativeName,
                             Description = description,
                             DownloadLink = downloadLink
@@ -113,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // format display value
                     foreach (var dictionaryItem in dictionaryItems)
                     {
-                        var text = $"{dictionaryItem.Name}{(string.IsNullOrEmpty(dictionaryItem.NativeName) ? "" : $" - {dictionaryItem.NativeName}")}";
+                        var text = $"{dictionaryItem.EnglishName}{(string.IsNullOrEmpty(dictionaryItem.NativeName) ? "" : $" - {dictionaryItem.NativeName}")}";
                         var width = graphics.MeasureString(text, comboBoxDictionaries.Font).Width;
                         var displayText = text;
                         if (width > comboboxWidth)
@@ -184,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
                 _downloadLink = item.DownloadLink;
-                SelectedEnglishName = item.Name;
+                SelectedEnglishName = item.EnglishName;
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -241,24 +228,24 @@ namespace Nikse.SubtitleEdit.Forms
             int index = comboBoxDictionaries.SelectedIndex;
 
             using (var ms = new MemoryStream(e.Result))
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
+            using (var zip = ZipExtractor.Open(ms))
             {
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+                var dir = zip.ReadCentralDir();
                 // Extract dic/aff files in dictionary folder
-                bool found = false;
+                var found = false;
                 ExtractDic(dictionaryFolder, zip, dir, ref found);
 
                 if (!found) // check zip inside zip
                 {
-                    foreach (ZipExtractor.ZipFileEntry entry in dir)
+                    foreach (var entry in dir)
                     {
                         if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
                             using (var innerMs = new MemoryStream())
                             {
                                 zip.ExtractFile(entry, innerMs);
-                                ZipExtractor innerZip = ZipExtractor.Open(innerMs);
-                                List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
+                                var innerZip = ZipExtractor.Open(innerMs);
+                                var innerDir = innerZip.ReadCentralDir();
                                 ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
                             }
                         }
@@ -277,16 +264,17 @@ namespace Nikse.SubtitleEdit.Forms
                 DownloadNext();
                 return;
             }
+
             MessageBox.Show(string.Format(LanguageSettings.Current.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
         {
-            foreach (ZipExtractor.ZipFileEntry entry in dir)
+            foreach (var entry in dir)
             {
                 if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
                 {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
+                    var fileName = Path.GetFileName(entry.FilenameInZip);
 
                     // French fix
                     if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
@@ -306,7 +294,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Replace("russian-aot", "ru_RU");
                     }
 
-                    string path = Path.Combine(dictionaryFolder, fileName);
+                    var path = Path.Combine(dictionaryFolder, fileName);
                     zip.ExtractFile(entry, path);
 
                     found = true;
