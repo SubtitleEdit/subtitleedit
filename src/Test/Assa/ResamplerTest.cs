@@ -92,6 +92,13 @@ namespace Test.Assa
         }
 
         [TestMethod]
+        public void TestResampleOverrideDrawingTags1a()
+        {
+            var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\p2}m 0 0 l 100 0 100 100 0 100{\\p0}");
+            Assert.AreEqual("{\\p2}m 0 0 l 200 0 200 200 0 200{\\p0}", result);
+        }
+
+        [TestMethod]
         public void TestResampleOverrideDrawingTags2()
         {
             var result = AssaResampler.ResampleOverrideTagsDrawing(100, 200, 100, 200, "{\\p1}m 0 0 l 100.1 0.2 100 100 0 100{\\p0}");
