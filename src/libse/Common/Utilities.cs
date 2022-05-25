@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -2979,6 +2980,25 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return true;
+        }
+
+        public static string GetSha512Hash(byte[] buffer)
+        {
+            using (var ms = new MemoryStream(buffer))
+            using (var bs = new BufferedStream(ms))
+            {
+                using (var sha512 = new SHA512Managed())
+                {
+                    var hash = sha512.ComputeHash(bs);
+                    var hashString = string.Empty;
+                    foreach (var x in hash)
+                    {
+                        hashString += $"{x:x2}";
+                    }
+
+                    return hashString.ToLower();
+                }
+            }
         }
     }
 }

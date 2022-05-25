@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -85,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(folder);
             }
 
-            var hash = GetSha512Hash(e.Result);
+            var hash = Utilities.GetSha512Hash(e.Result);
             if (hash != Sha512Hash)
             {
                 MessageBox.Show("yt-dlp SHA-512 hash does not match!");
@@ -105,25 +104,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Enabled = true;
             labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "youtube-dl");
-        }
-
-        private static string GetSha512Hash(byte[] buffer)
-        {
-            using (var ms = new MemoryStream(buffer))
-            using (var bs = new BufferedStream(ms))
-            {
-                using (var sha512 = new SHA512Managed())
-                {
-                    byte[] hash = sha512.ComputeHash(bs);
-                    string hashString = string.Empty;
-                    foreach (byte x in hash)
-                    {
-                        hashString += string.Format("{0:x2}", x);
-                    }
-
-                    return hashString.ToString().ToLower();
-                }
-            }
         }
     }
 }
