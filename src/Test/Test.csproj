@@ -65,6 +65,7 @@
     <Compile Include="Assa\ResamplerTest.cs" />
     <Compile Include="Dictionaries\StringWithoutSpaceSplitToWordsTest.cs" />
     <Compile Include="LanguageFiles\LanguageFileTest.cs" />
+    <Compile Include="Logic\NetflixHelperTest.cs" />
     <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
     <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
