@@ -4138,7 +4138,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.IsRunningOnWindows)
                 {
                     var isMpvAvailable = LibMpvDynamic.IsInstalled;
-                    var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
+                    var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "yt-dlp.exe"));
                     var allOk = isYouTubeDlInstalled && isMpvAvailable;
 
                     if (!allOk)
@@ -4688,7 +4688,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.IsRunningOnWindows)
             {
                 var isMpvAvailable = LibMpvDynamic.IsInstalled;
-                var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
+                var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "yt-dlp.exe"));
                 var allOk = isYouTubeDlInstalled && isMpvAvailable;
 
                 if (allOk)
@@ -32209,7 +32209,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnWindows)
             {
                 var isMpvAvailable = LibMpvDynamic.IsInstalled;
-                var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
+                var isYouTubeDlInstalled = File.Exists(Path.Combine(Configuration.DataDirectory, "yt-dlp.exe"));
                 var allOk = isYouTubeDlInstalled && isMpvAvailable;
 
                 if (!allOk)
