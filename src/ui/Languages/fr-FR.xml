@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated by 22/05/08</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -95,7 +95,7 @@
     <ShortcutX>Raccourci : {0}</ShortcutX>
     <ExampleX>Exemple : {0}</ExampleX>
   </General>
-    <Reset>Rétablir</Reset>
+  <Reset>Rétablir</Reset>
   <About>
     <Title>A propos de Subtitle Edit</Title>
     <AboutText1>Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
@@ -173,7 +173,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio/vidéo vers texte</Title>
-    <Info>Générer un texte depuis l'audio via la reconnaissance vocale &quot;Vosk/Kaldi&quot;</Info>
+    <Info>Générer un texte depuis l'audio via la reconnaissance vocale "Vosk/Kaldi"</Info>
     <VoskWebsite>Site Vosk</VoskWebsite>
     <Models>Modèles</Models>
     <ChooseModel>Choisir un modèle</ChooseModel>
@@ -2448,7 +2448,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <VideoResetSpeedAndZoom>Rétablir vitesse / zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Activer/désactiver les contrôles vidéo</MainToggleVideoControls>
     <VideoToggleContrast>Commuter contraste (mpv seul)</VideoToggleContrast>
-    <VideoAudioToText>Vidéo/audio -> texte (reconnaissance vocale)</VideoAudioToText>
+    <VideoAudioToText>Vidéo/audio -&gt; texte (reconnaissance vocale)</VideoAudioToText>
     <VideoToggleBrightness>Commuter luminosité (mpv seul)</VideoToggleBrightness>
     <CustomSearch1>Traduction, recherche personnalisée 1</CustomSearch1>
     <CustomSearch2>Traduction, recherche personnalisée 2</CustomSearch2>
