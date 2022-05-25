@@ -8668,6 +8668,75 @@ namespace Nikse.SubtitleEdit.Forms
                                                (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || _videoFileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase) || _videoFileName.EndsWith(".webm", StringComparison.OrdinalIgnoreCase)) &&
                                                IsSubtitleLoaded;
 
+            // Insert "selected lines" sub menu items dynamically
+            if (toolStripMenuItemSelectedLines.DropDownItems[0].Tag?.ToString() == "(REMOVE)")
+            {
+                toolStripMenuItemSelectedLines.DropDownItems.RemoveAt(0);
+            }
+
+            var selectLinesMultipleReplace = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Edit.MultipleReplace);
+            selectLinesMultipleReplace.Tag = "(REMOVE)";
+            if (SubtitleListview1.SelectedItems.Count > 0)
+            {
+                toolStripMenuItemSelectedLines.DropDownItems.Insert(0, selectLinesMultipleReplace);
+            }
+
+            selectLinesMultipleReplace.Click += (senderNew, eNew) =>
+            {
+                using (var multipleReplace = new MultipleReplace())
+                {
+                    var sub = new Subtitle();
+                    foreach (var idx in SubtitleListview1.GetSelectedIndices())
+                    {
+                        sub.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[idx], false));
+                    }
+
+                    multipleReplace.Initialize(sub);
+                    if (multipleReplace.ShowDialog(this) == DialogResult.OK)
+                    {
+                        MakeHistoryForUndo(_language.BeforeMultipleReplace);
+                        SaveSubtitleListviewIndices();
+
+                        for (int i = 0; i < sub.Paragraphs.Count; i++)
+                        {
+                            var tempP = multipleReplace.FixedSubtitle.Paragraphs[i];
+                            var p = _subtitle.GetParagraphOrDefaultById(tempP.Id);
+                            if (p != null)
+                            {
+                                p.Text = tempP.Text;
+                            }
+                        }
+
+                        var indicesToDelete = new List<int>();
+                        foreach (var i in multipleReplace.DeleteIndices)
+                        {
+                            var tempP = sub.Paragraphs[i];
+                            var p = _subtitle.GetParagraphOrDefaultById(tempP.Id);
+                            if (p != null)
+                            {
+                                indicesToDelete.Add(_subtitle.Paragraphs.IndexOf(p));
+                            }
+                        }
+                        _subtitle.RemoveParagraphsByIndices(indicesToDelete);
+                        _subtitle.Renumber();
+
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                        if (indicesToDelete.Count > 0)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(FirstSelectedIndex);
+                        }
+                        else
+                        {
+                            RestoreSubtitleListviewIndices();
+                        }
+
+                        RefreshSelectedParagraph();
+                        UpdateSourceView();
+                        ShowStatus(string.Format(_language.NumberOfLinesReplacedX, multipleReplace.FixCount));
+                    }
+                }
+            };
+
             toolStripMenuItemSetRegion.Visible = false;
             toolStripMenuItemSetLanguage.Visible = false;
             List<string> actors = null;
