@@ -17,8 +17,10 @@
    * Update Portuguese translation - thx hugok79
    * Update French translation - thx Pierre
    * Update Korean translation - thx domddol
+   * Update Italian translation - thx bovirus
    * Update dotnet framework to 4.8
    * Update Tesseract OCR to 5.1.0
+   * Update Vosk to 0.3.38
    * Add some new English names - thx Omair
    * Add err msg if user OCR fix replacelist invalid - thx sialivi
    * Improve burn-in settings - thx Leon 
@@ -29,7 +31,7 @@
    * Separate vertical margins in BD sup editor - thx von Suppé
    * Add new models for audio-to-text - thx Stefan
    * Improve ASSA support for "Remove Leading '...'" - thx von Suppé
-   * Add 4 extra colors to recent colors in color picker
+   * Add four extra colors to recent colors in color picker
    * Add a little vobsub support in spellcheck - thx cyzs233
    * Add error msg for audio-to-text with online video - thx ilCosmico
    * Try to keep assa tags after translate - thx eladkarako
@@ -38,9 +40,10 @@
    * Improve "gap info" in File - Statistics
    * Allow import time codes w empty subtitle - thx Heung
    * Improve audio to text post-processing for jp/cn - thx coastal45
-   * Add Kurdish (Sorani) to GT - thx Ahmad
+   * Add more GT languages - thx Ahmad/malik
    * Video track bar mouse wheel works as waveform - thx voblaunsane
    * Allow sort of issues in "Netflix quality check" - thx uckthis
+   * Add four extra custom color shortcuts - thx Bill
 * FIXED:
    * Fix selected line update after load of new sub - thx Jamakmake
    * Removed vertical-scroll-bar-auto-show-hide as it could freeze SE

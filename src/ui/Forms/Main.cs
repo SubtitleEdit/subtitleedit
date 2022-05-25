@@ -33816,7 +33816,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(voskFolder);
             }
 
-            if (Configuration.IsRunningOnWindows && (!File.Exists(Path.Combine(voskFolder, "libvosk.dll"))))
+            if (Configuration.IsRunningOnWindows && !HasCurrentVosk(voskFolder))
             {
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "libvosk"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
@@ -33853,6 +33853,19 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
             }
+        }
+
+        private bool HasCurrentVosk(string voskFolder)
+        {
+            var voskDll = Path.Combine(voskFolder, "libvosk.dll");
+            if (!File.Exists(voskDll))
+            {
+                return false;
+            }
+
+            var currentVoskDllSha512Hash = "0ed8187b9e109ebdc7c2022694224cacccc3b545b3ca0c204f3414cba4f0e758251fbab2bcbfeb565f3e166dbeab28712c30f6b9ccad3ea023abf7c5e8d2e92f";
+            var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(voskDll));
+            return currentVoskDllSha512Hash == hash;
         }
 
         private void Main_MouseDown(object sender, MouseEventArgs e)
