@@ -21,6 +21,7 @@
    * Update dotnet framework to 4.8
    * Update Tesseract OCR to 5.1.0
    * Update Vosk to 0.3.38
+   * Update yt-dlp.exe to 2022.05.18 (not renamed to youtube-dl.exe anymore)
    * Add some new English names - thx Omair
    * Add err msg if user OCR fix replacelist invalid - thx sialivi
    * Improve burn-in settings - thx Leon 
