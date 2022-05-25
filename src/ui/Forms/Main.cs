@@ -710,6 +710,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewColor5)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color5));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor6)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color6));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor7)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color7));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor8)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8));
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void InitializeWaveformZoomDropdown()
@@ -10589,6 +10609,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4), true);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewColor5)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color5), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor6)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color6), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor7)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color7), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor8)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8), true);
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
             {
                 SurroundWithTag(Configuration.Settings.Tools.MusicSymbol, selectedTextOnly: true);
@@ -19669,6 +19709,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4));
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewColor5)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color5));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor6)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color6));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor7)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color7));
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor8)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8));
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
             {
                 GoToNextSyntaxError();
@@ -27755,6 +27815,26 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainListViewColor4)
             {
                 SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor5)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color5), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor6)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color6), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor7)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color7), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewColor8)
+            {
+                SetColor(ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8), true);
                 e.SuppressKeyPress = true;
             }
 

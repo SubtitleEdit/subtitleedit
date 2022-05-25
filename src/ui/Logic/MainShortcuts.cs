@@ -190,6 +190,11 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewColor2 { get; set; }
         public Keys MainListViewColor3 { get; set; }
         public Keys MainListViewColor4 { get; set; }
+        public Keys MainListViewColor5 { get; set; }
+        public Keys MainListViewColor6 { get; set; }
+        public Keys MainListViewColor7 { get; set; }
+        public Keys MainListViewColor8 { get; set; }
+
         public Keys MainListViewGoToNextError { get; set; }
         public Keys MainListViewRemoveBlankLines { get; set; }
         public Keys MainListViewRemoveTimeCodes { get; set; }
@@ -333,6 +338,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewColor2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor2);
             MainListViewColor3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor3);
             MainListViewColor4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor4);
+            MainListViewColor5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor5);
+            MainListViewColor6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor6);
+            MainListViewColor7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor7);
+            MainListViewColor8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColor8);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
             MainListViewRemoveBlankLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralRemoveBlankLines);
             MainListViewRemoveTimeCodes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes);
