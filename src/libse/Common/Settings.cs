@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var existingEntry = GetRecentFile(fileName, originalFileName);
             if (existingEntry == null)
             {
-                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, AudioTrack = audioTrack, OriginalFileName = originalFileName});
+                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, AudioTrack = audioTrack, OriginalFileName = originalFileName });
             }
             else
             {
@@ -168,6 +168,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public Color Color2 { get; set; }
         public Color Color3 { get; set; }
         public Color Color4 { get; set; }
+        public Color Color5 { get; set; }
+        public Color Color6 { get; set; }
+        public Color Color7 { get; set; }
+        public Color Color8 { get; set; }
         public bool ListViewShowColumnStartTime { get; set; }
         public bool ListViewShowColumnEndTime { get; set; }
         public bool ListViewShowColumnDuration { get; set; }
@@ -396,7 +400,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
-    
+
         public ToolsSettings()
         {
             AssaTagTemplates = new List<AssaTemplateItem>();
@@ -445,6 +449,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             Color2 = Color.FromArgb(byte.MaxValue, 0, 0);
             Color3 = Color.FromArgb(0, byte.MaxValue, 0);
             Color4 = Color.Cyan;
+            Color5 = Color.Black;
+            Color6 = Color.White;
+            Color7 = Color.Orange;
+            Color8 = Color.Pink;
             ListViewShowColumnStartTime = true;
             ListViewShowColumnEndTime = true;
             ListViewShowColumnDuration = true;
@@ -2248,6 +2256,10 @@ $HorzAlign          =   Center
         public string MainListViewColor2 { get; set; }
         public string MainListViewColor3 { get; set; }
         public string MainListViewColor4 { get; set; }
+        public string MainListViewColor5 { get; set; }
+        public string MainListViewColor6 { get; set; }
+        public string MainListViewColor7 { get; set; }
+        public string MainListViewColor8 { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyPlainText { get; set; }
@@ -4460,6 +4472,30 @@ $HorzAlign          =   Center
                 settings.Tools.Color4 = ColorTranslator.FromHtml(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("Color5");
+            if (subNode != null)
+            {
+                settings.Tools.Color5 = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("Color6");
+            if (subNode != null)
+            {
+                settings.Tools.Color6 = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("Color7");
+            if (subNode != null)
+            {
+                settings.Tools.Color7 = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("Color8");
+            if (subNode != null)
+            {
+                settings.Tools.Color8 = ColorTranslator.FromHtml(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnStartTime");
             if (subNode != null)
             {
@@ -5623,7 +5659,7 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.AssaBgBoxColor = FromHtml(subNode.InnerText);
-             }
+            }
 
             subNode = node.SelectSingleNode("AssaBgBoxOutlineColor");
             if (subNode != null)
@@ -8396,6 +8432,30 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewColor4 = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewColor5");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor5 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColor6");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor6 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColor7");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor7 = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainListViewColor8");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColor8 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainRemoveFormatting");
                 if (subNode != null)
                 {
@@ -9604,6 +9664,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("Color2", ColorTranslator.ToHtml(settings.Tools.Color2));
                 textWriter.WriteElementString("Color3", ColorTranslator.ToHtml(settings.Tools.Color3));
                 textWriter.WriteElementString("Color4", ColorTranslator.ToHtml(settings.Tools.Color4));
+                textWriter.WriteElementString("Color5", ColorTranslator.ToHtml(settings.Tools.Color5));
+                textWriter.WriteElementString("Color6", ColorTranslator.ToHtml(settings.Tools.Color6));
+                textWriter.WriteElementString("Color7", ColorTranslator.ToHtml(settings.Tools.Color7));
+                textWriter.WriteElementString("Color8", ColorTranslator.ToHtml(settings.Tools.Color8));
                 textWriter.WriteElementString("ListViewShowColumnStartTime", settings.Tools.ListViewShowColumnStartTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
@@ -10419,6 +10483,10 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColor2", shortcuts.MainListViewColor2);
             textWriter.WriteElementString("MainListViewColor3", shortcuts.MainListViewColor3);
             textWriter.WriteElementString("MainListViewColor4", shortcuts.MainListViewColor4);
+            textWriter.WriteElementString("MainListViewColor5", shortcuts.MainListViewColor5);
+            textWriter.WriteElementString("MainListViewColor6", shortcuts.MainListViewColor6);
+            textWriter.WriteElementString("MainListViewColor7", shortcuts.MainListViewColor7);
+            textWriter.WriteElementString("MainListViewColor8", shortcuts.MainListViewColor8);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
             textWriter.WriteElementString("MainListViewCopyPlainText", shortcuts.MainListViewCopyPlainText);
