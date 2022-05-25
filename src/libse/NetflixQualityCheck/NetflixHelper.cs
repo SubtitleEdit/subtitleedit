@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
-    internal static class NetflixHelper
+    public static class NetflixHelper
     {
         public static string ConvertNumberToString(string input, bool startWithUppercase, string language)
         {
