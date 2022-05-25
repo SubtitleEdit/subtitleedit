@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.6 (xth May 2022) BETA
+3.6.6 (25th May 2022)
 * NEW:
    * Add toolbar icon for iTT properties - thx Leon
    * Add new sub format - thx Sergiy
