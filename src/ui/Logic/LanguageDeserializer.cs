@@ -5161,6 +5161,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ModifySelection/DurationGreaterThan":
                     language.ModifySelection.DurationGreaterThan = reader.Value;
                     break;
+                case "ModifySelection/ExactlyOneLine":
+                    language.ModifySelection.ExactlyOneLine = reader.Value;
+                    break;
+                case "ModifySelection/ExactlyTwoLines":
+                    language.ModifySelection.ExactlyTwoLines = reader.Value;
+                    break;
                 case "ModifySelection/MoreThanTwoLines":
                     language.ModifySelection.MoreThanTwoLines = reader.Value;
                     break;

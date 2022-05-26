@@ -2048,6 +2048,8 @@
             public string EvenLines { get; set; }
             public string DurationLessThan { get; set; }
             public string DurationGreaterThan { get; set; }
+            public string ExactlyOneLine { get; set; }
+            public string ExactlyTwoLines { get; set; }
             public string MoreThanTwoLines { get; set; }
             public string Bookmarked { get; set; }
             public string BlankLines { get; set; }
