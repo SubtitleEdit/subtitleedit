@@ -1898,6 +1898,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <EvenLines>Even-numbered lines</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
+    <ExactlyOneLine>Exactly one line</ExactlyOneLine>
+    <ExactlyTwoLines>Exactly two lines</ExactlyTwoLines>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
     <Bookmarked>Bookmarked</Bookmarked>
     <BlankLines>Blank lines</BlankLines>
