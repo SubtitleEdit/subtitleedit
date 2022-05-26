@@ -180,7 +180,10 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <OpenModelsFolder>Otwórz folder modeli</OpenModelsFolder>
     <LoadingVoskModel>Wczytuję model rozpoznawania mowy Vosk...</LoadingVoskModel>
     <Transcribing>Transkrypcja audio na tekst...</Transcribing>
+    <TranscribingXOfY>Transkrypcja audio na tekst — plik {0} z {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>Zapisano {0} plik(i)ów w folderze źródłowym wideo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Użyj przetwarzania końcowego (łączenie linii, poprawianie wielkości liter, interpunkcja i inne)</UsePostProcessing>
+    <BatchMode>Tryb wsadowy</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -592,6 +595,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <TimeCode>Kod czasowy</TimeCode>
     <NewLine>Nowa linia</NewLine>
     <Footer>Stopka</Footer>
+    <FileExtension>Rozszerzenie pliku</FileExtension>
     <DoNotModify>[Nie należy modyfikować]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -1736,6 +1740,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <ShowVideoControls>Pokaż elementy sterujące wideo</ShowVideoControls>
     <HideVideoControls>Ukryj elementy sterujące wideo</HideVideoControls>
     <GeneratingWaveformInBackground>Generowanie wykresu falowego w tle...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Zapisano automatyczną kopię zapasową</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -1893,6 +1898,8 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <EvenLines>Linie parzyste</EvenLines>
     <DurationLessThan>Czas trwania krótszy niż</DurationLessThan>
     <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
+    <ExactlyOneLine>Dokładnie jedna linia</ExactlyOneLine>
+    <ExactlyTwoLines>Dokładnie dwie linie</ExactlyTwoLines>
     <MoreThanTwoLines>Więcej niż dwie linie</MoreThanTwoLines>
     <Bookmarked>Dodano do zakładek</Bookmarked>
     <BlankLines>Puste linie</BlankLines>
@@ -2135,6 +2142,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ApplyAssaOverrideTags>Zastosuj do zaznaczenia tagi zastępowania ASSA</ApplyAssaOverrideTags>
     <SetAssaPosition>Ustaw/Uzyskaj pozycję ASSA</SetAssaPosition>
     <SetAssaResolution>Ustaw rozdzielczość ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>Wykonaj teraz automatyczną kopię zapasową</TakeAutoBackup>
     <ShowLineBreaksAs>Pokaż łamanie linii w "Widoku listy" jako</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Zapisz jako..." użyje nazwy pliku z</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dwukrotne kliknięcie linii w widoku listy w głównym oknie spowoduje:</MainListViewDoubleClickAction>
@@ -2275,14 +2283,17 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ContinuationStyleLeadingTrailingDashDots>Myślnik, ale kropki dla przerw</ContinuationStyleLeadingTrailingDashDots>
     <CpsLineLengthStyle>ZNS/długość linii</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Policz wszystkie znaki</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Policz wszystko oprócz spacji, tylko ZNS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Policz wszystko oprócz spacji</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, spacja 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignoruj arabskie znaki diakrytyczne</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignoruj arabskie znaki diakrytyczne/spacje</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Brak spacji i znaków interpunkcji ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>Symbol muzyczny</MusicSymbol>
     <MusicSymbolsReplace>Symbole muzyczne do zastąpienia (oddzielone przecinkiem)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem reguł zakodowanych na stałe</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>Użyj listy dzielenia wyrazów (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania - zezwól na przesunięcie czasu rozpoczęcia</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Domyślny format</DefaultFormat>
@@ -2443,6 +2454,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Przełącz elementy sterujące wideo</MainToggleVideoControls>
     <VideoToggleContrast>Przełącz kontrast (tylko mpv)</VideoToggleContrast>
+    <VideoAudioToText>Wideo/audio na tekst (rozpoznawanie mowy)</VideoAudioToText>
     <VideoToggleBrightness>Przełącz jasność (tylko mpv)</VideoToggleBrightness>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
@@ -2714,6 +2726,9 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Znaków/sekundę - minimalnie: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Znaków/sekundę - maksymalnie: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Znaków/sekundę - średnio: {0:0.000}</CharactersPerSecondAverage>
+    <GapMinimum>Odstęp - minimalny: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>Odstęp - maksymalny: {0:#,##0} ms</GapMaximum>
+    <GapAverage>Odstęp - średni: {0:#,##0.##} ms</GapAverage>
     <Export>Eksportuj...</Export>
   </Statistics>
   <SubStationAlphaProperties>
