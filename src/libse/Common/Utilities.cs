@@ -2985,18 +2985,17 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string GetSha512Hash(byte[] buffer)
         {
             using (var ms = new MemoryStream(buffer))
-            using (var bs = new BufferedStream(ms))
             {
                 using (var sha512 = new SHA512Managed())
                 {
-                    var hash = sha512.ComputeHash(bs);
-                    var hashString = string.Empty;
+                    var hash = sha512.ComputeHash(ms);
+                    var hashString = new StringBuilder(128);
                     foreach (var x in hash)
                     {
-                        hashString += $"{x:x2}";
+                        hashString.Append($"{x:x2}");
                     }
 
-                    return hashString.ToLower();
+                    return hashString.ToString();
                 }
             }
         }
