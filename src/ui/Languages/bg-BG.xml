@@ -176,8 +176,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChooseModel>Избери модел</ChooseModel>
     <OpenModelsFolder>Отвори папката с модели</OpenModelsFolder>
     <LoadingVoskModel>Моделът за разпознаване на реч Vosk се зарежда...</LoadingVoskModel>
-    <Transcribing>Транскрибиране на аудио към текс...</Transcribing>
+    <Transcribing>Предаване запис на аудио към текс...</Transcribing>
+    <TranscribingXOfY>Предаване запис на аудио към текстов файл {0} от {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видеоизточника</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Използвай последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
+    <BatchMode>Пакетен режим</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA</Title>
@@ -1897,6 +1900,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <EvenLines>Редове с четни номера</EvenLines>
     <DurationLessThan>Продължителност по-малка от</DurationLessThan>
     <DurationGreaterThan>Продължителност по-голяма от</DurationGreaterThan>
+    <ExactlyOneLine>Точно един ред</ExactlyOneLine>
+    <ExactlyTwoLines>Точно два реда</ExactlyTwoLines>
     <MoreThanTwoLines>Повече от два реда</MoreThanTwoLines>
     <Bookmarked>Маркирани</Bookmarked>
     <BlankLines>Празни редове</BlankLines>
@@ -2287,6 +2292,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, латински 0,5, интервал 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Игнорирай Арабските диакритични символи</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Игнорирай Арабските диакритични символи/интервал</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без интервал или препинателни знаци ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>Замяна с музикален символ</MusicSymbol>
     <MusicSymbolsReplace>Музикални символи за замяна (разделени със запетая)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR(разпознаване на текст) грешки</FixCommonOcrErrorsUseHardcodedRules>
@@ -2724,7 +2730,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <CharactersPerSecondMinimum>Символи/сек - минимум: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Символи/сек - максимум: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Символи/сек - средно: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>Минимално разстояние: {0} мс</MinimalGap>
+    <GapMinimum>Празнина-минимум: {0:#,##0} мс</GapMinimum>
+    <GapMaximum>Празнина-максимум: {0:#,##0} мс</GapMaximum>
+    <GapAverage>Празнина-средна: {0:#,##0.## } мс</GapAverage>
     <Export>Експорт...</Export>
   </Statistics>
   <SubStationAlphaProperties>
