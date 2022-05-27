@@ -99,6 +99,9 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonLineMode.Checked = true;
             }
 
+            labelEncoding.Text = LanguageSettings.Current.Main.Controls.FileEncoding;
+            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
+
             comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
             checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
             checkBoxRemoveEmptyLines.Checked = Configuration.Settings.Tools.ImportTextRemoveEmptyLines;
@@ -158,6 +161,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxGenerateTimeCodes_CheckedChanged(null, null);
         }
 
+        private Encoding GetChosenEncoding()
+        {
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding).Encoding;
+        }
+
         private void RefreshTimerTick(object sender, EventArgs e)
         {
             _refreshTimer.Stop();
@@ -194,6 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     LoadSingleFile(openFileDialog1.FileName, this);
                 }
+
                 GeneratePreview();
             }
         }
@@ -212,8 +221,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fd = new FinalDraftTemplate2();
-            var list = new List<string>(FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-            bool isFinalDraft = fd.IsMine(list, fileName);
+            var list = new List<string>(FileUtil.ReadAllLinesShared(fileName, GetChosenEncoding()));
+            var isFinalDraft = fd.IsMine(list, fileName);
 
             if (ext == ".astx")
             {
@@ -498,8 +507,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void MergeLinesWithContinuation()
         {
             var temp = new Subtitle();
-            bool skipNext = false;
-            for (int i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
+            var skipNext = false;
+            for (var i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = FixedSubtitle.Paragraphs[i];
                 if (!skipNext)
@@ -916,11 +925,11 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private static string GetAllText(string fileName)
+        private string GetAllText(string fileName)
         {
             try
             {
-                var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                var encoding = GetChosenEncoding();
                 var text = FileUtil.ReadAllTextShared(fileName, encoding);
                 if (fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1445,6 +1454,33 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxUseTimeCodeFromCurrentFile_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void buttonBrowseEncoding_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = LanguageSettings.Current.Main.OpenAnsiSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                using (var chooseEncoding = new ChooseEncoding())
+                {
+                    chooseEncoding.Initialize(openFileDialog1.FileName);
+                    if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var encoding = chooseEncoding.GetEncoding();
+                        for (var i = 0; i < comboBoxEncoding.Items.Count; i++)
+                        {
+                            var item = comboBoxEncoding.Items[i];
+                            if (item is TextEncoding te && te.Encoding.WebName == encoding.WebName)
+                            {
+                                comboBoxEncoding.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
