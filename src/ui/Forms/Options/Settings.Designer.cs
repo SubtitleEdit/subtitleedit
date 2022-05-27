@@ -931,7 +931,7 @@
             // 
             this.numericUpDownDurationMin.Location = new System.Drawing.Point(203, 163);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
-            3000,
+            10000,
             0,
             0,
             0});
