@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
                         }
 
-                        success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), binaryParagraphs, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, ocrEngine, preExt);
+                        success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), binaryParagraphs, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, ocrEngine, preExt);
                         if (success)
                         {
                             converted--;
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     var subtitle = new Subtitle(kvp.Value);
                     subtitle.Renumber();
                     var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, kvp.Key);
-                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, null, preExt);
+                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, null, preExt);
                     if (success)
                     {
                         converted--;

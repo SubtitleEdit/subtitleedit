@@ -68,16 +68,19 @@
             this.radioButtonAutoSplit = new System.Windows.Forms.RadioButton();
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseTimeCodeFromCurrentFile = new System.Windows.Forms.CheckBox();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxUseTimeCodeFromCurrentFile = new System.Windows.Forms.CheckBox();
+            this.buttonBrowseEncoding = new System.Windows.Forms.Button();
+            this.labelEncoding = new System.Windows.Forms.Label();
+            this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -108,6 +111,9 @@
             // 
             this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportText.Controls.Add(this.buttonBrowseEncoding);
+            this.groupBoxImportText.Controls.Add(this.labelEncoding);
+            this.groupBoxImportText.Controls.Add(this.comboBoxEncoding);
             this.groupBoxImportText.Controls.Add(this.checkBoxMultipleFiles);
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Controls.Add(this.textBoxText);
@@ -136,13 +142,13 @@
             this.textBoxText.AllowDrop = true;
             this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxText.Location = new System.Drawing.Point(6, 48);
+            this.textBoxText.Location = new System.Drawing.Point(6, 91);
             this.textBoxText.MaxLength = 0;
             this.textBoxText.Multiline = true;
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxText.Size = new System.Drawing.Size(612, 356);
-            this.textBoxText.TabIndex = 1;
+            this.textBoxText.Size = new System.Drawing.Size(612, 313);
+            this.textBoxText.TabIndex = 7;
             this.textBoxText.TextChanged += new System.EventHandler(this.TextBoxTextTextChanged);
             this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragDrop);
             this.textBoxText.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragEnter);
@@ -159,9 +165,9 @@
             this.listViewInputFiles.ContextMenuStrip = this.contextMenuStripListView;
             this.listViewInputFiles.FullRowSelect = true;
             this.listViewInputFiles.HideSelection = false;
-            this.listViewInputFiles.Location = new System.Drawing.Point(6, 48);
+            this.listViewInputFiles.Location = new System.Drawing.Point(6, 91);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(612, 356);
+            this.listViewInputFiles.Size = new System.Drawing.Size(612, 313);
             this.listViewInputFiles.TabIndex = 6;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -592,6 +598,18 @@
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
             this.checkBoxRemoveEmptyLines.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveEmptyLinesCheckedChanged);
             // 
+            // checkBoxUseTimeCodeFromCurrentFile
+            // 
+            this.checkBoxUseTimeCodeFromCurrentFile.AutoSize = true;
+            this.checkBoxUseTimeCodeFromCurrentFile.Enabled = false;
+            this.checkBoxUseTimeCodeFromCurrentFile.Location = new System.Drawing.Point(157, 250);
+            this.checkBoxUseTimeCodeFromCurrentFile.Name = "checkBoxUseTimeCodeFromCurrentFile";
+            this.checkBoxUseTimeCodeFromCurrentFile.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxUseTimeCodeFromCurrentFile.TabIndex = 8;
+            this.checkBoxUseTimeCodeFromCurrentFile.Text = "Take time from current file";
+            this.checkBoxUseTimeCodeFromCurrentFile.UseVisualStyleBackColor = true;
+            this.checkBoxUseTimeCodeFromCurrentFile.CheckedChanged += new System.EventHandler(this.checkBoxUseTimeCodeFromCurrentFile_CheckedChanged);
+            // 
             // buttonRefresh
             // 
             this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -615,33 +633,6 @@
             this.groupBoxImportResult.TabIndex = 2;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
-            // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowColumnReorder = true;
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripPreview;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(6, 20);
-            this.SubtitleListview1.MultiSelect = false;
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(1020, 257);
-            this.SubtitleListview1.SubtitleFontBold = false;
-            this.SubtitleListview1.SubtitleFontName = "Tahoma";
-            this.SubtitleListview1.SubtitleFontSize = 8;
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // contextMenuStripPreview
             // 
@@ -695,17 +686,63 @@
             this.labelStatus.TabIndex = 106;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxUseTimeCodeFromCurrentFile
+            // buttonBrowseEncoding
             // 
-            this.checkBoxUseTimeCodeFromCurrentFile.AutoSize = true;
-            this.checkBoxUseTimeCodeFromCurrentFile.Enabled = false;
-            this.checkBoxUseTimeCodeFromCurrentFile.Location = new System.Drawing.Point(157, 250);
-            this.checkBoxUseTimeCodeFromCurrentFile.Name = "checkBoxUseTimeCodeFromCurrentFile";
-            this.checkBoxUseTimeCodeFromCurrentFile.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxUseTimeCodeFromCurrentFile.TabIndex = 8;
-            this.checkBoxUseTimeCodeFromCurrentFile.Text = "Take time from current file";
-            this.checkBoxUseTimeCodeFromCurrentFile.UseVisualStyleBackColor = true;
-            this.checkBoxUseTimeCodeFromCurrentFile.CheckedChanged += new System.EventHandler(this.checkBoxUseTimeCodeFromCurrentFile_CheckedChanged);
+            this.buttonBrowseEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonBrowseEncoding.Location = new System.Drawing.Point(592, 52);
+            this.buttonBrowseEncoding.Name = "buttonBrowseEncoding";
+            this.buttonBrowseEncoding.Size = new System.Drawing.Size(26, 23);
+            this.buttonBrowseEncoding.TabIndex = 6;
+            this.buttonBrowseEncoding.Text = "...";
+            this.buttonBrowseEncoding.UseVisualStyleBackColor = true;
+            this.buttonBrowseEncoding.Click += new System.EventHandler(this.buttonBrowseEncoding_Click);
+            // 
+            // labelEncoding
+            // 
+            this.labelEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelEncoding.AutoSize = true;
+            this.labelEncoding.Location = new System.Drawing.Point(302, 56);
+            this.labelEncoding.Name = "labelEncoding";
+            this.labelEncoding.Size = new System.Drawing.Size(50, 13);
+            this.labelEncoding.TabIndex = 13;
+            this.labelEncoding.Text = "Encoding";
+            // 
+            // comboBoxEncoding
+            // 
+            this.comboBoxEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEncoding.FormattingEnabled = true;
+            this.comboBoxEncoding.Location = new System.Drawing.Point(372, 53);
+            this.comboBoxEncoding.Name = "comboBoxEncoding";
+            this.comboBoxEncoding.Size = new System.Drawing.Size(214, 21);
+            this.comboBoxEncoding.TabIndex = 5;
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowColumnReorder = true;
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripPreview;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(6, 20);
+            this.SubtitleListview1.MultiSelect = false;
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(1020, 257);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // ImportText
             // 
@@ -806,5 +843,8 @@
         private System.Windows.Forms.CheckBox checkBoxTakeTimeFromFileNames;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.CheckBox checkBoxUseTimeCodeFromCurrentFile;
+        private System.Windows.Forms.Button buttonBrowseEncoding;
+        private System.Windows.Forms.Label labelEncoding;
+        private System.Windows.Forms.ComboBox comboBoxEncoding;
     }
 }
