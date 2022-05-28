@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralSetAssaResolution { get; set; }
         public Keys MainGeneralTakeAutoBackupNow { get; set; }
         public Keys MainToolsAutoDuration { get; set; }
-        public Keys MainVideoFoucsSetVideoPosition { get; set; }
+        public Keys MainVideoFocusSetVideoPosition { get; set; }
         public Keys ToggleVideoDockUndock { get; set; }
         public Keys VideoPause { get; set; }
         public Keys VideoStop { get; set; }
@@ -222,6 +222,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformListSceneChanges { get; set; }
         public Keys WaveformGuessStart { get; set; }
         public Keys MainTranslateGoogleIt { get; set; }
+        public Keys MainCheckFixTimingViaShotChanges { get; set; }
         public Keys MainTranslateGoogleTranslateIt { get; set; }
         public Keys MainTranslateCustomSearch1 { get; set; }
         public Keys MainTranslateCustomSearch2 { get; set; }
@@ -263,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoPlayFromBeginning = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromBeginning);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
             VideoStop = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoStop);
-            MainVideoFoucsSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
+            MainVideoFocusSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
             Video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
@@ -447,6 +448,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformListSceneChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListSceneChanges);
             WaveformGuessStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGuessStart);
             MainTranslateGoogleIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleIt);
+            MainCheckFixTimingViaShotChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCheckFixTimingViaShotChanges);
             MainTranslateGoogleTranslateIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslateIt);
             MainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             MainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);

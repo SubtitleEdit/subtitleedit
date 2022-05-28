@@ -41,6 +41,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.SceneChanges;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16898,7 +16899,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.MainVideoFoucsSetVideoPosition)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.MainVideoFocusSetVideoPosition)
             {
                 if (tabControlModes.SelectedTab == tabPageAdjust)
                 {

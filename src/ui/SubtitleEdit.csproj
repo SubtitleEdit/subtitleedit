@@ -420,6 +420,12 @@
     <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.Designer.cs">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SceneChanges\AdjustTimingViaShotChanges.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SceneChanges\AdjustTimingViaShotChanges.Designer.cs">
+      <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SeJobs\SeJobExport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -636,10 +642,10 @@
     <Compile Include="Forms\ImportImages.Designer.cs">
       <DependentUpon>ImportImages.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ImportSceneChanges.cs">
+    <Compile Include="Forms\SceneChanges\ImportSceneChanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ImportSceneChanges.Designer.cs">
+    <Compile Include="Forms\SceneChanges\ImportSceneChanges.Designer.cs">
       <DependentUpon>ImportSceneChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ImportUnknownFormat.cs">
@@ -1527,6 +1533,9 @@
     <EmbeddedResource Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SceneChanges\AdjustTimingViaShotChanges.resx">
+      <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SeJobs\SeJobExport.resx">
       <DependentUpon>SeJobExport.cs</DependentUpon>
     </EmbeddedResource>
@@ -1628,7 +1637,7 @@
     <EmbeddedResource Include="Forms\ImportImages.resx">
       <DependentUpon>ImportImages.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ImportSceneChanges.resx">
+    <EmbeddedResource Include="Forms\SceneChanges\ImportSceneChanges.resx">
       <DependentUpon>ImportSceneChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportUnknownFormat.resx">

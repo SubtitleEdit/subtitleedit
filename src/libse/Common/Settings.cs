@@ -1899,6 +1899,10 @@ $HorzAlign          =   Center
         public bool WaveformSetVideoPositionOnMoveStartEnd { get; set; }
         public bool WaveformSingleClickSelect { get; set; }
         public bool WaveformSnapToSceneChanges { get; set; }
+        public int WaveformShotChangeStartTimeBeforeMs { get; set; }
+        public int WaveformShotChangeStartTimeAfterMs { get; set; }
+        public int WaveformShotChangeEndTimeBeforeMs { get; set; }
+        public int WaveformShotChangeEndTimeAfterMs { get; set; }
         public int WaveformBorderHitMs { get; set; }
         public Color WaveformGridColor { get; set; }
         public Color WaveformColor { get; set; }
@@ -2391,6 +2395,7 @@ $HorzAlign          =   Center
         public string Waveform100MsRight { get; set; }
         public string Waveform1000MsLeft { get; set; }
         public string Waveform1000MsRight { get; set; }
+        public string MainCheckFixTimingViaShotChanges { get; set; }
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslateIt { get; set; }
         public string MainTranslateAuto { get; set; }
@@ -2478,6 +2483,7 @@ $HorzAlign          =   Center
             Waveform100MsRight = "Shift+Right";
             Waveform1000MsLeft = "Left";
             Waveform1000MsRight = "Right";
+            MainCheckFixTimingViaShotChanges = "Control+Shift+0";
             PluginShortcuts = new List<PluginShortcut>();
         }
 
@@ -6784,6 +6790,30 @@ $HorzAlign          =   Center
                 settings.VideoControls.WaveformSnapToSceneChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("WaveformShotChangeStartTimeBeforeMs");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformShotChangeStartTimeBeforeMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WaveformShotChangeStartTimeAfterMs");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformShotChangeStartTimeAfterMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WaveformShotChangeEndTimeBeforeMs");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformShotChangeEndTimeBeforeMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WaveformShotChangeEndTimeAfterMs");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformShotChangeEndTimeAfterMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformSetVideoPositionOnMoveStartEnd");
             if (subNode != null)
             {
@@ -9278,6 +9308,12 @@ $HorzAlign          =   Center
                     shortcuts.Waveform1000MsRight = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainCheckFixTimingViaShotChanges");
+                if (subNode != null)
+                {
+                    shortcuts.MainCheckFixTimingViaShotChanges = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateGoogleIt");
                 if (subNode != null)
                 {
@@ -10099,6 +10135,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformSetVideoPositionOnMoveStartEnd", settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSingleClickSelect", settings.VideoControls.WaveformSingleClickSelect.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSnapToSceneChanges", settings.VideoControls.WaveformSnapToSceneChanges.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformShotChangeStartTimeBeforeMs", settings.VideoControls.WaveformShotChangeStartTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformShotChangeStartTimeAfterMs", settings.VideoControls.WaveformShotChangeStartTimeAfterMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformShotChangeEndTimeBeforeMs", settings.VideoControls.WaveformShotChangeEndTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformShotChangeEndTimeAfterMs", settings.VideoControls.WaveformShotChangeEndTimeAfterMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformGridColor", settings.VideoControls.WaveformGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformColor", settings.VideoControls.WaveformColor.ToArgb().ToString(CultureInfo.InvariantCulture));
@@ -10624,6 +10664,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("Waveform100MsRight", shortcuts.Waveform100MsRight);
             textWriter.WriteElementString("Waveform1000MsLeft", shortcuts.Waveform1000MsLeft);
             textWriter.WriteElementString("Waveform1000MsRight", shortcuts.Waveform1000MsRight);
+            textWriter.WriteElementString("MainCheckFixTimingViaShotChanges", shortcuts.MainCheckFixTimingViaShotChanges);
             textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
             textWriter.WriteElementString("MainTranslateGoogleTranslateIt", shortcuts.MainTranslateGoogleTranslateIt);
             textWriter.WriteElementString("MainTranslateAuto", shortcuts.MainTranslateAuto);
