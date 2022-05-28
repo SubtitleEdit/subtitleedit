@@ -1899,6 +1899,8 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <EvenLines>Linhas com números pares</EvenLines>
     <DurationLessThan>Duração menor que</DurationLessThan>
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
+    <ExactlyOneLine>Exactamente uma linha</ExactlyOneLine>
+    <ExactlyTwoLines>Exactamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
     <Bookmarked>Marcador</Bookmarked>
     <BlankLines>Linhas em branco</BlankLines>
