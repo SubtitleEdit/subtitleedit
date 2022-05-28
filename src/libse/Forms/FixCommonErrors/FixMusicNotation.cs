@@ -104,11 +104,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static string HandleQuestionMarks(string input)
         {
-            string narrator = string.Empty;
-            string text = input;
+            var narrator = string.Empty;
+            var text = input;
 
             // jump narrator
-            int colonIdx = text.IndexOf(':');
+            var colonIdx = text.IndexOf(':');
             if (colonIdx > 0 && colonIdx + 1 < text.Length && (text[colonIdx + 1] == ' ' || text[colonIdx + 1] == '?'))
             {
                 // jump white space
@@ -116,24 +116,34 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 text = text.Substring(colonIdx + 1).TrimStart();
             }
 
+            if (Utilities.CountTagInText(text, '?') == 1 &&
+                Utilities.CountTagInText(input, '?') == 2)
+            {
+                narrator = string.Empty;
+                text = input; // don't skip narrator
+            }
+
             // be stub when looking for question marks
-            string noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
+            var noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
 
             // check if text starts and ends with?
             if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?') && text.Length > 1)
             {
                 // find correct start & end question mark position taking tags in consideration
-                int startIdx = text.IndexOf('?');
-                int endIdx = text.LastIndexOf('?');
+                var startIdx = text.IndexOf('?');
+                var endIdx = text.LastIndexOf('?');
 
-                // get pre and post text excluding question marks
-                string preText = text.Substring(0, startIdx);
-                string postText = text.Substring(endIdx + 1);
+                if (startIdx != endIdx)
+                {
+                    // get pre and post text excluding question marks
+                    var preText = text.Substring(0, startIdx);
+                    var postText = text.Substring(endIdx + 1);
 
-                text = text.Substring(startIdx + 1, endIdx - (startIdx + 1));
+                    text = text.Substring(startIdx + 1, endIdx - (startIdx + 1));
 
-                // construct music text and restore preText/postText (mostly tags)
-                text = preText + WrapInMusic(text) + postText;
+                    // construct music text and restore preText/postText (mostly tags)
+                    text = preText + WrapInMusic(text) + postText;
+                }
             }
 
             // restore narrator
