@@ -13,18 +13,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction = Language.FixMusicNotation;
-            int fixCount = 0;
-            string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolReplace.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var fixAction = Language.FixMusicNotation;
+            var fixCount = 0;
+            var musicSymbols = Configuration.Settings.Tools.MusicSymbolReplace.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 if (callbacks.AllowFix(p, fixAction))
                 {
                     var oldText = p.Text;
                     var newText = oldText;
-                    bool containsFontTag = oldText.Contains("<font ", StringComparison.OrdinalIgnoreCase);
-                    foreach (string musicSymbol in musicSymbols)
+                    var containsFontTag = oldText.Contains("<font ", StringComparison.OrdinalIgnoreCase);
+                    foreach (var musicSymbol in musicSymbols)
                     {
                         var ms = musicSymbol.Trim();
                         if (containsFontTag && ms == "#")
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             var fix = true;
                             if (ms == "#" && newText.Contains("#") && !newText.Contains("# "))
                             {
-                                int count = Utilities.CountTagInText(newText, '#');
+                                var count = Utilities.CountTagInText(newText, '#');
                                 if (count == 1)
                                 {
                                     var idx = newText.IndexOf('#');
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 else if (!newText.EndsWith('#'))
                                 {
                                     var idx = newText.IndexOf('#');
-                                    int hashTagCount = 0;
+                                    var hashTagCount = 0;
                                     while (idx >= 0)
                                     {
                                         if (char.IsLetterOrDigit(newText[idx + 1]))
@@ -104,11 +104,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static string HandleQuestionMarks(string input)
         {
-            string narrator = string.Empty;
-            string text = input;
+            var narrator = string.Empty;
+            var text = input;
 
             // jump narrator
-            int colonIdx = text.IndexOf(':');
+            var colonIdx = text.IndexOf(':');
             if (colonIdx > 0 && colonIdx + 1 < text.Length && (text[colonIdx + 1] == ' ' || text[colonIdx + 1] == '?'))
             {
                 // jump white space
@@ -117,18 +117,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             // be stub when looking for question marks
-            string noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
+            var noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
 
             // check if text starts and ends with?
-            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?') && text.Length > 1)
+            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?') && noTagsText.Length > 2)
             {
                 // find correct start & end question mark position taking tags in consideration
-                int startIdx = text.IndexOf('?');
-                int endIdx = text.LastIndexOf('?');
+                var startIdx = text.IndexOf('?');
+                var endIdx = text.LastIndexOf('?');
 
                 // get pre and post text excluding question marks
-                string preText = text.Substring(0, startIdx);
-                string postText = text.Substring(endIdx + 1);
+                var preText = text.Substring(0, startIdx);
+                var postText = text.Substring(endIdx + 1);
 
                 text = text.Substring(startIdx + 1, endIdx - (startIdx + 1));
 
