@@ -94,8 +94,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             // go to segment
             _stream.Seek(_segmentElement.DataPosition, SeekOrigin.Begin);
 
+            const int maxClustersToSeek = 100;
+            var clusterNo = 0;
+
             Element element;
-            while (_stream.Position < _stream.Length && (element = ReadElement()) != null)
+            while (_stream.Position < _stream.Length &&
+                   clusterNo < maxClustersToSeek &&
+                   (element = ReadElement()) != null)
             {
                 switch (element.Id)
                 {
@@ -106,8 +111,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         ReadTracksElement(element);
                         break;
                     case ElementId.Cluster:
-                        return FindTrackStartInCluster(element, trackNumber);
+                        clusterNo++;
+                        var startTime = FindTrackStartInCluster(element, trackNumber, out var found);
+                        if (found)
+                        {
+                            return startTime;
+                        }
+
+                        break;
                 }
+
                 _stream.Seek(element.EndPosition, SeekOrigin.Begin);
             }
 
@@ -127,11 +140,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             return GetTrackStartTime(audioTrackNumber) - videoDelay;
         }
 
-        private long FindTrackStartInCluster(Element cluster, int targetTrackNumber)
+        private long FindTrackStartInCluster(Element cluster, int targetTrackNumber, out bool found)
         {
-            long clusterTimeCode = 0L;
-            long trackStartTime = -1L;
-            bool done = false;
+            found = false;
+            var clusterTimeCode = 0L;
+            var trackStartTime = -1L;
+            var done = false;
 
             Element element;
             while (_stream.Position < cluster.EndPosition && (element = ReadElement()) != null && !done)
@@ -155,6 +169,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                             // Timecode (relative to Cluster timecode, signed int16)
                             trackStartTime = ReadInt16();
                             done = true;
+                            found = true;
                         }
                         break;
                 }
