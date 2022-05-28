@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
 
             // check if text starts and ends with?
-            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?') && text.Length > 1)
+            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?') && noTagsText.Length > 2)
             {
                 // find correct start & end question mark position taking tags in consideration
                 var startIdx = text.IndexOf('?');
