@@ -755,7 +755,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Remove>Suprimeix</Remove>
     <RemoveAll>Suprimeix-ho tot</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Importa canvis d'escena</Title>
     <OpenTextFile>Obri fitxer de text...</OpenTextFile>
     <Generate>Genera canvis d'escena</Generate>
@@ -765,11 +765,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Frames>Quadres</Frames>
     <Seconds>Segons</Seconds>
     <Milliseconds>Mi·llisegons</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Genera canvis d'escena amb FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Genera canvis d'escena amb FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Sensibilitat</Sensitivity>
     <SensitivityDescription>Un valor més baix dona més canvis a l'escena</SensitivityDescription>
-    <NoSceneChangesFound>No s'han trobat canvis d'escena</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>No s'han trobat canvis d'escena</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importa text pla</Title>
     <OneSubtitleIsOneFile>Múltiples fitxers - un fitxer és un subtítul</OneSubtitleIsOneFile>
@@ -1085,8 +1085,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SmptTimeMode>Cronometratge SMPTE (marc desplegable)</SmptTimeMode>
         <GenerateTextFromVideo>Genera text des del vídeo...</GenerateTextFromVideo>
         <ImportChaptersFromVideo>Importa capítols des del vídeo</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Genera/importa canvis d'escena...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Suprimeix canvis d'escena</RemoveSceneChanges>
+        <GenerateImportShotChanges>Genera/importa canvis d'escena...</GenerateImportShotChanges>
+        <RemoveShotChanges>Suprimeix canvis d'escena</RemoveShotChanges>
         <WaveformBatchGenerate>Fitxer de lots genera waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Mostra/amaga vídeo</ShowHideVideo>
         <ShowHideWaveform>Mostra/amaga Ona wave</ShowHideWaveform>
@@ -1521,7 +1521,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplaySubtitleJoin>Abans d'unió subtítols</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subtítols units</SubtitlesJoined>
     <StatusLog>Registre d'Estat</StatusLog>
-    <XSceneChangesImported>{0} canvis d'escena importats</XSceneChangesImported>
+    <XShotChangesImported>{0} canvis d'escena importats</XShotChangesImported>
     <PluginXExecuted>Complement '{0}' executat.</PluginXExecuted>
     <NotAValidXSubFile>No és un fitxer XSub vàlid!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Abans de combinar línies amb el mateix text</BeforeMergeLinesWithSameText>
@@ -1988,7 +1988,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformFocusMouseEnter>Estableix focus a l'entrada del ratolí</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>També estableix focus a vista llista a l'entrada del ratolí en vista llista</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Un clic selecciona subtítols</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Ajusta canvis d'escena(mantenir Majús per sobreescriure)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Ajusta canvis d'escena(mantenir Majús per sobreescriure)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>Marca de vora deu pegar-se dins</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>mil·lisegons</WaveformBorderHitMs2>
     <WaveformColor>Color</WaveformColor>
@@ -2101,14 +2101,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartTimeKeepDuration>Estableix temps d'inici, manté duració</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Estableix final, compensa la resta</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Estableix final, compensa la resta i Aneu al següent</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Captura l'inici de les línies seleccionades al canvi d'escena següent</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Captura l'inici de les línies seleccionades al canvi d'escena següent amb min. buit</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Captura el final de les línies seleccionades al canvi d'escena anterior</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Captura el final de les línies seleccionades al canvi d'escena anterior amb min. buit</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Amplia les línies seleccionades al canvi d'escena següent (o subtítol)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Amplia les línies seleccionades al canvi d'escena següent amb min. buit (o subtítol)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Amplia les línies seleccionades al canvi d'escena anterior (o subtítol)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Amplia les línies seleccionades al canvi d'escena anterior amb min. buit (o subtítol)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Captura l'inici de les línies seleccionades al canvi d'escena següent</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Captura l'inici de les línies seleccionades al canvi d'escena següent amb min. buit</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Captura el final de les línies seleccionades al canvi d'escena anterior</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Captura el final de les línies seleccionades al canvi d'escena anterior amb min. buit</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Amplia les línies seleccionades al canvi d'escena següent (o subtítol)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Amplia les línies seleccionades al canvi d'escena següent amb min. buit (o subtítol)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Amplia les línies seleccionades al canvi d'escena anterior (o subtítol)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Amplia les línies seleccionades al canvi d'escena anterior amb min. buit (o subtítol)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Amplia línies seleccionades al següent subtítol</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Amplia línes seleccionades a l'anterior subtítol</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Amplia línia actual al següent subtítol o durada màxima</AdjustExtendCurrentSubtitle>
@@ -2155,9 +2155,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelectionEnd>Reprodueix final de la selecció</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reprodueix primer el subtítol seleccionat</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus en vista llista</WaveformFocusListView>
-    <WaveformGoToPreviousSceneChange>Aneu a canvi d'escena anterior</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Aneu a canvi d'escena següent</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Activa/desactiva canvi d'escena</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Aneu a canvi d'escena anterior</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Aneu a canvi d'escena següent</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Activa/desactiva canvi d'escena</WaveformToggleShotChange>
     <WaveformGuessStart>Autoajusta inici mitjantçant canvi volum/escena</WaveformGuessStart>
     <GoBack1Frame>Un quadre enrrere</GoBack1Frame>
     <GoForward1Frame>Un quadre avant</GoForward1Frame>
@@ -2712,8 +2712,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowWaveformAndSpectrogram>Mostra l'ona i l'espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostra només l'ona</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostra només l'espectrograma</ShowSpectrogramOnly>
-    <AddSceneChange>Afegeix canvi d'escena</AddSceneChange>
-    <RemoveSceneChange>Suprimeix canvi d'escena</RemoveSceneChange>
+    <AddShotChange>Afegeix canvi d'escena</AddShotChange>
+    <RemoveShotChange>Suprimeix canvi d'escena</RemoveShotChange>
     <GuessTimeCodes>Endevina codis de temps</GuessTimeCodes>
     <SeekSilence>Cerca silenci...</SeekSilence>
     <InsertSubtitleHere>Insereix subtítol ací...</InsertSubtitleHere>

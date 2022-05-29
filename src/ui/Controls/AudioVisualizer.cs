@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Controls
         public const double ZoomMaximum = 2.5;
         private double _zoomFactor = 1.0; // 1.0=no zoom
 
-        public const int SceneChangeSnapPixels = 8;
+        public const int ShotChangeSnapPixels = 8;
 
         public double ZoomFactor
         {
@@ -183,17 +183,17 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private List<double> _sceneChanges = new List<double>();
+        private List<double> _shotChanges = new List<double>();
 
         /// <summary>
-        /// Scene changes (seconds)
+        /// Shot changes (seconds)
         /// </summary>
-        public List<double> SceneChanges
+        public List<double> ShotChanges
         {
-            get => _sceneChanges;
+            get => _shotChanges;
             set
             {
-                _sceneChanges = value;
+                _shotChanges = value;
                 Invalidate();
             }
         }
@@ -343,9 +343,9 @@ namespace Nikse.SubtitleEdit.Controls
 
                 _wavePeaks = new WavePeakData(_wavePeaks.SampleRate, list);
 
-                if (_sceneChanges?.Count > 0)
+                if (_shotChanges?.Count > 0)
                 {
-                    _sceneChanges = _sceneChanges.Select(sc => sc /= 1.001).ToList();
+                    _shotChanges = _shotChanges.Select(sc => sc /= 1.001).ToList();
                 }
             }
         }
@@ -644,18 +644,18 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                // scene changes
-                if (_sceneChanges != null)
+                // shot changes
+                if (_shotChanges != null)
                 {
                     try
                     {
                         var index = 0;
-                        while (index < _sceneChanges.Count)
+                        while (index < _shotChanges.Count)
                         {
                             int pos;
                             try
                             {
-                                var time = _sceneChanges[index++];
+                                var time = _shotChanges[index++];
                                 pos = SecondsToXPosition(time - _startPositionSeconds);
                             }
                             catch
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (pos > 0 && pos < Width)
                             {
                                 if (currentPositionPos == pos)
-                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
+                                { // shot change and current pos are the same - draw 2 pixels + current pos dotted
                                     currentPosDone = true;
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
@@ -679,7 +679,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphStartList.Contains(pos))
-                                { // scene change and start pos are the same - draw 2 pixels + current pos dotted
+                                { // shot change and start pos are the same - draw 2 pixels + current pos dotted
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
@@ -691,7 +691,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                                 else if (paragraphEndList.Contains(pos))
-                                { // scene change and end pos are the same - draw 2 pixels + current pos dotted
+                                { // shot change and end pos are the same - draw 2 pixels + current pos dotted
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
@@ -1713,12 +1713,12 @@ namespace Nikse.SubtitleEdit.Controls
 
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
 
-                                if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
+                                if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                 {
-                                    var nearestSceneChange = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
-                                    if (Math.Abs(e.X - SecondsToXPosition(nearestSceneChange - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                    var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                    if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                     {
-                                        _mouseDownParagraph.StartTime.TotalMilliseconds = nearestSceneChange * 1000;
+                                        _mouseDownParagraph.StartTime.TotalMilliseconds = nearestShotChange * 1000;
                                     }
                                 }
 
@@ -1731,12 +1731,12 @@ namespace Nikse.SubtitleEdit.Controls
                                 {
                                     NewSelectionParagraph.StartTime.TotalMilliseconds = milliseconds;
 
-                                    if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
+                                    if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                     {
-                                        var nearestSceneChange = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
-                                        if (Math.Abs(e.X - SecondsToXPosition(nearestSceneChange - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                        var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                        if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                         {
-                                            NewSelectionParagraph.StartTime.TotalMilliseconds = nearestSceneChange * 1000;
+                                            NewSelectionParagraph.StartTime.TotalMilliseconds = nearestShotChange * 1000;
                                         }
                                     }
 
@@ -1770,12 +1770,12 @@ namespace Nikse.SubtitleEdit.Controls
 
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
 
-                                if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
+                                if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                 {
-                                    var nearestSceneChange = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
-                                    if (Math.Abs(e.X - SecondsToXPosition(nearestSceneChange - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                    var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                    if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                     {
-                                        _mouseDownParagraph.EndTime.TotalMilliseconds = nearestSceneChange * 1000;
+                                        _mouseDownParagraph.EndTime.TotalMilliseconds = nearestShotChange * 1000;
                                     }
                                 }
 
@@ -1788,12 +1788,12 @@ namespace Nikse.SubtitleEdit.Controls
                                 {
                                     NewSelectionParagraph.EndTime.TotalMilliseconds = milliseconds;
 
-                                    if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
+                                    if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                                     {
-                                        var nearestSceneChange = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
-                                        if (Math.Abs(e.X - SecondsToXPosition(nearestSceneChange - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                        var nearestShotChange = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
+                                        if (Math.Abs(e.X - SecondsToXPosition(nearestShotChange - _startPositionSeconds)) < ShotChangeSnapPixels)
                                         {
-                                            NewSelectionParagraph.EndTime.TotalMilliseconds = nearestSceneChange * 1000;
+                                            NewSelectionParagraph.EndTime.TotalMilliseconds = nearestShotChange * 1000;
                                         }
                                     }
 
@@ -1819,20 +1819,20 @@ namespace Nikse.SubtitleEdit.Controls
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds - _moveWholeStartDifferenceMilliseconds;
                             _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
 
-                            if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
+                            if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                             {
-                                var nearestSceneChangeInFront = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) ? x : y) : -9999;
-                                var nearestSceneChangeInBack = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) ? x : y) : -9999;
+                                var nearestShotChangeInFront = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.StartTime.TotalMilliseconds) ? x : y) : -9999;
+                                var nearestShotChangeInBack = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs((x * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) < Math.Abs((y * 1000) - _mouseDownParagraph.EndTime.TotalMilliseconds) ? x : y) : -9999;
 
-                                if (Math.Abs(SecondsToXPosition(_mouseDownParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestSceneChangeInFront - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                if (Math.Abs(SecondsToXPosition(_mouseDownParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestShotChangeInFront - _startPositionSeconds)) < ShotChangeSnapPixels)
                                 {
-                                    _mouseDownParagraph.StartTime.TotalMilliseconds = nearestSceneChangeInFront * 1000;
-                                    _mouseDownParagraph.EndTime.TotalMilliseconds = (nearestSceneChangeInFront * 1000) + durationMilliseconds;
+                                    _mouseDownParagraph.StartTime.TotalMilliseconds = nearestShotChangeInFront * 1000;
+                                    _mouseDownParagraph.EndTime.TotalMilliseconds = (nearestShotChangeInFront * 1000) + durationMilliseconds;
                                 }
-                                else if (Math.Abs(SecondsToXPosition(_mouseDownParagraph.EndTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestSceneChangeInBack - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                else if (Math.Abs(SecondsToXPosition(_mouseDownParagraph.EndTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestShotChangeInBack - _startPositionSeconds)) < ShotChangeSnapPixels)
                                 {
-                                    _mouseDownParagraph.EndTime.TotalMilliseconds = nearestSceneChangeInBack * 1000;
-                                    _mouseDownParagraph.StartTime.TotalMilliseconds = (nearestSceneChangeInBack * 1000) - durationMilliseconds;
+                                    _mouseDownParagraph.EndTime.TotalMilliseconds = nearestShotChangeInBack * 1000;
+                                    _mouseDownParagraph.StartTime.TotalMilliseconds = (nearestShotChangeInBack * 1000) - durationMilliseconds;
                                 }
                             }
 
@@ -1881,19 +1881,19 @@ namespace Nikse.SubtitleEdit.Controls
                             NewSelectionParagraph.StartTime.TotalSeconds = startTotalSeconds;
                             NewSelectionParagraph.EndTime.TotalSeconds = endTotalSeconds;
 
-                            if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
+                            if (Configuration.Settings.VideoControls.WaveformSnapToShotChanges && ModifierKeys != Keys.Shift)
                             {
-                                var nearestSceneChangeInFront = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs(x - startTotalSeconds) < Math.Abs(y - startTotalSeconds) ? x : y) : -9999;
-                                var nearestSceneChangeInBack = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs(x - endTotalSeconds) < Math.Abs(y - endTotalSeconds) ? x : y) : -9999;
+                                var nearestShotChangeInFront = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs(x - startTotalSeconds) < Math.Abs(y - startTotalSeconds) ? x : y) : -9999;
+                                var nearestShotChangeInBack = _shotChanges.Count > 0 ? _shotChanges.Aggregate((x, y) => Math.Abs(x - endTotalSeconds) < Math.Abs(y - endTotalSeconds) ? x : y) : -9999;
 
-                                if (Math.Abs(SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestSceneChangeInFront - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                if (Math.Abs(SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestShotChangeInFront - _startPositionSeconds)) < ShotChangeSnapPixels)
                                 {
-                                    NewSelectionParagraph.StartTime.TotalMilliseconds = nearestSceneChangeInFront * 1000;
+                                    NewSelectionParagraph.StartTime.TotalMilliseconds = nearestShotChangeInFront * 1000;
                                     Invalidate();
                                 }
-                                if (Math.Abs(SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestSceneChangeInBack - _startPositionSeconds)) < SceneChangeSnapPixels)
+                                if (Math.Abs(SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - _startPositionSeconds) - SecondsToXPosition(nearestShotChangeInBack - _startPositionSeconds)) < ShotChangeSnapPixels)
                                 {
-                                    NewSelectionParagraph.EndTime.TotalMilliseconds = nearestSceneChangeInBack * 1000;
+                                    NewSelectionParagraph.EndTime.TotalMilliseconds = nearestShotChangeInBack * 1000;
                                     Invalidate();
                                 }
                             }
@@ -2680,19 +2680,19 @@ namespace Nikse.SubtitleEdit.Controls
             return threshold;
         }
 
-        public int GetSceneChangeIndex(double seconds)
+        public int GetShotChangeIndex(double seconds)
         {
-            if (SceneChanges == null)
+            if (ShotChanges == null)
             {
                 return -1;
             }
 
             try
             {
-                for (var index = 0; index < SceneChanges.Count; index++)
+                for (var index = 0; index < ShotChanges.Count; index++)
                 {
-                    var sceneChange = SceneChanges[index];
-                    if (Math.Abs(sceneChange - seconds) < 0.04)
+                    var shotChange = ShotChanges[index];
+                    if (Math.Abs(shotChange - seconds) < 0.04)
                     {
                         return index;
                     }

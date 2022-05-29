@@ -2411,43 +2411,43 @@ namespace Nikse.SubtitleEdit.Logic
                     language.ImportImages.RemoveAll = reader.Value;
                     break;
                 case "ImportSceneChanges/Title":
-                    language.ImportSceneChanges.Title = reader.Value;
+                    language.ImportShotChanges.Title = reader.Value;
                     break;
                 case "ImportSceneChanges/OpenTextFile":
-                    language.ImportSceneChanges.OpenTextFile = reader.Value;
+                    language.ImportShotChanges.OpenTextFile = reader.Value;
                     break;
                 case "ImportSceneChanges/Generate":
-                    language.ImportSceneChanges.Generate = reader.Value;
+                    language.ImportShotChanges.Generate = reader.Value;
                     break;
                 case "ImportSceneChanges/Import":
-                    language.ImportSceneChanges.Import = reader.Value;
+                    language.ImportShotChanges.Import = reader.Value;
                     break;
                 case "ImportSceneChanges/TextFiles":
-                    language.ImportSceneChanges.TextFiles = reader.Value;
+                    language.ImportShotChanges.TextFiles = reader.Value;
                     break;
                 case "ImportSceneChanges/TimeCodes":
-                    language.ImportSceneChanges.TimeCodes = reader.Value;
+                    language.ImportShotChanges.TimeCodes = reader.Value;
                     break;
                 case "ImportSceneChanges/Frames":
-                    language.ImportSceneChanges.Frames = reader.Value;
+                    language.ImportShotChanges.Frames = reader.Value;
                     break;
                 case "ImportSceneChanges/Seconds":
-                    language.ImportSceneChanges.Seconds = reader.Value;
+                    language.ImportShotChanges.Seconds = reader.Value;
                     break;
                 case "ImportSceneChanges/Milliseconds":
-                    language.ImportSceneChanges.Milliseconds = reader.Value;
+                    language.ImportShotChanges.Milliseconds = reader.Value;
                     break;
                 case "ImportSceneChanges/GetSceneChangesWithFfmpeg":
-                    language.ImportSceneChanges.GetSceneChangesWithFfmpeg = reader.Value;
+                    language.ImportShotChanges.GetShotChangesWithFfmpeg = reader.Value;
                     break;
                 case "ImportSceneChanges/Sensitivity":
-                    language.ImportSceneChanges.Sensitivity = reader.Value;
+                    language.ImportShotChanges.Sensitivity = reader.Value;
                     break;
                 case "ImportSceneChanges/SensitivityDescription":
-                    language.ImportSceneChanges.SensitivityDescription = reader.Value;
+                    language.ImportShotChanges.SensitivityDescription = reader.Value;
                     break;
                 case "ImportSceneChanges/NoSceneChangesFound":
-                    language.ImportSceneChanges.NoSceneChangesFound = reader.Value;
+                    language.ImportShotChanges.NoShotChangesFound = reader.Value;
                     break;
                 case "ImportText/Title":
                     language.ImportText.Title = reader.Value;
@@ -3695,7 +3695,7 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Main.StatusLog = reader.Value;
                     break;
                 case "Main/XSceneChangesImported":
-                    language.Main.XSceneChangesImported = reader.Value;
+                    language.Main.XShotChangesImported = reader.Value;
                     break;
                 case "Main/PluginXExecuted":
                     language.Main.PluginXExecuted = reader.Value;
@@ -4157,10 +4157,10 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Main.Menu.Video.ImportChaptersFromVideo = reader.Value;
                     break;
                 case "Main/Menu/Video/GenerateImportSceneChanges":
-                    language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
+                    language.Main.Menu.Video.GenerateImportShotChanges = reader.Value;
                     break;
                 case "Main/Menu/Video/RemoveOrExportSceneChanges":
-                    language.Main.Menu.Video.RemoveOrExportSceneChanges = reader.Value;
+                    language.Main.Menu.Video.RemoveOrExportShotChanges = reader.Value;
                     break;
                 case "Main/Menu/Video/WaveformBatchGenerate":
                     language.Main.Menu.Video.WaveformBatchGenerate = reader.Value;
@@ -5990,7 +5990,7 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Settings.WaveformSingleClickSelect = reader.Value;
                     break;
                 case "Settings/WaveformSnapToSceneChanges":
-                    language.Settings.WaveformSnapToSceneChanges = reader.Value;
+                    language.Settings.WaveformSnapToShotChanges = reader.Value;
                     break;
                 case "Settings/WaveformAutoGen":
                     language.Settings.WaveformAutoGen = reader.Value;
@@ -6425,28 +6425,28 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext = reader.Value;
                     break;
                 case "Settings/AdjustSnapStartToNextSceneChange":
-                    language.Settings.AdjustSnapStartToNextSceneChange = reader.Value;
+                    language.Settings.AdjustSnapStartToNextShotChange = reader.Value;
                     break;
                 case "Settings/AdjustSnapStartToNextSceneChangeWithGap":
-                    language.Settings.AdjustSnapStartToNextSceneChangeWithGap = reader.Value;
+                    language.Settings.AdjustSnapStartToNextShotChangeWithGap = reader.Value;
                     break;
                 case "Settings/AdjustSnapEndToPreviousSceneChange":
-                    language.Settings.AdjustSnapEndToPreviousSceneChange = reader.Value;
+                    language.Settings.AdjustSnapEndToPreviousShotChange = reader.Value;
                     break;
                 case "Settings/AdjustSnapEndToPreviousSceneChangeWithGap":
-                    language.Settings.AdjustSnapEndToPreviousSceneChangeWithGap = reader.Value;
+                    language.Settings.AdjustSnapEndToPreviousShotChangeWithGap = reader.Value;
                     break;
                 case "Settings/AdjustExtendToNextSceneChange":
-                    language.Settings.AdjustExtendToNextSceneChange = reader.Value;
+                    language.Settings.AdjustExtendToNextShotChange = reader.Value;
                     break;
                 case "Settings/AdjustExtendToNextSceneChangeWithGap":
-                    language.Settings.AdjustExtendToNextSceneChangeWithGap = reader.Value;
+                    language.Settings.AdjustExtendToNextShotChangeWithGap = reader.Value;
                     break;
                 case "Settings/AdjustExtendToPreviousSceneChange":
-                    language.Settings.AdjustExtendToPreviousSceneChange = reader.Value;
+                    language.Settings.AdjustExtendToPreviousShotChange = reader.Value;
                     break;
                 case "Settings/AdjustExtendToPreviousSceneChangeWithGap":
-                    language.Settings.AdjustExtendToPreviousSceneChangeWithGap = reader.Value;
+                    language.Settings.AdjustExtendToPreviousShotChangeWithGap = reader.Value;
                     break;
                 case "Settings/AdjustExtendToNextSubtitle":
                     language.Settings.AdjustExtendToNextSubtitle = reader.Value;
@@ -6620,16 +6620,16 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Settings.WaveformPlayFirstSelectedSubtitle = reader.Value;
                     break;
                 case "Settings/WaveformGoToPreviousSceneChange":
-                    language.Settings.WaveformGoToPreviousSceneChange = reader.Value;
+                    language.Settings.WaveformGoToPreviousShotChange = reader.Value;
                     break;
                 case "Settings/WaveformGoToNextSceneChange":
-                    language.Settings.WaveformGoToNextSceneChange = reader.Value;
+                    language.Settings.WaveformGoToNextShotChange = reader.Value;
                     break;
                 case "Settings/WaveformToggleSceneChange":
-                    language.Settings.WaveformToggleSceneChange = reader.Value;
+                    language.Settings.WaveformToggleShotChange = reader.Value;
                     break;
                 case "Settings/WaveformRemoveOrExportSceneChanges":
-                    language.Settings.WaveformRemoveOrExportSceneChanges = reader.Value;
+                    language.Settings.WaveformRemoveOrExportShotChanges = reader.Value;
                     break;
                 case "Settings/WaveformGuessStart":
                     language.Settings.WaveformGuessStart = reader.Value;
@@ -8333,13 +8333,13 @@ namespace Nikse.SubtitleEdit.Logic
                     language.Waveform.ShowSpectrogramOnly = reader.Value;
                     break;
                 case "Waveform/AddSceneChange":
-                    language.Waveform.AddSceneChange = reader.Value;
+                    language.Waveform.AddShotChange = reader.Value;
                     break;
                 case "Waveform/RemoveSceneChange":
-                    language.Waveform.RemoveSceneChange = reader.Value;
+                    language.Waveform.RemoveShotChange = reader.Value;
                     break;
                 case "Waveform/RemoveSceneChangesFromSelection":
-                    language.Waveform.RemoveSceneChangesFromSelection = reader.Value;
+                    language.Waveform.RemoveShotChangesFromSelection = reader.Value;
                     break;
                 case "Waveform/GuessTimeCodes":
                     language.Waveform.GuessTimeCodes = reader.Value;

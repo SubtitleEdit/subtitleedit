@@ -906,7 +906,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <Remove>Fjern</Remove>
     <RemoveAll>Fjern alt</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Importer sceneskift</Title>
     <OpenTextFile>Åbn tekst fil...</OpenTextFile>
     <Generate>Generer sceneændringer</Generate>
@@ -916,11 +916,11 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
     <Frames>Rammer</Frames>
     <Seconds>Sekunder</Seconds>
     <Milliseconds>Millisekunder</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Generer sceneskift med FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Generer sceneskift med FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Følsomhed</Sensitivity>
     <SensitivityDescription>Nedre værdi giver flere sceneændringer</SensitivityDescription>
-    <NoSceneChangesFound>Ingen sceneændringer fundet.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Ingen sceneændringer fundet.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importer tekst</Title>
     <OneSubtitleIsOneFile>Flere filer - en fil er en tekst</OneSubtitleIsOneFile>
@@ -1237,8 +1237,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Video/lyd til tekst...</VideoAudioToText>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Generer/importer sceneændringer...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Fjern/eksporter sceneændringer...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveform>Vis/skjul lyd kurve</ShowHideWaveform>
@@ -1693,7 +1693,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Før flet af undertekster</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Undertekster flettet</SubtitlesJoined>
     <StatusLog>Status beskeder</StatusLog>
-    <XSceneChangesImported>{0} sceneskift importeret</XSceneChangesImported>
+    <XShotChangesImported>{0} sceneskift importeret</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' afviklet</PluginXExecuted>
     <NotAValidXSubFile>Ikke en valid XSub fil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Før fusioner linjer med samme tekst</BeforeMergeLinesWithSameText>
@@ -2188,7 +2188,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformFocusMouseEnter>Sæt fokus ved mus over</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Enkeltklik for at vælge undertekster</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Skift til sceneændringer (hold "shift" nede for at override)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Skift til sceneændringer (hold "shift" nede for at override)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Generer automatisk bølgeform, når du åbner video</WaveformAutoGen>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
@@ -2322,14 +2322,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Indstil starttid, forskyd hele underteksten</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Snap valgte linjer start til næste sceneændring</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Snap valgte linjer start til næste sceneændring med min. gap</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Snap valgte linjer slut til forrige sceneændring</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Snap valgte linjer slut til forrige sceneændring med min. gap</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Udvid valgte linjer til næste sceneændring (eller næste undertekst)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Udvid valgte linjer til næste sceneændring med min. gap (eller næste undertekst)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Udvid valgte linjer til forrige sceneændring (eller forrige undertekst)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Udvid valgte linjer til tidligere sceneskift med min. gap (eller forrige undertekst)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Snap valgte linjer start til næste sceneændring</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Snap valgte linjer start til næste sceneændring med min. gap</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Snap valgte linjer slut til forrige sceneændring</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Snap valgte linjer slut til forrige sceneændring med min. gap</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Udvid valgte linjer til næste sceneændring (eller næste undertekst)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Udvid valgte linjer til næste sceneændring med min. gap (eller næste undertekst)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Udvid valgte linjer til forrige sceneændring (eller forrige undertekst)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Udvid valgte linjer til tidligere sceneskift med min. gap (eller forrige undertekst)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Udvid valgte linjer til næste undertekst</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Udvid valgte linjer til forrige undertekst</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
@@ -2386,10 +2386,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Gå til forrige sceneændring</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Fjern/eksporter sceneændringer</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Gå til forrige sceneændring</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Gå til næste sceneskift</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Toggle sceneskift</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Fjern/eksporter sceneændringer</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Autojuster start via lydstyrke/sceneændring</WaveformGuessStart>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
     <GoForward1Frame>En frame frem</GoForward1Frame>
@@ -3013,9 +3013,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <ShowWaveformAndSpectrogram>Vis bølgeform og spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
-    <AddSceneChange>Tilføj sceneskift</AddSceneChange>
-    <RemoveSceneChange>Fjern sceneskift</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Fjern sceneskift fra markering</RemoveSceneChangesFromSelection>
+    <AddShotChange>Tilføj sceneskift</AddShotChange>
+    <RemoveShotChange>Fjern sceneskift</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Fjern sceneskift fra markering</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
     <InsertSubtitleHere>Indsæt undertekst her...</InsertSubtitleHere>

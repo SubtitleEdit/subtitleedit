@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public class SceneChangesGenerator
+    public class ShotChangesGenerator
     {
         private StringBuilder Log { get; set; }
 
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
 
-        public SceneChangesGenerator()
+        public ShotChangesGenerator()
         {
             Log = new StringBuilder();
             _timeCodes = new StringBuilder();

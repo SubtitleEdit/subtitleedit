@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.SeJob
         public string VideoHash { get; set; }
         public SeJobRules Rules { get; set; }
         public List<SeJobBookmark> Bookmarks { get; set; }
-        public List<double> SceneChanges { get; set; }
+        public List<double> ShotChanges { get; set; }
         public SeJobWaveform Waveform { get; set; }
     }
 }

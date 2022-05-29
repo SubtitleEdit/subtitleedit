@@ -34,7 +34,7 @@
             this.checkBoxGapBridge = new System.Windows.Forms.CheckBox();
             this.checkBoxWhiteSpace = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxLineLength = new System.Windows.Forms.CheckBox();
-            this.checkBoxSceneChange = new System.Windows.Forms.CheckBox();
+            this.checkBoxShotChange = new System.Windows.Forms.CheckBox();
             this.checkBoxTtmlFrameRate = new System.Windows.Forms.CheckBox();
             this.checkBoxNoItalics = new System.Windows.Forms.CheckBox();
             this.checkBoxGapMin = new System.Windows.Forms.CheckBox();
@@ -73,7 +73,7 @@
             this.groupBoxRules.Controls.Add(this.checkBoxGapBridge);
             this.groupBoxRules.Controls.Add(this.checkBoxWhiteSpace);
             this.groupBoxRules.Controls.Add(this.checkBoxMaxLineLength);
-            this.groupBoxRules.Controls.Add(this.checkBoxSceneChange);
+            this.groupBoxRules.Controls.Add(this.checkBoxShotChange);
             this.groupBoxRules.Controls.Add(this.checkBoxTtmlFrameRate);
             this.groupBoxRules.Controls.Add(this.checkBoxNoItalics);
             this.groupBoxRules.Controls.Add(this.checkBoxGapMin);
@@ -161,18 +161,18 @@
             this.checkBoxMaxLineLength.UseVisualStyleBackColor = true;
             this.checkBoxMaxLineLength.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
-            // checkBoxSceneChange
+            // checkBoxShotChange
             // 
-            this.checkBoxSceneChange.AutoSize = true;
-            this.checkBoxSceneChange.Checked = true;
-            this.checkBoxSceneChange.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSceneChange.Location = new System.Drawing.Point(19, 230);
-            this.checkBoxSceneChange.Name = "checkBoxSceneChange";
-            this.checkBoxSceneChange.Size = new System.Drawing.Size(191, 17);
-            this.checkBoxSceneChange.TabIndex = 11;
-            this.checkBoxSceneChange.Text = "Check timing to shot changes rules";
-            this.checkBoxSceneChange.UseVisualStyleBackColor = true;
-            this.checkBoxSceneChange.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
+            this.checkBoxShotChange.AutoSize = true;
+            this.checkBoxShotChange.Checked = true;
+            this.checkBoxShotChange.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShotChange.Location = new System.Drawing.Point(19, 230);
+            this.checkBoxShotChange.Name = "checkBoxShotChange";
+            this.checkBoxShotChange.Size = new System.Drawing.Size(191, 17);
+            this.checkBoxShotChange.TabIndex = 11;
+            this.checkBoxShotChange.Text = "Check timing to shot changes rules";
+            this.checkBoxShotChange.UseVisualStyleBackColor = true;
+            this.checkBoxShotChange.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
             // checkBoxTtmlFrameRate
             // 
@@ -518,7 +518,7 @@
         private System.Windows.Forms.CheckBox checkBoxNoItalics;
         private System.Windows.Forms.CheckBox checkBoxTtmlFrameRate;
         private System.Windows.Forms.CheckBox checkBoxMaxLineLength;
-        private System.Windows.Forms.CheckBox checkBoxSceneChange;
+        private System.Windows.Forms.CheckBox checkBoxShotChange;
         private System.Windows.Forms.CheckBox checkBoxWhiteSpace;
         private System.Windows.Forms.LinkLabel linkLabelOpenReportFolder;
         private System.Windows.Forms.CheckBox checkBoxGapBridge;

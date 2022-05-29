@@ -218,7 +218,7 @@
             this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
             this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
-            this.checkBoxWaveformSnapToSceneChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxWaveformSnapToShotChanges = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformSingleClickSelect = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowWpm = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowCps = new System.Windows.Forms.CheckBox();
@@ -2816,7 +2816,7 @@
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformAutoGen);
             this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.buttonWaveformCursorColor);
-            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToSceneChanges);
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToShotChanges);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSingleClickSelect);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowWpm);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowCps);
@@ -2878,15 +2878,15 @@
             this.buttonWaveformCursorColor.UseVisualStyleBackColor = true;
             this.buttonWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
             // 
-            // checkBoxWaveformSnapToSceneChanges
+            // checkBoxWaveformSnapToShotChanges
             // 
-            this.checkBoxWaveformSnapToSceneChanges.AutoSize = true;
-            this.checkBoxWaveformSnapToSceneChanges.Location = new System.Drawing.Point(262, 161);
-            this.checkBoxWaveformSnapToSceneChanges.Name = "checkBoxWaveformSnapToSceneChanges";
-            this.checkBoxWaveformSnapToSceneChanges.Size = new System.Drawing.Size(249, 17);
-            this.checkBoxWaveformSnapToSceneChanges.TabIndex = 26;
-            this.checkBoxWaveformSnapToSceneChanges.Text = "Snap to scene changes (hold Shift to override)";
-            this.checkBoxWaveformSnapToSceneChanges.UseVisualStyleBackColor = true;
+            this.checkBoxWaveformSnapToShotChanges.AutoSize = true;
+            this.checkBoxWaveformSnapToShotChanges.Location = new System.Drawing.Point(262, 161);
+            this.checkBoxWaveformSnapToShotChanges.Name = "checkBoxWaveformSnapToShotChanges";
+            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(249, 17);
+            this.checkBoxWaveformSnapToShotChanges.TabIndex = 26;
+            this.checkBoxWaveformSnapToShotChanges.Text = "Snap to shot changes (hold Shift to override)";
+            this.checkBoxWaveformSnapToShotChanges.UseVisualStyleBackColor = true;
             // 
             // checkBoxWaveformSingleClickSelect
             // 
@@ -5590,7 +5590,7 @@
         private System.Windows.Forms.ComboBox comboBoxDialogStyle;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripShortcuts;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShortcutsCollapse;
-        private System.Windows.Forms.CheckBox checkBoxWaveformSnapToSceneChanges;
+        private System.Windows.Forms.CheckBox checkBoxWaveformSnapToShotChanges;
         private System.Windows.Forms.CheckBox checkBoxWaveformSingleClickSelect;
         private System.Windows.Forms.Label labelSplitBehavior;
         private System.Windows.Forms.ComboBox comboBoxSplitBehavior;

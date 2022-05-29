@@ -144,14 +144,14 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustMoveStartOneFrameForwardKeepGapPrev { get; set; }
         public Keys MainAdjustMoveEndOneFrameBackKeepGapNext { get; set; }
         public Keys MainAdjustMoveEndOneFrameForwardKeepGapNext { get; set; }
-        public Keys MainAdjustSnapStartToNextSceneChange { get; set; }
-        public Keys MainAdjustSnapStartToNextSceneChangeWithGap { get; set; }
-        public Keys MainAdjustSnapEndToPreviousSceneChange { get; set; }
-        public Keys MainAdjustSnapEndToPreviousSceneChangeWithGap { get; set; }
-        public Keys MainAdjustExtendToNextSceneChange { get; set; }
-        public Keys MainAdjustExtendToNextSceneChangeWithGap { get; set; }
-        public Keys MainAdjustExtendToPreviousSceneChange { get; set; }
-        public Keys MainAdjustExtendToPreviousSceneChangeWithGap { get; set; }
+        public Keys MainAdjustSnapStartToNextShotChange { get; set; }
+        public Keys MainAdjustSnapStartToNextShotChangeWithGap { get; set; }
+        public Keys MainAdjustSnapEndToPreviousShotChange { get; set; }
+        public Keys MainAdjustSnapEndToPreviousShotChangeWithGap { get; set; }
+        public Keys MainAdjustExtendToNextShotChange { get; set; }
+        public Keys MainAdjustExtendToNextShotChangeWithGap { get; set; }
+        public Keys MainAdjustExtendToPreviousShotChange { get; set; }
+        public Keys MainAdjustExtendToPreviousShotChangeWithGap { get; set; }
         public Keys MainAdjustExtendToNextSubtitle { get; set; }
         public Keys MainAdjustExtendToPreviousSubtitle { get; set; }
         public Keys MainAdjustExtendCurrentSubtitle { get; set; }
@@ -216,10 +216,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformAddTextAtHere { get; set; }
         public Keys WaveformAddTextAtHereFromClipboard { get; set; }
         public Keys WaveformSetParagraphAsNewSelection { get; set; }
-        public Keys WaveformGoToPreviousSceneChange { get; set; }
-        public Keys WaveformGoToNextSceneChange { get; set; }
-        public Keys WaveformToggleSceneChange { get; set; }
-        public Keys WaveformListSceneChanges { get; set; }
+        public Keys WaveformGoToPreviousShotChange { get; set; }
+        public Keys WaveformGoToNextShotChange { get; set; }
+        public Keys WaveformToggleShotChange { get; set; }
+        public Keys WaveformListShotChanges { get; set; }
         public Keys WaveformGuessStart { get; set; }
         public Keys MainTranslateGoogleIt { get; set; }
         public Keys MainCheckFixTimingViaShotChanges { get; set; }
@@ -402,14 +402,14 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustMoveStartOneFrameForwardKeepGapPrev = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev);
             MainAdjustMoveEndOneFrameBackKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
             MainAdjustMoveEndOneFrameForwardKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
-            MainAdjustSnapStartToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChange);
-            MainAdjustSnapStartToNextSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap);
-            MainAdjustSnapEndToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange);
-            MainAdjustSnapEndToPreviousSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap);
-            MainAdjustExtendToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange);
-            MainAdjustExtendToNextSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
-            MainAdjustExtendToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
-            MainAdjustExtendToPreviousSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
+            MainAdjustSnapStartToNextShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChange);
+            MainAdjustSnapStartToNextShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChangeWithGap);
+            MainAdjustSnapEndToPreviousShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChange);
+            MainAdjustSnapEndToPreviousShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap);
+            MainAdjustExtendToNextShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChange);
+            MainAdjustExtendToNextShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChangeWithGap);
+            MainAdjustExtendToPreviousShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChange);
+            MainAdjustExtendToPreviousShotChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap);
             MainAdjustExtendToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle);
             MainAdjustExtendToPreviousSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
             MainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle);
@@ -442,10 +442,10 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
             WaveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
             WaveformSetParagraphAsNewSelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSetParagraphAsSelection);
-            WaveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
-            WaveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
-            WaveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
-            WaveformListSceneChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListSceneChanges);
+            WaveformGoToPreviousShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousShotChange);
+            WaveformGoToNextShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextShotChange);
+            WaveformToggleShotChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleShotChange);
+            WaveformListShotChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformListShotChanges);
             WaveformGuessStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGuessStart);
             MainTranslateGoogleIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleIt);
             MainCheckFixTimingViaShotChanges = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCheckFixTimingViaShotChanges);

@@ -916,7 +916,7 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
     <Remove>Rimuovi</Remove>
     <RemoveAll>Rimuovi tutto</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Importa cambi scena</Title>
     <OpenTextFile>Apri file di testo...</OpenTextFile>
     <Generate>Genera cambi scena</Generate>
@@ -926,11 +926,11 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
     <Frames>Fotogramma</Frames>
     <Seconds>Secondi</Seconds>
     <Milliseconds>Millisecondi</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Genera cambi scena con FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Genera cambi scena con FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Sensibilità</Sensitivity>
     <SensitivityDescription>Un valore più basso offre più cambi di scena</SensitivityDescription>
-    <NoSceneChangesFound>Nessun cambiamento di scena trovato.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nessun cambiamento di scena trovato.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importa testo normale</Title>
     <OneSubtitleIsOneFile>File multipli - un file è un sottotitolo</OneSubtitleIsOneFile>
@@ -1247,8 +1247,8 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
         <GenerateVideoWithBurnedInSub>Genera video con sub incorporati...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Video/audio a testo...</VideoAudioToText>
         <ImportChaptersFromVideo>Importa capitoli dal video</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Genera/importa modifiche alla scena...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Rimuovi cambi scena...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Genera/importa modifiche alla scena...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Rimuovi cambi scena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Generazione forma d'onda in Gruppo...</WaveformBatchGenerate>
         <ShowHideVideo>Visualizza/nascondi video</ShowHideVideo>
         <ShowHideWaveform>Visualizza/nascondi forma onda</ShowHideWaveform>
@@ -1703,7 +1703,7 @@ Continuare?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Prima di unisci sottototoli</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Sottotitoli uniti</SubtitlesJoined>
     <StatusLog>Log di stato</StatusLog>
-    <XSceneChangesImported>{0} cambi scena importati</XSceneChangesImported>
+    <XShotChangesImported>{0} cambi scena importati</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' eseguito</PluginXExecuted>
     <NotAValidXSubFile>Non è un file XSub valido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Prima di unire righe con lo stesso testo</BeforeMergeLinesWithSameText>
@@ -2206,7 +2206,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformFocusMouseEnter>Imposta focus su entrata mouse</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Imposta anche su visualizzazione elenco in entrata mouse</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Singolo clic per selezionare i sottotitoli</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Aggancia ai cambi di scena (tieni premuto Maiusc per ignorare)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Aggancia ai cambi di scena (tieni premuto Maiusc per ignorare)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Genera automaticamente forma d'onda all'apertura del video</WaveformAutoGen>
     <WaveformBorderHitMs1>Il marcatore del bordo deve essere all'interno</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisecondi</WaveformBorderHitMs2>
@@ -2351,14 +2351,14 @@ stesso file di sottotitolo (collaborazione)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Imposta l'ora di inizio, sposta l'intero sottotitolo</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Imposta la scadenza di offset</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Imposta la scadenza, sposta e vai al prossimo</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Blocco inizio linea al cambio di scena successivo</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Blocco dell'inizio della linea al cambio di scena successivo con spazio minimo</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Blocco dell'inizio linea al cambio di scena precedente</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Blocco dell'inizio della linea al cambio di scena precedente con spazio minimo</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Estendi le righe selezionate al cambio di scena successivo (o al sottotitolo successivo)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Estendi le righe selezionate al cambio di scena successivo di min. gap (o sottotitolo successivo)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Estendi le righe selezionate al cambiamento di scena precedente (o al sottotitolo precedente)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Estendi le righe selezionate ai cambiamenti di scena precedenti di min. (o sottotitolo precedente)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Blocco inizio linea al cambio di scena successivo</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Blocco dell'inizio della linea al cambio di scena successivo con spazio minimo</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Blocco dell'inizio linea al cambio di scena precedente</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Blocco dell'inizio della linea al cambio di scena precedente con spazio minimo</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Estendi le righe selezionate al cambio di scena successivo (o al sottotitolo successivo)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Estendi le righe selezionate al cambio di scena successivo di min. gap (o sottotitolo successivo)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Estendi le righe selezionate al cambiamento di scena precedente (o al sottotitolo precedente)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Estendi le righe selezionate ai cambiamenti di scena precedenti di min. (o sottotitolo precedente)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Estendi le righe selezionate al sottotitolo successivo</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Estendi le righe selezionate al sottotitolo precedente</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Estendi la riga attuale al sottotitolo successivo o alla durata massima</AdjustExtendCurrentSubtitle>
@@ -2416,10 +2416,10 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformPlayNewSelection>Riproduci nuova selezione</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Riproduci fine selezione</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Riproduci primo sottotitoli selezionato</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Vai al cambiamento di scena precedente</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Vai alla modifica della scena successiva</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Attiva/Disattiva modifica scena</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Rimuovi/esporta modifiche alla scena</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Vai al cambiamento di scena precedente</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Vai alla modifica della scena successiva</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Attiva/Disattiva modifica scena</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Rimuovi/esporta modifiche alla scena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Avvio con regolazione automatica tramite cambio Volume / Scena</WaveformGuessStart>
     <GoBack1Frame>Un fotogramma indietro</GoBack1Frame>
     <GoForward1Frame>Un fotogramma avanti</GoForward1Frame>
@@ -3051,9 +3051,9 @@ Mantieni le modifiche?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Visualizza forma Onda e Spettrogramma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Visualizza solo la forma d'onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Visualizza solo lo spettrogramma</ShowSpectrogramOnly>
-    <AddSceneChange>Aggiungi cambio di scena</AddSceneChange>
-    <RemoveSceneChange>Rimuovi cambio scena</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Rimuovi le modifiche alla scena dalla selezione</RemoveSceneChangesFromSelection>
+    <AddShotChange>Aggiungi cambio di scena</AddShotChange>
+    <RemoveShotChange>Rimuovi cambio scena</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Rimuovi le modifiche alla scena dalla selezione</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Riconosci codici temporali...</GuessTimeCodes>
     <SeekSilence>Cerca il silenzio...</SeekSilence>
     <InsertSubtitleHere>Inserisci qui i sottotitoli...</InsertSubtitleHere>

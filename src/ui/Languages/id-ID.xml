@@ -699,7 +699,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <Remove>Buang</Remove>
     <RemoveAll>Buang semua</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Hasilkan/impor perubahan adegan</Title>
     <OpenTextFile>Buka file teks...</OpenTextFile>
     <Generate>Hasilkan perubahan adegan</Generate>
@@ -709,10 +709,10 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <Frames>Frame</Frames>
     <Seconds>Detik</Seconds>
     <Milliseconds>Milidetik</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Hasilkan perubahan adegan dgn FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Hasilkan perubahan adegan dgn FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Kepekaan</Sensitivity>
     <SensitivityDescription>Nilai lebih rendah memberikan banyak perubahan adegan</SensitivityDescription>
-  </ImportSceneChanges>
+  </ImportShotChanges>
   <ImportText>
     <Title>Impor teks biasa</Title>
     <OneSubtitleIsOneFile>Beberapa file - satu file adalah satu subjudul</OneSubtitleIsOneFile>
@@ -1014,8 +1014,8 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
         <CloseVideo>Tutup file video</CloseVideo>
         <SetVideoOffset>Atur offset video...</SetVideoOffset>
         <SmptTimeMode>Waktu SMPTE (frame terbuang)</SmptTimeMode>
-        <GenerateImportSceneChanges>Hasilkan/impor perubahan adegan...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Buang perubahan adegan</RemoveSceneChanges>
+        <GenerateImportShotChanges>Hasilkan/impor perubahan adegan...</GenerateImportShotChanges>
+        <RemoveShotChanges>Buang perubahan adegan</RemoveShotChanges>
         <WaveformBatchGenerate>Batch hasilkan waveform...</WaveformBatchGenerate>
         <ShowHideVideo>Tampil/sembunyikan video</ShowHideVideo>
         <ShowHideWaveform>Tampil/sembunyikan waveform</ShowHideWaveform>
@@ -1447,7 +1447,7 @@ Lanjutkan?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Sebelum menggabung subjudul</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subjudul digabung</SubtitlesJoined>
     <StatusLog>Log status</StatusLog>
-    <XSceneChangesImported>{0} perubahan adegan diimpor</XSceneChangesImported>
+    <XShotChangesImported>{0} perubahan adegan diimpor</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' dieksekusi.</PluginXExecuted>
     <NotAValidXSubFile>Bukan file XSub yg valid!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Sebelum menggabung baris dgn teks yg sama</BeforeMergeLinesWithSameText>
@@ -1914,9 +1914,9 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <WaveformPlayNewSelection>Putar pilihan</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Putar akhir pilihan</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Putar subjudul pertama terpilih</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Pergi ke perubahan adegan sebelumnya</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Pergi ke perubahan adegan berikutnya</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Alihkan perubahan adegan</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Pergi ke perubahan adegan sebelumnya</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Pergi ke perubahan adegan berikutnya</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Alihkan perubahan adegan</WaveformToggleShotChange>
     <GoBack1Frame>Satu frame mundur</GoBack1Frame>
     <GoForward1Frame>Satu frame maju</GoForward1Frame>
     <GoBack1FrameWithPlay>Satu framei mundur (dgn diputar)</GoBack1FrameWithPlay>
@@ -2375,8 +2375,8 @@ Jaga perubahan?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Tampilkan waveform dan spektogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Hanya tampilkan waveform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Hanya tampilkan spektogram</ShowSpectrogramOnly>
-    <AddSceneChange>Tambah perubahan adegan</AddSceneChange>
-    <RemoveSceneChange>Buang perubahan adegan</RemoveSceneChange>
+    <AddShotChange>Tambah perubahan adegan</AddShotChange>
+    <RemoveShotChange>Buang perubahan adegan</RemoveShotChange>
     <GuessTimeCodes>Tebak kode waktu...</GuessTimeCodes>
     <SeekSilence>Cari (durasi) hening...</SeekSilence>
     <InsertSubtitleHere>Sisipkan subjudul di sini...</InsertSubtitleHere>

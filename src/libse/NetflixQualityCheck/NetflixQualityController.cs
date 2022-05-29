@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 new NetflixCheckBridgeGaps(),
                 new NetflixCheckWhiteSpace(),
                 new NetflixCheckItalics(),
-                new NetflixCheckSceneChange()
+                new NetflixCheckShotChange()
             };
         }
 

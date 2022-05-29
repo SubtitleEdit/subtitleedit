@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBoxIncludeSceneChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxIncludeShotChanges = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxJobId = new System.Windows.Forms.TextBox();
             this.labelSubtitleFileName = new System.Windows.Forms.Label();
@@ -76,15 +76,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
             this.SuspendLayout();
             // 
-            // checkBoxIncludeSceneChanges
+            // checkBoxIncludeShotChanges
             // 
-            this.checkBoxIncludeSceneChanges.AutoSize = true;
-            this.checkBoxIncludeSceneChanges.Location = new System.Drawing.Point(166, 315);
-            this.checkBoxIncludeSceneChanges.Name = "checkBoxIncludeSceneChanges";
-            this.checkBoxIncludeSceneChanges.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxIncludeSceneChanges.TabIndex = 13;
-            this.checkBoxIncludeSceneChanges.Text = "Include scene changes";
-            this.checkBoxIncludeSceneChanges.UseVisualStyleBackColor = true;
+            this.checkBoxIncludeShotChanges.AutoSize = true;
+            this.checkBoxIncludeShotChanges.Location = new System.Drawing.Point(166, 315);
+            this.checkBoxIncludeShotChanges.Name = "checkBoxIncludeShotChanges";
+            this.checkBoxIncludeShotChanges.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxIncludeShotChanges.TabIndex = 13;
+            this.checkBoxIncludeShotChanges.Text = "Include shot changes";
+            this.checkBoxIncludeShotChanges.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -557,7 +557,7 @@
             this.Controls.Add(this.labelSubtitleFileName);
             this.Controls.Add(this.textBoxJobId);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkBoxIncludeSceneChanges);
+            this.Controls.Add(this.checkBoxIncludeShotChanges);
             this.Name = "SeJobExport";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -581,7 +581,7 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBoxIncludeSceneChanges;
+        private System.Windows.Forms.CheckBox checkBoxIncludeShotChanges;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxJobId;
         private System.Windows.Forms.Label labelSubtitleFileName;

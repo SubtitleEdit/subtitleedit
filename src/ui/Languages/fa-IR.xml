@@ -903,7 +903,7 @@
     <Remove>حذف</Remove>
     <RemoveAll>حذف همه</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>وارد کردن صحنه های تغییر کرده</Title>
     <OpenTextFile>باز کردن فایل متنی...</OpenTextFile>
     <Generate>تغییرات صحنه ایجاد کنید</Generate>
@@ -913,11 +913,11 @@
     <Frames>فریم ها</Frames>
     <Seconds>ثانیه</Seconds>
     <Milliseconds>میلی ثانیه</Milliseconds>
-    <GetSceneChangesWithFfmpeg>تغییرات صحنه را با FFmpeg بگیر</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>تغییرات صحنه را با FFmpeg بگیر</GetShotChangesWithFfmpeg>
     <Sensitivity>حساسیت</Sensitivity>
     <SensitivityDescription>مقدار پایین تر باعث تغییر صحنه می شود</SensitivityDescription>
-    <NoSceneChangesFound>هیچ تغییری در صحنه یافت نشد.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>هیچ تغییری در صحنه یافت نشد.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>وارد کردن متن</Title>
     <OneSubtitleIsOneFile>چندین فایل - یک فایل یک زیرنویس است</OneSubtitleIsOneFile>
@@ -1234,8 +1234,8 @@
         <GenerateVideoWithBurnedInSub>تولید ویدیو با زیر سوخته...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>ویدئو/صوت به متن...</VideoAudioToText>
         <ImportChaptersFromVideo>وارد کردن فصل ها از ویدئو</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>ایجاد / تغییر صحنه وارد کردن ...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>حذف/خروجی گرفتن از تغییرات صحنه...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>ایجاد / تغییر صحنه وارد کردن ...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>حذف/خروجی گرفتن از تغییرات صحنه...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>تولید دسته ای شکل موج ...</WaveformBatchGenerate>
         <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
         <ShowHideWaveform>نمایش/پنهان سازی شکل موج</ShowHideWaveform>
@@ -1691,7 +1691,7 @@
     <BeforeDisplaySubtitleJoin>قبل از اتصال زیرنویسها</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>زیرنویسها متصل شدند</SubtitlesJoined>
     <StatusLog>لاگ وضعیت</StatusLog>
-    <XSceneChangesImported>{0} تغییرات صحنه وارد شده است</XSceneChangesImported>
+    <XShotChangesImported>{0} تغییرات صحنه وارد شده است</XShotChangesImported>
     <PluginXExecuted>افزونه '{0}' اجرا شد.</PluginXExecuted>
     <NotAValidXSubFile>فایل XSub معتبر نیست!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>قبل از ادغام خطوط با همان متن</BeforeMergeLinesWithSameText>
@@ -2186,7 +2186,7 @@
     <WaveformFocusMouseEnter>تمرکز را بر روی ورود ماوس تنظیم کنید</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>همچنین فوکوس نمای لیست را روی ورود ماوس در نمای لیست تنظیم کنید</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>برای انتخاب زیرنویس تنها کلیک کنید</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>ضربه زدن به تغییرات صحنه (برای لغو، Shift را نگه دارید)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>ضربه زدن به تغییرات صحنه (برای لغو، Shift را نگه دارید)</WaveformSnapToShotChanges>
     <WaveformAutoGen>ایجاد خودکار شکل موج هنگام باز کردن ویدیو</WaveformAutoGen>
     <WaveformBorderHitMs1>ضربه نشانگر مرزی باید در داخل باشد</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>میلی ثانیه</WaveformBorderHitMs2>
@@ -2320,14 +2320,14 @@
     <AdjustSetStartAndOffsetTheWholeSubtitle>زمان شروع را تنظیم کنید، کل زیرنویس را افست کنید</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>پایان را تنظیم کنید، بقیه را جبران کنید</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>تنظیم پایان، تعویض بقیه و رفتن به بعدی</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>خطوط انتخاب شده را به حالت اولیه تغییر دهید تا صحنه بعدی تغییر کند</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>خطوط انتخاب شده را با دقیقه شروع به تغییر صحنه بعدی کنید. فاصله</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>خطوط انتخاب شده را به تغییر صحنه قبلی بپیچید</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>خطوط انتخابی را با دقیقه به تغییر صحنه قبلی بچسبانید. فاصله</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>گسترش خطوط انتخابی به تغییر صحنه بعدی (یا زیرنویس بعدی)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>خطوط انتخابی را به تغییر صحنه بعدی با دقیقه گسترش دهید. فاصله (یا زیرنویس بعدی)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>گسترش خطوط انتخابی به تغییر صحنه قبلی (یا زیرنویس قبلی)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>خطوط انتخابی را به تغییر صحنه قبلی با دقیقه گسترش دهید. فاصله (یا زیرنویس قبلی)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>خطوط انتخاب شده را به حالت اولیه تغییر دهید تا صحنه بعدی تغییر کند</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>خطوط انتخاب شده را با دقیقه شروع به تغییر صحنه بعدی کنید. فاصله</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>خطوط انتخاب شده را به تغییر صحنه قبلی بپیچید</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>خطوط انتخابی را با دقیقه به تغییر صحنه قبلی بچسبانید. فاصله</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>گسترش خطوط انتخابی به تغییر صحنه بعدی (یا زیرنویس بعدی)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>خطوط انتخابی را به تغییر صحنه بعدی با دقیقه گسترش دهید. فاصله (یا زیرنویس بعدی)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>گسترش خطوط انتخابی به تغییر صحنه قبلی (یا زیرنویس قبلی)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>خطوط انتخابی را به تغییر صحنه قبلی با دقیقه گسترش دهید. فاصله (یا زیرنویس قبلی)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>خطوط انتخابی را به زیرنویس بعدی گسترش دهید</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>خطوط انتخاب شده را به زیرنویس قبلی گسترش دهید</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>گسترش خط فعلی به زیرنویس بعدی و یا حداکثر مدت زمان</AdjustExtendCurrentSubtitle>
@@ -2385,10 +2385,10 @@
     <WaveformPlayNewSelection>پخش انتخاب</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>پخش پایان انتخاب</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>پخش اولین زیرنویس انتخاب شده</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>به تغییر صحنه قبلی بروید</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>رفتن به تغییر صحنه بعدی</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>تغییر وضعیت صحنه</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>حذف/صادرات تغییرات صحنه</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>به تغییر صحنه قبلی بروید</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>رفتن به تغییر صحنه بعدی</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>تغییر وضعیت صحنه</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>حذف/صادرات تغییرات صحنه</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>تنظیم خودکار شروع از طریق تغییر صدا/صحنه</WaveformGuessStart>
     <GoBack1Frame>یک قاب عقب</GoBack1Frame>
     <GoForward1Frame>یک قاب به جلو</GoForward1Frame>
@@ -3013,9 +3013,9 @@
     <ShowWaveformAndSpectrogram>نمایش شکل موج و طیف نگار</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>فقط نمایش شکل موج</ShowWaveformOnly>
     <ShowSpectrogramOnly>فقط نمایش طیف نگار</ShowSpectrogramOnly>
-    <AddSceneChange>اضافه کردن تغییر صحنه</AddSceneChange>
-    <RemoveSceneChange>حذف تغییر صحنه</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>حذف تغییرات صحنه از انتخاب</RemoveSceneChangesFromSelection>
+    <AddShotChange>اضافه کردن تغییر صحنه</AddShotChange>
+    <RemoveShotChange>حذف تغییر صحنه</RemoveShotChange>
+    <RemoveShotChangesFromSelection>حذف تغییرات صحنه از انتخاب</RemoveShotChangesFromSelection>
     <GuessTimeCodes>حدس بزنید کدهای زمان...</GuessTimeCodes>
     <SeekSilence>جستجو برای سکوت...</SeekSilence>
     <InsertSubtitleHere>قرار دادن زیرنویس در اینجا...</InsertSubtitleHere>
