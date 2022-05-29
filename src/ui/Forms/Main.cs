@@ -31301,12 +31301,12 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             foreach (ListViewItem item in SubtitleListview1.Items)
             {
-
                 item.Selected = !item.Selected;
             }
 
             SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             SubtitleListview1.EndUpdate();
+            SubtitleListView1SelectedIndexChange();
         }
 
         private void toolStripMenuItemSpellCheckFromCurrentLine_Click(object sender, EventArgs e)
