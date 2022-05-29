@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms.SeJobs
         private readonly SubtitleFormat _subtitleFormat;
         private readonly string _videoFileName;
         private SeJobWaveform _waveform;
-        private List<double> _sceneChanges;
+        private List<double> _shotChanges;
 
         public SeJobExport(
             Subtitle subtitle,
@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.SeJobs
             SubtitleFormat subtitleFormat,
             string videoFileName,
             WavePeakData waveform,
-            List<double> sceneChanges)
+            List<double> shotChanges)
         {
             InitializeComponent();
 
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms.SeJobs
                 };
             }
 
-            _sceneChanges = sceneChanges;
+            _shotChanges = shotChanges;
             textBoxJobId.Text = Guid.NewGuid().ToString();
             textBoxSubtitleFileName.Text = Path.GetFileName(_subtitle?.FileName);
 
@@ -100,9 +100,9 @@ namespace Nikse.SubtitleEdit.Forms.SeJobs
                 model.Waveform = _waveform;
             }
 
-            if (checkBoxIncludeSceneChanges.Checked && _sceneChanges?.Count > 0)
+            if (checkBoxIncludeShotChanges.Checked && _shotChanges?.Count > 0)
             {
-                model.SceneChanges = _sceneChanges;
+                model.ShotChanges = _shotChanges;
             }
 
             if (checkBoxIncludeBookmarks.Checked)
@@ -164,9 +164,9 @@ namespace Nikse.SubtitleEdit.Forms.SeJobs
                 textBoxSubtitleFileName.Text = seJob.SubtitleFileName;
                 textBoxVideoUrl.Text = seJob.VideoStreamingUrl;
                 checkBoxIncludeWaveform.Checked = seJob.Waveform?.PeakMins.Count > 0;
-                checkBoxIncludeSceneChanges.Checked = seJob.SceneChanges?.Count > 0;
+                checkBoxIncludeShotChanges.Checked = seJob.ShotChanges?.Count > 0;
                 _waveform = seJob.Waveform;
-                _sceneChanges = seJob.SceneChanges;
+                _shotChanges = seJob.ShotChanges;
                 checkBoxIncludeRules.Checked = seJob.Rules != null;
                 if (seJob.Rules != null)
                 {

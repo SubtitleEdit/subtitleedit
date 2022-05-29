@@ -750,7 +750,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
     <Remove>Verwĳderen</Remove>
     <RemoveAll>Alle verwĳderen</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Beeldwissels detecteren/importeren</Title>
     <OpenTextFile>Tekstbestand openen</OpenTextFile>
     <Generate>Beeldwissels detecteren</Generate>
@@ -760,11 +760,11 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
     <Frames>Beelden</Frames>
     <Seconds>Seconden</Seconds>
     <Milliseconds>Milliseconden</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Beeldwissels met FFmpeg detecteren</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Beeldwissels met FFmpeg detecteren</GetShotChangesWithFfmpeg>
     <Sensitivity>Gevoeligheid</Sensitivity>
     <SensitivityDescription>Lagere waarde leidt tot meer beeldwissels</SensitivityDescription>
-    <NoSceneChangesFound>Geen beeldwissels gevonden</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Geen beeldwissels gevonden</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Platte tekst importeren</Title>
     <OneSubtitleIsOneFile>Meerdere bestanden – één ondertitel per bestand</OneSubtitleIsOneFile>
@@ -1077,8 +1077,8 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
         <SetVideoOffset>Videotĳdsverschil instellen...</SetVideoOffset>
         <SmptTimeMode>SMPTE-timing (drop-frame)</SmptTimeMode>
         <GenerateTextFromVideo>Tekst uit video halen...</GenerateTextFromVideo>
-        <GenerateImportSceneChanges>Beeldwissels detecteren/importeren...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Beeldwissels verwĳderen</RemoveSceneChanges>
+        <GenerateImportShotChanges>Beeldwissels detecteren/importeren...</GenerateImportShotChanges>
+        <RemoveShotChanges>Beeldwissels verwĳderen</RemoveShotChanges>
         <WaveformBatchGenerate>Golfvormen genereren</WaveformBatchGenerate>
         <ShowHideVideo>Video weergeven/verbergen</ShowHideVideo>
         <ShowHideWaveform>Golfvorm weergeven/verbergen</ShowHideWaveform>
@@ -1520,7 +1520,7 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Vóór samenvoegen van ondertitels</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Ondertitels samengevoegd</SubtitlesJoined>
     <StatusLog>Statuslogboek</StatusLog>
-    <XSceneChangesImported>{0} beeldwissels geïmporteerd</XSceneChangesImported>
+    <XShotChangesImported>{0} beeldwissels geïmporteerd</XShotChangesImported>
     <PluginXExecuted>Plug-in ‘{0}’ uitgevoerd.</PluginXExecuted>
     <NotAValidXSubFile>Ongeldig XSub-bestand</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vóór samenvoegen regels met dezelfde tekst</BeforeMergeLinesWithSameText>
@@ -1898,7 +1898,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformFocusMouseEnter>Op muisinvoer focussen</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ook op muisinvoer focussen in de lĳstweergave</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Eén keer klikken om ondertitels te selecteren</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Uitlĳnen op beeldwissels (houd Shift ingedrukt om te negeren)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Uitlĳnen op beeldwissels (houd Shift ingedrukt om te negeren)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>Randen van titels versleepbaar binnen</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
     <WaveformColor>Golfvormkleur</WaveformColor>
@@ -2001,8 +2001,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <AdjustSetEndAndOffsetTheRest>Einde bepalen, rest opschuiven</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Einde bepalen, rest opschuiven en naar volgende gaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Tĳdsduur verlengen tot volgende tekst of maximale tĳdsduur</AdjustExtendCurrentSubtitle>
-    <AdjustExtendToNextSceneChange>Geselecteerde titels verlengen tot volgende beeldwissel (of volgende titel)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToPreviousSceneChange>Geselecteerde titels verlengen tot vorige beeldwissel (of vorige titel)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextShotChange>Geselecteerde titels verlengen tot volgende beeldwissel (of volgende titel)</AdjustExtendToNextShotChange>
+    <AdjustExtendToPreviousShotChange>Geselecteerde titels verlengen tot vorige beeldwissel (of vorige titel)</AdjustExtendToPreviousShotChange>
     <AdjustExtendToNextSubtitle>Geselecteerde titels verlengen tot volgende titel</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Geselecteerde titels verlengen tot vorige titel</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Tĳdsduur van huidige ondertitel opnieuw berekenen</RecalculateDurationOfCurrentSubtitle>
@@ -2041,9 +2041,9 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <WaveformPlayNewSelection>Selectie afspelen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Selectie-einde afspelen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Eerste geselecteerde ondertitel afspelen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Naar vorige beeldwissel</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Naar volgende beeldwissel</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Beeldwissel toevoegen/verwĳderen</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Naar vorige beeldwissel</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Naar volgende beeldwissel</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Beeldwissel toevoegen/verwĳderen</WaveformToggleShotChange>
     <WaveformGuessStart>Begin automatisch aanpassen aan de hand van volumewĳziging/beeldwissel</WaveformGuessStart>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
@@ -2585,8 +2585,8 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Golfvorm en spectrogram weergeven</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Alleen golfvorm weergeven</ShowWaveformOnly>
     <ShowSpectrogramOnly>Alleen spectrogram weergeven</ShowSpectrogramOnly>
-    <AddSceneChange>Beeldwissel toevoegen</AddSceneChange>
-    <RemoveSceneChange>Beeldwissel verwĳderen</RemoveSceneChange>
+    <AddShotChange>Beeldwissel toevoegen</AddShotChange>
+    <RemoveShotChange>Beeldwissel verwĳderen</RemoveShotChange>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
     <InsertSubtitleHere>Ondertitel hier invoegen...</InsertSubtitleHere>

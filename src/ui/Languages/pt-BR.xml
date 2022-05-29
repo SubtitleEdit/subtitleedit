@@ -909,7 +909,7 @@ Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Ferramenta
     <Remove>Remover</Remove>
     <RemoveAll>Remover todos</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Gerar/importar mudanças de cena</Title>
     <OpenTextFile>Abrir arquivo de texto...</OpenTextFile>
     <Generate>Gerar mudanças de cena</Generate>
@@ -919,11 +919,11 @@ Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Ferramenta
     <Frames>Quadros</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milissegundos</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Gerar mudanças de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Gerar mudanças de cena com o FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Sensibilidade</Sensitivity>
     <SensitivityDescription>Valor mais baixo dá mais mudanças de cena</SensitivityDescription>
-    <NoSceneChangesFound>Nenhuma mudança de cena encontrada.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nenhuma mudança de cena encontrada.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importar texto simples</Title>
     <OneSubtitleIsOneFile>Vários arquivos - um arquivo é uma legenda</OneSubtitleIsOneFile>
@@ -1240,8 +1240,8 @@ Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Ferramenta
         <GenerateVideoWithBurnedInSub>Gerar vídeo com legenda incorporada....</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Vídeo/áudio para texto...</VideoAudioToText>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Gerar/importar mudanças de cena...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Remover/exportar mudanças de cena...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Remover/exportar mudanças de cena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Gerar formas de onda em lote...</WaveformBatchGenerate>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
@@ -1695,7 +1695,7 @@ Continuar?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Antes de juntar legendas</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Legendas juntadas</SubtitlesJoined>
     <StatusLog>Log de status</StatusLog>
-    <XSceneChangesImported>{0} alterações de cena importadas</XSceneChangesImported>
+    <XShotChangesImported>{0} alterações de cena importadas</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
     <NotAValidXSubFile>Não é um arquivo XSub válido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de unir linhas com o mesmo texto</BeforeMergeLinesWithSameText>
@@ -2193,7 +2193,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformFocusMouseEnter>Definir foco na entrada do mouse</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Também definir foco da visualização em lista na entrada do mouse</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Um clique para selecionar legendas</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Encaixar nas mudanças de cena (segure Shift para substituir)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Encaixar nas mudanças de cena (segure Shift para substituir)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Autogerar forma de onda ao abrir vídeo</WaveformAutoGen>
     <WaveformBorderHitMs1>Marcador da borda deve ser entre</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
@@ -2335,14 +2335,14 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Definir tempo inicial, deslocar todas as legendas</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Definir final, deslocar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir final, deslocar o resto e ir para próximo</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Encaixar início das linhas selecionadas na próxima mudança de cena</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Encaixar início das linhas selecionadas na próxima mudança de cena com pausa mínima</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Encaixar final das linhas selecionadas na mudança de cena anterior</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Encaixar final das linhas selecionadas na mudança de cena anterior com pausa mínima</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Estender linhas selecionadas para próxima mudança de cena (ou legenda anterior)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Estender linhas selecionadas para próxima mudança de cena com pausa mínima (ou próxima legenda)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Estender linhas selecionadas para mudança de cena anterior (ou legenda anterior)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Estender linhas selecionadas para a mudança de cena anterior com pausa mínima (ou legenda anterior)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Encaixar início das linhas selecionadas na próxima mudança de cena</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Encaixar início das linhas selecionadas na próxima mudança de cena com pausa mínima</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Encaixar final das linhas selecionadas na mudança de cena anterior</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Encaixar final das linhas selecionadas na mudança de cena anterior com pausa mínima</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Estender linhas selecionadas para próxima mudança de cena (ou legenda anterior)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Estender linhas selecionadas para próxima mudança de cena com pausa mínima (ou próxima legenda)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Estender linhas selecionadas para mudança de cena anterior (ou legenda anterior)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Estender linhas selecionadas para a mudança de cena anterior com pausa mínima (ou legenda anterior)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Estender linhas selecionadas para próxima legenda</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Estender linhas selecionadas para legenda anterior</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Estender linha atual para próxima legenda ou duração máxima</AdjustExtendCurrentSubtitle>
@@ -2400,10 +2400,10 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformPlayNewSelection>Tocar seleção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Tocar final da seleção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Ir para próxima mudança de cena</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Alternar mudança de cena</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Remover/exportar mudanças de cena</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Ir para a mudança de cena anterior</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Ir para próxima mudança de cena</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Alternar mudança de cena</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Remover/exportar mudanças de cena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Automaticamente ajustar início via mudança de volume/cena</WaveformGuessStart>
     <GoBack1Frame>Um quadro para trás</GoBack1Frame>
     <GoForward1Frame>Um quadro para frente</GoForward1Frame>
@@ -3031,9 +3031,9 @@ Manter as alterações?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar somente forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar somente espectrograma</ShowSpectrogramOnly>
-    <AddSceneChange>Adicionar mudança de cena</AddSceneChange>
-    <RemoveSceneChange>Remover mudança de cena</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Remover mudanças de cena da seleção</RemoveSceneChangesFromSelection>
+    <AddShotChange>Adicionar mudança de cena</AddShotChange>
+    <RemoveShotChange>Remover mudança de cena</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Remover mudanças de cena da seleção</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Identificar códigos de tempo...</GuessTimeCodes>
     <SeekSilence>Procurar silêncio...</SeekSilence>
     <InsertSubtitleHere>Insira a legenda aqui...</InsertSubtitleHere>

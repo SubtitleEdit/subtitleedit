@@ -1482,7 +1482,7 @@ $HorzAlign          =   Center
             MpvPreviewTextOpaqueBox = false;
             MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
-            FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
+            FFmpegSceneThreshold = "0.4"; // threshold for generating shot changes - 0.2 is sensitive (more shot changes), 0.6 is less sensitive (fewer shot changes)
             UseTimeFormatHHMMSSFF = false;
             SplitBehavior = 1; // 0=take gap from left, 1=divide evenly, 2=take gap from right
             SplitRemovesDashes = true;
@@ -1898,7 +1898,7 @@ $HorzAlign          =   Center
         public bool WaveformListViewFocusOnMouseEnter { get; set; }
         public bool WaveformSetVideoPositionOnMoveStartEnd { get; set; }
         public bool WaveformSingleClickSelect { get; set; }
-        public bool WaveformSnapToSceneChanges { get; set; }
+        public bool WaveformSnapToShotChanges { get; set; }
         public int WaveformShotChangeStartTimeBeforeMs { get; set; }
         public int WaveformShotChangeStartTimeAfterMs { get; set; }
         public int WaveformShotChangeEndTimeBeforeMs { get; set; }
@@ -1952,7 +1952,7 @@ $HorzAlign          =   Center
             WaveformMinimumSampleRate = 126;
             WaveformSeeksSilenceDurationSeconds = 0.3;
             WaveformSeeksSilenceMaxVolume = 0.1;
-            WaveformSnapToSceneChanges = true;
+            WaveformSnapToShotChanges = true;
         }
     }
 
@@ -2342,14 +2342,14 @@ $HorzAlign          =   Center
         public string MoveStartOneFrameForwardKeepGapPrev { get; set; }
         public string MoveEndOneFrameBackKeepGapNext { get; set; }
         public string MoveEndOneFrameForwardKeepGapNext { get; set; }
-        public string MainAdjustSnapStartToNextSceneChange { get; set; }
-        public string MainAdjustSnapStartToNextSceneChangeWithGap { get; set; }
-        public string MainAdjustSnapEndToPreviousSceneChange { get; set; }
-        public string MainAdjustSnapEndToPreviousSceneChangeWithGap { get; set; }
-        public string MainAdjustExtendToNextSceneChange { get; set; }
-        public string MainAdjustExtendToNextSceneChangeWithGap { get; set; }
-        public string MainAdjustExtendToPreviousSceneChange { get; set; }
-        public string MainAdjustExtendToPreviousSceneChangeWithGap { get; set; }
+        public string MainAdjustSnapStartToNextShotChange { get; set; }
+        public string MainAdjustSnapStartToNextShotChangeWithGap { get; set; }
+        public string MainAdjustSnapEndToPreviousShotChange { get; set; }
+        public string MainAdjustSnapEndToPreviousShotChangeWithGap { get; set; }
+        public string MainAdjustExtendToNextShotChange { get; set; }
+        public string MainAdjustExtendToNextShotChangeWithGap { get; set; }
+        public string MainAdjustExtendToPreviousShotChange { get; set; }
+        public string MainAdjustExtendToPreviousShotChangeWithGap { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
         public string MainAdjustExtendToPreviousSubtitle { get; set; }
         public string MainAdjustExtendCurrentSubtitle { get; set; }
@@ -2386,10 +2386,10 @@ $HorzAlign          =   Center
         public string WaveformAddTextHere { get; set; }
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformSetParagraphAsSelection { get; set; }
-        public string WaveformGoToPreviousSceneChange { get; set; }
-        public string WaveformGoToNextSceneChange { get; set; }
-        public string WaveformToggleSceneChange { get; set; }
-        public string WaveformListSceneChanges { get; set; }
+        public string WaveformGoToPreviousShotChange { get; set; }
+        public string WaveformGoToNextShotChange { get; set; }
+        public string WaveformToggleShotChange { get; set; }
+        public string WaveformListShotChanges { get; set; }
         public string WaveformGuessStart { get; set; }
         public string Waveform100MsLeft { get; set; }
         public string Waveform100MsRight { get; set; }
@@ -2483,7 +2483,7 @@ $HorzAlign          =   Center
             Waveform100MsRight = "Shift+Right";
             Waveform1000MsLeft = "Left";
             Waveform1000MsRight = "Right";
-            MainCheckFixTimingViaShotChanges = "Control+Shift+0";
+            MainCheckFixTimingViaShotChanges = "Control+Shift+D9";
             PluginShortcuts = new List<PluginShortcut>();
         }
 
@@ -6784,10 +6784,10 @@ $HorzAlign          =   Center
                 settings.VideoControls.WaveformSingleClickSelect = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("WaveformSnapToSceneChanges");
+            subNode = node.SelectSingleNode("WaveformSnapToShotChanges");
             if (subNode != null)
             {
-                settings.VideoControls.WaveformSnapToSceneChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.VideoControls.WaveformSnapToShotChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("WaveformShotChangeStartTimeBeforeMs");
@@ -9008,52 +9008,52 @@ $HorzAlign          =   Center
                     shortcuts.MoveEndOneFrameForwardKeepGapNext = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChange");
+                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustSnapStartToNextSceneChange = subNode.InnerText;
+                    shortcuts.MainAdjustSnapStartToNextShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChangeWithGap");
+                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextShotChangeWithGap");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap = subNode.InnerText;
+                    shortcuts.MainAdjustSnapStartToNextShotChangeWithGap = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChange");
+                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustSnapEndToPreviousSceneChange = subNode.InnerText;
+                    shortcuts.MainAdjustSnapEndToPreviousShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChangeWithGap");
+                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousShotChangeWithGap");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap = subNode.InnerText;
+                    shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustExtendToNextSceneChange = subNode.InnerText;
+                    shortcuts.MainAdjustExtendToNextShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChangeWithGap");
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextShotChangeWithGap");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustExtendToNextSceneChangeWithGap = subNode.InnerText;
+                    shortcuts.MainAdjustExtendToNextShotChangeWithGap = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChange");
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustExtendToPreviousSceneChange = subNode.InnerText;
+                    shortcuts.MainAdjustExtendToPreviousShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChangeWithGap");
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousShotChangeWithGap");
                 if (subNode != null)
                 {
-                    shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap = subNode.InnerText;
+                    shortcuts.MainAdjustExtendToPreviousShotChangeWithGap = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainAdjustExtendToNextSubtitle");
@@ -9254,28 +9254,28 @@ $HorzAlign          =   Center
                     shortcuts.WaveformSetParagraphAsSelection = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
+                subNode = node.SelectSingleNode("WaveformGoToPreviousShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.WaveformGoToPreviousSceneChange = subNode.InnerText;
+                    shortcuts.WaveformGoToPreviousShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
+                subNode = node.SelectSingleNode("WaveformGoToNextShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
+                    shortcuts.WaveformGoToNextShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("WaveformToggleSceneChange");
+                subNode = node.SelectSingleNode("WaveformToggleShotChange");
                 if (subNode != null)
                 {
-                    shortcuts.WaveformToggleSceneChange = subNode.InnerText;
+                    shortcuts.WaveformToggleShotChange = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("WaveformListSceneChanges");
+                subNode = node.SelectSingleNode("WaveformListShotChanges");
                 if (subNode != null)
                 {
-                    shortcuts.WaveformListSceneChanges = subNode.InnerText;
+                    shortcuts.WaveformListShotChanges = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("WaveformGuessStart");
@@ -10134,7 +10134,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSetVideoPositionOnMoveStartEnd", settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSingleClickSelect", settings.VideoControls.WaveformSingleClickSelect.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveformSnapToSceneChanges", settings.VideoControls.WaveformSnapToSceneChanges.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformSnapToShotChanges", settings.VideoControls.WaveformSnapToShotChanges.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformShotChangeStartTimeBeforeMs", settings.VideoControls.WaveformShotChangeStartTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformShotChangeStartTimeAfterMs", settings.VideoControls.WaveformShotChangeStartTimeAfterMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformShotChangeEndTimeBeforeMs", settings.VideoControls.WaveformShotChangeEndTimeBeforeMs.ToString(CultureInfo.InvariantCulture));
@@ -10614,14 +10614,14 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MoveStartOneFrameForwardKeepGapPrev", shortcuts.MoveStartOneFrameForwardKeepGapPrev);
             textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", shortcuts.MoveEndOneFrameBackKeepGapNext);
             textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", shortcuts.MoveEndOneFrameForwardKeepGapNext);
-            textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChange", shortcuts.MainAdjustSnapStartToNextSceneChange);
-            textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChangeWithGap", shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap);
-            textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChange", shortcuts.MainAdjustSnapEndToPreviousSceneChange);
-            textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChangeWithGap", shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap);
-            textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", shortcuts.MainAdjustExtendToNextSceneChange);
-            textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
-            textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", shortcuts.MainAdjustExtendToPreviousSceneChange);
-            textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChangeWithGap", shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
+            textWriter.WriteElementString("MainAdjustSnapStartToNextShotChange", shortcuts.MainAdjustSnapStartToNextShotChange);
+            textWriter.WriteElementString("MainAdjustSnapStartToNextShotChangeWithGap", shortcuts.MainAdjustSnapStartToNextShotChangeWithGap);
+            textWriter.WriteElementString("MainAdjustSnapEndToPreviousShotChange", shortcuts.MainAdjustSnapEndToPreviousShotChange);
+            textWriter.WriteElementString("MainAdjustSnapEndToPreviousShotChangeWithGap", shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap);
+            textWriter.WriteElementString("MainAdjustExtendToNextShotChange", shortcuts.MainAdjustExtendToNextShotChange);
+            textWriter.WriteElementString("MainAdjustExtendToNextShotChangeWithGap", shortcuts.MainAdjustExtendToNextShotChangeWithGap);
+            textWriter.WriteElementString("MainAdjustExtendToPreviousShotChange", shortcuts.MainAdjustExtendToPreviousShotChange);
+            textWriter.WriteElementString("MainAdjustExtendToPreviousShotChangeWithGap", shortcuts.MainAdjustExtendToPreviousShotChangeWithGap);
             textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", shortcuts.MainAdjustExtendToNextSubtitle);
             textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", shortcuts.MainAdjustExtendToPreviousSubtitle);
             textWriter.WriteElementString("MainAdjustExtendCurrentSubtitle", shortcuts.MainAdjustExtendCurrentSubtitle);
@@ -10655,10 +10655,10 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("WaveformAddTextHere", shortcuts.WaveformAddTextHere);
             textWriter.WriteElementString("WaveformAddTextHereFromClipboard", shortcuts.WaveformAddTextHereFromClipboard);
             textWriter.WriteElementString("WaveformSetParagraphAsSelection", shortcuts.WaveformSetParagraphAsSelection);
-            textWriter.WriteElementString("WaveformGoToPreviousSceneChange", shortcuts.WaveformGoToPreviousSceneChange);
-            textWriter.WriteElementString("WaveformGoToNextSceneChange", shortcuts.WaveformGoToNextSceneChange);
-            textWriter.WriteElementString("WaveformToggleSceneChange", shortcuts.WaveformToggleSceneChange);
-            textWriter.WriteElementString("WaveformListSceneChanges", shortcuts.WaveformListSceneChanges);
+            textWriter.WriteElementString("WaveformGoToPreviousShotChange", shortcuts.WaveformGoToPreviousShotChange);
+            textWriter.WriteElementString("WaveformGoToNextShotChange", shortcuts.WaveformGoToNextShotChange);
+            textWriter.WriteElementString("WaveformToggleShotChange", shortcuts.WaveformToggleShotChange);
+            textWriter.WriteElementString("WaveformListShotChanges", shortcuts.WaveformListShotChanges);
             textWriter.WriteElementString("WaveformGuessStart", shortcuts.WaveformGuessStart);
             textWriter.WriteElementString("Waveform100MsLeft", shortcuts.Waveform100MsLeft);
             textWriter.WriteElementString("Waveform100MsRight", shortcuts.Waveform100MsRight);

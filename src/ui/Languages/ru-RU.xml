@@ -924,7 +924,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Remove>Удалить</Remove>
     <RemoveAll>Удалить все</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Получение изменений сцен</Title>
     <OpenTextFile>Открыть файл...</OpenTextFile>
     <Generate>Создать изменения сцен</Generate>
@@ -934,12 +934,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <Frames>Кадров</Frames>
     <Seconds>Секунд</Seconds>
     <Milliseconds>Миллисекунд</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Получить изменения сцен с помощью FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Получить изменения сцен с помощью FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Чув-ность</Sensitivity>
     <SensitivityDescription>Низкие значения дают больше
      изменений сцен</SensitivityDescription>
-    <NoSceneChangesFound>Изменений в сцене не найдено.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Изменений в сцене не найдено.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Открыть простой текст</Title>
     <OneSubtitleIsOneFile>Несколько файлов - один файл является одним субтитром</OneSubtitleIsOneFile>
@@ -1256,8 +1256,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateVideoWithBurnedInSub>Создасть видео с наложенными субтитрами (хардсаб)...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Видео/аудио в текст...</VideoAudioToText>
         <ImportChaptersFromVideo>Импорт глав из видео</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Создание/Открытие изменений сцен...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Удалить/экспортировать изменения сцен...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Создание/Открытие изменений сцен...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Удалить/экспортировать изменения сцен...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала...</WaveformBatchGenerate>
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
         <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
@@ -1719,7 +1719,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeDisplaySubtitleJoin>Перед объединением субтитров</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Выполнено объединение субтитров</SubtitlesJoined>
     <StatusLog>Журнал состояния</StatusLog>
-    <XSceneChangesImported>Импортировано изменений: {0}</XSceneChangesImported>
+    <XShotChangesImported>Импортировано изменений: {0}</XShotChangesImported>
     <PluginXExecuted>Плагин '{0}' запущен.</PluginXExecuted>
     <NotAValidXSubFile>Не допустимый XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Перед объединением строк с одинаковым текстом</BeforeMergeLinesWithSameText>
@@ -2221,7 +2221,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformFocusMouseEnter>Установить фокус по курсору мышки</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Установить фокус на списке по курсору мышки</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Однократное нажатие фокусирует на выбранной строке [+ на окне видео и текстовом окне]</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Привязка к изменениям сцены (удерживайте Shift для отмены)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Привязка к изменениям сцены (удерживайте Shift для отмены)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Автоматически создавать форму сигнала при открытии видео</WaveformAutoGen>
     <WaveformBorderHitMs1>Только в границах маркера</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>миллисекунд</WaveformBorderHitMs2>
@@ -2368,14 +2368,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetStartAndOffsetTheWholeSubtitle></AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Привязать выбранные линии к началу следующего изменения сцены</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Привязать начало выбранных линий к следующей смене сцены с мин. разрывом</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Привязать выбранные линии к концу предыдущей смены сцены</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Привязать конец выбранных линий к предыдущему изменению сцены с мин. разрывом</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Расширить выделенные строки до следующего изменения сцены (или следующей строки)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Расширить выделенные строки до следующего изменения сцены с мин. разрывом (или следующей строки)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Расширить выделенные строки до предыдущего изменения сцены (или предыдущей строки)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Расширить выделенные строки до предыдущего изменения сцены с мин. разрывом (или предыдущей строки)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Привязать выбранные линии к началу следующего изменения сцены</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Привязать начало выбранных линий к следующей смене сцены с мин. разрывом</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Привязать выбранные линии к концу предыдущей смены сцены</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Привязать конец выбранных линий к предыдущему изменению сцены с мин. разрывом</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Расширить выделенные строки до следующего изменения сцены (или следующей строки)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Расширить выделенные строки до следующего изменения сцены с мин. разрывом (или следующей строки)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Расширить выделенные строки до предыдущего изменения сцены (или предыдущей строки)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Расширить выделенные строки до предыдущего изменения сцены с мин. разрывом (или предыдущей строки)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Расширить выделенные строки до следующего субтитра</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Расширить выделенные строки до предыдущего субтитра</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Продлить строку до следующего субтитра/задать максимальную длительность</AdjustExtendCurrentSubtitle>
@@ -2433,10 +2433,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Перейти к предыдущему изменению сцены</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Удалить/экспортировать изменения сцен</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Перейти к предыдущему изменению сцены</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Перейти к следующему изменению сцены</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Переключить изменение сцен</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Удалить/экспортировать изменения сцен</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Автоматическая настройка начала с помощью громкости/изменения сцены</WaveformGuessStart>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
     <GoForward1Frame>1 кадр вперед</GoForward1Frame>
@@ -3074,9 +3074,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowWaveformAndSpectrogram>Показать форму сигнала и спектрограмму</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Показать только форму сигнала</ShowWaveformOnly>
     <ShowSpectrogramOnly>Показать только спектрограмму</ShowSpectrogramOnly>
-    <AddSceneChange>Добавить изменение сцены</AddSceneChange>
-    <RemoveSceneChange>Удалить изменение сцены</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Удалить изменения сцены из выбранного</RemoveSceneChangesFromSelection>
+    <AddShotChange>Добавить изменение сцены</AddShotChange>
+    <RemoveShotChange>Удалить изменение сцены</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Удалить изменения сцены из выбранного</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Распознать таймкоды...</GuessTimeCodes>
     <SeekSilence>Поиск пауз...</SeekSilence>
     <InsertSubtitleHere>Вставить субтитр здесь...</InsertSubtitleHere>

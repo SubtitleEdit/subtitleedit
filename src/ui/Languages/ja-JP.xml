@@ -601,7 +601,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Remove>削除</Remove>
     <RemoveAll>すべて削除</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>シーンの変更を生成/インポート</Title>
     <OpenTextFile>テキストファイルを開く...</OpenTextFile>
     <Generate>シーンの変更を生成</Generate>
@@ -611,11 +611,11 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Frames>フレーム</Frames>
     <Seconds>秒</Seconds>
     <Milliseconds>ミリ秒</Milliseconds>
-    <GetSceneChangesWithFfmpeg>FFmpeg を使用してシーンの変更を生成</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>FFmpeg を使用してシーンの変更を生成</GetShotChangesWithFfmpeg>
     <Sensitivity>感度</Sensitivity>
     <SensitivityDescription>値が小さいほどシーンの変更が生成されます</SensitivityDescription>
-    <NoSceneChangesFound>シーンの変更は見つかりませんでした。</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>シーンの変更は見つかりませんでした。</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>プレーン テキストのインポート</Title>
     <OneSubtitleIsOneFile>複数のファイル - 1つのファイルは1つの字幕</OneSubtitleIsOneFile>
@@ -1324,7 +1324,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BeforeDisplaySubtitleJoin>字幕の結合前</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>字幕が結合されました</SubtitlesJoined>
     <StatusLog>ステータス ログ</StatusLog>
-    <XSceneChangesImported>{0} scene changes imported</XSceneChangesImported>
+    <XShotChangesImported>{0} shot changes imported</XShotChangesImported>
     <PluginXExecuted>プラグイン '{0}' が実行されました。</PluginXExecuted>
     <NotAValidXSubFile>無効な XSub ファイルです！</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
@@ -1729,9 +1729,9 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <WaveformAddTextHere>ここにテキストを追加 (新しい選択)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>ここにテキストを追加 (クリップボードから新しく選択)</WaveformAddTextHereFromClipboard>
     <WaveformPlayFirstSelectedSubtitle>最初に選択した字幕を再生</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>前のシーンの変更に移動</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>次のシーンの変更に移動</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>シーンの変更を切り替え</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>前のシーンの変更に移動</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>次のシーンの変更に移動</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>シーンの変更を切り替え</WaveformToggleShotChange>
     <GoBack1Frame>1フレーム戻る</GoBack1Frame>
     <GoForward1Frame>1フレーム進む</GoForward1Frame>
     <GoBack1FrameWithPlay>1フレーム戻る (再生しながら)</GoBack1FrameWithPlay>
@@ -2120,8 +2120,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ShowWaveformAndSpectrogram>波形とスペクトログラムの表示</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>波形のみ表示</ShowWaveformOnly>
     <ShowSpectrogramOnly>スペクトログラムのみ表示</ShowSpectrogramOnly>
-    <AddSceneChange>シーンの変更を追加</AddSceneChange>
-    <RemoveSceneChange>シーンの変更を削除</RemoveSceneChange>
+    <AddShotChange>シーンの変更を追加</AddShotChange>
+    <RemoveShotChange>シーンの変更を削除</RemoveShotChange>
     <GuessTimeCodes>タイム コードの推測...</GuessTimeCodes>
     <SeekSilence>無音の検索...</SeekSilence>
     <InsertSubtitleHere>ここに字幕を挿入...</InsertSubtitleHere>

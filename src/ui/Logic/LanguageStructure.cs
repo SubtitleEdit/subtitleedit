@@ -1008,7 +1008,7 @@
             public string RemoveAll { get; set; }
         }
 
-        public class ImportSceneChanges
+        public class ImportShotChanges
         {
             public string Title { get; set; }
             public string OpenTextFile { get; set; }
@@ -1019,10 +1019,10 @@
             public string Frames { get; set; }
             public string Seconds { get; set; }
             public string Milliseconds { get; set; }
-            public string GetSceneChangesWithFfmpeg { get; set; }
+            public string GetShotChangesWithFfmpeg { get; set; }
             public string Sensitivity { get; set; }
             public string SensitivityDescription { get; set; }
-            public string NoSceneChangesFound { get; set; }
+            public string NoShotChangesFound { get; set; }
         }
 
         public class ImportText
@@ -1461,7 +1461,7 @@
             public string BeforeDisplaySubtitleJoin { get; set; }
             public string SubtitlesJoined { get; set; }
             public string StatusLog { get; set; }
-            public string XSceneChangesImported { get; set; }
+            public string XShotChangesImported { get; set; }
             public string PluginXExecuted { get; set; }
             public string NotAValidXSubFile { get; set; }
             public string BeforeMergeLinesWithSameText { get; set; }
@@ -1629,8 +1629,8 @@
                     public string GenerateVideoWithBurnedInSub { get; set; }
                     public string VideoAudioToText { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
-                    public string GenerateImportSceneChanges { get; set; }
-                    public string RemoveOrExportSceneChanges { get; set; }
+                    public string GenerateImportShotChanges { get; set; }
+                    public string RemoveOrExportShotChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -2387,7 +2387,7 @@
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformSingleClickSelect { get; set; }
-            public string WaveformSnapToSceneChanges { get; set; }
+            public string WaveformSnapToShotChanges { get; set; }
             public string WaveformAutoGen { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
@@ -2534,14 +2534,14 @@
             public string AdjustSetStartAndOffsetTheWholeSubtitle { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
-            public string AdjustSnapStartToNextSceneChange { get; set; }
-            public string AdjustSnapStartToNextSceneChangeWithGap { get; set; }
-            public string AdjustSnapEndToPreviousSceneChange { get; set; }
-            public string AdjustSnapEndToPreviousSceneChangeWithGap { get; set; }
-            public string AdjustExtendToNextSceneChange { get; set; }
-            public string AdjustExtendToNextSceneChangeWithGap { get; set; }
-            public string AdjustExtendToPreviousSceneChange { get; set; }
-            public string AdjustExtendToPreviousSceneChangeWithGap { get; set; }
+            public string AdjustSnapStartToNextShotChange { get; set; }
+            public string AdjustSnapStartToNextShotChangeWithGap { get; set; }
+            public string AdjustSnapEndToPreviousShotChange { get; set; }
+            public string AdjustSnapEndToPreviousShotChangeWithGap { get; set; }
+            public string AdjustExtendToNextShotChange { get; set; }
+            public string AdjustExtendToNextShotChangeWithGap { get; set; }
+            public string AdjustExtendToPreviousShotChange { get; set; }
+            public string AdjustExtendToPreviousShotChangeWithGap { get; set; }
             public string AdjustExtendToNextSubtitle { get; set; }
             public string AdjustExtendToPreviousSubtitle { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
@@ -2599,10 +2599,10 @@
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
-            public string WaveformGoToPreviousSceneChange { get; set; }
-            public string WaveformGoToNextSceneChange { get; set; }
-            public string WaveformToggleSceneChange { get; set; }
-            public string WaveformRemoveOrExportSceneChanges { get; set; }
+            public string WaveformGoToPreviousShotChange { get; set; }
+            public string WaveformGoToNextShotChange { get; set; }
+            public string WaveformToggleShotChange { get; set; }
+            public string WaveformRemoveOrExportShotChanges { get; set; }
             public string WaveformGuessStart { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
@@ -3287,9 +3287,9 @@
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
             public string ShowSpectrogramOnly { get; set; }
-            public string AddSceneChange { get; set; }
-            public string RemoveSceneChange { get; set; }
-            public string RemoveSceneChangesFromSelection { get; set; }
+            public string AddShotChange { get; set; }
+            public string RemoveShotChange { get; set; }
+            public string RemoveShotChangesFromSelection { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
             public string InsertSubtitleHere { get; set; }

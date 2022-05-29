@@ -662,7 +662,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Remove>Lemmel kuit</Remove>
     <RemoveAll>Tennañ kuit an holl</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Enporzhiañ ar c'hemmoù sen</Title>
     <OpenTextFile>Digeriñ restr an destenn...</OpenTextFile>
     <ImportOptions>Dibarzhioù emporzhiañ</ImportOptions>
@@ -671,7 +671,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Frames>Frames</Frames>
     <Seconds>Eilennoù</Seconds>
     <Milliseconds>Milieilennoù</Milliseconds>
-  </ImportSceneChanges>
+  </ImportShotChanges>
   <ImportText>
     <Title>Enporzhiañ testenn</Title>
     <OneSubtitleIsOneFile>Meur a restr 'zo - ur restr a zo un istitl</OneSubtitleIsOneFile>
@@ -970,8 +970,8 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
         <OpenDvd>Digeriñ DVD...</OpenDvd>
         <ChooseAudioTrack>Dibabit loabr ar c'hlev</ChooseAudioTrack>
         <CloseVideo>Serriñ restr video</CloseVideo>
-        <ImportSceneChanges>Enporzhiañ ar c'hemmoù senenn...</ImportSceneChanges>
-        <RemoveSceneChanges>Diverkañ c'hemmoù senenn...</RemoveSceneChanges>
+        <ImportShotChanges>Enporzhiañ ar c'hemmoù senenn...</ImportShotChanges>
+        <RemoveShotChanges>Diverkañ c'hemmoù senenn...</RemoveShotChanges>
         <WaveformBatchGenerate>Genel dre vernioù ar stummoù gwagenn sonus</WaveformBatchGenerate>
         <ShowHideVideo>Diskouez/Kuzhat video</ShowHideVideo>
         <ShowHideWaveform>Diskouez/Kuzhat tresenn ar son</ShowHideWaveform>
@@ -1383,7 +1383,7 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>A-raok kendeuziñ an istitloù</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Istitloù diazalc'h</SubtitlesJoined>
     <StatusLog>Kemennadennoù statud</StatusLog>
-    <XSceneChangesImported>{0} kemmoù senenn emporzhiet</XSceneChangesImported>
+    <XShotChangesImported>{0} kemmoù senenn emporzhiet</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' kaset da-benn</PluginXExecuted>
     <NotAValidXSubFile>N'eo ket ur restr XSUB gweredekaus !</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>A-raok kendeuziñ al linennoù gant ar memes testenn</BeforeMergeLinesWithSameText>

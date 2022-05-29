@@ -798,7 +798,7 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Bing bezero sekretua sartzeko.<
     <Remove>Kendu</Remove>
     <RemoveAll>Kendu denak</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Inportatu agerraldi aldaketak</Title>
     <OpenTextFile>&amp;Inportatu idazki agiria...</OpenTextFile>
     <Generate>Sortu agerraldi aldaketak</Generate>
@@ -808,11 +808,11 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Bing bezero sekretua sartzeko.<
     <Frames>Frame</Frames>
     <Seconds>Segundu</Seconds>
     <Milliseconds>Segundumilaen</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Lortu agerraldi aldaketak FFmpeg-tik</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Lortu agerraldi aldaketak FFmpeg-tik</GetShotChangesWithFfmpeg>
     <Sensitivity>Sentikortasuna</Sensitivity>
     <SensitivityDescription>Balio apalagoek agerraldi aldaketa gehiago ematen dute</SensitivityDescription>
-    <NoSceneChangesFound>Ez da agerraldi aldaketarik aurkitu.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Ez da agerraldi aldaketarik aurkitu.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Inportatu idatzi laua</Title>
     <OneSubtitleIsOneFile>Agiri anitz - agiri bat azpidatzi bat</OneSubtitleIsOneFile>
@@ -1129,8 +1129,8 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Bing bezero sekretua sartzeko.<
         <SmptTimeMode>SMPTE denborapena (eror framea)</SmptTimeMode>
         <GenerateTextFromVideo>Sortu idazkia bideotik...</GenerateTextFromVideo>
         <ImportChaptersFromVideo>Inportatu atalak bideotik...</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Sortu/inportatu agerraldi aldaketak</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Kendu agerraldi aldaketak</RemoveSceneChanges>
+        <GenerateImportShotChanges>Sortu/inportatu agerraldi aldaketak</GenerateImportShotChanges>
+        <RemoveShotChanges>Kendu agerraldi aldaketak</RemoveShotChanges>
         <WaveformBatchGenerate>Multzo uhinera sortzea...</WaveformBatchGenerate>
         <ShowHideVideo>E&amp;rakutsi/ezkutatu bideoa</ShowHideVideo>
         <ShowHideWaveform>Erakutsi/ezkutatu uhinera</ShowHideWaveform>
@@ -1570,7 +1570,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Azpidatziak batu aurretik</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Azpidatziak batuta</SubtitlesJoined>
     <StatusLog>Egoera oharra</StatusLog>
-    <XSceneChangesImported>{0} agerraldi aldaketa inportaturik</XSceneChangesImported>
+    <XShotChangesImported>{0} agerraldi aldaketa inportaturik</XShotChangesImported>
     <PluginXExecuted>'{0}' plugin exekutaturik.</PluginXExecuted>
     <NotAValidXSubFile>Ez da XSub agiri baliozko bat!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Idatzi bera duten lerroak batu aurretik</BeforeMergeLinesWithSameText>
@@ -2049,7 +2049,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <WaveformFocusMouseEnter>Ezarri fokua sagua sartzerakoan</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ezarri zerrenda ikuspegi fokua sagua zerrenda ikuspegian sartzerakoan ere</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Klik bakarra azpidatziak hautatzeko</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Dohitu agerraldi aldaketetara (sakatu Aldatu ezeztatzeko)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Dohitu agerraldi aldaketetara (sakatu Aldatu ezeztatzeko)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>Hertz markatzailea izan behar da</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>segundumilaen</WaveformBorderHitMs2>
     <WaveformColor>Margoa</WaveformColor>
@@ -2177,14 +2177,14 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Ezarri hasiera denbora, orekatu azpidatzi osoa</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Dohitu hautaturiko lerroen hasiera hurrengo agerraldi aldaketara</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Dohitu hautaturiko lerroen hasiera hurrengo agerraldi aldaketara gutx. hutsartearekin</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Dohitu hautaturiko lerroen amaiera aurreko agerraldi aldaketara</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Dohitu hautaturiko lerroen amaiera aurreko agerraldi aldaketara gutx. hutsartearekin</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Hedatu hautaturiko lerroak hurrengo agerraldi aldaketara (edo hurrengo azpidatzira)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Hedatu hautaturiko lerroak aurreko agerraldi aldaketara gutx. hutsartearekin (edo aurreko azpidatzira)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Hedatu hautaturiko lerroak aurreko agerraldi aldaketara (edo aurreko azpidatzira)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Hedatu hautaturiko lerroak aurreko agerraldi aldaketara gutx. hutsartearekin (edo aurreko azpidatzira)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Dohitu hautaturiko lerroen hasiera hurrengo agerraldi aldaketara</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Dohitu hautaturiko lerroen hasiera hurrengo agerraldi aldaketara gutx. hutsartearekin</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Dohitu hautaturiko lerroen amaiera aurreko agerraldi aldaketara</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Dohitu hautaturiko lerroen amaiera aurreko agerraldi aldaketara gutx. hutsartearekin</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Hedatu hautaturiko lerroak hurrengo agerraldi aldaketara (edo hurrengo azpidatzira)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Hedatu hautaturiko lerroak aurreko agerraldi aldaketara gutx. hutsartearekin (edo aurreko azpidatzira)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Hedatu hautaturiko lerroak aurreko agerraldi aldaketara (edo aurreko azpidatzira)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Hedatu hautaturiko lerroak aurreko agerraldi aldaketara gutx. hutsartearekin (edo aurreko azpidatzira)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Hedatu hautaturiko lerroak hurrengo azpidatzira</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Hedatu hautaturiko lerroak aurreko azpidatzira</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Hedatu oraingo lerroa hurrengo azpidatzira edo geh iraupenera</AdjustExtendCurrentSubtitle>
@@ -2233,9 +2233,9 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <WaveformPlayNewSelection>Irakurri hautapen berria</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Irakurri hautapenaren amaiera</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Joan aurreko agerraldi aldaketara</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Joan aurreko agerraldi aldaketara</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Aldatu agerraldi aldaketa</WaveformToggleShotChange>
     <WaveformGuessStart>Berez zehaztu hasiera bolumen/agerraldi aldaketaren bidez</WaveformGuessStart>
     <GoBack1Frame>Frame bat atzera</GoBack1Frame>
     <GoForward1Frame>Frame bat aurrera</GoForward1Frame>
@@ -2824,8 +2824,8 @@ Gorde aldaketak?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Erakutsi uhinera eta argilitza</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Erakutsi uhinera bakarrik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Erakutsi argilitza bakarrik</ShowSpectrogramOnly>
-    <AddSceneChange>Gehitu agerraldi aldaketa</AddSceneChange>
-    <RemoveSceneChange>Kendu agerraldi aldaketa</RemoveSceneChange>
+    <AddShotChange>Gehitu agerraldi aldaketa</AddShotChange>
+    <RemoveShotChange>Kendu agerraldi aldaketa</RemoveShotChange>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna</SeekSilence>
     <InsertSubtitleHere>Txertatu azpidatzia hemen...</InsertSubtitleHere>

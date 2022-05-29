@@ -863,7 +863,7 @@ Pro použití klíče API pejděte na "Volby -&gt; Nastavení -&gt; Nástroje" p
     <Remove>Odebrat</Remove>
     <RemoveAll>Odebrat vše</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Generovat nebo importovat změny scén</Title>
     <OpenTextFile>Otevřít textový soubor...</OpenTextFile>
     <Generate>Generovat změny scén</Generate>
@@ -873,11 +873,11 @@ Pro použití klíče API pejděte na "Volby -&gt; Nastavení -&gt; Nástroje" p
     <Frames>Snímky</Frames>
     <Seconds>Sekundy</Seconds>
     <Milliseconds>Milisekundy</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Generovat změny scén pomocí FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Generovat změny scén pomocí FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Citlivost</Sensitivity>
     <SensitivityDescription>Nižší hodnota poskytne více změn scén</SensitivityDescription>
-    <NoSceneChangesFound>Nebyly nalezeny žádné změny scén.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nebyly nalezeny žádné změny scén.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importovat prostý text</Title>
     <OneSubtitleIsOneFile>Více souborů - jeden soubor je jeden titulek</OneSubtitleIsOneFile>
@@ -1192,8 +1192,8 @@ Pro použití klíče API pejděte na "Volby -&gt; Nastavení -&gt; Nástroje" p
         <GenerateBlankVideo>Generovat prázdné video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generovat video s vypálenými titulky...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Importovat kapitoly z videa</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Generovat nebo importovat změny scén...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Odebrat změny scén</RemoveSceneChanges>
+        <GenerateImportShotChanges>Generovat nebo importovat změny scén...</GenerateImportShotChanges>
+        <RemoveShotChanges>Odebrat změny scén</RemoveShotChanges>
         <WaveformBatchGenerate>Dávkově generovat křivky...</WaveformBatchGenerate>
         <ShowHideVideo>Zobrazit nebo skrýt video</ShowHideVideo>
         <ShowHideWaveform>Zobrazit nebo skrýt křivku</ShowHideWaveform>
@@ -1645,7 +1645,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Před spojením titulků</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Titulky spojeny</SubtitlesJoined>
     <StatusLog>Záznam stavu</StatusLog>
-    <XSceneChangesImported>Importováno {0} změn scén</XSceneChangesImported>
+    <XShotChangesImported>Importováno {0} změn scén</XShotChangesImported>
     <PluginXExecuted>Spuštěn doplněk '{0}'.</PluginXExecuted>
     <NotAValidXSubFile>Není platný soubor XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Před sloučením řádků se stejným textem</BeforeMergeLinesWithSameText>
@@ -2132,7 +2132,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformFocusMouseEnter>Nastavit zaměření na potvrzení myší</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Také nastavit zaměření zobrazení seznamu na potvrzení myší v zobrazení seznamu</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Kliknutí pro výběr titulků</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Přichytit pro změny scén (držet Shift pro přepsání)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Přichytit pro změny scén (držet Shift pro přepsání)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>Označení hranice musí být v rámci</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisekund</WaveformBorderHitMs2>
     <WaveformColor>Barva</WaveformColor>
@@ -2264,14 +2264,14 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Nastavit čas začátku, posunout celé titulky</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Nastavit konec, posunout zbytek</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Nastavit konec, posunout zbytek a přejít na další</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Přichytit začátek vybraných řádků k následující změně scény</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Přichytit začátek vybraných řádků k následující změně scény s min. mezerou</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Přichytit konec vybraných řádků k předchozí změně scény</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Přichytit konec vybraných řádků k předchozí změně scény s min. mezerou</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Rozšířit vybrané řádky na následující změnu scény (nebo následující titulek)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Rozšířit vybrané řádky na následující změnu scény s min. mezerou (nebo následující titulek)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Rozšířit vybrané řádky na předchozí změnu scény (nebo předchozí titulek)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Rozšířit vybrané řádky na předchozí změnu scény s min. mezerou (nebo předchozí titulek)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Přichytit začátek vybraných řádků k následující změně scény</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Přichytit začátek vybraných řádků k následující změně scény s min. mezerou</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Přichytit konec vybraných řádků k předchozí změně scény</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Přichytit konec vybraných řádků k předchozí změně scény s min. mezerou</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Rozšířit vybrané řádky na následující změnu scény (nebo následující titulek)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Rozšířit vybrané řádky na následující změnu scény s min. mezerou (nebo následující titulek)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Rozšířit vybrané řádky na předchozí změnu scény (nebo předchozí titulek)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Rozšířit vybrané řádky na předchozí změnu scény s min. mezerou (nebo předchozí titulek)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Rozšířit vybrané řádky na následující titulek</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Rozšířit vybrané řádky na předchozí titulek</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Rozšířit aktuální řádek do dalšího titulku nebo max. trvání</AdjustExtendCurrentSubtitle>
@@ -2324,9 +2324,9 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformPlayNewSelection>Přehrát výběr</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Přehrát konec výběru</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Přehrát první vybraný titulek</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Přejít na předchozí změnu scény</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Přejít na další změnu scény</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Přepnout změnu scény</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Přejít na předchozí změnu scény</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Přejít na další změnu scény</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Přepnout změnu scény</WaveformToggleShotChange>
     <WaveformGuessStart>Automaticky upravit začátek prostřednictvím změny hlasitosti nebo scény</WaveformGuessStart>
     <GoBack1Frame>Jeden snímek zpět</GoBack1Frame>
     <GoForward1Frame>Jeden snímek vpřed</GoForward1Frame>
@@ -2929,9 +2929,9 @@ Zachovat změny?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Zobrazit křivku a spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Zobrazit pouze křivku</ShowWaveformOnly>
     <ShowSpectrogramOnly>Zobrazit pouze spektrogram</ShowSpectrogramOnly>
-    <AddSceneChange>Přidat změnu scény</AddSceneChange>
-    <RemoveSceneChange>Odebrat změnu scény</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Odebrat změnu scén z výběru</RemoveSceneChangesFromSelection>
+    <AddShotChange>Přidat změnu scény</AddShotChange>
+    <RemoveShotChange>Odebrat změnu scény</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Odebrat změnu scén z výběru</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Odhadnout časové kódy...</GuessTimeCodes>
     <SeekSilence>Hledat ticho...</SeekSilence>
     <InsertSubtitleHere>Vložit titulek sem...</InsertSubtitleHere>

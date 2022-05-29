@@ -720,7 +720,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Remove>Löschen</Remove>
     <RemoveAll>Alle löschen</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Szenenwechsel importieren</Title>
     <OpenTextFile>Textdatei öffnen...</OpenTextFile>
     <Generate>Szenenwechsel erstellen</Generate>
@@ -730,11 +730,11 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Frames>Bilder</Frames>
     <Seconds>Sekunden</Seconds>
     <Milliseconds>Millisekunden</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Szenenwechsel mit FFmpeg erstellen</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Szenenwechsel mit FFmpeg erstellen</GetShotChangesWithFfmpeg>
     <Sensitivity>Empfindlichkeit</Sensitivity>
     <SensitivityDescription>Ein niedriger Wert erzeugt mehr Szenen</SensitivityDescription>
-    <NoSceneChangesFound>Keine Szenen gefunden.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Keine Szenen gefunden.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Text importieren</Title>
     <OneSubtitleIsOneFile>Mehrere Dateien - Eine Datei ist ein Untertitel</OneSubtitleIsOneFile>
@@ -1043,8 +1043,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <SetVideoOffset>Video Ausgleich einstellen...</SetVideoOffset>
         <SmptTimeMode>SMPTE Timing (Drop Frame)</SmptTimeMode>
         <GenerateTextFromVideo>Text aus Video holen...</GenerateTextFromVideo>
-        <GenerateImportSceneChanges>Szenenwechsel erstellen/importieren...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Szenenwechsel entfernen</RemoveSceneChanges>
+        <GenerateImportShotChanges>Szenenwechsel erstellen/importieren...</GenerateImportShotChanges>
+        <RemoveShotChanges>Szenenwechsel entfernen</RemoveShotChanges>
         <WaveformBatchGenerate>Wellenforme im Stapel generieren...</WaveformBatchGenerate>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
         <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
@@ -1480,7 +1480,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Vor Untertitel verbinden</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Untertitel Verbunden</SubtitlesJoined>
     <StatusLog>Status Log</StatusLog>
-    <XSceneChangesImported>{0} Szenenwechsel importiert</XSceneChangesImported>
+    <XShotChangesImported>{0} Szenenwechsel importiert</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' ausgeführt.</PluginXExecuted>
     <NotAValidXSubFile>Keine gültige XSub Datei!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichen Text</BeforeMergeLinesWithSameText>
@@ -1954,8 +1954,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToNextSceneChange>Zum nächsten Szenenwechsel</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Szenenwechsel umschalten</WaveformToggleSceneChange>
+    <WaveformGoToNextShotChange>Zum nächsten Szenenwechsel</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Szenenwechsel umschalten</WaveformToggleShotChange>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
     <GoForward1Frame>Ein Bild vor</GoForward1Frame>
     <GoBack1FrameWithPlay>Ein Bild zurück (Wiedergabe)</GoBack1FrameWithPlay>
@@ -2394,8 +2394,8 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <ShowWaveformAndSpectrogram>Wellenform/Spektogramm anzeigen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Nur Wellenform anzeigen</ShowWaveformOnly>
     <ShowSpectrogramOnly>Nur Spektogramm anzeigen</ShowSpectrogramOnly>
-    <AddSceneChange>Szenenwechsel einfügen</AddSceneChange>
-    <RemoveSceneChange>Szenenwechsel entfernen</RemoveSceneChange>
+    <AddShotChange>Szenenwechsel einfügen</AddShotChange>
+    <RemoveShotChange>Szenenwechsel entfernen</RemoveShotChange>
     <GuessTimeCodes>Zeitstempel ermitteln...</GuessTimeCodes>
     <SeekSilence>Stille suchen...</SeekSilence>
   </Waveform>

@@ -912,7 +912,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Remove>Αφαίρεση</Remove>
     <RemoveAll>Αφαίρεση όλων</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Δημιουργία/εισαγωγή αλλαγών σκηνών</Title>
     <OpenTextFile>Άνοιγμα αρχείου κειμένου…</OpenTextFile>
     <Generate>Δημιουργία αλλαγών σκηνών</Generate>
@@ -922,11 +922,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Frames>Καρέ</Frames>
     <Seconds>Δευτερόλεπτα</Seconds>
     <Milliseconds>Χιλιοστά δευτερολέπτου</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Δημιουργία αλλαγών σκηνής με FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Δημιουργία αλλαγών σκηνής με FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Ευαισθησία</Sensitivity>
     <SensitivityDescription>Μικρότερη τιμή δίνει περισσότερες αλλαγές σκηνών</SensitivityDescription>
-    <NoSceneChangesFound>Αδυναμία εύρεσης αλλαγών σκηνών.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Αδυναμία εύρεσης αλλαγών σκηνών.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Εισαγωγή απλού κειμένου</Title>
     <OneSubtitleIsOneFile>Πολλαπλά αρχεία - κάθε αρχείο είναι ένας υπότιτλος</OneSubtitleIsOneFile>
@@ -1243,8 +1243,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GenerateVideoWithBurnedInSub>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους…</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Βίντεο/ήχος σε κείμενο…</VideoAudioToText>
         <ImportChaptersFromVideo>Εισαγωγή κεφαλαίων από βίντεο</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Δημιουργία/εισαγωγή αλλαγών σκηνών…</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Αφαίρεση/εξαγωγή αλλαγών σκηνής…</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Δημιουργία/εισαγωγή αλλαγών σκηνών…</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Αφαίρεση/εξαγωγή αλλαγών σκηνής…</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Ομαδική δημιουργία κυματομορφών…</WaveformBatchGenerate>
         <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
         <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
@@ -1699,7 +1699,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplaySubtitleJoin>Πριν την ένωση υποτίτλων</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Υπότιτλοι ενώθηκαν</SubtitlesJoined>
     <StatusLog>Κατάσταση αρχείου καταγραφής</StatusLog>
-    <XSceneChangesImported>Εισαγωγή {0} αλλαγών σκηνής</XSceneChangesImported>
+    <XShotChangesImported>Εισαγωγή {0} αλλαγών σκηνής</XShotChangesImported>
     <PluginXExecuted>Εκτέλεση πρόσθετου '{0}'.</PluginXExecuted>
     <NotAValidXSubFile>Μη έγκυρο αρχείο XSub.</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Πριν από συγχώνευση γραμμών ίδιου κειμένου</BeforeMergeLinesWithSameText>
@@ -2201,7 +2201,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformFocusMouseEnter>Καθορισμός εστίασης δείκτη ποντικιού</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Καθορισμός εστίασης δείκτη ποντικιού στην προβολή λίστας</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Μονό κλικ επιλογής υποτίτλου</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Εικόνα για την αλλαγή σκηνών (κράτημα Shift για παράκαμψη)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Εικόνα για την αλλαγή σκηνών (κράτημα Shift για παράκαμψη)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Αυτόματη δημιουργία κυματομορφής στο άνοιγμα βίντεο</WaveformAutoGen>
     <WaveformBorderHitMs1>Το χτύπημα του πλαισίου σήμανσης πρέπει να βρίσκεται μεταξύ</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>χιλιοστών του δευτερολέπτου.</WaveformBorderHitMs2>
@@ -2346,14 +2346,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Ορισμός χρόνου έναρξης, μετατώπιση όλου του υποτίτλου</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ορισμός λήξης, μετατόπιση υπολοίπων</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ορισμός λήξης, μετατόπιση υπολοίπων και μετάβαση σε επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Επέκταση γραμμών μέχρι την επόμενη αλλαγή σκηνής (ή επόμενο υπότιτλο)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Επέκταση γραμμών σε επόμενη αλλαγή σκηνής με ελάχιστο κενό (ή επόμενο υπότιτλο)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Επέκταση γραμμών μέχρι την προηγούμενη αλλαγή σκηνής (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Επέκταση γραμμών σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Κλείδωμα έναρξης γραμμής σε επόμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Κλείδωμα έναρξης γραμμής σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Επέκταση γραμμών μέχρι την επόμενη αλλαγή σκηνής (ή επόμενο υπότιτλο)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Επέκταση γραμμών σε επόμενη αλλαγή σκηνής με ελάχιστο κενό (ή επόμενο υπότιτλο)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Επέκταση γραμμών μέχρι την προηγούμενη αλλαγή σκηνής (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Επέκταση γραμμών σε προηγούμενη αλλαγή σκηνής με ελάχιστο κενό (ή προηγούμενο υπότιτλο)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Επέκταση γραμμών μέχρι τον επόμενο υπότιτλο</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Επέκταση γραμμών μέχρι τον προηγούμενο υπότιλο</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Επέκταση γραμμής μέχρι τον επόμενο υπότιτλο ή μέγιστη διάρκεια</AdjustExtendCurrentSubtitle>
@@ -2411,10 +2411,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelection>Αναπαραγωγή επιλεγμένου</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Αναπαραγωγή λήξης επιλεγμένου</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Αναπαραγωγή του πρώτου υποτίτλου</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Μετάβαση σε προηγούμενη αλλαγή σκηνής</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Μετάβαση σε επόμενη αλλαγή σκηνής</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Εναλλαγή αλλαγή σκηνής</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Αφαίρεση/εξαγωγή αλλαγών σκηνής</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Μετάβαση σε προηγούμενη αλλαγή σκηνής</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Μετάβαση σε επόμενη αλλαγή σκηνής</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Εναλλαγή αλλαγή σκηνής</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Αφαίρεση/εξαγωγή αλλαγών σκηνής</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Αυτόματη προσαρμογή έναρξης μέσω έντασης/αλλαγή σκηνής</WaveformGuessStart>
     <GoBack1Frame>Πίσω ένα καρέ</GoBack1Frame>
     <GoForward1Frame>Μπροστά ένα καρέ</GoForward1Frame>
@@ -3043,9 +3043,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowWaveformAndSpectrogram>Εμφάνιση κυματομορφής και φασματογράμματος</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Εμφάνιση μόνο κυματομορφής</ShowWaveformOnly>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
-    <AddSceneChange>Προσθήκη αλλαγής σκηνής</AddSceneChange>
-    <RemoveSceneChange>Αφαίρεση αλλαγής σκηνής</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Αφαίρεση αλλαγής σκηνών από επιλογή</RemoveSceneChangesFromSelection>
+    <AddShotChange>Προσθήκη αλλαγής σκηνής</AddShotChange>
+    <RemoveShotChange>Αφαίρεση αλλαγής σκηνής</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Αφαίρεση αλλαγής σκηνών από επιλογή</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Εικασία κωδικών χρόνου…</GuessTimeCodes>
     <SeekSilence>Αναζήτηση σιωπής…</SeekSilence>
     <InsertSubtitleHere>Εισαγωγή υποτίτλου εδώ…</InsertSubtitleHere>

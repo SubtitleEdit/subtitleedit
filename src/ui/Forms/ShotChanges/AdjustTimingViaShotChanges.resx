@@ -117,27 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="audioVisualizer.Chapters" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAIwBbGlic2UsIFZlcnNpb249My42LjYuMTIsIEN1bHR1cmU9bmV1
-        dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbF1dLCBtc2NvcmxpYiwgVmVyc2lvbj00LjAuMC4wLCBDdWx0
-        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkMAwAAAD1saWJzZSwgVmVy
-        c2lvbj0zLjYuNi4xMiwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1udWxsBQEAAABkU3lz
-        dGVtLkNvbGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tOaWtzZS5TdWJ0aXRsZUVkaXQuQ29yZS5Db250
-        YWluZXJGb3JtYXRzLk1hdHJvc2thLk1hdHJvc2thQ2hhcHRlcgMAAAAGX2l0ZW1zBV9zaXplCF92ZXJz
-        aW9uBAAAQ05pa3NlLlN1YnRpdGxlRWRpdC5Db3JlLkNvbnRhaW5lckZvcm1hdHMuTWF0cm9za2EuTWF0
-        cm9za2FDaGFwdGVyW10DAAAACAgCAAAACQQAAAAAAAAAAAAAAAcEAAAAAAEAAAAAAAAABEFOaWtzZS5T
-        dWJ0aXRsZUVkaXQuQ29yZS5Db250YWluZXJGb3JtYXRzLk1hdHJvc2thLk1hdHJvc2thQ2hhcHRlcgMA
-        AAAL
-</value>
-  </data>
-  <data name="audioVisualizer.SceneChanges" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAJoBbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1u
-        ZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0sIG1zY29ybGliLCBWZXJzaW9u
-        PTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4OQUB
-        AAAAMFN5c3RlbS5Db2xsZWN0aW9ucy5HZW5lcmljLkxpc3RgMVtbU3lzdGVtLkRvdWJsZQMAAAAGX2l0
-        ZW1zBV9zaXplCF92ZXJzaW9uBwAABggIAgAAAAkDAAAAAAAAAAAAAAAPAwAAAAAAAAAGCw==
-</value>
-  </data>
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

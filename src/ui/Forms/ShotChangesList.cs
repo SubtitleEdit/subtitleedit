@@ -11,18 +11,18 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class SceneChangesList : Form
+    public sealed partial class ShotChangesList : Form
     {
-        public List<double> SceneChanges { get; set; }
+        public List<double> ShotChanges { get; set; }
         private readonly string _subtitleFileName;
-        public double SceneChangeSeconds { get; private set; }
+        public double ShotChangeSeconds { get; private set; }
 
-        public SceneChangesList(string subtitleFileName, List<double> sceneChanges)
+        public ShotChangesList(string subtitleFileName, List<double> shotChanges)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = LanguageSettings.Current.Settings.WaveformRemoveOrExportSceneChanges;
+            Text = LanguageSettings.Current.Settings.WaveformRemoveOrExportShotChanges;
             buttonExport.Text = LanguageSettings.Current.MultipleReplace.Export;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderStartTime.Text = LanguageSettings.Current.General.StartTime;
             removeToolStripMenuItem.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
 
-            SceneChanges = new List<double>(sceneChanges);
+            ShotChanges = new List<double>(shotChanges);
             _subtitleFileName = subtitleFileName;
 
             FillListView();
@@ -39,44 +39,44 @@ namespace Nikse.SubtitleEdit.Forms
         private void FillListView()
         {
             var i = 0;
-            listViewSceneChanges.BeginUpdate();
-            listViewSceneChanges.Items.Clear();
-            foreach (var sceneChange in SceneChanges)
+            listViewShotChanges.BeginUpdate();
+            listViewShotChanges.Items.Clear();
+            foreach (var shotChange in ShotChanges)
             {
                 i++;
-                ListViewItem item = new ListViewItem("#" + i) { Tag = sceneChange };
-                item.SubItems.Add(TimeCode.FromSeconds(sceneChange).ToDisplayString());
-                listViewSceneChanges.Items.Add(item);
+                ListViewItem item = new ListViewItem("#" + i) { Tag = shotChange };
+                item.SubItems.Add(TimeCode.FromSeconds(shotChange).ToDisplayString());
+                listViewShotChanges.Items.Add(item);
             }
 
-            listViewSceneChanges.EndUpdate();
-            labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {SceneChanges.Count}";
+            listViewShotChanges.EndUpdate();
+            labelCount.Text = $"{LanguageSettings.Current.FindDialog.Count}: {ShotChanges.Count}";
         }
 
-        private void listViewSceneChanges_DoubleClick(object sender, EventArgs e)
+        private void listViewShotChanges_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewSceneChanges.SelectedItems.Count > 0)
+            if (listViewShotChanges.SelectedItems.Count > 0)
             {
-                SceneChangeSeconds = (double)listViewSceneChanges.SelectedItems[0].Tag;
+                ShotChangeSeconds = (double)listViewShotChanges.SelectedItems[0].Tag;
                 DialogResult = DialogResult.OK;
             }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (listViewSceneChanges.SelectedItems.Count > 0)
+            if (listViewShotChanges.SelectedItems.Count > 0)
             {
-                SceneChangeSeconds = (double)listViewSceneChanges.SelectedItems[0].Tag;
+                ShotChangeSeconds = (double)listViewShotChanges.SelectedItems[0].Tag;
                 DialogResult = DialogResult.OK;
             }
 
-            SceneChangeSeconds = -1;
+            ShotChangeSeconds = -1;
             DialogResult = DialogResult.OK;
         }
 
-        private void SceneChangesList_KeyDown(object sender, KeyEventArgs e)
+        private void ShotChangesList_KeyDown(object sender, KeyEventArgs e)
         {
-            if (listViewSceneChanges.Focused && e.KeyCode == Keys.Enter)
+            if (listViewShotChanges.Focused && e.KeyCode == Keys.Enter)
             {
                 buttonOK_Click(sender, e);
             }
@@ -86,38 +86,38 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                listViewSceneChanges.SelectAll();
+                listViewShotChanges.SelectAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
             {
-                listViewSceneChanges.SelectFirstSelectedItemOnly();
+                listViewShotChanges.SelectFirstSelectedItemOnly();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
             {
-                listViewSceneChanges.InverseSelection();
+                listViewShotChanges.InverseSelection();
                 e.SuppressKeyPress = true;
             }
         }
 
-        private void SceneChangesList_ResizeEnd(object sender, EventArgs e)
+        private void ShotChangesList_ResizeEnd(object sender, EventArgs e)
         {
-            listViewSceneChanges.AutoSizeLastColumn();
+            listViewShotChanges.AutoSizeLastColumn();
         }
 
-        private void SceneChangesList_Shown(object sender, EventArgs e)
+        private void ShotChangesList_Shown(object sender, EventArgs e)
         {
-            SceneChangesList_ResizeEnd(sender, e);
-            listViewSceneChanges.Focus();
+            ShotChangesList_ResizeEnd(sender, e);
+            listViewShotChanges.Focus();
         }
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            ExportSceneChanges(SceneChanges, this);
+            ExportShotChanges(ShotChanges, this);
         }
 
-        public void ExportSceneChanges(List<double> sceneChanges, Form form)
+        public void ExportShotChanges(List<double> shotChanges, Form form)
         {
             using (var saveDialog = new SaveFileDialog { FileName = GetFileName(), Filter = "Seconds|*.txt|Milliseconds|*.txt|Frames|*.txt" })
             {
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var sb = new StringBuilder();
-                foreach (var sc in sceneChanges)
+                foreach (var sc in shotChanges)
                 {
                     if (saveDialog.FilterIndex == 1)
                     {
@@ -151,21 +151,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (string.IsNullOrEmpty(_subtitleFileName))
             {
-                return "scene_changes.txt";
+                return "shot_changes.txt";
             }
 
-            return Path.GetFileNameWithoutExtension(_subtitleFileName) + "_scene_changes.txt";
+            return Path.GetFileNameWithoutExtension(_subtitleFileName) + "_shot_changes.txt";
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listViewSceneChanges.SelectedItems.Count == 0)
+            if (listViewShotChanges.SelectedItems.Count == 0)
             {
                 return;
             }
 
-            string askText = listViewSceneChanges.SelectedItems.Count > 1 ?
-                string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewSceneChanges.SelectedItems.Count) :
+            string askText = listViewShotChanges.SelectedItems.Count > 1 ?
+                string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewShotChanges.SelectedItems.Count) :
                 LanguageSettings.Current.Main.DeleteOneLinePrompt;
 
             if (Configuration.Settings.General.PromptDeleteLines
@@ -175,14 +175,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var indices = new List<int>();
-            foreach (ListViewItem selectedItem in listViewSceneChanges.SelectedItems)
+            foreach (ListViewItem selectedItem in listViewShotChanges.SelectedItems)
             {
                 indices.Add(selectedItem.Index);
             }
 
             foreach (var index in indices.OrderByDescending(p=>p))
             {
-                SceneChanges.RemoveAt(index);
+                ShotChanges.RemoveAt(index);
             }
 
             FillListView();

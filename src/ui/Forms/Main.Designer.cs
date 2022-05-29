@@ -230,8 +230,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.setVideoOffsetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smpteTimeModedropFrameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportChapters = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemListSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportShotChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemListShotChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAddWaveformBatch = new System.Windows.Forms.ToolStripMenuItem();
             this.generateBlankVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -442,8 +442,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.showOnlyWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlySpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorGuessTimeCodes = new System.Windows.Forms.ToolStripSeparator();
-            this.removeSceneChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addSceneChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeShotChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addShotChangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.guessTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.seekSilenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertSubtitleHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2177,8 +2177,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.setVideoOffsetToolStripMenuItem,
             this.smpteTimeModedropFrameToolStripMenuItem,
             this.toolStripMenuItemImportChapters,
-            this.toolStripMenuItemImportSceneChanges,
-            this.toolStripMenuItemListSceneChanges,
+            this.toolStripMenuItemImportShotChanges,
+            this.toolStripMenuItemListShotChanges,
             this.toolStripMenuItemAddWaveformBatch,
             this.generateBlankVideoToolStripMenuItem,
             this.generateVideoWithHardcodedSubtitleToolStripMenuItem,
@@ -2257,19 +2257,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemImportChapters.Text = "Import chapters from video...";
             this.toolStripMenuItemImportChapters.Click += new System.EventHandler(this.toolStripMenuItemImportChapters_Click);
             // 
-            // toolStripMenuItemImportSceneChanges
+            // toolStripMenuItemImportShotChanges
             // 
-            this.toolStripMenuItemImportSceneChanges.Name = "toolStripMenuItemImportSceneChanges";
-            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(295, 22);
-            this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
-            this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
+            this.toolStripMenuItemImportShotChanges.Name = "toolStripMenuItemImportShotChanges";
+            this.toolStripMenuItemImportShotChanges.Size = new System.Drawing.Size(295, 22);
+            this.toolStripMenuItemImportShotChanges.Text = "Import shot changes...";
+            this.toolStripMenuItemImportShotChanges.Click += new System.EventHandler(this.toolStripMenuItemImportShotChanges_Click);
             // 
-            // toolStripMenuItemListSceneChanges
+            // toolStripMenuItemListShotChanges
             // 
-            this.toolStripMenuItemListSceneChanges.Name = "toolStripMenuItemListSceneChanges";
-            this.toolStripMenuItemListSceneChanges.Size = new System.Drawing.Size(295, 22);
-            this.toolStripMenuItemListSceneChanges.Text = "List scene changes";
-            this.toolStripMenuItemListSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemListSceneChanges_Click);
+            this.toolStripMenuItemListShotChanges.Name = "toolStripMenuItemListShotChanges";
+            this.toolStripMenuItemListShotChanges.Size = new System.Drawing.Size(295, 22);
+            this.toolStripMenuItemListShotChanges.Text = "List shot changes";
+            this.toolStripMenuItemListShotChanges.Click += new System.EventHandler(this.toolStripMenuItemListShotChanges_Click);
             // 
             // toolStripMenuItemAddWaveformBatch
             // 
@@ -4069,8 +4069,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem,
             this.toolStripSeparatorGuessTimeCodes,
-            this.removeSceneChangeToolStripMenuItem,
-            this.addSceneChangeToolStripMenuItem,
+            this.removeShotChangeToolStripMenuItem,
+            this.addShotChangeToolStripMenuItem,
             this.guessTimeCodesToolStripMenuItem,
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
@@ -4211,19 +4211,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorGuessTimeCodes.Name = "toolStripSeparatorGuessTimeCodes";
             this.toolStripSeparatorGuessTimeCodes.Size = new System.Drawing.Size(271, 6);
             // 
-            // removeSceneChangeToolStripMenuItem
+            // removeShotChangeToolStripMenuItem
             // 
-            this.removeSceneChangeToolStripMenuItem.Name = "removeSceneChangeToolStripMenuItem";
-            this.removeSceneChangeToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.removeSceneChangeToolStripMenuItem.Text = "Remove scene change";
-            this.removeSceneChangeToolStripMenuItem.Click += new System.EventHandler(this.removeSceneChangeToolStripMenuItem_Click);
+            this.removeShotChangeToolStripMenuItem.Name = "removeShotChangeToolStripMenuItem";
+            this.removeShotChangeToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.removeShotChangeToolStripMenuItem.Text = "Remove shot change";
+            this.removeShotChangeToolStripMenuItem.Click += new System.EventHandler(this.removeShotChangeToolStripMenuItem_Click);
             // 
-            // addSceneChangeToolStripMenuItem
+            // addShotChangeToolStripMenuItem
             // 
-            this.addSceneChangeToolStripMenuItem.Name = "addSceneChangeToolStripMenuItem";
-            this.addSceneChangeToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.addSceneChangeToolStripMenuItem.Text = "Add scene change";
-            this.addSceneChangeToolStripMenuItem.Click += new System.EventHandler(this.addSceneChangeToolStripMenuItem_Click);
+            this.addShotChangeToolStripMenuItem.Name = "addShotChangeToolStripMenuItem";
+            this.addShotChangeToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.addShotChangeToolStripMenuItem.Text = "Add shot change";
+            this.addShotChangeToolStripMenuItem.Click += new System.EventHandler(this.addShotChangeToolStripMenuItem_Click);
             // 
             // guessTimeCodesToolStripMenuItem
             // 
@@ -5430,7 +5430,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.audioVisualizer.Name = "audioVisualizer";
             this.audioVisualizer.NewSelectionParagraph = null;
             this.audioVisualizer.ParagraphColor = System.Drawing.Color.LimeGreen;
-            this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
+            this.audioVisualizer.ShotChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.ShotChanges")));
             this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
             this.audioVisualizer.ShowGridLines = true;
             this.audioVisualizer.ShowSpectrogram = false;
@@ -5956,8 +5956,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpellCheckFromCurrentLine;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportChapters;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemListSceneChanges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportShotChanges;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemListShotChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubtitlesBridgeGaps;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenDvd;
         private System.Windows.Forms.ToolStripMenuItem styleToolStripMenuItem;
@@ -5983,8 +5983,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelProgress;
         private System.Windows.Forms.ToolStripButton toolStripButtonFixCommonErrors;
-        private System.Windows.Forms.ToolStripMenuItem removeSceneChangeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addSceneChangeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeShotChangeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addShotChangeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem netflixQualityCheckToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonNetflixQualityCheck;
         private System.Windows.Forms.ToolStripMenuItem setActorForSelectedLinesToolStripMenuItem;

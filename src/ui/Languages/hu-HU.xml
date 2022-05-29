@@ -912,7 +912,7 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
     <Remove>Eltávolítás</Remove>
     <RemoveAll>Összes eltávolítása</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Jelenetváltozások létrehozása/importálása</Title>
     <OpenTextFile>Szövegfájl megnyitása...</OpenTextFile>
     <Generate>Jelenetváltozások létrehozása</Generate>
@@ -922,11 +922,11 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
     <Frames>Képkockák</Frames>
     <Seconds>Másodperc</Seconds>
     <Milliseconds>Ezredmásodperc</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Jelenetváltások létrehozása az FFmpeg segítségével</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Jelenetváltások létrehozása az FFmpeg segítségével</GetShotChangesWithFfmpeg>
     <Sensitivity>Érzékenység</Sensitivity>
     <SensitivityDescription>Az alacsonyabb érték több jelenetváltozást eredményez</SensitivityDescription>
-    <NoSceneChangesFound>Nem található jelenetváltozás.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nem található jelenetváltozás.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Egyszerű szöveg importálása</Title>
     <OneSubtitleIsOneFile>Több fájl - egy fájl egy felirat</OneSubtitleIsOneFile>
@@ -1243,8 +1243,8 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
         <GenerateVideoWithBurnedInSub>Videó létrehozása égetett felirattal...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Videó/hang szöveggé alakítása...</VideoAudioToText>
         <ImportChaptersFromVideo>Fejezetek importálása videóból</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Jelenetváltozások létrehozása/importálása...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Jelenetváltozások eltávolítása/exportálása...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Jelenetváltozások létrehozása/importálása...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Jelenetváltozások eltávolítása/exportálása...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Hullámformák csoportos létrehozása...</WaveformBatchGenerate>
         <ShowHideVideo>Videó megjelenítése/elrejtése</ShowHideVideo>
         <ShowHideWaveform>Hullámforma megjelenítése/elrejtése</ShowHideWaveform>
@@ -1699,7 +1699,7 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>A feliratok egyesítése előtti állapotra</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Feliratok egyesítve</SubtitlesJoined>
     <StatusLog>Állapotnapló</StatusLog>
-    <XSceneChangesImported>{0} jelenet változás importálása</XSceneChangesImported>
+    <XShotChangesImported>{0} jelenet változás importálása</XShotChangesImported>
     <PluginXExecuted>'{0}' beépülő végrehajtva.</PluginXExecuted>
     <NotAValidXSubFile>Érvénytelen XSub fájl!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>A sorok azonos szöveggel való összevonása előtti állapotra</BeforeMergeLinesWithSameText>
@@ -2198,7 +2198,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformFocusMouseEnter>Fókusz beállítása az egér belépésekor</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Listanézeti fókusz beállítása az egér listanézetbe való belépése esetén</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Egyetlen kattintás a feliratok kiválasztásához</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Igazítás a jelenetváltozásokhoz (tartsa lenyomva a Shift billentyűt a felülíráshoz)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Igazítás a jelenetváltozásokhoz (tartsa lenyomva a Shift billentyűt a felülíráshoz)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Hullámforma automatikus generálása a videó megnyitásakor</WaveformAutoGen>
     <WaveformBorderHitMs1>A határjelölő</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>ezredmásodpercen belül legyen</WaveformBorderHitMs2>
@@ -2341,14 +2341,14 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Kezdési időpont beállítása, a teljes felirat eltolása</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>A befejezés és a többi eltolás beállítása</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>A kiválasztott sorok igazítása a következő jelenetváltáshoz</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>A kiválasztott sorok igazítása a következő jelenetváltáshoz min. távolsággal</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>A kiválasztott sorok igazítása az előző jelenetváltáshoz</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>A kiválasztott sorok igazítása az előző jelenetváltáshoz min. távolsággal</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Kijelölt sorok kiterjesztése a következő jelenetváltásra (vagy a következő feliratra)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy a következő felirat) használatával</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Kijelölt sorok kiterjesztése az előző jelenetváltásra (vagy az előző feliratra)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy az előző felirat) használatával</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>A kiválasztott sorok igazítása a következő jelenetváltáshoz</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>A kiválasztott sorok igazítása a következő jelenetváltáshoz min. távolsággal</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>A kiválasztott sorok igazítása az előző jelenetváltáshoz</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>A kiválasztott sorok igazítása az előző jelenetváltáshoz min. távolsággal</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Kijelölt sorok kiterjesztése a következő jelenetváltásra (vagy a következő feliratra)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy a következő felirat) használatával</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Kijelölt sorok kiterjesztése az előző jelenetváltásra (vagy az előző feliratra)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy az előző felirat) használatával</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Kijelölt sorok kiterjesztése a következő feliratra</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Kijelölt sorok kiterjesztése az előző feliratra</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Az aktuális sor kibővítése a következő feliratra vagy max időtartamra</AdjustExtendCurrentSubtitle>
@@ -2406,10 +2406,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformPlayNewSelection>Új kijelölés lejátszása</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Kijelölés végének lejátszása</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Az első kiválasztott felirat lejátszása</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Ugrás az előző jelenetváltásra</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Ugrás a következő jelenet váltásra</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Jelenet váltás kapcsoló</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Jelenetváltozások eltávolítása/exportálása</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Ugrás az előző jelenetváltásra</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Ugrás a következő jelenet váltásra</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Jelenet váltás kapcsoló</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Jelenetváltozások eltávolítása/exportálása</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Automatikus beállítás indítása a hangerő/jelenet váltásán keresztül</WaveformGuessStart>
     <GoBack1Frame>Egy képkocka vissza</GoBack1Frame>
     <GoForward1Frame>Egy képkocka előre</GoForward1Frame>
@@ -3038,9 +3038,9 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Hullámforma és spektogram megjelenítése</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Hullámforma megjelenítése</ShowWaveformOnly>
     <ShowSpectrogramOnly>Spektogram megjelenítése</ShowSpectrogramOnly>
-    <AddSceneChange>Jelenet váltás hozzáadása</AddSceneChange>
-    <RemoveSceneChange>Jelenet váltás eltávolítása</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Jelenetváltozások eltávolítása a kijelölésből</RemoveSceneChangesFromSelection>
+    <AddShotChange>Jelenet váltás hozzáadása</AddShotChange>
+    <RemoveShotChange>Jelenet váltás eltávolítása</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Jelenetváltozások eltávolítása a kijelölésből</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Időkódok becslése...</GuessTimeCodes>
     <SeekSilence>Csend keresése...</SeekSilence>
     <InsertSubtitleHere>Szúrja be a feliratot ide...</InsertSubtitleHere>

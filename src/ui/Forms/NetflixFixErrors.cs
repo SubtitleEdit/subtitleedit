@@ -69,16 +69,16 @@ namespace Nikse.SubtitleEdit.Forms
             int halfSecGapInFrames = (int)Math.Round(_frameRate / 2, MidpointRounding.AwayFromZero);
             checkBoxGapBridge.Text = $"Frame gap: 3 to {halfSecGapInFrames - 1} frames => 2 frames";
 
-            var sceneChangesExist = false;
+            var shotChangesExist = false;
             if (_netflixQualityController.VideoExists)
             {
-                if (SceneChangeHelper.FromDisk(_videoFileName).Count > 0)
+                if (ShotChangeHelper.FromDisk(_videoFileName).Count > 0)
                 {
-                    sceneChangesExist = true;
+                    shotChangesExist = true;
                 }
             }
-            checkBoxSceneChange.Checked = sceneChangesExist;
-            checkBoxSceneChange.Enabled = sceneChangesExist;
+            checkBoxShotChange.Checked = shotChangesExist;
+            checkBoxShotChange.Enabled = shotChangesExist;
 
             var checkFrameRate = _subtitleFormat.GetType() == new NetflixTimedText().GetType();
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
@@ -271,9 +271,9 @@ namespace Nikse.SubtitleEdit.Forms
                 list.Add(new NetflixCheckWhiteSpace());
             }
 
-            if (checkBoxSceneChange.Checked)
+            if (checkBoxShotChange.Checked)
             {
-                list.Add(new NetflixCheckSceneChange());
+                list.Add(new NetflixCheckShotChange());
             }
 
             return list;

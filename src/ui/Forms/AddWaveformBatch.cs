@@ -40,14 +40,14 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Text = l.ScanFolder;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
-            checkBoxGenerateSceneChanges.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
-            checkBoxGenerateSceneChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateSceneChanges.Width;
-            checkBoxGenerateSceneChanges.Visible = !Configuration.IsRunningOnWindows ||
+            checkBoxGenerateShotChanges.Text = LanguageSettings.Current.ImportShotChanges.GetShotChangesWithFfmpeg;
+            checkBoxGenerateShotChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateShotChanges.Width;
+            checkBoxGenerateShotChanges.Visible = !Configuration.IsRunningOnWindows ||
                                                    (!string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) &&
                                                     File.Exists(Configuration.Settings.General.FFmpegLocation));
-            if (checkBoxGenerateSceneChanges.Visible)
+            if (checkBoxGenerateShotChanges.Visible)
             {
-                checkBoxGenerateSceneChanges.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
+                checkBoxGenerateShotChanges.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
             }
 
             removeToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Remove;
@@ -366,9 +366,9 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
-                    if (checkBoxGenerateSceneChanges.Visible && checkBoxGenerateSceneChanges.Checked)
+                    if (checkBoxGenerateShotChanges.Visible && checkBoxGenerateShotChanges.Checked)
                     {
-                        GenerateSceneChanges(fileName);
+                        GenerateShotChanges(fileName);
                     }
 
                     // cleanup
@@ -403,15 +403,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Enabled = true;
         }
 
-        private void GenerateSceneChanges(string videoFileName)
+        private void GenerateShotChanges(string videoFileName)
         {
-            var sceneChangesGenerator = new SceneChangesGenerator();
+            var shotChangesGenerator = new ShotChangesGenerator();
             var threshold = 0.4m;
             if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
             {
                 threshold = d;
             }
-            using (var process = sceneChangesGenerator.GetProcess(videoFileName, threshold))
+            using (var process = shotChangesGenerator.GetProcess(videoFileName, threshold))
             {
                 while (!process.HasExited)
                 {
@@ -425,10 +425,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            var seconds = SceneChangesGenerator.GetSeconds(sceneChangesGenerator.GetTimeCodesString().SplitToLines().ToArray());
+            var seconds = ShotChangesGenerator.GetSeconds(shotChangesGenerator.GetTimeCodesString().SplitToLines().ToArray());
             if (seconds.Count > 0)
             {
-                SceneChangeHelper.SaveSceneChanges(videoFileName, seconds);
+                ShotChangeHelper.SaveShotChanges(videoFileName, seconds);
             }
         }
 

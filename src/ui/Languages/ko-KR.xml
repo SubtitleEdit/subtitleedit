@@ -909,7 +909,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Remove>제거</Remove>
     <RemoveAll>모두 제거</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>장면 전환 생성/가져오기</Title>
     <OpenTextFile>텍스트 파일 열기...</OpenTextFile>
     <Generate>장면 전환 생성</Generate>
@@ -919,11 +919,11 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Frames>프레임</Frames>
     <Seconds>초</Seconds>
     <Milliseconds>밀리초</Milliseconds>
-    <GetSceneChangesWithFfmpeg>FFmpeg으로 장면 전환 가져오기</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>FFmpeg으로 장면 전환 가져오기</GetShotChangesWithFfmpeg>
     <Sensitivity>민감도</Sensitivity>
     <SensitivityDescription>값을 낮추면 장면이 더 많이 전환됨</SensitivityDescription>
-    <NoSceneChangesFound>장면 전환 없음</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>장면 전환 없음</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>일반 텍스트 파일로 새 자막 구성</Title>
     <OneSubtitleIsOneFile>여러 파일 - 한 개의 파일이 하나의 자막</OneSubtitleIsOneFile>
@@ -1240,8 +1240,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GenerateVideoWithBurnedInSub>자막 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>비디오/오디오를 텍스트로...</VideoAudioToText>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>장면 전환 생성/가져오기...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>장면 전환 제거/내보내기...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>장면 전환 생성/가져오기...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>장면 전환 제거/내보내기...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
         <ShowHideWaveform>오디오 표시 | 숨김</ShowHideWaveform>
@@ -1698,7 +1698,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BeforeDisplaySubtitleJoin>새 자막 등록 전</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>새 자막이 등록됐습니다.</SubtitlesJoined>
     <StatusLog>* 로그 기록</StatusLog>
-    <XSceneChangesImported>{0}개의 장면 전환을 가져왔습니다.</XSceneChangesImported>
+    <XShotChangesImported>{0}개의 장면 전환을 가져왔습니다.</XShotChangesImported>
     <PluginXExecuted>'{0}' 플러그 인이 실행됐습니다.</PluginXExecuted>
     <NotAValidXSubFile>유효한 XSub 파일이 아닙니다!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>동일한 텍스트 라인 병합하기 전</BeforeMergeLinesWithSameText>
@@ -2200,7 +2200,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformFocusMouseEnter>마우스 입력에 초점 놓기</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>「자막 보기」에서 마우스 입력에 초점 놓기</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>한 번 클릭으로 자막을 선택</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>스냅으로 장면 변경 (다시 지정하려면 Shift 누름)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>스냅으로 장면 변경 (다시 지정하려면 Shift 누름)</WaveformSnapToShotChanges>
     <WaveformAutoGen>비디오를 열 때 파형 자동 생성</WaveformAutoGen>
     <WaveformBorderHitMs1>다음 시간 이하로 테두리 표시:</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>밀리초</WaveformBorderHitMs2>
@@ -2345,14 +2345,14 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AdjustSetStartAndOffsetTheWholeSubtitle>시작 시간을 설정하고 전체 자막을 오프셋합니다.</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>선택한 줄의 시작을 다음 장면 변경에 맞춤</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>선택한 줄의 시작을 최소 간격으로 다음 장면 변경에 맞춤</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>선택한 줄의 끝을 이전 장면 변경에 맞춤</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>선택한 줄의 끝을 최소 간격으로 이전 장면 변경에 맞춤</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>선택한 줄을 다음 장면 변경으로 확장 (또는 다음 자막)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>선택한 줄을 다음 장면 변경으로 최소 간격으로 확장 (또는 다음 자막)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>선택한 줄을 이전 장면 변경으로 확장 (또는 이전 자막)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>선택한 줄을 최소 간격으로 이전 장면 변경으로 확장 (또는 이전 자막)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>선택한 줄의 시작을 다음 장면 변경에 맞춤</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>선택한 줄의 시작을 최소 간격으로 다음 장면 변경에 맞춤</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>선택한 줄의 끝을 이전 장면 변경에 맞춤</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>선택한 줄의 끝을 최소 간격으로 이전 장면 변경에 맞춤</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>선택한 줄을 다음 장면 변경으로 확장 (또는 다음 자막)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>선택한 줄을 다음 장면 변경으로 최소 간격으로 확장 (또는 다음 자막)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>선택한 줄을 이전 장면 변경으로 확장 (또는 이전 자막)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>선택한 줄을 최소 간격으로 이전 장면 변경으로 확장 (또는 이전 자막)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>선택한 줄을 다음 자막으로 확장</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>선택한 줄을 이전 자막으로 확장</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
@@ -2410,10 +2410,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>이전 장면 전환으로 이동</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>장면 전환 제거/내보내기</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>이전 장면 전환으로 이동</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>다음 장면 전환으로 이동</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>장면 전환</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>장면 전환 제거/내보내기</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>볼륨/장면 전환을 통한 자동 조정</WaveformGuessStart>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
     <GoForward1Frame>1프레임 앞으로</GoForward1Frame>
@@ -3044,9 +3044,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ShowWaveformAndSpectrogram>파형 및 스펙트로그램 표시</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>파형만 표시</ShowWaveformOnly>
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
-    <AddSceneChange>장면 전환 추가</AddSceneChange>
-    <RemoveSceneChange>장면 전환 제거</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>선택에서 장면 전환 제거</RemoveSceneChangesFromSelection>
+    <AddShotChange>장면 전환 추가</AddShotChange>
+    <RemoveShotChange>장면 전환 제거</RemoveShotChange>
+    <RemoveShotChangesFromSelection>선택에서 장면 전환 제거</RemoveShotChangesFromSelection>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
     <InsertSubtitleHere>여기에 자막 삽입...</InsertSubtitleHere>

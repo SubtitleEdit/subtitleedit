@@ -264,11 +264,11 @@
     <Compile Include="Forms\Ocr\WordSplitDictionaryGenerator.Designer.cs">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SceneChangesList.cs">
+    <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SceneChangesList.Designer.cs">
-      <DependentUpon>SceneChangesList.cs</DependentUpon>
+    <Compile Include="Forms\ShotChangesList.Designer.cs">
+      <DependentUpon>ShotChangesList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DownloadYouTubeDl.cs">
       <SubType>Form</SubType>
@@ -420,10 +420,10 @@
     <Compile Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.Designer.cs">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SceneChanges\AdjustTimingViaShotChanges.cs">
+    <Compile Include="Forms\ShotChanges\AdjustTimingViaShotChanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SceneChanges\AdjustTimingViaShotChanges.Designer.cs">
+    <Compile Include="Forms\ShotChanges\AdjustTimingViaShotChanges.Designer.cs">
       <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SeJobs\SeJobExport.cs">
@@ -642,11 +642,11 @@
     <Compile Include="Forms\ImportImages.Designer.cs">
       <DependentUpon>ImportImages.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SceneChanges\ImportSceneChanges.cs">
+    <Compile Include="Forms\ShotChanges\ImportShotChanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SceneChanges\ImportSceneChanges.Designer.cs">
-      <DependentUpon>ImportSceneChanges.cs</DependentUpon>
+    <Compile Include="Forms\ShotChanges\ImportShotChanges.Designer.cs">
+      <DependentUpon>ImportShotChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ImportUnknownFormat.cs">
       <SubType>Form</SubType>
@@ -1294,7 +1294,7 @@
     <Compile Include="Logic\Networking\SeNetworkService.cs" />
     <Compile Include="Logic\PathHelper.cs" />
     <Compile Include="Logic\ReplaceAllHelper.cs" />
-    <Compile Include="Logic\SceneChangesGenerator.cs" />
+    <Compile Include="Logic\ShotChangesGenerator.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
@@ -1454,8 +1454,8 @@
     <EmbeddedResource Include="Forms\Ocr\WordSplitDictionaryGenerator.resx">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SceneChangesList.resx">
-      <DependentUpon>SceneChangesList.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ShotChangesList.resx">
+      <DependentUpon>ShotChangesList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadYouTubeDl.resx">
       <DependentUpon>DownloadYouTubeDl.cs</DependentUpon>
@@ -1533,7 +1533,7 @@
     <EmbeddedResource Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SceneChanges\AdjustTimingViaShotChanges.resx">
+    <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
       <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SeJobs\SeJobExport.resx">
@@ -1637,8 +1637,8 @@
     <EmbeddedResource Include="Forms\ImportImages.resx">
       <DependentUpon>ImportImages.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SceneChanges\ImportSceneChanges.resx">
-      <DependentUpon>ImportSceneChanges.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ShotChanges\ImportShotChanges.resx">
+      <DependentUpon>ImportShotChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportUnknownFormat.resx">
       <DependentUpon>ImportUnknownFormat.cs</DependentUpon>
