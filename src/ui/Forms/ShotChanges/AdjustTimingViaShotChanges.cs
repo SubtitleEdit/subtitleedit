@@ -50,5 +50,23 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
 
             audioVisualizer.SetPosition(startPositionSeconds, _subtitle, currentVideoPositionSeconds, subtitleIndex, selectedIndices);
         }
+
+        private void AdjustTimingViaShotChanges_ResizeEnd(object sender, System.EventArgs e)
+        {
+            audioVisualizer.Invalidate();
+        }
+
+        private void AdjustTimingViaShotChanges_Resize(object sender, System.EventArgs e)
+        {
+            audioVisualizer.Invalidate();
+        }
+
+        private void AdjustTimingViaShotChanges_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }

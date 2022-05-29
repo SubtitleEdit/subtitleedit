@@ -12,8 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private readonly Subtitle _subtitle;
         private readonly XmlDocument _xml;
-        private readonly XmlNamespaceManager _nsmgr;
-        private readonly string _NA;
+        private readonly XmlNamespaceManager _namespaceManager;
 
         public TimedTextProperties(Subtitle subtitle)
         {
@@ -23,11 +22,11 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
 
             _subtitle = subtitle;
-            _NA = "[" + LanguageSettings.Current.General.NotAvailable + "]";
-            comboBoxDropMode.Items[0] = _NA;
-            comboBoxTimeBase.Items[0] = _NA;
-            comboBoxDefaultStyle.Items.Add(_NA);
-            comboBoxDefaultRegion.Items.Add(_NA);
+            var notAvailable = "[" + LanguageSettings.Current.General.NotAvailable + "]";
+            comboBoxDropMode.Items[0] = notAvailable;
+            comboBoxTimeBase.Items[0] = notAvailable;
+            comboBoxDefaultStyle.Items.Add(notAvailable);
+            comboBoxDefaultRegion.Items.Add(notAvailable);
 
             _xml = new XmlDocument();
             try
@@ -39,19 +38,19 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitle.Header = new TimedText10().ToText(new Subtitle(), "tt");
                 _xml.LoadXml(subtitle.Header); // load default xml
             }
-            _nsmgr = new XmlNamespaceManager(_xml.NameTable);
-            _nsmgr.AddNamespace("ttml", TimedText10.TtmlNamespace);
-            _nsmgr.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
-            _nsmgr.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
-            _nsmgr.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
+            _namespaceManager = new XmlNamespaceManager(_xml.NameTable);
+            _namespaceManager.AddNamespace("ttml", TimedText10.TtmlNamespace);
+            _namespaceManager.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
+            _namespaceManager.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
+            _namespaceManager.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
+            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
             if (node != null)
             {
                 textBoxTitle.Text = node.InnerText;
             }
 
-            node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _nsmgr);
+            node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _namespaceManager);
             if (node != null)
             {
                 textBoxDescription.Text = node.InnerText;
@@ -99,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string style in TimedText10.GetStylesFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultStyle.Items.Add(style);
-                node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
+                node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
                 if (node?.Attributes?["style"] != null && style == node.Attributes["style"].Value)
                 {
                     comboBoxDefaultStyle.SelectedIndex = comboBoxDefaultStyle.Items.Count - 1;
@@ -108,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string region in TimedText10.GetRegionsFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultRegion.Items.Add(region);
-                node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
+                node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
                 if (node?.Attributes?["region"] != null && region == node.Attributes["region"].Value)
                 {
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
@@ -147,12 +146,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
+            XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _namespaceManager);
             if (node != null)
             {
                 if (string.IsNullOrWhiteSpace(textBoxTitle.Text) && string.IsNullOrWhiteSpace(textBoxDescription.Text))
                 {
-                    _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr).RemoveChild(_xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _nsmgr));
+                    _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager).RemoveChild(_xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager));
                 }
                 else
                 {
@@ -161,47 +160,47 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (!string.IsNullOrWhiteSpace(textBoxTitle.Text))
             {
-                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
+                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager);
                 if (head == null)
                 {
-                    head = _xml.CreateElement("ttml", "head", _nsmgr.LookupNamespace("ttml"));
+                    head = _xml.CreateElement("ttml", "head", _namespaceManager.LookupNamespace("ttml"));
                     _xml.DocumentElement.PrependChild(head);
                 }
 
-                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _nsmgr);
+                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager);
                 if (metadata == null)
                 {
-                    metadata = _xml.CreateElement("ttml", "metadata", _nsmgr.LookupNamespace("ttml"));
+                    metadata = _xml.CreateElement("ttml", "metadata", _namespaceManager.LookupNamespace("ttml"));
                     head.PrependChild(metadata);
                 }
 
-                var title = _xml.CreateElement("ttml", "title", _nsmgr.LookupNamespace("ttml"));
+                var title = _xml.CreateElement("ttml", "title", _namespaceManager.LookupNamespace("ttml"));
                 metadata.InnerText = textBoxTitle.Text;
                 metadata.AppendChild(title);
             }
 
-            node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _nsmgr);
+            node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _namespaceManager);
             if (node != null)
             {
                 node.InnerText = textBoxDescription.Text;
             }
             else if (!string.IsNullOrWhiteSpace(textBoxDescription.Text))
             {
-                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
+                var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _namespaceManager);
                 if (head == null)
                 {
-                    head = _xml.CreateElement("ttml", "head", _nsmgr.LookupNamespace("ttml"));
+                    head = _xml.CreateElement("ttml", "head", _namespaceManager.LookupNamespace("ttml"));
                     _xml.DocumentElement.PrependChild(head);
                 }
 
-                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _nsmgr);
+                var metadata = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _namespaceManager);
                 if (metadata == null)
                 {
-                    metadata = _xml.CreateElement("ttml", "metadata", _nsmgr.LookupNamespace("ttml"));
+                    metadata = _xml.CreateElement("ttml", "metadata", _namespaceManager.LookupNamespace("ttml"));
                     head.PrependChild(metadata);
                 }
 
-                var desc = _xml.CreateElement("ttml", "desc", _nsmgr.LookupNamespace("ttml"));
+                var desc = _xml.CreateElement("ttml", "desc", _namespaceManager.LookupNamespace("ttml"));
                 desc.InnerText = textBoxDescription.Text;
                 metadata.AppendChild(desc);
             }
@@ -217,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxLanguage.Text.Length > 0)
             {
-                attr = _xml.CreateAttribute("xml", "lang", _nsmgr.LookupNamespace("xml"));
+                attr = _xml.CreateAttribute("xml", "lang", _namespaceManager.LookupNamespace("xml"));
                 attr.Value = comboBoxLanguage.Text;
                 _xml.DocumentElement.Attributes.Prepend(attr);
             }
@@ -233,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxTimeBase.Text.Length > 0)
             {
-                attr = _xml.CreateAttribute("ttp", "timeBase", _nsmgr.LookupNamespace("ttp"));
+                attr = _xml.CreateAttribute("ttp", "timeBase", _namespaceManager.LookupNamespace("ttp"));
                 attr.Value = comboBoxTimeBase.Text;
                 _xml.DocumentElement.Attributes.Append(attr);
             }
@@ -249,7 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxFrameRate.Text.Length > 0)
             {
-                attr = _xml.CreateAttribute("ttp", "frameRate", _nsmgr.LookupNamespace("ttp"));
+                attr = _xml.CreateAttribute("ttp", "frameRate", _namespaceManager.LookupNamespace("ttp"));
                 attr.Value = comboBoxFrameRate.Text;
                 _xml.DocumentElement.Attributes.Append(attr);
             }
@@ -265,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxFrameRateMultiplier.Text.Length > 0)
             {
-                attr = _xml.CreateAttribute("ttp", "frameRateMultiplier", _nsmgr.LookupNamespace("ttp"));
+                attr = _xml.CreateAttribute("ttp", "frameRateMultiplier", _namespaceManager.LookupNamespace("ttp"));
                 attr.Value = comboBoxFrameRateMultiplier.Text;
                 _xml.DocumentElement.Attributes.Append(attr);
             }
@@ -281,12 +280,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxDropMode.Text.Length > 0)
             {
-                attr = _xml.CreateAttribute("ttp", "dropMode", _nsmgr.LookupNamespace("ttp"));
+                attr = _xml.CreateAttribute("ttp", "dropMode", _namespaceManager.LookupNamespace("ttp"));
                 attr.Value = comboBoxDropMode.Text;
                 _xml.DocumentElement.Attributes.Append(attr);
             }
 
-            node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
+            node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
             if (node != null && node.Attributes["style"] != null)
             {
                 node.Attributes["style"].Value = comboBoxDefaultStyle.Text;
@@ -298,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
                 node.Attributes.Append(attr);
             }
 
-            node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
+            node = _xml.DocumentElement.SelectSingleNode("ttml:body", _namespaceManager);
             if (node != null && node.Attributes["region"] != null)
             {
                 node.Attributes["region"].Value = comboBoxDefaultRegion.Text;
@@ -332,5 +331,12 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private void TimedTextProperties_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }
