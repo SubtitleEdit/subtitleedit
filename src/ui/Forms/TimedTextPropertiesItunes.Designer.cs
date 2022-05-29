@@ -32,6 +32,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
             this.groupBoxAlignment = new System.Windows.Forms.GroupBox();
+            this.textBoxBottomExtent = new System.Windows.Forms.TextBox();
+            this.labelBottomExtent = new System.Windows.Forms.Label();
+            this.textBoxBottomOrigin = new System.Windows.Forms.TextBox();
+            this.labelBottomOrigin = new System.Windows.Forms.Label();
             this.textBoxTopExtent = new System.Windows.Forms.TextBox();
             this.labelTopExtent = new System.Windows.Forms.Label();
             this.textBoxTopOrigin = new System.Windows.Forms.TextBox();
@@ -58,10 +62,6 @@
             this.labelCollision = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
-            this.textBoxBottomExtent = new System.Windows.Forms.TextBox();
-            this.labelBottomExtent = new System.Windows.Forms.Label();
-            this.textBoxBottomOrigin = new System.Windows.Forms.TextBox();
-            this.labelBottomOrigin = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxAlignment.SuspendLayout();
             this.SuspendLayout();
@@ -142,6 +142,38 @@
             this.groupBoxAlignment.TabIndex = 23;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
+            // 
+            // textBoxBottomExtent
+            // 
+            this.textBoxBottomExtent.Location = new System.Drawing.Point(135, 141);
+            this.textBoxBottomExtent.Name = "textBoxBottomExtent";
+            this.textBoxBottomExtent.Size = new System.Drawing.Size(263, 20);
+            this.textBoxBottomExtent.TabIndex = 23;
+            // 
+            // labelBottomExtent
+            // 
+            this.labelBottomExtent.AutoSize = true;
+            this.labelBottomExtent.Location = new System.Drawing.Point(14, 144);
+            this.labelBottomExtent.Name = "labelBottomExtent";
+            this.labelBottomExtent.Size = new System.Drawing.Size(72, 13);
+            this.labelBottomExtent.TabIndex = 25;
+            this.labelBottomExtent.Text = "Bottom extent";
+            // 
+            // textBoxBottomOrigin
+            // 
+            this.textBoxBottomOrigin.Location = new System.Drawing.Point(135, 115);
+            this.textBoxBottomOrigin.Name = "textBoxBottomOrigin";
+            this.textBoxBottomOrigin.Size = new System.Drawing.Size(263, 20);
+            this.textBoxBottomOrigin.TabIndex = 22;
+            // 
+            // labelBottomOrigin
+            // 
+            this.labelBottomOrigin.AutoSize = true;
+            this.labelBottomOrigin.Location = new System.Drawing.Point(14, 118);
+            this.labelBottomOrigin.Name = "labelBottomOrigin";
+            this.labelBottomOrigin.Size = new System.Drawing.Size(68, 13);
+            this.labelBottomOrigin.TabIndex = 24;
+            this.labelBottomOrigin.Text = "Bottom origin";
             // 
             // textBoxTopExtent
             // 
@@ -393,38 +425,6 @@
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
             // 
-            // textBoxBottomExtent
-            // 
-            this.textBoxBottomExtent.Location = new System.Drawing.Point(135, 141);
-            this.textBoxBottomExtent.Name = "textBoxBottomExtent";
-            this.textBoxBottomExtent.Size = new System.Drawing.Size(263, 20);
-            this.textBoxBottomExtent.TabIndex = 23;
-            // 
-            // labelBottomExtent
-            // 
-            this.labelBottomExtent.AutoSize = true;
-            this.labelBottomExtent.Location = new System.Drawing.Point(14, 144);
-            this.labelBottomExtent.Name = "labelBottomExtent";
-            this.labelBottomExtent.Size = new System.Drawing.Size(72, 13);
-            this.labelBottomExtent.TabIndex = 25;
-            this.labelBottomExtent.Text = "Bottom extent";
-            // 
-            // textBoxBottomOrigin
-            // 
-            this.textBoxBottomOrigin.Location = new System.Drawing.Point(135, 115);
-            this.textBoxBottomOrigin.Name = "textBoxBottomOrigin";
-            this.textBoxBottomOrigin.Size = new System.Drawing.Size(263, 20);
-            this.textBoxBottomOrigin.TabIndex = 22;
-            // 
-            // labelBottomOrigin
-            // 
-            this.labelBottomOrigin.AutoSize = true;
-            this.labelBottomOrigin.Location = new System.Drawing.Point(14, 118);
-            this.labelBottomOrigin.Name = "labelBottomOrigin";
-            this.labelBottomOrigin.Size = new System.Drawing.Size(68, 13);
-            this.labelBottomOrigin.TabIndex = 24;
-            this.labelBottomOrigin.Text = "Bottom origin";
-            // 
             // TimedTextPropertiesItunes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,6 +442,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Timed Text properties";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TimedTextPropertiesItunes_KeyDown);
             this.groupBoxOptions.ResumeLayout(false);
             this.groupBoxOptions.PerformLayout();
             this.groupBoxAlignment.ResumeLayout(false);
