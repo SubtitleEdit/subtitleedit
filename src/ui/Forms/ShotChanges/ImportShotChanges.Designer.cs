@@ -214,13 +214,13 @@
             this.labelThresholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.labelThresholdDescription.Location = new System.Drawing.Point(6, 387);
             this.labelThresholdDescription.Name = "labelThresholdDescription";
-            this.labelThresholdDescription.Size = new System.Drawing.Size(195, 13);
+            this.labelThresholdDescription.Size = new System.Drawing.Size(186, 13);
             this.labelThresholdDescription.TabIndex = 5;
             this.labelThresholdDescription.Text = "Lower value gives more shot changes";
             // 
             // numericUpDownThreshold
             // 
-            this.numericUpDownThreshold.DecimalPlaces = 1;
+            this.numericUpDownThreshold.DecimalPlaces = 2;
             this.numericUpDownThreshold.Increment = new decimal(new int[] {
             1,
             0,
@@ -238,7 +238,7 @@
             0,
             65536});
             this.numericUpDownThreshold.Name = "numericUpDownThreshold";
-            this.numericUpDownThreshold.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownThreshold.Size = new System.Drawing.Size(48, 20);
             this.numericUpDownThreshold.TabIndex = 4;
             this.numericUpDownThreshold.Value = new decimal(new int[] {
             4,
