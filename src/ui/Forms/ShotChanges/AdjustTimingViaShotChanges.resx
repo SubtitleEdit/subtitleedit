@@ -120,4 +120,32 @@
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="audioVisualizer.Chapters" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAIwBbGlic2UsIFZlcnNpb249My42LjYuMjUsIEN1bHR1cmU9bmV1
+        dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbF1dLCBtc2NvcmxpYiwgVmVyc2lvbj00LjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkMAwAAAD1saWJzZSwgVmVy
+        c2lvbj0zLjYuNi4yNSwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1udWxsBQEAAABkU3lz
+        dGVtLkNvbGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tOaWtzZS5TdWJ0aXRsZUVkaXQuQ29yZS5Db250
+        YWluZXJGb3JtYXRzLk1hdHJvc2thLk1hdHJvc2thQ2hhcHRlcgMAAAAGX2l0ZW1zBV9zaXplCF92ZXJz
+        aW9uBAAAQ05pa3NlLlN1YnRpdGxlRWRpdC5Db3JlLkNvbnRhaW5lckZvcm1hdHMuTWF0cm9za2EuTWF0
+        cm9za2FDaGFwdGVyW10DAAAACAgCAAAACQQAAAAAAAAAAAAAAAcEAAAAAAEAAAAAAAAABEFOaWtzZS5T
+        dWJ0aXRsZUVkaXQuQ29yZS5Db250YWluZXJGb3JtYXRzLk1hdHJvc2thLk1hdHJvc2thQ2hhcHRlcgMA
+        AAAL
+</value>
+  </data>
+  <data name="videoPlayerContainer1.Chapters" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAIwBbGlic2UsIFZlcnNpb249My42LjYuMjUsIEN1bHR1cmU9bmV1
+        dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbF1dLCBtc2NvcmxpYiwgVmVyc2lvbj00LjAuMC4wLCBDdWx0
+        dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkMAwAAAD1saWJzZSwgVmVy
+        c2lvbj0zLjYuNi4yNSwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1udWxsBQEAAABkU3lz
+        dGVtLkNvbGxlY3Rpb25zLkdlbmVyaWMuTGlzdGAxW1tOaWtzZS5TdWJ0aXRsZUVkaXQuQ29yZS5Db250
+        YWluZXJGb3JtYXRzLk1hdHJvc2thLk1hdHJvc2thQ2hhcHRlcgMAAAAGX2l0ZW1zBV9zaXplCF92ZXJz
+        aW9uBAAAQ05pa3NlLlN1YnRpdGxlRWRpdC5Db3JlLkNvbnRhaW5lckZvcm1hdHMuTWF0cm9za2EuTWF0
+        cm9za2FDaGFwdGVyW10DAAAACAgCAAAACQQAAAAAAAAAAAAAAAcEAAAAAAEAAAAAAAAABEFOaWtzZS5T
+        dWJ0aXRsZUVkaXQuQ29yZS5Db250YWluZXJGb3JtYXRzLk1hdHJvc2thLk1hdHJvc2thQ2hhcHRlcgMA
+        AAAL
+</value>
+  </data>
 </root>

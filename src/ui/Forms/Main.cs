@@ -17743,7 +17743,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowCheckFixTimingViaShotChanges()
         {
-            using (var form = new AdjustTimingViaShotChanges(_subtitle, audioVisualizer.WavePeaks, audioVisualizer.ShotChanges))
+            using (var form = new AdjustTimingViaShotChanges(_subtitle, _videoFileName, audioVisualizer.WavePeaks, audioVisualizer.ShotChanges))
             {
                 if (form.ShowDialog(this) != DialogResult.OK)
                 {

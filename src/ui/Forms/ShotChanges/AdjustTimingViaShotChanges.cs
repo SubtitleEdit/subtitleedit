@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.ShotChanges
 {
@@ -9,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
     {
         private readonly Subtitle _subtitle;
 
-        public AdjustTimingViaShotChanges(Subtitle subtitle, WavePeakData wavePeaks, List<double> shotChanges)
+        public AdjustTimingViaShotChanges(Subtitle subtitle, string videoFileName, WavePeakData wavePeaks, List<double> shotChanges)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -20,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             SetAudioVisualizerSettings();
             audioVisualizer.WavePeaks = wavePeaks;
             audioVisualizer.ShotChanges = shotChanges;
+
+            OpenVideo(videoFileName);
         }
 
         private void SetAudioVisualizerSettings()
@@ -39,6 +42,23 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
             audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
             audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
+            audioVisualizer.AllowNewSelection = false;
+        }
+
+        private void OpenVideo(string videoFileName)
+        {
+            var videoInfo = UiUtil.GetVideoInfo(videoFileName);
+            UiUtil.InitializeVideoPlayerAndContainer(videoFileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+        }
+
+        private void VideoStartEnded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
+        }
+
+        private void VideoStartLoaded(object sender, EventArgs e)
+        {
+            videoPlayerContainer1.Pause();
         }
 
         private void timer1_Tick(object sender, System.EventArgs e)
@@ -67,6 +87,24 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void AdjustTimingViaShotChanges_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CloseVideo();
+        }
+
+        private void CloseVideo()
+        {
+            if (videoPlayerContainer1.VideoPlayer != null)
+            {
+                videoPlayerContainer1.Pause();
+                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                videoPlayerContainer1.VideoPlayer = null;
+            }
+
+            Application.DoEvents();
+            videoPlayerContainer1.Visible = false;
         }
     }
 }

@@ -1533,11 +1533,11 @@
     <EmbeddedResource Include="Forms\Assa\SubStationAlphaStylesCategoriesManager.resx">
       <DependentUpon>SubStationAlphaStylesCategoriesManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
-      <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SeJobs\SeJobExport.resx">
       <DependentUpon>SeJobExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
+      <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextPropertiesItunes.resx">
       <DependentUpon>TimedTextPropertiesItunes.cs</DependentUpon>
