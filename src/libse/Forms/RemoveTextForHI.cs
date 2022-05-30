@@ -364,14 +364,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 }
                                 else
                                 {
-                                    string s = line;
+                                    var s = line;
 
                                     var skipDoToNumbers =
-                                        indexOfColon < line.Length + 1 &&
+                                        indexOfColon < line.Length - 1 &&
                                         char.IsDigit(line[indexOfColon - 1]) &&
                                         char.IsDigit(line[indexOfColon + 1]);
 
-                                    string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                                    var l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
                                     if (!skipDoToNumbers &&
                                         count == 1 && 
                                         lines.Count == 2 && 
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         !l1Trim.EndsWith('!') &&
                                         !l1Trim.EndsWith('?'))
                                     {
-                                        int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
+                                        var indexOf = line.IndexOf(". ", StringComparison.Ordinal);
                                         if (indexOf > 0 && indexOf < indexOfColon)
                                         {
                                             var periodWord = line.Substring(0, indexOf).TrimStart(' ', '-', '"');
