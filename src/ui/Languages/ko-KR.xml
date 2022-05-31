@@ -176,7 +176,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <OpenModelsFolder>모델 폴더 열기</OpenModelsFolder>
     <LoadingVoskModel>Vosk 음성 인식 모델을 로드하는 중...</LoadingVoskModel>
     <Transcribing>오디오를 텍스트로 변환하는 중...</Transcribing>
+    <TranscribingXOfY>오디오를 텍스트로 변환 - {1}의 {0}파일...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} 파일을 비디오 소스 폴더에 저장함 </XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>post-processing 사용 (줄 병합, 케이싱 수정, 문장 부호 등)</UsePostProcessing>
+    <BatchMode>일괄 모드</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha 첨부파일</Title>
@@ -1894,6 +1897,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <EvenLines>짝수 라인</EvenLines>
     <DurationLessThan>표시시간 미달</DurationLessThan>
     <DurationGreaterThan>표시시간 초과</DurationGreaterThan>
+    <ExactlyOneLine>정확히 한 줄</ExactlyOneLine>
+    <ExactlyTwoLines>정확히 두 줄</ExactlyTwoLines>
     <MoreThanTwoLines>두 줄 이상</MoreThanTwoLines>
     <Bookmarked>북마크됨</Bookmarked>
     <BlankLines>빈 줄</BlankLines>
