@@ -47,11 +47,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             s = s.Replace(" i-i-i ", " I-I-I ");
 
             // reg-ex
-            Match match = re.Match(s);
+            var match = re.Match(s);
+            var assaDrawStart = s.IndexOf("{\\p1", StringComparison.Ordinal);
+            var assaDrawEnd = s.IndexOf("{\\p0}", StringComparison.Ordinal);
             while (match.Success)
             {
                 if (s[match.Index] == target && !s.Substring(match.Index).StartsWith("i.e.", StringComparison.Ordinal) &&
-                    !s.Substring(match.Index).StartsWith("i-", StringComparison.Ordinal))
+                    !s.Substring(match.Index).StartsWith("i-", StringComparison.Ordinal) &&
+                    !(assaDrawStart >= 0 && match.Index > assaDrawStart && match.Index < assaDrawEnd))
                 {
                     var prev = '\0';
                     var next = '\0';
@@ -65,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         next = s[match.Index + 1];
                     }
 
-                    string wholePrev = string.Empty;
+                    var wholePrev = string.Empty;
                     if (match.Index > 1)
                     {
                         wholePrev = s.Substring(0, match.Index - 1);
@@ -73,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (prev != '>' && next != '>' && next != '}' && !wholePrev.TrimEnd().EndsWith("...", StringComparison.Ordinal))
                     {
-                        bool fix = prev != '.' && prev != '\'';
+                        var fix = prev != '.' && prev != '\'';
 
                         if (prev == ' ' && next == '.')
                         {
@@ -104,8 +107,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
                 match = match.NextMatch();
             }
+
             return s;
         }
-
     }
 }

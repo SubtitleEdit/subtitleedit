@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -17,30 +18,31 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string fixAction0 = Language.RemovedEmptyLine;
-            string fixAction1 = Language.RemovedEmptyLineAtTop;
-            string fixAction2 = Language.RemovedEmptyLineAtBottom;
-            string fixAction3 = Language.RemovedEmptyLineInMiddle;
+            var fixAction0 = Language.RemovedEmptyLine;
+            var fixAction1 = Language.RemovedEmptyLineAtTop;
+            var fixAction2 = Language.RemovedEmptyLineAtBottom;
+            var fixAction3 = Language.RemovedEmptyLineInMiddle;
 
             if (subtitle.Paragraphs.Count == 0)
             {
                 return;
             }
 
-            int emptyLinesRemoved = 0;
+            var emptyLinesRemoved = 0;
 
-            for (int i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            for (var i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 var p = subtitle.Paragraphs[i];
                 if (!string.IsNullOrEmpty(p.Text))
                 {
-                    string text = p.Text.Trim(' ');
+                    var text = p.Text.Trim(' ');
                     var oldText = text;
                     var pre = string.Empty;
                     var post = string.Empty;
 
-                    // Ssa Tags
-                    if (text.StartsWith("{\\", StringComparison.Ordinal))
+                    // Assa Tags
+                    var textNoAssa = Utilities.RemoveSsaTags(text);
+                    if (textNoAssa.Length == 0)
                     {
                         var endIdx = text.IndexOf('}', 2);
                         if (endIdx > 2)
@@ -126,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (Configuration.Settings.Tools.RemoveEmptyLinesBetweenText &&
                         callbacks.AllowFix(p, fixAction3) && text.Contains(Environment.NewLine + Environment.NewLine))
                     {
-                        int beforeLength = text.Length;
+                        var beforeLength = text.Length;
                         while (text.Contains(Environment.NewLine + Environment.NewLine))
                         {
                             text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
@@ -158,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             // this must be the very last action done, or line numbers will be messed up!!!
-            for (int i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            for (var i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 var p = subtitle.Paragraphs[i];
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();

@@ -897,7 +897,7 @@ namespace Test.Logic
         [TestMethod]
         public void RemoveSsaTags4()
         {
-            var result = Utilities.RemoveSsaTags("{\\p2}m 0 0 l 1 1{\\p0}Hallo world!");
+            var result = Utilities.RemoveSsaTags("{\\p2}m 0 0 l 1 1{\\p0}Hallo world!", true);
             Assert.AreEqual("Hallo world!", result);
         }
     }

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -463,6 +464,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             text = text.Trim();
+
+            var textNoAssa = Utilities.RemoveSsaTags(text, true);
+            if (textNoAssa.Length == 0)
+            {
+                return text;
+            }
+
+
 
             // Try to prevent resizing when fixing Ocr-hardcoded.
             var sb = new StringBuilder(text.Length + 2);
