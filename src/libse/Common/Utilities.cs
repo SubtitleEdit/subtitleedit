@@ -759,11 +759,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return singleLine;
         }
 
-        public static string RemoveSsaTags(string input)
+        public static string RemoveSsaTags(string input, bool removeDrawingTags = false)
         {
             var s = input;
 
-            if (s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
+            if (removeDrawingTags && s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
             {
                 s = AdvancedSubStationAlpha.RemoveDrawingTag(s);
             }
@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = s.Replace("\\h", " "); // Hard space
             }
 
-            if (s.StartsWith("m ", StringComparison.Ordinal))
+            if (removeDrawingTags && s.StartsWith("m ", StringComparison.Ordinal))
             {
                 var test = s.Remove(0, 2)
                     .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'l', 'm', ' ', '.');
