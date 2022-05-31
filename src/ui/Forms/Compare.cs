@@ -1224,7 +1224,9 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine("    </tr>");
                     for (int i = 0; i < subtitleListView1.Items.Count; i++)
                     {
-                        if (subtitleListView1.Items[i].Tag is Paragraph itemLeft && subtitleListView2.Items[i].Tag is Paragraph itemRight)
+                        if (subtitleListView1.Items[i].Tag is Paragraph itemLeft &&
+                            subtitleListView2.Items.Count > i &&
+                            subtitleListView2.Items[i].Tag is Paragraph itemRight)
                         {
                             sb.AppendLine("    <tr>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
@@ -1256,7 +1258,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GetHtmlText(Paragraph p, string text)
+        private static string GetHtmlText(Paragraph p, string text)
         {
             return p.IsDefault ? string.Empty : HtmlUtil.EncodeNamed(text);
         }
