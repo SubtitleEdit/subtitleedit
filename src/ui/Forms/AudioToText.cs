@@ -47,6 +47,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
 
+            buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
+            buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
+            buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
+
+            columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
+
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
             FillModels();
