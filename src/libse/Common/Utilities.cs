@@ -146,26 +146,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        /// <summary>
-        /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
-        /// </summary>
-        /// <param name="address">A <see cref="String"/> containing the URI to download.</param>
-        /// <param name="encoding">Encoding for source text</param>
-        /// <returns>A <see cref="String"/> containing the requested resource.</returns>
-        public static string DownloadString(string address, Encoding encoding = null)
-        {
-            using (var wc = new WebClient())
-            {
-                wc.Proxy = GetProxy();
-                if (encoding != null)
-                {
-                    wc.Encoding = encoding;
-                }
-
-                return wc.DownloadString(address).Trim();
-            }
-        }
-
         public static WebProxy GetProxy()
         {
             if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
