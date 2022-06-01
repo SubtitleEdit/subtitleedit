@@ -2287,7 +2287,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_oldSubtitleFormat.GetType() == typeof(SubStationAlpha))
                     {
-                        if (!_subtitle.Header.Contains("[V4+ Styles]"))
+                        if (_subtitle.Header != null && !_subtitle.Header.Contains("[V4+ Styles]"))
                         {
                             _subtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromSubStationAlpha(_subtitle.Header);
                             foreach (var p in _subtitle.Paragraphs)
