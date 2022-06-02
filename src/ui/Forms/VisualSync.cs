@@ -435,7 +435,8 @@ namespace Nikse.SubtitleEdit.Forms
             double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
             // Both end times must be greater than start time.
-            if (!(videoPlayerCurrentEndPos > videoPlayerCurrentStartPos && subEnd > videoPlayerCurrentStartPos))
+            if (!(videoPlayerCurrentEndPos > videoPlayerCurrentStartPos && subEnd > videoPlayerCurrentStartPos) ||
+                comboBoxStartTexts.SelectedIndex >= comboBoxEndTexts.SelectedIndex)
             {
                 MessageBox.Show(_language.StartSceneMustComeBeforeEndScene, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
