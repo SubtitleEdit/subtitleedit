@@ -306,7 +306,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            ReadWaveFile(targetFile, _delayInMilliseconds);
+            try
+            {
+                ReadWaveFile(targetFile, _delayInMilliseconds);
+            }
+            catch
+            {
+                // retry - see https://github.com/SubtitleEdit/subtitleedit/issues/6003
+                System.Threading.Thread.Sleep(5000);
+                Application.DoEvents();
+                ReadWaveFile(targetFile, _delayInMilliseconds);
+            }
+
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);
             DialogResult = DialogResult.OK;
