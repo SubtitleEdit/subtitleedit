@@ -157,6 +157,12 @@
                 LanguageName = "Czech",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-cs-0.4-rhasspy.zip",
             },
+            new DownloadModel
+            {
+                TwoLetterLanguageCode = "pl",
+                LanguageName = "Polish",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-small-pl-0.22.zip",
+            }
         };
     }
 }
