@@ -5345,6 +5345,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         maxHeight = top + height;
                     }
+
+                    if (idx < _bluRaySubtitles.Count)
+                    {
+                        height = _bluRaySubtitles[idx].Size.Height;
+                        if (height > maxHeight)
+                        {
+                            maxHeight = height;
+                        }
+                    }
                 }
 
                 _captureTopAlignHeightThird = maxHeight / 3;
