@@ -10389,7 +10389,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
         {
             var idx = _subtitleListViewIndex;
-            if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
+            var p = _subtitle.GetParagraphOrDefault(idx);
+            if (p == null)
             {
                 return;
             }
@@ -10399,7 +10400,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Also check https://stackoverflow.com/questions/28331672/c-sharp-textchanged-event-fires-twice-in-a-multiline-textbox
             if (textBoxListViewText.Text.Length == 0)
             {
-                _subtitle.Paragraphs[idx].Text = string.Empty;
+                p.Text = string.Empty;
                 UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
                 SubtitleListview1.SetText(idx, string.Empty);
                 _listViewTextUndoIndex = idx;
@@ -10423,12 +10424,13 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Text = text;
             }
 
-            if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
+            if (p != _subtitle.GetParagraphOrDefault(idx))
             {
+                textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
                 return;
             }
 
-            _subtitle.Paragraphs[idx].Text = text;
+            p.Text = text;
             labelStatus.Text = string.Empty;
             UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
             SubtitleListview1.SetText(idx, text);
