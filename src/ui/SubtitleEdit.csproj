@@ -1536,9 +1536,6 @@
     <EmbeddedResource Include="Forms\SeJobs\SeJobExport.resx">
       <DependentUpon>SeJobExport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ShotChanges\AdjustTimingViaShotChanges.resx">
-      <DependentUpon>AdjustTimingViaShotChanges.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextPropertiesItunes.resx">
       <DependentUpon>TimedTextPropertiesItunes.cs</DependentUpon>
     </EmbeddedResource>

@@ -225,7 +225,7 @@
             1,
             0,
             0,
-            65536});
+            131072});
             this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 364);
             this.numericUpDownThreshold.Maximum = new decimal(new int[] {
             9,
