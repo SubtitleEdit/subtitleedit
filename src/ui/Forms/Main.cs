@@ -33952,7 +33952,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
-            var currentVoskDllSha512Hash = "0ed8187b9e109ebdc7c2022694224cacccc3b545b3ca0c204f3414cba4f0e758251fbab2bcbfeb565f3e166dbeab28712c30f6b9ccad3ea023abf7c5e8d2e92f";
+            var currentVoskDllSha512Hash =
+                IntPtr.Size * 8 == 32
+                ? "1cc13d8e2ffd3ad7ca76941c99e8ad00567d0b8135878c3a80fb938054cf98bde1f692647e6d19df7526c98aa5ad975d72dba20bf1759baedba5c753a14480bb"
+                : "77479a934650b40968d54dcf71fce17237c59b62b6c64ad3d6b5433486b76b6202eb956e93597ba466c67aa0d553db7b2863e0aeb8856a6dd29a3aba3a14bf66";
             var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(voskDll));
             return currentVoskDllSha512Hash == hash;
         }
