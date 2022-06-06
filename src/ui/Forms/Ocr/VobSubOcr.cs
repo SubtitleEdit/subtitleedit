@@ -5346,9 +5346,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         maxHeight = top + height;
                     }
 
-                    if (idx < _bluRaySubtitles.Count)
+                    if (_bluRaySubtitles != null && idx < _bluRaySubtitles.Count)
                     {
                         height = _bluRaySubtitles[idx].Size.Height;
+                        if (height > maxHeight)
+                        {
+                            maxHeight = height;
+                        }
+                    }
+                    else if (_binaryParagraphWithPositions != null && idx < _binaryParagraphWithPositions.Count)
+                    {
+                        height = _binaryParagraphWithPositions[idx].GetScreenSize().Height;
+                        if (height > maxHeight)
+                        {
+                            maxHeight = height;
+                        }
+                    }
+                    else if (_vobSubMergedPackList != null && idx < _vobSubMergedPackList.Count)
+                    {
+                        height = _vobSubMergedPackList[idx].GetScreenSize().Height;
                         if (height > maxHeight)
                         {
                             maxHeight = height;
