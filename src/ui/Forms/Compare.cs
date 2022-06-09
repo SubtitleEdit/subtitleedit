@@ -232,20 +232,20 @@ namespace Nikse.SubtitleEdit.Forms
             var sub1 = new Subtitle(_subtitle1);
             var sub2 = new Subtitle(_subtitle2);
 
-            int index = 0;
-            Paragraph p1 = sub1.GetParagraphOrDefault(index);
-            Paragraph p2 = sub2.GetParagraphOrDefault(index);
-            int max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            var index = 0;
+            var p1 = sub1.GetParagraphOrDefault(index);
+            var p2 = sub2.GetParagraphOrDefault(index);
+            var max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             while (index < max)
             {
                 if (p1 != null && p2 != null && GetColumnsEqualExceptNumberAndDuration(p1, p2) == 0)
                 {
-                    for (int i = index + 1; i < max; i++)
+                    for (var i = index + 1; i < max; i++)
                     {
                         // Try to find at least two matching properties
                         if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(i), p2) > 1)
                         {
-                            for (int j = index; j < i; j++)
+                            for (var j = index; j < i; j++)
                             {
                                 sub2.Paragraphs.Insert(index++, new Paragraph());
                             }
@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(i)) > 1)
                         {
-                            for (int j = index; j < i; j++)
+                            for (var j = index; j < i; j++)
                             {
                                 sub1.Paragraphs.Insert(index++, new Paragraph());
                             }
@@ -280,17 +280,17 @@ namespace Nikse.SubtitleEdit.Forms
             index = 0;
             p1 = sub1.GetParagraphOrDefault(index);
             p2 = sub2.GetParagraphOrDefault(index);
-            int totalWords = 0;
-            int wordsChanged = 0;
+            var totalWords = 0;
+            var wordsChanged = 0;
             max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
-            int min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            var min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             var onlyTextDiff = checkBoxOnlyListDifferencesInText.Checked;
 
             if (onlyTextDiff)
             {
                 while (index < min)
                 {
-                    bool addIndexToDifferences = false;
+                    var addIndexToDifferences = false;
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
                     if (p1.IsDefault)
                     {
@@ -319,11 +319,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                const double tolerance = 0.1;
                 while (index < min)
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
-                    bool addIndexToDifferences = false;
+                    var addIndexToDifferences = false;
                     if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
@@ -336,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
+                        var columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
                         // Not alike paragraphs
                         if (columnsAlike == 0)
                         {
@@ -350,19 +349,19 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             addIndexToDifferences = true;
                             // Start time
-                            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
+                            if (!IsTimeEqual(p1.StartTime, p2.StartTime))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexStart);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexStart);
                             }
                             // End time
-                            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
+                            if (!IsTimeEqual(p1.EndTime, p2.EndTime))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexEnd);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexEnd);
                             }
                             // Duration
-                            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
+                            if (!IsTimeEqual(p1.Duration, p2.Duration))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexDuration);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexDuration);
@@ -497,20 +496,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return 0;
             }
 
-            const double tolerance = 0.1;
-
-            int columnsEqual = 0;
-            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
+            var columnsEqual = 0;
+            if (IsTimeEqual(p1.StartTime, p2.StartTime))
             {
                 columnsEqual++;
             }
 
-            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
+            if (IsTimeEqual(p1.EndTime, p2.EndTime))
             {
                 columnsEqual++;
             }
 
-            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) < tolerance)
+            if (IsTimeEqual(p1.Duration, p2.Duration))
             {
                 columnsEqual++;
             }
@@ -524,6 +521,17 @@ namespace Nikse.SubtitleEdit.Forms
             return columnsEqual;
         }
 
+        private static bool IsTimeEqual(TimeCode t1, TimeCode t2)
+        {
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                return t1.ToDisplayString() == t2.ToDisplayString();
+            }
+
+            const double tolerance = 0.1;
+            return Math.Abs(t2.TotalMilliseconds - t2.TotalMilliseconds) < tolerance;
+        }
+
         private int GetColumnsEqualExceptNumberAndDuration(Paragraph p1, Paragraph p2)
         {
             if (p1 == null || p2 == null)
@@ -531,15 +539,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return 0;
             }
 
-            const double tolerance = 0.1;
-
-            int columnsEqual = 0;
-            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
+            var columnsEqual = 0;
+            if (IsTimeEqual(p1.StartTime, p2.StartTime))
             {
                 columnsEqual++;
             }
 
-            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
+            if (IsTimeEqual(p1.EndTime, p2.EndTime))
             {
                 columnsEqual++;
             }
@@ -881,8 +887,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOpenSubtitle2.Left = subtitleListView2.Left;
             buttonReloadSubtitle2.Left = buttonOpenSubtitle2.Left + buttonOpenSubtitle2.Width + 7;
 
-            subtitleListView1.Height = Height - (subtitleListView1.Top + 140);
-            subtitleListView2.Height = Height - (subtitleListView2.Top + 140);
+            subtitleListView1.Height = Height - (subtitleListView1.Top + 155);
+            subtitleListView2.Height = Height - (subtitleListView2.Top + 155);
 
             richTextBox1.Width = subtitleListView1.Width;
             richTextBox2.Width = subtitleListView2.Width;
