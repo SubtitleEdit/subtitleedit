@@ -83,6 +83,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             subtitleListView1.Fill(subtitle1);
+            subtitleListView1.AutoSizeAllColumns(this);
+            subtitleListView2.AutoSizeAllColumns(this);
 
             if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
             {
@@ -200,6 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static Subtitle LoadSubtitle(string fileName)
         {
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
             var subtitle = new Subtitle();
             var format = subtitle.LoadSubtitle(fileName, out _, null);
             if (format == null)
@@ -213,6 +216,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            Configuration.Settings.General.CurrentFrameRate = frameRate;
             return subtitle;
         }
 
