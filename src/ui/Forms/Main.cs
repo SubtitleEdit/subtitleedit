@@ -15827,6 +15827,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (comboBoxSubtitleFormats.Focused && comboBoxSubtitleFormats.DroppedDown)
+            {
+                return;
+            }
+
             var fc = UiUtil.FindFocusedControl(this);
             if (fc != null && (e.Modifiers == Keys.None || e.Modifiers == Keys.Shift))
             {
