@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class Ebu : SubtitleFormat, IBinaryPersistableSubtitle
     {
+        public static double OverrideReadFrameRate { get; set; }
+
         private static readonly Regex FontTagsNoSpace1 = new Regex("[a-zA-z.!?]</font><font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
         private static readonly Regex FontTagsNoSpace2 = new Regex("[a-zA-z.!?]<font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
 
@@ -1103,6 +1105,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             JustificationCodes = new List<int>();
             VerticalPositions = new List<int>();
             Configuration.Settings.General.CurrentFrameRate = header.FrameRate;
+            if (OverrideReadFrameRate > 20)
+            {
+                Configuration.Settings.General.CurrentFrameRate = OverrideReadFrameRate;
+            }
+
             foreach (var tti in ReadTextAndTiming(buffer, header))
             {
                 if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data

@@ -213,7 +213,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static Subtitle LoadSubtitle(string fileName)
         {
-            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            // EBU STL does not support eg drop frame, so we override the loading frame rate
+            Ebu.OverrideReadFrameRate = Configuration.Settings.General.DefaultFrameRate;
+
             var subtitle = new Subtitle();
             var format = subtitle.LoadSubtitle(fileName, out _, null);
             if (format == null)
@@ -228,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            Configuration.Settings.General.CurrentFrameRate = frameRate;
+            Ebu.OverrideReadFrameRate = 0;
             return subtitle;
         }
 
