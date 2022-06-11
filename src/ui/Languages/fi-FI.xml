@@ -916,7 +916,7 @@ rostiedosto</DrawingFile>
     <Remove>Poista</Remove>
     <RemoveAll>Poista kaikki</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Tuo muutoskohdat</Title>
     <OpenTextFile>Avaa tekstitiedosto</OpenTextFile>
     <Generate>Luo kohtauksen muutokset</Generate>
@@ -926,11 +926,11 @@ rostiedosto</DrawingFile>
     <Frames>Kehyksiä</Frames>
     <Seconds>Sekuntia</Seconds>
     <Milliseconds>Millisekuntia</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Kohtausten vaihdot FFmpeg:llä</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Kohtausten vaihdot FFmpeg:llä</GetShotChangesWithFfmpeg>
     <Sensitivity>Herkkyys</Sensitivity>
     <SensitivityDescription>Pienempi arvo aiheuttaa enemmän kohtauksien vaihtoja</SensitivityDescription>
-    <NoSceneChangesFound>Kohtauksien vaihtoja ei havaittu.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Kohtauksien vaihtoja ei havaittu.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Tuo pelkkä teksti</Title>
     <OneSubtitleIsOneFile>Monta tiedostoa - kukin yksi tekstitys</OneSubtitleIsOneFile>
@@ -1247,8 +1247,8 @@ rostiedosto</DrawingFile>
         <GenerateVideoWithBurnedInSub>Luo video kiinteästi upotetullla tekstityksellä...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>Kuva/ääni tekstiksi...</VideoAudioToText>
         <ImportChaptersFromVideo>Tuo kappaleet videosta</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Luo tai tuo kohtaustenvaihtoja</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Poista tai vie kohtaustenvaihtoja</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Luo tai tuo kohtaustenvaihtoja</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Poista tai vie kohtaustenvaihtoja</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Luo aaltomuodot eräajona</WaveformBatchGenerate>
         <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
         <ShowHideWaveform>Näytä/piilota aaltomuoto</ShowHideWaveform>
@@ -1697,7 +1697,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <BeforeDisplaySubtitleJoin>Ennen tekstityksien liittämistä</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Liitetyt tekstitykset</SubtitlesJoined>
     <StatusLog>Tilaloki</StatusLog>
-    <XSceneChangesImported>Tuotu {0} kohtausmuutosta</XSceneChangesImported>
+    <XShotChangesImported>Tuotu {0} kohtausmuutosta</XShotChangesImported>
     <PluginXExecuted>Suoritettiin laajennus '{0}'.</PluginXExecuted>
     <NotAValidXSubFile>Tiedosto ei ole XSub-muodossa!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Ennen samansisältöisten rivien yhdistämistä</BeforeMergeLinesWithSameText>
@@ -2196,7 +2196,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformFocusMouseEnter>Valitse hiirellä</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Valitse luettelosta hiirellä</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Yksi napsautus tekstityksen valitsemiseksi</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Tahdista kohtausten vaihtoihin (Pidä Vaihtonäppäin painettuna korvataksesi)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Tahdista kohtausten vaihtoihin (Pidä Vaihtonäppäin painettuna korvataksesi)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Luo aaltomuoto automaattisesti videota avattaessa</WaveformAutoGen>
     <WaveformBorderHitMs1>Reunaviivojen näyttöaika</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekuntia</WaveformBorderHitMs2>
@@ -2342,14 +2342,14 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustSetStartAndOffsetTheWholeSubtitle>Aseta alkuaika, liu'uta koko tekstitystä</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Aseta loppu, liu'uta muita</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Aseta loppu, liu'uta muita ja siirry seuraavaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Kytke valitut rivit alkamaan seuraavassa näytöksen vaihdossa</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Kytke valitut rivit alkamaan seuraavassa näytöksen vaihdossa, minimivälillä</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Kytke valitut rivit päättymään edellisessä näytöksen vaihdossa</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Kytke valitut rivit päättymään edellisessä näytöksen vaihdossa, minimivälillä</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai tekstitykseen)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai tekstitykseen) minimivälillä</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai tekstitykseen)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai tekstitykseen) minimivälillä</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Kytke valitut rivit alkamaan seuraavassa näytöksen vaihdossa</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Kytke valitut rivit alkamaan seuraavassa näytöksen vaihdossa, minimivälillä</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Kytke valitut rivit päättymään edellisessä näytöksen vaihdossa</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Kytke valitut rivit päättymään edellisessä näytöksen vaihdossa, minimivälillä</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai tekstitykseen)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai tekstitykseen) minimivälillä</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai tekstitykseen)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai tekstitykseen) minimivälillä</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Laajenna valitut rivit seuraavaan tekstitykseen</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Laajenna valitut rivit edelliseen tekstitykseen</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Laajenna nykyinen rivi seuraavaan tekstitykseen tai enimmäiskestoon</AdjustExtendCurrentSubtitle>
@@ -2407,10 +2407,10 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformPlayNewSelection>Toista uusi valinta</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Poista/vie kohtauksenvaihdot</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Kohtauksen vaihto päälle / pois</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Poista/vie kohtauksenvaihdot</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Säädä aloitusta kohtauksen vaihtuessa</WaveformGuessStart>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
     <GoForward1Frame>Yksi kehys eteenpäin</GoForward1Frame>
@@ -3036,9 +3036,9 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ShowWaveformAndSpectrogram>Näytä aaltomuoto ja taajuusanalyysi</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Näytä vain aaltomuoto</ShowWaveformOnly>
     <ShowSpectrogramOnly>Näytä vain taajuusanalyysi</ShowSpectrogramOnly>
-    <AddSceneChange>Lisää kohtauksen vaihto</AddSceneChange>
-    <RemoveSceneChange>Poista kohtauksen vaihto</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Poista kohtauksen vaihto valinnasta</RemoveSceneChangesFromSelection>
+    <AddShotChange>Lisää kohtauksen vaihto</AddShotChange>
+    <RemoveShotChange>Poista kohtauksen vaihto</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Poista kohtauksen vaihto valinnasta</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Arvaa aikaleimat</GuessTimeCodes>
     <SeekSilence>Etsi hiljaisuutta</SeekSilence>
     <InsertSubtitleHere>Lisää tähän tekstitys</InsertSubtitleHere>
