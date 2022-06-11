@@ -1604,6 +1604,22 @@ $HorzAlign          =   Center
             });
             profiles.Add(new RulesProfile
             {
+                Name = "Netflix (Simplified Chinese)",
+                SubtitleLineMaximumLength = 16,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 17,
+                SubtitleMaximumCharactersPerSeconds = 9,
+                SubtitleOptimalCharactersPerSeconds = 9,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 833,
+                SubtitleMaximumWordsPerMinute = 100,
+                CpsLineLengthStrategy = "CalcAll",
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashBothLinesWithoutSpace,
+                ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
+            });
+            profiles.Add(new RulesProfile
+            {
                 Name = "Amazon Prime (English/Spanish/French)",
                 SubtitleLineMaximumLength = 42,
                 MaxNumberOfLines = 2,
