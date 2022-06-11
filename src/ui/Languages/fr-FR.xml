@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.6</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated by 22/05/08</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/06/11</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -94,8 +94,8 @@
     <Collapse>Replier</Collapse>
     <ShortcutX>Raccourci : {0}</ShortcutX>
     <ExampleX>Exemple : {0}</ExampleX>
+    <Reset>Réinitialiser</Reset>
   </General>
-  <Reset>Rétablir</Reset>
   <About>
     <Title>A propos de Subtitle Edit</Title>
     <AboutText1>Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
@@ -180,7 +180,10 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <OpenModelsFolder>Ouvrir le dossier des modèles</OpenModelsFolder>
     <LoadingVoskModel>Téléchargement du modèle de reconnaissance vocale Vosk ...</LoadingVoskModel>
     <Transcribing>Transcription de l’audio en texte ...</Transcribing>
+    <TranscribingXOfY>Transcription de l’audio en texte - fichier {0} de {1} ...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} fichiers sauvés dans le dossier vidéo source</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Post-traitement (fusion de ligne, réparation casse, ponctuation, etc.)</UsePostProcessing>
+    <BatchMode>Mode en "lot(s)"</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Annexes Advanced Sub Station Alpha</Title>
@@ -734,7 +737,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <BreakLongLines>Scinder les lignes longues</BreakLongLines>
     <RemoveLineBreaks>Retirer les sauts de lignes dans les textes courts d'une seule phrase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogue)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Corriger le 'i' majuscule à l'intérieur des mots (erreur OCR)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsideLowercaseWords>Correction du 'i' majuscule à l'intérieur des mots minuscules (erreur OCR)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Remplacer les apostrophes doubles (' ') par un guillemet (")</FixDoubleApostrophes>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Commencer par une majuscule après un paragraphe</StartWithUppercaseLetterAfterParagraph>
@@ -778,7 +781,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hé   toi , là bas. -&gt; Hé toi, là bas.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hé toi !. -&gt; Hé toi !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hétoi. -&gt; Hé toi.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>La fIn est proche. -&gt; La fin est proche.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample></FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Texte n°{0}: Le temps initial est postérieur au temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossible de corriger le texte n°{0}: Temps initial &gt; temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -825,7 +828,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Title>Générer une vidéo avec les s/titres incrustés</Title>
     <InfoAssaOff>Note : Prise en charge du style Advanced Substation Alpha.</InfoAssaOff>
     <InfoAssaOn>Note : Le style Advanced Substation Alpha sera utilisé :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" généré avec s/titres incrustés.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" généré avec un sous-titre incrusté dans {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Temps restant : {0} min.</TimeRemainingMinutes>
     <TimeRemainingSeconds>Temps restant : {0} sec.</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Temps restant : {0} min. et {1} sec.</TimeRemainingMinutesAndSeconds>
@@ -1244,7 +1247,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
         <VideoAudioToText>Vidéo/audio vers texte ...</VideoAudioToText>
         <ImportChaptersFromVideo>Importer des chapitres de la vidéo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Générer / Importer les changements de scènes ...</GenerateImportShotChanges>
-        <RemoveShotChanges>Supprimer les changements de scène</RemoveShotChanges>
+        <RemoveOrExportShotChanges>Supprimer/exporter les changements de plans...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Générer les ondes sonores par lots ...</WaveformBatchGenerate>
         <ShowHideVideo>Afficher / Masquer la vidéo</ShowHideVideo>
         <ShowHideWaveform>Afficher / Masquer l'audio</ShowHideWaveform>
@@ -1312,9 +1315,9 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Ajuster la taille des colonnes</SizeAllColumnsToFit>
-        <AdvancedSubStationAlphaSetStyle>Advanced SubStation Alpha - Régler le style</AdvancedSubStationAlphaSetStyle>
-        <SubStationAlphaSetStyle>SubStation Alpha - Régler le style</SubStationAlphaSetStyle>
+        <SetStyle>Définir le style</SetStyle>
         <SetActor>Définir l'acteur</SetActor>
+        <AssaTools>Outils ASSA</AssaTools>
         <SubStationAlphaStyles>Styles SubStation Alpha ...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Styles Advanced SubStation Alpha ...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Texte minuté - Définir région</TimedTextSetRegion>
@@ -1894,6 +1897,8 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <EvenLines>Lignes paires</EvenLines>
     <DurationLessThan>Durée &lt; que</DurationLessThan>
     <DurationGreaterThan>Durée &gt; que</DurationGreaterThan>
+    <ExactlyOneLine>Exactement 1 ligne</ExactlyOneLine>
+    <ExactlyTwoLines>Exactement 2 lignes</ExactlyTwoLines>
     <MoreThanTwoLines>Plus de 2 lignes</MoreThanTwoLines>
     <Bookmarked>Marqué d'un signet</Bookmarked>
     <BlankLines>Lignes vierges</BlankLines>
@@ -2070,7 +2075,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <WordLists>Listes de mots</WordLists>
     <SsaStyle>Style ASS/SSA</SsaStyle>
     <Network>Réseau</Network>
-    <RuleInfo>Information de règle</RuleInfo>
+    <FileTypeAssociations>Associations de types de fichiers</FileTypeAssociations>
     <Rules>Règles</Rules>
     <ShowToolBarButtons>Afficher les boutons de la barre d'outils</ShowToolBarButtons>
     <New>Nouveau</New>
@@ -2720,7 +2725,9 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Caractères/sec - minimum : {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caractères/sec - maximum : {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caractères/sec - moyen : {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>Ecart minimal : {0} ms</MinimalGap>
+    <GapMinimum>Ecart - minimum : {0:#,##0} ms</GapMinimum>
+    <GapMaximum>Ecart - maximum : {0:#,##0} ms</GapMaximum>
+    <GapAverage>Ecart - moyen : {0:#,##0.##} ms</GapAverage>
     <Export>Exporter ...</Export>
   </Statistics>
   <SubStationAlphaProperties>
