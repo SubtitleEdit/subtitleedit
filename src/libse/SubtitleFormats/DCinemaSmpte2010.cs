@@ -808,7 +808,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (innerNode.Name == "Font")
                         {
                             //var bold = innerNode.Attributes["Weight"].InnerText == "bold";
-                            var italic = innerNode.Attributes["Italic"].InnerText == "yes";
+                            var italic = innerNode.Attributes["Italic"]?.InnerText == "yes";
                             if (italic)
                             {
                                 pText.Append("<i>");
