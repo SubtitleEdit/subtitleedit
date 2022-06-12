@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.listBoxUnknownWords = new System.Windows.Forms.ListBox();
             this.contextMenuStripUnknownWords = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAllXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPageAllFixes = new System.Windows.Forms.TabPage();
             this.listBoxLog = new System.Windows.Forms.ListBox();
             this.tabPageSuggestions = new System.Windows.Forms.TabPage();
@@ -230,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 408);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 386);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -1324,16 +1325,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // contextMenuStripUnknownWords
             // 
             this.contextMenuStripUnknownWords.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearToolStripMenuItem});
+            this.clearToolStripMenuItem,
+            this.removeAllXToolStripMenuItem});
             this.contextMenuStripUnknownWords.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripUnknownWords.Size = new System.Drawing.Size(102, 26);
+            this.contextMenuStripUnknownWords.Size = new System.Drawing.Size(139, 48);
+            this.contextMenuStripUnknownWords.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripUnknownWords_Opening);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // removeAllXToolStripMenuItem
+            // 
+            this.removeAllXToolStripMenuItem.Name = "removeAllXToolStripMenuItem";
+            this.removeAllXToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.removeAllXToolStripMenuItem.Text = "RemoveAllX";
+            this.removeAllXToolStripMenuItem.Click += new System.EventHandler(this.removeAllXToolStripMenuItem_Click);
             // 
             // tabPageAllFixes
             // 
@@ -1787,7 +1797,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCurrentText.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.textBoxCurrentText.ContextMenuStrip = this.contextMenuStripTextBox;
-            this.textBoxCurrentText.CurrentLanguage = null;
+            this.textBoxCurrentText.CurrentLanguage = "";
             this.textBoxCurrentText.CurrentLineIndex = 0;
             this.textBoxCurrentText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCurrentText.HideSelection = true;
@@ -2164,5 +2174,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem imageWithTimeCodeInFileNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeAllXToolStripMenuItem;
     }
 }
