@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             vobSubToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportVobSub;
             bDNXMLToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportBdnXml;
             bluraySupToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.File.ExportBluRaySup;
-            imageWithTimeCodeInFileNameToolStripMenuItem.Text = language.ImagesWithTimeCodesInFileName; 
+            imageWithTimeCodeInFileNameToolStripMenuItem.Text = language.ImagesWithTimeCodesInFileName;
 
             toolStripMenuItemClearFixes.Text = LanguageSettings.Current.DvdSubRip.Clear;
             toolStripMenuItemClearGuesses.Text = LanguageSettings.Current.DvdSubRip.Clear;
@@ -9939,7 +9939,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     Application.DoEvents();
                 }
             }
-            finally 
+            finally
             {
                 Cursor = Cursors.Default;
                 _ocrMethodIndex = oldOcrIndex;
@@ -9950,6 +9950,64 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var f = new ExportPngXmlDialogOpenFolder(text, path))
             {
                 f.ShowDialog(this);
+            }
+        }
+
+        private string GetUnknownComboBoxWord(string s)
+        {
+            if (s == null || !s.Contains(':'))
+            {
+                return string.Empty;
+            }
+
+            return s.Remove(0, s.IndexOf(':') + 1).Trim();
+        }
+
+        private void removeAllXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var word = GetUnknownComboBoxWord(listBoxUnknownWords.Text);
+            if (string.IsNullOrEmpty(word))
+            {
+                return;
+            }
+
+            var unkownWords = new List<LogItem>();
+            foreach (var item in listBoxUnknownWords.Items)
+            {
+                var raw = item as LogItem;
+                if (raw == null)
+                {
+                    continue;
+                }
+
+                if (!word.Equals(raw.Text, StringComparison.OrdinalIgnoreCase))
+                {
+                    unkownWords.Add(raw);
+                }
+            }
+
+            listBoxUnknownWords.BeginUpdate();
+            listBoxUnknownWords.Items.Clear();
+            listBoxUnknownWords.Items.AddRange(unkownWords.Cast<object>().ToArray());
+            listBoxUnknownWords.EndUpdate();
+
+            if (listBoxUnknownWords.Items.Count > 0)
+            {
+                listBoxUnknownWords.SelectedIndex = 0;
+            }
+        }
+
+        private void contextMenuStripUnknownWords_Opening(object sender, CancelEventArgs e)
+        {
+            var word = GetUnknownComboBoxWord(listBoxUnknownWords.Text);
+            if (string.IsNullOrEmpty(word))
+            {
+                removeAllXToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                removeAllXToolStripMenuItem.Visible = true;
+                removeAllXToolStripMenuItem.Text = string.Format(LanguageSettings.Current.Settings.RemoveX.RemoveChar('?'), word);
             }
         }
     }
