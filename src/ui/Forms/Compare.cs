@@ -264,6 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             break;
                         }
+
                         if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(i)) > 1)
                         {
                             for (var j = index; j < i; j++)
@@ -549,7 +550,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             const double tolerance = 0.1;
-            return Math.Abs(t2.TotalMilliseconds - t2.TotalMilliseconds) < tolerance;
+            return Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) < tolerance;
         }
 
         private int GetColumnsEqualExceptNumberAndDuration(Paragraph p1, Paragraph p2)
