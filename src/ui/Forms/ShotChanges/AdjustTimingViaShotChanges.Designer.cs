@@ -373,6 +373,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             // 
             // videoPlayerContainer1
             // 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
             this.videoPlayerContainer1.CurrentPosition = 0D;

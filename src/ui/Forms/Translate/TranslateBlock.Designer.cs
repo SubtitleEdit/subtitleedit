@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
-    partial class TranslateBlock
+    sealed partial class TranslateBlock
     {
         /// <summary>
         /// Required designer variable.
@@ -33,6 +33,8 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonGetTargetGet = new System.Windows.Forms.Button();
             this.buttonCopySourceTextToClipboard = new System.Windows.Forms.Button();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.buttonImport = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelInfo
@@ -51,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCancel.Location = new System.Drawing.Point(452, 165);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -73,16 +75,40 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCopySourceTextToClipboard.Location = new System.Drawing.Point(211, 165);
             this.buttonCopySourceTextToClipboard.Name = "buttonCopySourceTextToClipboard";
             this.buttonCopySourceTextToClipboard.Size = new System.Drawing.Size(235, 23);
-            this.buttonCopySourceTextToClipboard.TabIndex = 1;
+            this.buttonCopySourceTextToClipboard.TabIndex = 3;
             this.buttonCopySourceTextToClipboard.Text = "Copy source text clipboard again";
             this.buttonCopySourceTextToClipboard.UseVisualStyleBackColor = true;
             this.buttonCopySourceTextToClipboard.Click += new System.EventHandler(this.buttonCopySourceTextToClipboard_Click);
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.Location = new System.Drawing.Point(12, 165);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(193, 23);
+            this.buttonExport.TabIndex = 2;
+            this.buttonExport.Text = "Save to file...";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
+            // buttonImport
+            // 
+            this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonImport.Location = new System.Drawing.Point(418, 99);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(28, 23);
+            this.buttonImport.TabIndex = 1;
+            this.buttonImport.Text = "...";
+            this.buttonImport.UseVisualStyleBackColor = true;
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
             // 
             // TranslateBlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(539, 200);
+            this.Controls.Add(this.buttonImport);
+            this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonGetTargetGet);
@@ -107,5 +133,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonGetTargetGet;
         private System.Windows.Forms.Button buttonCopySourceTextToClipboard;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.Button buttonImport;
     }
 }
