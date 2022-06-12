@@ -6,6 +6,7 @@
    * More options for "Modify selection"
    * CLI change output-file-name - thx BenJamesAndo
    * Add Polish speech recognition vosk/kaldi model
+   * Add Netflix Chinese profile - thx Kester
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -20,6 +21,7 @@
    * Minor improvements for compare
    * Improve searching for start time in mkv - thx cyzs233/signedout
    * Improve top alignment capture for bdsup - thx tormento
+   * Improve dcinema 2010 - thx stephw999
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
