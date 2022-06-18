@@ -88,6 +88,12 @@
     <Reference Include="Vosk, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Vosk.0.3.38\lib\netstandard2.0\Vosk.dll</HintPath>
     </Reference>
+    <Reference Include="Xceed.Document.NET, Version=2.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DocX.2.2.0\lib\net40\Xceed.Document.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Words.NET, Version=2.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DocX.2.2.0\lib\net40\Xceed.Words.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\SETextBox.cs">
@@ -1122,11 +1128,18 @@
     <Compile Include="Forms\Styles\TimedTextStyles.Designer.cs">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Translate\SplitHelper.cs" />
     <Compile Include="Forms\Translate\TranslateBlock.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Translate\TranslateBlock.Designer.cs">
       <DependentUpon>TranslateBlock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Translate\TranslateExportImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Translate\TranslateExportImport.Designer.cs">
+      <DependentUpon>TranslateExportImport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Translate\TranslateViaCopyPaste.cs">
       <SubType>Form</SubType>
@@ -1879,6 +1892,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Translate\TranslateBlock.resx">
       <DependentUpon>TranslateBlock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Translate\TranslateExportImport.resx">
+      <DependentUpon>TranslateExportImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Translate\TranslateViaCopyPaste.resx">
       <DependentUpon>TranslateViaCopyPaste.cs</DependentUpon>

@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.listViewTranslate.FullRowSelect = true;
             this.listViewTranslate.GridLines = true;
             this.listViewTranslate.HideSelection = false;
-            this.listViewTranslate.Location = new System.Drawing.Point(26, 43);
+            this.listViewTranslate.Location = new System.Drawing.Point(12, -6);
             this.listViewTranslate.Name = "listViewTranslate";
             this.listViewTranslate.Size = new System.Drawing.Size(886, 441);
             this.listViewTranslate.TabIndex = 7;
@@ -223,10 +223,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TranslateViaCopyPaste";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(MainForm_KeyDown);
-            this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.ResizeEnd += new System.EventHandler(this.MainForm_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxBytes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

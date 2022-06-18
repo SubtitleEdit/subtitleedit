@@ -33926,7 +33926,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var form = new AudioToText(_videoFileName))
+            using (var form = new AudioToText(_videoFileName, this))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
@@ -33967,13 +33967,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.X > 72 && e.X <= (122 + textBoxListViewText.Height))
+            if (e.X > 72 && e.X <= (122 + textBoxListViewText.Height) && !textBoxListViewText.Enabled)
             {
-                if (!textBoxListViewText.Enabled)
+                InsertLineToolStripMenuItemClick(null, null);
+                return;
+            }
+        }
+
+        private void exporImportTofromWordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new TranslateExportImport(_subtitle))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
                 {
-                    InsertLineToolStripMenuItemClick(null, null);
                     return;
                 }
+
+                SaveSubtitleListviewIndices();
+                _subtitle = form.Subtitle;
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                RestoreSubtitleListviewIndices();
+                RefreshSelectedParagraph();
             }
         }
     }
