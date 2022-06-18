@@ -26,15 +26,17 @@ namespace Nikse.SubtitleEdit.Forms
         private long _bytesWavTotal;
         private long _bytesWavRead;
         private readonly List<string> _filesToDelete;
+        private readonly Form _parentForm;
         public Subtitle TranscribedSubtitle { get; private set; }
 
-        public AudioToText(string videoFileName)
+        public AudioToText(string videoFileName, Form parentForm)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonGenerate);
             _videoFileName = videoFileName;
+            _parentForm = parentForm;
 
             Text = LanguageSettings.Current.AudioToText.Title;
             labelInfo.Text = LanguageSettings.Current.AudioToText.Info;
@@ -117,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 GenerateBatch();
+                TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
                 return;
             }
 
@@ -170,6 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);
                 if (_cancel)
                 {
+                    TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
                     if (!_batchMode)
                     {
                         DialogResult = DialogResult.Cancel;
@@ -186,10 +190,13 @@ namespace Nikse.SubtitleEdit.Forms
                 TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked);
 
                 SaveToSourceFolder(videoFileName);
+                TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
             }
 
             progressBar1.Visible = false;
             labelTime.Text = string.Empty;
+
+            TaskbarList.StartBlink(_parentForm, 10, 1, 2);
             MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count));
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
@@ -249,6 +256,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelProgress.Text = string.Format(LanguageSettings.Current.AudioToText.TranscribingXOfY, _batchFileNumber, listViewInputFiles.Items.Count);
             }
+            else
+            {
+                TaskbarList.SetProgressValue(_parentForm.Handle, 1, 100);
+            }
 
             labelProgress.Refresh();
             Application.DoEvents();
@@ -278,10 +289,21 @@ namespace Nikse.SubtitleEdit.Forms
                         textBoxLog.AppendText(res.RemoveChar('\r', '\n'));
                     }
 
+                    if (!_batchMode)
+                    {
+                        TaskbarList.SetProgressValue(_parentForm.Handle, Math.Max(1, progressBar1.Value), progressBar1.Maximum);
+                    }
+
                     if (_cancel)
                     {
+                        TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
                         return null;
                     }
+                }
+
+                if (!_batchMode)
+                {
+                    TaskbarList.StartBlink(_parentForm, 10, 1, 2);
                 }
             }
 

@@ -308,6 +308,8 @@ Source: {#bindir}\Vosk.dll;                        DestDir: {app};              
 Source: {#bindir}\NCalc.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\Xceed.Document.NET.dll;          DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\Xceed.Words.NET.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -347,6 +349,8 @@ Type: files;      Name: {app}\Vosk.dll;                               Check: IsU
 Type: files;      Name: {app}\NCalc.dll;                              Check: IsUpgrade()
 Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsUpgrade()
 Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
+Type: files;      Name: {app}\Xceed.Document.NET.dll;                 Check: IsUpgrade()
+Type: files;      Name: {app}\Xceed.Words.NET.dll;                    Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Primitives.dll;         Check: IsUpgrade()
 
