@@ -19,16 +19,18 @@
    * Update French translation - the Peirre
    * Update Vosk to v0.3.42
    * Minor improvements for compare
-   * Improve searching for start time in mkv - thx cyzs233/signedout
    * Improve top alignment capture for bdsup - thx tormento
    * Improve dcinema 2010 - thx stephw999
+   * Add taskbar progress bar for audio to text - thx lambdacore12
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
+   * Fix crash in "Fix music notation" - thx MizzouDawg
    * Fix crash in save as ASSA after SSA - thx darnn
    * Fix crash in compare export - thx 1380
    * Fix crash in visual sync - thx fusefib
    * Fix for remove ASSA line as empty - thx Leon
+   * Fix for finding delay in mkv - thx cyzs233/signedout
 
 
 3.6.6 (25th May 2022)
