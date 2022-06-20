@@ -27,6 +27,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     foreach (string musicSymbol in musicSymbols)
                     {
                         var ms = musicSymbol.Trim();
+                        if (ms.Length == 0)
+                        {
+                            continue;
+                        }
+
                         if (containsFontTag && ms == "#")
                         {
                             var idx = newText.IndexOf('#');
