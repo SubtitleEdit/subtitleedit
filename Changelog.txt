@@ -20,7 +20,7 @@
    * Update Vosk to v0.3.42
    * Minor improvements for compare
    * Improve top alignment capture for bdsup - thx tormento
-   * Improve dcinema 2010 - thx stephw999
+   * Improve DCinema 2010 - thx stephw999
    * Add taskbar progress bar for audio to text - thx lambdacore12
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
