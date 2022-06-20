@@ -182,6 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             int count = 0;
             int converted = 0;
             int errors = 0;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 var pattern = arguments[2].Trim();
@@ -809,7 +810,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (count > 0)
             {
                 _stdOutWriter.WriteLine();
-                _stdOutWriter.WriteLine($"{converted} file(s) converted");
+                _stdOutWriter.WriteLine($"{converted} file(s) converted in {sw.Elapsed}" );
                 _stdOutWriter.WriteLine();
             }
 
