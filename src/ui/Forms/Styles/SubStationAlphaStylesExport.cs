@@ -42,14 +42,31 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            var exportNames = new List<string>();
+            var occursMoreThanOnce = new List<string>();
             ExportedStyles = new List<string>();
             foreach (ListViewItem item in listViewExportStyles.Items)
             {
                 if (item.Checked)
                 {
                     ExportedStyles.Add(item.Text);
+                    if (exportNames.Contains(item.Text))
+                    {
+                        occursMoreThanOnce.Add(item.Text);
+                    }
+                    else
+                    {
+                        exportNames.Add(item.Text);
+                    }
                 }
             }
+
+            if (occursMoreThanOnce.Count > 0)
+            {
+                MessageBox.Show("Style name must be unique - can only export one style with name: " + string.Join(", ", occursMoreThanOnce));
+                return;
+            }
+
             if (ExportedStyles.Count == 0)
             {
                 return;
@@ -145,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     var sb = new StringBuilder();
                     foreach (var styleName in ExportedStyles)
                     {
-                        var style = _stylesToExport.Single(styleItem => styleItem.Name == styleName);
+                        var style = _stylesToExport.First(styleItem => styleItem.Name == styleName);
                         sb.Append(style.ToRawAss());
                         sb.Append(Environment.NewLine);
                     }
