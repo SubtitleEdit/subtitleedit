@@ -2819,6 +2819,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Box per line (use outline color)</BoxPerLine>
     <BoxMultiLine>One box (use shadow color)</BoxMultiLine>
+    <DuplicateStyleNames>Duplicate style names: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Category</Category>

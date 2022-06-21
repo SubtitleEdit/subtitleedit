@@ -7732,6 +7732,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/BoxMultiLine":
                     language.SubStationAlphaStyles.BoxMultiLine = reader.Value;
                     break;
+                case "SubStationAlphaStyles/DuplicateStyleNames":
+                    language.SubStationAlphaStyles.DuplicateStyleNames = reader.Value;
+                    break;
                 case "SubStationAlphaStylesCategoriesManager/Category":
                     language.SubStationAlphaStylesCategoriesManager.Category = reader.Value;
                     break;
