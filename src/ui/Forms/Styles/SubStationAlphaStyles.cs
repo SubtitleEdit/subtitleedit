@@ -232,6 +232,26 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
             checkBoxStrikeout.Left = checkBoxFontUnderline.Left + checkBoxFontUnderline.Width + 12;
+
+            CheckDuplicateStyles();
+        }
+
+        private void CheckDuplicateStyles()
+        {
+            labelDuplicateStyleNames.Text = string.Empty;
+            var duplicateStyles = new List<string>();
+            foreach (var style in _currentFileStyles)
+            {
+                if (_currentFileStyles.Count(p => p.Name == style.Name) > 1 && !duplicateStyles.Contains(style.Name))
+                {
+                    duplicateStyles.Add(style.Name);
+                }
+            }
+
+            if (duplicateStyles.Count > 0)
+            {
+                labelDuplicateStyleNames.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.DuplicateStyleNames, string.Join(", ", duplicateStyles));
+            }
         }
 
         public override string Header => GetFileHeader(_currentFileStyles);
@@ -1238,6 +1258,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var name = selectedItem.Text;
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
                 RemoveStyleFromHeader(name);
+                CheckDuplicateStyles();
             }
 
             if (listViewStyles.Items.Count == 0)
@@ -1261,6 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             listViewStyles.Items.Clear();
             _currentFileStyles.Clear();
+            CheckDuplicateStyles();
             InitializeStylesListView();
             UpdateSelectedIndices(listViewStyles);
         }
@@ -1274,6 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "fontname", text);
                 GeneratePreview();
+                CheckDuplicateStyles();
             }
         }
 
@@ -1288,6 +1311,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     SetSsaStyle(name, "fontname", item.ToString());
                 }
                 GeneratePreview();
+                CheckDuplicateStyles();
             }
         }
 
