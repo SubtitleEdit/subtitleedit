@@ -22,6 +22,7 @@
    * Improve top alignment capture for bdsup - thx tormento
    * Improve DCinema 2010 - thx stephw999
    * Add taskbar progress bar for audio to text - thx lambdacore12
+   * Warn about duplicate style names in ASSA/SSA
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
@@ -29,6 +30,7 @@
    * Fix crash in save as ASSA after SSA - thx darnn
    * Fix crash in compare export - thx 1380
    * Fix crash in visual sync - thx fusefib
+   * Fix crash in export ssa styles w dup style name - thx A-Winters
    * Fix for remove ASSA line as empty - thx Leon
    * Fix for finding delay in mkv - thx cyzs233/signedout
 
