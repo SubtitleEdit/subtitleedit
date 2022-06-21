@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private Subtitle _subtitle;
+        private readonly Subtitle _subtitle;
         public List<NameEdit> RenameActions { get; set; }
         private readonly Timer _previewTimer = new Timer();
         private string _startName;
@@ -321,8 +321,28 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
             checkBoxStrikeout.Left = checkBoxFontUnderline.Left + checkBoxFontUnderline.Width + 12;
 
+            CheckDuplicateStyles();
+
             _previewTimer.Interval = 200;
             _previewTimer.Tick += PreviewTimerTick;
+        }
+
+        private void CheckDuplicateStyles()
+        {
+            labelDuplicateStyleNames.Text = string.Empty;
+            var duplicateStyles = new List<string>();
+            foreach (var style in _currentFileStyles)
+            {
+                if (_currentFileStyles.Count(p => p.Name == style.Name) > 1 && !duplicateStyles.Contains(style.Name))
+                {
+                    duplicateStyles.Add(style.Name);
+                }
+            }
+
+            if (duplicateStyles.Count > 0)
+            {
+                labelDuplicateStyleNames.Text = string.Format(LanguageSettings.Current.SubStationAlphaStyles.DuplicateStyleNames, string.Join(", ", duplicateStyles));
+            }
         }
 
         private void PreviewTimerTick(object sender, EventArgs e)
@@ -1195,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonPrimaryColor_Click(object sender, EventArgs e)
         {
-            string name = ActiveListView.SelectedItems[0].Text;
+            var name = ActiveListView.SelectedItems[0].Text;
             if (_isSubStationAlpha)
             {
                 colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
@@ -1227,7 +1247,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonSecondaryColor_Click(object sender, EventArgs e)
         {
-            string name = ActiveListView.SelectedItems[0].Text;
+            var name = ActiveListView.SelectedItems[0].Text;
             if (_isSubStationAlpha)
             {
                 colorDialogSSAStyle.Color = panelSecondaryColor.BackColor;
@@ -1254,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonOutlineColor_Click(object sender, EventArgs e)
         {
-            string name = ActiveListView.SelectedItems[0].Text;
+            var name = ActiveListView.SelectedItems[0].Text;
             if (_isSubStationAlpha)
             {
                 colorDialogSSAStyle.Color = panelOutlineColor.BackColor;
@@ -1282,7 +1302,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
-            string name = ActiveListView.SelectedItems[0].Text;
+            var name = ActiveListView.SelectedItems[0].Text;
             if (_isSubStationAlpha)
             {
                 colorDialogSSAStyle.Color = panelBackColor.BackColor;
@@ -1463,7 +1483,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            string askText = listViewStyles.SelectedItems.Count > 1 ?
+            var askText = listViewStyles.SelectedItems.Count > 1 ?
                 string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.SelectedItems.Count) :
                 LanguageSettings.Current.Main.DeleteOneLinePrompt;
 
@@ -1475,7 +1495,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             foreach (ListViewItem selectedItem in listViewStyles.SelectedItems)
             {
-                string name = selectedItem.Text;
+                var name = selectedItem.Text;
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
                 RemoveStyleFromHeader(name);
             }
@@ -1487,11 +1507,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             UpdateSelectedIndices(listViewStyles);
             UpdateStorageButtonsState();
+            CheckDuplicateStyles();
         }
 
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
-            string askText = listViewStyles.Items.Count == 1 ?
+            var askText = listViewStyles.Items.Count == 1 ?
                 LanguageSettings.Current.Main.DeleteOneLinePrompt :
                 string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, listViewStyles.Items.Count);
 
@@ -1504,6 +1525,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _currentFileStyles.Clear();
             InitializeStylesListView(string.Empty);
             UpdateSelectedIndices(listViewStyles);
+            CheckDuplicateStyles();
         }
 
         private void comboBoxFontName_TextChanged(object sender, EventArgs e)
@@ -1512,9 +1534,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (_doUpdate && !string.IsNullOrEmpty(text) && ActiveListView.SelectedItems.Count > 0)
             {
                 ActiveListView.SelectedItems[0].SubItems[1].Text = text;
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "fontname", text);
                 GeneratePreview();
+                CheckDuplicateStyles();
             }
         }
 
@@ -1522,13 +1545,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = listViewStyles.SelectedItems[0].Text;
+                var name = listViewStyles.SelectedItems[0].Text;
                 var item = comboBoxFontName.SelectedItem;
                 if (item != null)
                 {
                     SetSsaStyle(name, "fontname", item.ToString());
                 }
                 GeneratePreview();
+                CheckDuplicateStyles();
             }
         }
 
@@ -1537,7 +1561,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
                 ActiveListView.SelectedItems[0].SubItems[2].Text = numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture);
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "fontsize", numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1581,7 +1605,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "bold", checkBoxFontBold.Checked ? "-1" : "0");
                 UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
@@ -1592,7 +1616,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "italic", checkBoxFontItalic.Checked ? "-1" : "0");
                 UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
@@ -1603,7 +1627,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "underline", checkBoxFontUnderline.Checked ? "-1" : "0");
                 UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
@@ -1614,7 +1638,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "strikeout", checkBoxStrikeout.Checked ? "-1" : "0");
                 UpdateListViewFontStyle(GetSsaStyle(name));
                 GeneratePreview();
@@ -1625,7 +1649,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", "1");
                 GeneratePreview();
             }
@@ -1635,7 +1659,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", "2");
                 GeneratePreview();
             }
@@ -1645,7 +1669,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", "3");
                 GeneratePreview();
             }
@@ -1655,7 +1679,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", _isSubStationAlpha ? "9" : "4");
                 GeneratePreview();
             }
@@ -1665,7 +1689,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", _isSubStationAlpha ? "10" : "5");
                 GeneratePreview();
             }
@@ -1675,7 +1699,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", _isSubStationAlpha ? "11" : "6");
                 GeneratePreview();
             }
@@ -1685,7 +1709,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", _isSubStationAlpha ? "5" : "7");
                 GeneratePreview();
             }
@@ -1695,7 +1719,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", _isSubStationAlpha ? "6" : "8");
                 GeneratePreview();
             }
@@ -1705,7 +1729,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", _isSubStationAlpha ? "7" : "9");
                 GeneratePreview();
             }
@@ -1715,7 +1739,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "marginl", numericUpDownMarginLeft.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1725,7 +1749,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "marginr", numericUpDownMarginRight.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1735,7 +1759,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "marginv", numericUpDownMarginVertical.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1793,7 +1817,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1803,7 +1827,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
@@ -1813,7 +1837,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (sender is RadioButton rb && ActiveListView.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
@@ -1824,7 +1848,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             if (ActiveListView.SelectedItems.Count == 1 && _doUpdate && radioButtonOpaqueBox.Checked)
             {
-                string name = ActiveListView.SelectedItems[0].Text;
+                var name = ActiveListView.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 if (comboBoxOpaqueBoxStyle.SelectedIndex == 0)
                 {

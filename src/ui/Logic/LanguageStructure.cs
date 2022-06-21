@@ -3027,6 +3027,7 @@
             public string Angle { get; set; }
             public string BoxPerLine { get; set; }
             public string BoxMultiLine { get; set; }
+            public string DuplicateStyleNames { get; set; }
         }
 
         public class SubStationAlphaStylesCategoriesManager
