@@ -21,12 +21,16 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxUncheckInsertsLowercase.Text = language.UncheckInsertsLowercase;
             checkBoxHideContinuationCandidatesWithoutName.Text = language.HideContinuationCandidatesWithoutName;
             checkBoxIgnoreLyrics.Text = language.IgnoreLyrics;
+            labelContinuationPause.Text = language.ContinuationPause;
+            labelMs.Text = language.Milliseconds;
+            buttonEditCustomStyle.Text = language.EditCustomContinuationStyle;
 
             checkBoxUncheckInsertsAllCaps.Checked = settings.FixContinuationStyleUncheckInsertsAllCaps;
             checkBoxUncheckInsertsItalic.Checked = settings.FixContinuationStyleUncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Checked = settings.FixContinuationStyleUncheckInsertsLowercase;
             checkBoxHideContinuationCandidatesWithoutName.Checked = settings.FixContinuationStyleHideContinuationCandidatesWithoutName;
             checkBoxIgnoreLyrics.Checked = settings.FixContinuationStyleIgnoreLyrics;
+            numericUpDownContinuationPause.Value = settings.ContinuationPause;
 
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -41,6 +45,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 Width = checkBoxHideContinuationCandidatesWithoutName.Left + checkBoxHideContinuationCandidatesWithoutName.Width + 10;
             }
+
+            numericUpDownContinuationPause.Left = labelContinuationPause.Left + labelContinuationPause.Width + 6;
+            labelMs.Left = numericUpDownContinuationPause.Left + numericUpDownContinuationPause.Width + 6;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -50,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase = checkBoxUncheckInsertsLowercase.Checked;
             Configuration.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName = checkBoxHideContinuationCandidatesWithoutName.Checked;
             Configuration.Settings.General.FixContinuationStyleIgnoreLyrics = checkBoxIgnoreLyrics.Checked;
+            Configuration.Settings.General.ContinuationPause = Convert.ToInt32(numericUpDownContinuationPause.Value);
 
             DialogResult = DialogResult.OK;
         }
@@ -64,6 +72,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void buttonEditCustomStyle_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsCustomContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
+                    // Reload pause setting in case it was changed
+                    numericUpDownContinuationPause.Value = Configuration.Settings.General.ContinuationPause;
+                }
             }
         }
     }
