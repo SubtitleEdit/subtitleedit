@@ -1456,6 +1456,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                         GapPrefix = "...",
                         GapPrefixAddSpace = false
                     };
+                case ContinuationStyle.Custom:
+                    return new ContinuationProfile
+                    {
+                        Suffix = Configuration.Settings.General.CustomContinuationStyleSuffix,
+                        SuffixApplyIfComma = Configuration.Settings.General.CustomContinuationStyleSuffixApplyIfComma,
+                        SuffixAddSpace = Configuration.Settings.General.CustomContinuationStyleSuffixAddSpace,
+                        SuffixReplaceComma = Configuration.Settings.General.CustomContinuationStyleSuffixReplaceComma,
+                        Prefix = Configuration.Settings.General.CustomContinuationStylePrefix,
+                        PrefixAddSpace = Configuration.Settings.General.CustomContinuationStylePrefixAddSpace,
+                        UseDifferentStyleGap = Configuration.Settings.General.CustomContinuationStyleUseDifferentStyleGap,
+                        GapSuffix = Configuration.Settings.General.CustomContinuationStyleGapSuffix,
+                        GapSuffixApplyIfComma = Configuration.Settings.General.CustomContinuationStyleGapSuffixApplyIfComma,
+                        GapSuffixAddSpace = Configuration.Settings.General.CustomContinuationStyleGapSuffixAddSpace,
+                        GapSuffixReplaceComma = Configuration.Settings.General.CustomContinuationStyleGapSuffixReplaceComma,
+                        GapPrefix = Configuration.Settings.General.CustomContinuationStyleGapPrefix,
+                        GapPrefixAddSpace = Configuration.Settings.General.CustomContinuationStyleGapPrefixAddSpace
+                    };
                 default:
                     return new ContinuationProfile
                     {

@@ -99,6 +99,7 @@
             public string ShortcutX { get; set; }
             public string ExampleX { get; set; }
             public string Reset { get; set; }
+            public string Warning { get; set; }
         }
 
         public class About
@@ -2463,6 +2464,7 @@
             public string ContinuationStyleLeadingTrailingEllipsis { get; set; }
             public string ContinuationStyleLeadingTrailingDash { get; set; }
             public string ContinuationStyleLeadingTrailingDashDots { get; set; }
+            public string ContinuationStyleCustom { get; set; }
             public string CpsLineLengthStyle { get; set; }
             public string CpsLineLengthStyleCalcAll { get; set; }
             public string CpsLineLengthStyleCalcNoSpaceCpsOnly { get; set; }
@@ -2744,6 +2746,18 @@
             public string ShortcutsAllowSingleLetterOrNumberInTextBox { get; set; }
             public string UpdateFileTypeAssociations { get; set; }
             public string FileTypeAssociationsUpdated { get; set; }
+            public string CustomContinuationStyle { get; set; }
+            public string LoadStyle { get; set; }
+            public string Suffix { get; set; }
+            public string AddSuffixForComma { get; set; }
+            public string AddSpace { get; set; }
+            public string RemoveComma { get; set; }
+            public string Prefix { get; set; }
+            public string DifferentStyleGap { get; set; }
+            public string Preview { get; set; }
+            public string PreviewPause { get; set; }
+            public string CustomContinuationStyleNote { get; set; }
+            public string ResetCustomContinuationStyleWarning { get; set; }
         }
 
         public class SettingsMpv

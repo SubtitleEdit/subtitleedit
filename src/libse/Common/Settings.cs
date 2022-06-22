@@ -1249,6 +1249,19 @@ $HorzAlign          =   Center
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
         public int ContinuationPause { get; set; }
+        public string CustomContinuationStyleSuffix { get; set; }
+        public bool CustomContinuationStyleSuffixApplyIfComma { get; set; }
+        public bool CustomContinuationStyleSuffixAddSpace { get; set; }
+        public bool CustomContinuationStyleSuffixReplaceComma { get; set; }
+        public string CustomContinuationStylePrefix { get; set; }
+        public bool CustomContinuationStylePrefixAddSpace { get; set; }
+        public bool CustomContinuationStyleUseDifferentStyleGap { get; set; }
+        public string CustomContinuationStyleGapSuffix { get; set; }
+        public bool CustomContinuationStyleGapSuffixApplyIfComma { get; set; }
+        public bool CustomContinuationStyleGapSuffixAddSpace { get; set; }
+        public bool CustomContinuationStyleGapSuffixReplaceComma { get; set; }
+        public string CustomContinuationStyleGapPrefix { get; set; }
+        public bool CustomContinuationStyleGapPrefixAddSpace { get; set; }
         public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
         public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
         public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
@@ -1431,7 +1444,20 @@ $HorzAlign          =   Center
             SubtitleMaximumWordsPerMinute = 400;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.None;
-            ContinuationPause = 2000;
+            ContinuationPause = 300;
+            CustomContinuationStyleSuffix = "";
+            CustomContinuationStyleSuffixApplyIfComma = false;
+            CustomContinuationStyleSuffixAddSpace = false;
+            CustomContinuationStyleSuffixReplaceComma = false;
+            CustomContinuationStylePrefix = "";
+            CustomContinuationStylePrefixAddSpace = false;
+            CustomContinuationStyleUseDifferentStyleGap = true;
+            CustomContinuationStyleGapSuffix = "...";
+            CustomContinuationStyleGapSuffixApplyIfComma = true;
+            CustomContinuationStyleGapSuffixAddSpace = false;
+            CustomContinuationStyleGapSuffixReplaceComma = true;
+            CustomContinuationStyleGapPrefix = "...";
+            CustomContinuationStyleGapPrefixAddSpace = false;
             FixContinuationStyleUncheckInsertsAllCaps = true;
             FixContinuationStyleUncheckInsertsItalic = true;
             FixContinuationStyleUncheckInsertsLowercase = true;
@@ -3460,6 +3486,84 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ContinuationPause = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffixApplyIfComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffixApplyIfComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffixReplaceComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffixReplaceComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStylePrefix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStylePrefix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStylePrefixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStylePrefixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleUseDifferentStyleGap");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleUseDifferentStyleGap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixApplyIfComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffixApplyIfComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixReplaceComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffixReplaceComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapPrefix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapPrefix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapPrefixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapPrefixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsAllCaps");
@@ -9547,6 +9651,19 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
                 textWriter.WriteElementString("ContinuationPause", settings.General.ContinuationPause.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffix", settings.General.CustomContinuationStyleSuffix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffixApplyIfComma", settings.General.CustomContinuationStyleSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffixAddSpace", settings.General.CustomContinuationStyleSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffixReplaceComma", settings.General.CustomContinuationStyleSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStylePrefix", settings.General.CustomContinuationStylePrefix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStylePrefixAddSpace", settings.General.CustomContinuationStylePrefixAddSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleUseDifferentStyleGap", settings.General.CustomContinuationStyleUseDifferentStyleGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffix", settings.General.CustomContinuationStyleGapSuffix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffixApplyIfComma", settings.General.CustomContinuationStyleGapSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffixAddSpace", settings.General.CustomContinuationStyleGapSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffixReplaceComma", settings.General.CustomContinuationStyleGapSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapPrefix", settings.General.CustomContinuationStyleGapPrefix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapPrefixAddSpace", settings.General.CustomContinuationStyleGapPrefixAddSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));

@@ -12,6 +12,7 @@
         OnlyTrailingEllipsis,           // Ellipsis (trailing only)
         LeadingTrailingEllipsis,        // Ellipsis
         LeadingTrailingDash,            // Dash
-        LeadingTrailingDashDots         // Dash, but dots for pauses
+        LeadingTrailingDashDots,        // Dash, but dots for pauses
+        Custom                          // Custom
     }
 }

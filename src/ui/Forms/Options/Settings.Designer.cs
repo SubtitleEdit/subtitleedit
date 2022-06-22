@@ -40,6 +40,7 @@
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.buttonEditCustomContinuationStyle = new System.Windows.Forms.Button();
             this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
             this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.buttonGapChoose = new System.Windows.Forms.Button();
@@ -657,6 +658,7 @@
             // 
             // groupBoxGeneralRules
             // 
+            this.groupBoxGeneralRules.Controls.Add(this.buttonEditCustomContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.buttonGapChoose);
@@ -692,6 +694,18 @@
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
             // 
+            // buttonEditCustomContinuationStyle
+            // 
+            this.buttonEditCustomContinuationStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(346, 323);
+            this.buttonEditCustomContinuationStyle.Name = "buttonEditCustomContinuationStyle";
+            this.buttonEditCustomContinuationStyle.Size = new System.Drawing.Size(28, 23);
+            this.buttonEditCustomContinuationStyle.TabIndex = 59;
+            this.buttonEditCustomContinuationStyle.Text = "...";
+            this.buttonEditCustomContinuationStyle.UseVisualStyleBackColor = true;
+            this.buttonEditCustomContinuationStyle.Visible = false;
+            this.buttonEditCustomContinuationStyle.Click += new System.EventHandler(this.buttonEditCustomContinuationStyle_Click);
+            // 
             // comboBoxCpsLineLenCalc
             // 
             this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -714,7 +728,7 @@
             // 
             // buttonGapChoose
             // 
-            this.buttonGapChoose.Location = new System.Drawing.Point(264, 213);
+            this.buttonGapChoose.Location = new System.Drawing.Point(265, 214);
             this.buttonGapChoose.Name = "buttonGapChoose";
             this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
             this.buttonGapChoose.TabIndex = 46;
@@ -5679,5 +5693,6 @@
         private System.Windows.Forms.Label labelCpsLineLenCalc;
         private System.Windows.Forms.CheckBox checkBoxUseWordSplitList;
         private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
+        private System.Windows.Forms.Button buttonEditCustomContinuationStyle;
     }
 }
