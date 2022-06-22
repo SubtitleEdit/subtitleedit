@@ -156,7 +156,7 @@
             // 
             this.buttonEditCustomStyle.Location = new System.Drawing.Point(12, 177);
             this.buttonEditCustomStyle.Name = "buttonEditCustomStyle";
-            this.buttonEditCustomStyle.Size = new System.Drawing.Size(196, 27);
+            this.buttonEditCustomStyle.Size = new System.Drawing.Size(240, 27);
             this.buttonEditCustomStyle.TabIndex = 7;
             this.buttonEditCustomStyle.Text = "Edit custom continuation style...";
             this.buttonEditCustomStyle.UseVisualStyleBackColor = true;
