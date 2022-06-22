@@ -39,6 +39,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly List<string> DashPrefixes = new List<string> { "-", "‐", "–", "—" };
         public static readonly List<string> Suffixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
 
+        public static readonly List<ContinuationStyle> ContinuationStyles = Enum.GetValues(typeof(ContinuationStyle)).Cast<ContinuationStyle>().ToList();
+
         public static string SanitizeString(string input, bool removeDashes)
         {
             // Return if empty string
@@ -1271,57 +1273,22 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static int GetIndexFromContinuationStyle(ContinuationStyle continuationStyle)
         {
-            switch (continuationStyle)
-            {
-                case ContinuationStyle.NoneTrailingDots:
-                    return 1;
-                case ContinuationStyle.NoneLeadingTrailingDots:
-                    return 2;
-                case ContinuationStyle.OnlyTrailingDots:
-                    return 3;
-                case ContinuationStyle.LeadingTrailingDots:
-                    return 4;
-                case ContinuationStyle.LeadingTrailingDash:
-                    return 5;
-                case ContinuationStyle.LeadingTrailingDashDots:
-                    return 6;
-                case ContinuationStyle.LeadingTrailingEllipsis:
-                    return 7;
-                case ContinuationStyle.NoneEllipsisForPauses:
-                    return 8;
-                case ContinuationStyle.OnlyTrailingEllipsis:
-                    return 9;
-                default:
-                    return 0;
-            }
+            var index = ContinuationStyles.IndexOf(continuationStyle);
+            return index >= 0 ? index : ContinuationStyles.IndexOf(ContinuationStyle.NoneLeadingTrailingDots);
         }
 
         public static ContinuationStyle GetContinuationStyleFromIndex(int index)
         {
-            switch (index)
+            try
             {
-                case 1:
-                    return ContinuationStyle.NoneTrailingDots;
-                case 2:
-                    return ContinuationStyle.NoneLeadingTrailingDots;
-                case 3:
-                    return ContinuationStyle.OnlyTrailingDots;
-                case 4:
-                    return ContinuationStyle.LeadingTrailingDots;
-                case 5:
-                    return ContinuationStyle.LeadingTrailingDash;
-                case 6:
-                    return ContinuationStyle.LeadingTrailingDashDots;
-                case 7:
-                    return ContinuationStyle.LeadingTrailingEllipsis;
-                case 8:
-                    return ContinuationStyle.NoneEllipsisForPauses;
-                case 9:
-                    return ContinuationStyle.OnlyTrailingEllipsis;
-                default:
-                    return ContinuationStyle.None;
+                return ContinuationStyles[index];
+            }
+            catch
+            {
+                return ContinuationStyle.NoneLeadingTrailingDots;
             }
         }
+
 
         public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
         {
@@ -1361,7 +1328,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                         GapPrefix = "",
                         GapPrefixAddSpace = false
                     };
-                case ContinuationStyle.NoneEllipsisForPauses:
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "",
+                        SuffixApplyIfComma = false,
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = false,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = true,
+                        GapSuffix = "...",
+                        GapSuffixApplyIfComma = true,
+                        GapSuffixAddSpace = false,
+                        GapSuffixReplaceComma = true,
+                        GapPrefix = "...",
+                        GapPrefixAddSpace = false
+                    };
+                case ContinuationStyle.NoneTrailingEllipsis:
                     return new ContinuationProfile
                     {
                         Suffix = "",
@@ -1378,7 +1362,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         GapPrefix = "",
                         GapPrefixAddSpace = false
                     };
-                case ContinuationStyle.NoneLeadingTrailingDots:
+                case ContinuationStyle.NoneLeadingTrailingEllipsis:
                     return new ContinuationProfile
                     {
                         Suffix = "",
@@ -1388,11 +1372,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                         Prefix = "",
                         PrefixAddSpace = false,
                         UseDifferentStyleGap = true,
-                        GapSuffix = "...",
+                        GapSuffix = "…",
                         GapSuffixApplyIfComma = true,
                         GapSuffixAddSpace = false,
                         GapSuffixReplaceComma = true,
-                        GapPrefix = "...",
+                        GapPrefix = "…",
                         GapPrefixAddSpace = false
                     };
                 case ContinuationStyle.OnlyTrailingDots:
@@ -1414,6 +1398,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         SuffixAddSpace = false,
                         SuffixReplaceComma = true,
                         Prefix = "...",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = false
+                    };
+                case ContinuationStyle.OnlyTrailingEllipsis:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "…",
+                        SuffixApplyIfComma = true,
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = true,
+                        Prefix = "",
                         PrefixAddSpace = false,
                         UseDifferentStyleGap = false
                     };
@@ -1455,17 +1450,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                         GapSuffixReplaceComma = true,
                         GapPrefix = "...",
                         GapPrefixAddSpace = false
-                    };
-                case ContinuationStyle.OnlyTrailingEllipsis:
-                    return new ContinuationProfile
-                    {
-                        Suffix = "…",
-                        SuffixApplyIfComma = true,
-                        SuffixAddSpace = false,
-                        SuffixReplaceComma = true,
-                        Prefix = "",
-                        PrefixAddSpace = false,
-                        UseDifferentStyleGap = false
                     };
                 default:
                     return new ContinuationProfile

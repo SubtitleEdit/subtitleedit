@@ -1189,16 +1189,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void SetContinuationStyle(ContinuationStyle continuationStyle)
         {
             comboBoxContinuationStyle.Items.Clear();
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNone);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis);
+            foreach (var style in ContinuationUtilities.ContinuationStyles)
+            {
+                comboBoxContinuationStyle.Items.Add(UiUtil.GetContinuationStyleName(style));
+            }
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(continuationStyle));
