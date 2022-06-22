@@ -141,6 +141,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void checkBoxDifferentStyleGap_CheckedChanged(object sender, EventArgs e)
         {
+            if (this.isUpdating)
+            {
+                return;
+            }
+
             if (checkBoxDifferentStyleGap.Checked)
             {
                 // Duplicate settings if empty
