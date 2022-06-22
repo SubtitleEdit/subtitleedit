@@ -2908,7 +2908,7 @@ can edit in same subtitle file (collaboration)",
                 Prefix = "Prefix:",
                 DifferentStyleGap = "Use different style for gaps longer than",
                 Preview = "Preview",
-                PreviewPause = "(long pause)",
+                PreviewPause = "(pause)",
                 CustomContinuationStyleNote = "Note: The custom continuation style is shared across profiles.",
                 ResetCustomContinuationStyleWarning = "This will override the values in the dialog. Are you sure?",
             };
