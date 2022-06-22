@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 var numberOfLetters = GetNumberOfLetters(lineMatches);
                 var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches);
-                if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2)
+                if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 3 && numberOfLetters - numberOfItalicLetters < 2 && ItalicIsInsideWord(matches))
                 {
                     sb.AppendLine("<i>" + GetRawString(lineMatches) + "</i>");
                 }
@@ -36,6 +36,29 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
             return sb.ToString().TrimEnd().Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+        }
+
+        private static bool ItalicIsInsideWord(List<VobSubOcr.CompareMatch> matches)
+        {
+            for (var i = 0; i < matches.Count; i++)
+            {
+                var m = matches[i];
+                if (m.Italic || Separators.Contains(m.Text))
+                {
+                    continue;
+                }
+
+                var beforeHasLetter = i > 0 && !Separators.Contains(matches[i - 1].Text);
+                var afterHasLetter = i < matches.Count -1 && !Separators.Contains(matches[i + 1].Text);
+                if (beforeHasLetter || afterHasLetter)
+                {
+                    continue;
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         private static string GetStringWithItalicTagsMixed(List<VobSubOcr.CompareMatch> lineMatches)
