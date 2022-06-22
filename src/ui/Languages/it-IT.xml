@@ -2819,6 +2819,7 @@ Vuoi Continuare?</RestoreDefaultSettingsMsg>
     <Angle>Angolo</Angle>
     <BoxPerLine>Riquadro per riga (usa il colore del contorno)</BoxPerLine>
     <BoxMultiLine>Una casella (usa il colore dell'ombra)</BoxMultiLine>
+    <DuplicateStyleNames>Nomi stile duplicati: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Categoria</Category>
