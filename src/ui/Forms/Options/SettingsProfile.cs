@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             comboBoxContinuationStyle.Left = labelContinuationStyle.Left + labelContinuationStyle.Width + 5;
             comboBoxContinuationStyle.Width = comboBoxMergeShortLineLength.Width + (comboBoxMergeShortLineLength.Left - comboBoxContinuationStyle.Left);
+            buttonEditCustomContinuationStyle.Height = comboBoxContinuationStyle.Height;
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
@@ -232,6 +233,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             toolTipDialogStylePreview.RemoveAll();
             toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(RulesProfiles[idx].DialogStyle));
+
+            buttonEditCustomContinuationStyle.Visible = RulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = RulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
         }
 
         private void listViewProfiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -346,6 +350,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 // ignore
             }
 
+            buttonEditCustomContinuationStyle.Visible = RulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = RulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
+
             _editOn = oldEditOn;
         }
 
@@ -411,6 +418,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     //TODO: display something?
+                }
+            }
+        }
+
+        private void buttonEditCustomContinuationStyle_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsCustomContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
                 }
             }
         }

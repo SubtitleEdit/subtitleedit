@@ -913,6 +913,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
             SetCpsLineLengthStyle(Configuration.Settings.General.CpsLineLengthStrategy);
 
+            buttonEditCustomContinuationStyle.Visible = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
+
             UpdateProfileNames(gs.Profiles);
 
             comboBoxToolsMusicSymbol.Items.Clear();
@@ -3542,6 +3545,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             toolTipDialogStylePreview.RemoveAll();
             toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(_rulesProfiles[idx].DialogStyle));
+
+            buttonEditCustomContinuationStyle.Visible = _rulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = _rulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
@@ -4056,6 +4062,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelUpdateFileTypeAssociationsStatus.Text = LanguageSettings.Current.Settings.FileTypeAssociationsUpdated;
             FileTypeAssociations.Refresh();
             System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
+        }
+
+        private void buttonEditCustomContinuationStyle_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsCustomContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
+                }
+            }
         }
     }
 }

@@ -33,6 +33,7 @@
             this.labelName = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.buttonEditCustomContinuationStyle = new System.Windows.Forms.Button();
             this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
             this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
@@ -130,6 +131,7 @@
             // 
             this.groupBoxGeneralRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGeneralRules.Controls.Add(this.buttonEditCustomContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxContinuationStyle);
@@ -161,6 +163,18 @@
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
             // 
+            // buttonEditCustomContinuationStyle
+            // 
+            this.buttonEditCustomContinuationStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(279, 284);
+            this.buttonEditCustomContinuationStyle.Name = "buttonEditCustomContinuationStyle";
+            this.buttonEditCustomContinuationStyle.Size = new System.Drawing.Size(28, 23);
+            this.buttonEditCustomContinuationStyle.TabIndex = 196;
+            this.buttonEditCustomContinuationStyle.Text = "...";
+            this.buttonEditCustomContinuationStyle.UseVisualStyleBackColor = true;
+            this.buttonEditCustomContinuationStyle.Visible = false;
+            this.buttonEditCustomContinuationStyle.Click += new System.EventHandler(this.buttonEditCustomContinuationStyle_Click);
+            // 
             // comboBoxCpsLineLenCalc
             // 
             this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -174,7 +188,7 @@
             // labelCpsLineLenCalc
             // 
             this.labelCpsLineLenCalc.AutoSize = true;
-            this.labelCpsLineLenCalc.Location = new System.Drawing.Point(4, 316);
+            this.labelCpsLineLenCalc.Location = new System.Drawing.Point(6, 316);
             this.labelCpsLineLenCalc.Name = "labelCpsLineLenCalc";
             this.labelCpsLineLenCalc.Size = new System.Drawing.Size(102, 13);
             this.labelCpsLineLenCalc.TabIndex = 196;
@@ -185,7 +199,7 @@
             this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxContinuationStyle.DropDownWidth = 260;
             this.comboBoxContinuationStyle.FormattingEnabled = true;
-            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(132, 286);
+            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(132, 285);
             this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
             this.comboBoxContinuationStyle.Size = new System.Drawing.Size(174, 21);
             this.comboBoxContinuationStyle.TabIndex = 195;
@@ -733,5 +747,6 @@
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
         private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
+        private System.Windows.Forms.Button buttonEditCustomContinuationStyle;
     }
 }

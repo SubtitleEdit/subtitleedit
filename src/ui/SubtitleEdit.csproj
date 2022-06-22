@@ -270,6 +270,12 @@
     <Compile Include="Forms\Ocr\WordSplitDictionaryGenerator.Designer.cs">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options\SettingsCustomContinuationStyle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options\SettingsCustomContinuationStyle.Designer.cs">
+      <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1466,6 +1472,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\WordSplitDictionaryGenerator.resx">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options\SettingsCustomContinuationStyle.resx">
+      <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChangesList.resx">
       <DependentUpon>ShotChangesList.cs</DependentUpon>

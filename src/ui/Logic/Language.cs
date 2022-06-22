@@ -223,6 +223,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ShortcutX = "Shortcut: {0}",
                 ExampleX = "Example: {0}",
                 Reset = "Reset",
+                Warning = "Warning",
             };
 
             About = new LanguageStructure.About
@@ -2621,6 +2622,7 @@ can edit in same subtitle file (collaboration)",
                 ContinuationStyleLeadingTrailingEllipsis = "Ellipsis",
                 ContinuationStyleLeadingTrailingDash = "Dash",
                 ContinuationStyleLeadingTrailingDashDots = "Dash, but dots for pauses",
+                ContinuationStyleCustom = "Custom",
                 MusicSymbol = "Music symbol",
                 MusicSymbolsReplace = "Music symbols to replace (separate by comma)",
                 FixCommonOcrErrorsUseHardcodedRules = "Fix common OCR errors - also use hard-coded rules",
@@ -2894,6 +2896,18 @@ can edit in same subtitle file (collaboration)",
                 ShortcutsAllowSingleLetterOrNumberInTextBox = "Shortcuts: Allow single letter/number in text box",
                 UpdateFileTypeAssociations = "Update file type associations",
                 FileTypeAssociationsUpdated = "File type associations updated",
+                CustomContinuationStyle = "Edit custom continuation style",
+                LoadStyle = "Load style...",
+                Suffix = "Suffix:",
+                AddSuffixForComma = "Process if ends with comma",
+                AddSpace = "Add space",
+                RemoveComma = "Remove comma",
+                Prefix = "Prefix:",
+                DifferentStyleGap = "Use different style for gaps longer than",
+                Preview = "Preview",
+                PreviewPause = "(long pause)",
+                CustomContinuationStyleNote = "Note: The custom continuation style is shared between profiles.",
+                ResetCustomContinuationStyleWarning = "This will override the values in the dialog. Are you sure?",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv
