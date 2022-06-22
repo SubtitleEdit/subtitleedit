@@ -429,6 +429,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     // Saving settings handled by dialog
+                    // Quick refresh
+                    UiElementChanged(sender, e);
                 }
             }
         }

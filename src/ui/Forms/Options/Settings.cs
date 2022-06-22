@@ -3628,6 +3628,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     // Saving settings handled by dialog
+                    // Quick refresh in case custom style was changed
+                    ProfileUiValueChanged(sender, e);
                 }
             }
         }
@@ -4071,6 +4073,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     // Saving settings handled by dialog
+                    // Quick refresh
+                    ProfileUiValueChanged(sender, e);
                 }
             }
         }
