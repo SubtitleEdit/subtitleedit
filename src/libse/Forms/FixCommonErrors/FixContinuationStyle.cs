@@ -30,23 +30,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
 
-            // Quick fix for Portuguese
-            if (callbacks.Language == "pt")
-            {
-                _continuationProfile.SuffixApplyIfComma = false;
-                _continuationProfile.GapSuffixApplyIfComma = false;
-
-                if (_continuationProfile.Prefix == "..." || _continuationProfile.Prefix == "…")
-                {
-                    _continuationProfile.PrefixAddSpace = true;
-                }
-
-                if (_continuationProfile.GapPrefix == "..." || _continuationProfile.GapPrefix == "…")
-                {
-                    _continuationProfile.GapPrefixAddSpace = true;
-                }
-            }
-
             var minGapMs = ContinuationUtilities.GetMinimumGapMs();
 
             var inSentence = false;
