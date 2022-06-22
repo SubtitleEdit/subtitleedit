@@ -427,6 +427,7 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
+            this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -2883,7 +2884,7 @@
             this.checkBoxWaveformSnapToShotChanges.AutoSize = true;
             this.checkBoxWaveformSnapToShotChanges.Location = new System.Drawing.Point(262, 161);
             this.checkBoxWaveformSnapToShotChanges.Name = "checkBoxWaveformSnapToShotChanges";
-            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(249, 17);
+            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(242, 17);
             this.checkBoxWaveformSnapToShotChanges.TabIndex = 26;
             this.checkBoxWaveformSnapToShotChanges.Text = "Snap to shot changes (hold Shift to override)";
             this.checkBoxWaveformSnapToShotChanges.UseVisualStyleBackColor = true;
@@ -5124,6 +5125,12 @@
             this.imageListFileTypeAssociations.ImageSize = new System.Drawing.Size(32, 32);
             this.imageListFileTypeAssociations.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // toolTipDialogStylePreview
+            // 
+            this.toolTipDialogStylePreview.AutoPopDelay = 60000;
+            this.toolTipDialogStylePreview.InitialDelay = 500;
+            this.toolTipDialogStylePreview.ReshowDelay = 100;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5671,5 +5678,6 @@
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
         private System.Windows.Forms.CheckBox checkBoxUseWordSplitList;
+        private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
     }
 }
