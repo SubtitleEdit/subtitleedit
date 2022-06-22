@@ -1292,19 +1292,24 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
         {
+            return GetContinuationStylePreview(GetContinuationProfile(continuationStyle));
+        }
+
+        public static string GetContinuationStylePreview(ContinuationProfile profile)
+        {
             var line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit,";
             var line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
             var line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
             var linePause = "(...)";
             var line4 = "mauris mollis consectetur nibh,\nnec congue est viverra quis.";
 
-            var profile = GetContinuationProfile(continuationStyle);
+            var shouldAddLine1Suffix = ShouldAddSuffix(line1, profile);
 
-            return AddSuffixIfNeeded(line1, profile, false) + "\n\n"
-                                                            + AddSuffixIfNeeded(AddPrefixIfNeeded(line2, profile, false), profile, false) + "\n\n"
-                                                            + AddSuffixIfNeeded(AddPrefixIfNeeded(line3, profile, false), profile, true) + "\n\n"
-                                                            + linePause + "\n\n"
-                                                            + AddPrefixIfNeeded(line4, profile, true);
+            return (shouldAddLine1Suffix ? AddSuffixIfNeeded(line1, profile, false) : line1) + "\n\n"
+                    + AddSuffixIfNeeded((shouldAddLine1Suffix ? AddPrefixIfNeeded(line2, profile, false) : line2), profile, false) + "\n\n"
+                    + AddSuffixIfNeeded(AddPrefixIfNeeded(line3, profile, false), profile, true) + "\n\n"
+                    + linePause + "\n\n"
+                    + AddPrefixIfNeeded(line4, profile, true);
         }
 
         public static ContinuationProfile GetContinuationProfile(ContinuationStyle continuationStyle)
