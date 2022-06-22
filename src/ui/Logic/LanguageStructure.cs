@@ -2737,6 +2737,9 @@
             public string UncheckInsertsLowercase { get; set; }
             public string HideContinuationCandidatesWithoutName { get; set; }
             public string IgnoreLyrics { get; set; }
+            public string ContinuationPause { get; set; }
+            public string Milliseconds { get; set; }
+            public string EditCustomContinuationStyle { get; set; }
             public string MinFrameGap { get; set; }
             public string XFramesAtYFrameRateGivesZMs { get; set; }
             public string UseXAsNewGap { get; set; }
