@@ -33,6 +33,8 @@
             this.labelName = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
+            this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
             this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
@@ -71,8 +73,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
-            this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
-            this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
+            this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
@@ -159,6 +160,25 @@
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
+            // 
+            // comboBoxCpsLineLenCalc
+            // 
+            this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
+            this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
+            this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(132, 313);
+            this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
+            this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxCpsLineLenCalc.TabIndex = 197;
+            // 
+            // labelCpsLineLenCalc
+            // 
+            this.labelCpsLineLenCalc.AutoSize = true;
+            this.labelCpsLineLenCalc.Location = new System.Drawing.Point(4, 316);
+            this.labelCpsLineLenCalc.Name = "labelCpsLineLenCalc";
+            this.labelCpsLineLenCalc.Size = new System.Drawing.Size(102, 13);
+            this.labelCpsLineLenCalc.TabIndex = 196;
+            this.labelCpsLineLenCalc.Text = "Cps/line length style";
             // 
             // comboBoxContinuationStyle
             // 
@@ -627,24 +647,11 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // comboBoxCpsLineLenCalc
+            // toolTipDialogStylePreview
             // 
-            this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
-            this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
-            this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(132, 313);
-            this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
-            this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(174, 21);
-            this.comboBoxCpsLineLenCalc.TabIndex = 197;
-            // 
-            // labelCpsLineLenCalc
-            // 
-            this.labelCpsLineLenCalc.AutoSize = true;
-            this.labelCpsLineLenCalc.Location = new System.Drawing.Point(4, 316);
-            this.labelCpsLineLenCalc.Name = "labelCpsLineLenCalc";
-            this.labelCpsLineLenCalc.Size = new System.Drawing.Size(102, 13);
-            this.labelCpsLineLenCalc.TabIndex = 196;
-            this.labelCpsLineLenCalc.Text = "Cps/line length style";
+            this.toolTipDialogStylePreview.AutoPopDelay = 60000;
+            this.toolTipDialogStylePreview.InitialDelay = 500;
+            this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
             // SettingsProfile
             // 
@@ -725,5 +732,6 @@
         private System.Windows.Forms.ToolTip toolTipContinuationPreview;
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
+        private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
     }
 }

@@ -410,6 +410,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             return pre + s.TrimStart().TrimStart(GetDashChar(), GetAlternateDashChar()).TrimStart();
         }
 
+        public static string GetDialogStylePreview(DialogType dialogType)
+        {
+            var line1 = "Lorem ipsum dolor sit amet.";
+            var line2 = "Donec eget turpis consequat.";
+
+            switch (dialogType)
+            {
+                case DialogType.DashBothLinesWithoutSpace: 
+                    return "-" + line1 + "\n" + "-" + line2;
+                case DialogType.DashSecondLineWithSpace:
+                    return line1 + "\n" + "- " + line2;
+                case DialogType.DashSecondLineWithoutSpace:
+                    return line1 + "\n" + "-" + line2;
+                default:
+                    return "- " + line1 + "\n" + "- " + line2;
+            }
+        }
+
         public static DialogType GetDialogStyleFromIndex(int index)
         {
             switch (index)

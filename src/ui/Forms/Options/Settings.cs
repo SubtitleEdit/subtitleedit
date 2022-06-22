@@ -1151,19 +1151,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace);
             comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace);
             comboBoxDialogStyle.SelectedIndex = 0;
+            toolTipDialogStylePreview.RemoveAll();
             switch (dialogStyle)
             {
                 case DialogType.DashBothLinesWithSpace:
                     comboBoxDialogStyle.SelectedIndex = 0;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashBothLinesWithSpace));
                     break;
                 case DialogType.DashBothLinesWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 1;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashBothLinesWithoutSpace));
                     break;
                 case DialogType.DashSecondLineWithSpace:
                     comboBoxDialogStyle.SelectedIndex = 2;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashSecondLineWithSpace));
                     break;
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashSecondLineWithoutSpace));
                     break;
             }
         }
@@ -3534,6 +3539,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
+
+            toolTipDialogStylePreview.RemoveAll();
+            toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(_rulesProfiles[idx].DialogStyle));
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
