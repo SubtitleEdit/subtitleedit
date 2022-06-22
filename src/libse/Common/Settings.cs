@@ -1562,13 +1562,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 20,
                 SubtitleOptimalCharactersPerSeconds = 15,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis
             });
             profiles.Add(new RulesProfile
             {
@@ -1578,13 +1578,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis
             });
             profiles.Add(new RulesProfile
             {
@@ -1594,11 +1594,11 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
             });
@@ -1610,11 +1610,11 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 17,
                 SubtitleMaximumCharactersPerSeconds = 9,
                 SubtitleOptimalCharactersPerSeconds = 9,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 100,
                 CpsLineLengthStrategy = "CalcAll",
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
             });
@@ -1626,13 +1626,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1642,13 +1642,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 20,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = typeof(CalcIgnoreArabicDiacritics).Name,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1658,13 +1658,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1674,13 +1674,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1708,7 +1708,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 11,
                 SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1400,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 160,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
@@ -1724,7 +1724,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 11,
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1400,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 160,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
@@ -1772,7 +1772,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 10,
                 SubtitleMaximumDisplayMilliseconds = 8008,
                 SubtitleMinimumDisplayMilliseconds = 2002,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 160,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
@@ -1788,11 +1788,27 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 10,
                 SubtitleMaximumDisplayMilliseconds = 8000,
                 SubtitleMinimumDisplayMilliseconds = 2000,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 160,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SDI (Dutch)",
+                SubtitleLineMaximumLength = 37,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 38,
+                SubtitleMaximumCharactersPerSeconds = 18.75m,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1320,
+                SubtitleMaximumWordsPerMinute = 160,
+                CpsLineLengthStrategy = string.Empty,
+                MinimumMillisecondsBetweenLines = 160,
+                DialogStyle = DialogType.DashSecondLineWithoutSpace,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
             });
             profiles.Add(new RulesProfile
             {
