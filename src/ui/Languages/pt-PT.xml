@@ -2820,6 +2820,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Angle>Ângulo</Angle>
     <BoxPerLine>Caixa por linha (usar cor de contorno)</BoxPerLine>
     <BoxMultiLine>Uma caixa (usar cor de sombra)</BoxMultiLine>
+    <DuplicateStyleNames>Nomes de estilo duplicados: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Categoria</Category>
