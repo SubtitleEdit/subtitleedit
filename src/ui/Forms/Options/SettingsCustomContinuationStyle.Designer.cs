@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Options
 {
-    partial class SettingsCustomContinuationStyle
+    sealed partial class SettingsCustomContinuationStyle
     {
         /// <summary>
         /// Required designer variable.
