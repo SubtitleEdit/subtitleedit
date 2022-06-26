@@ -40,6 +40,7 @@
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.buttonEditCustomContinuationStyle = new System.Windows.Forms.Button();
             this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
             this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.buttonGapChoose = new System.Windows.Forms.Button();
@@ -427,6 +428,7 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
+            this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -656,6 +658,7 @@
             // 
             // groupBoxGeneralRules
             // 
+            this.groupBoxGeneralRules.Controls.Add(this.buttonEditCustomContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.buttonGapChoose);
@@ -691,6 +694,18 @@
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
             // 
+            // buttonEditCustomContinuationStyle
+            // 
+            this.buttonEditCustomContinuationStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(346, 323);
+            this.buttonEditCustomContinuationStyle.Name = "buttonEditCustomContinuationStyle";
+            this.buttonEditCustomContinuationStyle.Size = new System.Drawing.Size(28, 23);
+            this.buttonEditCustomContinuationStyle.TabIndex = 59;
+            this.buttonEditCustomContinuationStyle.Text = "...";
+            this.buttonEditCustomContinuationStyle.UseVisualStyleBackColor = true;
+            this.buttonEditCustomContinuationStyle.Visible = false;
+            this.buttonEditCustomContinuationStyle.Click += new System.EventHandler(this.buttonEditCustomContinuationStyle_Click);
+            // 
             // comboBoxCpsLineLenCalc
             // 
             this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -713,7 +728,7 @@
             // 
             // buttonGapChoose
             // 
-            this.buttonGapChoose.Location = new System.Drawing.Point(264, 213);
+            this.buttonGapChoose.Location = new System.Drawing.Point(265, 214);
             this.buttonGapChoose.Name = "buttonGapChoose";
             this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
             this.buttonGapChoose.TabIndex = 46;
@@ -2883,7 +2898,7 @@
             this.checkBoxWaveformSnapToShotChanges.AutoSize = true;
             this.checkBoxWaveformSnapToShotChanges.Location = new System.Drawing.Point(262, 161);
             this.checkBoxWaveformSnapToShotChanges.Name = "checkBoxWaveformSnapToShotChanges";
-            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(249, 17);
+            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(242, 17);
             this.checkBoxWaveformSnapToShotChanges.TabIndex = 26;
             this.checkBoxWaveformSnapToShotChanges.Text = "Snap to shot changes (hold Shift to override)";
             this.checkBoxWaveformSnapToShotChanges.UseVisualStyleBackColor = true;
@@ -5124,6 +5139,12 @@
             this.imageListFileTypeAssociations.ImageSize = new System.Drawing.Size(32, 32);
             this.imageListFileTypeAssociations.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // toolTipDialogStylePreview
+            // 
+            this.toolTipDialogStylePreview.AutoPopDelay = 60000;
+            this.toolTipDialogStylePreview.InitialDelay = 500;
+            this.toolTipDialogStylePreview.ReshowDelay = 100;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5671,5 +5692,7 @@
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
         private System.Windows.Forms.CheckBox checkBoxUseWordSplitList;
+        private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
+        private System.Windows.Forms.Button buttonEditCustomContinuationStyle;
     }
 }

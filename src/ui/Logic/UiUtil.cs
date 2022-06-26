@@ -1355,20 +1355,24 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots;
                 case ContinuationStyle.NoneLeadingTrailingDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots;
+                case ContinuationStyle.NoneTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
+                case ContinuationStyle.NoneLeadingTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingEllipsis;
                 case ContinuationStyle.OnlyTrailingDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots;
                 case ContinuationStyle.LeadingTrailingDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots;
+                case ContinuationStyle.OnlyTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis;
+                case ContinuationStyle.LeadingTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
                 case ContinuationStyle.LeadingTrailingDash:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash;
                 case ContinuationStyle.LeadingTrailingDashDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots;
-                case ContinuationStyle.LeadingTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
-                case ContinuationStyle.NoneEllipsisForPauses:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
-                case ContinuationStyle.OnlyTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis;
+                case ContinuationStyle.Custom:
+                    return LanguageSettings.Current.Settings.ContinuationStyleCustom;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
             }

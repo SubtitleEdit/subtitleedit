@@ -1249,6 +1249,19 @@ $HorzAlign          =   Center
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
         public int ContinuationPause { get; set; }
+        public string CustomContinuationStyleSuffix { get; set; }
+        public bool CustomContinuationStyleSuffixApplyIfComma { get; set; }
+        public bool CustomContinuationStyleSuffixAddSpace { get; set; }
+        public bool CustomContinuationStyleSuffixReplaceComma { get; set; }
+        public string CustomContinuationStylePrefix { get; set; }
+        public bool CustomContinuationStylePrefixAddSpace { get; set; }
+        public bool CustomContinuationStyleUseDifferentStyleGap { get; set; }
+        public string CustomContinuationStyleGapSuffix { get; set; }
+        public bool CustomContinuationStyleGapSuffixApplyIfComma { get; set; }
+        public bool CustomContinuationStyleGapSuffixAddSpace { get; set; }
+        public bool CustomContinuationStyleGapSuffixReplaceComma { get; set; }
+        public string CustomContinuationStyleGapPrefix { get; set; }
+        public bool CustomContinuationStyleGapPrefixAddSpace { get; set; }
         public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
         public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
         public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
@@ -1431,7 +1444,20 @@ $HorzAlign          =   Center
             SubtitleMaximumWordsPerMinute = 400;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.None;
-            ContinuationPause = 2000;
+            ContinuationPause = 300;
+            CustomContinuationStyleSuffix = "";
+            CustomContinuationStyleSuffixApplyIfComma = false;
+            CustomContinuationStyleSuffixAddSpace = false;
+            CustomContinuationStyleSuffixReplaceComma = false;
+            CustomContinuationStylePrefix = "";
+            CustomContinuationStylePrefixAddSpace = false;
+            CustomContinuationStyleUseDifferentStyleGap = true;
+            CustomContinuationStyleGapSuffix = "...";
+            CustomContinuationStyleGapSuffixApplyIfComma = true;
+            CustomContinuationStyleGapSuffixAddSpace = false;
+            CustomContinuationStyleGapSuffixReplaceComma = true;
+            CustomContinuationStyleGapPrefix = "...";
+            CustomContinuationStyleGapPrefixAddSpace = false;
             FixContinuationStyleUncheckInsertsAllCaps = true;
             FixContinuationStyleUncheckInsertsItalic = true;
             FixContinuationStyleUncheckInsertsLowercase = true;
@@ -1562,13 +1588,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 20,
                 SubtitleOptimalCharactersPerSeconds = 15,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 240,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis
             });
             profiles.Add(new RulesProfile
             {
@@ -1578,13 +1604,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 204,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis
             });
             profiles.Add(new RulesProfile
             {
@@ -1594,11 +1620,11 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 204,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
             });
@@ -1610,11 +1636,11 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 17,
                 SubtitleMaximumCharactersPerSeconds = 9,
                 SubtitleOptimalCharactersPerSeconds = 9,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 100,
                 CpsLineLengthStrategy = "CalcAll",
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingEllipsis
             });
@@ -1626,13 +1652,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 204,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1642,13 +1668,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 20,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 240,
                 CpsLineLengthStrategy = typeof(CalcIgnoreArabicDiacritics).Name,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1658,13 +1684,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 204,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1674,13 +1700,13 @@ $HorzAlign          =   Center
                 MergeLinesShorterThan = 43,
                 SubtitleMaximumCharactersPerSeconds = 17,
                 SubtitleOptimalCharactersPerSeconds = 12,
-                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 204,
                 CpsLineLengthStrategy = string.Empty,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                MinimumMillisecondsBetweenLines = 83, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneEllipsisForPauses,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingEllipsis,
             });
             profiles.Add(new RulesProfile
             {
@@ -1692,7 +1718,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 12,
                 SubtitleMaximumDisplayMilliseconds = 10000,
                 SubtitleMinimumDisplayMilliseconds = 1000,
-                SubtitleMaximumWordsPerMinute = 300,
+                SubtitleMaximumWordsPerMinute = 240,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
@@ -1708,7 +1734,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 11,
                 SubtitleMaximumDisplayMilliseconds = 7007,
                 SubtitleMinimumDisplayMilliseconds = 1400,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 180,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
@@ -1724,7 +1750,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 11,
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 1400,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 180,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashSecondLineWithoutSpace,
@@ -1772,7 +1798,7 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 10,
                 SubtitleMaximumDisplayMilliseconds = 8008,
                 SubtitleMinimumDisplayMilliseconds = 2002,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 180,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 125,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
@@ -1788,11 +1814,27 @@ $HorzAlign          =   Center
                 SubtitleOptimalCharactersPerSeconds = 10,
                 SubtitleMaximumDisplayMilliseconds = 8000,
                 SubtitleMinimumDisplayMilliseconds = 2000,
-                SubtitleMaximumWordsPerMinute = 280,
+                SubtitleMaximumWordsPerMinute = 180,
                 CpsLineLengthStrategy = string.Empty,
                 MinimumMillisecondsBetweenLines = 120,
                 DialogStyle = DialogType.DashBothLinesWithSpace,
                 ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SDI (Dutch)",
+                SubtitleLineMaximumLength = 37,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 38,
+                SubtitleMaximumCharactersPerSeconds = 18.75m,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1320,
+                SubtitleMaximumWordsPerMinute = 225,
+                CpsLineLengthStrategy = string.Empty,
+                MinimumMillisecondsBetweenLines = 160,
+                DialogStyle = DialogType.DashSecondLineWithoutSpace,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -3444,6 +3486,84 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ContinuationPause = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffixApplyIfComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffixApplyIfComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleSuffixReplaceComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleSuffixReplaceComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStylePrefix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStylePrefix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStylePrefixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStylePrefixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleUseDifferentStyleGap");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleUseDifferentStyleGap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixApplyIfComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffixApplyIfComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixReplaceComma");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapSuffixReplaceComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapPrefix");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapPrefix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("CustomContinuationStyleGapPrefixAddSpace");
+            if (subNode != null) 
+            {
+                settings.General.CustomContinuationStyleGapPrefixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsAllCaps");
@@ -9531,6 +9651,19 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
                 textWriter.WriteElementString("ContinuationPause", settings.General.ContinuationPause.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffix", settings.General.CustomContinuationStyleSuffix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffixApplyIfComma", settings.General.CustomContinuationStyleSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffixAddSpace", settings.General.CustomContinuationStyleSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleSuffixReplaceComma", settings.General.CustomContinuationStyleSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStylePrefix", settings.General.CustomContinuationStylePrefix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStylePrefixAddSpace", settings.General.CustomContinuationStylePrefixAddSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleUseDifferentStyleGap", settings.General.CustomContinuationStyleUseDifferentStyleGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffix", settings.General.CustomContinuationStyleGapSuffix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffixApplyIfComma", settings.General.CustomContinuationStyleGapSuffixApplyIfComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffixAddSpace", settings.General.CustomContinuationStyleGapSuffixAddSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapSuffixReplaceComma", settings.General.CustomContinuationStyleGapSuffixReplaceComma.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapPrefix", settings.General.CustomContinuationStyleGapPrefix.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CustomContinuationStyleGapPrefixAddSpace", settings.General.CustomContinuationStyleGapPrefixAddSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));

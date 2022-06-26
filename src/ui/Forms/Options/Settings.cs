@@ -913,6 +913,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
             SetCpsLineLengthStyle(Configuration.Settings.General.CpsLineLengthStrategy);
 
+            buttonEditCustomContinuationStyle.Visible = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
+
             UpdateProfileNames(gs.Profiles);
 
             comboBoxToolsMusicSymbol.Items.Clear();
@@ -1151,19 +1154,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace);
             comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace);
             comboBoxDialogStyle.SelectedIndex = 0;
+            toolTipDialogStylePreview.RemoveAll();
             switch (dialogStyle)
             {
                 case DialogType.DashBothLinesWithSpace:
                     comboBoxDialogStyle.SelectedIndex = 0;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashBothLinesWithSpace));
                     break;
                 case DialogType.DashBothLinesWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 1;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashBothLinesWithoutSpace));
                     break;
                 case DialogType.DashSecondLineWithSpace:
                     comboBoxDialogStyle.SelectedIndex = 2;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashSecondLineWithSpace));
                     break;
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashSecondLineWithoutSpace));
                     break;
             }
         }
@@ -1189,16 +1197,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void SetContinuationStyle(ContinuationStyle continuationStyle)
         {
             comboBoxContinuationStyle.Items.Clear();
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNone);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis);
+            foreach (var style in ContinuationUtilities.ContinuationStyles)
+            {
+                comboBoxContinuationStyle.Items.Add(UiUtil.GetContinuationStyleName(style));
+            }
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(continuationStyle));
@@ -3540,6 +3542,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
+
+            toolTipDialogStylePreview.RemoveAll();
+            toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(_rulesProfiles[idx].DialogStyle));
+
+            buttonEditCustomContinuationStyle.Visible = _rulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = _rulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
@@ -3620,6 +3628,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     // Saving settings handled by dialog
+                    // Quick refresh in case custom style was changed
+                    ProfileUiValueChanged(sender, e);
                 }
             }
         }
@@ -4054,6 +4064,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelUpdateFileTypeAssociationsStatus.Text = LanguageSettings.Current.Settings.FileTypeAssociationsUpdated;
             FileTypeAssociations.Refresh();
             System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
+        }
+
+        private void buttonEditCustomContinuationStyle_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsCustomContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
+                    // Quick refresh
+                    ProfileUiValueChanged(sender, e);
+                }
+            }
         }
     }
 }
