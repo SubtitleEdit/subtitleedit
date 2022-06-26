@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
-    public partial class SettingsCustomContinuationStyle : Form
+    public sealed partial class SettingsCustomContinuationStyle : Form
     {
-        private bool isUpdating = true;
+        private bool _isUpdating = true;
 
         public SettingsCustomContinuationStyle()
         {
@@ -91,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void LoadSettings(ContinuationUtilities.ContinuationProfile profile)
         {
             // Update controls
-            this.isUpdating = true;
+            _isUpdating = true;
             comboBoxSuffix.Text = profile.Suffix;
             checkBoxSuffixAddForComma.Checked = profile.SuffixApplyIfComma;
             checkBoxSuffixAddSpace.Checked = profile.SuffixAddSpace;
@@ -105,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxGapSuffixRemoveComma.Checked = profile.GapSuffixReplaceComma;
             comboBoxGapPrefix.Text = profile.GapPrefix;
             checkBoxGapPrefixAddSpace.Checked = profile.GapPrefixAddSpace;
-            this.isUpdating = false;
+            _isUpdating = false;
 
             // Update preview
             RefreshControls(null, EventArgs.Empty);
@@ -113,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         
         private void RefreshControls(object sender, EventArgs e)
         {
-            if (this.isUpdating)
+            if (_isUpdating)
             {
                 return;
             }
@@ -141,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void checkBoxDifferentStyleGap_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.isUpdating)
+            if (_isUpdating)
             {
                 return;
             }
@@ -149,17 +142,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (checkBoxDifferentStyleGap.Checked)
             {
                 // Duplicate settings if empty
-                if (comboBoxGapSuffix.Text == "" && checkBoxGapSuffixAddForComma.Checked == false && checkBoxGapSuffixAddSpace.Checked == false
-                    && checkBoxGapSuffixRemoveComma.Checked == false && comboBoxGapPrefix.Text == "" && checkBoxGapPrefixAddSpace.Checked == false)
+                if (comboBoxGapSuffix.Text == string.Empty && checkBoxGapSuffixAddForComma.Checked == false && checkBoxGapSuffixAddSpace.Checked == false
+                    && checkBoxGapSuffixRemoveComma.Checked == false && comboBoxGapPrefix.Text == string.Empty && checkBoxGapPrefixAddSpace.Checked == false)
                 {
-                    this.isUpdating = true;
+                    _isUpdating = true;
                     comboBoxGapSuffix.Text = comboBoxSuffix.Text;
                     checkBoxGapSuffixAddForComma.Checked = checkBoxSuffixAddForComma.Checked;
                     checkBoxGapSuffixAddSpace.Checked = checkBoxSuffixAddSpace.Checked;
                     checkBoxGapSuffixRemoveComma.Checked = checkBoxSuffixRemoveComma.Checked;
                     comboBoxGapPrefix.Text = comboBoxPrefix.Text;
                     checkBoxGapPrefixAddSpace.Checked = checkBoxPrefixAddSpace.Checked;
-                    this.isUpdating = false;
+                    _isUpdating = false;
                 }
             }
             
