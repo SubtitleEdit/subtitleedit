@@ -2808,7 +2808,7 @@ Command line: {1} {2}
     <Angle>角度</Angle>
     <BoxPerLine>每行一个框（使用轮廓色）</BoxPerLine>
     <BoxMultiLine>共用一个框（使用阴影色）</BoxMultiLine>
-    DuplicateStyleNames>为样式创建副本: {0}</DuplicateStyleNames>
+    <DuplicateStyleNames>为样式创建副本: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>类别</Category>
