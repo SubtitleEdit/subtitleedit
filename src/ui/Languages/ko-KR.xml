@@ -2818,6 +2818,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Angle>각도</Angle>
     <BoxPerLine>줄마다 별도로 (테두리 색 사용)</BoxPerLine>
     <BoxMultiLine>단일 상자로 (그림자 색 사용)</BoxMultiLine>
+    <DuplicateStyleNames>중복 스타일 이름: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>카테고리 </Category>
