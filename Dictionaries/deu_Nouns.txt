@@ -1528,7 +1528,6 @@ Höhen
 Höhle
 Hölle
 Haar
-Ich
 Idee
 Identität
 Idiot
@@ -1782,7 +1781,6 @@ Käse
 König
 Königin
 Königreich
-Können
 Köpfe
 Körbe
 Körper
@@ -2400,7 +2398,6 @@ Rubin
 Rucksack
 Rudel
 Ruf
-Rufe
 Ruhe
 Ruhestand
 Ruhestände
@@ -2610,7 +2607,6 @@ Sehenswürdigkeit
 Seide
 Seife
 Seil
-Sein
 Seite
 Seitenleiste
 Sekretär
@@ -2970,7 +2966,6 @@ Trübung
 Trümmer
 Träger
 TShirt
-Tun
 Tunnel
 Turm
 Typ
@@ -3614,3 +3609,13 @@ Stelle
 Neubeginn
 West
 Fernseher
+Eltern
+Wiedersehen
+Frühstücken
+Arbeitsplatz
+Stress
+Kellnerin
+Unterlagen
+Lebenslauf
+Freunde
+Freitag
