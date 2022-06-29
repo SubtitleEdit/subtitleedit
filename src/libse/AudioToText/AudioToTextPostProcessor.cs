@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
@@ -272,6 +274,27 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     var st = new StrippableText(text);
                     st.FixCasing(nameListInclMulti, true, false, false, string.Empty);
                     paragraph.Text = st.MergedString;
+                }
+            }
+
+            // fix german nouns
+            if (language == "de")
+            {
+                var inputFile = Path.Combine(Configuration.DictionariesDirectory, "deu_Nouns.txt");
+                if (File.Exists(inputFile))
+                {
+                    var nounList = FileUtil.ReadAllLinesShared(inputFile, Encoding.UTF8);
+                    foreach (var paragraph in subtitle.Paragraphs)
+                    {
+                        var text = paragraph.Text;
+                        var textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+                        if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
+                        {
+                            var st = new StrippableText(text);
+                            st.FixCasing(nounList, true, false, false, string.Empty);
+                            paragraph.Text = st.MergedString;
+                        }
+                    }
                 }
             }
 
