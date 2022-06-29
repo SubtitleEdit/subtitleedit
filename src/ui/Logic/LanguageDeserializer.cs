@@ -340,6 +340,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Reset":
                     language.General.Reset = reader.Value;
                     break;
+                case "General/Warning":
+                    language.General.Warning = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
@@ -6193,26 +6196,32 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ContinuationStyleNoneLeadingTrailingDots":
                     language.Settings.ContinuationStyleNoneLeadingTrailingDots = reader.Value;
                     break;
+                case "Settings/ContinuationStyleNoneTrailingEllipsis":
+                    language.Settings.ContinuationStyleNoneTrailingEllipsis = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleNoneLeadingTrailingEllipsis":
+                    language.Settings.ContinuationStyleNoneLeadingTrailingEllipsis = reader.Value;
+                    break;
                 case "Settings/ContinuationStyleOnlyTrailingDots":
                     language.Settings.ContinuationStyleOnlyTrailingDots = reader.Value;
                     break;
                 case "Settings/ContinuationStyleLeadingTrailingDots":
                     language.Settings.ContinuationStyleLeadingTrailingDots = reader.Value;
                     break;
-                case "Settings/ContinuationStyleLeadingTrailingEllipsis":
-                    language.Settings.ContinuationStyleLeadingTrailingEllipsis = reader.Value;
-                    break;
-                case "Settings/ContinuationStyleNoneTrailingEllipsis":
-                    language.Settings.ContinuationStyleNoneTrailingEllipsis = reader.Value;
-                    break;
                 case "Settings/ContinuationStyleOnlyTrailingEllipsis":
                     language.Settings.ContinuationStyleOnlyTrailingEllipsis = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingEllipsis":
+                    language.Settings.ContinuationStyleLeadingTrailingEllipsis = reader.Value;
                     break;
                 case "Settings/ContinuationStyleLeadingTrailingDash":
                     language.Settings.ContinuationStyleLeadingTrailingDash = reader.Value;
                     break;
                 case "Settings/ContinuationStyleLeadingTrailingDashDots":
                     language.Settings.ContinuationStyleLeadingTrailingDashDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleCustom":
+                    language.Settings.ContinuationStyleCustom = reader.Value;
                     break;
                 case "Settings/CpsLineLengthStyle":
                     language.Settings.CpsLineLengthStyle = reader.Value;
@@ -7021,6 +7030,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/IgnoreLyrics":
                     language.Settings.IgnoreLyrics = reader.Value;
                     break;
+                case "Settings/ContinuationPause":
+                    language.Settings.ContinuationPause = reader.Value;
+                    break;
+                case "Settings/Milliseconds":
+                    language.Settings.Milliseconds = reader.Value;
+                    break;
+                case "Settings/EditCustomContinuationStyle":
+                    language.Settings.EditCustomContinuationStyle = reader.Value;
+                    break;
                 case "Settings/MinFrameGap":
                     language.Settings.MinFrameGap = reader.Value;
                     break;
@@ -7047,6 +7065,42 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/FileTypeAssociationsUpdated":
                     language.Settings.FileTypeAssociationsUpdated = reader.Value;
+                    break;
+                case "Settings/CustomContinuationStyle":
+                    language.Settings.CustomContinuationStyle = reader.Value;
+                    break;
+                case "Settings/LoadStyle":
+                    language.Settings.LoadStyle = reader.Value;
+                    break;
+                case "Settings/Suffix":
+                    language.Settings.Suffix = reader.Value;
+                    break;
+                case "Settings/AddSuffixForComma":
+                    language.Settings.AddSuffixForComma = reader.Value;
+                    break;
+                case "Settings/AddSpace":
+                    language.Settings.AddSpace = reader.Value;
+                    break;
+                case "Settings/RemoveComma":
+                    language.Settings.RemoveComma = reader.Value;
+                    break;
+                case "Settings/Prefix":
+                    language.Settings.Prefix = reader.Value;
+                    break;
+                case "Settings/DifferentStyleGap":
+                    language.Settings.DifferentStyleGap = reader.Value;
+                    break;
+                case "Settings/Preview":
+                    language.Settings.Preview = reader.Value;
+                    break;
+                case "Settings/PreviewPause":
+                    language.Settings.PreviewPause = reader.Value;
+                    break;
+                case "Settings/CustomContinuationStyleNote":
+                    language.Settings.CustomContinuationStyleNote = reader.Value;
+                    break;
+                case "Settings/ResetCustomContinuationStyleWarning":
+                    language.Settings.ResetCustomContinuationStyleWarning = reader.Value;
                     break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;
