@@ -95,6 +95,7 @@
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
     <Reset>Reset</Reset>
+    <Warning>Warning</Warning>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -2274,13 +2275,15 @@ can edit in same subtitle file (collaboration)</Information>
     <ContinuationStyleNone>None</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>None, dots for pauses (trailing only)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>None, dots for pauses</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>None, ellipsis for pauses (trailing only)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>None, ellipsis for pauses</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Dots (trailing only)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Dots</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>None, ellipsis for pauses</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Ellipsis (trailing only)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Dash</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Dash, but dots for pauses</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Custom</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/line-length</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Count all characters</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Count all except space, cps only</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2554,6 +2557,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Detect and uncheck single titles, or lyrics, in lowercase</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Hide unlikely continuation sentences</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignore lyrics between music symbols</IgnoreLyrics>
+    <ContinuationPause>Pause threshold:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Edit custom continuation style...</EditCustomContinuationStyle>
     <MinFrameGap>Min. gap in frames</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} frames at a frame rate of {1} gives {2} milliseconds.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
@@ -2563,6 +2569,18 @@ Continue?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Shortcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Update file type associations</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>File type associations updated</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Edit custom continuation style</CustomContinuationStyle>
+    <LoadStyle>Load style...</LoadStyle>
+    <Suffix>Suffix:</Suffix>
+    <AddSuffixForComma>Process if ends with comma</AddSuffixForComma>
+    <AddSpace>Add space</AddSpace>
+    <RemoveComma>Remove comma</RemoveComma>
+    <Prefix>Prefix:</Prefix>
+    <DifferentStyleGap>Use different style for gaps longer than</DifferentStyleGap>
+    <Preview>Preview</Preview>
+    <PreviewPause>(pause)</PreviewPause>
+    <CustomContinuationStyleNote>Note: The custom continuation style is shared across profiles.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>This will override the values in the dialog. Are you sure?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
