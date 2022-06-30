@@ -96,6 +96,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <ShortcutX>Atalho: {0}</ShortcutX>
     <ExampleX>Exemplo: {0}</ExampleX>
     <Reset>Repor</Reset>
+    <Warning>Aviso</Warning>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -2275,13 +2276,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ContinuationStyleNone>Nenhum</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Nenhum, pontos para pausas (apenas para continuação)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Nenhum, pontos para pausas</ContinuationStyleNoneLeadingTrailingDots>
-    <ContinuationStyleOnlyTrailingDots>Pontos (apenas para continuação de frases)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Nenhum, reticências para pausas (apenas para continuação)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Nenhum, reticências para pausas</ContinuationStyleNoneLeadingTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingDots>Pontos (apenas para continuação)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Pontos</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingEllipsis>Reticências (apenas para continuação)</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingEllipsis>Reticências</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Nenhum, reticências para pausas</ContinuationStyleNoneTrailingEllipsis>
-    <ContinuationStyleOnlyTrailingEllipsis>Reticências (apenas à direita)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Travessão</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Travessão, mas pontos para pausas</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Personalizado</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/comprimento da linha</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Contar todos os caracteres</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar todos excepto o espaço, apenas cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2555,6 +2558,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Detectar e desmarcar linhas, ou símbolos musicais, em minúsculas</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Ocultar pontuação improvavél de continuação de frases</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignorar letras de música entre símbolos musicais</IgnoreLyrics>
+    <ContinuationPause>Limite de pausa:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Editar estilo de continuação personalizado...</EditCustomContinuationStyle>
     <MinFrameGap>Intervalo mínimo em fotogramas</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} fotogramas a uma velocidade de {1} dá {2} milissegundos.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Utilizar "{0}" milissegundos como novo intervalo mínimo?</UseXAsNewGap>
@@ -2564,6 +2570,18 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Atalhos: Permitir uma única letra/número na caixa de texto</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Actualizar associações de tipo de ficheiro</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Associações de tipo de ficheiro actualizadas</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Editar estilo de continuação personalizado</CustomContinuationStyle>
+    <LoadStyle>Carregar estilo...</LoadStyle>
+    <Suffix>Sufixo:</Suffix>
+    <AddSuffixForComma>Processar se terminar com vírgula</AddSuffixForComma>
+    <AddSpace>Adicionar espaço</AddSpace>
+    <RemoveComma>Remover vírgula</RemoveComma>
+    <Prefix>Prefixo:</Prefix>
+    <DifferentStyleGap>Usar um estilo diferente para intervalos maiores do que</DifferentStyleGap>
+    <Preview>Pré-visualizar</Preview>
+    <PreviewPause>(pausa)</PreviewPause>
+    <CustomContinuationStyleNote>Nota: o estilo de continuação personalizado é partilhado entre perfis.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Isto irá substituir os valores no diálogo. Tem a certeza?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
