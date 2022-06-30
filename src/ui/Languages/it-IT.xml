@@ -95,7 +95,8 @@
     <ShortcutX>Scorciatoia: {0}</ShortcutX>
     <ExampleX>Esempio: {0}</ExampleX>
     <Reset>Ripristina</Reset>
-  </General>
+    <Warning>Avviso</Warning>
+ </General>
   <About>
     <Title>Informazioni</Title>
     <AboutText1>Subtitle Edit è un software libero rilasciato sotto i termini della 
@@ -2274,13 +2275,15 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ContinuationStyleNone>Nessuno</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>No punti pause (alla fine)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>No punti per pause</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Nessuno, puntini di sospensione per le pause</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Nessuno, puntini di sospensione per pause</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Punti (solo alla fine)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Punti</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Ellissi</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Nessuno, puntini di sospensione per le pause</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Ellissi (solo finale)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Ellissi</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Trattino</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Trattino punti per pause</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Personalizzato</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/lunghezza linea</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Conta tutti i caratteri</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Conta tutto tranne gli spazi, solo cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2554,6 +2557,9 @@ Vuoi Continuare?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Rileva e deseleziona singoli titoli o testi in minuscolo</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Nascondi frasi di continuazione improbabili</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignora i testi tra i simboli musicali</IgnoreLyrics>
+    <ContinuationPause>Soglia pasua:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Modifica stile continuazione personalizzato...</EditCustomContinuationStyle>
     <MinFrameGap>Fotogrammi Minimi</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} fotogrammi con una frequenza fotogrammi {1} con {2} millisecondi.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Vuoi utilizzare  {0} "30" come nuovo intervallo minimo?</UseXAsNewGap>
@@ -2563,6 +2569,18 @@ Vuoi Continuare?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Scorciatoie: consenti una singola lettera/numero nella casella testo</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Aggiorna le associazioni dei tipi di file</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Aggiornate le associazioni dei tipi di file</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Modifica stile continuazione personalizzato</CustomContinuationStyle>
+    <LoadStyle>Carica stile...</LoadStyle>
+    <Suffix>Suffisso:</Suffix>
+    <AddSuffixForComma>Elabora se termina con virgola</AddSuffixForComma>
+    <AddSpace>Aggiungi spazio</AddSpace>
+    <RemoveComma>Rimuovi virgola</RemoveComma>
+    <Prefix>Prefisso:</Prefix>
+    <DifferentStyleGap>Usa stile diverso per spazi più lunghi di</DifferentStyleGap>
+    <Preview>Anteprima</Preview>
+    <PreviewPause>(pausa)</PreviewPause>
+    <CustomContinuationStyleNote>Nota: lo stile continuazione personalizzato è condiviso tra i profili.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Questo sovrascriverà i valori nella finestra di dialogo. Sei sicuro?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Scarica mpv lib</DownloadMpv>
