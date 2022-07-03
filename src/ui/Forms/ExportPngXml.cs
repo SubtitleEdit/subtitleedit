@@ -4975,9 +4975,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     goToLine.Initialize(1, subtitleListView1.Items.Count);
                     if (goToLine.ShowDialog(this) == DialogResult.OK)
                     {
-                        subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
-                        subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
-                        subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                        var idx = goToLine.LineNumber - 1;
+                        subtitleListView1.Items[idx].Selected = true;
+                        subtitleListView1.Items[idx].EnsureVisible();
+                        subtitleListView1.Items[idx].Focused = true;
                     }
                 }
             }
