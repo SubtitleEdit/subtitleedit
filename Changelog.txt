@@ -2,6 +2,7 @@
 
 3.6.7 (xth August 2022)
 * NEW:
+   * Add custom "continuation style" - thx Flitskikker
    * Add Icelandic language auto detect - thx Elheym
    * More options for "Modify selection"
    * CLI change output-file-name - thx BenJamesAndo
@@ -23,6 +24,7 @@
    * Improve DCinema 2010 - thx stephw999
    * Add taskbar progress bar for audio to text - thx lambdacore12
    * Warn about duplicate style names in ASSA/SSA
+   * Improve keeping original bd sup colors - thx resolution
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
@@ -31,8 +33,10 @@
    * Fix crash in compare export - thx 1380
    * Fix crash in visual sync - thx fusefib
    * Fix crash in export ssa styles w dup style name - thx A-Winters
+   * Fix crash in bd sup edit when changing color/resolution/alpha
    * Fix for remove ASSA line as empty - thx Leon
    * Fix for finding delay in mkv - thx cyzs233/signedout
+   * Fix bd sup edit quick OCR
 
 
 3.6.6 (25th May 2022)
