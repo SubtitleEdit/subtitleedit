@@ -18,9 +18,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (path.PointCount > 0)
             {
-                int k = 0;
+                var k = 0;
                 var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                for (int i = list.Length - 1; i >= 0; i--)
+                for (var i = list.Length - 1; i >= 0; i--)
                 {
                     if (list[i].X > next.X)
                     {
@@ -85,9 +85,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 using (var path = new GraphicsPath())
                 {
                     var sb = new StringBuilder(text);
-                    bool newLine = false;
+                    var newLine = false;
                     const int leftMargin = 0;
-                    int pathPointsStart = -1;
+                    var pathPointsStart = -1;
                     DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
                     if (path.PathData.Points.Length == 0)
                     {
@@ -96,10 +96,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     float width = 0;
                     var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    int max = list.Length;
+                    var max = list.Length;
                     if (max <= 500)
                     {
-                        for (int i = 0; i < max; i++)
+                        for (var i = 0; i < max; i++)
                         {
                             if (list[i].X > width)
                             {
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return width;
                     }
 
-                    int interval = 1;
+                    int interval;
                     if (max > 1500)
                     {
                         interval = 5;
@@ -122,7 +122,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         interval = 2;
                     }
-                    for (int i = 0; i < max; i += interval)
+
+                    for (var i = 0; i < max; i += interval)
                     {
                         if (list[i].X > width)
                         {
@@ -158,15 +159,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 using (var path = new GraphicsPath())
                 {
                     var sb = new StringBuilder(text);
-                    bool newLine = false;
+                    var newLine = false;
                     const int leftMargin = 0;
-                    int pathPointsStart = -1;
+                    var pathPointsStart = -1;
                     DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
                     float height = 0;
                     var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    int index = System.Math.Max(list.Length - 80, 0);
-                    for (int i = index; i < list.Length; i += 2)
+                    var index = System.Math.Max(list.Length - 80, 0);
+                    for (var i = index; i < list.Length; i += 2)
                     {
                         if (list[i].Y > height)
                         {
@@ -174,7 +175,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         }
                     }
 
-                    for (int i = 0; i < list.Length; i += 2)
+                    for (var i = 0; i < list.Length; i += 2)
                     {
                         if (list[i].Y > height)
                         {
@@ -186,6 +187,5 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
         }
-
     }
 }
