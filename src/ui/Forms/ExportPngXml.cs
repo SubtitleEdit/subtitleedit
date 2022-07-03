@@ -4981,6 +4981,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
             }
+            else if (e.KeyCode == Keys.P && e.Modifiers == Keys.Control)
+            {
+                linkLabelPreview_LinkClicked(null, null);
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
@@ -5756,10 +5761,32 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                     }
 
+                    var showPrev = false;
+                    var showNext = false;
+                    var idx = -1;
                     using (var form = new ExportPngXmlPreview(bmp))
                     {
                         Cursor = Cursors.Default;
-                        form.ShowDialog(this);
+                        if (subtitleListView1.SelectedItems.Count > 0)
+                        {
+                            idx = subtitleListView1.SelectedItems[0].Index;
+                            form.AllowNext = idx < _subtitle.Paragraphs.Count - 1;
+                            form.AllowPrevious = idx > 0;
+                            form.ShowDialog(this);
+                            showPrev = form.PreviousPressed;
+                            showNext = form.NextPressed;
+                        }
+                    }
+
+                    if (showPrev || showNext)
+                    {
+                        idx = showPrev ? Math.Max(0, idx - 1) : Math.Min(subtitleListView1.Items.Count - 1, idx + 1);
+                        subtitleListView1.SelectedIndices.Clear();
+                        subtitleListView1.Items[idx].Selected = true;
+                        subtitleListView1.Items[idx].Focused = true;
+                        subtitleListView1.Items[idx].EnsureVisible();
+                        Application.DoEvents();
+                        linkLabelPreview_LinkClicked(null, null);
                     }
                 }
             }
