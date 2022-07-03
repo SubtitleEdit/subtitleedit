@@ -2906,7 +2906,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : s.GetBitmap();
             var nBmp = new NikseBitmap(bmp);
             nBmp.MakeTwoColor(200);
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nBmp, 8, false, true, 15, true);
+            nBmp.CropTop(0, Color.FromArgb(0, 0, 0, 0));
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nBmp, 10, false, true, 20, true);
             var sb = new StringBuilder();
             foreach (var item in list)
             {
@@ -2919,12 +2920,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    var match = nOcrDb.GetMatch(item.NikseBitmap, item.Top, true, 40);
+                    var match = nOcrDb.GetMatch(item.NikseBitmap, item.Top, true, 50);
                     sb.Append(match != null ? FixUppercaseLowercaseIssues(item, match) : "*");
                 }
             }
 
-            p.Text = sb.ToString().Trim();
+            p.Text = sb.ToString().Trim().Replace(Environment.NewLine, " ");
         }
 
         private void centerSelectedLinesHorizontallyToolStripMenuItem_Click(object sender, EventArgs e)
