@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonBurnIn = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonIttProperties = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonXProperties = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAssStyleManager = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAssProperties = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAssAttachments = new System.Windows.Forms.ToolStripButton();
@@ -255,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.mergeSentencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.breaksplitLongLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exporImportTofromWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -563,7 +564,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
-            this.exporImportTofromWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonVisualSync,
             this.toolStripButtonBurnIn,
             this.toolStripButtonSpellCheck,
-            this.toolStripButtonIttProperties,
+            this.toolStripButtonXProperties,
             this.toolStripButtonAssStyleManager,
             this.toolStripButtonAssProperties,
             this.toolStripButtonAssAttachments,
@@ -853,17 +853,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripButtonSpellCheck.Text = "Spell check";
             this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.SpellCheckToolStripMenuItemClick);
             // 
-            // toolStripButtonIttProperties
+            // toolStripButtonXProperties
             // 
-            this.toolStripButtonIttProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonIttProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.toolStripButtonIttProperties.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonIttProperties.Image")));
-            this.toolStripButtonIttProperties.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonIttProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonIttProperties.Name = "toolStripButtonIttProperties";
-            this.toolStripButtonIttProperties.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonIttProperties.Text = "Properties";
-            this.toolStripButtonIttProperties.Click += new System.EventHandler(this.toolStripMenuItemFileFormatProperties_Click);
+            this.toolStripButtonXProperties.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonXProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toolStripButtonXProperties.Image = global::Nikse.SubtitleEdit.Properties.Resources.itt;
+            this.toolStripButtonXProperties.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonXProperties.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonXProperties.Name = "toolStripButtonXProperties";
+            this.toolStripButtonXProperties.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonXProperties.Text = "Properties";
+            this.toolStripButtonXProperties.Click += new System.EventHandler(this.toolStripMenuItemFileFormatProperties_Click);
             // 
             // toolStripButtonAssStyleManager
             // 
@@ -2416,35 +2416,42 @@ namespace Nikse.SubtitleEdit.Forms
             // translateToolStripMenuItem
             // 
             this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.translateToolStripMenuItem.Text = "Auto-translate...";
             this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
             // 
             // autotranslateViaCopypasteToolStripMenuItem
             // 
             this.autotranslateViaCopypasteToolStripMenuItem.Name = "autotranslateViaCopypasteToolStripMenuItem";
-            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.autotranslateViaCopypasteToolStripMenuItem.Text = "Auto-translate via copy-paste...";
             this.autotranslateViaCopypasteToolStripMenuItem.Click += new System.EventHandler(this.autotranslateViaCopypasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator26
             // 
             this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(235, 6);
+            this.toolStripSeparator26.Size = new System.Drawing.Size(261, 6);
             // 
             // mergeSentencesToolStripMenuItem
             // 
             this.mergeSentencesToolStripMenuItem.Name = "mergeSentencesToolStripMenuItem";
-            this.mergeSentencesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.mergeSentencesToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.mergeSentencesToolStripMenuItem.Text = "Merge sentences...";
             this.mergeSentencesToolStripMenuItem.Click += new System.EventHandler(this.mergeSentencesToolStripMenuItem_Click);
             // 
             // breaksplitLongLinesToolStripMenuItem
             // 
             this.breaksplitLongLinesToolStripMenuItem.Name = "breaksplitLongLinesToolStripMenuItem";
-            this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.breaksplitLongLinesToolStripMenuItem.Text = "Break/split long lines...";
             this.breaksplitLongLinesToolStripMenuItem.Click += new System.EventHandler(this.breaksplitLongLinesToolStripMenuItem_Click);
+            // 
+            // exporImportTofromWordToolStripMenuItem
+            // 
+            this.exporImportTofromWordToolStripMenuItem.Name = "exporImportTofromWordToolStripMenuItem";
+            this.exporImportTofromWordToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.exporImportTofromWordToolStripMenuItem.Text = "Export to / import from Word docx...";
+            this.exporImportTofromWordToolStripMenuItem.Click += new System.EventHandler(this.exporImportTofromWordToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -5492,13 +5499,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
             // 
-            // exporImportTofromWordToolStripMenuItem
-            // 
-            this.exporImportTofromWordToolStripMenuItem.Name = "exporImportTofromWordToolStripMenuItem";
-            this.exporImportTofromWordToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.exporImportTofromWordToolStripMenuItem.Text = "Export to / import from Word docx...";
-            this.exporImportTofromWordToolStripMenuItem.Click += new System.EventHandler(this.exporImportTofromWordToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5620,7 +5620,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonSaveAs;
         private System.Windows.Forms.ToolStripButton toolStripButtonFind;
         private System.Windows.Forms.ToolStripButton toolStripButtonReplace;
-        private System.Windows.Forms.ToolStripButton toolStripButtonIttProperties;
+        private System.Windows.Forms.ToolStripButton toolStripButtonXProperties;
         private System.Windows.Forms.ToolStripButton toolStripButtonSettings;
         private System.Windows.Forms.ToolStripButton toolStripButtonVisualSync;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFindReplace;

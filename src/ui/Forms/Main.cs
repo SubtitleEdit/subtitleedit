@@ -20,6 +20,7 @@ using Nikse.SubtitleEdit.Forms.Networking;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Options;
 using Nikse.SubtitleEdit.Forms.SeJobs;
+using Nikse.SubtitleEdit.Forms.ShotChanges;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Forms.Translate;
 using Nikse.SubtitleEdit.Logic;
@@ -41,7 +42,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms.ShotChanges;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -32081,10 +32081,18 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonAssAttachments.Visible = true;
             }
 
-            toolStripButtonIttProperties.Visible = formatType == typeof(ItunesTimedText);
-            if (toolStripButtonIttProperties.Visible)
+            toolStripButtonXProperties.Visible = formatType == typeof(ItunesTimedText);
+            if (toolStripButtonXProperties.Visible)
             {
-                toolStripButtonIttProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, _currentSubtitleFormat?.Name);
+                toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, _currentSubtitleFormat?.Name);
+                toolStripButtonXProperties.Image = Properties.Resources.itt;
+            }
+
+            if (formatType == typeof(WebVTT) || formatType == typeof(WebVTTFileWithLineNumber))
+            {
+                toolStripButtonXProperties.Visible = true;
+                toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, new WebVTT().Name);
+                toolStripButtonXProperties.Image = Properties.Resources.webvtt;
             }
         }
 
