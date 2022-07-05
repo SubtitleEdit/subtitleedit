@@ -9,7 +9,7 @@
    * Add Polish speech recognition vosk/kaldi model
    * Add Netflix Chinese profile - thx Kester
    * Fix casing of some German nouns after audio-to-text
-   * Add toolbar icon for itt properties - thx Leon
+   * Add toolbar icon for WebVTT properties - thx Leon
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
