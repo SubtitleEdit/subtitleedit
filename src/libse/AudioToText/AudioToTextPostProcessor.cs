@@ -38,7 +38,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     continue;
                 }
 
-                subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
+                if (!string.IsNullOrWhiteSpace(resultText.Text))
+                {
+                    subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
+                }
             }
 
             if (usePostProcessing)
@@ -202,7 +205,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             if (!lastMerged)
             {
-                mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
+                var last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
+                if (last != null && !string.IsNullOrWhiteSpace(last.Text))
+                {
+                    mergedSubtitle.Paragraphs.Add(new Paragraph(last));
+                }
             }
 
             return mergedSubtitle;
