@@ -95,6 +95,7 @@
     <ShortcutX>Atalho: {0}</ShortcutX>
     <ExampleX>Exemplo: {0}</ExampleX>
     <Reset>Redefinir</Reset>
+    <Warning>Aviso</Warning>
   </General>
   <About>
     <Title>Sobre o Subtitle Edit</Title>
@@ -178,7 +179,10 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <OpenModelsFolder>Abir pasta de modelos</OpenModelsFolder>
     <LoadingVoskModel>Carregando modelo de reconhecimento de fala Vosk...</LoadingVoskModel>
     <Transcribing>Transcrevendo áudio para texto...</Transcribing>
+    <TranscribingXOfY>Transcrição de áudio em texto - arquivo {0} de {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} arquivos salvos na pasta de origem do arquivo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usar pós-processamento (junção de linhas, correção de maiúsculas/minúsculas, pontuação e mais...)</UsePostProcessing>
+    <BatchMode>Modo de lote</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos avançados de Sub Station Alpha</Title>
@@ -590,6 +594,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <TimeCode>Código de tempo</TimeCode>
     <NewLine>Nova linha</NewLine>
     <Footer>Rodapé</Footer>
+    <FileExtension>Extensão do arquivo</FileExtension>
     <DoNotModify>[Não modificar]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -1731,6 +1736,7 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
     <ShowVideoControls>Mostrar controles de vídeo</ShowVideoControls>
     <HideVideoControls>Ocultar controles de vídeo</HideVideoControls>
     <GeneratingWaveformInBackground>Gerando forma de onda em segundo plano...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Backup automático salvo</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
@@ -1888,6 +1894,8 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
     <EvenLines>Linhas pares</EvenLines>
     <DurationLessThan>Duração menor que</DurationLessThan>
     <DurationGreaterThan>Duração maior que</DurationGreaterThan>
+    <ExactlyOneLine>Exatamente uma linha</ExactlyOneLine>
+    <ExactlyTwoLines>Exatamente duas linhas</ExactlyTwoLines>
     <MoreThanTwoLines>Mais de duas linhas</MoreThanTwoLines>
     <Bookmarked>Favorito</Bookmarked>
     <BlankLines>Linhas em branco</BlankLines>
@@ -2130,6 +2138,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ApplyAssaOverrideTags>Aplicar tags de substituição ASSA à seleção</ApplyAssaOverrideTags>
     <SetAssaPosition>Definir/obter posição ASSA</SetAssaPosition>
     <SetAssaResolution>Definir resolução ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>Fazer backup automático agora</TakeAutoBackup>
     <ShowLineBreaksAs>Mostrar quebras de linha na visualização de lista como</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Salvar como..." usa o nome do arquivo</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Duplo clique na linha na janela principal de visualização de lista irá...</MainListViewDoubleClickAction>
@@ -2261,23 +2270,28 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ContinuationStyleNone>Nenhum</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Nenhum, pontos para pausas (apenas à direita)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Nenhum, pontos para pausas</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Nenhum, reticências para pausas (apenas à direita)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Nenhum, reticências para pausas</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Pontos (apenas à direita)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Pontos</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Reticências</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Nenhum, reticências para pausas</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Reticências (somente à direita)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Reticências</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Traço</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Traço, mas pontos para pausas</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Personalizado</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/comprimento de linha</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Contar todos os caracteres</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Contar tudo, exceto espaços, somente cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Contar todos, menos espaços</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latino 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latino 0.5, espaço 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorar diacríticos em árabe</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorar diacríticos/espaço em árabe</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Sem espaço ou pontuação ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR (também utilizar regras codificadas)</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>Usar lista de divisão de palavras (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir exibição curta (permitir mover tempo inicial)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorar passo um (escolher regras de correção)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Formato padrão</DefaultFormat>
@@ -2438,6 +2452,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <VideoResetSpeedAndZoom>Redefinir velocidade/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Ativar/desativar controles de vídeo</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (somente mpv)</VideoToggleContrast>
+    <VideoAudioToText>Vídeo/áudio para texto (reconhecimento de fala)</VideoAudioToText>
     <VideoToggleBrightness>Mudar brilho (somente mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
     <CustomSearch2>Traduzir, pesquisa personalizada 2</CustomSearch2>
@@ -2537,6 +2552,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Detectar e desmarcar títulos únicos, ou letras, em minúsculo</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Ocultar sentenças de continuação improváveis</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignorar letra entre símbolos musicais</IgnoreLyrics>
+    <ContinuationPause>Limite da pausa:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Editar estilo de continuação personalizado...</EditCustomContinuationStyle>
     <MinFrameGap>Pausa mínima em quadros</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} quadros em uma taxa de quadros de {1} dá {2} milissegundos.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Usar "{0}" milissegundos como nova pausa mínima?</UseXAsNewGap>
@@ -2546,6 +2564,18 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Atalhos: Permitir única letra/número na caixa de texto</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Atualizar associações de tipos de arquivos</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Associações de tipos de arquivos atualizadas</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Editar estilo de continuação personalizado</CustomContinuationStyle>
+    <LoadStyle>Carregar estilo...</LoadStyle>
+    <Suffix>Sufixo:</Suffix>
+    <AddSuffixForComma>Processar se terminar com vírgula</AddSuffixForComma>
+    <AddSpace>Adicionar espaço</AddSpace>
+    <RemoveComma>Remover vírgula</RemoveComma>
+    <Prefix>Prefixo:</Prefix>
+    <DifferentStyleGap>Usar estilo diferente para pausas maiores que</DifferentStyleGap>
+    <Preview>Prévia</Preview>
+    <PreviewPause>(pausa)</PreviewPause>
+    <CustomContinuationStyleNote>Nota: o estilo de continuação personalizado é compartilhado entre os perfis.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Isso substituirá os valores na caixa de diálogo. Tem certeza?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Baixar mpv lib</DownloadMpv>
@@ -2709,6 +2739,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Caracteres/seg. - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg. - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg. - média: {0:0.000}</CharactersPerSecondAverage>
+    <GapMinimum>Pausa - mínima: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>Pausa - máxima: {0:#,##0} ms</GapMaximum>
+    <GapAverage>Pausa - média: {0:#,##0.##} ms</GapAverage>
     <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2799,6 +2832,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Angle>Ângulo</Angle>
     <BoxPerLine>Caixa por linha (usar cor de contorno)</BoxPerLine>
     <BoxMultiLine>Uma caixa (usar cor da sombra)</BoxMultiLine>
+    <DuplicateStyleNames>Nomes de estilo duplicados: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Categoria</Category>
