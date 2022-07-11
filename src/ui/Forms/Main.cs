@@ -33981,22 +33981,5 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
         }
-
-        private void exporImportTofromWordToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var form = new TranslateExportImport(_subtitle))
-            {
-                if (form.ShowDialog(this) != DialogResult.OK)
-                {
-                    return;
-                }
-
-                SaveSubtitleListviewIndices();
-                _subtitle = form.Subtitle;
-                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                RestoreSubtitleListviewIndices();
-                RefreshSelectedParagraph();
-            }
-        }
     }
 }

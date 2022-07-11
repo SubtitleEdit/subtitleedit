@@ -255,7 +255,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.mergeSentencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.breaksplitLongLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exporImportTofromWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2407,8 +2406,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.autotranslateViaCopypasteToolStripMenuItem,
             this.toolStripSeparator26,
             this.mergeSentencesToolStripMenuItem,
-            this.breaksplitLongLinesToolStripMenuItem,
-            this.exporImportTofromWordToolStripMenuItem});
+            this.breaksplitLongLinesToolStripMenuItem});
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(94, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
@@ -2445,13 +2443,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.breaksplitLongLinesToolStripMenuItem.Text = "Break/split long lines...";
             this.breaksplitLongLinesToolStripMenuItem.Click += new System.EventHandler(this.breaksplitLongLinesToolStripMenuItem_Click);
-            // 
-            // exporImportTofromWordToolStripMenuItem
-            // 
-            this.exporImportTofromWordToolStripMenuItem.Name = "exporImportTofromWordToolStripMenuItem";
-            this.exporImportTofromWordToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
-            this.exporImportTofromWordToolStripMenuItem.Text = "Export to / import from Word docx...";
-            this.exporImportTofromWordToolStripMenuItem.Click += new System.EventHandler(this.exporImportTofromWordToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -6106,6 +6097,5 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem sortByGapToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonBurnIn;
         private System.Windows.Forms.ToolStripButton toolStripButtonSpellCheck;
-        private System.Windows.Forms.ToolStripMenuItem exporImportTofromWordToolStripMenuItem;
     }
 }
