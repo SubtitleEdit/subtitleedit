@@ -7,6 +7,7 @@
    * More options for "Modify selection"
    * CLI change output-file-name - thx BenJamesAndo
    * Add Polish speech recognition vosk/kaldi model
+   * Add Japanese large speech rec vosk/kaldi model - thx coastal45
    * Add Netflix Chinese profile - thx Kester
    * Fix casing of some German nouns after audio-to-text
    * Add toolbar icon for WebVTT properties - thx Leon
@@ -20,6 +21,7 @@
    * Update Korean translation - thx domddol
    * Update Finnish translation - thx Teijo S
    * Update French translation - the Peirre
+   * Update Brazilian Portuguese translation - thx Igor
    * Update Vosk to v0.3.42
    * Minor improvements for compare
    * Improve top alignment capture for bdsup - thx tormento
