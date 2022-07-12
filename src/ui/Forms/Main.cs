@@ -24363,7 +24363,26 @@ namespace Nikse.SubtitleEdit.Forms
 
             var factor = double.Parse(percentText) / 100.0;
             toolStripSplitButtonPlayRate.Image = Math.Abs(factor - 1) < 0.01 ? imageListPlayRate.Images[0] : imageListPlayRate.Images[1];
-            mediaPlayer.VideoPlayer.PlayRate = factor;
+
+            try
+            {
+                mediaPlayer.VideoPlayer.PlayRate = factor;
+            }
+            catch
+            {
+                if (Configuration.Settings.General.VideoPlayer != "MPV")
+                {
+                    using (var form = new SettingsMpv(!LibMpvDynamic.IsInstalled))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        Configuration.Settings.General.VideoPlayer = "MPV";
+                    }
+                }
+            }
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
