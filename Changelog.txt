@@ -11,6 +11,7 @@
    * Add Netflix Chinese profile - thx Kester
    * Fix casing of some German nouns after audio-to-text
    * Add toolbar icon for WebVTT properties - thx Leon
+   * Add shortcut for toggle between text box and waveform - thx Marco
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -23,6 +24,7 @@
    * Update French translation - the Peirre
    * Update Brazilian Portuguese translation - thx Igor
    * Update Vosk to v0.3.42
+   * Update Tesseract OCR to 5.2.0
    * Minor improvements for compare
    * Improve top alignment capture for bdsup - thx tormento
    * Improve DCinema 2010 - thx stephw999
