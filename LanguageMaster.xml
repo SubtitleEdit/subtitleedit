@@ -2387,6 +2387,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextSubtitleAndPlay>Go to next line and play</GoToNextSubtitleAndPlay>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleFocusWaveform>Toggle focus between list view and waveform/spectrogram</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Toggle focus between text box and waveform/spectrogram</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleQuotes>Toggle quotes</ToggleQuotes>
     <ToggleHiTags>Toggle HI tags</ToggleHiTags>

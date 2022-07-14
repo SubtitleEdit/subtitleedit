@@ -171,6 +171,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainMergeDialogWithPrevious { get; set; }
         public Keys MainToggleFocus { get; set; }
         public Keys MainToggleFocusWaveform { get; set; }
+        public Keys MainToggleFocusWaveformTextBox { get; set; }
         public Keys MainWaveformAdd { get; set; }
         public Keys MainListViewToggleDashes { get; set; }
         public Keys MainListViewToggleQuotes { get; set; }
@@ -429,6 +430,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainMergeDialogWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogWithPrevious);
             MainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
             MainToggleFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocusWaveform);
+            MainToggleFocusWaveformTextBox = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocusWaveformTextBox);
             MainWaveformAdd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAdd);
             WaveformVerticalZoom = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             WaveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
