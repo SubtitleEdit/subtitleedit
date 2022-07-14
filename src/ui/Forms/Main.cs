@@ -16426,6 +16426,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainToggleFocusWaveformTextBox == e.KeyData)
+            {
+                if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
+                {
+                    audioVisualizer.Focus();
+                }
+                else if (audioVisualizer.Focused)
+                {
+                    textBoxListViewText.Focus();
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralGoToFirstSelectedLine == e.KeyData) //Locate first selected line in subtitle listview
             {
                 if (SubtitleListview1.SelectedItems.Count > 0)

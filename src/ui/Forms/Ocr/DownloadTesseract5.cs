@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadTesseract5 : Form
     {
-        public const string TesseractDownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/Tesseract510.tar.gz";
+        public const string TesseractDownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/Tesseract520.tar.gz";
 
         public DownloadTesseract5(string version)
         {
