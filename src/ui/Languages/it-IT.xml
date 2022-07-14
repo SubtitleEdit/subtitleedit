@@ -991,7 +991,7 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
     <bgName>Bulgaro</bgName>
     <bhName>Bihari </bhName>
     <biName>Bislama</biName>
-    <bnName>Bengali</bnName>
+    <bnName>Bengalese</bnName>
     <boName>Tibetano</boName>
     <brName>Bretone</brName>
     <caName>Catalano</caName>
@@ -2391,6 +2391,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ToggleQuotes>Attiva/disattiva virgolette</ToggleQuotes>
     <ToggleHiTags>Cambia le etichette per problemi di udito</ToggleHiTags>
     <ToggleMusicSymbols>Attiva/Disattiva i simboli musicali</ToggleMusicSymbols>
+    <ToggleFocusWaveformTextBox>Alterna la messa a fuoco tra casella di testo e forma d'onda/spettrogramma</ToggleFocusWaveformTextBox>
     <Alignment>Allinea (righe selezionate)</Alignment>
     <AlignmentN1>Allinea in basso a sinistra - {\an1}</AlignmentN1>
     <AlignmentN2>Allinea in basso al centro - {\an2}</AlignmentN2>
@@ -2945,7 +2946,7 @@ Mantieni le modifiche?</KeepChangesMessage>
     <UseCustomColors>Usa colori personalizzati</UseCustomColors>
     <Transparent>Trasparente</Transparent>
     <TransparentMinAlpha>Valore alpha min. (0=trasparente, 255=massima visibilità)</TransparentMinAlpha>
-    <TransportStream>Transport stream</TransportStream>
+    <TransportStream>Stream trasporto</TransportStream>
     <TransportStreamGrayscale>Scala di grigi</TransportStreamGrayscale>
     <TransportStreamGetColor>Usa colore (può includere alcune righe divise)</TransportStreamGetColor>
     <PromptForUnknownWords>Chiedi per le parole sconosciute</PromptForUnknownWords>
