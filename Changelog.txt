@@ -44,6 +44,7 @@
    * Fix for remove ASSA line as empty - thx Leon
    * Fix for finding delay in mkv - thx cyzs233/signedout
    * Fix bd sup edit quick OCR
+   * Fix reading QuickTime text with < 5 lines - thx chloehong 
 
 
 3.6.6 (25th May 2022)
