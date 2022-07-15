@@ -40,6 +40,7 @@
    * Fix crash in visual sync - thx fusefib
    * Fix crash in export ssa styles w dup style name - thx A-Winters
    * Fix crash in bd sup edit when changing color/resolution/alpha
+   * Fix crash in generate blank video with no sub loaded
    * Fix for remove ASSA line as empty - thx Leon
    * Fix for finding delay in mkv - thx cyzs233/signedout
    * Fix bd sup edit quick OCR
