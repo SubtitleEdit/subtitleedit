@@ -16,14 +16,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (lines != null && lines.Count > 0 && lines[0].StartsWith("{\\rtf", StringComparison.Ordinal))
+            if (lines == null || lines.Count == 0 || lines[0].StartsWith("{\\rtf", StringComparison.Ordinal))
             {
                 return false;
             }
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            bool isMine = subtitle.Paragraphs.Count > _errorCount;
+            var isMine = subtitle.Paragraphs.Count > _errorCount;
 
             if (isMine && new UnknownSubtitle80().IsMine(lines, fileName))
             {
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             sb.AppendLine(header);
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 //[00:00:07.12]
                 //d’être perdu dans un brouillard de pensées,
@@ -75,20 +75,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (RegexTimeCodes.IsMatch(line))
                 {
-                    string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
-                    string[] parts = temp.Split(new[] { '.', ':', '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+                    var temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
+                    var parts = temp.Split(new[] { '.', ':', '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         if (p == null || string.IsNullOrEmpty(p.Text))
                         {
                             try
                             {
-                                string text = string.Empty;
-                                int indexOfEndTime = line.IndexOf(']');
+                                var text = string.Empty;
+                                var indexOfEndTime = line.IndexOf(']');
                                 if (indexOfEndTime > 0 && indexOfEndTime + 1 < line.Length)
                                 {
                                     text = line.Substring(indexOfEndTime + 1);
@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.EndTime = DecodeTimeCodeFramesFourParts(parts);
                             subtitle.Paragraphs.Add(p);
 
-                            string text = string.Empty;
-                            int indexOfEndTime = line.IndexOf(']');
+                            var text = string.Empty;
+                            var indexOfEndTime = line.IndexOf(']');
                             if (indexOfEndTime > 0 && indexOfEndTime + 1 < line.Length)
                             {
                                 text = line.Substring(indexOfEndTime + 1);
@@ -131,6 +131,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         p.Text = p.Text + Environment.NewLine + line;
                     }
+                }
+                else if (line.StartsWith("{QTtext}", StringComparison.OrdinalIgnoreCase) ||
+                         line.StartsWith("{plain}", StringComparison.OrdinalIgnoreCase) ||
+                         line.StartsWith("{timeScale:", StringComparison.OrdinalIgnoreCase) ||
+                         line.StartsWith("{width:", StringComparison.OrdinalIgnoreCase) ||
+                         line.StartsWith("{timestamps:", StringComparison.OrdinalIgnoreCase))
+                {
+                    // ignore
                 }
                 else
                 {
