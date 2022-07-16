@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             AudioToText = new LanguageStructure.AudioToText
             {
-                Title = "Audio/video to text",
+                Title = "Audio to text",
                 Info = "Generate text from audio via Vosk/Kaldi speech recognition",
                 VoskWebsite = "Vosk website",
                 Models = "Models",
@@ -1779,7 +1779,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in sub...",
-                        VideoAudioToText = "Video/audio to text...",
+                        VideoAudioToText = "Audio to text...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportShotChanges = "Generate/import shot changes...",
                         RemoveOrExportShotChanges = "Remove/export shot changes...",
@@ -2788,7 +2788,7 @@ can edit in same subtitle file (collaboration)",
                 VideoResetSpeedAndZoom = "Reset speed/zoom",
                 MainToggleVideoControls = "Toggle video controls",
                 VideoToggleContrast = "Toggle contrast (mpv only)",
-                VideoAudioToText = "Video/audio to text (speech recognition)",
+                VideoAudioToText = "Audio to text",
                 VideoToggleBrightness = "Toggle brightness (mpv only)",
                 CustomSearch1 = "Translate, custom search 1",
                 CustomSearch2 = "Translate, custom search 2",

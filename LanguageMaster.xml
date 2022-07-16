@@ -173,7 +173,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Audio/video to text</Title>
+    <Title>Audio to text</Title>
     <Info>Generate text from audio via Vosk/Kaldi speech recognition</Info>
     <VoskWebsite>Vosk website</VoskWebsite>
     <Models>Models</Models>
@@ -1246,7 +1246,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Video/audio to text...</VideoAudioToText>
+        <VideoAudioToText>Audio to text...</VideoAudioToText>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>
@@ -2458,7 +2458,7 @@ can edit in same subtitle file (collaboration)</Information>
     <VideoResetSpeedAndZoom>Reset speed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
     <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
-    <VideoAudioToText>Video/audio to text (speech recognition)</VideoAudioToText>
+    <VideoAudioToText>Audio to text</VideoAudioToText>
     <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>

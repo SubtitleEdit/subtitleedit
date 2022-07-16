@@ -2296,7 +2296,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.videoaudioToTextToolStripMenuItem.Name = "videoaudioToTextToolStripMenuItem";
             this.videoaudioToTextToolStripMenuItem.Size = new System.Drawing.Size(295, 22);
-            this.videoaudioToTextToolStripMenuItem.Text = "Video/audio to text...";
+            this.videoaudioToTextToolStripMenuItem.Text = "Audio to text...";
             this.videoaudioToTextToolStripMenuItem.Click += new System.EventHandler(this.videoaudioToTextToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
