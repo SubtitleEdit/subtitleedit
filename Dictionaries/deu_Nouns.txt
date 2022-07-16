@@ -103,6 +103,7 @@ Ameisenhaufen
 Amerikaner
 Amerikas
 Ammoniak
+Amputation
 Amt
 Amtsenthebungsverfahren
 Amtsinhaber
@@ -198,6 +199,7 @@ Anstöße
 Ansätze
 Anteilseigner
 Anti-Aging-Produkten
+Antibiotika
 Antrag
 Anträge
 Antwort
@@ -227,6 +229,7 @@ Arbeiter
 Arbeitnehmer
 Arbeitslosigkeit
 Arbeitslosigkeiten
+Arbeitsplans
 Arbeitsplatz
 Argument
 Arm
@@ -238,10 +241,15 @@ Art
 Artefakte
 Arten
 Artikel
+Arzt
 Asche
 Aspekt
 Ass
 Assistent
+Assistenten
+Assistenzarzttest
+Assistenzärzte
+Assistenzärztinnen
 Ast
 Atem
 Atempause
@@ -317,6 +325,7 @@ Aufwiegelung
 Aufwiegelungen
 Aufwände
 Aufzug
+Aufzügen
 Auge
 Augen
 Augenblick
@@ -404,6 +413,7 @@ Auszug
 Auszählung
 Auszählungen
 Auszüge
+Ausübung
 Auto
 Autobahn
 Autopsie
@@ -423,6 +433,7 @@ Balance
 Balkon
 Ball
 Ballon
+Bambi
 Bananenschale
 Band
 Bandbreite
@@ -448,6 +459,7 @@ Baum
 Baumwolle
 Beamten
 Beat
+Beatmungsbeutel
 Becher
 Becken
 Bedarf
@@ -602,6 +614,7 @@ Bewerbung
 Bewerbungen
 Bewohner
 Bewusstsein
+Bewährung
 Beziehung
 Beziehungen
 Bezirk
@@ -647,6 +660,7 @@ Blume
 Bluse
 Blut
 Bluterguss
+Blutkreislauf
 Bluttat
 Bluttaten
 Blutvergießen
@@ -746,6 +760,7 @@ Charakteristika
 Charm
 Charme
 Chef
+Chefarztarbeit
 Chemikalien
 Chemotherapie
 China
@@ -1089,6 +1104,7 @@ Erschließung
 Erschließungen
 Ersuchen
 Erwachsene
+Erwartungen
 Erwerb
 Erwerbe
 Erwähnung
@@ -1219,6 +1235,7 @@ Fleck
 Flecken
 Fledermaus
 Fleisch
+Fleischbällen
 Fleischthermometer
 Fliese
 Flotte
@@ -1289,6 +1306,7 @@ Fremden
 Fremdenfeindlichkeit
 Fremdenfeindlichkeiten
 Fremdenverkehr
+Fremdkörper
 Fremdsprache
 Fremdsprachen
 Freude
@@ -1403,9 +1421,11 @@ Gegenschlag
 Gegenschläge
 Gegenstand
 Gegensätze
+Gegenteil
 Gegner
 Geheimnis
 Gehirn
+Gehirnoperation
 Gehweg
 Gehälter
 Geisel
@@ -1606,6 +1626,7 @@ Hain
 Haken
 Halbinsel
 Halbinseln
+Halbschwester
 Halle
 Hallen
 Halluzinationen
@@ -1614,6 +1635,7 @@ Halskette
 Halt
 Haltung
 Haltungen
+Hamburger
 Hammer
 Hand
 Handel
@@ -1621,6 +1643,7 @@ Handeln
 Handgelenk
 Handlung
 Handschuh
+Handschuhe
 Handtuch
 Handvoll
 Handwerk
@@ -1629,6 +1652,7 @@ Hase
 Haube
 Hauptfigur
 Hauptpferd
+Hauptschlagader
 Hauptstadt
 Hauptstädte
 Haus
@@ -1639,6 +1663,7 @@ Haushalte
 Hausregel
 Hausschuh
 Haustier
+Haustiernamen
 Haut
 Heap
 Heer
@@ -1671,6 +1696,7 @@ Herrschaft
 Hersteller
 Herz
 Herzog
+Heuchler
 Heulsuse
 Hexe
 Hilfe
@@ -1758,6 +1784,7 @@ Impuls
 Indische
 Influencerin
 Information
+Infusionen
 Ingenieur
 Inhaber
 Inhalt
@@ -1786,6 +1813,7 @@ Internet
 Interview
 Interviewer
 Inventar
+Irgendjemand
 Iris
 Irrsinn
 Jacke
@@ -1847,6 +1875,7 @@ Kapital
 Kapitel
 Kapitän
 Kappe
+Karambolage
 Karriere
 Karte
 Kartoffel
@@ -1923,6 +1952,8 @@ Knalle
 Knappheit
 Knast
 Knie
+Kniescheibe
+Knieverletzung
 Knochen
 Knopf
 Knospe
@@ -2091,6 +2122,7 @@ Landwirtschaft
 Landwirtschaften
 Lappen
 Laptops
+Lasagne
 Last
 Lasten
 Lastwagen
@@ -2232,6 +2264,7 @@ Maske
 Masse
 Massenansturm
 Massenanstürme
+Massenkarambolage
 Masturbationsfantasie
 Match
 Material
@@ -2251,6 +2284,7 @@ Medikament
 Medikamente
 Medikamenten
 Medizin
+Medizinbücher
 Meer
 Mehrwertsteuern
 Meinung
@@ -2418,6 +2452,7 @@ Nadel
 Nadeln
 Nagel
 Nahrung
+Nahrungskette
 Name
 Narbe
 Nase
@@ -2439,9 +2474,12 @@ Neubeginn
 Neufassung
 Neugier
 Neuigkeiten
+Neurochirurg
 New York
 Niederlage
 Niederlagen
+Niemandes
+Nilpferd
 Nippel
 Niveau
 Niveaus
@@ -2450,11 +2488,14 @@ Nobelpreises
 Nominierungen
 Nonne
 Nord
+Notaufnahme
 Note
 Notebook
 Notenbank
 Notenbanken
 Notfall
+Notfallergußentwässerung
+Notfallsituation
 Notfälle
 Nothilfe
 Nothilfen
@@ -2465,11 +2506,14 @@ Notruf
 Notrufe
 Notwendigkeit
 Notwendigkeiten
+Nummer
 Nutzer
 Nägel
 Nähere
 Nörgler
 Nüsse
+Oberarm
+Oberarzt
 Oberfläche
 Oberflächen
 Oberschenkel
@@ -2488,6 +2532,8 @@ Onkel
 Opa
 Oper
 Operation
+Operationssaal
+Operationszeit
 Opfer
 Opfergabe
 Option
@@ -2497,6 +2543,7 @@ Ordner
 Ordnung
 Ordnungen
 Organisation
+Organspender
 Orgel
 Ort
 Orte
@@ -2544,6 +2591,7 @@ Passwort
 Pat
 Patch
 Patient
+Patienten
 Patrouille
 Patty
 Paukenschlag
@@ -2623,6 +2671,7 @@ Prinz
 Prinzessin
 Prinzip
 Prinzipien
+Prioritäten
 Privatleben
 Privatsphäre
 Privileg
@@ -2658,7 +2707,9 @@ Punktestand
 Punktzahl
 Puppe
 Puppen
+Putzigkeitsfestival
 Pyramiden
+Pädiatrie
 Päpste
 Quadrat
 Qual
@@ -2825,6 +2876,8 @@ Räume
 Räumung
 Räumungen
 Räusche
+Röntgenabteilung
+Röntgenaufnahmen
 Rück
 Rücken
 Rückendeckung
@@ -2847,6 +2900,7 @@ Rüstung
 Rüstungen
 Saat
 Sachen
+Sachkenntnisse
 Sachverhalt
 Sachverhalte
 Sack
@@ -2857,6 +2911,7 @@ Saison
 Saisonen
 Salat
 Salz
+Salzlösung
 Sammlerstücke
 Sammlung
 Samt
@@ -2963,6 +3018,7 @@ Schnur
 Schnurrbart
 Schnürchen
 Schock
+Schockraum
 Schokolade
 Schrank
 Schrebergarten
@@ -2998,6 +3054,7 @@ Schultern
 Schuppen
 Schuss
 Schutz
+Schwangerschaftwoche
 Schwankung
 Schwankungen
 Schwarze
@@ -3092,10 +3149,12 @@ Sinn
 Sip
 Sir
 Sirene
+Sirenen
 Situation
 Sitzung
 Sitzungszimmer
 Skala
+Skalpell
 Skelett
 Sklave
 Sklaven
@@ -3128,6 +3187,7 @@ Sorgen
 Sorgfalt
 Soundsystem
 Sowjets
+Spaghetti
 Spalten
 Spaltung
 Spaltungen
@@ -3195,6 +3255,7 @@ Startbahn
 Startbahnen
 Station
 Stationen
+Stationsarzt
 Statistik
 Statue
 Status
@@ -3368,6 +3429,7 @@ Taxifahrt
 Taxigeld
 Team
 Teams
+Technik
 Techniker
 Technologie
 Tee
@@ -3381,6 +3443,7 @@ Teilnahmen
 Telefon
 Telefonat
 Telefonate
+Telefonlisten
 Teller
 Tempel
 Temperatur
@@ -3418,6 +3481,7 @@ Tod
 Todesangst
 Todesopfer
 Todesstrafe
+Todeszeitpunkt
 Toilette
 Tomate
 Ton
@@ -3434,6 +3498,9 @@ Trainer
 Training
 Trauer
 Traum
+Trauma
+Traumakleider
+Traumaprotokolle
 Traurigkeit
 Treffen
 Treibstoff
@@ -3462,6 +3529,7 @@ Träumer
 Träumerei
 Trübung
 Trümmer
+Tumor
 Tunnel
 Turm
 Typ
@@ -3469,6 +3537,7 @@ Typen
 Tänzer
 Tänzerin
 Täter
+Tätigkeiten
 Tätowierung
 Töpfchen
 Töten
@@ -3519,6 +3588,7 @@ Unannehmlichkeiten
 Unbehagen
 Unerledigtes
 Unfall
+Unfallort
 Unfähigkeit
 Unfähigkeiten
 Unfälle
@@ -3558,6 +3628,7 @@ Unterkünfte
 Unterlagen
 Unterleib
 Unterleiber
+Unterleibsverletzungen
 Unternehmen
 Unterricht
 Unterschied
@@ -3588,9 +3659,12 @@ Venen
 Veranstaltung
 Veranstaltungen
 Verantwortung
+Verantwortungsvolle
 Verband
+Verbandschere
 Verbindung
 Verbindungen
+Verblüfftheit
 Verbraucher
 Verbrechen
 Verbrecher
@@ -3609,6 +3683,7 @@ Verein
 Vereinbarung
 Vereinbarungen
 Vereine
+Vereinigung
 Verfahren
 Verfall
 Verfasser
@@ -3729,6 +3804,7 @@ Verzeihung
 Verzweiflung
 Verzögerung
 Verzögerungen
+Veränderungen
 Veröffentlichung
 Veröffentlichungen
 Video
@@ -3919,10 +3995,12 @@ Widrigkeit
 Widrigkeiten
 Wiederaufnahme
 Wiederaufnahmen
+Wiederherstellung
 Wiedersehen
 Wiese
 Wille
 Willkür
+Wimpernschläge
 Wind
 Windschutzscheibe
 Winkel
@@ -4044,6 +4122,7 @@ Zivilist
 Zivilisten
 Zocken
 Zocker
+Zombie
 Zombies
 Zone
 Zorn
