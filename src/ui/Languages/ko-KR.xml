@@ -169,7 +169,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UnableToFix>수리 불가: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>오디오/비디오를 텍스트로</Title>
+    <Title>오디오를 텍스트로</Title>
     <Info>Vosk/Kaldi 음성 인식을 통해 오디오에서 텍스트 생성</Info>
     <VoskWebsite>Vosk 홈페이지</VoskWebsite>
     <Models>모델</Models>
@@ -1242,7 +1242,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>자막 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>비디오/오디오를 텍스트로...</VideoAudioToText>
+        <VideoAudioToText>오디오를 텍스트로...</VideoAudioToText>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportShotChanges>장면 전환 생성/가져오기...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>장면 전환 제거/내보내기...</RemoveOrExportShotChanges>
@@ -2386,6 +2386,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GoToNextSubtitleAndPlay>다음 줄로 이동하여 재생</GoToNextSubtitleAndPlay>
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
     <ToggleFocusWaveform>목록 보기와 파형/스펙트로그램 간의 포커스 전환</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>텍스트 상자와 파형/스펙트로그램 간의 포커스 전환</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <ToggleQuotes>따옴표 전환</ToggleQuotes>
     <ToggleHiTags>HI 태그 전환</ToggleHiTags>
@@ -2456,7 +2457,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <VideoResetSpeedAndZoom>속도/줌 재설정</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
-    <VideoAudioToText>비디오/오디오를 텍스트로 (음성 인식)</VideoAudioToText>
+    <VideoAudioToText>오디오를 텍스트로</VideoAudioToText>
     <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
