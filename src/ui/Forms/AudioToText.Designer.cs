@@ -321,7 +321,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Video/audio to text";
+            this.Text = "Audio to text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.Load += new System.EventHandler(this.AudioToText_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
