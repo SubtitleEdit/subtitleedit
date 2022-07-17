@@ -95,6 +95,7 @@
     <ShortcutX>快捷键: {0}</ShortcutX>
     <ExampleX>示例: {0}</ExampleX>
     <Reset>重置</Reset>
+    <Warning>警告</Warning>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -2264,13 +2265,15 @@ Command line: {1} {2}
     <ContinuationStyleNone>无</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>无, 在停顿处加点 (仅添补)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>无, 在停顿处加点</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>无, 在停顿处加省略号 (仅添补)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>无, 在停顿处加省略号</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>无, 加点 (仅添补)</ContinuationStyleOnlyTrailingDots>
-    <ContinuationStyleLeadingTrailingDots>点</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>无, 但在停顿处加省略号</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingDots>句点</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>自定义</ContinuationStyleCustom>
     <CpsLineLengthStyle>每秒字频/行长</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示每秒字频</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2374,6 +2377,7 @@ Command line: {1} {2}
     <GoToNextSubtitleAndPlay>跳转到下一行并播放</GoToNextSubtitleAndPlay>
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
     <ToggleFocusWaveform>在列表视图和波形/频谱视图之间切换焦点</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>在文本框和波形/频谱图之间切换焦点</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleQuotes>切换引号</ToggleQuotes>
     <ToggleHiTags>切换HI标签</ToggleHiTags>
@@ -2543,6 +2547,9 @@ Command line: {1} {2}
     <UncheckInsertsLowercase>侦测并弃选小写的单行标题或歌词</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>隐藏不太可能的连续型句段</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>忽略乐符间的歌词</IgnoreLyrics>
+    <ContinuationPause>暂停阈值：</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>编辑自定义延续样式...</EditCustomContinuationStyle>
     <MinFrameGap>最小间隔 (帧)</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隔长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隔值？</UseXAsNewGap>
@@ -2552,6 +2559,18 @@ Command line: {1} {2}
     <ShortcutsAllowSingleLetterOrNumberInTextBox>快捷方式：在文本框中允许单个字母/数字</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>更新文件类型关联</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>文件类型关联已更新</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>编辑自定义延续样式</CustomContinuationStyle>
+    <LoadStyle>加载样式...</LoadStyle>
+    <Suffix>后缀：</Suffix>
+    <AddSuffixForComma>如果以逗号结尾则处理</AddSuffixForComma>
+    <AddSpace>添加空格</AddSpace>
+    <RemoveComma>删除逗号</RemoveComma>
+    <Prefix>前缀：</Prefix>
+    <DifferentStyleGap>对长于指定时间的间隔使用不同的样式</DifferentStyleGap>
+    <Preview>预览</Preview>
+    <PreviewPause>（暂停）</PreviewPause>
+    <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
