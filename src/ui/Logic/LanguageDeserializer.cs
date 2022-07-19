@@ -6526,6 +6526,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/GoToNextSubtitleAndPlay":
                     language.Settings.GoToNextSubtitleAndPlay = reader.Value;
                     break;
+                case "Settings/GoToPreviousSubtitleAndFocusWaveform":
+                    language.Settings.GoToPreviousSubtitleAndFocusWaveform = reader.Value;
+                    break;
+                case "Settings/GoToNextSubtitleAndFocusWaveform":
+                    language.Settings.GoToNextSubtitleAndFocusWaveform = reader.Value;
+                    break;
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
                     break;

@@ -2154,6 +2154,8 @@ $HorzAlign          =   Center
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
         public string GeneralGoToPreviousSubtitleAndFocusVideo { get; set; }
         public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
+        public string GeneralGoToPreviousSubtitleAndFocusWaveform { get; set; }
+        public string GeneralGoToNextSubtitleAndFocusWaveform { get; set; }
         public string GeneralGoToPrevSubtitleAndPlay { get; set; }
         public string GeneralGoToNextSubtitleAndPlay { get; set; }
         public string GeneralToggleBookmarks { get; set; }
@@ -7741,6 +7743,18 @@ $HorzAlign          =   Center
                     shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralGoToPreviousSubtitleAndFocusWaveform");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToPreviousSubtitleAndFocusWaveform = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndFocusWaveform");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralGoToNextSubtitleAndFocusWaveform = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDuration");
                 if (subNode != null)
                 {
@@ -10535,6 +10549,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", shortcuts.GeneralGoToStartOfCurrentSubtitle);
             textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusVideo", shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
             textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
+            textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusWaveform", shortcuts.GeneralGoToPreviousSubtitleAndFocusWaveform);
+            textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusWaveform", shortcuts.GeneralGoToNextSubtitleAndFocusWaveform);
             textWriter.WriteElementString("GeneralGoToPrevSubtitleAndPlay", shortcuts.GeneralGoToPrevSubtitleAndPlay);
             textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", shortcuts.GeneralGoToNextSubtitleAndPlay);
             textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", shortcuts.GeneralAutoCalcCurrentDuration);
