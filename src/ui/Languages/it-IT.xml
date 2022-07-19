@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.6</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data 08.12.2021 - numerico.altervista.org</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data 19.07.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -173,7 +173,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <UnableToFix>Impossibile correggere: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Audio/video da testare</Title>
+    <Title>Audio/video a testo</Title>
     <Info>Genera testo dall'audio tramite il riconoscimento vocale Vosk/Kaldi</Info>
     <VoskWebsite>Sito web Vosk</VoskWebsite>
     <Models>Modelli</Models>
@@ -1246,7 +1246,7 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
         <GenerateTextFromVideo>Genera testo da video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Genera video vuoto...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Genera video con sub incorporati...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Video/audio a testo...</VideoAudioToText>
+        <VideoAudioToText>Audio a testo...</VideoAudioToText>
         <ImportChaptersFromVideo>Importa capitoli dal video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Genera/importa modifiche alla scena...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Rimuovi cambi scena...</RemoveOrExportShotChanges>
@@ -2385,6 +2385,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <GoToNextSubtitleAndFocusVideo>Vai alla riga successiva e imposta la posizione del video</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Vai alla riga precedente</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Vai alla riga successiva e avvia il video</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Vai alla riga precedente e metti a fuoco la forma d'onda</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Vai alla riga successiva e metti a fuoco la forma d'onda</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Attiva/disattiva lo stato attivo tra la visualizzazione elenco e la casella di testo dei sottotitoli</ToggleFocus>
     <ToggleFocusWaveform>Attiva/disattiva lo stato attivo tra la visualizzazione elenco e la forma d'onda/spettrogramma</ToggleFocusWaveform>
     <ToggleDialogDashes>Attiva/disattiva trattini di dialogo</ToggleDialogDashes>
@@ -2442,8 +2444,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <GoBackXLSeconds>Molto tempo selezionato a sinistra</GoBackXLSeconds>
     <GoForwardXLSeconds>Molto tempo scelto avanti</GoForwardXLSeconds>
     <GoBack3Second>Tre secondi indietro</GoBack3Second>
-    <GoToStartCurrent>Imposta posiz. video all'inizio del sottotitolo attuale</GoToStartCurrent>
-    <ToggleStartEndCurrent>Commuta posiz. video tra l'inizio / la fine del sottotitolo attuale</ToggleStartEndCurrent>
+    <GoToStartCurrent>Imposta posizione video ad inizio sottotitolo attuale</GoToStartCurrent>
+    <ToggleStartEndCurrent>Commuta posizione video tra inizio/fine sottotitolo attuale</ToggleStartEndCurrent>
     <PlaySelectedLines>Riproduci righe selezionate</PlaySelectedLines>
     <WaveformGoToPrevSubtitle>Vai al sottotitolo precedente (dalla posizione del video)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Vai al sottotitolo successivo (dalla posizione del video)</WaveformGoToNextSubtitle>
@@ -2458,7 +2460,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <VideoResetSpeedAndZoom>Ripristina Velocità/Zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Attiva/disattiva i controlli video</MainToggleVideoControls>
     <VideoToggleContrast>Attiva/disattiva contrasto (solo mpv)</VideoToggleContrast>
-    <VideoAudioToText>Da video/audio a testo (riconoscimento vocale)</VideoAudioToText>
+    <VideoAudioToText>Audio a testo</VideoAudioToText>
     <VideoToggleBrightness>Attiva/disattiva luminosità (solo mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduci, ricerca personalizzata 1</CustomSearch1>
     <CustomSearch2>Traduci, ricerca personalizzata 2</CustomSearch2>
@@ -3023,11 +3025,11 @@ Mantieni le modifiche?</KeepChangesMessage>
     <Description>Regola il valore fino a quando lo stile del testo non è normale anziché corsivo.Nota che l'immagine originale deve essere in corsivo.</Description>
   </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
-    <Title>Preelaborazione dell'immagine OCR</Title>
+    <Title>Pre-elaborazione dell'immagine OCR</Title>
     <Colors>Colori</Colors>
     <AdjustAlpha>Regola il valore fino a quando il testo non viene visualizzato chiaramente (normalmente valori compresi tra 200 e 300)</AdjustAlpha>
     <OriginalImage>Immagine originale</OriginalImage>
-    <PostImage>Immagine dopo la preelaborazione</PostImage>
+    <PostImage>Immagine dopo la pre-elaborazione</PostImage>
     <BinaryThreshold>Soglia di confronto dell'immagine binaria</BinaryThreshold>
     <InvertColors>Inverti i colori</InvertColors>
     <YellowToWhite>Dal giallo al bianco</YellowToWhite>
