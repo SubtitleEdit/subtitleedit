@@ -31,6 +31,7 @@
    * Add taskbar progress bar for audio to text - thx lambdacore12
    * Warn about duplicate style names in ASSA/SSA
    * Improve keeping original bd sup colors - thx resolution
+   * Spell check can now have "se" word list (besides user words)
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
@@ -41,10 +42,13 @@
    * Fix crash in export ssa styles w dup style name - thx A-Winters
    * Fix crash in bd sup edit when changing color/resolution/alpha
    * Fix crash in generate blank video with no sub loaded
+   * Fix crash in post processing after vosk/kaldi - thx Can/WestcoastHstd
    * Fix for remove ASSA line as empty - thx Leon
    * Fix for finding delay in mkv - thx cyzs233/signedout
    * Fix bd sup edit quick OCR
-   * Fix reading QuickTime text with < 5 lines - thx chloehong 
+   * Fix reading QuickTime text with < 5 lines - thx chloehong
+   * Fix minor issue for import plain text - thx Leon
+   * Fix for "Save as" with "default save as format" after mkv - thx Peter
 
 
 3.6.6 (25th May 2022)
