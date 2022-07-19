@@ -2386,6 +2386,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToNextSubtitleAndFocusVideo>Ir para a linha seguinte e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Ir para a linha anterior e reporduzir</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Ir para a linha seguinte e reproduzir</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Ir para a linha anterior e enfocar a forma de onda</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Ir para a linha seguinte e enfocar a forma de onda</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Alternar o enfoque entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleFocusWaveform>Alternar o enfoque entre a lista e forma de onda/espectrograma</ToggleFocusWaveform>
     <ToggleFocusWaveformTextBox>Alternar o enfoque entre a caixa de texto e forma de onda/espectrograma</ToggleFocusWaveformTextBox>
