@@ -391,7 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    ImportSplitAtBlankLine(textBoxText.Lines);
+                    ImportSplitAtBlankLine(textBoxText.Lines.ToList());
                 }
             }
             else
@@ -639,16 +639,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ImportSplitAtBlankLine(IEnumerable<string> lines)
+        private void ImportSplitAtBlankLine(List<string> lines)
         {
             var sb = new StringBuilder();
-            foreach (string line in lines)
+            lines.Add(string.Empty);
+            foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     if (sb.Length > 0)
                     {
-                        string text = sb.ToString().Trim();
+                        var text = sb.ToString().Trim();
                         if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
                         {
                             text = Utilities.AutoBreakLine(text);
@@ -669,10 +670,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sb.AppendLine(line.Trim());
                 }
-            }
-            if (sb.Length > 0)
-            {
-                SplitSingle(sb);
             }
         }
 
