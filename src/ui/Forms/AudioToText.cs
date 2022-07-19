@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
+            groupBoxInputFiles.Text = LanguageSettings.Current.BatchConvert.Input;
 
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
