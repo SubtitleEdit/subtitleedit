@@ -16148,6 +16148,36 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGoToPreviousSubtitleAndFocusWaveform == e.KeyData)
+            {
+                int newIndex = _subtitleListViewIndex - 1;
+                if (newIndex >= 0)
+                {
+                    _subtitleListViewIndex = -1;
+                    SelectListViewIndexAndEnsureVisible(newIndex);
+                    _subtitleListViewIndex = newIndex;
+                    audioVisualizer.Focus();
+                    GotoSubtitleIndex(newIndex);
+                    ShowSubtitle();
+                }
+
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainGoToNextSubtitleAndFocusWaveform == e.KeyData)
+            {
+                int newIndex = _subtitleListViewIndex + 1;
+                if (newIndex < _subtitle.Paragraphs.Count)
+                {
+                    _subtitleListViewIndex = -1;
+                    SelectListViewIndexAndEnsureVisible(newIndex);
+                    _subtitleListViewIndex = newIndex;
+                    audioVisualizer.Focus();
+                    GotoSubtitleIndex(newIndex);
+                    ShowSubtitle();
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGoToNextSubtitleAndPlay == e.KeyData && mediaPlayer != null)
             {
                 int newIndex = _subtitleListViewIndex + 1;

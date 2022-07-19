@@ -2568,6 +2568,8 @@
             public string GoToNextSubtitleAndFocusVideo { get; set; }
             public string GoToPrevSubtitleAndPlay { get; set; }
             public string GoToNextSubtitleAndPlay { get; set; }
+            public string GoToPreviousSubtitleAndFocusWaveform { get; set; }
+            public string GoToNextSubtitleAndFocusWaveform { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleFocusWaveform { get; set; }
             public string ToggleFocusWaveformTextBox { get; set; }
