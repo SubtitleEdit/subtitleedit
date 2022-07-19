@@ -4758,7 +4758,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            FileSaveAs(!_converted);
+            FileSaveAs(!_converted || !string.IsNullOrEmpty(Configuration.Settings.General.DefaultSaveAsFormat));
         }
 
         private DialogResult FileSaveAs(bool allowUsingDefaultOrLastSaveAsFormat)
