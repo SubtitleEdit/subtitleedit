@@ -174,7 +174,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <UnableToFix>Incapaz de corrigir: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Áudio/vídeo para texto</Title>
+    <Title>Áudio para texto</Title>
     <Info>Gerar texto a partir de áudio via reconhecimento de voz Vosk/Kaldi</Info>
     <VoskWebsite>Website do Vosk</VoskWebsite>
     <Models>Modelos</Models>
@@ -1247,7 +1247,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda embutida...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Vídeo/áudio para texto...</VideoAudioToText>
+        <VideoAudioToText>Áudio para texto...</VideoAudioToText>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Remover/exportar mudanças de cena...</RemoveOrExportShotChanges>
@@ -1408,9 +1408,9 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <SubtitleFormat>Formato</SubtitleFormat>
       <FileEncoding>Codificação</FileEncoding>
       <UndoChangesInEditPanel>Anular alterações no painel de edição</UndoChangesInEditPanel>
-      <Previous>Anterior</Previous>
-      <Next>Próxima</Next>
-      <AutoBreak>Ajuste auto &amp;</AutoBreak>
+      <Previous>&lt; Anterior</Previous>
+      <Next>Seguinte &gt;</Next>
+      <AutoBreak>Ajustar</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
     <VideoControls>
@@ -2383,11 +2383,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
-    <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>Ir para a linha seguinte e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Ir para a linha anterior e reporduzir</GoToPrevSubtitleAndPlay>
-    <GoToNextSubtitleAndPlay>Ir para a próxima linha e reproduzir</GoToNextSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>Ir para a linha seguinte e reproduzir</GoToNextSubtitleAndPlay>
     <ToggleFocus>Alternar o enfoque entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleFocusWaveform>Alternar o enfoque entre a lista e forma de onda/espectrograma</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Alternar o enfoque entre a caixa de texto e forma de onda/espectrograma</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleQuotes>Alternar aspas</ToggleQuotes>
     <ToggleHiTags>Alternar etiquetas de Deficientes Auditivos</ToggleHiTags>
@@ -2458,7 +2459,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (apenas mpv)</VideoToggleContrast>
-    <VideoAudioToText>Vídeo/áudio para texto (reconhecimento de voz)</VideoAudioToText>
+    <VideoAudioToText>Áudio para texto</VideoAudioToText>
     <VideoToggleBrightness>Alternar luminosidade (apenas mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
     <CustomSearch2>Traduzir, pesquisa personalizada 2</CustomSearch2>
