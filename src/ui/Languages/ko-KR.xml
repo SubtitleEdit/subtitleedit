@@ -2384,6 +2384,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GoToNextSubtitleAndFocusVideo>다음 줄로 이동하고 비디오 위치 설정</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>이전 줄로 이동하여 재생</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>다음 줄로 이동하여 재생</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>이전 줄로 이동하고 파형에 포커스 맞춤</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>다음 줄로 이동하고 파형에 포커스 맞춤</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
     <ToggleFocusWaveform>목록 보기와 파형/스펙트로그램 간의 포커스 전환</ToggleFocusWaveform>
     <ToggleFocusWaveformTextBox>텍스트 상자와 파형/스펙트로그램 간의 포커스 전환</ToggleFocusWaveformTextBox>
