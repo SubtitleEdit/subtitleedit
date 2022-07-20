@@ -2375,6 +2375,8 @@ Command line: {1} {2}
     <GoToNextSubtitleAndFocusVideo>转到下一行并设置视频位置</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>跳转到上一行并播放</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>跳转到下一行并播放</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>跳转到上一行并将焦点置于波形视图</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>跳转到下一行并将焦点置于波形视图</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
     <ToggleFocusWaveform>在列表视图和波形/频谱视图之间切换焦点</ToggleFocusWaveform>
     <ToggleFocusWaveformTextBox>在文本框和波形/频谱图之间切换焦点</ToggleFocusWaveformTextBox>
