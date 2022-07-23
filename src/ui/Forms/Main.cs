@@ -1767,9 +1767,10 @@ namespace Nikse.SubtitleEdit.Forms
             pointSyncViaOtherSubtitleToolStripMenuItem.Text = _language.Menu.Synchronization.PointSyncViaOtherSubtitle;
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
-
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
+            wordListsToolStripMenuItem.Text = _language.Menu.Options.WordLists;
             settingsToolStripMenuItem.Text = _language.Menu.Options.Settings;
+
             changeLanguageToolStripMenuItem.Text = _language.Menu.Options.ChooseLanguage + " [" + LanguageSettings.Current.Name + "]";
 
             toolStripMenuItemNetworking.Text = _language.Menu.Networking.Title;
@@ -34041,6 +34042,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 InsertLineToolStripMenuItemClick(null, null);
                 return;
+            }
+        }
+
+        private void wordListsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new WordLists())
+            {
+                form.ShowDialog(this);
             }
         }
     }

@@ -4234,6 +4234,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Options/Settings":
                     language.Main.Menu.Options.Settings = reader.Value;
                     break;
+                case "Main/Menu/Options/WordLists":
+                    language.Main.Menu.Options.WordLists = reader.Value;
+                    break;
                 case "Main/Menu/Options/ChooseLanguage":
                     language.Main.Menu.Options.ChooseLanguage = reader.Value;
                     break;

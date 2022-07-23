@@ -258,6 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wordListsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemNetworking = new System.Windows.Forms.ToolStripMenuItem();
             this.startServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.joinSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2414,33 +2415,33 @@ namespace Nikse.SubtitleEdit.Forms
             // translateToolStripMenuItem
             // 
             this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.translateToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.translateToolStripMenuItem.Text = "Auto-translate...";
             this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
             // 
             // autotranslateViaCopypasteToolStripMenuItem
             // 
             this.autotranslateViaCopypasteToolStripMenuItem.Name = "autotranslateViaCopypasteToolStripMenuItem";
-            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.autotranslateViaCopypasteToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.autotranslateViaCopypasteToolStripMenuItem.Text = "Auto-translate via copy-paste...";
             this.autotranslateViaCopypasteToolStripMenuItem.Click += new System.EventHandler(this.autotranslateViaCopypasteToolStripMenuItem_Click);
             // 
             // toolStripSeparator26
             // 
             this.toolStripSeparator26.Name = "toolStripSeparator26";
-            this.toolStripSeparator26.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator26.Size = new System.Drawing.Size(235, 6);
             // 
             // mergeSentencesToolStripMenuItem
             // 
             this.mergeSentencesToolStripMenuItem.Name = "mergeSentencesToolStripMenuItem";
-            this.mergeSentencesToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.mergeSentencesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.mergeSentencesToolStripMenuItem.Text = "Merge sentences...";
             this.mergeSentencesToolStripMenuItem.Click += new System.EventHandler(this.mergeSentencesToolStripMenuItem_Click);
             // 
             // breaksplitLongLinesToolStripMenuItem
             // 
             this.breaksplitLongLinesToolStripMenuItem.Name = "breaksplitLongLinesToolStripMenuItem";
-            this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.breaksplitLongLinesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.breaksplitLongLinesToolStripMenuItem.Text = "Break/split long lines...";
             this.breaksplitLongLinesToolStripMenuItem.Click += new System.EventHandler(this.breaksplitLongLinesToolStripMenuItem_Click);
             // 
@@ -2448,6 +2449,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsToolStripMenuItem,
+            this.wordListsToolStripMenuItem,
             this.changeLanguageToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -2466,6 +2468,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.changeLanguageToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.changeLanguageToolStripMenuItem.Text = "Change language...";
             this.changeLanguageToolStripMenuItem.Click += new System.EventHandler(this.ChangeLanguageToolStripMenuItemClick);
+            // 
+            // wordListsToolStripMenuItem
+            // 
+            this.wordListsToolStripMenuItem.Name = "wordListsToolStripMenuItem";
+            this.wordListsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.wordListsToolStripMenuItem.Text = "Word lists...";
+            this.wordListsToolStripMenuItem.Click += new System.EventHandler(this.wordListsToolStripMenuItem_Click);
             // 
             // toolStripMenuItemNetworking
             // 
@@ -6097,5 +6106,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem sortByGapToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonBurnIn;
         private System.Windows.Forms.ToolStripButton toolStripButtonSpellCheck;
+        private System.Windows.Forms.ToolStripMenuItem wordListsToolStripMenuItem;
     }
 }

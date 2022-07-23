@@ -1822,6 +1822,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Options",
                         Settings = "&Settings...",
+                        WordLists = "Word lists...",
                         ChooseLanguage = "&Choose language...",
                     },
 

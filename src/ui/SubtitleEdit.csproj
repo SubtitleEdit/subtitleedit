@@ -270,6 +270,12 @@
     <Compile Include="Forms\Options\SettingsCustomContinuationStyle.Designer.cs">
       <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options\WordLists.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options\WordLists.Designer.cs">
+      <DependentUpon>WordLists.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShotChangesList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1295,6 +1301,7 @@
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FileTypeAssociations.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
+    <Compile Include="Logic\FontHelper.cs" />
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\LanguageStructure.cs" />
@@ -1463,6 +1470,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\SettingsCustomContinuationStyle.resx">
       <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options\WordLists.resx">
+      <DependentUpon>WordLists.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShotChangesList.resx">
       <DependentUpon>ShotChangesList.cs</DependentUpon>

@@ -1667,6 +1667,7 @@
                 {
                     public string Title { get; set; }
                     public string Settings { get; set; }
+                    public string WordLists { get; set; }
                     public string ChooseLanguage { get; set; }
                 }
 
