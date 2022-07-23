@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         public SettingsProfileExport(List<RulesProfile> profiles)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 

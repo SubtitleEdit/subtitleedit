@@ -1281,6 +1281,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <Options>
         <Title>Options</Title>
         <Settings>&amp;Settings...</Settings>
+        <WordLists>Word lists...</WordLists>
         <ChooseLanguage>&amp;Choose language...</ChooseLanguage>
       </Options>
       <Networking>
