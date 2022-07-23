@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,9 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Dictionaries;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -617,20 +617,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             _listBoxSearchStringLastUsed = DateTime.UtcNow;
             FindAndSelectListViewItem(sender as ListView);
             e.SuppressKeyPress = true;
-        }
-
-        private void FindAndSelectListBoxItem(ListBox listBox)
-        {
-            var i = 0;
-            foreach (string s in listBox.Items)
-            {
-                if (s.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
-                {
-                    listBox.SelectedIndex = i;
-                    break;
-                }
-                i++;
-            }
         }
 
         private void FindAndSelectListViewItem(ListView listView)
