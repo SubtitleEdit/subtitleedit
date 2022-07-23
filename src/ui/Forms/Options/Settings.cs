@@ -39,7 +39,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
 
-        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+        private readonly BackgroundWorker _shortcutsBackgroundWorker;
+
+        private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
 
         internal class ComboBoxLanguage
         {
@@ -56,11 +58,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             public string ShortcutText { get; set; }
             public ShortcutHelper Shortcut { get; set; }
             public List<ShortcutNode> Nodes { get; set; }
-
-            public ShortcutNode()
-            {
-                Nodes = new List<ShortcutNode>();
-            }
 
             public ShortcutNode(string text)
             {
@@ -85,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private static string GetRelativePath(string fileName)
         {
-            string folder = Configuration.BaseDirectory;
+            var folder = Configuration.BaseDirectory;
 
             if (string.IsNullOrEmpty(fileName) || !fileName.StartsWith(folder.Substring(0, 2), StringComparison.OrdinalIgnoreCase))
             {
@@ -108,6 +105,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            _shortcutsBackgroundWorker = new BackgroundWorker();
+            _shortcutsBackgroundWorker.DoWork += (sender, args) =>
+            {
+                MakeShortcutsTreeView(LanguageSettings.Current.Settings);
+            };
+            _shortcutsBackgroundWorker.RunWorkerAsync();
+
             Init();
         }
 
@@ -877,7 +882,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
-            SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
             SetCpsLineLengthStyle(Configuration.Settings.General.CpsLineLengthStrategy);
 
             buttonEditCustomContinuationStyle.Visible = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom;
@@ -984,8 +988,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
-            MakeShortcutsTreeView(language);
-            ShowShortcutsTreeView();
             toolStripMenuItemShortcutsCollapse.Text = LanguageSettings.Current.General.Collapse;
             importShortcutsToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
             exportShortcutsToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
@@ -2081,6 +2083,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case ShortcutsSection:
                     section = panelShortcuts;
+                    Cursor = Cursors.WaitCursor;
+                    while (_shortcutsBackgroundWorker.IsBusy)
+                    {
+                        System.Threading.Thread.Sleep(10);
+                        Application.DoEvents();
+                    }
+
+                    ShowShortcutsTreeView();
+                    Cursor = Cursors.Default;
                     break;
                 case SyntaxColoringSection:
                     section = panelSyntaxColoring;
