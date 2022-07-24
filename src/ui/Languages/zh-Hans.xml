@@ -1276,6 +1276,7 @@ Command line: {1} {2}
       <Options>
         <Title>选项(&amp;O)</Title>
         <Settings>设置(&amp;S)...</Settings>
+        <WordLists>词语列表...</WordLists>
         <ChooseLanguage>选择语言(&amp;C)...</ChooseLanguage>
       </Options>
       <Networking>
