@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             groupBoxWordListLocation.Text = language.Location;
             checkBoxNamesOnline.Text = language.UseOnlineNames;
             linkLabelOpenDictionaryFolder.Text = LanguageSettings.Current.GetDictionaries.OpenDictionariesFolder;
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
             InitComboBoxWordListLanguages();
             labelStatus.Text = string.Empty;
