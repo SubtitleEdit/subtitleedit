@@ -33,6 +33,8 @@
    * Warn about duplicate style names in ASSA/SSA
    * Improve keeping original bd sup colors - thx resolution
    * Spell check can now have "se" word list (besides user words)
+   * Separate "Word lists" to own menu item
+   * Add bit rate info for burn-in two pass - thx Marko
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
