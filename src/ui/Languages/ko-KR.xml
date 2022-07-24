@@ -1277,6 +1277,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
       <Options>
         <Title>옵션</Title>
         <Settings>환경 설정</Settings>
+        <WordLists>단어 목록...</WordLists>
         <ChooseLanguage>언어 선택</ChooseLanguage>
       </Options>
       <Networking>
