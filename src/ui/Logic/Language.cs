@@ -1062,6 +1062,7 @@ namespace Nikse.SubtitleEdit.Logic
                 PassX = "Pass {0}",
                 Encoding = "Encoding",
                 BitRate = "Bit rate",
+                TotalBitRateX = "Total bit rate: {0}",
                 SampleRate = "Sample rate",
                 Audio = "Audio",
                 Stereo = "Stereo",

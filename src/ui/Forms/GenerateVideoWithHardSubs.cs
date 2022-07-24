@@ -92,6 +92,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAlignRight.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
             checkBoxRightToLeft.Checked = Configuration.Settings.Tools.GenVideoNonAssaAlignRight;
 
+            labelVideoBitrate.Text = string.Empty;
+
             numericUpDownWidth.Value = _videoInfo.Width;
             numericUpDownHeight.Value = _videoInfo.Height;
 
@@ -355,19 +357,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelPass.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PassX, "1");
 
-            var audioMb = 0;
-            if (comboBoxAudioEnc.Text == "copy")
-            {
-                audioMb = GetAudioFileSizeInMb();
-            }
-
-            // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
-            var bitRate = (int)Math.Round(((double)numericUpDownTargetFileSize.Value - audioMb) * 8192.0 / _videoInfo.TotalSeconds);
-            if (comboBoxAudioEnc.Text != "copy" && !string.IsNullOrWhiteSpace(comboBoxAudioBitRate.Text))
-            {
-                var audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
-                bitRate -= audioBitRate;
-            }
+            var bitRate = GetVideoBitRate();
             var videoBitRate = bitRate.ToString(CultureInfo.InvariantCulture) + "k";
 
             if (bitRate < 10)
@@ -938,6 +928,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAudioBitRate.Enabled = false;
                 comboBoxAudioBitRate.Enabled = false;
             }
+
+            numericUpDownTargetFileSize_ValueChanged(null, null);
         }
 
         private void buttonPreview_Click(object sender, EventArgs e)
@@ -1107,6 +1099,54 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var coordinates = buttonVideoChooseStandardRes.PointToClient(Cursor.Position);
             contextMenuStripRes.Show(buttonVideoChooseStandardRes, coordinates);
+        }
+
+        private int GetVideoBitRate()
+        {
+            var audioMb = 0;
+            if (comboBoxAudioEnc.Text == "copy")
+            {
+                audioMb = GetAudioFileSizeInMb();
+            }
+
+            // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
+            var bitRate = (int)Math.Round(((double)numericUpDownTargetFileSize.Value - audioMb) * 8192.0 / _videoInfo.TotalSeconds);
+            if (comboBoxAudioEnc.Text != "copy" && !string.IsNullOrWhiteSpace(comboBoxAudioBitRate.Text))
+            {
+                var audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
+                bitRate -= audioBitRate;
+            }
+            
+            return bitRate;
+        }
+
+        private void numericUpDownTargetFileSize_ValueChanged(object sender, EventArgs e)
+        {
+            labelVideoBitrate.Text = string.Empty;
+            if (!checkBoxTargetFileSize.Checked)
+            {
+                return;
+            }
+
+            var videoBitRate = GetVideoBitRate();
+            var separateAudio = comboBoxAudioEnc.Text != "copy" && !string.IsNullOrWhiteSpace(comboBoxAudioBitRate.Text);
+            var audioBitRate = 0;
+            if (separateAudio)
+            {
+                 audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
+            }
+
+            labelVideoBitrate.Left = numericUpDownTargetFileSize.Right + 5;
+            labelVideoBitrate.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TotalBitRateX, $"{(videoBitRate + audioBitRate):#,###,##0}k");
+            if (separateAudio)
+            {
+                labelVideoBitrate.Text += $" ({videoBitRate:#,###,##0}k + {audioBitRate:#,###,##0}k)";
+            }
+        }
+
+        private void comboBoxAudioBitRate_SelectedValueChanged(object sender, EventArgs e)
+        {
+            numericUpDownTargetFileSize_ValueChanged(null, null);
         }
     }
 }
