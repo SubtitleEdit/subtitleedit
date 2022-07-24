@@ -922,6 +922,7 @@
             public string PassX { get; set; }
             public string Encoding { get; set; }
             public string BitRate { get; set; }
+            public string TotalBitRateX { get; set; }
             public string SampleRate { get; set; }
             public string Audio { get; set; }
             public string Stereo { get; set; }

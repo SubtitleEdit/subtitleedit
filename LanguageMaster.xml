@@ -839,6 +839,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <PassX>Pass {0}</PassX>
     <Encoding>Encoding</Encoding>
     <BitRate>Bit rate</BitRate>
+    <TotalBitRateX>Total bit rate: {0}</TotalBitRateX>
     <SampleRate>Sample rate</SampleRate>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>

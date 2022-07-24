@@ -2230,6 +2230,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/BitRate":
                     language.GenerateVideoWithBurnedInSubs.BitRate = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/TotalBitRateX":
+                    language.GenerateVideoWithBurnedInSubs.TotalBitRateX = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/SampleRate":
                     language.GenerateVideoWithBurnedInSubs.SampleRate = reader.Value;
                     break;
