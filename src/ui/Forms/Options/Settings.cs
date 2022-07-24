@@ -293,7 +293,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 {
                     comboBoxVideoPlayerPreviewFontIndex = comboBoxSubtitleFontList.Count - 1;
                 }
-                break;
             }
             comboBoxSubtitleFont.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
             comboBoxVideoPlayerPreviewFontName.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
