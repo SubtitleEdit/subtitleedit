@@ -2,13 +2,12 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
-    public partial class SettingsLineWidth : Form
+    public sealed partial class SettingsLineWidth : Form
     {
         public SettingsLineWidth()
         {
@@ -26,10 +25,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             comboBoxMeasureFontName.BeginUpdate();
             comboBoxMeasureFontName.Items.Clear();
-            var comboBoxFontNameList = new List<string>();
             var comboBoxSubtitleFontList = new List<string>();
             var comboBoxSubtitleFontIndex = 0;
-            foreach (var x in FontFamily.Families.OrderBy(p => p.Name))
+            foreach (var x in FontHelper.GetFontFamilies())
             {
                 comboBoxSubtitleFontList.Add(x.Name);
                 if (x.Name.Equals(settings.MeasureFontName, StringComparison.OrdinalIgnoreCase))
