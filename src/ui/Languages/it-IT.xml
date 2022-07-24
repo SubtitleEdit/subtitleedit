@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.6</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data 19.07.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data 24.07.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -839,6 +839,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <PassX>Passaggio {0}</PassX>
     <Encoding>Codifica</Encoding>
     <BitRate>Bitrate</BitRate>
+    <TotalBitRateX>Bitrate totale: {0}</TotalBitRateX>
     <SampleRate>Freq. campionamento</SampleRate>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
@@ -1281,6 +1282,7 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
       <Options>
         <Title>Opzioni</Title>
         <Settings>&amp;Impostazioni</Settings>
+        <WordLists>Elenchi parole...</WordLists>
         <ChooseLanguage>&amp;Cambia Lingua </ChooseLanguage>
       </Options>
       <Networking>
