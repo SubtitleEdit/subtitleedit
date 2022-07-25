@@ -8671,7 +8671,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                IsSubtitleLoaded;
 
             // Insert "selected lines" sub menu items dynamically
-            if (toolStripMenuItemSelectedLines.DropDownItems[0].Tag?.ToString() == "(REMOVE)")
+            while (toolStripMenuItemSelectedLines.DropDownItems[0].Tag?.ToString() == "(REMOVE)")
             {
                 toolStripMenuItemSelectedLines.DropDownItems.RemoveAt(0);
             }
@@ -8738,6 +8738,37 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             };
+            
+            // harboe debug todo nixe fix nikolaj
+            var audio = new ToolStripMenuItem("Audio");
+            audio.Tag = "(REMOVE)";
+            if (SubtitleListview1.SelectedItems.Count > 0)
+            {
+                toolStripMenuItemSelectedLines.DropDownItems.Insert(0, audio);
+                var audioClip = new ToolStripMenuItem("Save audio as...");
+                var audioToText = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Video.VideoAudioToText);
+                audio.DropDownItems.Insert(0, audioClip);
+             //   audio.DropDownItems.Insert(0, audioToText);
+                audioClip.Click += (senderNew, eNew) =>
+                {
+                    if (!RequireFfmpegOk())
+                    {
+                        return;
+                    }
+
+                    var audioClips = GetAudioClips();
+                    UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFile));
+                };
+                audioToText.Click += (senderNew, eNew) =>
+                {
+                    if (!RequireFfmpegOk())
+                    {
+                        return;
+                    }
+
+                    var audioClips = GetAudioClips();
+                };
+            }
 
             toolStripMenuItemSetRegion.Visible = false;
             toolStripMenuItemSetLanguage.Visible = false;
@@ -9193,6 +9224,25 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssaTools.Visible = false;
                 toolStripSeparatorAssa.Visible = false;
             }
+        }
+
+        private List<AudioClipsGet.AudioClip> GetAudioClips()
+        {
+            var selectedParagraphs = new List<Paragraph>();
+            foreach (var index in SubtitleListview1.GetSelectedIndices())
+            {
+                selectedParagraphs.Add(_subtitle.Paragraphs[index]);
+            }
+
+            using (var form = new AudioClipsGet(selectedParagraphs, _videoFileName, _videoAudioTrackNumber))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    return form.AudioClips;
+                }
+            }
+
+            return null;
         }
 
         private void SetStyle(object sender, EventArgs e)
