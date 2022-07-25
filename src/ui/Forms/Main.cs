@@ -8739,16 +8739,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             };
             
-            // harboe debug todo nixe fix nikolaj
             var audio = new ToolStripMenuItem("Audio");
             audio.Tag = "(REMOVE)";
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemSelectedLines.DropDownItems.Insert(0, audio);
-                var audioClip = new ToolStripMenuItem("Save audio as...");
+                var audioClip = new ToolStripMenuItem("Extract audio");
                 var audioToText = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Video.VideoAudioToText);
                 audio.DropDownItems.Insert(0, audioClip);
-             //   audio.DropDownItems.Insert(0, audioToText);
+                audio.DropDownItems.Insert(0, audioToText);
                 audioClip.Click += (senderNew, eNew) =>
                 {
                     if (!RequireFfmpegOk())
@@ -8757,7 +8756,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var audioClips = GetAudioClips();
-                    UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFile));
+                    UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
                 };
                 audioToText.Click += (senderNew, eNew) =>
                 {
@@ -8767,6 +8766,24 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var audioClips = GetAudioClips();
+                    using (var form = new AudioToTextSelectedLines(audioClips, this))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            SubtitleListview1.BeginUpdate();
+                            foreach (var ac in audioClips)
+                            {
+                                var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
+                                if (p != null)
+                                {
+                                    p.Text = ac.Paragraph.Text;
+                                    var idx = _subtitle.Paragraphs.IndexOf(p);
+                                    SubtitleListview1.SetText(idx, p.Text);
+                                }
+                            }
+                            SubtitleListview1.EndUpdate();
+                        }
+                    }
                 };
             }
 
@@ -9231,7 +9248,7 @@ namespace Nikse.SubtitleEdit.Forms
             var selectedParagraphs = new List<Paragraph>();
             foreach (var index in SubtitleListview1.GetSelectedIndices())
             {
-                selectedParagraphs.Add(_subtitle.Paragraphs[index]);
+                selectedParagraphs.Add(new Paragraph(_subtitle.Paragraphs[index], false));
             }
 
             using (var form = new AudioClipsGet(selectedParagraphs, _videoFileName, _videoAudioTrackNumber))

@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    sealed partial class AudioToText
+    sealed partial class AudioToTextSelectedLines
     {
         /// <summary>
         /// Required designer variable.
@@ -44,11 +44,7 @@
             this.labelTime = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.checkBoxUsePostProcessing = new System.Windows.Forms.CheckBox();
-            this.buttonBatchMode = new System.Windows.Forms.Button();
             this.groupBoxInputFiles = new System.Windows.Forms.GroupBox();
-            this.buttonClear = new System.Windows.Forms.Button();
-            this.buttonRemoveFile = new System.Windows.Forms.Button();
-            this.buttonAddFile = new System.Windows.Forms.Button();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxModels.SuspendLayout();
@@ -213,26 +209,11 @@
             this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
             this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
             // 
-            // buttonBatchMode
-            // 
-            this.buttonBatchMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonBatchMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonBatchMode.Location = new System.Drawing.Point(504, 427);
-            this.buttonBatchMode.Name = "buttonBatchMode";
-            this.buttonBatchMode.Size = new System.Drawing.Size(112, 23);
-            this.buttonBatchMode.TabIndex = 7;
-            this.buttonBatchMode.Text = "Batch mode";
-            this.buttonBatchMode.UseVisualStyleBackColor = true;
-            this.buttonBatchMode.Click += new System.EventHandler(this.buttonBatchMode_Click);
-            // 
             // groupBoxInputFiles
             // 
             this.groupBoxInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxInputFiles.Controls.Add(this.buttonClear);
-            this.groupBoxInputFiles.Controls.Add(this.buttonRemoveFile);
-            this.groupBoxInputFiles.Controls.Add(this.buttonAddFile);
             this.groupBoxInputFiles.Controls.Add(this.listViewInputFiles);
             this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 200);
             this.groupBoxInputFiles.Name = "groupBoxInputFiles";
@@ -240,39 +221,6 @@
             this.groupBoxInputFiles.TabIndex = 5;
             this.groupBoxInputFiles.TabStop = false;
             this.groupBoxInputFiles.Text = "Input files";
-            // 
-            // buttonClear
-            // 
-            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClear.Location = new System.Drawing.Point(602, 73);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(74, 23);
-            this.buttonClear.TabIndex = 3;
-            this.buttonClear.Text = "Clear";
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
-            // 
-            // buttonRemoveFile
-            // 
-            this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveFile.Location = new System.Drawing.Point(603, 46);
-            this.buttonRemoveFile.Name = "buttonRemoveFile";
-            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
-            this.buttonRemoveFile.TabIndex = 2;
-            this.buttonRemoveFile.Text = "Remove";
-            this.buttonRemoveFile.UseVisualStyleBackColor = true;
-            this.buttonRemoveFile.Click += new System.EventHandler(this.buttonRemoveFile_Click);
-            // 
-            // buttonAddFile
-            // 
-            this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddFile.Location = new System.Drawing.Point(603, 19);
-            this.buttonAddFile.Name = "buttonAddFile";
-            this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
-            this.buttonAddFile.TabIndex = 1;
-            this.buttonAddFile.Text = "Add...";
-            this.buttonAddFile.UseVisualStyleBackColor = true;
-            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
             // 
             // listViewInputFiles
             // 
@@ -286,7 +234,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 18);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(591, 150);
+            this.listViewInputFiles.Size = new System.Drawing.Size(670, 150);
             this.listViewInputFiles.TabIndex = 0;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -296,13 +244,12 @@
             this.columnHeaderFileName.Text = "File name";
             this.columnHeaderFileName.Width = 455;
             // 
-            // AudioToText
+            // AudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
             this.Controls.Add(this.groupBoxInputFiles);
-            this.Controls.Add(this.buttonBatchMode);
             this.Controls.Add(this.checkBoxUsePostProcessing);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.linkLabelVoskWebSite);
@@ -318,7 +265,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(575, 250);
-            this.Name = "AudioToText";
+            this.Name = "AudioToTextSelectedLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -351,12 +298,8 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox checkBoxUsePostProcessing;
         private System.Windows.Forms.Button buttonDownload;
-        private System.Windows.Forms.Button buttonBatchMode;
         private System.Windows.Forms.GroupBox groupBoxInputFiles;
         private System.Windows.Forms.ListView listViewInputFiles;
         private System.Windows.Forms.ColumnHeader columnHeaderFileName;
-        private System.Windows.Forms.Button buttonClear;
-        private System.Windows.Forms.Button buttonRemoveFile;
-        private System.Windows.Forms.Button buttonAddFile;
     }
 }
