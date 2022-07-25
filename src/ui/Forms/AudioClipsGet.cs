@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public class AudioClip
         {
-            public string AudioFile { get; set; }
+            public string AudioFileName { get; set; }
             public Paragraph Paragraph { get; set; }
         }
 
@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Value = 0;
             var targetFolder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(targetFolder);
+            AudioClips = new List<AudioClip>();
             while (index < _paragraphs.Count && _abort == false)
             {
                 var item = _paragraphs[index];
@@ -82,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AudioClips.Add(new AudioClip
                     {
                         Paragraph = item,
-                        AudioFile = targetFile,
+                        AudioFileName = targetFile,
                     });
 
                     UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Done);

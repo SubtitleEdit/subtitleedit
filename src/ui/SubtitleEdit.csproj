@@ -186,6 +186,12 @@
     <Compile Include="Forms\AudioClipsGet.Designer.cs">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AudioToTextSelectedLines.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToTextSelectedLines.Designer.cs">
+      <DependentUpon>AudioToTextSelectedLines.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AudioToText.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1434,6 +1440,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioClipsGet.resx">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToTextSelectedLines.resx">
+      <DependentUpon>AudioToTextSelectedLines.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText.resx">
       <DependentUpon>AudioToText.cs</DependentUpon>
