@@ -1797,6 +1797,7 @@
                     public string RemoveBookmark { get; set; }
                     public string GoToSourceView { get; set; }
                     public string GoToListView { get; set; }
+                    public string ExtractAudio { get; set; }
                 }
 
                 public FileMenu File { get; set; }

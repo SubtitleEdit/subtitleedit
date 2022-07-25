@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             TwoLetterLanguageCode = twoLetterLanguageCode;
         }
 
-        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing)
+        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration)
         {
             _resultTexts = resultTexts;
             var subtitle = new Subtitle();
@@ -44,12 +44,32 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
             }
 
+            return Generate(subtitle, usePostProcessing, true, true, true, true);
+        }
+
+        public Subtitle Generate(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration)
+        {
             if (usePostProcessing)
             {
-                subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
-                subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
-                subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
-                subtitle = FixShortDuration(subtitle);
+                if (addPeriods)
+                {
+                    subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
+                }
+
+                if (mergeLines)
+                {
+                    subtitle = MergeShortLines(subtitle, TwoLetterLanguageCode);
+                }
+
+                if (fixCasing)
+                {
+                    subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
+                }
+
+                if (fixShortDuration)
+                {
+                    subtitle = FixShortDuration(subtitle);
+                }
             }
 
             subtitle.Renumber();

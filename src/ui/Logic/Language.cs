@@ -1951,7 +1951,8 @@ namespace Nikse.SubtitleEdit.Logic
                         EditBookmark = "Edit bookmark...",
                         RemoveBookmark = "Remove bookmark",
                         GoToSourceView = "Go to source view",
-                        GoToListView = "Go to list view"
+                        GoToListView = "Go to list view",
+                        ExtractAudio = "Extract audio...",
                     }
                 },
 
