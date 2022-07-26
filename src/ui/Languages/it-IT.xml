@@ -1403,6 +1403,7 @@ Per utilizzare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti
         <RemoveBookmark>Rimuovi segnalibro</RemoveBookmark>
         <GoToSourceView>Vista sorgente</GoToSourceView>
         <GoToListView>Vista elenco</GoToListView>
+        <ExtractAudio>Estrai audio...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
