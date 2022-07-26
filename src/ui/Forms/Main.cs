@@ -8739,9 +8739,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             };
             
-            var audio = new ToolStripMenuItem("Audio");
+            var audio = new ToolStripMenuItem(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio);
             audio.Tag = "(REMOVE)";
-            if (SubtitleListview1.SelectedItems.Count > 0)
+            if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName))
             {
                 toolStripMenuItemSelectedLines.DropDownItems.Insert(0, audio);
                 var audioClip = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.ExtractAudio);

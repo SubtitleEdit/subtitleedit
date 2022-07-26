@@ -13,6 +13,8 @@
    * Add toolbar icon for WebVTT properties - thx Leon
    * Add shortcut for toggle between text box and waveform - thx Marko
    * Add shortcuts for go to next/prev and focus waveform - thx cyzs233
+   * Export audio for selected lines - thx nissansz
+   * Audio-to-text for selected lines - thx Mishasama 
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин

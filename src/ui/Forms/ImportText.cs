@@ -740,77 +740,6 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private void SplitSingle(StringBuilder sb)
-        {
-            string t = sb.ToString().Trim();
-            var tarr = t.SplitToLines();
-            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 3 &&
-                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
-                tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
-                tarr[2].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
-                return;
-            }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 2 &&
-                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
-                tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
-                return;
-            }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = tarr[0].Trim() });
-                return;
-            }
-
-            Paragraph p = null;
-            if (CanMakeThreeLiner(out var threeLiner, sb.ToString()))
-            {
-                var parts = threeLiner.SplitToLines();
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = parts[2].Trim() });
-                return;
-            }
-
-            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, "en").SplitToLines())
-            {
-                if (p == null)
-                {
-                    p = new Paragraph { Text = text };
-                }
-                else if (p.Text.Contains(Environment.NewLine))
-                {
-                    FixedSubtitle.Paragraphs.Add(p);
-                    p = new Paragraph();
-                    if (text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        p.Text = Utilities.AutoBreakLine(text);
-                    }
-                    else
-                    {
-                        p.Text = text;
-                    }
-                }
-                else
-                {
-                    if (checkBoxMergeShortLines.Checked || p.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength || text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + text.Trim());
-                    }
-                    else
-                    {
-                        p.Text = p.Text + Environment.NewLine + text.Trim();
-                    }
-                }
-            }
-            if (p != null)
-            {
-                FixedSubtitle.Paragraphs.Add(p);
-            }
-        }
-
         private void ImportAutoSplit(string[] textLines)
         {
             var sub = new Subtitle();
@@ -1326,7 +1255,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in fileNames.OrderBy(p => p))
+            foreach (var fileName in fileNames.OrderBy(p => p))
             {
                 AddInputFile(fileName);
             }
