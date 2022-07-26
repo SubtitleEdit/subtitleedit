@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Value++;
                 try
                 {
-                    var targetFile = Path.Combine(targetFolder, MakeTimeCodeFileName(item)  + ".wav");
+                    var targetFile = Path.Combine(targetFolder, MakeTimeCodeFileName(item));
                     var audioParameter = string.Empty;
                     if (_audioTrackNumber > 0)
                     {
@@ -100,11 +100,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string MakeTimeCodeFileName(Paragraph item)
         {
-            //0_00_01_042__0_00_03_919_01.wav
+            //0_00_01_042__0_00_03_919_010.wav
             return
                 item.StartTime.ToDisplayString().Replace('.', '_').Replace(':', '_').Replace(',', '_') + 
                 "__" + 
-                item.StartTime.ToDisplayString().Replace('.', '_').Replace(':', '_').Replace(',', '_');
+                item.EndTime.ToDisplayString().Replace('.', '_').Replace(':', '_').Replace(',', '_') + 
+                ".wav";
         }
 
         private void UpdateStatus(string status)
