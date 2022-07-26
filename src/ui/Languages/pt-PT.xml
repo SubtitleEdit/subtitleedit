@@ -840,6 +840,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <PassX>Passagem {0}</PassX>
     <Encoding>Codificação</Encoding>
     <BitRate>Taxa de bits</BitRate>
+    <TotalBitRateX>Taxa de bits total: {0}</TotalBitRateX>
     <SampleRate>Taxa de amostra</SampleRate>
     <Audio>Áudio</Audio>
     <Stereo>Estéreo</Stereo>
@@ -1282,6 +1283,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <Options>
         <Title>Opções</Title>
         <Settings>&amp;Definições...</Settings>
+        <WordLists>Listas de palavras...</WordLists>
         <ChooseLanguage>&amp;Seleccionar idioma...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1402,6 +1404,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <RemoveBookmark>Remover marcador</RemoveBookmark>
         <GoToSourceView>Ir para a lista Original</GoToSourceView>
         <GoToListView>Ir para a Lista</GoToListView>
+        <ExtractAudio>Extrair áudio...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
