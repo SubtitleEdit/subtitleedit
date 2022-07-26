@@ -1403,6 +1403,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
+        <ExtractAudio>Extract audio...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
