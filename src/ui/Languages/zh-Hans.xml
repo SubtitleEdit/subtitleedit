@@ -838,6 +838,7 @@ Command line: {1} {2}
     <PassX>{0}次编码</PassX>
     <Encoding>编码</Encoding>
     <BitRate>比特率</BitRate>
+    <TotalBitRateX>总比特率：{0}</TotalBitRateX>
     <SampleRate>采样率</SampleRate>
     <Audio>音频</Audio>
     <Stereo>立体声</Stereo>
