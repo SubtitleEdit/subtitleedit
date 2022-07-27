@@ -435,6 +435,7 @@ Autotelefon
 Autotür
 Außenklo
 Baby
+Babyelefanten
 Bach
 Backofen
 Bad
@@ -715,6 +716,7 @@ Botschafter
 Branche
 Braune
 Braut
+Brautkleid
 Bravour
 Bremse
 Brief
@@ -914,6 +916,8 @@ Drähte
 Dränge
 Drücke
 Dschungel
+Duett
+Duettpartner
 Duft
 Duldung
 Duldungen
@@ -1023,6 +1027,7 @@ Einstellung
 Einstellungen
 Einstimmigkeit
 Einstimmigkeiten
+Einstimmung
 Einsturz
 Einstürze
 Einsätze
@@ -1111,6 +1116,7 @@ Erdwärme
 Ereignis
 Ereignisse
 Erfahrung
+Erfahrungen
 Erfolg
 Erfolge
 Erforderliche
@@ -1254,6 +1260,7 @@ Fell
 Fels
 Felsen
 Fenster
+Fernsehdebüt
 Fernsehen
 Fernseher
 Fernstraße
@@ -1383,6 +1390,7 @@ Freunde
 Freunden
 Freundin
 Freundschaft
+Freundschaftstag
 Frieden
 Friedfertigkeiten
 Friedhof
@@ -1544,6 +1552,7 @@ Genehmigungen
 Generation
 Genie
 Gentleman
+Gentlemen
 Gepäck
 Gericht
 Gerichts
@@ -1554,6 +1563,8 @@ Geräusch
 Geräusche
 Gerücht
 Gerüchte
+Gesangsauftritt
+Gesangspartnerin
 Geschehnis
 Geschehnisse
 Gescheiterten
@@ -1670,6 +1681,7 @@ Grenzen
 Griff
 Griffe
 Grinsen
+Großeltern
 Großmutter
 Großraumbüro
 Großstadt
@@ -1987,6 +1999,7 @@ Kauderwelsch
 Kauernde
 Kaution
 Keks
+Kekse
 Keller
 Kellner
 Kellnerin
@@ -2034,6 +2047,7 @@ Kleidung
 Kleingeld
 Kleinigkeit
 Kleinkind
+Kleinstadt
 Klick
 Klient
 Klima
@@ -2217,6 +2231,7 @@ Küsten
 Labor
 Labore
 Lachen
+Ladies
 Ladung
 Ladungen
 Lage
@@ -2232,6 +2247,7 @@ Landung
 Landwirtschaft
 Landwirtschaften
 Lappen
+Laptop
 Laptops
 Lasagne
 Last
@@ -2252,6 +2268,7 @@ Lebenslauf
 Lebensmittel
 Lebenspartner
 Lebenspartnerin
+Lebkuchenhaus
 Leck
 Leckeres
 Lecks
@@ -2398,6 +2415,7 @@ Medikamenten
 Medizin
 Medizinbücher
 Meer
+Meerjungfrau
 Mehrwertsteuern
 Meinung
 Meister
@@ -2450,6 +2468,7 @@ Misstrauen
 Missverständnis
 Missverständnisse
 Mist
+Mistelzweig
 Mitbewerber
 Mitbewohner
 Mitbewohnerin
@@ -2622,6 +2641,7 @@ Nominierungen
 Nonne
 Noosphäre
 Nord
+Nostalgie
 Notaufnahme
 Note
 Notebook
@@ -2761,6 +2781,7 @@ Pfote
 Pfund
 Pfusch
 Phantasie
+Pianist
 Picknick
 Pier
 Pilaw
@@ -2865,6 +2886,7 @@ Qual
 Qualen
 Qualität
 Quantenkosmologie
+Quantität
 Quelle
 Quiz
 Rabatt
@@ -2981,6 +3003,7 @@ Riegen
 Riese
 Riesen
 Riesendeal
+Riesenspaß
 Riesenwelle
 Riesenwellen
 Ring
@@ -3105,7 +3128,10 @@ Schaukel
 Schauplatz
 Schauplätze
 Schauspieler
+Schauspielerfamilie
 Schauspielerin
+Schauspielkarriere
+Schauspielschule
 Schausteller
 Schaustellern
 Scheibe
@@ -3146,6 +3172,7 @@ Schlagstock
 Schlagstöcke
 Schlagzeile
 Schlagzeilen
+Schlagzeuger
 Schlamm
 Schlange
 Schlauch
@@ -3165,6 +3192,7 @@ Schmiergeld
 Schmiergelder
 Schmuck
 Schmuggler
+Schneckenhaus
 Schnee
 Schnellstraße
 Schnellstraßen
@@ -3636,8 +3664,10 @@ Test
 Teuerung
 Teuerungen
 Teufel
+Teufelchen
 Text
 Theater
+Theaterkind
 Thema
 Theorie
 Theorien
@@ -3685,6 +3715,7 @@ Traum
 Trauma
 Traumakleider
 Traumaprotokolle
+Traumhaus
 Traurigkeit
 Treffen
 Treibstoff
@@ -4142,7 +4173,12 @@ Wehwehchen
 Weibchen
 Weigerung
 Weigerungen
+Weihnachten
+Weihnachtsgeschenk
 Weihnachtslied
+Weihnachtsmorgen
+Weihnachtssong
+Weihnachtswunder
 Weile
 Wein
 Weinen
@@ -4158,6 +4194,7 @@ Welpe
 Welt
 Weltall
 Weltmeisterschaften
+Weltpremiere
 Weltraum
 Wende
 Wenden
@@ -4315,6 +4352,7 @@ Ziege
 Ziegel
 Ziel
 Ziele
+Zielen
 Ziellinie
 Zielort
 Zielsetzung
