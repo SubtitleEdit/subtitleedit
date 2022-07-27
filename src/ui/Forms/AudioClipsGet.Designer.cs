@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class AudioClipsGet
+    sealed partial class AudioClipsGet
     {
         /// <summary>
         /// Required designer variable.
