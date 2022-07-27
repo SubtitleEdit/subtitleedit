@@ -8677,6 +8677,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var selectLinesMultipleReplace = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Edit.MultipleReplace);
+            UiUtil.FixFonts(selectLinesMultipleReplace);
             selectLinesMultipleReplace.Tag = "(REMOVE)";
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -8739,13 +8740,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             };
             
-            var audio = new ToolStripMenuItem(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio);
-            audio.Tag = "(REMOVE)";
             if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName))
             {
+                var audio = new ToolStripMenuItem(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio);
+                UiUtil.FixFonts(audio);
+                audio.Tag = "(REMOVE)";
+
                 toolStripMenuItemSelectedLines.DropDownItems.Insert(0, audio);
                 var audioClip = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.ExtractAudio);
+                UiUtil.FixFonts(audioClip);
                 var audioToText = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Video.VideoAudioToText);
+                UiUtil.FixFonts(audioToText);
                 audio.DropDownItems.Insert(0, audioClip);
                 audio.DropDownItems.Insert(0, audioToText);
                 audioClip.Click += (senderNew, eNew) =>
@@ -8782,6 +8787,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             SubtitleListview1.EndUpdate();
+                            RefreshSelectedParagraph();
                         }
                     }
                 };
