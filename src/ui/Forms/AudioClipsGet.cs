@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AudioClipsGet : Form
+    public sealed partial class AudioClipsGet : Form
     {
         public class AudioClip
         {
@@ -24,11 +24,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         public AudioClipsGet(List<Paragraph> paragraphs, string videoFileName, int audioTrackNumber)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _paragraphs = paragraphs;
             _videoFileName = videoFileName;
             _audioTrackNumber = audioTrackNumber;
+            Text = LanguageSettings.Current.AddWaveformBatch.ExtractingAudio;
         }
 
         private void AudioClipsGet_Shown(object sender, EventArgs e)
@@ -58,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //-ss = start time
                     //-t = duration
                     //-i indicates the input
-                    //-vn means no video ouput
+                    //-vn means no video output
                     //-ar 44100 indicates the sampling frequency.
                     //-ab indicates the bit rate (in this example 160kb/s)
                     //-vol 448 will boot volume... 256 is normal
@@ -78,27 +81,27 @@ namespace Nikse.SubtitleEdit.Forms
                         Application.DoEvents();
                     }
 
-                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Calculating);
+                    UpdateStatus($"{index+1} / {_paragraphs.Count}");
 
                     AudioClips.Add(new AudioClip
                     {
                         Paragraph = item,
                         AudioFileName = targetFile,
                     });
-
-                    UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Done);
                 }
                 catch
                 {
                     UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Error);
                 }
+
                 index++;
             }
-            labelProgress.Text = string.Empty;
+
+            UpdateStatus(LanguageSettings.Current.AddWaveformBatch.Done);
             DialogResult = DialogResult.OK;
         }
 
-        private string MakeTimeCodeFileName(Paragraph item)
+        private static string MakeTimeCodeFileName(Paragraph item)
         {
             //0_00_01_042__0_00_03_919_010.wav
             return
