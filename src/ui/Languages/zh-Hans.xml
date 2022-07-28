@@ -1398,6 +1398,7 @@ Command line: {1} {2}
         <RemoveBookmark>移除书签</RemoveBookmark>
         <GoToSourceView>转到源视图</GoToSourceView>
         <GoToListView>转到列表视图</GoToListView>
+        <ExtractAudio>提取音频…</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
