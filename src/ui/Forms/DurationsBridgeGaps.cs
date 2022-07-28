@@ -19,10 +19,10 @@ namespace Nikse.SubtitleEdit.Forms
         public int MinMsBetweenLines
         {
             get => (int)numericUpDownMinMsBetweenLines.Value;
-            set => numericUpDownMinMsBetweenLines.Value = value;
+            set => UiUtil.SetNumericUpDownValue(numericUpDownMinMsBetweenLines, value);
         }
 
-        private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
+        private static readonly Color ListViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
 
         public bool PreviousSubtitleTakesAllTime => radioButtonProlongEndTime.Checked;
 
@@ -53,18 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Empty;
 
             _subtitle = subtitle;
-            try
-            {
-                numericUpDownMaxMs.Value = Configuration.Settings.Tools.BridgeGapMilliseconds;
-            }
-            catch
-            {
-                numericUpDownMaxMs.Value = 100;
-            }
-            if (Configuration.Settings.General.MinimumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MinimumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
-            {
-                numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-            }
+
+            UiUtil.SetNumericUpDownValue(numericUpDownMaxMs, Configuration.Settings.Tools.BridgeGapMilliseconds);
+            UiUtil.SetNumericUpDownValue(numericUpDownMinMsBetweenLines, Configuration.Settings.General.MinimumMillisecondsBetweenLines);
 
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
@@ -73,9 +64,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelMinMsBetweenLines.Text = LanguageSettings.Current.DurationsBridgeGaps.MinFramesBetweenLines;
 
-                numericUpDownMaxMs.Value = SubtitleFormat.MillisecondsToFrames((double)numericUpDownMaxMs.Value);
+                UiUtil.SetNumericUpDownValue(numericUpDownMaxMs, SubtitleFormat.MillisecondsToFrames((double)numericUpDownMaxMs.Value));
+
                 numericUpDownMaxMs.Increment = 1;
-                numericUpDownMinMsBetweenLines.Value = SubtitleFormat.MillisecondsToFrames((double)numericUpDownMinMsBetweenLines.Value);
+                UiUtil.SetNumericUpDownValue(numericUpDownMinMsBetweenLines, SubtitleFormat.MillisecondsToFrames((double)numericUpDownMinMsBetweenLines.Value));
+
                 numericUpDownMinMsBetweenLines.Increment = 1;
             }
 
@@ -180,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var index in fixedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, _listViewGreen);
+                SubtitleListview1.SetBackgroundColor(index, ListViewGreen);
             }
 
             SubtitleListview1.EndUpdate();
