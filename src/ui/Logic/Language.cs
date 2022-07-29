@@ -1638,7 +1638,6 @@ namespace Nikse.SubtitleEdit.Logic
                 NoSupportHereVobSub = "VobSub files are not supported here.",
                 NoSupportHereDivx = "DivX files are not supported here.",
                 NoChapters = "No chapters found in the video.",
-                DarkThemeRestart = "Restart Subtitle Edit for dark theme changes to take effect.",
                 VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
                 Errors = "Errors",
                 ShowVideoControls = "Show video controls",

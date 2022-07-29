@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic
                     attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
                 }
 
-                int useImmersiveDarkMode = enabled ? 1 : 0;
+                var useImmersiveDarkMode = enabled ? 1 : 0;
                 return NativeMethods.DwmSetWindowAttribute(handle, (int)attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
             }
 
@@ -41,6 +41,14 @@ namespace Nikse.SubtitleEdit.Logic
             if (Configuration.IsRunningOnWindows)
             {
                 NativeMethods.SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
+            }
+        }
+
+        private static void SetWindowThemeNormal(Control control)
+        {
+            if (Configuration.IsRunningOnWindows)
+            {
+                NativeMethods.SetWindowTheme(control.Handle, "Explorer", null);
             }
         }
 
@@ -157,6 +165,197 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static void UndoDarkTheme(Control ctrl, int iterations = 5)
+        {
+            if (iterations < 1)
+            {
+                // note: no need to restore the colors set are constants
+                return;
+            }
+
+            if (ctrl is Form form)
+            {
+                UseImmersiveDarkMode(ctrl.Handle, false);
+
+                var contextMenus = GetSubControls<ContextMenuStrip>(form);
+                foreach (ContextMenuStrip cms in contextMenus)
+                {
+                    cms.BackColor = Control.DefaultBackColor;
+                    cms.ForeColor = Control.DefaultForeColor;
+                    cms.Renderer = null;
+                    foreach (Control inner in cms.Controls)
+                    {
+                        UndoDarkTheme(inner, iterations - 1);
+                    }
+                }
+
+                var toolStrips = GetSubControls<ToolStrip>(form);
+                foreach (ToolStrip c in toolStrips)
+                {
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                    c.Renderer = null;
+                }
+
+                var toolStripComboBox = GetSubControls<ToolStripComboBox>(form);
+                foreach (ToolStripComboBox c in toolStripComboBox)
+                {
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                    c.FlatStyle = FlatStyle.Flat;
+                }
+
+                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
+                foreach (ToolStripContentPanel c in toolStripContentPanels)
+                {
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                }
+
+                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
+                foreach (ToolStripContainer c in toolStripContainers)
+                {
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                }
+
+                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
+                foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
+                {
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                    foreach (ToolStripItem x in c.Items)
+                    {
+                        x.BackColor = Control.DefaultBackColor;
+                        x.ForeColor = Control.DefaultForeColor;
+                    }
+                }
+
+                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
+                foreach (ToolStripMenuItem c in toolStripMenuItems)
+                {
+                    if (c.GetCurrentParent() is ToolStripDropDownMenu p)
+                    {
+                        p.BackColor = Control.DefaultBackColor;
+                        p.Renderer = null;
+                    }
+
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                }
+
+                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
+                foreach (ToolStripSeparator c in toolStripSeparators)
+                {
+                    c.BackColor = Control.DefaultBackColor;
+                    c.ForeColor = Control.DefaultForeColor;
+                }
+            }
+
+            UnFixControl(ctrl);
+            foreach (Control c in GetSubControls<Control>(ctrl))
+            {
+                UnFixControl(c);
+            }
+        }
+
+        private static void UnFixControl(Control c)
+        {
+            c.BackColor = Control.DefaultBackColor;
+            c.ForeColor = Control.DefaultForeColor;
+
+            if (c is Button b)
+            {
+                b.FlatStyle = FlatStyle.Standard;
+                b.EnabledChanged -= Button_EnabledChanged;
+                b.Paint -= Button_Paint;
+            }
+
+            if (c is CheckBox cb)
+            {
+                cb.Paint -= CheckBox_Paint;
+            }
+
+            if (c is RadioButton rb)
+            {
+                rb.Paint -= RadioButton_Paint;
+            }
+
+            if (c is ComboBox cmBox)
+            {
+                cmBox.FlatStyle = FlatStyle.Standard;
+            }
+
+            if (c is NumericUpDown numeric)
+            {
+                numeric.BorderStyle = BorderStyle.Fixed3D;
+            }
+
+            if (c is Panel p)
+            {
+                if (p.BorderStyle != BorderStyle.None)
+                {
+                    p.BorderStyle = BorderStyle.Fixed3D;
+                }
+            }
+
+            if (c is ContextMenuStrip cms)
+            {
+                cms.Renderer = null;
+            }
+
+            if (c is LinkLabel linkLabel)
+            {
+                var linkColor = new LinkLabel().ActiveLinkColor;
+                linkLabel.ActiveLinkColor = linkColor;
+                linkLabel.LinkColor = linkColor;
+                linkLabel.VisitedLinkColor = linkColor;
+                linkLabel.DisabledLinkColor = new LinkLabel().DisabledLinkColor;
+            }
+
+            if (c is ToolStripDropDownMenu t)
+            {
+                foreach (var x in t.Items)
+                {
+                    if (x is ToolStripMenuItem item)
+                    {
+                        item.BackColor = Control.DefaultBackColor;
+                        item.ForeColor = Control.DefaultForeColor;
+                    }
+                }
+            }
+
+            if (c is TreeView || c is ListBox || c is TextBox || c is RichTextBox)
+            {
+                SetWindowThemeNormal(c);
+            }
+
+            if (c is TabControl tc)
+            {
+                //SetStyle(tc, ControlStyles.UserPaint | ControlStyles.DoubleBuffer, true);
+                tc.Paint -= TabControl_Paint;
+            }
+
+            if (c is SubtitleListView subtitleListView)
+            {
+                subtitleListView.OwnerDraw = false;
+                subtitleListView.GridLines = true;
+                subtitleListView.DrawColumnHeader -= ListView_DrawColumnHeader;
+                subtitleListView.HandleCreated -= ListView_HandleCreated;
+                SetWindowThemeNormal(c);
+            }
+            else if (c is ListView lv)
+            {
+                lv.GridLines = true;
+                lv.OwnerDraw = false;
+                lv.DrawItem -= ListView_DrawItem;
+                lv.DrawSubItem -= ListView_DrawSubItem;
+                lv.DrawColumnHeader -= ListView_DrawColumnHeader;
+                lv.EnabledChanged -= ListView_EnabledChanged;
+                lv.HandleCreated -= ListView_HandleCreated;
+            }
+        }
+
         private static void FixControl(Control c)
         {
             c.BackColor = BackColor;
@@ -234,13 +433,13 @@ namespace Nikse.SubtitleEdit.Logic
                 tc.Paint += TabControl_Paint;
             }
 
-            if (c is SubtitleListView seLV)
+            if (c is SubtitleListView subtitleListView)
             {
-                seLV.OwnerDraw = true;
-                seLV.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
-                seLV.DrawColumnHeader += ListView_DrawColumnHeader;
-                seLV.HandleCreated += ListView_HandleCreated;
-                SetWindowThemeDark(seLV);
+                subtitleListView.OwnerDraw = true;
+                subtitleListView.GridLines = Configuration.Settings.General.DarkThemeShowListViewGridLines;
+                subtitleListView.DrawColumnHeader += ListView_DrawColumnHeader;
+                subtitleListView.HandleCreated += ListView_HandleCreated;
+                SetWindowThemeDark(subtitleListView);
             }
             else if (c is ListView lv)
             {
@@ -309,8 +508,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            var lv = sender as ListView;
-            if (!lv.Focused && (e.State & ListViewItemStates.Selected) != 0)
+            if (sender is ListView lv && !lv.Focused && (e.State & ListViewItemStates.Selected) != 0)
             {
                 if (e.Item.Focused)
                 {
@@ -325,9 +523,13 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void ListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            var lv = sender as ListView;
-            Color backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
-            Color subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
+            if (!(sender is ListView lv))
+            {
+                return;
+            }
+
+            var backgroundColor = lv.Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            var subBackgroundColor = Color.FromArgb(backgroundColor.A, Math.Max(backgroundColor.R - 39, 0), Math.Max(backgroundColor.G - 39, 0), Math.Max(backgroundColor.B - 39, 0));
             if (lv.Focused && backgroundColor == BackColor || lv.RightToLeftLayout)
             {
                 e.DrawDefault = true;
@@ -337,7 +539,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (e.Item.Selected)
             {
                 var subtitleFont = e.Item.Font;
-                Rectangle rect = e.Bounds;
+                var rect = e.Bounds;
                 if (Configuration.Settings != null)
                 {
                     backgroundColor = backgroundColor == BackColor ? Configuration.Settings.Tools.ListViewUnfocusedSelectedColor : subBackgroundColor;
@@ -351,7 +553,7 @@ namespace Nikse.SubtitleEdit.Logic
                     e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                 }
 
-                int addX = 0;
+                var addX = 0;
 
                 if (e.ColumnIndex == 0 && lv.CheckBoxes)
                 {
@@ -403,18 +605,18 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        // A hack to set the backcolor of a disabled ListView
+        // A hack to set the background color of a disabled ListView
         private static void ListView_EnabledChanged(object sender, EventArgs e)
         {
             var listView = sender as ListView;
-            if (!listView.Enabled)
+            if (listView != null && !listView.Enabled)
             {
-                Bitmap disabledBackgroundImage = new Bitmap(listView.ClientSize.Width, listView.ClientSize.Height);
+                var disabledBackgroundImage = new Bitmap(listView.ClientSize.Width, listView.ClientSize.Height);
                 Graphics.FromImage(disabledBackgroundImage).Clear(Color.DimGray);
                 listView.BackgroundImage = disabledBackgroundImage;
                 listView.BackgroundImageTiled = true;
             }
-            else if (listView.BackgroundImage != null)
+            else if (listView?.BackgroundImage != null)
             {
                 listView.BackgroundImage = null;
             }
@@ -527,12 +729,12 @@ namespace Nikse.SubtitleEdit.Logic
             private readonly Size _size;
             private readonly bool _failed;
 
-            private static readonly Color _selectedTabColor = Color.FromArgb(0, 122, 204);
-            private static readonly Color _highlightedTabColor = Color.FromArgb(28, 151, 234);
+            private static readonly Color SelectedTabColor = Color.FromArgb(0, 122, 204);
+            private static readonly Color HighlightedTabColor = Color.FromArgb(28, 151, 234);
 
-            private static readonly int ImagePadding = 6;
-            private static readonly int SelectedTabPadding = 2;
-            private static readonly int BorderWidth = 1;
+            private const int ImagePadding = 6;
+            private const int SelectedTabPadding = 2;
+            private const int BorderWidth = 1;
 
             public TabControlRenderer(TabControl tabs, PaintEventArgs e)
             {
@@ -771,12 +973,12 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (index == _selectedIndex)
                 {
-                    return new SolidBrush(_selectedTabColor);
+                    return new SolidBrush(SelectedTabColor);
                 }
 
                 bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
                 return isHighlighted
-                    ? new SolidBrush(_highlightedTabColor)
+                    ? new SolidBrush(HighlightedTabColor)
                     : new SolidBrush(BackColor);
             }
 
