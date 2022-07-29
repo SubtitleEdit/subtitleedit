@@ -8775,6 +8775,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
+                            MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.Video.VideoAudioToText));
                             SubtitleListview1.BeginUpdate();
                             foreach (var ac in audioClips)
                             {
