@@ -101,12 +101,12 @@ namespace Nikse.SubtitleEdit.Forms
                     audioParameter = $"-map 0:a:{audioTrackNumber}";
                 }
 
-                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -af volume=1.8 -f wav {2} \"{1}\"";
+                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.
                 //-ab indicates the bit rate (in this example 160kb/s)
-                //-vol 448 will boot volume... 256 is normal
+                //-af volume=1.75 will boot volume... 1.0 is normal
                 //-ac 2 means 2 channels
 
                 // "-map 0:a:0" is the first audio stream, "-map 0:a:1" is the second audio stream

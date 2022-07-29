@@ -57,14 +57,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var start = $"{item.StartTime.TotalSeconds:0.000}".Replace(",", ".");
                     var duration = $"{item.Duration.TotalSeconds:0.000}".Replace(",", ".");
-                    var fFmpegWaveTranscodeSettings = "-ss " + start + " -t " + duration + " -i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.8 -f wav {2} \"{1}\"";
+                    var fFmpegWaveTranscodeSettings = "-ss " + start + " -t " + duration + " -i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
                     //-ss = start time
                     //-t = duration
                     //-i indicates the input
                     //-vn means no video output
                     //-ar 44100 indicates the sampling frequency.
                     //-ab indicates the bit rate (in this example 160kb/s)
-                    //-vol 448 will boot volume... 256 is normal
+                    //-af volume=1.75 will boot volume... 1.0 is normal
                     //-ac 2 means 2 channels
                     // "-map 0:a:0" is the first audio stream, "-map 0:a:1" is the second audio stream
 
