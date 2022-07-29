@@ -5795,40 +5795,31 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    Configuration.Settings.General.SubtitleBackgroundColor = new TextBox().BackColor;
-                    Configuration.Settings.General.SubtitleFontColor = DefaultForeColor;
+                    darkThemeBackColor = new TextBox().BackColor;
+                    darkThemeForeColor = DefaultForeColor;
+                    Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
+                    Configuration.Settings.General.SubtitleFontColor = darkThemeForeColor;
+                    textBoxListViewText.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    textBoxListViewTextOriginal.Initialize(Configuration.Settings.General.SubtitleTextBoxSyntaxColor);
+                    SubtitleListview1.BackColor = darkThemeBackColor;
+                    SubtitleListview1.ForeColor = darkThemeForeColor;
 
-                    if (Configuration.Settings.VideoControls.WaveformGridColor.ToArgb() == slightlyLighter.ToArgb())
-                    {
-                        Configuration.Settings.VideoControls.WaveformGridColor = defaultWaveformValues.WaveformGridColor;
-                    }
+                    RefreshSelectedParagraph();
 
-                    if (Configuration.Settings.VideoControls.WaveformBackgroundColor.ToArgb() == darkThemeBackColor.ToArgb())
-                    {
-                        Configuration.Settings.VideoControls.WaveformBackgroundColor = defaultWaveformValues.WaveformBackgroundColor;
-                    }
+                    Configuration.Settings.VideoControls.WaveformGridColor = defaultWaveformValues.WaveformGridColor;
+                    Configuration.Settings.VideoControls.WaveformBackgroundColor = defaultWaveformValues.WaveformBackgroundColor;
+                    Configuration.Settings.VideoControls.WaveformColor = defaultWaveformValues.WaveformColor;
+                    Configuration.Settings.VideoControls.WaveformSelectedColor = defaultWaveformValues.WaveformSelectedColor;
 
-                    if (Configuration.Settings.VideoControls.WaveformColor.ToArgb() == darkModeWaveformColor.ToArgb())
-                    {
-                        Configuration.Settings.VideoControls.WaveformColor = defaultWaveformValues.WaveformColor;
-                    }
+                    var newTools = new ToolsSettings();
+                    Configuration.Settings.Tools.ListViewSyntaxErrorColor = newTools.ListViewSyntaxErrorColor;
+                    Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = newTools.ListViewUnfocusedSelectedColor;
 
-                    if (Configuration.Settings.VideoControls.WaveformSelectedColor.ToArgb() == darkModeWaveformSelectedColor.ToArgb())
-                    {
-                        Configuration.Settings.VideoControls.WaveformSelectedColor = defaultWaveformValues.WaveformSelectedColor;
-                    }
+                    SetAudioVisualizerSettings();
 
-                    if (Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb() == darkModeListViewSyntaxErrorColor.ToArgb())
-                    {
-                        Configuration.Settings.Tools.ListViewSyntaxErrorColor = defaultListViewSyntaxErrorColor;
-                    }
+                    DarkTheme.UndoDarkTheme(this, 1500);
 
-                    if (Configuration.Settings.Tools.ListViewUnfocusedSelectedColor.ToArgb() == listViewDarkThemeUnfocusedBackColor.ToArgb())
-                    {
-                        Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = Color.LightBlue;
-                    }
-
-                    MessageBox.Show(LanguageSettings.Current.Main.DarkThemeRestart);
+                    OnLoad(null);
                 }
             }
 
@@ -8739,7 +8730,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             };
-            
+
             if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName))
             {
                 var audio = new ToolStripMenuItem(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio);

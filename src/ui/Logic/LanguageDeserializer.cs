@@ -3781,9 +3781,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/NoChapters":
                     language.Main.NoChapters = reader.Value;
                     break;
-                case "Main/DarkThemeRestart":
-                    language.Main.DarkThemeRestart = reader.Value;
-                    break;
                 case "Main/VideoFromUrlRequirements":
                     language.Main.VideoFromUrlRequirements = reader.Value;
                     break;
