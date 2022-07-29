@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     double nearestStartNextShotChange = nextStartShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
                     var gapToShotChange = SubtitleFormat.MillisecondsToFrames(nearestStartNextShotChange * 1000 - p.StartTime.TotalMilliseconds);
                     var threshold = (int)Math.Round(halfSecGapInFrames * 0.75, MidpointRounding.AwayFromZero);
-                    if (gapToShotChange < halfSecGapInFrames)
+                    if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
                     {
                         if (gapToShotChange < threshold)
                         {
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     double nearestEndNextShotChange = nextEndShotChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
                     if (SubtitleFormat.MillisecondsToFrames(nearestEndNextShotChange * 1000 - p.EndTime.TotalMilliseconds) < halfSecGapInFrames &&
-                        SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds) != SubtitleFormat.MillisecondsToFrames(nearestEndNextShotChange * 1000 - twoFramesGap))
+                        SubtitleFormat.MillisecondsToFrames(nearestEndNextShotChange * 1000 - p.EndTime.TotalMilliseconds) < 2)
                     {
                         fixedParagraph.EndTime.TotalMilliseconds = nearestEndNextShotChange * 1000 - twoFramesGap;
                         comment = $"The out-cue is within {halfSecGapInFrames} frames of the shot change";
