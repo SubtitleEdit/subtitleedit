@@ -1110,6 +1110,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
+
+            checkBoxDarkThemeEnabled_CheckedChanged(null, null);
         }
 
         private void SetDialogStyle(DialogType dialogStyle)
