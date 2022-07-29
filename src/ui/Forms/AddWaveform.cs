@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioParameter = $"-map 0:a:{audioTrackNumber}";
                 }
 
-                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav {2} \"{1}\"";
+                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -af volume=1.8 -f wav {2} \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.

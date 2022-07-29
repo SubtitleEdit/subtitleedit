@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var start = $"{item.StartTime.TotalSeconds:0.000}".Replace(",", ".");
                     var duration = $"{item.Duration.TotalSeconds:0.000}".Replace(",", ".");
-                    var fFmpegWaveTranscodeSettings = "-ss " + start + " -t " + duration + " -i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -vol 448 -f wav {2} \"{1}\"";
+                    var fFmpegWaveTranscodeSettings = "-ss " + start + " -t " + duration + " -i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.8 -f wav {2} \"{1}\"";
                     //-ss = start time
                     //-t = duration
                     //-i indicates the input
