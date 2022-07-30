@@ -400,6 +400,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
+        public int AudioToTextLineMaxChars { get; set; }
+        public int AudioToTextLineMaxCharsJp { get; set; }
+        public int AudioToTextLineMaxCharsCn { get; set; }
 
         public ToolsSettings()
         {
@@ -589,6 +592,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             VoskPostProcessing = true;
+            AudioToTextLineMaxChars = 86;
+            AudioToTextLineMaxCharsJp = 32;
+            AudioToTextLineMaxCharsCn = 36;
         }
     }
 
@@ -5981,6 +5987,25 @@ $HorzAlign          =   Center
                 settings.Tools.VoskModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AudioToTextLineMaxChars");
+            if (subNode != null)
+            {
+                settings.Tools.AudioToTextLineMaxChars = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AudioToTextLineMaxCharsJp");
+            if (subNode != null)
+            {
+                settings.Tools.AudioToTextLineMaxCharsJp = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("AudioToTextLineMaxCharsCn");
+            if (subNode != null)
+            {
+                settings.Tools.AudioToTextLineMaxCharsCn = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -10096,6 +10121,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
+                textWriter.WriteElementString("VoskModel", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public double SetPeriodIfDistanceToNextIsMoreThan { get; set; } = 300;
         public double SetPeriodIfDistanceToNextIsMoreThanAlways { get; set; } = 500;
 
-        public int ParagraphMaxChars { get; set; } = 86;
+        public int ParagraphMaxChars { get; set; }
 
         public string TwoLetterLanguageCode { get; }
 
@@ -25,6 +25,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public AudioToTextPostProcessor(string twoLetterLanguageCode)
         {
             TwoLetterLanguageCode = twoLetterLanguageCode;
+
+            ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxChars;
+            if (ParagraphMaxChars < 10 || ParagraphMaxChars > 1_000_000)
+            {
+                ParagraphMaxChars = 86;
+            }
         }
 
         public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration)
@@ -146,12 +152,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             if (language == "jp")
             {
-                ParagraphMaxChars = 13;
+                ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
             }
 
             if (language == "cn")
             {
-                ParagraphMaxChars = 16;
+                ParagraphMaxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
             }
 
             var mergedSubtitle = new Subtitle();
