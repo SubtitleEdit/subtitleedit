@@ -171,6 +171,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
             textBoxLog.Visible = false;
+
+            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixFonts(this, 2000);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -261,14 +264,13 @@ namespace Nikse.SubtitleEdit.Forms
             FixRightToLeft(_assaSubtitle);
 
             var format = new AdvancedSubStationAlpha();
-            var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
-            File.WriteAllText(assaTempFileName, format.ToText(_assaSubtitle, null));
+            var assaTempFileName = GetAssaFileName(_inputVideoFileName);
+            FileUtil.WriteAllText(assaTempFileName, format.ToText(_assaSubtitle, null), new TextEncoding(Encoding.UTF8, "UTF8"));
 
             groupBoxSettings.Enabled = false;
             labelPleaseWait.Visible = true;
             if (_videoInfo.TotalFrames > 0)
             {
-                progressBar1.Maximum = (int)_videoInfo.TotalFrames;
                 progressBar1.Visible = true;
             }
 
@@ -312,6 +314,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             DialogResult = DialogResult.OK;
+        }
+
+        private static string GetAssaFileName(string inputVideoFileName)
+        {
+            var path = Path.GetDirectoryName(inputVideoFileName);
+            for (var i =0; i< int.MaxValue; i++)
+            {
+                var guidLetters = Guid.NewGuid().ToString().RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-');
+                var fileName = Path.Combine(path, $"{guidLetters}.ass");
+                if (!File.Exists(fileName))
+                {
+                    return fileName;
+                }
+            }
+
+            return Path.Combine(path, "qwerty12.ass");
         }
 
         private string SuggestNewVideoFileName()
@@ -385,10 +403,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var v = (int)_processedFrames;
-                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
-                {
-                    progressBar1.Value = v;
-                }
+                SetProgress(v);
             }
 
 
@@ -412,10 +427,21 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var v = (int)_processedFrames;
-                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
-                {
-                    progressBar1.Value = v;
-                }
+                SetProgress(v);
+            }
+        }
+
+        private void SetProgress(int v)
+        {
+            if (_totalFrames == 0)
+            {
+                progressBar1.Value = progressBar1.Maximum;
+            }
+
+            var pct = Math.Min(progressBar1.Maximum, (int)Math.Round(v * 100.0 / _totalFrames, MidpointRounding.AwayFromZero));
+            if (pct >= progressBar1.Minimum && pct <= progressBar1.Maximum && _totalFrames > 0)
+            {
+                progressBar1.Value = pct;
             }
         }
 
@@ -473,18 +499,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             while (!process.HasExited)
             {
-                System.Threading.Thread.Sleep(100);
                 Application.DoEvents();
+                System.Threading.Thread.Sleep(100);
                 if (_abort)
                 {
                     process.Kill();
                 }
 
                 var v = (int)_processedFrames;
-                if (v >= progressBar1.Minimum && v <= progressBar1.Maximum)
-                {
-                    progressBar1.Value = v;
-                }
+                SetProgress(v);
             }
         }
 
@@ -497,7 +520,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return VideoPreviewGenerator.GenerateHardcodedVideoFile(
-                inputVideoFileName,
+                Path.GetFileName(inputVideoFileName),
                 assaTempFileName,
                 outputVideoFileName,
                 (int)numericUpDownWidth.Value,
@@ -593,7 +616,7 @@ namespace Nikse.SubtitleEdit.Forms
                         log.AppendLine("Video info total frames: " + _videoInfo.TotalFrames);
                         log.AppendLine("Video info total seconds: " + _videoInfo.TotalSeconds);
                         log.AppendLine();
-                        log.AppendLine("ffmpeg " + GetFfmpegProcess(_inputVideoFileName, VideoFileName, "input.ass", null).StartInfo.Arguments);
+                        log.AppendLine("ffmpeg " + GetFfmpegProcess(_inputVideoFileName, "output.mp4", "input.ass", null).StartInfo.Arguments);
                         textBoxLog.Text = log.ToString();
                     }
                     else
@@ -913,6 +936,7 @@ namespace Nikse.SubtitleEdit.Forms
             var targetFileSizeMb = (int)Math.Round(new FileInfo(_inputVideoFileName).Length / 1024.0 / 1024);
             numericUpDownTargetFileSize.Value = Math.Max(targetFileSizeMb, numericUpDownTargetFileSize.Minimum);
             _loading = false;
+            UiUtil.FixFonts(groupBoxSettings, 2000);
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -959,7 +983,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // make temp assa file with font
-                var assaTempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
+                var assaTempFileName = GetAssaFileName(tempVideoFileName);
                 var sub = new Subtitle();
                 sub.Header = _assaSubtitle.Header;
                 sub.Paragraphs.Add(new Paragraph(GetPreviewParagraph()));
@@ -969,7 +993,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SetStyleForNonAssa(sub);
                 }
                 FixRightToLeft(sub);
-                File.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty));
+                FileUtil.WriteAllText(assaTempFileName, new AdvancedSubStationAlpha().ToText(sub, string.Empty), new TextEncoding(Encoding.UTF8, "UTF8"));
 
                 // hardcode subtitle
                 var outputVideoFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp4");
