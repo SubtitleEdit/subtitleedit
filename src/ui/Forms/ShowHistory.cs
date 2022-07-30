@@ -88,7 +88,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewHistory.SelectedItems.Count > 0)
             {
                 _selectedIndex = listViewHistory.SelectedItems[0].Index;
-                DialogResult = DialogResult.OK;
+                _selectedIndex--;
+                if (_selectedIndex >= 0)
+                {
+                    DialogResult = DialogResult.OK;
+                }
             }
             else
             {
@@ -114,7 +118,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonCompare.Enabled = listViewHistory.SelectedItems.Count == 1;
             buttonCompareHistory.Enabled = listViewHistory.SelectedItems.Count == 2;
-            buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1 && listViewHistory.SelectedItems[0].Index <= _undoIndex;
+            buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1 &&
+                                     listViewHistory.SelectedItems[0].Index > 0 &&
+                                     listViewHistory.SelectedItems[0].Index <= _undoIndex;
         }
 
         private void ButtonCompareHistoryClick(object sender, EventArgs e)
