@@ -834,6 +834,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <PassX>{0}pass</PassX>
     <Encoding>인코딩</Encoding>
     <BitRate>비트레이트</BitRate>
+    <TotalBitRateX>총 비트레이트: {0}</TotalBitRateX>
     <SampleRate>샘플레이트</SampleRate>
     <Audio>오디오</Audio>
     <Stereo>스테레오</Stereo>
@@ -1398,6 +1399,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <RemoveBookmark>북마크 제거</RemoveBookmark>
         <GoToSourceView>소스 보기로 이동</GoToSourceView>
         <GoToListView>자막 보기로 이동</GoToListView>
+        <ExtractAudio>오디오 추출...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
