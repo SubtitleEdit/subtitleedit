@@ -1739,7 +1739,6 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <NoSupportHereVobSub>Ficheiros VobSub não são suportados aqui.</NoSupportHereVobSub>
     <NoSupportHereDivx>Ficheiros DivX não são suportados aqui.</NoSupportHereDivx>
     <NoChapters>Nenhum capítulo encontrado no vídeo.</NoChapters>
-    <DarkThemeRestart>Reiniciar o Subtitle Edit para que as mudanças do tema escuro produzam efeito.</DarkThemeRestart>
     <VideoFromUrlRequirements>Abrir vídeo do url requer o mpv e o youtube-dl - transferir e continuar?</VideoFromUrlRequirements>
     <Errors>Erros</Errors>
     <ShowVideoControls>Mostrar controlos de vídeo</ShowVideoControls>
