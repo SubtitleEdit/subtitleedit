@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -92,18 +93,20 @@ namespace Nikse.SubtitleEdit.Forms
             var p1 = new Paragraph("Line 1a." + Environment.NewLine + "Line 1b.", 1000, 3500) { Actor = "Joe" };
             var start1 = GetTimeCode(p1.StartTime, comboBoxTimeCode.Text);
             var end1 = GetTimeCode(p1.EndTime, comboBoxTimeCode.Text);
-            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 1000, 3500) { Actor = "Smith" };
+            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 4000, 3500) { Actor = "Smith" };
             var start2 = GetTimeCode(p2.StartTime, comboBoxTimeCode.Text);
             var end2 = GetTimeCode(p2.EndTime, comboBoxTimeCode.Text);
             subtitle.Paragraphs.Add(p1);
             subtitle.Paragraphs.Add(p2);
+            var gap1 = GetTimeCode(new TimeCode(p2.StartTime.TotalMilliseconds - p1.EndTime.TotalMilliseconds), comboBoxTimeCode.Text);
+            var gap2 = string.Empty;
             try
             {
                 var newLine = comboBoxNewLine.Text.Replace(LanguageSettings.Current.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
                 var template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, comboBoxTimeCode.Text, p1) +
-                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, comboBoxTimeCode.Text, p2) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, gap1, comboBoxTimeCode.Text, p1) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, gap2, comboBoxTimeCode.Text, p2) +
                                       GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
@@ -132,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{text-length-br0}", "{13}");
             s = s.Replace("{text-length-br1}", "{14}");
             s = s.Replace("{text-length-br2}", "{15}");
+            s = s.Replace("{gap}", "{16}");
             s = s.Replace("{tab}", "\t");
             return s;
         }
@@ -256,6 +260,12 @@ namespace Nikse.SubtitleEdit.Forms
             t = t.Replace("z", $"{Math.Round(timeCode.Milliseconds / 100.0):0}");
             t = t.Replace("ff", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}");
             t = t.Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)}");
+
+            if (timeCode.TotalMilliseconds < 0)
+            {
+                return "-" + t.RemoveChar('-');
+            }
+
             return t;
         }
 
@@ -324,7 +334,7 @@ namespace Nikse.SubtitleEdit.Forms
             return template;
         }
 
-        internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string timeCodeTemplate, Paragraph p)
+        internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p)
         {
             var cps = Utilities.GetCharactersPerSecond(p);
             var d = duration.ToString();
@@ -415,7 +425,9 @@ namespace Nikse.SubtitleEdit.Forms
                               text.Length,
                               p.Text.RemoveChar('\r', '\n').Length,
                               p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1,
-                              p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2);
+                              p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2,
+                              gap)
+                ;
             s = PostCurly(s, replaceStart, replaceEnd);
             return s;
         }
@@ -443,7 +455,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var indices = GetCurlyBeginIndexesReversed(s);
-            for (int i = 0; i < indices.Count; i++)
+            for (var i = 0; i < indices.Count; i++)
             {
                 var idx = indices[i];
                 s = s.Remove(idx, 1);
@@ -461,7 +473,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var indices = GetCurlyEndIndexesReversed(s);
-            for (int i = 0; i < indices.Count; i++)
+            for (var i = 0; i < indices.Count; i++)
             {
                 var idx = indices[i];
                 s = s.Remove(idx, 1);
@@ -493,7 +505,7 @@ namespace Nikse.SubtitleEdit.Forms
                 .Select(m => m.Index)
                 .ToList();
             var list = new List<int>();
-            for (int i = s.Length - 1; i >= 0; i--)
+            for (var i = s.Length - 1; i >= 0; i--)
             {
                 var c = s[i];
                 if (c == '{' && !matchIndices.Contains(i))
@@ -512,7 +524,7 @@ namespace Nikse.SubtitleEdit.Forms
                 .Select(m => m.Index + m.Length - 1)
                 .ToList();
             var list = new List<int>();
-            for (int i = s.Length - 1; i >= 0; i--)
+            for (var i = s.Length - 1; i >= 0; i--)
             {
                 var c = s[i];
                 if (c == '}' && !matchIndices.Contains(i))

@@ -273,15 +273,22 @@ namespace Nikse.SubtitleEdit.Forms
             var arr = templateString.Split('Æ');
             var sb = new StringBuilder();
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[1]));
-            string template = ExportCustomTextFormat.GetParagraphTemplate(arr[2]);
+            var template = ExportCustomTextFormat.GetParagraphTemplate(arr[2]);
             var isXml = arr[1].Contains("<?xml version=", StringComparison.OrdinalIgnoreCase);
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                string start = ExportCustomTextFormat.GetTimeCode(p.StartTime, arr[3]);
-                string end = ExportCustomTextFormat.GetTimeCode(p.EndTime, arr[3]);
+                var p = subtitle.Paragraphs[i];
+                var start = ExportCustomTextFormat.GetTimeCode(p.StartTime, arr[3]);
+                var end = ExportCustomTextFormat.GetTimeCode(p.EndTime, arr[3]);
 
-                string text = p.Text;
+                var gap = string.Empty;
+                var next = subtitle.GetParagraphOrDefault(i + 1);
+                if (next != null)
+                {
+                    gap = ExportCustomTextFormat.GetTimeCode(new TimeCode(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds), arr[3]); 
+                }
+
+                var text = p.Text;
                 if (isXml)
                 {
                     text = text.Replace("<", "&lt;")
@@ -290,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 text = ExportCustomTextFormat.GetText(text, arr[4]);
 
-                string originalText = string.Empty;
+                var originalText = string.Empty;
                 if (original?.Paragraphs != null && original.Paragraphs.Count > 0)
                 {
                     var originalParagraph = Utilities.GetOriginalParagraph(i, p, original.Paragraphs);
@@ -299,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
                         originalText = originalParagraph.Text;
                     }
                 }
-                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, originalText, i, p.Actor, p.Duration, arr[3], p);
+                var paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, originalText, i, p.Actor, p.Duration, gap, arr[3], p);
                 sb.Append(paragraph);
             }
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
