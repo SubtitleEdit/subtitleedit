@@ -73,6 +73,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.gapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -284,9 +285,10 @@
             this.textlengthToolStripMenuItem,
             this.textlengthnobrToolStripMenuItem,
             this.textlengthbr1ToolStripMenuItem,
-            this.textlengthbr2ToolStripMenuItem});
+            this.textlengthbr2ToolStripMenuItem,
+            this.gapToolStripMenuItem});
             this.contextMenuStripParagraph.Name = "contextMenuStrip1";
-            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 378);
+            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 400);
             this.contextMenuStripParagraph.Text = "{text-length-br1}";
             // 
             // insertHHMMSSMSToolStripMenuItem
@@ -497,6 +499,13 @@
             this.textBoxPreview.Size = new System.Drawing.Size(340, 432);
             this.textBoxPreview.TabIndex = 0;
             // 
+            // gapToolStripMenuItem
+            // 
+            this.gapToolStripMenuItem.Name = "gapToolStripMenuItem";
+            this.gapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gapToolStripMenuItem.Text = "{gap}";
+            this.gapToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
             // ExportCustomTextFormat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -573,5 +582,6 @@
         private System.Windows.Forms.ToolStripMenuItem textlengthbr2ToolStripMenuItem;
         private System.Windows.Forms.TextBox textBoxFileExtension;
         private System.Windows.Forms.Label labelFileExt;
+        private System.Windows.Forms.ToolStripMenuItem gapToolStripMenuItem;
     }
 }
