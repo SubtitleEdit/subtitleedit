@@ -29547,7 +29547,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds > ms)
                     {
-                        mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? p.StartTime.TotalSeconds * 1.001 : p.StartTime.TotalSeconds;
+                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p), true);
                         return;
                     }
@@ -29570,7 +29571,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds < ms)
                     {
-                        mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? p.StartTime.TotalSeconds * 1.001 : p.StartTime.TotalSeconds;
+                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p), true);
                         return;
                     }
