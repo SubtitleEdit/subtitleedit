@@ -6256,6 +6256,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CpsLineLengthStyleCalcNoSpaceOrPunctuation":
                     language.Settings.CpsLineLengthStyleCalcNoSpaceOrPunctuation = reader.Value;
                     break;
+                case "Settings/CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly":
+                    language.Settings.CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly = reader.Value;
+                    break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;
                     break;

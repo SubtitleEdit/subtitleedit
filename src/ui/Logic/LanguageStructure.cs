@@ -2476,6 +2476,7 @@
             public string CpsLineLengthStyleCalcIgnoreArabicDiacritics { get; set; }
             public string CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace { get; set; }
             public string CpsLineLengthStyleCalcNoSpaceOrPunctuation { get; set; }
+            public string CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
