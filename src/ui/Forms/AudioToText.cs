@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class AudioToText : Form
     {
         private readonly string _videoFileName;
+        private readonly int _audioTrackNumber;
         private readonly string _voskFolder;
         private bool _cancel;
         private bool _batchMode;
@@ -31,13 +32,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
-        public AudioToText(string videoFileName, Form parentForm)
+        public AudioToText(string videoFileName, int audioTrackNumber, Form parentForm)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonGenerate);
             _videoFileName = videoFileName;
+            _audioTrackNumber = audioTrackNumber;
             _parentForm = parentForm;
 
             Text = LanguageSettings.Current.AudioToText.Title;
@@ -133,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonGenerate.Enabled = false;
             buttonDownload.Enabled = false;
             buttonBatchMode.Enabled = false;
-            var waveFileName = GenerateWavFile(_videoFileName, 0);
+            var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
             textBoxLog.AppendText("Wav file name: " + waveFileName);
             textBoxLog.AppendText(Environment.NewLine);
             progressBar1.Style = ProgressBarStyle.Blocks;
@@ -170,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
-                var waveFileName = GenerateWavFile(videoFileName, 0);
+                var waveFileName = GenerateWavFile(videoFileName, _audioTrackNumber);
                 textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);

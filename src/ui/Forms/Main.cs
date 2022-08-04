@@ -34065,7 +34065,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var form = new AudioToText(_videoFileName, this))
+            using (var form = new AudioToText(_videoFileName, _videoAudioTrackNumber, this))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)
