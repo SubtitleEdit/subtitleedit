@@ -25,6 +25,8 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace;
                 case nameof(CalcNoSpaceOrPunctuation):
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcNoSpaceOrPunctuation;
+                case nameof(CalcNoSpaceOrPunctuationCpsOnly):
+                    return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly;
                 default:
                     return LanguageSettings.Current.Settings.CpsLineLengthStyleCalcAll;
             }
