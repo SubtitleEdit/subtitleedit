@@ -1737,7 +1737,6 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <NoSupportHereVobSub>VobSub 파일은 여기서 지원되지 않습니다.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX 파일은 여기서 지원되지 않습니다.</NoSupportHereDivx>
     <NoChapters>비디오에 챕터가 없습니다.</NoChapters>
-    <DarkThemeRestart>어두운 테마 변경을 적용하려면 Subtitle Edit를 다시 시작하십시오</DarkThemeRestart>
     <VideoFromUrlRequirements>URL에서 동영상을 열려면 mpv 및 Youtube-dl이 필요합니다. 다운로드 후 계속하시겠습니까?</VideoFromUrlRequirements>
     <Errors>오류</Errors>
     <ShowVideoControls>비디오 컨트롤 표시</ShowVideoControls>
@@ -2295,6 +2294,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>아랍어 분음부 무시</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>아랍어 분음부/공백 무시</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>공백 또는 구두점()[]-:;,.!? 없음</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>공백 또는 구두점 없음, cps 만</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
