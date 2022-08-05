@@ -15,6 +15,8 @@
    * Add shortcuts for go to next/prev and focus waveform - thx cyzs233
    * Export audio for selected lines - thx nissansz
    * Audio-to-text for selected lines - thx Mishasama 
+   * Add "Calc cps only wihout space/punction - thx Michele
+   * Add "{gap}" to custom text export - thx Shaun
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -34,10 +36,11 @@
    * Add taskbar progress bar for audio to text - thx lambdacore12
    * Warn about duplicate style names in ASSA/SSA
    * Improve keeping original bd sup colors - thx resolution
-   * Spell check can now have "se" word list (besides user words)
+   * Spell check can now have "SE" word list (besides user words)
    * Separate "Word lists" to own menu item
    * Add bit rate info for burn-in two pass - thx Marko
-   * Fix obsolete ffmpeg param -vol - thx qwerty12
+   * Fix obsolete ffmpeg param "-vol" - thx qwerty12
+   * Use current audio track for audio-to-text - thx edwardg117
 * FIXED:
    * Fix crash in "Remove text for HI" - thx loicvan
    * Fix crash in "Fix music notation" - thx ReallyInventiveUserName
@@ -57,6 +60,7 @@
    * Fix minor issue for import plain text - thx Leon
    * Fix for "Save as" with "default save as format" after mkv - thx Peter
    * Fix issues with NQC shot change rules - thx OmrSi
+   * Fix for go to with SMPTE - thx OmrSi
 
 
 3.6.6 (25th May 2022)
