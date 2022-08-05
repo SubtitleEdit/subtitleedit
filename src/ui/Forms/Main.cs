@@ -15948,7 +15948,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.IsPaused)
                 {
-                    var pos = mediaPlayer.VideoPlayer.CurrentPosition;
+                    var pos = mediaPlayer.CurrentPosition;
                     var paragraph = _subtitle.GetFirstParagraphOrDefaultByTime(pos * TimeCode.BaseUnit);
                     if (paragraph != null &&
                         pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
@@ -18559,8 +18559,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SelectListViewIndexAndEnsureVisible(form.BookmarkIndex);
                     if (mediaPlayer.VideoPlayer != null)
                     {
-                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
-                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
                     }
                 }
             }
@@ -18579,8 +18578,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SelectListViewIndexAndEnsureVisible(i);
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[i].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[i].StartTime.TotalSeconds;
-                            mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                            mediaPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
                         }
 
                         return;
@@ -18605,8 +18603,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SelectListViewIndexAndEnsureVisible(i);
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[i].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[i].StartTime.TotalSeconds;
-                            mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                            mediaPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
                         }
 
                         return;
@@ -19286,8 +19283,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SelectListViewIndexAndEnsureVisible(index);
                     if (mediaPlayer.VideoPlayer != null)
                     {
-                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[index].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[index].StartTime.TotalSeconds;
-                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
                     }
 
                     return;
@@ -20362,8 +20358,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SelectListViewIndexAndEnsureVisible(i);
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? _subtitle.Paragraphs[i].StartTime.TotalSeconds * 1.001 : _subtitle.Paragraphs[i].StartTime.TotalSeconds;
-                            mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                            mediaPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
                         }
 
                         return;
@@ -20384,7 +20379,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SelectListViewIndexAndEnsureVisible(form.ErrorIndex);
                     if (mediaPlayer.VideoPlayer != null)
                     {
-                        mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[form.ErrorIndex].StartTime.TotalSeconds;
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[form.ErrorIndex].StartTime.TotalSeconds;
                     }
                 }
             }
@@ -29538,7 +29533,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (mediaPlayer.VideoPlayer != null && _subtitle != null)
             {
-                double ms = mediaPlayer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit;
+                double ms = Math.Round(mediaPlayer.CurrentPosition * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
                 foreach (var p in _subtitle.Paragraphs)
                 {
                     if (p.EndTime.TotalMilliseconds > ms && p.StartTime.TotalMilliseconds < ms)
@@ -29547,8 +29542,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds > ms)
                     {
-                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? p.StartTime.TotalSeconds * 1.001 : p.StartTime.TotalSeconds;
-                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p), true);
                         return;
                     }
@@ -29560,7 +29554,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (mediaPlayer.VideoPlayer != null && _subtitle != null)
             {
-                double ms = mediaPlayer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit;
+                double ms = Math.Round(mediaPlayer.CurrentPosition * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
                 int i = _subtitle.Paragraphs.Count - 1;
                 while (i >= 0)
                 {
@@ -29571,8 +29565,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds < ms)
                     {
-                        var currentPosition = Configuration.Settings.General.CurrentVideoIsSmpte ? p.StartTime.TotalSeconds * 1.001 : p.StartTime.TotalSeconds;
-                        mediaPlayer.VideoPlayer.CurrentPosition = currentPosition;
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p), true);
                         return;
                     }
@@ -31590,7 +31583,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShotChangeHelper.SaveShotChanges(_videoFileName, audioVisualizer.ShotChanges);
                     if (mediaPlayer.VideoPlayer != null && form.ShotChangeSeconds >= 0)
                     {
-                        mediaPlayer.VideoPlayer.CurrentPosition = form.ShotChangeSeconds;
+                        mediaPlayer.CurrentPosition = form.ShotChangeSeconds;
                     }
                 }
             }
@@ -31976,7 +31969,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var change = _changeSubtitleHash != GetFastSubtitleHash();
                     if (form.FromCurrentVideoPosition && mediaPlayer.VideoPlayer != null)
                     {
-                        Configuration.Settings.General.CurrentVideoOffsetInMs = (long)(Math.Round((form.VideoOffset.TotalSeconds - mediaPlayer.VideoPlayer.CurrentPosition) * 1000.0));
+                        Configuration.Settings.General.CurrentVideoOffsetInMs = (long)(Math.Round((form.VideoOffset.TotalSeconds - mediaPlayer.CurrentPosition) * 1000.0));
                         change = true;
                     }
                     else
