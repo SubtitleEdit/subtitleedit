@@ -2922,7 +2922,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OcrViaModi>OCR μέσω Microsoft Office Document Imaging (MODI). Προϋποθέτει Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR μέσω nOCR</OcrViaNOCR>
     <TesseractEngineMode>Λειτουργία μηχανής</TesseractEngineMode>
-    <TesseractEngineModeLegacy>Αρχικό Tesseract (ανίχνευση πλάγιας γραφή)</TesseractEngineModeLegacy>
+    <TesseractEngineModeLegacy>Αρχικό Tesseract (ανίχνευση πλάγιας γραφής)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Δίκτυα LSTM</TesseractEngineModeNeural>
     <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
     <TesseractEngineModeDefault>Προεπιλεγμένο, βάσει διαθέσιμων</TesseractEngineModeDefault>
