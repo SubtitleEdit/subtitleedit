@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1739,7 +1739,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
     <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl.
-    
+
 Download and continue?</VideoFromUrlRequirements>
     <Url>Url</Url>
     <Errors>Errors</Errors>

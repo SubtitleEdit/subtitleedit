@@ -1638,7 +1638,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NoSupportHereVobSub = "VobSub files are not supported here.",
                 NoSupportHereDivx = "DivX files are not supported here.",
                 NoChapters = "No chapters found in the video.",
-                VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl - download and continue?",
+                VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl.\r\n\r\nDownload and continue?",
                 Url = "Url",
                 Errors = "Errors",
                 ShowVideoControls = "Show video controls",
