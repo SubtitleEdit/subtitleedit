@@ -132,9 +132,9 @@
             // 
             this.buttonInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonInsert.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.buttonInsert.Location = new System.Drawing.Point(254, 155);
+            this.buttonInsert.Location = new System.Drawing.Point(287, 175);
             this.buttonInsert.Name = "buttonInsert";
-            this.buttonInsert.Size = new System.Drawing.Size(75, 23);
+            this.buttonInsert.Size = new System.Drawing.Size(102, 23);
             this.buttonInsert.TabIndex = 9;
             this.buttonInsert.Text = "&Insert";
             this.buttonInsert.UseVisualStyleBackColor = true;
@@ -144,7 +144,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(332, 155);
+            this.buttonOK.Location = new System.Drawing.Point(392, 175);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 10;
@@ -156,7 +156,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(419, 190);
+            this.ClientSize = new System.Drawing.Size(479, 210);
             this.Controls.Add(this.listBoxCategory);
             this.Controls.Add(this.labelConvertFrom);
             this.Controls.Add(this.comboBoxFrom);

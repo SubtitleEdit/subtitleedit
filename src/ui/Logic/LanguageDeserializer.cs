@@ -3784,6 +3784,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/VideoFromUrlRequirements":
                     language.Main.VideoFromUrlRequirements = reader.Value;
                     break;
+                case "Main/Url":
+                    language.Main.Url = reader.Value;
+                    break;
                 case "Main/Errors":
                     language.Main.Errors = reader.Value;
                     break;

@@ -31516,7 +31516,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Input = selectedText,
                 IsOriginalActive = GetFocusedTextBox() == textBoxListViewTextOriginal,
             };
-            _measurementConverter.InsertClicked += measurementConverter_InsertClicked;
+            _measurementConverter.OnInsertClicked += measurementConverter_InsertClicked;
             _measurementConverter.Show(this);
         }
 
@@ -32401,7 +32401,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, "Url", string.Empty, 500))
+            using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, _language.Url, string.Empty, 500))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

@@ -15,7 +15,7 @@
    * Add shortcuts for go to next/prev and focus waveform - thx cyzs233
    * Export audio for selected lines - thx nissansz
    * Audio-to-text for selected lines - thx Mishasama 
-   * Add "Calc cps only wihout space/punction - thx Michele
+   * Add "Calc cps only wihout space/punction" - thx Michele
    * Add "{gap}" to custom text export - thx Shaun
 * IMPROVED:
    * Update Polish translation - thx admas
