@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.6</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 05.08.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 06.08.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1738,8 +1738,10 @@ Se hai modificato questo file con Subtitle Edit potresti essere in grado di trov
     <NoSupportHereVobSub>I file VobSub qui non sono supportati.</NoSupportHereVobSub>
     <NoSupportHereDivx>I file DivX qui non sono supportati.</NoSupportHereDivx>
     <NoChapters>Nessun capitolo trovato nel video.</NoChapters>
-    <VideoFromUrlRequirements>L'apertura di una URL video richiede i programmi mpv e youtube-dl. 
+    <VideoFromUrlRequirements>L'apertura di una URL video richiede i programmi mpv e youtube-dl.
+ 
 Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
+    <Url>URL</Url>
     <Errors>Errori</Errors>
     <ShowVideoControls>Visualizza controlli video</ShowVideoControls>
     <HideVideoControls>Nascondi controlli video</HideVideoControls>
@@ -3105,6 +3107,6 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - imposta nuova voce</Title>
-    <VoiceName>Nome della voce</VoiceName>
+    <VoiceName>Nome voce</VoiceName>
   </WebVttNewVoice>
 </Language>
