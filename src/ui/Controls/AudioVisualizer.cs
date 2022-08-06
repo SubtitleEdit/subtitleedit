@@ -8,7 +8,6 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
