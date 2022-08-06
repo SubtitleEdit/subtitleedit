@@ -1739,6 +1739,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
     <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl - download and continue?</VideoFromUrlRequirements>
+    <Url>Url</Url>
     <Errors>Errors</Errors>
     <ShowVideoControls>Show video controls</ShowVideoControls>
     <HideVideoControls>Hide video controls</HideVideoControls>
