@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -1103,9 +1104,9 @@ namespace Nikse.SubtitleEdit.Controls
                 text = Utilities.ReverseStartAndEndingForRightToLeft(text);
             }
 
-            if (text.Length > 500)
+            if (text.Length > 255)
             {
-                text = text.Substring(0, 500); // don't now allow very long texts as they can make SE unresponsive - see https://github.com/SubtitleEdit/subtitleedit/issues/2536
+                text = text.Substring(0, 255); // don't now allow very long texts as they can make SE unresponsive - see https://github.com/SubtitleEdit/subtitleedit/issues/2536
             }
 
             var y = padding;
@@ -1114,7 +1115,18 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 text = line;
                 var removeLength = 1;
-                var measureResult = graphics.MeasureString(text, font);
+                SizeF measureResult;
+                try
+                {
+                    measureResult = graphics.MeasureString(text, font);
+                }
+                catch
+                {
+                    // This try/catch is due to some characters crashing MeasureString, see https://github.com/SubtitleEdit/subtitleedit/issues/6108
+                    text = "?";
+                    measureResult = new SizeF(5,5);
+                }
+                
                 while (text.Length > removeLength && graphics.MeasureString(text, font).Width > max)
                 {
                     text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
