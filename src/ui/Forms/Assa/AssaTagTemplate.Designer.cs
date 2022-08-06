@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.listViewTemplates.UseCompatibleStateImageBehavior = false;
             this.listViewTemplates.View = System.Windows.Forms.View.Details;
             this.listViewTemplates.SelectedIndexChanged += new System.EventHandler(this.listViewTemplates_SelectedIndexChanged);
+            this.listViewTemplates.ClientSizeChanged += new System.EventHandler(this.listViewTemplates_ClientSizeChanged);
             // 
             // contextMenuStripFile
             // 
@@ -326,6 +327,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AssaTagTemplate";
+            this.Shown += new System.EventHandler(this.AssaTagTemplate_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AssaTagTemplate_KeyDown);
             this.contextMenuStripFile.ResumeLayout(false);
             this.groupBoxTemplateItem.ResumeLayout(false);
