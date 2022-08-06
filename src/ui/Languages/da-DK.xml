@@ -95,6 +95,7 @@
     <ShortcutX>Genvej: {0}</ShortcutX>
     <ExampleX>Eksempel: {0}</ExampleX>
     <Reset>Nulstil</Reset>
+    <Warning>Advarsel</Warning>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -175,7 +176,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <OpenModelsFolder>Åbn mappen modeller</OpenModelsFolder>
     <LoadingVoskModel>Indlæser Vosk talegenkendelsesmodel...</LoadingVoskModel>
     <Transcribing>Transskriberer lyd til tekst...</Transcribing>
+    <TranscribingXOfY>Transskriberer lyd til tekst - fil {0} af {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} filer gemt i videokildemappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
+    <BatchMode>Batch-tilstand</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -234,8 +238,9 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <BoxColor>Boks farve</BoxColor>
     <Radius>Radius</Radius>
     <Step>Trin</Step>
-    <MaxSpike>Max spids</MaxSpike>
     <Spikes>Pigge</Spikes>
+    <Bubbles>Bobler</Bubbles>
+    <Circle>Cirkel</Circle>
     <MarginX>Margen X</MarginX>
     <MarginY>Margen Y</MarginY>
     <OnlyDrawing>Kun tegning</OnlyDrawing>
@@ -587,6 +592,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TimeCode>Tidskode</TimeCode>
     <NewLine>Ny linje</NewLine>
     <Footer>Footer</Footer>
+    <FileExtension>Filtypenavn</FileExtension>
     <DoNotModify>[Ret ikke]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -829,6 +835,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <PassX>Pass {0}</PassX>
     <Encoding>Encoding</Encoding>
     <BitRate>Bit rate</BitRate>
+    <TotalBitRateX>Samlet bithastighed: {0}</TotalBitRateX>
     <SampleRate>Sample rate</SampleRate>
     <Audio>Lyd</Audio>
     <Stereo>Stereo</Stereo>
@@ -1270,6 +1277,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
       <Options>
         <Title>Indstillinger</Title>
         <Settings>&amp;Indstillinger...</Settings>
+        <WordLists>Ordlister...</WordLists>
         <ChooseLanguage>&amp;Vælg sprog...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1390,6 +1398,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <RemoveBookmark>Fjern bogmærke</RemoveBookmark>
         <GoToSourceView>Gå til kildevisning</GoToSourceView>
         <GoToListView>Gå til listevisning</GoToListView>
+        <ExtractAudio>Uddrag lyd...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1723,12 +1732,13 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <NoSupportHereVobSub>VobSub filer understøttes ikke her.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX-filer understøttes ikke her.</NoSupportHereDivx>
     <NoChapters>Ingen kapitler fundet i videoen.</NoChapters>
-    <DarkThemeRestart>Genstart Subtitle Edit for at temaændringer træder i kraft.</DarkThemeRestart>
     <VideoFromUrlRequirements>Åbning af video fra url kræver mpv og youtube-dl - download og fortsæt?</VideoFromUrlRequirements>
+    <Url>URL</Url>
     <Errors>Fejl</Errors>
     <ShowVideoControls>Vis video vindue</ShowVideoControls>
     <HideVideoControls>Skjul vide vindue</HideVideoControls>
     <GeneratingWaveformInBackground>Genererer bølgeform i baggrunden...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Auto-backup gemt</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1886,8 +1896,11 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <EvenLines>Lige linjer</EvenLines>
     <DurationLessThan>Varighed mindre end</DurationLessThan>
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
+    <ExactlyOneLine>Præcis én linje</ExactlyOneLine>
+    <ExactlyTwoLines>Præcis to linjer</ExactlyTwoLines>
     <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
     <Bookmarked>Bogmærket</Bookmarked>
+    <BlankLines>Blanke linjer</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
@@ -2071,6 +2084,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Find>Find</Find>
     <Replace>Erstat</Replace>
     <VisualSync>Visuel synk</VisualSync>
+    <BurnIn>Brænd ind</BurnIn>
     <SpellCheck>Stavekontrol</SpellCheck>
     <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
     <SettingsName>Indstillinger</SettingsName>
@@ -2126,6 +2140,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ApplyAssaOverrideTags>Anvend ASSA override tags til valgte linjer</ApplyAssaOverrideTags>
     <SetAssaPosition>Indstil/hent ASSA position</SetAssaPosition>
     <SetAssaResolution>Indstil ASSA -opløsning (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>Tag automatisk backup nu</TakeAutoBackup>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
@@ -2133,6 +2148,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainListViewNothing>Ingenting</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Gå til video pos og pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Gå til video pos og afspi</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Gå til videoposition, afspil aktuel og pause</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Gå til at rediger tekst</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Gå til video pos - 1 sek og pause</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Gå til video pos - 0,5 sek og pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2256,15 +2272,29 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ContinuationStyleNone>Ingen</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Ingen, punktummer for pauser (kun bageste)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Ingen, punktummer for pauser</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Ingen, ellipsis til pauser</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Ingen, ellipse for pauser</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>punktummer (kun bagest)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Punktummer </ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingEllipsis>Ellipsis (kun efterfølgende)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Ingen, ellipsis til pauser</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Bindestreg</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Stip, men punktummer for pauser</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Brugerdefinerede</ContinuationStyleCustom>
+    <CpsLineLengthStyle>Cps/linje-længde</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>Tæl alle tegn</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Tæl alle undtagen mellemrum, kun cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>Tæl alle undtagen mellemrum</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, latin 0,5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0,5, mellemrum 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorer arabiske diakritiske tegn</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorer arabiske diakritiske tegn/mellemrum</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Intet mellemrum eller tegnsætning ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Ingen mellemrum eller tegnsætning, kun cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>Brug ordopdel liste (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Spring trin 1 over (vælg fix regler)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Standardformat</DefaultFormat>
@@ -2353,8 +2383,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToNextSubtitleAndFocusVideo>Gå til næste linje og sæt video position</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Gå til forrige linje og afspil</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Gå til næste linje og start video</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Gå til forrige linje og fokuser bølgeformen</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Gå til næste linje og fokuser bølgeformen</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleFocusWaveform>Skift fokus mellem listevisning og bølgeform/spektrogram</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Skift fokus mellem tekstboks og bølgeform/spektrogram</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <ToggleQuotes>Skift gåseøjne</ToggleQuotes>
     <ToggleHiTags>Skift HI-tags</ToggleHiTags>
@@ -2371,6 +2404,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AlignmentN9>Justering top højre- {\an9}</AlignmentN9>
     <ColorX>Farve {0} ({1})</ColorX>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
+    <CopyPlainText>Kopier almindelig tekst til udklipsholder (valgte linjer)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra original</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>Fix RTL via Unicode-kontroltegn</FixRTLViaUnicodeChars>
@@ -2424,6 +2458,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
+    <VideoAudioToText>Lyd til tekst</VideoAudioToText>
     <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
@@ -2523,6 +2558,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Registrer og fjern markeringen af ​​enkelt titler eller tekster med små bogstaver</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Skjul usandsynlige fortsættelsessætninger</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignorer tekster mellem musiksymboler</IgnoreLyrics>
+    <ContinuationPause>Pausegrænse:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Rediger tilpasset fortsættelsesstil...</EditCustomContinuationStyle>
     <MinFrameGap>Min.  gap i frames</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} rammer med en billedhastighed på {1} giver {2} millisekunder.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Brug "{0}" millisekunder som nyt minimumskløft?</UseXAsNewGap>
@@ -2532,6 +2570,18 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Genveje: Tillad enkelt bogstav/tal i tekstfeltet</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Opdater filtypetilknytninger</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Filtypetilknytninger opdateret</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Rediger tilpasset fortsættelsesstil</CustomContinuationStyle>
+    <LoadStyle>Indlæs stil...</LoadStyle>
+    <Suffix>Suffiks:</Suffix>
+    <AddSuffixForComma>Behandle hvis ender med komma</AddSuffixForComma>
+    <AddSpace>Tilføj plads</AddSpace>
+    <RemoveComma>Fjern komma</RemoveComma>
+    <Prefix>Præfiks:</Prefix>
+    <DifferentStyleGap>Brug anden stil til mellemrum længere end</DifferentStyleGap>
+    <Preview>Forhåndsvisning</Preview>
+    <PreviewPause>(pause)</PreviewPause>
+    <CustomContinuationStyleNote>Bemærk: Den tilpassede fortsættelsesstil deles på tværs af profiler.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Dette vil overskrive i dialogen.  Er du sikker?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
@@ -2602,6 +2652,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
     <SpacesNotAllowed>Mellemrum ikke tilladt i enkeltord!</SpacesNotAllowed>
     <UndoX>Fortryd: {0}</UndoX>
+    <OpenImageBasedSourceFile>Åbn billedbaseret kildefil...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Ugyldigt tegn {0} findes i kolonne {1}</GlyphCheckReport>
@@ -2694,6 +2745,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Karakterer/sek - min: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakterer/sek - maks: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Karakterer/sek - gennemsnit: {0:0.000}</CharactersPerSecondAverage>
+    <GapMinimum>Gap - minimum: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>Gap - maksimum: {0:#,##0} ms</GapMaximum>
+    <GapAverage>Gap - gennemsnit: {0:#,##0.##} ms</GapAverage>
     <Export>Eksporter...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2784,6 +2838,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Boks pr. Linje (brug konturfarve)</BoxPerLine>
     <BoxMultiLine>En boks (brug skygge farve)</BoxMultiLine>
+    <DuplicateStyleNames>Dublerede stilnavne: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Kategori</Category>
@@ -2933,6 +2988,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AlsoTrainBold>Træne også fed</AlsoTrainBold>
     <StartTraining>Start træning</StartTraining>
     <NowTraining>Træner nu font '{1}'. Bogstaver trænet: {0:#,###,##0}, {2:#,###,##0} kendte</NowTraining>
+    <ImagesWithTimeCodesInFileName>Billeder med tidskoder i filnavn...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
