@@ -28,6 +28,7 @@
    * Update Finnish translation - thx Teijo S
    * Update French translation - the Peirre
    * Update Brazilian Portuguese translation - thx Igor
+   * Update Greek translation - thx PMitsakis
    * Update Vosk to v0.3.42
    * Update Tesseract OCR to 5.2.0
    * Minor improvements for compare
