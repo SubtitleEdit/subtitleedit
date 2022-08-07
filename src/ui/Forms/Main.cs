@@ -8743,17 +8743,22 @@ namespace Nikse.SubtitleEdit.Forms
                 var audioToText = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Video.VideoAudioToText);
                 UiUtil.FixFonts(audioToText);
                 audio.DropDownItems.Insert(0, audioClip);
-                audio.DropDownItems.Insert(0, audioToText);
-                audioClip.Click += (senderNew, eNew) =>
+                
+                if (Configuration.IsRunningOnWindows)
                 {
-                    if (!RequireFfmpegOk())
+                    audio.DropDownItems.Insert(0, audioToText);
+                    audioClip.Click += (senderNew, eNew) =>
                     {
-                        return;
-                    }
+                        if (!RequireFfmpegOk())
+                        {
+                            return;
+                        }
 
-                    var audioClips = GetAudioClips();
-                    UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
-                };
+                        var audioClips = GetAudioClips();
+                        UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
+                    };
+                }
+
                 audioToText.Click += (senderNew, eNew) =>
                 {
                     if (!RequireFfmpegOk())
