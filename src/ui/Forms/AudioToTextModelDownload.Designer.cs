@@ -32,6 +32,7 @@
             this.buttonDownload = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.comboBoxModels = new System.Windows.Forms.ComboBox();
+            this.textBoxError = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelPleaseWait
@@ -77,11 +78,24 @@
             this.comboBoxModels.Size = new System.Drawing.Size(237, 21);
             this.comboBoxModels.TabIndex = 0;
             // 
+            // textBoxError
+            // 
+            this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxError.Location = new System.Drawing.Point(15, 69);
+            this.textBoxError.Multiline = true;
+            this.textBoxError.Name = "textBoxError";
+            this.textBoxError.ReadOnly = true;
+            this.textBoxError.Size = new System.Drawing.Size(388, 12);
+            this.textBoxError.TabIndex = 19;
+            // 
             // AudioToTextModelDownload
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(415, 120);
+            this.Controls.Add(this.textBoxError);
             this.Controls.Add(this.comboBoxModels);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.buttonDownload);
@@ -94,7 +108,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "DownloadFfmpeg";
+            this.Text = "Download Vosk model";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToTextDownload_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -107,5 +121,6 @@
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ComboBox comboBoxModels;
+        private System.Windows.Forms.TextBox textBoxError;
     }
 }

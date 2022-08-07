@@ -35,6 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxModels.SelectedIndex = selectedIndex;
             labelPleaseWait.Text = string.Empty;
+
+            textBoxError.Visible = false;
         }
 
         private void AudioToTextDownload_KeyDown(object sender, KeyEventArgs e)
@@ -85,15 +87,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
+
             if (e.Error != null)
             {
-                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "Vosk model");
-                buttonDownload.Enabled = true;
+                Width = 630;
+                Height = 350;
+                labelPleaseWait.Text = string.Empty;
+                var errorMsg = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "Vosk model");
+                textBoxError.Visible = true;
+                var downloadModel = (DownloadModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
+                var dirName = Path.GetFileNameWithoutExtension(downloadModel.Url);
+                textBoxError.Text = $"{errorMsg}{Environment.NewLine}{Environment.NewLine}You could manually download and unpack{Environment.NewLine}{downloadModel.Url}{Environment.NewLine}to{Environment.NewLine}{folder}{Path.DirectorySeparatorChar}{dirName}" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    e.Error;
                 Cursor = Cursors.Default;
                 return;
             }
-
-            string folder = Path.Combine(Configuration.DataDirectory, "Vosk");
+  
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
