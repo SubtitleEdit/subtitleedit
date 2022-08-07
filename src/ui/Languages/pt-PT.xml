@@ -1739,7 +1739,10 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <NoSupportHereVobSub>Ficheiros VobSub não são suportados aqui.</NoSupportHereVobSub>
     <NoSupportHereDivx>Ficheiros DivX não são suportados aqui.</NoSupportHereDivx>
     <NoChapters>Nenhum capítulo encontrado no vídeo.</NoChapters>
-    <VideoFromUrlRequirements>Abrir vídeo do url requer o mpv e o youtube-dl - transferir e continuar?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Abrir vídeo do url requer o mpv e o youtube-dl.
+
+Transferir e continuar?</VideoFromUrlRequirements>
+    <Url>Url</Url>
     <Errors>Erros</Errors>
     <ShowVideoControls>Mostrar controlos de vídeo</ShowVideoControls>
     <HideVideoControls>Ocultar controlos de vídeo</HideVideoControls>
