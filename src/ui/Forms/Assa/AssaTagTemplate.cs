@@ -304,5 +304,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             MoveToBottom(listViewTemplates);
         }
+
+        private void listViewTemplates_ClientSizeChanged(object sender, EventArgs e)
+        {
+            listViewTemplates.AutoSizeLastColumn();
+        }
+
+        private void AssaTagTemplate_Shown(object sender, EventArgs e)
+        {
+            listViewTemplates.AutoSizeLastColumn();
+        }
     }
 }
