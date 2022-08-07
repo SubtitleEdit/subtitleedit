@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+            textBoxError.Visible = false;
         }
 
         private void DownloadVosk_KeyDown(object sender, KeyEventArgs e)
@@ -47,6 +48,8 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private string VoskUrl => "https://github.com/alphacep/vosk-api/releases/download/v0.3.42/vosk-win" + IntPtr.Size * 8 + "-0.3.42.zip?raw=true";
+
         private void DownloadVosk_Shown(object sender, EventArgs e)
         {
             try
@@ -55,15 +58,14 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                var url = "https://github.com/alphacep/vosk-api/releases/download/v0.3.42/vosk-win" + IntPtr.Size * 8 + "-0.3.42.zip?raw=true";
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
 
+                var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
                 {
                     labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
-                wc.DownloadDataAsync(new Uri(url));
+                wc.DownloadDataAsync(new Uri(VoskUrl));
             }
             catch (Exception exception)
             {
@@ -76,9 +78,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
+
             if (e.Error != null)
             {
+                Width = 630;
+                Height = 350;
                 labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "Vosk");
+                textBoxError.Visible = true;
+                textBoxError.Text = $"You could manually download and unpack{Environment.NewLine}{VoskUrl}{Environment.NewLine}to{Environment.NewLine}{folder}" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    e.Error;
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
                 return;
@@ -91,7 +101,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
             using (var ms = new MemoryStream(e.Result))
             using (var zip = ZipExtractor.Open(ms))
             {
