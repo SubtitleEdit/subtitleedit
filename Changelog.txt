@@ -54,6 +54,7 @@
    * Fix crash in generate blank video with no sub loaded
    * Fix crash in post processing after vosk/kaldi - thx Can/WestcoastHstd
    * Fix crash in "duration, bridge gaps" - thx stephpw
+   * Fix crash (somewhat) calling GDI w many/special chars - thx holduan
    * Fix for remove ASSA line as empty - thx Leon
    * Fix for finding delay in mkv - thx cyzs233/signedout
    * Fix bd sup edit quick OCR
