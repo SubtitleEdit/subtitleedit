@@ -1151,6 +1151,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mts");
             AddExtension(sb, ".m2ts");
             AddExtension(sb, ".m4s");
+            AddExtension(sb, ".se-job");
 
             sb.Append('|');
             sb.Append(LanguageSettings.Current.General.AllFiles);
@@ -1354,20 +1355,24 @@ namespace Nikse.SubtitleEdit.Logic
                     return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots;
                 case ContinuationStyle.NoneLeadingTrailingDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots;
+                case ContinuationStyle.NoneTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
+                case ContinuationStyle.NoneLeadingTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingEllipsis;
                 case ContinuationStyle.OnlyTrailingDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots;
                 case ContinuationStyle.LeadingTrailingDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots;
+                case ContinuationStyle.OnlyTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis;
+                case ContinuationStyle.LeadingTrailingEllipsis:
+                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
                 case ContinuationStyle.LeadingTrailingDash:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash;
                 case ContinuationStyle.LeadingTrailingDashDots:
                     return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots;
-                case ContinuationStyle.LeadingTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis;
-                case ContinuationStyle.NoneEllipsisForPauses:
-                    return LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis;
-                case ContinuationStyle.OnlyTrailingEllipsis:
-                    return LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis;
+                case ContinuationStyle.Custom:
+                    return LanguageSettings.Current.Settings.ContinuationStyleCustom;
                 default:
                     return LanguageSettings.Current.Settings.ContinuationStyleNone;
             }
@@ -1385,6 +1390,22 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             return control;
+        }
+
+        public static void SetNumericUpDownValue(NumericUpDown numericUpDown, int value)
+        {
+            if (value < numericUpDown.Minimum)
+            {
+                numericUpDown.Value = numericUpDown.Minimum;
+            }
+            else if (value > numericUpDown.Maximum)
+            {
+                numericUpDown.Value = numericUpDown.Maximum;
+            }
+            else
+            {
+                numericUpDown.Value = value;
+            }
         }
     }
 }

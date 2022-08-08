@@ -31,6 +31,7 @@
             this.labelPleaseWait = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.textBoxError = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // labelPleaseWait
@@ -46,7 +47,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(150, 74);
+            this.buttonOK.Location = new System.Drawing.Point(172, 72);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 15;
@@ -59,7 +60,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(231, 74);
+            this.buttonCancel.Location = new System.Drawing.Point(253, 72);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 16;
@@ -67,11 +68,24 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // DownloadFfmpeg
+            // textBox1
+            // 
+            this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxError.Location = new System.Drawing.Point(15, 54);
+            this.textBoxError.Multiline = true;
+            this.textBoxError.Name = "textBoxError";
+            this.textBoxError.ReadOnly = true;
+            this.textBoxError.Size = new System.Drawing.Size(313, 12);
+            this.textBoxError.TabIndex = 18;
+            // 
+            // DownloadVosk
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(318, 107);
+            this.ClientSize = new System.Drawing.Size(340, 105);
+            this.Controls.Add(this.textBoxError);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
@@ -79,11 +93,11 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DownloadFfmpeg";
+            this.Name = "DownloadVosk";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "DownloadFfmpeg";
+            this.Text = "Download Vosk";
             this.Shown += new System.EventHandler(this.DownloadVosk_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DownloadVosk_KeyDown);
             this.ResumeLayout(false);
@@ -96,5 +110,6 @@
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.TextBox textBoxError;
     }
 }

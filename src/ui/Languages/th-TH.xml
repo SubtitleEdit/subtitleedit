@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -612,7 +612,7 @@
     <Input>อินพุต</Input>
     <InputDescription>เลือกไฟล์อินพุต (เบราซ์หรือลากแล้วปล่อย)</InputDescription>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>อิมพอร์ตฉากที่เปลี่ยนแปลง</Title>
     <OpenTextFile>เปิดไฟล์ข้อความ...</OpenTextFile>
     <ImportOptions>ตัวเลือกอิมพอร์ต</ImportOptions>
@@ -621,7 +621,7 @@
     <Frames>เฟรม</Frames>
     <Seconds>วินาที</Seconds>
     <Milliseconds>มิลลิวินาที</Milliseconds>
-  </ImportSceneChanges>
+  </ImportShotChanges>
   <ImportText>
     <Title>อิมพอร์ตเฉพาะข้อความ</Title>
     <OneSubtitleIsOneFile>หลายไฟล์ - หนึ่งไฟล์ต่อหนึ่งซับไตเติ้ล</OneSubtitleIsOneFile>
@@ -910,8 +910,8 @@
         <OpenDvd>เปิดดีวีดี...</OpenDvd>
         <ChooseAudioTrack>เลือกแทร็กออดิโอ</ChooseAudioTrack>
         <CloseVideo>ปิดวิดีโอ</CloseVideo>
-        <ImportSceneChanges>อิมพอร์ตฉากที่เปลี่ยนแปลง...</ImportSceneChanges>
-        <RemoveSceneChanges>ลบฉากที่เปลี่ยนแปลง</RemoveSceneChanges>
+        <ImportShotChanges>อิมพอร์ตฉากที่เปลี่ยนแปลง...</ImportShotChanges>
+        <RemoveShotChanges>ลบฉากที่เปลี่ยนแปลง</RemoveShotChanges>
         <ShowHideVideo>แสดง/ซ่อนวิดีโอ</ShowHideVideo>
         <ShowHideWaveform>แสดง/ซ่อนเวฟฟอร์ม</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>แสดง/ซ่อนเวฟฟอร์มและสเปคโตแกรม</ShowHideWaveformAndSpectrogram>
@@ -1323,7 +1323,7 @@
     <BeforeDisplaySubtitleJoin>ก่อนต่อซับไตเติ้ล</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>ซับไตเติ้ลต่อแล้ว</SubtitlesJoined>
     <StatusLog>ล็อกสถานะ</StatusLog>
-    <XSceneChangesImported>{0} ฉากที่เปลี่ยนแปลงอิมพอร์ตแล้ว</XSceneChangesImported>
+    <XShotChangesImported>{0} ฉากที่เปลี่ยนแปลงอิมพอร์ตแล้ว</XShotChangesImported>
     <PluginXExecuted>ปลั๊กอิน '{0}' ทำงานแล้ว</PluginXExecuted>
     <NotAValidXSubFile>ไม่ใช่ไฟล์ XSub ที่ถูกต้อง!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>ก่อนการรวมบรรทัดที่มีข้อความเหมือนกัน</BeforeMergeLinesWithSameText>

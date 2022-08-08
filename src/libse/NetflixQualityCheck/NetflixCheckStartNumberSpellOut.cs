@@ -14,14 +14,14 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                string newText = p.Text;
+                var newText = p.Text;
 
                 var m = NumberStart.Match(newText);
                 while (m.Success)
                 {
-                    int length = m.Length - 2;
+                    var length = m.Length - 2;
                     newText = newText.Remove(m.Index, length).Insert(m.Index, NetflixHelper.ConvertNumberToString(m.Value.Substring(0, length), true, controller.Language));
                     m = NumberStart.Match(newText, m.Index + 1);
                 }
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 m = NumberStartInside.Match(newText);
                 while (m.Success)
                 {
-                    int length = m.Length - 4;
+                    var length = m.Length - 4;
                     newText = newText.Remove(m.Index + 2, length).Insert(m.Index + 2, NetflixHelper.ConvertNumberToString(m.Value.Substring(2, length), true, controller.Language));
                     m = NumberStartInside.Match(newText, m.Index + 1);
                 }
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 m = NumberStartInside2.Match(newText);
                 while (m.Success)
                 {
-                    int length = m.Length - 5;
+                    var length = m.Length - 5;
                     newText = newText.Remove(m.Index + 3, length).Insert(m.Index + 3, NetflixHelper.ConvertNumberToString(m.Value.Substring(3, length), true, controller.Language));
                     m = NumberStartInside2.Match(newText, m.Index + 1);
                 }
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (newText != p.Text)
                 {
                     var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                    string comment = "When a number begins a sentence, it should always be spelled out";
+                    var comment = "When a number begins a sentence, it should always be spelled out";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

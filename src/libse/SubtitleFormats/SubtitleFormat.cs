@@ -346,6 +346,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle103(),
                     new UnknownSubtitle104(),
                     new UnknownSubtitle105(),
+                    new UnknownSubtitle106(),
                 };
 
                 string path = Configuration.PluginsDirectory;
@@ -439,15 +440,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static double GetFrameForCalculation(double frameRate)
         {
-            if (Math.Abs(frameRate - 23.976) < 0.01)
+            if (Math.Abs(frameRate - 23.976) < 0.001)
             {
                 return 24000.0 / 1001.0;
             }
-            if (Math.Abs(frameRate - 29.97) < 0.01)
+            if (Math.Abs(frameRate - 29.97) < 0.001)
             {
                 return 30000.0 / 1001.0;
             }
-            if (Math.Abs(frameRate - 59.94) < 0.01)
+            if (Math.Abs(frameRate - 59.94) < 0.001)
             {
                 return 60000.0 / 1001.0;
             }

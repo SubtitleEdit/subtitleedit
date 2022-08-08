@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -101,6 +101,16 @@ namespace Nikse.SubtitleEdit.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap itt {
+            get {
+                object obj = ResourceManager.GetObject("itt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon SEIcon {
@@ -136,6 +146,16 @@ namespace Nikse.SubtitleEdit.Properties {
         public static System.Drawing.Bitmap TransparentBackground {
             get {
                 object obj = ResourceManager.GetObject("TransparentBackground", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap webvtt {
+            get {
+                object obj = ResourceManager.GetObject("webvtt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -99,6 +99,9 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonLineMode.Checked = true;
             }
 
+            labelEncoding.Text = LanguageSettings.Current.Main.Controls.FileEncoding;
+            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
+
             comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
             checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
             checkBoxRemoveEmptyLines.Checked = Configuration.Settings.Tools.ImportTextRemoveEmptyLines;
@@ -158,6 +161,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxGenerateTimeCodes_CheckedChanged(null, null);
         }
 
+        private Encoding GetChosenEncoding()
+        {
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding).Encoding;
+        }
+
         private void RefreshTimerTick(object sender, EventArgs e)
         {
             _refreshTimer.Stop();
@@ -194,6 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     LoadSingleFile(openFileDialog1.FileName, this);
                 }
+
                 GeneratePreview();
             }
         }
@@ -212,8 +221,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fd = new FinalDraftTemplate2();
-            var list = new List<string>(FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-            bool isFinalDraft = fd.IsMine(list, fileName);
+            var list = new List<string>(FileUtil.ReadAllLinesShared(fileName, GetChosenEncoding()));
+            var isFinalDraft = fd.IsMine(list, fileName);
 
             if (ext == ".astx")
             {
@@ -382,7 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    ImportSplitAtBlankLine(textBoxText.Lines);
+                    ImportSplitAtBlankLine(textBoxText.Lines.ToList());
                 }
             }
             else
@@ -498,8 +507,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void MergeLinesWithContinuation()
         {
             var temp = new Subtitle();
-            bool skipNext = false;
-            for (int i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
+            var skipNext = false;
+            for (var i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = FixedSubtitle.Paragraphs[i];
                 if (!skipNext)
@@ -630,16 +639,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ImportSplitAtBlankLine(IEnumerable<string> lines)
+        private void ImportSplitAtBlankLine(List<string> lines)
         {
             var sb = new StringBuilder();
-            foreach (string line in lines)
+            lines.Add(string.Empty);
+            foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     if (sb.Length > 0)
                     {
-                        string text = sb.ToString().Trim();
+                        var text = sb.ToString().Trim();
                         if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
                         {
                             text = Utilities.AutoBreakLine(text);
@@ -660,10 +670,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sb.AppendLine(line.Trim());
                 }
-            }
-            if (sb.Length > 0)
-            {
-                SplitSingle(sb);
             }
         }
 
@@ -732,77 +738,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return false;
-        }
-
-        private void SplitSingle(StringBuilder sb)
-        {
-            string t = sb.ToString().Trim();
-            var tarr = t.SplitToLines();
-            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 3 &&
-                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
-                tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
-                tarr[2].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
-                return;
-            }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 2 &&
-                tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
-                tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
-                return;
-            }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = tarr[0].Trim() });
-                return;
-            }
-
-            Paragraph p = null;
-            if (CanMakeThreeLiner(out var threeLiner, sb.ToString()))
-            {
-                var parts = threeLiner.SplitToLines();
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
-                FixedSubtitle.Paragraphs.Add(new Paragraph { Text = parts[2].Trim() });
-                return;
-            }
-
-            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, "en").SplitToLines())
-            {
-                if (p == null)
-                {
-                    p = new Paragraph { Text = text };
-                }
-                else if (p.Text.Contains(Environment.NewLine))
-                {
-                    FixedSubtitle.Paragraphs.Add(p);
-                    p = new Paragraph();
-                    if (text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        p.Text = Utilities.AutoBreakLine(text);
-                    }
-                    else
-                    {
-                        p.Text = text;
-                    }
-                }
-                else
-                {
-                    if (checkBoxMergeShortLines.Checked || p.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength || text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + text.Trim());
-                    }
-                    else
-                    {
-                        p.Text = p.Text + Environment.NewLine + text.Trim();
-                    }
-                }
-            }
-            if (p != null)
-            {
-                FixedSubtitle.Paragraphs.Add(p);
-            }
         }
 
         private void ImportAutoSplit(string[] textLines)
@@ -916,11 +851,11 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private static string GetAllText(string fileName)
+        private string GetAllText(string fileName)
         {
             try
             {
-                var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                var encoding = GetChosenEncoding();
                 var text = FileUtil.ReadAllTextShared(fileName, encoding);
                 if (fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1320,7 +1255,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
         {
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in fileNames.OrderBy(p => p))
+            foreach (var fileName in fileNames.OrderBy(p => p))
             {
                 AddInputFile(fileName);
             }
@@ -1445,6 +1380,33 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxUseTimeCodeFromCurrentFile_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void buttonBrowseEncoding_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = LanguageSettings.Current.Main.OpenAnsiSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                using (var chooseEncoding = new ChooseEncoding())
+                {
+                    chooseEncoding.Initialize(openFileDialog1.FileName);
+                    if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var encoding = chooseEncoding.GetEncoding();
+                        for (var i = 0; i < comboBoxEncoding.Items.Count; i++)
+                        {
+                            var item = comboBoxEncoding.Items[i];
+                            if (item is TextEncoding te && te.Encoding.WebName == encoding.WebName)
+                            {
+                                comboBoxEncoding.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

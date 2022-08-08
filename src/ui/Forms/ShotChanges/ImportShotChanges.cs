@@ -1,7 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -9,20 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.ShotChanges
 {
-    public partial class ImportSceneChanges : PositionAndSizeForm
+    public partial class ImportShotChanges : PositionAndSizeForm
     {
-        public List<double> SceneChangesInSeconds = new List<double>();
+        public List<double> ShotChangesInSeconds = new List<double>();
         private readonly double _frameRate = 25;
         private readonly string _videoFileName;
         private bool _abort;
         private bool _pause;
         private readonly StringBuilder _log;
-        private SceneChangesGenerator _sceneChangesGenerator;
+        private ShotChangesGenerator _shotChangesGenerator;
 
-        public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
+        public ImportShotChanges(VideoInfo videoInfo, string videoFileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -34,18 +34,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             _videoFileName = videoFileName;
 
-            Text = LanguageSettings.Current.ImportSceneChanges.Title;
-            groupBoxGenerateSceneChanges.Text = LanguageSettings.Current.ImportSceneChanges.Generate;
-            buttonOpenText.Text = LanguageSettings.Current.ImportSceneChanges.OpenTextFile;
-            groupBoxImportText.Text = LanguageSettings.Current.ImportSceneChanges.Import;
-            radioButtonFrames.Text = LanguageSettings.Current.ImportSceneChanges.Frames;
-            radioButtonSeconds.Text = LanguageSettings.Current.ImportSceneChanges.Seconds;
-            radioButtonMilliseconds.Text = LanguageSettings.Current.ImportSceneChanges.Milliseconds;
-            groupBoxTimeCodes.Text = LanguageSettings.Current.ImportSceneChanges.TimeCodes;
+            Text = LanguageSettings.Current.ImportShotChanges.Title;
+            groupBoxGenerateShotChanges.Text = LanguageSettings.Current.ImportShotChanges.Generate;
+            buttonOpenText.Text = LanguageSettings.Current.ImportShotChanges.OpenTextFile;
+            groupBoxImportText.Text = LanguageSettings.Current.ImportShotChanges.Import;
+            radioButtonFrames.Text = LanguageSettings.Current.ImportShotChanges.Frames;
+            radioButtonSeconds.Text = LanguageSettings.Current.ImportShotChanges.Seconds;
+            radioButtonMilliseconds.Text = LanguageSettings.Current.ImportShotChanges.Milliseconds;
+            groupBoxTimeCodes.Text = LanguageSettings.Current.ImportShotChanges.TimeCodes;
             buttonDownloadFfmpeg.Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "FFmpeg");
-            buttonImportWithFfmpeg.Text = LanguageSettings.Current.ImportSceneChanges.GetSceneChangesWithFfmpeg;
-            labelFfmpegThreshold.Text = LanguageSettings.Current.ImportSceneChanges.Sensitivity;
-            labelThresholdDescription.Text = LanguageSettings.Current.ImportSceneChanges.SensitivityDescription;
+            buttonImportWithFfmpeg.Text = LanguageSettings.Current.ImportShotChanges.GetShotChangesWithFfmpeg;
+            labelFfmpegThreshold.Text = LanguageSettings.Current.ImportShotChanges.Sensitivity;
+            labelThresholdDescription.Text = LanguageSettings.Current.ImportShotChanges.SensitivityDescription;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -80,10 +80,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = LanguageSettings.Current.ImportText.TextFiles + "|*.txt;*.scenechanges;*.xml;*.json" +
+            openFileDialog1.Filter = LanguageSettings.Current.ImportText.TextFiles + "|*.txt;*.shotchanges;*.xml;*.json" +
                                      "|Matroska xml chapter file|*.xml" +
                                      "|EZTitles shotchanges XML file|*.xml" +
-                                     "|JSON scene changes file|*.json" +
+                                     "|JSON shot changes file|*.json" +
                                      "|" + LanguageSettings.Current.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -252,39 +252,39 @@ namespace Nikse.SubtitleEdit.Forms
             var lines = string.IsNullOrEmpty(textBoxGenerate.Text) ? textBoxIImport.Lines : textBoxGenerate.Lines;
             if (radioButtonHHMMSSMS.Checked)
             {
-                SceneChangesInSeconds = SceneChangesGenerator.GetSeconds(lines);
+                ShotChangesInSeconds = ShotChangesGenerator.GetSeconds(lines);
             }
             else
             {
-                SceneChangesInSeconds = new List<double>();
+                ShotChangesInSeconds = new List<double>();
                 foreach (var line in lines)
                 {
                     if (double.TryParse(line, out var d))
                     {
                         if (radioButtonFrames.Checked)
                         {
-                            SceneChangesInSeconds.Add(d / _frameRate);
+                            ShotChangesInSeconds.Add(d / _frameRate);
                         }
                         else if (radioButtonSeconds.Checked)
                         {
-                            SceneChangesInSeconds.Add(d);
+                            ShotChangesInSeconds.Add(d);
                         }
                         else if (radioButtonMilliseconds.Checked)
                         {
-                            SceneChangesInSeconds.Add(d / TimeCode.BaseUnit);
+                            ShotChangesInSeconds.Add(d / TimeCode.BaseUnit);
                         }
                     }
                 }
             }
 
             Configuration.Settings.General.FFmpegSceneThreshold = numericUpDownThreshold.Value.ToString(CultureInfo.InvariantCulture);
-            if (SceneChangesInSeconds.Count > 0)
+            if (ShotChangesInSeconds.Count > 0)
             {
                 DialogResult = DialogResult.OK;
             }
             else
             {
-                MessageBox.Show(LanguageSettings.Current.ImportSceneChanges.NoSceneChangesFound);
+                MessageBox.Show(LanguageSettings.Current.ImportShotChanges.NoShotChangesFound);
             }
         }
 
@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private void ImportSceneChanges_KeyDown(object sender, KeyEventArgs e)
+        private void ImportShotChanges_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
             {
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _sceneChangesGenerator = new SceneChangesGenerator();
+            _shotChangesGenerator = new ShotChangesGenerator();
             groupBoxImportText.Enabled = false;
             buttonOK.Enabled = false;
             progressBar1.Visible = true;
@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownThreshold.Enabled = false;
             Cursor = Cursors.WaitCursor;
             textBoxGenerate.Text = string.Empty;
-            using (var process = _sceneChangesGenerator.GetProcess(_videoFileName, numericUpDownThreshold.Value))
+            using (var process = _shotChangesGenerator.GetProcess(_videoFileName, numericUpDownThreshold.Value))
             {
                 double lastUpdateSeconds = 0;
                 radioButtonHHMMSSMS.Checked = true;
@@ -351,9 +351,9 @@ namespace Nikse.SubtitleEdit.Forms
                         continue;
                     }
 
-                    if (_sceneChangesGenerator.LastSeconds > 0.1 && Math.Abs(lastUpdateSeconds - _sceneChangesGenerator.LastSeconds) > 0 - 001)
+                    if (_shotChangesGenerator.LastSeconds > 0.1 && Math.Abs(lastUpdateSeconds - _shotChangesGenerator.LastSeconds) > 0 - 001)
                     {
-                        lastUpdateSeconds = _sceneChangesGenerator.LastSeconds;
+                        lastUpdateSeconds = _shotChangesGenerator.LastSeconds;
                         UpdateImportTextBox();
                     }
                     if (_abort)
@@ -375,12 +375,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateImportTextBox()
         {
-            textBoxGenerate.Text = _sceneChangesGenerator.GetTimeCodesString();
+            textBoxGenerate.Text = _shotChangesGenerator.GetTimeCodesString();
             textBoxGenerate.SelectionStart = textBoxGenerate.Text.Length;
             textBoxGenerate.ScrollToCaret();
         }
 
-        private void ImportSceneChanges_Shown(object sender, EventArgs e)
+        private void ImportShotChanges_Shown(object sender, EventArgs e)
         {
             Activate();
         }

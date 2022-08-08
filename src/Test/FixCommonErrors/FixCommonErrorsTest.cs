@@ -1759,6 +1759,15 @@ namespace Test.FixCommonErrors
             Assert.AreEqual(result, "WOMAN 2: <i>24 hours a day at BabyC.</i>");
         }
 
+
+        [TestMethod]
+        public void FixEllipsesStartItalic6()
+        {
+            var result = Helper.FixEllipsesStartHelper("{\\i1}...But that is true.{\\i0}");
+            Assert.AreEqual(result, "{\\i1}But that is true.{\\i0}");
+        }
+
+
         [TestMethod]
         public void FixEllipsesStartFont1()
         {
@@ -2129,6 +2138,18 @@ namespace Test.FixCommonErrors
                 Configuration.Settings.Tools.MusicSymbol = "♫";
                 new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("♫ Hello world ♫", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotationQuestionMarks2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>? And he said: ?</i>");
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>♫ And he said: ♫</i>", _subtitle.Paragraphs[0].Text);
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate.Service;
@@ -14,9 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
@@ -29,17 +26,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private const int VideoPlayerSection = 4;
         private const int WaveformAndSpectrogramSection = 5;
         private const int ToolsSection = 6;
-        private const int WordListsSection = 7;
-        private const int ToolbarSection = 8;
-        private const int AppearanceSection = 9;
-        private const int NetworkSection = 10;
-        private const int FileTypeAssociationSection = 11;
+        private const int ToolbarSection = 7;
+        private const int AppearanceSection = 8;
+        private const int NetworkSection = 9;
+        private const int FileTypeAssociationSection = 10;
 
-        private string _listBoxSearchString = string.Empty;
-        private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
-        private List<string> _wordListNames = new List<string>();
-        private List<string> _userWordList = new List<string>();
-        private OcrFixReplaceList _ocrFixReplaceList;
         private string _oldVlcLocation;
         private string _oldVlcLocationRelative;
         private bool _oldListViewShowCps;
@@ -48,9 +39,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private List<RulesProfile> _rulesProfiles;
         private List<PluginShortcut> _pluginShortcuts;
 
-        private IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+        private readonly BackgroundWorker _shortcutsBackgroundWorker;
 
-        private class ComboBoxLanguage
+        private static IEnumerable<string> GetSubtitleFormats() => SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+
+        internal class ComboBoxLanguage
         {
             public CultureInfo CultureInfo { get; set; }
             public override string ToString()
@@ -65,11 +58,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             public string ShortcutText { get; set; }
             public ShortcutHelper Shortcut { get; set; }
             public List<ShortcutNode> Nodes { get; set; }
-
-            public ShortcutNode()
-            {
-                Nodes = new List<ShortcutNode>();
-            }
 
             public ShortcutNode(string text)
             {
@@ -94,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private static string GetRelativePath(string fileName)
         {
-            string folder = Configuration.BaseDirectory;
+            var folder = Configuration.BaseDirectory;
 
             if (string.IsNullOrEmpty(fileName) || !fileName.StartsWith(folder.Substring(0, 2), StringComparison.OrdinalIgnoreCase))
             {
@@ -117,6 +105,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            _shortcutsBackgroundWorker = new BackgroundWorker();
+            _shortcutsBackgroundWorker.DoWork += (sender, args) =>
+            {
+                MakeShortcutsTreeView(LanguageSettings.Current.Settings);
+            };
+            _shortcutsBackgroundWorker.RunWorkerAsync();
+
             Init();
         }
 
@@ -285,20 +281,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var comboBoxSubtitleFontList = new List<string>();
             var comboBoxSubtitleFontIndex = 0;
             var comboBoxVideoPlayerPreviewFontIndex = 0;
-            foreach (var x in FontFamily.Families.OrderBy(p => p.Name))
+            foreach (var x in FontHelper.GetFontFamilies())
             {
-                if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
+                comboBoxSubtitleFontList.Add(x.Name);
+                if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
                 {
-                    comboBoxSubtitleFontList.Add(x.Name);
-                    if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxSubtitleFontIndex = comboBoxSubtitleFontList.Count - 1;
-                    }
+                    comboBoxSubtitleFontIndex = comboBoxSubtitleFontList.Count - 1;
+                }
 
-                    if (x.Name.Equals(gs.VideoPlayerPreviewFontName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        comboBoxVideoPlayerPreviewFontIndex = comboBoxSubtitleFontList.Count - 1;
-                    }
+                if (x.Name.Equals(gs.VideoPlayerPreviewFontName, StringComparison.OrdinalIgnoreCase))
+                {
+                    comboBoxVideoPlayerPreviewFontIndex = comboBoxSubtitleFontList.Count - 1;
                 }
             }
             comboBoxSubtitleFont.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
@@ -307,10 +300,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxVideoPlayerPreviewFontName.SelectedIndex = comboBoxVideoPlayerPreviewFontIndex;
             comboBoxSubtitleFont.EndUpdate();
             comboBoxVideoPlayerPreviewFontName.EndUpdate();
-
-            var wordListSettings = Configuration.Settings.WordLists;
-            checkBoxNamesOnline.Checked = wordListSettings.UseOnlineNames;
-            textBoxNamesOnline.Text = wordListSettings.NamesUrl;
 
             var proxy = Configuration.Settings.Proxy;
             textBoxProxyAddress.Text = proxy.ProxyAddress;
@@ -343,7 +332,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             listBoxSection.Items[VideoPlayerSection] = language.VideoPlayer;
             listBoxSection.Items[WaveformAndSpectrogramSection] = language.WaveformAndSpectrogram;
             listBoxSection.Items[ToolsSection] = language.Tools;
-            listBoxSection.Items[WordListsSection] = language.WordLists;
             listBoxSection.Items[ToolbarSection] = language.Toolbar;
             listBoxSection.Items[AppearanceSection] = language.Appearance;
             listBoxSection.Items[NetworkSection] = language.Network;
@@ -354,7 +342,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelSubtitleFormats.Text = language.SubtitleFormats;
             panelVideoPlayer.Text = language.VideoPlayer;
             panelWaveform.Text = language.WaveformAndSpectrogram;
-            panelWordLists.Text = language.WordLists;
             panelTools.Text = language.Tools;
             panelNetwork.Text = language.Network;
             panelToolBar.Text = language.Toolbar;
@@ -639,7 +626,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             checkBoxWaveformSingleClickSelect.Text = language.WaveformSingleClickSelect;
-            checkBoxWaveformSnapToSceneChanges.Text = language.WaveformSnapToSceneChanges;
+            checkBoxWaveformSnapToShotChanges.Text = language.WaveformSnapToShotChanges;
             checkBoxWaveformAutoGen.Text = language.WaveformAutoGen;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
@@ -697,22 +684,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             labelFFmpegPath.Text = language.WaveformFFmpegPath;
 
-            groupBoxWordLists.Text = language.WordLists;
-            labelWordListLanguage.Text = language.Language;
-            comboBoxWordListLanguage.Left = labelWordListLanguage.Left + labelWordListLanguage.Width + 4;
-            groupBoxNamesIgonoreLists.Text = language.NamesIgnoreLists;
-            groupBoxUserWordList.Text = language.UserWordList;
-            groupBoxOcrFixList.Text = language.OcrFixList;
-            buttonRemoveNameEtc.Text = language.Remove;
-            buttonRemoveUserWord.Text = language.Remove;
-            buttonRemoveOcrFix.Text = language.Remove;
-            buttonAddNames.Text = language.AddName;
-            buttonAddUserWord.Text = language.AddWord;
-            buttonAddOcrFix.Text = language.AddPair;
-            groupBoxWordListLocation.Text = language.Location;
-            checkBoxNamesOnline.Text = language.UseOnlineNames;
-            linkLabelOpenDictionaryFolder.Text = LanguageSettings.Current.GetDictionaries.OpenDictionariesFolder;
-
             groupBoxProxySettings.Text = language.ProxyServerSettings;
             labelProxyAddress.Text = language.ProxyAddress;
             groupBoxProxyAuthentication.Text = language.ProxyAuthentication;
@@ -751,6 +722,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
+            checkBoxUseWordSplitList.Text = language.UseWordSplitList;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = language.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Text = language.FixCommonErrorsSkipStepOne;
             groupBoxSpellCheck.Text = language.SpellCheck;
@@ -909,8 +881,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
-            SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
             SetCpsLineLengthStyle(Configuration.Settings.General.CpsLineLengthStrategy);
+
+            buttonEditCustomContinuationStyle.Visible = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = Configuration.Settings.General.ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
 
             UpdateProfileNames(gs.Profiles);
 
@@ -948,6 +922,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
+            checkBoxUseWordSplitList.Checked = toolsSettings.OcrUseWordSplitList;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked = toolsSettings.FixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Checked = toolsSettings.FixCommonErrorsSkipStepOne;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNameCasing;
@@ -973,8 +948,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
-            InitComboBoxWordListLanguages();
-
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
             checkBoxWaveformShowCps.Checked = Configuration.Settings.VideoControls.WaveformDrawCps;
             checkBoxWaveformShowWpm.Checked = Configuration.Settings.VideoControls.WaveformDrawWpm;
@@ -994,7 +967,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter;
             checkBoxWaveformSingleClickSelect.Checked = Configuration.Settings.VideoControls.WaveformSingleClickSelect;
-            checkBoxWaveformSnapToSceneChanges.Checked = Configuration.Settings.VideoControls.WaveformSnapToSceneChanges;
+            checkBoxWaveformSnapToShotChanges.Checked = Configuration.Settings.VideoControls.WaveformSnapToShotChanges;
             checkBoxWaveformAutoGen.Checked = Configuration.Settings.General.WaveformAutoGenWhenOpeningVideo;
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
@@ -1014,8 +987,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
-            MakeShortcutsTreeView(language);
-            ShowShortcutsTreeView();
             toolStripMenuItemShortcutsCollapse.Text = LanguageSettings.Current.General.Collapse;
             importShortcutsToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
             exportShortcutsToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
@@ -1139,6 +1110,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             buttonUpdateFileTypeAssociations.Text = language.UpdateFileTypeAssociations;
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
+
+            checkBoxDarkThemeEnabled_CheckedChanged(null, null);
         }
 
         private void SetDialogStyle(DialogType dialogStyle)
@@ -1149,19 +1122,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithSpace);
             comboBoxDialogStyle.Items.Add(LanguageSettings.Current.Settings.DialogStyleDashSecondLineWithoutSpace);
             comboBoxDialogStyle.SelectedIndex = 0;
+            toolTipDialogStylePreview.RemoveAll();
             switch (dialogStyle)
             {
                 case DialogType.DashBothLinesWithSpace:
                     comboBoxDialogStyle.SelectedIndex = 0;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashBothLinesWithSpace));
                     break;
                 case DialogType.DashBothLinesWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 1;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashBothLinesWithoutSpace));
                     break;
                 case DialogType.DashSecondLineWithSpace:
                     comboBoxDialogStyle.SelectedIndex = 2;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashSecondLineWithSpace));
                     break;
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
+                    toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(DialogType.DashSecondLineWithoutSpace));
                     break;
             }
         }
@@ -1187,16 +1165,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void SetContinuationStyle(ContinuationStyle continuationStyle)
         {
             comboBoxContinuationStyle.Items.Clear();
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNone);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDash);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingDashDots);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleLeadingTrailingEllipsis);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleNoneTrailingEllipsis);
-            comboBoxContinuationStyle.Items.Add(LanguageSettings.Current.Settings.ContinuationStyleOnlyTrailingEllipsis);
+            foreach (var style in ContinuationUtilities.ContinuationStyles)
+            {
+                comboBoxContinuationStyle.Items.Add(UiUtil.GetContinuationStyleName(style));
+            }
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(continuationStyle));
@@ -1244,7 +1216,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        ShortcutNode _shortcuts = new ShortcutNode("root");
+        private ShortcutNode _shortcuts = new ShortcutNode("root");
 
         private void MakeShortcutsTreeView(LanguageStructure.Settings language)
         {
@@ -1281,6 +1253,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToPrevSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay));
             AddNode(generalNode, language.GoToNextSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay));
+            AddNode(generalNode, language.GoToPreviousSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusWaveform));
+            AddNode(generalNode, language.GoToNextSubtitleAndFocusWaveform, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusWaveform));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
             AddNode(generalNode, language.ToggleBookmarksWithComment, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText), true);
             AddNode(generalNode, LanguageSettings.Current.Bookmarks.EditBookmark, nameof(Configuration.Settings.Shortcuts.GeneralEditBookmarks), true);
@@ -1298,6 +1272,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.ApplyAssaOverrideTags, nameof(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags), true);
             AddNode(generalNode, language.SetAssaPosition, nameof(Configuration.Settings.Shortcuts.GeneralSetAssaPosition), true);
             AddNode(generalNode, language.SetAssaResolution, nameof(Configuration.Settings.Shortcuts.GeneralSetAssaResolution));
+            AddNode(generalNode, language.TakeAutoBackup, nameof(Configuration.Settings.Shortcuts.GeneralTakeAutoBackup));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp), true);
             _shortcuts.Nodes.Add(generalNode);
 
@@ -1403,6 +1378,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.PlayRateFaster, nameof(Configuration.Settings.Shortcuts.MainVideoFaster));
             AddNode(videoNode, language.VideoResetSpeedAndZoom, nameof(Configuration.Settings.Shortcuts.MainVideoReset));
             AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleControls));
+            AddNode(videoNode, language.VideoAudioToText, nameof(Configuration.Settings.Shortcuts.MainVideoAudioToText));
             AddNode(videoNode, language.VideoToggleContrast, nameof(Configuration.Settings.Shortcuts.MainVideoToggleContrast));
             AddNode(videoNode, language.VideoToggleBrightness, nameof(Configuration.Settings.Shortcuts.MainVideoToggleBrightness));
             _shortcuts.Nodes.Add(videoNode);
@@ -1445,6 +1421,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "2", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color2)), nameof(Configuration.Settings.Shortcuts.MainListViewColor2));
             AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "3", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color3)), nameof(Configuration.Settings.Shortcuts.MainListViewColor3));
             AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "4", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color4)), nameof(Configuration.Settings.Shortcuts.MainListViewColor4));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "5", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color5)), nameof(Configuration.Settings.Shortcuts.MainListViewColor5));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "6", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color6)), nameof(Configuration.Settings.Shortcuts.MainListViewColor6));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "7", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color7)), nameof(Configuration.Settings.Shortcuts.MainListViewColor7));
+            AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "8", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8)), nameof(Configuration.Settings.Shortcuts.MainListViewColor8));
             AddNode(listViewAndTextBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll, nameof(Configuration.Settings.Shortcuts.MainRemoveFormatting), true);
             AddNode(listViewAndTextBoxNode, language.RemoveTimeCodes, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
@@ -1457,6 +1437,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewNode, language.MergeDialogWithPrevious, nameof(Configuration.Settings.Shortcuts.MainMergeDialogWithPrevious));
             AddNode(listViewNode, language.ToggleFocus, nameof(Configuration.Settings.Shortcuts.MainToggleFocus));
             AddNode(listViewNode, language.ToggleFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainToggleFocusWaveform));
+            AddNode(listViewNode, language.ToggleFocusWaveformTextBox, nameof(Configuration.Settings.Shortcuts.MainToggleFocusWaveformTextBox));
             AddNode(listViewNode, language.ToggleDialogDashes, nameof(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             AddNode(listViewNode, language.Alignment, nameof(Configuration.Settings.Shortcuts.MainListViewAlignment), true);
             AddNode(listViewNode, language.CopyTextOnly, nameof(Configuration.Settings.Shortcuts.MainListViewCopyText));
@@ -1560,14 +1541,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByOptimalReadingSpeed));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitleByMinReadingSpeed, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDurationByMinReadingSpeed));
-            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap));
-            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange));
-            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap));
-            AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap));
-            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange));
-            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap));
+            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChange));
+            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextShotChangeWithGap));
+            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChange));
+            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousShotChangeWithGap));
+            AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChange));
+            AddNode(createAndAdjustNode, language.AdjustExtendToNextShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextShotChangeWithGap));
+            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChange));
+            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousShotChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousShotChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendCurrentSubtitle));
@@ -1590,10 +1571,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(audioVisualizerNode, language.WaveformPlayNewSelection, nameof(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             AddNode(audioVisualizerNode, language.WaveformPlayNewSelectionEnd, nameof(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             AddNode(audioVisualizerNode, LanguageSettings.Current.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
-            AddNode(audioVisualizerNode, language.WaveformGoToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange));
-            AddNode(audioVisualizerNode, language.WaveformGoToNextSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange));
-            AddNode(audioVisualizerNode, language.WaveformToggleSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleSceneChange));
-            AddNode(audioVisualizerNode, language.WaveformRemoveOrExportSceneChanges, nameof(Configuration.Settings.Shortcuts.WaveformListSceneChanges), true);
+            AddNode(audioVisualizerNode, language.WaveformGoToPreviousShotChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToPreviousShotChange));
+            AddNode(audioVisualizerNode, language.WaveformGoToNextShotChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextShotChange));
+            AddNode(audioVisualizerNode, language.WaveformToggleShotChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleShotChange));
+            AddNode(audioVisualizerNode, language.WaveformRemoveOrExportShotChanges, nameof(Configuration.Settings.Shortcuts.WaveformListShotChanges), true);
             AddNode(audioVisualizerNode, language.WaveformGuessStart, nameof(Configuration.Settings.Shortcuts.WaveformGuessStart));
             AddNode(audioVisualizerNode, language.GoBack100Milliseconds, nameof(Configuration.Settings.Shortcuts.Waveform100MsLeft));
             AddNode(audioVisualizerNode, language.GoForward100Milliseconds, nameof(Configuration.Settings.Shortcuts.Waveform100MsRight));
@@ -1751,77 +1732,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }
-
-        private void InitComboBoxWordListLanguages()
-        {
-            //Examples: da_DK_user.xml, eng_OCRFixReplaceList.xml, en_names.xml
-            string dir = Utilities.DictionaryFolder;
-            if (Directory.Exists(dir))
-            {
-                var cultures = new List<CultureInfo>();
-                // Specific culture e.g: en-US, en-GB...
-                foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-                {
-                    if (File.Exists(Path.Combine(dir, culture.Name.Replace('-', '_') + "_user.xml")))
-                    {
-                        if (!cultures.Contains(culture))
-                        {
-                            cultures.Add(culture);
-                        }
-                    }
-                }
-                // Neutral culture e.g: "en" for all (en-US, en-GB, en-JM...)
-                foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-                {
-                    string ocrFixGeneralFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList.xml");
-                    string ocrFixUserFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList_User.xml");
-                    string namesFile = Path.Combine(dir, culture.TwoLetterISOLanguageName + "_names.xml");
-                    if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile))
-                    {
-                        bool alreadyInList = false;
-                        foreach (var ci in cultures)
-                        {
-                            // If culture is already added to the list, it doesn't matter if it's "culture specific" do not re-add.
-                            if (ci.GetThreeLetterIsoLanguageName().Equals(culture.GetThreeLetterIsoLanguageName(), StringComparison.Ordinal))
-                            {
-                                alreadyInList = true;
-                                break;
-                            }
-                        }
-                        if (!alreadyInList)
-                        {
-                            cultures.Add(culture);
-                        }
-                    }
-                }
-
-                // English is the default selected language
-                Configuration.Settings.WordLists.LastLanguage = Configuration.Settings.WordLists.LastLanguage ?? "en-US";
-                comboBoxWordListLanguage.BeginUpdate();
-                var list = new List<ComboBoxLanguage>(cultures.Count);
-                var idx = 0;
-                for (var index = 0; index < cultures.Count; index++)
-                {
-                    var ci = cultures[index];
-                    list.Add(new ComboBoxLanguage { CultureInfo = ci });
-                    if (ci.Name.Equals(Configuration.Settings.WordLists.LastLanguage, StringComparison.Ordinal))
-                    {
-                        idx = index;
-                    }
-                }
-                comboBoxWordListLanguage.Items.AddRange(list.ToArray<object>());
-                if (comboBoxWordListLanguage.Items.Count > 0)
-                {
-                    comboBoxWordListLanguage.SelectedIndex = idx;
-                }
-                comboBoxWordListLanguage.EndUpdate();
-            }
-            else
-            {
-                groupBoxWordLists.Enabled = false;
-            }
-        }
-
         private void ButtonOkClick(object sender, EventArgs e)
         {
             var gs = Configuration.Settings.General;
@@ -2061,22 +1971,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.General.AllowLetterShortcutsInTextBox = checkBoxShortcutsAllowLetterOrNumberInTextBox.Checked;
 
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
+            toolsSettings.OcrUseWordSplitList = checkBoxUseWordSplitList.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
             toolsSettings.MicrosoftTranslatorTokenEndpoint = comboBoxBoxBingTokenEndpoint.Text.Trim();
             toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
-
-            var wordListSettings = Configuration.Settings.WordLists;
-            wordListSettings.UseOnlineNames = checkBoxNamesOnline.Checked;
-            wordListSettings.NamesUrl = textBoxNamesOnline.Text;
-            if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex >= 0)
-            {
-                if (comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage ci)
-                {
-                    Configuration.Settings.WordLists.LastLanguage = ci.CultureInfo.Name;
-                }
-            }
 
             var proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
@@ -2123,7 +2023,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformSingleClickSelect = checkBoxWaveformSingleClickSelect.Checked;
-            Configuration.Settings.VideoControls.WaveformSnapToSceneChanges = checkBoxWaveformSnapToSceneChanges.Checked;
+            Configuration.Settings.VideoControls.WaveformSnapToShotChanges = checkBoxWaveformSnapToShotChanges.Checked;
             Configuration.Settings.General.WaveformAutoGenWhenOpeningVideo = checkBoxWaveformAutoGen.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
             gs.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
@@ -2160,493 +2060,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
-        {
-            buttonRemoveNameEtc.Enabled = false;
-            buttonAddNames.Enabled = false;
-            buttonRemoveUserWord.Enabled = false;
-            buttonAddUserWord.Enabled = false;
-            buttonRemoveOcrFix.Enabled = false;
-            buttonAddOcrFix.Enabled = false;
-            listViewNames.Items.Clear();
-            listBoxUserWordLists.Items.Clear();
-            listBoxOcrFixList.Items.Clear();
-            if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage)
-            {
-                string language = GetCurrentWordListLanguage();
-
-                buttonAddNames.Enabled = true;
-                buttonAddUserWord.Enabled = true;
-                buttonAddOcrFix.Enabled = true;
-
-                // user word list
-                LoadUserWords(language, true);
-
-                // OCR fix words
-                LoadOcrFixList(true);
-
-                LoadNames(language, true);
-            }
-        }
-
-        private void LoadOcrFixList(bool reloadListBox)
-        {
-            if (comboBoxWordListLanguage.Items.Count == 0 || !(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage cb))
-            {
-                return;
-            }
-
-            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.GetThreeLetterIsoLanguageName());
-            if (reloadListBox)
-            {
-                listBoxOcrFixList.BeginUpdate();
-                listBoxOcrFixList.Items.Clear();
-                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.WordReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray<object>());
-                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.PartialLineWordBoundaryReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray<object>());
-                listBoxOcrFixList.Sorted = true;
-                listBoxOcrFixList.EndUpdate();
-            }
-        }
-
-        private void LoadUserWords(string language, bool reloadListBox)
-        {
-            _userWordList = new List<string>();
-            Utilities.LoadUserWordList(_userWordList, language);
-            _userWordList.Sort();
-
-            if (reloadListBox)
-            {
-                listBoxUserWordLists.Items.Clear();
-                listBoxUserWordLists.Items.AddRange(_userWordList.ToArray<object>());
-            }
-        }
-
-        private void LoadNames(string language, bool reloadListBox)
-        {
-            var task = Task.Factory.StartNew(() =>
-            {
-                // names etc
-                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                _wordListNames = nameList.GetAllNames();
-                _wordListNames.Sort();
-                return _wordListNames;
-            });
-
-            if (reloadListBox)
-            {
-                // reload the listbox on a continuation ui thead
-                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
-                task.ContinueWith(originalTask =>
-                {
-                    listViewNames.BeginUpdate();
-                    listViewNames.Items.Clear();
-                    var list = new List<ListViewItem>();
-                    foreach (var item in originalTask.Result)
-                    {
-                        list.Add(new ListViewItem(item));
-                    }
-                    listViewNames.Items.AddRange(list.ToArray());
-                    listViewNames.EndUpdate();
-                }, uiContext);
-            }
-        }
-
-        private string GetCurrentWordListLanguage()
-        {
-            var idx = comboBoxWordListLanguage.SelectedIndex;
-            if (idx < 0)
-            {
-                return null;
-            }
-
-            var cb = comboBoxWordListLanguage.Items[idx] as ComboBoxLanguage;
-            return cb?.CultureInfo.Name.Replace('-', '_');
-        }
-
-        private void ButtonAddNamesClick(object sender, EventArgs e)
-        {
-            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
-            if (languageIndex < 0)
-            {
-                return;
-            }
-
-            string language = GetCurrentWordListLanguage();
-            string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
-            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNames.Contains(text))
-            {
-                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                nameList.Add(text);
-                LoadNames(language, true);
-                labelStatus.Text = string.Format(LanguageSettings.Current.Settings.WordAddedX, text);
-                textBoxNameEtc.Text = string.Empty;
-                textBoxNameEtc.Focus();
-                for (int i = 0; i < listViewNames.Items.Count; i++)
-                {
-                    if (listViewNames.Items[i].ToString() == text)
-                    {
-                        listViewNames.Items[i].Selected = true;
-                        listViewNames.Items[i].Focused = true;
-                        int top = i - 5;
-                        if (top < 0)
-                        {
-                            top = 0;
-                        }
-
-                        listViewNames.EnsureVisible(top);
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
-            }
-        }
-
-        private void ListViewNamesSelectedIndexChanged(object sender, EventArgs e)
-        {
-            buttonRemoveNameEtc.Enabled = listViewNames.SelectedItems.Count >= 1;
-        }
-
-        private void ButtonRemoveNameEtcClick(object sender, EventArgs e)
-        {
-            if (listViewNames.SelectedItems.Count == 0)
-            {
-                return;
-            }
-
-            string language = GetCurrentWordListLanguage();
-            int index = listViewNames.SelectedItems[0].Index;
-            string text = listViewNames.Items[index].Text;
-            int itemsToRemoveCount = listViewNames.SelectedIndices.Count;
-            if (!string.IsNullOrEmpty(language) && index >= 0)
-            {
-                DialogResult result;
-                if (itemsToRemoveCount == 1)
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-                else
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-
-                if (result == DialogResult.Yes)
-                {
-                    int removeCount = 0;
-                    var namesList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                    for (int idx = listViewNames.SelectedIndices.Count - 1; idx >= 0; idx--)
-                    {
-                        index = listViewNames.SelectedIndices[idx];
-                        text = listViewNames.Items[index].Text;
-                        namesList.Remove(text);
-                        removeCount++;
-                        listViewNames.Items.RemoveAt(index);
-                    }
-
-                    if (removeCount > 0)
-                    {
-                        LoadNames(language, true); // reload
-
-                        if (index < listViewNames.Items.Count)
-                        {
-                            listViewNames.Items[index].Selected = true;
-                        }
-                        else if (listViewNames.Items.Count > 0)
-                        {
-                            listViewNames.Items[index - 1].Selected = true;
-                        }
-
-                        listViewNames.Focus();
-
-                        buttonRemoveNameEtc.Enabled = false;
-                        return;
-                    }
-
-                    if (removeCount < itemsToRemoveCount && Configuration.Settings.WordLists.UseOnlineNames && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesUrl))
-                    {
-                        MessageBox.Show(LanguageSettings.Current.Settings.CannotUpdateNamesOnline);
-                        return;
-                    }
-
-                    if (removeCount == 0)
-                    {
-                        MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound);
-                    }
-                }
-            }
-        }
-
-        private void TextBoxNameEtcKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                ButtonAddNamesClick(null, null);
-            }
-        }
-
-        private void ButtonAddUserWordClick(object sender, EventArgs e)
-        {
-            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
-            if (languageIndex < 0)
-            {
-                return;
-            }
-
-            string language = GetCurrentWordListLanguage();
-            string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLowerInvariant();
-            if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
-            {
-                Utilities.AddToUserDictionary(text, language);
-                LoadUserWords(language, true);
-                labelStatus.Text = string.Format(LanguageSettings.Current.Settings.WordAddedX, text);
-                textBoxUserWord.Text = string.Empty;
-                textBoxUserWord.Focus();
-
-                for (int i = 0; i < listBoxUserWordLists.Items.Count; i++)
-                {
-                    if (listBoxUserWordLists.Items[i].ToString() == text)
-                    {
-                        listBoxUserWordLists.SelectedIndex = i;
-                        int top = i - 5;
-                        if (top < 0)
-                        {
-                            top = 0;
-                        }
-
-                        listBoxUserWordLists.TopIndex = top;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
-            }
-        }
-
-        private void TextBoxUserWordKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                ButtonAddUserWordClick(null, null);
-            }
-        }
-
-        private void ButtonRemoveUserWordClick(object sender, EventArgs e)
-        {
-            if (listBoxUserWordLists.SelectedIndices.Count == 0)
-            {
-                return;
-            }
-
-            string language = GetCurrentWordListLanguage();
-            int index = listBoxUserWordLists.SelectedIndex;
-            int itemsToRemoveCount = listBoxUserWordLists.SelectedIndices.Count;
-            string text = listBoxUserWordLists.Items[index].ToString();
-            if (!string.IsNullOrEmpty(language) && index >= 0)
-            {
-                DialogResult result;
-                if (itemsToRemoveCount == 1)
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-                else
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-
-                if (result == DialogResult.Yes)
-                {
-                    int removeCount = 0;
-                    var words = new List<string>();
-                    string userWordFileName = Utilities.LoadUserWordList(words, language);
-
-                    for (int idx = listBoxUserWordLists.SelectedIndices.Count - 1; idx >= 0; idx--)
-                    {
-                        index = listBoxUserWordLists.SelectedIndices[idx];
-                        text = listBoxUserWordLists.Items[index].ToString();
-
-                        if (words.Contains(text))
-                        {
-                            words.Remove(text);
-                            removeCount++;
-                        }
-                        listBoxUserWordLists.Items.RemoveAt(index);
-                    }
-
-                    if (removeCount > 0)
-                    {
-                        words.Sort();
-                        var doc = new XmlDocument();
-                        doc.Load(userWordFileName);
-                        doc.DocumentElement.RemoveAll();
-                        foreach (string word in words)
-                        {
-                            XmlNode node = doc.CreateElement("word");
-                            node.InnerText = word;
-                            doc.DocumentElement.AppendChild(node);
-                        }
-                        doc.Save(userWordFileName);
-                        LoadUserWords(language, false); // reload
-                        buttonRemoveUserWord.Enabled = false;
-
-                        if (index < listBoxUserWordLists.Items.Count)
-                        {
-                            listBoxUserWordLists.SelectedIndex = index;
-                        }
-                        else if (listBoxUserWordLists.Items.Count > 0)
-                        {
-                            listBoxUserWordLists.SelectedIndex = index - 1;
-                        }
-
-                        listBoxUserWordLists.Focus();
-                        return;
-                    }
-
-                    if (removeCount < itemsToRemoveCount)
-                    {
-                        MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound);
-                    }
-                }
-            }
-        }
-
-        private void ListBoxUserWordListsSelectedIndexChanged(object sender, EventArgs e)
-        {
-            buttonRemoveUserWord.Enabled = listBoxUserWordLists.SelectedIndex >= 0;
-        }
-
-        private void ButtonAddOcrFixClick(object sender, EventArgs e)
-        {
-            string key = textBoxOcrFixKey.Text.RemoveControlCharacters().Trim();
-            string value = textBoxOcrFixValue.Text.RemoveControlCharacters().Trim();
-            if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
-            {
-                return;
-            }
-
-            if (comboBoxWordListLanguage.Items.Count == 0 || !(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage))
-            {
-                return;
-            }
-
-            var added = _ocrFixReplaceList.AddWordOrPartial(key, value);
-            if (!added)
-            {
-                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
-                return;
-            }
-
-            LoadOcrFixList(true);
-            textBoxOcrFixKey.Text = string.Empty;
-            textBoxOcrFixValue.Text = string.Empty;
-            textBoxOcrFixKey.Focus();
-
-            for (int i = 0; i < listBoxOcrFixList.Items.Count; i++)
-            {
-                if (listBoxOcrFixList.Items[i].ToString() == key + " --> " + value)
-                {
-                    listBoxOcrFixList.SelectedIndex = i;
-                    int top = i - 5;
-                    if (top < 0)
-                    {
-                        top = 0;
-                    }
-
-                    listBoxOcrFixList.TopIndex = top;
-                    break;
-                }
-            }
-        }
-
-        private void ListBoxOcrFixListSelectedIndexChanged(object sender, EventArgs e)
-        {
-            buttonRemoveOcrFix.Enabled = listBoxOcrFixList.SelectedIndex >= 0;
-        }
-
-        private void ButtonRemoveOcrFixClick(object sender, EventArgs e)
-        {
-            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
-            if (languageIndex < 0)
-            {
-                return;
-            }
-
-            if (!(comboBoxWordListLanguage.Items[languageIndex] is ComboBoxLanguage))
-            {
-                return;
-            }
-
-            if (listBoxOcrFixList.SelectedIndices.Count == 0)
-            {
-                return;
-            }
-
-            int itemsToRemoveCount = listBoxOcrFixList.SelectedIndices.Count;
-
-            int index = listBoxOcrFixList.SelectedIndex;
-            string text = listBoxOcrFixList.Items[index].ToString();
-            string key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
-
-            if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
-            {
-                DialogResult result;
-                if (itemsToRemoveCount == 1)
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-                else
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-
-                if (result == DialogResult.Yes)
-                {
-                    listBoxOcrFixList.BeginUpdate();
-                    for (int idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
-                    {
-                        index = listBoxOcrFixList.SelectedIndices[idx];
-                        text = listBoxOcrFixList.Items[index].ToString();
-                        key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
-
-                        if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
-                        {
-                            _ocrFixReplaceList.RemoveWordOrPartial(key);
-                        }
-                        listBoxOcrFixList.Items.RemoveAt(index);
-                    }
-                    listBoxOcrFixList.EndUpdate();
-
-                    LoadOcrFixList(false);
-                    buttonRemoveOcrFix.Enabled = false;
-
-                    if (index < listBoxOcrFixList.Items.Count)
-                    {
-                        listBoxOcrFixList.SelectedIndex = index;
-                    }
-                    else if (listBoxOcrFixList.Items.Count > 0)
-                    {
-                        listBoxOcrFixList.SelectedIndex = index - 1;
-                    }
-
-                    listBoxOcrFixList.Focus();
-                }
-            }
-        }
-
-        private void TextBoxOcrFixValueKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                ButtonAddOcrFixClick(null, null);
-            }
-        }
-
         private void ListBoxSectionSelectedIndexChanged(object sender, EventArgs e)
         {
             labelStatus.Text = string.Empty;
@@ -2658,7 +2071,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             panelVideoPlayer.Visible = false;
             panelWaveform.Visible = false;
             panelTools.Visible = false;
-            panelWordLists.Visible = false;
             panelToolBar.Visible = false;
             panelFont.Visible = false;
             panelNetwork.Visible = false;
@@ -2672,6 +2084,15 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case ShortcutsSection:
                     section = panelShortcuts;
+                    Cursor = Cursors.WaitCursor;
+                    while (_shortcutsBackgroundWorker.IsBusy)
+                    {
+                        System.Threading.Thread.Sleep(10);
+                        Application.DoEvents();
+                    }
+
+                    ShowShortcutsTreeView();
+                    Cursor = Cursors.Default;
                     break;
                 case SyntaxColoringSection:
                     section = panelSyntaxColoring;
@@ -2684,9 +2105,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     break;
                 case ToolsSection:
                     section = panelTools;
-                    break;
-                case WordListsSection:
-                    section = panelWordLists;
                     break;
                 case ToolbarSection:
                     section = panelToolBar;
@@ -2749,82 +2167,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             var shortcut = _pluginShortcuts.FirstOrDefault(p => p.Name == name);
             return shortcut == null ? $"{name} [{LanguageSettings.Current.General.None}]" : $"{name} [{shortcut.Shortcut}]";
-        }
-
-        private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape ||
-                e.KeyCode == Keys.Tab ||
-                e.KeyCode == Keys.Return ||
-                e.KeyCode == Keys.Enter ||
-                e.KeyCode == Keys.Down ||
-                e.KeyCode == Keys.Up ||
-                e.KeyCode == Keys.PageDown ||
-                e.KeyCode == Keys.PageUp ||
-                e.KeyCode == Keys.None ||
-                e.KeyCode == UiUtil.HelpKeys ||
-                e.KeyCode == Keys.Home ||
-                e.KeyCode == Keys.End)
-            {
-                return;
-            }
-
-            if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
-            {
-                _listBoxSearchString = string.Empty;
-            }
-
-            if (e.KeyCode == Keys.Delete)
-            {
-                if (_listBoxSearchString.Length > 0)
-                {
-                    _listBoxSearchString = _listBoxSearchString.Remove(_listBoxSearchString.Length - 1, 1);
-                }
-            }
-            else
-            {
-                _listBoxSearchString += e.KeyCode.ToString();
-            }
-
-            _listBoxSearchStringLastUsed = DateTime.UtcNow;
-            FindAndSelectListBoxItem(sender as ListBox);
-            e.SuppressKeyPress = true;
-        }
-
-        private void FindAndSelectListBoxItem(ListBox listBox)
-        {
-            int i = 0;
-            foreach (string s in listBox.Items)
-            {
-                if (s.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
-                {
-                    listBox.SelectedIndex = i;
-                    break;
-                }
-                i++;
-            }
-        }
-
-        private void FindAndSelectListViewItem(ListView listView)
-        {
-            listView.SelectedItems.Clear();
-            int i = 0;
-            foreach (ListViewItem s in listView.Items)
-            {
-                if (s.Text.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
-                {
-                    listView.Items[i].Selected = true;
-                    listView.EnsureVisible(i);
-                    break;
-                }
-                i++;
-            }
-        }
-
-        private void ListBoxSearchReset(object sender, EventArgs e)
-        {
-            _listBoxSearchString = string.Empty;
         }
 
         private void comboBoxCustomSearch_SelectedIndexChanged(object sender, EventArgs e)
@@ -3531,6 +2873,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
+
+            toolTipDialogStylePreview.RemoveAll();
+            toolTipDialogStylePreview.SetToolTip(comboBoxDialogStyle, DialogSplitMerge.GetDialogStylePreview(_rulesProfiles[idx].DialogStyle));
+
+            buttonEditCustomContinuationStyle.Visible = _rulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom;
+            comboBoxContinuationStyle.Width = _rulesProfiles[idx].ContinuationStyle == ContinuationStyle.Custom ? (buttonEditCustomContinuationStyle.Left - comboBoxContinuationStyle.Left - 6) : (comboBoxDialogStyle.Right - comboBoxContinuationStyle.Left);
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
@@ -3555,44 +2903,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             treeViewShortcuts.CollapseAll();
         }
 
-        private void listViewNames_DoubleClick(object sender, EventArgs e)
-        {
-            if (listViewNames.SelectedItems.Count == 0)
-            {
-                return;
-            }
-
-            var idx = listViewNames.SelectedItems[0].Index;
-            if (idx >= 0)
-            {
-                textBoxNameEtc.Text = listViewNames.Items[idx].Text;
-            }
-        }
-
-        private void listBoxUserWordLists_DoubleClick(object sender, EventArgs e)
-        {
-            var idx = listBoxUserWordLists.SelectedIndex;
-            if (idx >= 0)
-            {
-                textBoxUserWord.Text = (string)listBoxUserWordLists.Items[idx];
-            }
-        }
-
-        private void listBoxOcrFixList_DoubleClick(object sender, EventArgs e)
-        {
-            var idx = listBoxOcrFixList.SelectedIndex;
-            if (idx >= 0)
-            {
-                var text = (string)listBoxOcrFixList.Items[idx];
-                var splitIdx = text.IndexOf(" --> ", StringComparison.Ordinal);
-                if (splitIdx > 0)
-                {
-                    textBoxOcrFixKey.Text = text.Substring(0, splitIdx);
-                    textBoxOcrFixValue.Text = text.Remove(0, splitIdx + " --> ".Length);
-                }
-            }
-        }
-
         private void buttonLineWidthSettings_Click(object sender, EventArgs e)
         {
             using (var form = new SettingsLineWidth())
@@ -3611,6 +2921,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     // Saving settings handled by dialog
+                    // Quick refresh in case custom style was changed
+                    ProfileUiValueChanged(sender, e);
                 }
             }
         }
@@ -3738,47 +3050,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             // avoid flickering when losing focus
             listBoxSection.Update();
-        }
-
-        private void listViewNames_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape ||
-                e.KeyCode == Keys.Tab ||
-                e.KeyCode == Keys.Return ||
-                e.KeyCode == Keys.Enter ||
-                e.KeyCode == Keys.Down ||
-                e.KeyCode == Keys.Up ||
-                e.KeyCode == Keys.PageDown ||
-                e.KeyCode == Keys.PageUp ||
-                e.KeyCode == Keys.None ||
-                e.KeyCode == UiUtil.HelpKeys ||
-                e.KeyCode == Keys.Home ||
-                e.KeyCode == Keys.End)
-            {
-                return;
-            }
-
-            if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
-            {
-                _listBoxSearchString = string.Empty;
-            }
-
-            if (e.KeyCode == Keys.Delete)
-            {
-                if (_listBoxSearchString.Length > 0)
-                {
-                    _listBoxSearchString = _listBoxSearchString.Remove(_listBoxSearchString.Length - 1, 1);
-                }
-            }
-            else
-            {
-                _listBoxSearchString += e.KeyCode.ToString();
-            }
-
-            _listBoxSearchStringLastUsed = DateTime.UtcNow;
-            FindAndSelectListViewItem(sender as ListView);
-            e.SuppressKeyPress = true;
         }
 
         private void panelVideoPlayerPreviewFontColor_Click(object sender, EventArgs e)
@@ -4002,19 +3273,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var iconFileNames = Directory.GetFiles(iconDir, "*.ico");
             imageListFileTypeAssociations.Images.Clear();
             listViewFileTypeAssociations.HeaderStyle = ColumnHeaderStyle.None;
-            //listViewFileTypeAssociations.LargeImageList = imageListFileTypeAssociations;
             listViewFileTypeAssociations.SmallImageList = imageListFileTypeAssociations;
             listViewFileTypeAssociations.BeginUpdate();
             listViewFileTypeAssociations.Items.Clear();
             foreach (var iconFileName in iconFileNames)
             {
+                if (iconFileName.EndsWith("uninstall.ico", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 var friendlyName = "." + Path.GetFileNameWithoutExtension(iconFileName).ToUpperInvariant();
                 var icon = new Icon(iconFileName);
                 imageListFileTypeAssociations.Images.Add(icon);
                 var item = new ListViewItem(string.Empty);
                 item.SubItems.Add(friendlyName);
                 item.ImageIndex = imageListFileTypeAssociations.Images.Count - 1;
-                item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "Subtitle Edit");
+                item.Checked = FileTypeAssociations.GetChecked("." + Path.GetFileNameWithoutExtension(iconFileName).ToLowerInvariant(), "SubtitleEdit");
                 item.Tag = iconFileName;
                 listViewFileTypeAssociations.Items.Add(item);
             }
@@ -4030,17 +3305,30 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (item.Checked)
                 {
                     var iconFileName = (string)item.Tag;
-                    FileTypeAssociations.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "Subtitle Edit");
+                    FileTypeAssociations.SetFileAssociationViaRegistry(ext, exeFileName, iconFileName, "SubtitleEdit");
                 }
                 else
                 {
-                    FileTypeAssociations.DeleteFileAssociationViaRegistry(ext, "Subtitle Edit");
+                    FileTypeAssociations.DeleteFileAssociationViaRegistry(ext, "SubtitleEdit");
                 }
             }
 
             labelUpdateFileTypeAssociationsStatus.Text = LanguageSettings.Current.Settings.FileTypeAssociationsUpdated;
             FileTypeAssociations.Refresh();
             System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3000), () => labelUpdateFileTypeAssociationsStatus.Text = string.Empty);
+        }
+
+        private void buttonEditCustomContinuationStyle_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsCustomContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
+                    // Quick refresh
+                    ProfileUiValueChanged(sender, e);
+                }
+            }
         }
     }
 }

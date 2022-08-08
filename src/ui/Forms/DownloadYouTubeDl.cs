@@ -3,15 +3,14 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class DownloadYouTubeDl : Form
     {
-        public const string Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2021.11.10.1/yt-dlp.exe";
-        public const string Sha512Hash = "44f992ebd88859e772bd4d555b5d87f8fa1d89a0aabf638cfe331e2330a0786ebec7093a2bbc9f38de3fdfecb12a38b2171d2eec29dd51bbd2e171a3cd734c01";
+        public const string Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2022.05.18/yt-dlp.exe";
+        public const string Sha512Hash = "f8f55be89b8b4b5c9703bb594367ad10c245dd1e1de9182a8a3d8ae06220aeabe200ed9b797d6f176a5d10f99ff3bbb48176c4e52cd9f4cc3c1fac451df42dde";
         public bool AutoClose { get; internal set; }
 
         public DownloadYouTubeDl()
@@ -85,14 +84,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(folder);
             }
 
-            var hash = GetSha512Hash(e.Result);
+            var hash = Utilities.GetSha512Hash(e.Result);
             if (hash != Sha512Hash)
             {
-                MessageBox.Show("yt-dlp SHA-512 hash does not match!");
+                MessageBox.Show("yt-dlp.exe SHA-512 hash does not match!");
                 return;
             }
 
-            File.WriteAllBytes(Path.Combine(folder, "youtube-dl.exe"), e.Result);
+            File.WriteAllBytes(Path.Combine(folder, "yt-dlp.exe"), e.Result);
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
@@ -105,25 +104,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Enabled = true;
             labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "youtube-dl");
-        }
-
-        private static string GetSha512Hash(byte[] buffer)
-        {
-            using (var ms = new MemoryStream(buffer))
-            using (var bs = new BufferedStream(ms))
-            {
-                using (var sha512 = new SHA512Managed())
-                {
-                    byte[] hash = sha512.ComputeHash(bs);
-                    string hashString = string.Empty;
-                    foreach (byte x in hash)
-                    {
-                        hashString += string.Format("{0:x2}", x);
-                    }
-
-                    return hashString.ToString().ToLower();
-                }
-            }
         }
     }
 }

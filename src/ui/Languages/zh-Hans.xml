@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -33,7 +33,7 @@
     <CharsPerSec>字/秒</CharsPerSec>
     <WordsPerMin>词/分</WordsPerMin>
     <Actor>演员</Actor>
-    <Gap>间隙</Gap>
+    <Gap>间隔</Gap>
     <Region>区域</Region>
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
@@ -95,6 +95,7 @@
     <ShortcutX>快捷键: {0}</ShortcutX>
     <ExampleX>示例: {0}</ExampleX>
     <Reset>重置</Reset>
+    <Warning>警告</Warning>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -179,7 +180,10 @@ Command line: {1} {2}
     <OpenModelsFolder>打开模型文件夹</OpenModelsFolder>
     <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
     <Transcribing>将音频转录为文本...</Transcribing>
+    <TranscribingXOfY>将音频转录为文本 - 第{0}/{1}个文件...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} 个文件已保存到视频源文件夹</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>使用后处理（行合并、修复大小写、标点符号等）</UsePostProcessing>
+    <BatchMode>批处理模式</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -295,7 +299,7 @@ Command line: {1} {2}
     <AutoBalance>自动均排各行</AutoBalance>
     <ScanFolder>扫描文件夹...</ScanFolder>
     <Recursive>包含子文件夹</Recursive>
-    <BridgeGaps>桥接间隙</BridgeGaps>
+    <BridgeGaps>桥接间隔</BridgeGaps>
     <PlainText>纯文本</PlainText>
     <Ocr>OCR...</Ocr>
     <AddFiles>添加文件...</AddFiles>
@@ -591,6 +595,7 @@ Command line: {1} {2}
     <TimeCode>时间码</TimeCode>
     <NewLine>新行</NewLine>
     <Footer>页脚</Footer>
+    <FileExtension>文件扩展名</FileExtension>
     <DoNotModify>[不改动]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -833,6 +838,7 @@ Command line: {1} {2}
     <PassX>{0}次编码</PassX>
     <Encoding>编码</Encoding>
     <BitRate>比特率</BitRate>
+    <TotalBitRateX>总比特率：{0}</TotalBitRateX>
     <SampleRate>采样率</SampleRate>
     <Audio>音频</Audio>
     <Stereo>立体声</Stereo>
@@ -907,7 +913,7 @@ Command line: {1} {2}
     <Remove>移除</Remove>
     <RemoveAll>全部移除</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>导入场景切换</Title>
     <OpenTextFile>打开文本文件...</OpenTextFile>
     <Generate>生成场景切换</Generate>
@@ -917,11 +923,11 @@ Command line: {1} {2}
     <Frames>帧</Frames>
     <Seconds>秒</Seconds>
     <Milliseconds>毫秒</Milliseconds>
-    <GetSceneChangesWithFfmpeg>使用 FFmpeg 获取场景切换</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>使用 FFmpeg 获取场景切换</GetShotChangesWithFfmpeg>
     <Sensitivity>敏感度</Sensitivity>
     <SensitivityDescription>较低的值将产生较多的场景切换</SensitivityDescription>
-    <NoSceneChangesFound>未找到场景切换</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>未找到场景切换</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>导入纯文本</Title>
     <OneSubtitleIsOneFile>多个文件 - 每个文件是独立的字幕</OneSubtitleIsOneFile>
@@ -1187,7 +1193,7 @@ Command line: {1} {2}
         <Title>工具(&amp;T)</Title>
         <AdjustDisplayDuration>调整时长(&amp;A)...</AdjustDisplayDuration>
         <ApplyDurationLimits>应用时长限制...</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>桥接字幕间隙</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>桥接字幕间隔</SubtitlesBridgeGaps>
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>
@@ -1238,8 +1244,8 @@ Command line: {1} {2}
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
         <VideoAudioToText>视频/音频到文本...</VideoAudioToText>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>生成/导入场景切换...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>删除/导出场景切换...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>删除/导出场景切换...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
         <ShowHideVideo>显示/隐藏视频</ShowHideVideo>
         <ShowHideWaveform>显示/隐藏波形</ShowHideWaveform>
@@ -1271,6 +1277,7 @@ Command line: {1} {2}
       <Options>
         <Title>选项(&amp;O)</Title>
         <Settings>设置(&amp;S)...</Settings>
+        <WordLists>词语列表...</WordLists>
         <ChooseLanguage>选择语言(&amp;C)...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1391,6 +1398,7 @@ Command line: {1} {2}
         <RemoveBookmark>移除书签</RemoveBookmark>
         <GoToSourceView>转到源视图</GoToSourceView>
         <GoToListView>转到列表视图</GoToListView>
+        <ExtractAudio>提取音频…</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1641,7 +1649,7 @@ Command line: {1} {2}
     <MergedShortLinesX>已合并行数: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>分割长行之前</BeforeSplitLongLines>
     <LongLinesSplitX>分割后的行数: {0}</LongLinesSplitX>
-    <BeforeDurationsBridgeGap>在桥接短间隙之前</BeforeDurationsBridgeGap>
+    <BeforeDurationsBridgeGap>在桥接短间隔之前</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>设置段间最小显示时间之前</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>已更改段间最小显示时间的行数: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>导入纯文本之前</BeforeImportText>
@@ -1691,7 +1699,7 @@ Command line: {1} {2}
     <BeforeDisplaySubtitleJoin>合并字幕之前</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>字幕已合并</SubtitlesJoined>
     <StatusLog>状态记录</StatusLog>
-    <XSceneChangesImported>已导入 {0} 个场景切换</XSceneChangesImported>
+    <XShotChangesImported>已导入 {0} 个场景切换</XShotChangesImported>
     <PluginXExecuted>插件 '{0}' 已执行。</PluginXExecuted>
     <NotAValidXSubFile>不是有效的 XSub 文件!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>在合并相同文本行之前</BeforeMergeLinesWithSameText>
@@ -1728,6 +1736,7 @@ Command line: {1} {2}
     <ShowVideoControls>显示视频控件</ShowVideoControls>
     <HideVideoControls>隐藏视频控件</HideVideoControls>
     <GeneratingWaveformInBackground>在后台生成波形...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>自动备份 已保存</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -1885,6 +1894,8 @@ Command line: {1} {2}
     <EvenLines>匹配行</EvenLines>
     <DurationLessThan>时长小于</DurationLessThan>
     <DurationGreaterThan>时长大于</DurationGreaterThan>
+    <ExactlyOneLine>正好一行</ExactlyOneLine>
+    <ExactlyTwoLines>正好两行</ExactlyTwoLines>
     <MoreThanTwoLines>超过两行</MoreThanTwoLines>
     <Bookmarked>已收藏</Bookmarked>
     <BlankLines>空行</BlankLines>
@@ -2125,6 +2136,7 @@ Command line: {1} {2}
     <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
     <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
     <SetAssaResolution>设置ASSA分辨率(PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>立即生成自动备份</TakeAutoBackup>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
@@ -2156,9 +2168,9 @@ Command line: {1} {2}
     <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <SplitBehavior>分割方案</SplitBehavior>
-    <SplitBehaviorPrevious>在分割点左侧插入间隙</SplitBehaviorPrevious>
-    <SplitBehaviorHalf>在分割点处均分间隙</SplitBehaviorHalf>
-    <SplitBehaviorNext>在分割点右侧插入间隙</SplitBehaviorNext>
+    <SplitBehaviorPrevious>在分割点左侧插入间隔</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>在分割点处均分间隔</SplitBehaviorHalf>
+    <SplitBehaviorNext>在分割点右侧插入间隔</SplitBehaviorNext>
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
@@ -2188,7 +2200,7 @@ Command line: {1} {2}
     <WaveformFocusMouseEnter>鼠标滑过后设置焦点</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>单击以选中字幕</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>吸附到场景切换点 (按住Shift键可临时禁用)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>吸附到场景切换点 (按住Shift键可临时禁用)</WaveformSnapToShotChanges>
     <WaveformAutoGen>打开视频时自动生成波形</WaveformAutoGen>
     <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
@@ -2256,13 +2268,15 @@ Command line: {1} {2}
     <ContinuationStyleNone>无</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>无, 在停顿处加点 (仅添补)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>无, 在停顿处加点</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>无, 在停顿处加省略号 (仅添补)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>无, 在停顿处加省略号</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>无, 加点 (仅添补)</ContinuationStyleOnlyTrailingDots>
-    <ContinuationStyleLeadingTrailingDots>点</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>无, 但在停顿处加省略号</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingDots>句点</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingEllipsis>省略号(仅添补)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>省略号</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>连字符</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>连字符, 但在停顿处加点</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>自定义</ContinuationStyleCustom>
     <CpsLineLengthStyle>每秒字频/行长</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>统计所有字符</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>统计除空格外的字符，仅显示每秒字频</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2271,9 +2285,12 @@ Command line: {1} {2}
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1，拉丁文 0.5，空格 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>忽略阿拉伯语变音符号</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>忽略阿拉伯语变音符号/空格</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>忽略空格或标点符号 ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>忽略空格或标点符号，仅显示每秒字频</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsReplace>要替换的音乐符号（用逗号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>使用分词列表（OCR + FCE）</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>修正较短的显示时间 - 允许移动起始时间</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
     <DefaultFormat>默认格式</DefaultFormat>
@@ -2309,8 +2326,8 @@ Command line: {1} {2}
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点并转到下一条</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一条</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSetStartAndEndOfPrevious>设置前一条的开始和结束（减去最小间隙）</AdjustSetStartAndEndOfPrevious>
-    <AdjustSetStartAndEndOfPreviousAndGoToNext>设置前一条的开始和结束（减去最小间隙），并转到下一条</AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>设置前一条的开始和结束（减去最小间隔）</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>设置前一条的开始和结束（减去最小间隔），并转到下一条</AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>所选行后移 100ms</AdjustSelected100MsBack>
     <AdjustStartXMsBack>将起始点向后移动 {0} ms</AdjustStartXMsBack>
@@ -2321,24 +2338,24 @@ Command line: {1} {2}
     <AdjustStartOneFrameForward>将起始点前移1帧</AdjustStartOneFrameForward>
     <AdjustEndOneFrameBack>将结束点后移1帧</AdjustEndOneFrameBack>
     <AdjustEndOneFrameForward>将结束点前移1帧</AdjustEndOneFrameForward>
-    <AdjustStartOneFrameBackKeepGapPrev>将起始点后移1帧 (若与前行之间的间隙较小, 则平移间隙)</AdjustStartOneFrameBackKeepGapPrev>
-    <AdjustStartOneFrameForwardKeepGapPrev>将起始点前移1帧 (若与前行之间的间隙较小, 则平移间隙)</AdjustStartOneFrameForwardKeepGapPrev>
-    <AdjustEndOneFrameBackKeepGapNext>将结束点后移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameBackKeepGapNext>
-    <AdjustEndOneFrameForwardKeepGapNext>将结束点前移1帧 (若与后行之间的间隙较小, 则平移间隙)</AdjustEndOneFrameForwardKeepGapNext>
+    <AdjustStartOneFrameBackKeepGapPrev>将起始点后移1帧 (若与前行之间的间隔较小, 则平移间隔)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>将起始点前移1帧 (若与前行之间的间隔较小, 则平移间隔)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>将结束点后移1帧 (若与后行之间的间隔较小, 则平移间隔)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>将结束点前移1帧 (若与后行之间的间隔较小, 则平移间隔)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
     <AdjustVideoSetStartForAppropriateLine>为适当的行设置开始时间</AdjustVideoSetStartForAppropriateLine>
     <AdjustVideoSetEndForAppropriateLine>为适当的行设置结束时间</AdjustVideoSetEndForAppropriateLine>
     <AdjustSetStartAndOffsetTheWholeSubtitle>设置开始时间，偏移所有字幕</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>以最小间隔将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>以最小间隔将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>将所选行延伸至下个场景切换点</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>以最小间隔将所选行延伸至下个场景切换点</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>将所选行延伸至上个场景切换点</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>以最小间隔将所选行延伸至上个场景切换点</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>以最小间隔将选定行的开始时间设为下一个场景切换处</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>以最小间隔将选定行的结束时间设为上一个场景切换处</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>将所选行延伸至下个场景切换点</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>以最小间隔将所选行延伸至下个场景切换点</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>将所选行延伸至上个场景切换点</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>以最小间隔将所选行延伸至上个场景切换点</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>将所选行延伸至下一条字幕</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>将所选行延伸至上一条字幕</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>将当前行延伸至下一条字幕或最大间隔</AdjustExtendCurrentSubtitle>
@@ -2362,8 +2379,11 @@ Command line: {1} {2}
     <GoToNextSubtitleAndFocusVideo>转到下一行并设置视频位置</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>跳转到上一行并播放</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>跳转到下一行并播放</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>跳转到上一行并将焦点置于波形视图</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>跳转到下一行并将焦点置于波形视图</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>在列表视图和文本输入框之间切换焦点</ToggleFocus>
     <ToggleFocusWaveform>在列表视图和波形/频谱视图之间切换焦点</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>在文本框和波形/频谱图之间切换焦点</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleQuotes>切换引号</ToggleQuotes>
     <ToggleHiTags>切换HI标签</ToggleHiTags>
@@ -2396,10 +2416,10 @@ Command line: {1} {2}
     <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>播放选中内容的末尾</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>转到下一个场景切换点</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>转到下一处场景切换</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>切换场景切换</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>删除/导出场景切换</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>转到下一个场景切换点</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>转到下一处场景切换</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>切换场景切换</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>删除/导出场景切换</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>根据音量/场景切换点调节起始点</WaveformGuessStart>
     <GoBack1Frame>回退一帧</GoBack1Frame>
     <GoForward1Frame>前进一帧</GoForward1Frame>
@@ -2434,6 +2454,7 @@ Command line: {1} {2}
     <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
+    <VideoAudioToText>视频/音频到文本（语音识别）</VideoAudioToText>
     <VideoToggleBrightness>切换亮度（仅限mpv）</VideoToggleBrightness>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
@@ -2532,15 +2553,30 @@ Command line: {1} {2}
     <UncheckInsertsLowercase>侦测并弃选小写的单行标题或歌词</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>隐藏不太可能的连续型句段</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>忽略乐符间的歌词</IgnoreLyrics>
-    <MinFrameGap>最小间隙 (帧)</MinFrameGap>
-    <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隙长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
-    <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隙值？</UseXAsNewGap>
+    <ContinuationPause>暂停阈值：</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>编辑自定义延续样式...</EditCustomContinuationStyle>
+    <MinFrameGap>最小间隔 (帧)</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>当帧数为 {0}、帧速率为 {1} 时，间隔长度为 {2} 毫秒。</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>是否将 "{0}" 毫秒设为新的最小间隔值？</UseXAsNewGap>
     <BDOpensIn>打开BD sup/bdn-xml文件的方式</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>编辑</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>快捷方式：在文本框中允许单个字母/数字</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>更新文件类型关联</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>文件类型关联已更新</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>编辑自定义延续样式</CustomContinuationStyle>
+    <LoadStyle>加载样式...</LoadStyle>
+    <Suffix>后缀：</Suffix>
+    <AddSuffixForComma>如果以逗号结尾则处理</AddSuffixForComma>
+    <AddSpace>添加空格</AddSpace>
+    <RemoveComma>删除逗号</RemoveComma>
+    <Prefix>前缀：</Prefix>
+    <DifferentStyleGap>对长于指定时间的间隔使用不同的样式</DifferentStyleGap>
+    <Preview>预览</Preview>
+    <PreviewPause>（暂停）</PreviewPause>
+    <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
@@ -2704,7 +2740,9 @@ Command line: {1} {2}
     <CharactersPerSecondMinimum>每秒字符数（最少）: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数（最多）: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数（平均）: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>最小间隔: {0} 毫秒</MinimalGap>
+    <GapMinimum>间隔 - 最短: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>间隔 - 最长: {0:#,##0} ms</GapMaximum>
+    <GapAverage>间隔 - 平均: {0:#,##0.##} ms</GapAverage>
     <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2795,6 +2833,7 @@ Command line: {1} {2}
     <Angle>角度</Angle>
     <BoxPerLine>每行一个框（使用轮廓色）</BoxPerLine>
     <BoxMultiLine>共用一个框（使用阴影色）</BoxMultiLine>
+    <DuplicateStyleNames>为样式创建副本: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>类别</Category>
@@ -3025,9 +3064,9 @@ Command line: {1} {2}
     <ShowWaveformAndSpectrogram>保存波形和频谱图</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>仅显示波形</ShowWaveformOnly>
     <ShowSpectrogramOnly>仅显示频谱图</ShowSpectrogramOnly>
-    <AddSceneChange>添加场景切换</AddSceneChange>
-    <RemoveSceneChange>移除场景切换</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>从所选中移除场景切换</RemoveSceneChangesFromSelection>
+    <AddShotChange>添加场景切换</AddShotChange>
+    <RemoveShotChange>移除场景切换</RemoveShotChange>
+    <RemoveShotChangesFromSelection>从所选中移除场景切换</RemoveShotChangesFromSelection>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
     <InsertSubtitleHere>在这里插入字幕...</InsertSubtitleHere>

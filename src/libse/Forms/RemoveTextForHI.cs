@@ -364,13 +364,22 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 }
                                 else
                                 {
-                                    string s = line;
-                                    string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
-                                    if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
-                                                                           !l1Trim.EndsWith('!') &&
-                                                                           !l1Trim.EndsWith('?'))
+                                    var s = line;
+
+                                    var skipDoToNumbers =
+                                        indexOfColon < line.Length - 1 &&
+                                        char.IsDigit(line[indexOfColon - 1]) &&
+                                        char.IsDigit(line[indexOfColon + 1]);
+
+                                    var l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                                    if (!skipDoToNumbers &&
+                                        count == 1 && 
+                                        lines.Count == 2 && 
+                                        !l1Trim.EndsWith('.') &&
+                                        !l1Trim.EndsWith('!') &&
+                                        !l1Trim.EndsWith('?'))
                                     {
-                                        int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
+                                        var indexOf = line.IndexOf(". ", StringComparison.Ordinal);
                                         if (indexOf > 0 && indexOf < indexOfColon)
                                         {
                                             var periodWord = line.Substring(0, indexOf).TrimStart(' ', '-', '"');
@@ -843,7 +852,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return string.Empty;
             }
 
-            if (Settings.RemoveWhereContains)
+            if (Settings.RemoveWhereContains && Settings.RemoveIfTextContains != null)
             {
                 foreach (var removeIfTextContain in Settings.RemoveIfTextContains)
                 {

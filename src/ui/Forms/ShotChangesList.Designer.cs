@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    sealed partial class SceneChangesList
+    sealed partial class ShotChangesList
     {
         /// <summary>
         /// Required designer variable.
@@ -33,7 +33,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonExport = new System.Windows.Forms.Button();
             this.labelCount = new System.Windows.Forms.Label();
-            this.listViewSceneChanges = new System.Windows.Forms.ListView();
+            this.listViewShotChanges = new System.Windows.Forms.ListView();
             this.columnHeaderNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStartTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -87,25 +87,25 @@
             this.labelCount.TabIndex = 10;
             this.labelCount.Text = "Count: {0}";
             // 
-            // listViewSceneChanges
+            // listViewShotChanges
             // 
-            this.listViewSceneChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewSceneChanges.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewShotChanges.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderNumber,
             this.columnHeaderStartTime});
-            this.listViewSceneChanges.ContextMenuStrip = this.contextMenuStrip1;
-            this.listViewSceneChanges.FullRowSelect = true;
-            this.listViewSceneChanges.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listViewSceneChanges.HideSelection = false;
-            this.listViewSceneChanges.Location = new System.Drawing.Point(13, 12);
-            this.listViewSceneChanges.Name = "listViewSceneChanges";
-            this.listViewSceneChanges.Size = new System.Drawing.Size(472, 289);
-            this.listViewSceneChanges.TabIndex = 0;
-            this.listViewSceneChanges.UseCompatibleStateImageBehavior = false;
-            this.listViewSceneChanges.View = System.Windows.Forms.View.Details;
-            this.listViewSceneChanges.DoubleClick += new System.EventHandler(this.listViewSceneChanges_DoubleClick);
+            this.listViewShotChanges.ContextMenuStrip = this.contextMenuStrip1;
+            this.listViewShotChanges.FullRowSelect = true;
+            this.listViewShotChanges.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listViewShotChanges.HideSelection = false;
+            this.listViewShotChanges.Location = new System.Drawing.Point(13, 12);
+            this.listViewShotChanges.Name = "listViewShotChanges";
+            this.listViewShotChanges.Size = new System.Drawing.Size(472, 289);
+            this.listViewShotChanges.TabIndex = 0;
+            this.listViewShotChanges.UseCompatibleStateImageBehavior = false;
+            this.listViewShotChanges.View = System.Windows.Forms.View.Details;
+            this.listViewShotChanges.DoubleClick += new System.EventHandler(this.listViewShotChanges_DoubleClick);
             // 
             // columnHeaderNumber
             // 
@@ -130,28 +130,28 @@
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
-            // SceneChangesList
+            // ShotChangesList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(497, 341);
             this.Controls.Add(this.labelCount);
             this.Controls.Add(this.buttonExport);
-            this.Controls.Add(this.listViewSceneChanges);
+            this.Controls.Add(this.listViewShotChanges);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(458, 380);
-            this.Name = "SceneChangesList";
+            this.Name = "ShotChangesList";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Scene change list";
-            this.Shown += new System.EventHandler(this.SceneChangesList_Shown);
-            this.ResizeEnd += new System.EventHandler(this.SceneChangesList_ResizeEnd);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SceneChangesList_KeyDown);
+            this.Text = "Shot change list";
+            this.Shown += new System.EventHandler(this.ShotChangesList_Shown);
+            this.ResizeEnd += new System.EventHandler(this.ShotChangesList_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ShotChangesList_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -164,7 +164,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonExport;
         private System.Windows.Forms.Label labelCount;
-        private System.Windows.Forms.ListView listViewSceneChanges;
+        private System.Windows.Forms.ListView listViewShotChanges;
         private System.Windows.Forms.ColumnHeader columnHeaderNumber;
         private System.Windows.Forms.ColumnHeader columnHeaderStartTime;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;

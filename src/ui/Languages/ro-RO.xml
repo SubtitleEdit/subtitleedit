@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -815,7 +815,7 @@ Pentru folosirea unui cod API de la Google Translate, accesează "Opțiuni -&gt;
     <Remove>Elimină</Remove>
     <RemoveAll>Elimină tot</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Generare/Importare schimbări scenă</Title>
     <OpenTextFile>Deschide fișierul text...</OpenTextFile>
     <Generate>Generare schimbări de scenă</Generate>
@@ -825,11 +825,11 @@ Pentru folosirea unui cod API de la Google Translate, accesează "Opțiuni -&gt;
     <Frames>Cadre</Frames>
     <Seconds>Secunde</Seconds>
     <Milliseconds>Milisecunde</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Se obțin schimbări scenă cu FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Se obțin schimbări scenă cu FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Acuitate</Sensitivity>
     <SensitivityDescription>Val. mică = mai multe schimbări de scenă</SensitivityDescription>
-    <NoSceneChangesFound>Nicio schimbare de scenă găsită.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nicio schimbare de scenă găsită.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importare text simplu</Title>
     <OneSubtitleIsOneFile>Fișiere multiple - un fișier este o subtitrare</OneSubtitleIsOneFile>
@@ -1146,8 +1146,8 @@ Pentru folosirea unui cod API de la Google Translate, accesează "Opțiuni -&gt;
         <SmptTimeMode>Sincronizare SMPTE (cadru sărit)</SmptTimeMode>
         <GenerateTextFromVideo>Generare text din video...</GenerateTextFromVideo>
         <ImportChaptersFromVideo>Importare capitole din video</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Generare/importare schimbări de scenă...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Elimină schimbări scenă</RemoveSceneChanges>
+        <GenerateImportShotChanges>Generare/importare schimbări de scenă...</GenerateImportShotChanges>
+        <RemoveShotChanges>Elimină schimbări scenă</RemoveShotChanges>
         <WaveformBatchGenerate>Pachet audio generat...</WaveformBatchGenerate>
         <ShowHideVideo>Arată/ascunde Video</ShowHideVideo>
         <ShowHideWaveform>Arată/ascunde Audio</ShowHideWaveform>
@@ -1595,7 +1595,7 @@ Continui?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Înaintea îmbinării subtitrărilor</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subtitrări îmbinate</SubtitlesJoined>
     <StatusLog>Jurnal de situație</StatusLog>
-    <XSceneChangesImported>{0} schimbări de scenă importate</XSceneChangesImported>
+    <XShotChangesImported>{0} schimbări de scenă importate</XShotChangesImported>
     <PluginXExecuted>Plugin-ul '{0}' executat.</PluginXExecuted>
     <NotAValidXSubFile>Niciun fișier XSub valabil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Înaintea îmbinării liniilor cu același text</BeforeMergeLinesWithSameText>
@@ -2077,7 +2077,7 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <WaveformFocusMouseEnter>Setează focalizarea cu Enter-ul mouse-ului</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Setează focalizarea lista cu Enter-ul mouse-ului</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Selectează subtitrările cu un singur click</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Fixează schimbările de scenă (Shift apăsat pentru suprapunere)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Fixează schimbările de scenă (Shift apăsat pentru suprapunere)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>Limitarea trebuie să fie de ordinul</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisecunde</WaveformBorderHitMs2>
     <WaveformColor>Culoarea undei</WaveformColor>
@@ -2199,14 +2199,14 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AdjustSetStartTimeKeepDuration>Setează timpul de pornire, reține durata</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Setează timpul de oprire, decalarea restului</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Setează timpul de oprire, decalarea restului și continuarea</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Fixează startul liniilor selectate pâna la următoarea schimbare de scenă</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Fixează startul liniilor selectate pâna la următoarea schimbare de scenă cu decalare minimă</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Fixează sfârșitul liniilor selectate pâna la următoarea schimbare de scenă</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Fixează sfârșitul liniilor selectate pâna la următoarea schimbare de scenă cu decalare minimă</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Extinde liniile selectate până la schimbarea de scenă (sau următoarea subtitrare)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Extinde liniile selectate până la schimbarea de scenă cu decalare minimă (sau următoarea subtitrare)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Extinde liniile selectate până la schimbarea precedentă de scenă (sau subtitrarea precedentă)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Extinde liniile selectate până la schimbarea precedentă de scenă cu decalare minimă (sau subtitrarea precedentă)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Fixează startul liniilor selectate pâna la următoarea schimbare de scenă</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Fixează startul liniilor selectate pâna la următoarea schimbare de scenă cu decalare minimă</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Fixează sfârșitul liniilor selectate pâna la următoarea schimbare de scenă</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Fixează sfârșitul liniilor selectate pâna la următoarea schimbare de scenă cu decalare minimă</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Extinde liniile selectate până la schimbarea de scenă (sau următoarea subtitrare)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Extinde liniile selectate până la schimbarea de scenă cu decalare minimă (sau următoarea subtitrare)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Extinde liniile selectate până la schimbarea precedentă de scenă (sau subtitrarea precedentă)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Extinde liniile selectate până la schimbarea precedentă de scenă cu decalare minimă (sau subtitrarea precedentă)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extinde liniile selectate până la următoarea subtitrare</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extinde liniile selectate până la subtitrarea precedentă</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Extinde linia actuală până la subtitrarea următoare sau la durată max.</AdjustExtendCurrentSubtitle>
@@ -2255,9 +2255,9 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <WaveformPlayNewSelection>Redă selecția</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Redă sfârșitul selecției</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Redă mai întâi subtitrarea selectată</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Accesează schimbarea precedentă de scenă</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Accesează schimbarea următoare de scenă</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Comută schimbarea de scenă</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Accesează schimbarea precedentă de scenă</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Accesează schimbarea următoare de scenă</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Comută schimbarea de scenă</WaveformToggleShotChange>
     <WaveformGuessStart>Auto-corectarea startului prin volum/schimbare de scenă</WaveformGuessStart>
     <GoBack1Frame>Un cadru înapoi</GoBack1Frame>
     <GoForward1Frame>Un cadru înainte</GoForward1Frame>
@@ -2864,8 +2864,8 @@ Reții schimbările?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Arată audio și spectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Arată doar audio</ShowWaveformOnly>
     <ShowSpectrogramOnly>Arată doar spectrograma</ShowSpectrogramOnly>
-    <AddSceneChange>Adaugă schimbarea de scenă</AddSceneChange>
-    <RemoveSceneChange>Elimină schimbarea de scenă</RemoveSceneChange>
+    <AddShotChange>Adaugă schimbarea de scenă</AddShotChange>
+    <RemoveShotChange>Elimină schimbarea de scenă</RemoveShotChange>
     <GuessTimeCodes>Estimează coduri de timp...</GuessTimeCodes>
     <SeekSilence>Căutare tacită...</SeekSilence>
     <InsertSubtitleHere>Inserare subtitrare aici...</InsertSubtitleHere>

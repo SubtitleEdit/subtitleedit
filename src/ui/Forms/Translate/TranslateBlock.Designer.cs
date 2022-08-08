@@ -1,7 +1,7 @@
 ﻿
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
-    partial class TranslateBlock
+    sealed partial class TranslateBlock
     {
         /// <summary>
         /// Required designer variable.
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCancel.Location = new System.Drawing.Point(452, 165);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 2;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.buttonCopySourceTextToClipboard.Location = new System.Drawing.Point(211, 165);
             this.buttonCopySourceTextToClipboard.Name = "buttonCopySourceTextToClipboard";
             this.buttonCopySourceTextToClipboard.Size = new System.Drawing.Size(235, 23);
-            this.buttonCopySourceTextToClipboard.TabIndex = 1;
+            this.buttonCopySourceTextToClipboard.TabIndex = 3;
             this.buttonCopySourceTextToClipboard.Text = "Copy source text clipboard again";
             this.buttonCopySourceTextToClipboard.UseVisualStyleBackColor = true;
             this.buttonCopySourceTextToClipboard.Click += new System.EventHandler(this.buttonCopySourceTextToClipboard_Click);

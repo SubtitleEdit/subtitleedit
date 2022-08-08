@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
         private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
         private readonly HashSet<string> _userWordList = new HashSet<string>();
+        private readonly HashSet<string> _seWordList = new HashSet<string>();
         private readonly HashSet<string> _userPhraseList = new HashSet<string>();
         private readonly string _dictionaryFolder;
         private HashSet<string> _skipAllList = new HashSet<string>();
@@ -93,6 +94,29 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                     }
                 }
             }
+
+            if (File.Exists(dictionaryFolder + languageName + "_se.xml"))
+            {
+                var userWordDictionary = new XmlDocument();
+                userWordDictionary.Load(dictionaryFolder + languageName + "_se.xml");
+                var xmlNodeList = userWordDictionary.DocumentElement?.SelectNodes("word");
+                if (xmlNodeList != null)
+                {
+                    foreach (XmlNode node in xmlNodeList)
+                    {
+                        var word = node.InnerText.Trim().ToLowerInvariant();
+                        if (word.Contains(' '))
+                        {
+                            _userPhraseList.Add(word);
+                        }
+                        else
+                        {
+                            _userWordList.Add(word);
+                        }
+                    }
+                }
+            }
+
             // Add names/userdic with "." or " " or "-"
             foreach (var word in namesMultiWordList)
             {

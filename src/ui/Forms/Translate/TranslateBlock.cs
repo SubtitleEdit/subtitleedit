@@ -2,13 +2,15 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Forms.Translate
 {
-    public partial class TranslateBlock : Form
+    public sealed partial class TranslateBlock : Form
     {
-        private CopyPasteBlock _sourceBlock;
+        private readonly CopyPasteBlock _sourceBlock;
         public string TargetText { get; set; }
 
         public TranslateBlock(CopyPasteBlock source, string title, bool autoCopy)

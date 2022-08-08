@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Options
 {
-    partial class SettingsLineWidth
+    sealed partial class SettingsLineWidth
     {
         /// <summary>
         /// Required designer variable.

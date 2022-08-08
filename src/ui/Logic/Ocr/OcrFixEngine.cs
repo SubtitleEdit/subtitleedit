@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -144,6 +145,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             AutoGuessesUsed = new List<LogItem>();
             UnknownWordsFound = new List<LogItem>();
+        }
+
+        public string GetOcrFixReplaceListError()
+        {
+            if (_ocrFixReplaceList == null)
+            {
+                return null;
+            }
+
+            var errorMessage = _ocrFixReplaceList.ErrorMessage;
+            _ocrFixReplaceList.ErrorMessage = null;
+            return errorMessage;
         }
 
         private void LoadSpellingDictionaries(string threeLetterIsoLanguageName, string hunspellName)
@@ -451,6 +464,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             text = text.Trim();
+
+            var textNoAssa = Utilities.RemoveSsaTags(text, true);
+            if (textNoAssa.Length == 0)
+            {
+                return text;
+            }
+
+
 
             // Try to prevent resizing when fixing Ocr-hardcoded.
             var sb = new StringBuilder(text.Length + 2);

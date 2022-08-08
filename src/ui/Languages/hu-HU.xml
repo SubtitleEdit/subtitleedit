@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -94,6 +94,7 @@
     <Collapse>Összecsukás</Collapse>
     <ShortcutX>Billentyűparancs: {0}</ShortcutX>
     <ExampleX>Példa: {0}</ExampleX>
+    <Reset>Visszaállítás</Reset>
   </General>
   <About>
     <Title>Subtitle Edit névjegy</Title>
@@ -102,7 +103,7 @@ A program szabadon terjeszthető, módosítható és használható.
 
 A C# forráskód elérhető a https://github.com/SubtitleEdit/subtitleedit címen.
 
-A legfrissebb verziókért, keresse fel a www.nikse.dk oldalt.
+A legfrissebb verziókért, keresse fel a https://www.nikse.dk oldalt.
 
 Javaslatait is szívesen fogadjuk.
 
@@ -170,6 +171,17 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <FixesAvailable>Elérhető javítások: {0}</FixesAvailable>
     <UnableToFix>Sikertelen javítás: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Audió/videó szöveggé alakítása</Title>
+    <Info>Szöveg generálása hangból Vosk/Kaldi beszédfelismerés segítségével 2}</Info>
+    <VoskWebsite>Vosk weboldal</VoskWebsite>
+    <Models>Modellek</Models>
+    <ChooseModel>Válasszon modellt</ChooseModel>
+    <OpenModelsFolder>Modell mappa megnyitása</OpenModelsFolder>
+    <LoadingVoskModel>Vosk beszédfelismerő modell betöltése...</LoadingVoskModel>
+    <Transcribing>Hang átírása szöveggé...</Transcribing>
+    <UsePostProcessing>Utófeldolgozás használata (sorok összevonása, betűjelek és írásjelek javítása, stb.)</UsePostProcessing>
+  </AudioToText>
   <AssaAttachments>
     <Title>Speciális alállomás alfa mellékletek</Title>
     <AttachFiles>Fájlok csatolása...</AttachFiles>
@@ -216,7 +228,24 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <ChangeResolutionFontSize>Felbontás módosítása a betűmérethez</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Felbontás módosítása a pozícióhoz</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Felbontás módosítása a rajzhoz</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>A forrás és a célfelbontás ugyanaz - nincs mit tenni.</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <AssaSetBackgroundBox>
+    <Title>Háttérdoboz létrehozása</Title>
+    <Padding>Kitöltés</Padding>
+    <FillWidth>Kitöltési szélesség</FillWidth>
+    <Drawing>Rajzolás</Drawing>
+    <BoxColor>Doboz színe</BoxColor>
+    <Radius>Sugár</Radius>
+    <Step>Lépés</Step>
+    <Spikes>Tüskék</Spikes>
+    <Bubbles>Buborékok</Bubbles>
+    <Circle>Kör</Circle>
+    <MarginX>X margó</MarginX>
+    <MarginY>Y margó</MarginY>
+    <OnlyDrawing>Csak rajz</OnlyDrawing>
+    <DrawingFile>Rajzfájl</DrawingFile>
+  </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Pozíció beállítása</SetPosition>
     <VideoResolutionX>Videófelbontás: {0}</VideoResolutionX>
@@ -229,14 +258,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <RotateXAxis>{0} tengely elforgatás</RotateXAxis>
     <DistortX>{0} torzítás </DistortX>
   </AssaSetPosition>
-  <AudioToText>
-    <Title>Hang szövegbe</Title>
-    <ExtractingAudioUsingX>Hang kiemelése a következővel {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Szöveg kiemelése a hangból a következővel {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Szöveg kiemelése a(z) {0}-n keresztül, folyamat: {1}%</ProgessViaXy>
-    <ShowLess>Kevesebb  ▲</ShowLess>
-    <ShowMore>Több  ▼</ShowMore>
-  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>A kiválasztott sorok automatikus kiegyenlítése</TitleAutoBreak>
     <TitleUnbreak>Sortörések eltávolítása a kiválasztott sorokból</TitleUnbreak>
@@ -440,7 +461,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <TimeCodeRate>Időkód arány</TimeCodeRate>
     <StartTime>Kezdési idő</StartTime>
     <Font>Betűtípus</Font>
-    <FontId>ID</FontId>
+    <FontId>Azonosító</FontId>
     <FontUri>URI</FontUri>
     <FontColor>Szín</FontColor>
     <FontEffect>Effekt</FontEffect>
@@ -797,12 +818,13 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <CheckeredImage>Kockás kép</CheckeredImage>
     <SolidColor>Egyszínű</SolidColor>
     <DurationInMinutes>Időtartam percben</DurationInMinutes>
+    <Background>Háttér</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
-    <Title>Videó létrehozása égetett felirattal</Title>
+    <Title>Videó létrehozása ráégetett felirattal</Title>
     <InfoAssaOff>Megjegyzés: Az Advanced Substation Alpha feliratstílus támogatott.</InfoAssaOff>
     <InfoAssaOn>Megjegyzés: Az Advanced Substation Alpha feliratstílus lesz használva :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubs>"{0}" létrehozva égetett felirattal.</XGeneratedWithBurnedInSubs>
+    <XGeneratedWithBurnedInSubsInX>"{0}" létrehozva ráégetett felirattal a következőben: {1}</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Hátralévő idő: {0} perc</TimeRemainingMinutes>
     <TimeRemainingSeconds>Hátralévő idő: {0} másodperc</TimeRemainingSeconds>
     <TimeRemainingMinutesAndSeconds>Hátralévő idő: {0} perc és {1} másodperc</TimeRemainingMinutesAndSeconds>
@@ -813,6 +835,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Encoding>Kódolás</Encoding>
     <BitRate>Bitarány</BitRate>
     <SampleRate>Mintavételi arány</SampleRate>
+    <Audio>Audió</Audio>
     <Stereo>Sztereó</Stereo>
     <Preset>Séma</Preset>
     <Crf>CRF</Crf>
@@ -889,7 +912,7 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
     <Remove>Eltávolítás</Remove>
     <RemoveAll>Összes eltávolítása</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Jelenetváltozások létrehozása/importálása</Title>
     <OpenTextFile>Szövegfájl megnyitása...</OpenTextFile>
     <Generate>Jelenetváltozások létrehozása</Generate>
@@ -899,11 +922,11 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
     <Frames>Képkockák</Frames>
     <Seconds>Másodperc</Seconds>
     <Milliseconds>Ezredmásodperc</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Jelenetváltások létrehozása az FFmpeg segítségével</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Jelenetváltások létrehozása az FFmpeg segítségével</GetShotChangesWithFfmpeg>
     <Sensitivity>Érzékenység</Sensitivity>
     <SensitivityDescription>Az alacsonyabb érték több jelenetváltozást eredményez</SensitivityDescription>
-    <NoSceneChangesFound>Nem található jelenetváltozás.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nem található jelenetváltozás.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Egyszerű szöveg importálása</Title>
     <OneSubtitleIsOneFile>Több fájl - egy fájl egy felirat</OneSubtitleIsOneFile>
@@ -1096,8 +1119,8 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
       <File>
         <Title>&amp;Fájl</Title>
         <New>Új</New>
-        <Open>Megnyitás</Open>
-        <OpenKeepVideo>Megnyitás (videó megtartása)</OpenKeepVideo>
+        <Open>Megnyitás...</Open>
+        <OpenKeepVideo>Megnyitás (videó megtartása)...</OpenKeepVideo>
         <Reopen>Újranyitás</Reopen>
         <Save>Mentés</Save>
         <SaveAs>Mentés másként...</SaveAs>
@@ -1182,11 +1205,12 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
         <SplitLongLines>Hosszú sorok felosztása/tördelése...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>A feliratok közötti legkisebb térköz alkalmazása...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Rendezés</SortBy>
-        <NetflixQualityCheck>Netflix minőségellenőrzés...</NetflixQualityCheck>
         <Number>Szám</Number>
         <StartTime>Kezdési idő</StartTime>
         <EndTime>Befejezési idő</EndTime>
         <Duration>Időtartam</Duration>
+        <ListErrors>Hibák listázása...</ListErrors>
+        <NetflixQualityCheck>Netflix minőségellenőrzés...</NetflixQualityCheck>
         <TextAlphabetically>Szöveg - betűrendben</TextAlphabetically>
         <TextSingleLineMaximumLength>Szöveg - egysoros max. hossz</TextSingleLineMaximumLength>
         <TextTotalLength>Szöveg - teljes hossz</TextTotalLength>
@@ -1217,9 +1241,10 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
         <GenerateTextFromVideo>Szöveg létrehozása videóból...</GenerateTextFromVideo>
         <GenerateBlankVideo>Üres videó létrehozása...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Videó létrehozása égetett felirattal...</GenerateVideoWithBurnedInSub>
+        <VideoAudioToText>Videó/hang szöveggé alakítása...</VideoAudioToText>
         <ImportChaptersFromVideo>Fejezetek importálása videóból</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Jelenetváltozások létrehozása/importálása...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Jelenetváltozások eltávolítása/exportálása...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Jelenetváltozások létrehozása/importálása...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Jelenetváltozások eltávolítása/exportálása...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Hullámformák csoportos létrehozása...</WaveformBatchGenerate>
         <ShowHideVideo>Videó megjelenítése/elrejtése</ShowHideVideo>
         <ShowHideWaveform>Hullámforma megjelenítése/elrejtése</ShowHideWaveform>
@@ -1359,6 +1384,7 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
         <SetPosition>Pozíció beállítása...</SetPosition>
         <GenerateProgressBar>Folyamatjelző sáv létrehozása...</GenerateProgressBar>
         <AssaResolutionChanger>ASSA parancsfájl felbontásának módosítása...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>Háttérdoboz létrehozása...</AssaGenerateBackgroundBox>
         <FixCommonErrorsInSelectedLines>Gyakori hibák javítása a kijelölt sorokban...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Betűállás módosítás a kijelölt soroknál...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Kijelölt sorok mentése másként...</SaveSelectedLines>
@@ -1505,8 +1531,7 @@ Elindítja a dokumentum tetejéről és folytatja a keresést és cserét?</Repl
     <TextingForHearingImpairedRemovedOneLine>A hallássérülteknek szánt szöveg eltávolítva: Egy sor</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>A hallássérülteknek szánt szöveg eltávolítva: {0} sor</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Felirat felosztva</SubtitleSplitted>
-    <SubtitleAppendPrompt>Ez hozzá fog fűzni egy létező feliratot a jelenleg betöltött felirathoz, amelyet már szinkronizálni kellett
-volna a videó állománnyal.
+    <SubtitleAppendPrompt>Ez egy meglévő feliratot csatol az aktuálisan betöltött felirathoz, amelynek már szinkronban kell lennie a videófájllal.
 
 Folytatja?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Felirat hozzáfűzése</SubtitleAppendPromptTitle>
@@ -1674,7 +1699,7 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>A feliratok egyesítése előtti állapotra</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Feliratok egyesítve</SubtitlesJoined>
     <StatusLog>Állapotnapló</StatusLog>
-    <XSceneChangesImported>{0} jelenet változás importálása</XSceneChangesImported>
+    <XShotChangesImported>{0} jelenet változás importálása</XShotChangesImported>
     <PluginXExecuted>'{0}' beépülő végrehajtva.</PluginXExecuted>
     <NotAValidXSubFile>Érvénytelen XSub fájl!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>A sorok azonos szöveggel való összevonása előtti állapotra</BeforeMergeLinesWithSameText>
@@ -1710,6 +1735,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <Errors>Hibák</Errors>
     <ShowVideoControls>Videóvezérlők megjelenítése</ShowVideoControls>
     <HideVideoControls>Videóvezérlők elrejtése</HideVideoControls>
+    <GeneratingWaveformInBackground>Hullámforma létrehozása a háttérben...</GeneratingWaveformInBackground>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Válassza ki a feliratot a Matroska fájlból</Title>
@@ -1723,6 +1749,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <ConvertTo>Konvertálás erre:</ConvertTo>
     <CopyToClipboard>Másolás a vágólapra</CopyToClipboard>
     <CloseOnInsert>Bezárás beszúráskor</CloseOnInsert>
+    <Insert>Beszúrás</Insert>
     <Length>Hossz</Length>
     <Mass>Tömeg</Mass>
     <Volume>Hangerő</Volume>
@@ -1868,6 +1895,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <DurationGreaterThan>Időtartama nagyobb, mint</DurationGreaterThan>
     <MoreThanTwoLines>Több, mint két sor</MoreThanTwoLines>
     <Bookmarked>Könyvjelzővel megjelölve</Bookmarked>
+    <BlankLines>Üres sorok</BlankLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Csoportos csere</Title>
@@ -1900,6 +1928,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <RenameGroup>Csoport átnevezése...</RenameGroup>
     <NewGroup>Új csoport...</NewGroup>
     <NothingToImport>Nincs importálható</NothingToImport>
+    <RuleInfo>Szabályinformáció</RuleInfo>
   </MultipleReplace>
   <NetworkChat>
     <Title>Csevegés</Title>
@@ -2040,6 +2069,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WordLists>Szólisták</WordLists>
     <SsaStyle>ASS/SSA stílus</SsaStyle>
     <Network>Hálózat</Network>
+    <FileTypeAssociations>Fájltípus társítások</FileTypeAssociations>
     <Rules>Szabályok</Rules>
     <ShowToolBarButtons>Eszköztár gombok megjelenítése</ShowToolBarButtons>
     <New>Új</New>
@@ -2049,6 +2079,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Find>Keresés</Find>
     <Replace>Csere</Replace>
     <VisualSync>Vizuális szinkron</VisualSync>
+    <BurnIn>Ráégetés</BurnIn>
     <SpellCheck>Helyesírás</SpellCheck>
     <NetflixQualityCheck>Netflix minőségellenőrzés</NetflixQualityCheck>
     <SettingsName>Beállítások</SettingsName>
@@ -2111,6 +2142,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <MainListViewNothing>Nincs művelet</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ugrás a videópozícióra és szüneteltetés</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ugrás a videópozícióra és lejátszás</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>Ugrás a videó pozíciójára, jelenlegi lejátszása és szünet</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
     <MainListViewEditText>Ugrás a szövegszerkesztő ablakba</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Ugrás a videópozícióra - 1 mp és szüneteltetés</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ugrás a videópozícióra - 0.5 mp és szüneteltetés</MainListViewVideoGoToPositionMinusHalfSecAndPause>
@@ -2166,7 +2198,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformFocusMouseEnter>Fókusz beállítása az egér belépésekor</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Listanézeti fókusz beállítása az egér listanézetbe való belépése esetén</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Egyetlen kattintás a feliratok kiválasztásához</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Igazítás a jelenetváltozásokhoz (tartsa lenyomva a Shift billentyűt a felülíráshoz)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Igazítás a jelenetváltozásokhoz (tartsa lenyomva a Shift billentyűt a felülíráshoz)</WaveformSnapToShotChanges>
+    <WaveformAutoGen>Hullámforma automatikus generálása a videó megnyitásakor</WaveformAutoGen>
     <WaveformBorderHitMs1>A határjelölő</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>ezredmásodpercen belül legyen</WaveformBorderHitMs2>
     <WaveformColor>Szín</WaveformColor>
@@ -2183,7 +2216,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SpectrogramOneColorGradient>Egy színátmenetes</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasszikus</SpectrogramClassic>
     <WaveformUseFFmpeg>FFmpeg használata a wav kiemelésénél</WaveformUseFFmpeg>
-    <DownloadFFmpeg>FFmpeg letöltése</DownloadFFmpeg>
+    <DownloadX>Letöltés {0}</DownloadX>
     <WaveformFFmpegPath>FFmpeg helye</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>FFmpeg keresése</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC hordozható keresése</WaveformBrowseToVLC>
@@ -2237,8 +2270,17 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ContinuationStyleLeadingTrailingDots>Pontok</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>Ellipszis</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleNoneTrailingEllipsis>Nincs, ellipszis a szünetekre</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>Ellipszis (csak záró)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Kötőjel</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Kötőjel, de pontok a szünetekhez</ContinuationStyleLeadingTrailingDashDots>
+    <CpsLineLengthStyle>Cps/sorhosszúság</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>Összes karakter megszámolása</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Összes számolása a szóközt kivéve, csak cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>Összes számolása a szóközt kivéve</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, szóköz 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Az arab diakritikus jelek figyelmen kívül hagyása</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Az arab diakritikus jelek/közök figyelmen kívül hagyása</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <MusicSymbol>Zene szimbólum</MusicSymbol>
     <MusicSymbolsReplace>Cserélendő zenei szimbólumok (vesszővel elválasztva)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Közös OCR hibák javítása - rögzített hivatkozású szabály is használható</FixCommonOcrErrorsUseHardcodedRules>
@@ -2299,14 +2341,14 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Kezdési időpont beállítása, a teljes felirat eltolása</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>A befejezés és a többi eltolás beállítása</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>A kiválasztott sorok igazítása a következő jelenetváltáshoz</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>A kiválasztott sorok igazítása a következő jelenetváltáshoz min. távolsággal</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>A kiválasztott sorok igazítása az előző jelenetváltáshoz</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>A kiválasztott sorok igazítása az előző jelenetváltáshoz min. távolsággal</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Kijelölt sorok kiterjesztése a következő jelenetváltásra (vagy a következő feliratra)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy a következő felirat) használatával</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Kijelölt sorok kiterjesztése az előző jelenetváltásra (vagy az előző feliratra)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy az előző felirat) használatával</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>A kiválasztott sorok igazítása a következő jelenetváltáshoz</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>A kiválasztott sorok igazítása a következő jelenetváltáshoz min. távolsággal</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>A kiválasztott sorok igazítása az előző jelenetváltáshoz</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>A kiválasztott sorok igazítása az előző jelenetváltáshoz min. távolsággal</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Kijelölt sorok kiterjesztése a következő jelenetváltásra (vagy a következő feliratra)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy a következő felirat) használatával</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Kijelölt sorok kiterjesztése az előző jelenetváltásra (vagy az előző feliratra)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>A kijelölt vonalak kiterjesztése az előző jelenetmódosításra min. távolság (vagy az előző felirat) használatával</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Kijelölt sorok kiterjesztése a következő feliratra</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Kijelölt sorok kiterjesztése az előző feliratra</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Az aktuális sor kibővítése a következő feliratra vagy max időtartamra</AdjustExtendCurrentSubtitle>
@@ -2314,8 +2356,11 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustExtendNextLineStartToCurrentEnd>A következő sor kezdetének kiterjesztése a jelenlegi végére</AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Az aktuális felirat időtartamának újraszámolása</RecalculateDurationOfCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>Az aktuális felirat időtartamának újbóli kiszámítása (az optimális olvasási sebesség alapján)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>Az aktuális felirat időtartamának újraszámítása (a minimális olvasási sebesség alapján)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>Új felirat beszúrása a gomb lenyomásakor, befejezési idő beállítása a gomb elengedésekor</MainCreateStartDownEndUp>
     <MergeDialog>Párbeszéd egyesítése (gondolatjelek beszúrása)</MergeDialog>
+    <MergeDialogWithNext>Párbeszédpanel összevonása a következővel (kötőjelek beszúrása)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>Párbeszédpanel összevonása az előzővel (kötőjelek beszúrása)</MergeDialogWithPrevious>
     <GoToNext>Ugrás a következő sorra</GoToNext>
     <GoToNextPlayTranslate>Ugrás a következő sorra (és lejátszás 'Fordítási mód'-ban)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Lépjen a következő sorba, és helyezze a kurzort a végére</GoToNextCursorAtEnd>
@@ -2345,6 +2390,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AlignmentN9>Igazítás felül jobbra - {\an9}</AlignmentN9>
     <ColorX>Szín {0} ({1})</ColorX>
     <CopyTextOnly>Szöveg másolása csak a vágólapra (kijelölt sorok)</CopyTextOnly>
+    <CopyPlainText>Sima szöveg másolása a vágólapra (kijelölt sorok)</CopyPlainText>
     <CopyTextOnlyFromOriginalToCurrent>Szöveg másolása az eredetiből a jelenlegibe</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>
     <FixRTLViaUnicodeChars>RtL javítása Unicode vezérlőkarakterekkel</FixRTLViaUnicodeChars>
@@ -2360,10 +2406,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformPlayNewSelection>Új kijelölés lejátszása</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Kijelölés végének lejátszása</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Az első kiválasztott felirat lejátszása</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Ugrás az előző jelenetváltásra</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Ugrás a következő jelenet váltásra</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Jelenet váltás kapcsoló</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Jelenetváltozások eltávolítása/exportálása</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Ugrás az előző jelenetváltásra</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Ugrás a következő jelenet váltásra</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Jelenet váltás kapcsoló</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Jelenetváltozások eltávolítása/exportálása</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Automatikus beállítás indítása a hangerő/jelenet váltásán keresztül</WaveformGuessStart>
     <GoBack1Frame>Egy képkocka vissza</GoBack1Frame>
     <GoForward1Frame>Egy képkocka előre</GoForward1Frame>
@@ -2430,6 +2476,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SplitSelectedLineBilingual>Kijelölt sorok kétnyelvű felosztása</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Fordító módba váltás</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Az eredeti és a fordítás váltása</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>Eredeti és fordítási szövegdobozok/listanézet oszlopainak váltása</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Az eredeti és a fordítás egyesítése</MergeOriginalAndTranslation>
     <MergeWithNext>Egyesítés a következővel</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Egyesítés az előzővel és a tördeletlennel</MergeWithPreviousAndUnbreak>
@@ -2447,6 +2494,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ListViewColumnTextDown>Oszlop, szöveg lefelé</ListViewColumnTextDown>
     <ListViewGoToNextError>Ugrás a következő hibára</ListViewGoToNextError>
     <ListViewListErrors>Hibák listázása</ListViewListErrors>
+    <ListViewListSortByX>Rendezés {0} szerint</ListViewListSortByX>
     <ShowStyleManager>Stíluskezelő megjelenítése</ShowStyleManager>
     <MainTextBoxMoveLastWordDown>Utolsó szó áthelyezése a következő feliratra</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Első szó lekérése a következő feliratból</MainTextBoxMoveFirstWordFromNextUp>
@@ -2502,6 +2550,8 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Szerkesztés</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Gyorsbillentyűk: Egyetlen betű/szám engedélyezése a szövegdobozban</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <UpdateFileTypeAssociations>Fájltípus társítások frissítése</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>Fájltípus társítások frissítve</FileTypeAssociationsUpdated>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Mpv könyvtár letöltése</DownloadMpv>
@@ -2509,7 +2559,6 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <DownloadMpvOk>Az mpv könyvtár letöltésre került, és készen áll a használatra.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownload>Letöltés {0}</XDownload>
     <XDownloadFailed>A(z) {0} letöltése sikertelen volt - Próbálja meg később.</XDownloadFailed>
     <XDownloadOk>A(z) {0}  letöltődött és készen áll a használatra.</XDownloadOk>
   </SettingsFfmpeg>
@@ -2528,7 +2577,7 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <TotalAdjustmentX>Teljes igazítás: {0}</TotalAdjustmentX>
     <AllLines>Minden sor</AllLines>
     <SelectedLinesOnly>Csak a kijelölt sorok</SelectedLinesOnly>
-    <SelectedLinesAndForward>Kijelölt sor(ok) és előre</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Kijelölt és további sorok</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Előzmények (visszavonási mód)</Title>
@@ -2573,6 +2622,7 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <SpellCheckAborted>A helyesírás-ellenőrzés félbeszakadt</SpellCheckAborted>
     <SpacesNotAllowed>A szóközök nem engedélyezettek egyetlen szóban!</SpacesNotAllowed>
     <UndoX>Visszavonás: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>Képalapú forrásfájl megnyitása...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Érvénytelen {0} karakter a(z) {1} oszlopban</GlyphCheckReport>
@@ -2665,6 +2715,7 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Karakter/mp - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakter/mp - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Karakter/mp - átlagos: {0:0.000}</CharactersPerSecondAverage>
+    <MinimalGap>Minimális köz: {0} ezredmp</MinimalGap>
     <Export>Exportálás...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2686,6 +2737,10 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <WrapStyle>Tördelési stílus</WrapStyle>
     <Collision>Ütközés</Collision>
     <ScaleBorderAndShadow>Szegély és árnyék méretezés</ScaleBorderAndShadow>
+    <WrapStyle0>0: Intelligens tördelés, a felső sor szélesebb</WrapStyle0>
+    <WrapStyle1>1: Sorvégi sortörés, csak \N sortörés</WrapStyle1>
+    <WrapStyle2>2: Nincs sortörés, \n és \N esetén is sortörés</WrapStyle2>
+    <WrapStyle3>3: Intelligens tördelés, az alsó sor szélesebb</WrapStyle3>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Advanced Sub Station Alpha feliratstílusok</Title>
@@ -2867,7 +2922,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <AllFixes>Összes javítás</AllFixes>
     <GuessesUsed>Használt becslések</GuessesUsed>
     <UnknownWords>Ismeretlen szavak</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} 'OCRFixReplaceList/WordSplitList' fájlon keresztül a következő sorban: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} az 'OCRFixReplaceList/WordSplitList'-en keresztül a {2} sorban</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR automatikus javítás / helyesírás-ellenőrzés</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR hibák javítása</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Egyező időkódú szöveg importálása...</ImportTextWithMatchingTimeCodes>
@@ -2902,6 +2957,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <AlsoTrainBold>Továbbá félkövér képzése</AlsoTrainBold>
     <StartTraining>Tréning megkezdése</StartTraining>
     <NowTraining>Most a(z) '{1}' betűtípus képzése. Összes képzett karakter: {0:#,###,##0}, {2:#,###,##0} ismert</NowTraining>
+    <ImagesWithTimeCodesInFileName>Képek időkódokkal a fájlnévben...</ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Manuális kép a szöveghez</Title>
@@ -2982,9 +3038,9 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Hullámforma és spektogram megjelenítése</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Hullámforma megjelenítése</ShowWaveformOnly>
     <ShowSpectrogramOnly>Spektogram megjelenítése</ShowSpectrogramOnly>
-    <AddSceneChange>Jelenet váltás hozzáadása</AddSceneChange>
-    <RemoveSceneChange>Jelenet váltás eltávolítása</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Jelenetváltozások eltávolítása a kijelölésből</RemoveSceneChangesFromSelection>
+    <AddShotChange>Jelenet váltás hozzáadása</AddShotChange>
+    <RemoveShotChange>Jelenet váltás eltávolítása</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Jelenetváltozások eltávolítása a kijelölésből</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Időkódok becslése...</GuessTimeCodes>
     <SeekSilence>Csend keresése...</SeekSilence>
     <InsertSubtitleHere>Szúrja be a feliratot ide...</InsertSubtitleHere>

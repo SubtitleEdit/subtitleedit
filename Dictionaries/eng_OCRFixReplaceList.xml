@@ -780,10 +780,6 @@
 		<Word from="gotjumped" to="got jumped" />
 		<Word from="gotmyfirstinterview" to="got my first interview" />
 		<Word from="grafier" to="grafter" />
-		<Word from="Granddad" to="Grandad" />
-		<Word from="granddad" to="grandad" />
-		<Word from="granddad's" to="grandad's" />
-		<Word from="Granddad's" to="Grandad's" />
 		<Word from="grandjury" to="grand jury" />
 		<Word from="GreatBritain's" to="Great Britain's" />
 		<Word from="greatjob" to="great job" />
@@ -2793,6 +2789,17 @@
 		<Word from="ismy" to="is my" />
 		<Word from="bea" to="be a" />
 		<Word from="youa" to="you a" />
+		<Word from="I00se" to="loose" />
+		<Word from="0utside" to="outside" />
+		<Word from="Radi0" to="Radio" />
+		<Word from="s0" to="so" />
+		<Word from="0ff" to="off" />
+		<Word from="0rganize" to="organize" />
+		<Word from="int0" to="into" />
+		<Word from="0wn" to="own" />
+		<Word from="0rjoins" to="or joins" />
+		<Word from="0ther" to="other" />
+		<Word from="0kay" to="okay" />
 	</WholeWords>
 	<PartialWordsAlways>
 		<!-- Will be replaced always -->

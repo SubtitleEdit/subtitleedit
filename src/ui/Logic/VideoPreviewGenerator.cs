@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Forms;
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -148,9 +149,7 @@ namespace Nikse.SubtitleEdit.Logic
             };
 
             processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
-
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
-
             return processMakeVideo;
         }
 

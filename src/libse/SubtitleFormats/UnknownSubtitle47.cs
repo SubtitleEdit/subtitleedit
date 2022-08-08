@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 sb.AppendLine($"{EncodeTimeCode(p.StartTime)}\t{p.Text.Replace(Environment.NewLine, " ")}");
             }
@@ -38,9 +38,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
-                string s = line.Trim();
+                var s = line.Trim();
                 if (RegexTimeCodes.Match(s).Success)
                 {
                     try
@@ -48,9 +48,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var arr = s.Substring(0, 10).Split(':');
                         if (arr.Length == 4)
                         {
-                            var p = new Paragraph();
-                            p.StartTime = DecodeTimeCodeFramesFourParts(arr);
-                            p.Text = s.Remove(0, 10).Trim();
+                            var p = new Paragraph
+                            {
+                                StartTime = DecodeTimeCodeFramesFourParts(arr),
+                                Text = s.Remove(0, 10).Trim()
+                            };
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -65,24 +67,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            int index = 1;
-            foreach (Paragraph paragraph in subtitle.Paragraphs)
+            var index = 1;
+            foreach (var paragraph in subtitle.Paragraphs)
             {
-                Paragraph next = subtitle.GetParagraphOrDefault(index);
+                var next = subtitle.GetParagraphOrDefault(index);
                 if (next != null)
                 {
                     paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
+                else
+                {
+                    paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
+                }
+
+
                 if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
                 }
+
                 index++;
             }
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }

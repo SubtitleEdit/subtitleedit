@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxTemplate = new System.Windows.Forms.GroupBox();
+            this.textBoxFileExtension = new System.Windows.Forms.TextBox();
+            this.labelFileExt = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
             this.comboBoxNewLine = new System.Windows.Forms.ComboBox();
@@ -60,6 +62,8 @@
             this.textlengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textlengthnobrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textlengthbr1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textlengthbr2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelHeader = new System.Windows.Forms.Label();
             this.textBoxHeader = new System.Windows.Forms.TextBox();
             this.contextMenuStripHeader = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -70,7 +74,6 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
-            this.textlengthbr2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -82,6 +85,8 @@
             // 
             this.groupBoxTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxTemplate.Controls.Add(this.textBoxFileExtension);
+            this.groupBoxTemplate.Controls.Add(this.labelFileExt);
             this.groupBoxTemplate.Controls.Add(this.textBoxName);
             this.groupBoxTemplate.Controls.Add(this.labelName);
             this.groupBoxTemplate.Controls.Add(this.comboBoxNewLine);
@@ -96,10 +101,28 @@
             this.groupBoxTemplate.Controls.Add(this.textBoxHeader);
             this.groupBoxTemplate.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTemplate.Name = "groupBoxTemplate";
-            this.groupBoxTemplate.Size = new System.Drawing.Size(346, 393);
+            this.groupBoxTemplate.Size = new System.Drawing.Size(346, 451);
             this.groupBoxTemplate.TabIndex = 0;
             this.groupBoxTemplate.TabStop = false;
             this.groupBoxTemplate.Text = "Current template";
+            // 
+            // textBoxFileExtension
+            // 
+            this.textBoxFileExtension.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFileExtension.Location = new System.Drawing.Point(87, 418);
+            this.textBoxFileExtension.Name = "textBoxFileExtension";
+            this.textBoxFileExtension.Size = new System.Drawing.Size(75, 20);
+            this.textBoxFileExtension.TabIndex = 13;
+            // 
+            // labelFileExt
+            // 
+            this.labelFileExt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelFileExt.AutoSize = true;
+            this.labelFileExt.Location = new System.Drawing.Point(7, 421);
+            this.labelFileExt.Name = "labelFileExt";
+            this.labelFileExt.Size = new System.Drawing.Size(71, 13);
+            this.labelFileExt.TabIndex = 12;
+            this.labelFileExt.Text = "File extension";
             // 
             // textBoxName
             // 
@@ -125,7 +148,7 @@
             "[Do not modify]",
             "||",
             "[Only newline (hex char 0xd)]"});
-            this.comboBoxNewLine.Location = new System.Drawing.Point(241, 266);
+            this.comboBoxNewLine.Location = new System.Drawing.Point(241, 292);
             this.comboBoxNewLine.Name = "comboBoxNewLine";
             this.comboBoxNewLine.Size = new System.Drawing.Size(99, 21);
             this.comboBoxNewLine.TabIndex = 9;
@@ -144,7 +167,7 @@
             "ff",
             "zzz",
             "ss"});
-            this.comboBoxTimeCode.Location = new System.Drawing.Point(69, 266);
+            this.comboBoxTimeCode.Location = new System.Drawing.Point(69, 292);
             this.comboBoxTimeCode.Name = "comboBoxTimeCode";
             this.comboBoxTimeCode.Size = new System.Drawing.Size(92, 21);
             this.comboBoxTimeCode.TabIndex = 7;
@@ -155,7 +178,7 @@
             // 
             this.labelNewLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelNewLine.AutoSize = true;
-            this.labelNewLine.Location = new System.Drawing.Point(185, 267);
+            this.labelNewLine.Location = new System.Drawing.Point(185, 293);
             this.labelNewLine.Name = "labelNewLine";
             this.labelNewLine.Size = new System.Drawing.Size(48, 13);
             this.labelNewLine.TabIndex = 8;
@@ -165,7 +188,7 @@
             // 
             this.labelTimeCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTimeCode.AutoSize = true;
-            this.labelTimeCode.Location = new System.Drawing.Point(6, 267);
+            this.labelTimeCode.Location = new System.Drawing.Point(6, 293);
             this.labelTimeCode.Name = "labelTimeCode";
             this.labelTimeCode.Size = new System.Drawing.Size(57, 13);
             this.labelTimeCode.TabIndex = 6;
@@ -175,7 +198,7 @@
             // 
             this.textBoxFooter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxFooter.ContextMenuStrip = this.contextMenuStripFooter;
-            this.textBoxFooter.Location = new System.Drawing.Point(6, 313);
+            this.textBoxFooter.Location = new System.Drawing.Point(6, 339);
             this.textBoxFooter.Multiline = true;
             this.textBoxFooter.Name = "textBoxFooter";
             this.textBoxFooter.Size = new System.Drawing.Size(334, 70);
@@ -216,7 +239,7 @@
             // 
             this.labelFooter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelFooter.AutoSize = true;
-            this.labelFooter.Location = new System.Drawing.Point(6, 297);
+            this.labelFooter.Location = new System.Drawing.Point(6, 323);
             this.labelFooter.Name = "labelFooter";
             this.labelFooter.Size = new System.Drawing.Size(37, 13);
             this.labelFooter.TabIndex = 10;
@@ -239,7 +262,7 @@
             this.textBoxParagraph.Location = new System.Drawing.Point(6, 175);
             this.textBoxParagraph.Multiline = true;
             this.textBoxParagraph.Name = "textBoxParagraph";
-            this.textBoxParagraph.Size = new System.Drawing.Size(334, 85);
+            this.textBoxParagraph.Size = new System.Drawing.Size(334, 101);
             this.textBoxParagraph.TabIndex = 5;
             this.textBoxParagraph.Text = "{number}\r\n{start} --> {end}\r\n{text}\r\n\r\n";
             this.textBoxParagraph.TextChanged += new System.EventHandler(this.TextBoxParagraphTextChanged);
@@ -251,6 +274,7 @@
             this.insertendToolStripMenuItem,
             this.insertnumberToolStripMenuItem,
             this.insertdurationToolStripMenuItem,
+            this.gapToolStripMenuItem,
             this.textToolStripMenuItem,
             this.translationToolStripMenuItem,
             this.toolStripMenuItemActor,
@@ -264,7 +288,7 @@
             this.textlengthbr1ToolStripMenuItem,
             this.textlengthbr2ToolStripMenuItem});
             this.contextMenuStripParagraph.Name = "contextMenuStrip1";
-            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 378);
+            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 400);
             this.contextMenuStripParagraph.Text = "{text-length-br1}";
             // 
             // insertHHMMSSMSToolStripMenuItem
@@ -306,7 +330,7 @@
             // 
             this.translationToolStripMenuItem.Name = "translationToolStripMenuItem";
             this.translationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.translationToolStripMenuItem.Text = "{translation}";
+            this.translationToolStripMenuItem.Text = "{original-text}";
             this.translationToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // toolStripMenuItemActor
@@ -372,6 +396,20 @@
             this.textlengthbr1ToolStripMenuItem.Text = "{text-length-br1}";
             this.textlengthbr1ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
+            // textlengthbr2ToolStripMenuItem
+            // 
+            this.textlengthbr2ToolStripMenuItem.Name = "textlengthbr2ToolStripMenuItem";
+            this.textlengthbr2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.textlengthbr2ToolStripMenuItem.Text = "{text-length-br2}";
+            this.textlengthbr2ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // gapToolStripMenuItem
+            // 
+            this.gapToolStripMenuItem.Name = "gapToolStripMenuItem";
+            this.gapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gapToolStripMenuItem.Text = "{gap}";
+            this.gapToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
             // labelHeader
             // 
             this.labelHeader.AutoSize = true;
@@ -425,7 +463,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(628, 412);
+            this.buttonCancel.Location = new System.Drawing.Point(628, 470);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
@@ -437,7 +475,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(547, 412);
+            this.buttonOK.Location = new System.Drawing.Point(547, 470);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
@@ -453,7 +491,7 @@
             this.groupBoxPreview.Controls.Add(this.textBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(364, 12);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(346, 393);
+            this.groupBoxPreview.Size = new System.Drawing.Size(346, 451);
             this.groupBoxPreview.TabIndex = 1;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -465,21 +503,14 @@
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
             this.textBoxPreview.ReadOnly = true;
-            this.textBoxPreview.Size = new System.Drawing.Size(340, 374);
+            this.textBoxPreview.Size = new System.Drawing.Size(340, 432);
             this.textBoxPreview.TabIndex = 0;
-            // 
-            // textlengthbr2ToolStripMenuItem
-            // 
-            this.textlengthbr2ToolStripMenuItem.Name = "textlengthbr2ToolStripMenuItem";
-            this.textlengthbr2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.textlengthbr2ToolStripMenuItem.Text = "{text-length-br2}";
-            this.textlengthbr2ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // ExportCustomTextFormat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 445);
+            this.ClientSize = new System.Drawing.Size(715, 503);
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -549,5 +580,8 @@
         private System.Windows.Forms.ToolStripMenuItem textlengthnobrToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textlengthbr1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem textlengthbr2ToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBoxFileExtension;
+        private System.Windows.Forms.Label labelFileExt;
+        private System.Windows.Forms.ToolStripMenuItem gapToolStripMenuItem;
     }
 }

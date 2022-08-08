@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -657,7 +657,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Input>Вхід</Input>
     <InputDescription>Оберіть вхідні файли (вкажіть місце розташування або перетягніть)</InputDescription>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Імпорт змін сцен</Title>
     <OpenTextFile>Відкрити текст. файл...</OpenTextFile>
     <ImportOptions>Налаштування імпортування</ImportOptions>
@@ -666,7 +666,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Frames>Кадри</Frames>
     <Seconds>Секунди</Seconds>
     <Milliseconds>Мілісекунди</Milliseconds>
-  </ImportSceneChanges>
+  </ImportShotChanges>
   <ImportText>
     <Title>Імпортування простого тексту</Title>
     <OneSubtitleIsOneFile>Декілька файлів: один файл - один субтитр</OneSubtitleIsOneFile>
@@ -963,8 +963,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenDvd>Відкрити DVD...</OpenDvd>
         <ChooseAudioTrack>Оберіть аудіодоріжку</ChooseAudioTrack>
         <CloseVideo>Закрити відеофайл</CloseVideo>
-        <ImportSceneChanges>Імпортувати зміни сцен...</ImportSceneChanges>
-        <RemoveSceneChanges>Видалити зміни сцен</RemoveSceneChanges>
+        <ImportShotChanges>Імпортувати зміни сцен...</ImportShotChanges>
+        <RemoveShotChanges>Видалити зміни сцен</RemoveShotChanges>
         <WaveformBatchGenerate>Пакетно згенерувати дані для аудіохвиль...</WaveformBatchGenerate>
         <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
         <ShowHideWaveform>Показати/сховати аудіохвилі</ShowHideWaveform>
@@ -1388,7 +1388,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplaySubtitleJoin>Перед об'єднанням субтитрів</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Субтитри об'єднано</SubtitlesJoined>
     <StatusLog>Журнал станів</StatusLog>
-    <XSceneChangesImported>{0} змін сцен імпортовано</XSceneChangesImported>
+    <XShotChangesImported>{0} змін сцен імпортовано</XShotChangesImported>
     <PluginXExecuted>Плаґін '{0}' виконано.</PluginXExecuted>
     <NotAValidXSubFile>Це не коректний файл XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Перед об'єднанням рядків з однаковим текстом</BeforeMergeLinesWithSameText>

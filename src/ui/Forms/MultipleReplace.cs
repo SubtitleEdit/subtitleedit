@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview()
         {
             Cursor = Cursors.WaitCursor;
-            FixedSubtitle = new Subtitle(_subtitle);
+            FixedSubtitle = new Subtitle(_subtitle, false);
             int fixedLines = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();

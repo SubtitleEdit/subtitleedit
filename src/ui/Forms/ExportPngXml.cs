@@ -721,14 +721,21 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             threadEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                        if (!string.IsNullOrEmpty(paramEqual.Error))
+                        {
+                            errors.Add(paramEqual.Error);
+                        }
+
                         if (threadUnEqual.ThreadState == ThreadState.Running)
                         {
                             threadUnEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                        if (!string.IsNullOrEmpty(paramUnEqual.Error))
+                        {
+                            errors.Add(paramUnEqual.Error);
+                        }
                     }
                     else
                     {
@@ -736,14 +743,21 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             threadUnEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                        if (!string.IsNullOrEmpty(paramUnEqual.Error))
+                        {
+                            errors.Add(paramUnEqual.Error);
+                        }
+
                         if (threadEqual.ThreadState == ThreadState.Running)
                         {
                             threadEqual.Join();
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                        if (!string.IsNullOrEmpty(paramEqual.Error))
+                        {
+                            errors.Add(paramEqual.Error);
+                        }
                     }
                 }
 
@@ -4961,11 +4975,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     goToLine.Initialize(1, subtitleListView1.Items.Count);
                     if (goToLine.ShowDialog(this) == DialogResult.OK)
                     {
-                        subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
-                        subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
-                        subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                        var idx = goToLine.LineNumber - 1;
+                        subtitleListView1.Items[idx].Selected = true;
+                        subtitleListView1.Items[idx].EnsureVisible();
+                        subtitleListView1.Items[idx].Focused = true;
                     }
                 }
+            }
+            else if (e.KeyCode == Keys.P && e.Modifiers == Keys.Control)
+            {
+                linkLabelPreview_LinkClicked(null, null);
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -5742,10 +5762,32 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                     }
 
+                    var showPrev = false;
+                    var showNext = false;
+                    var idx = -1;
                     using (var form = new ExportPngXmlPreview(bmp))
                     {
                         Cursor = Cursors.Default;
-                        form.ShowDialog(this);
+                        if (subtitleListView1.SelectedItems.Count > 0)
+                        {
+                            idx = subtitleListView1.SelectedItems[0].Index;
+                            form.AllowNext = idx < _subtitle.Paragraphs.Count - 1;
+                            form.AllowPrevious = idx > 0;
+                            form.ShowDialog(this);
+                            showPrev = form.PreviousPressed;
+                            showNext = form.NextPressed;
+                        }
+                    }
+
+                    if (showPrev || showNext)
+                    {
+                        idx = showPrev ? Math.Max(0, idx - 1) : Math.Min(subtitleListView1.Items.Count - 1, idx + 1);
+                        subtitleListView1.SelectedIndices.Clear();
+                        subtitleListView1.Items[idx].Selected = true;
+                        subtitleListView1.Items[idx].Focused = true;
+                        subtitleListView1.Items[idx].EnsureVisible();
+                        Application.DoEvents();
+                        linkLabelPreview_LinkClicked(null, null);
                     }
                 }
             }

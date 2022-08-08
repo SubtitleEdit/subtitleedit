@@ -238,9 +238,50 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             var pal = new List<Color>();
             var lookup = new HashSet<int>();
-            for (int y = 0; y < bitmap.Height; y++)
+
+            // first we try with exact colors
+            for (var y = 0; y < bitmap.Height; y++)
             {
-                for (int x = 0; x < bitmap.Width; x++)
+                for (var x = 0; x < bitmap.Width; x++)
+                {
+                    var c = bitmap.GetPixel(x, y);
+                    if (c.A > 0)
+                    {
+                        if (lookup.Contains(c.ToArgb()))
+                        {
+                            // exact color already exists
+                        }
+                        else
+                        {
+                            pal.Add(c);
+                            lookup.Add(c.ToArgb());
+                        }
+
+                        if (pal.Count >= 254)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (pal.Count >= 254)
+                {
+                    break;
+                }
+            }
+
+            if (pal.Count < 254)
+            {
+                pal.Add(Color.FromArgb(0, 0, 0, 0)); // last entry must be transparent
+                return pal;
+            }
+
+
+            // get close colors (image has probably been processed in SE)
+            pal = new List<Color>();
+            lookup = new HashSet<int>();
+            for (var y = 0; y < bitmap.Height; y++)
+            {
+                for (var x = 0; x < bitmap.Width; x++)
                 {
                     var c = bitmap.GetPixel(x, y);
                     if (c.A > 0)

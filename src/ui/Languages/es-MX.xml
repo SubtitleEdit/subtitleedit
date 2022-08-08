@@ -2,7 +2,7 @@
 <Language Name="Español (México)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Traducido por Francisco Naranjo (paconaranjo)</TranslatedBy>
     <CultureName>es-MX</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -883,7 +883,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
     <Remove>Eliminar</Remove>
     <RemoveAll>Eliminar todo</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Importar cambios de escena</Title>
     <OpenTextFile>Abrir archivo de texto...</OpenTextFile>
     <Generate>Generar cambios de escena</Generate>
@@ -893,11 +893,11 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
     <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milisegundos</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Obtener cambios de escena con FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Obtener cambios de escena con FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Sensibilidad</Sensitivity>
     <SensitivityDescription>Un valor más bajo da más cambios de escena</SensitivityDescription>
-    <NoSceneChangesFound>No se encontraron cambios de escena.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>No se encontraron cambios de escena.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importar texto plano</Title>
     <OneSubtitleIsOneFile>Archivos múltiples - un archivo es un subtítulo</OneSubtitleIsOneFile>
@@ -1213,8 +1213,8 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
         <GenerateBlankVideo>Generar video en blanco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generar video con subtítulos incrustados...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Importar capítulos del video</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Generar/importar cambios de escena...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Eliminar/exportar cambios de escena...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Generar/importar cambios de escena...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Eliminar/exportar cambios de escena...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Generar formas de onda por lotes...</WaveformBatchGenerate>
         <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
@@ -1669,7 +1669,7 @@ con el archivo de video, al subtítulo actual cargado.
     <BeforeDisplaySubtitleJoin>Antes de unirse subtítulos</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subtítulos unido</SubtitlesJoined>
     <StatusLog>Estatus de registro</StatusLog>
-    <XSceneChangesImported>{0} cambios de escena importados</XSceneChangesImported>
+    <XShotChangesImported>{0} cambios de escena importados</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' ejecutado.</PluginXExecuted>
     <NotAValidXSubFile>¡Archivo XSub inválido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de mezclar líneas con el mismo texto</BeforeMergeLinesWithSameText>
@@ -2164,7 +2164,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformFocusMouseEnter>Establecer foco al introducir el ratón</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>También establecer el foco en vista de lista al introducir el ratón en la vista de lista</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Un solo clic para seleccionar los subtítulos</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Ajustarse a los cambios de escena (mantener Shift para anular)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Ajustarse a los cambios de escena (mantener Shift para anular)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Generar forma de onda automáticamente al abrir el video</WaveformAutoGen>
     <WaveformBorderHitMs1>El borde del marcador afectado debe estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisegundos</WaveformBorderHitMs2>
@@ -2298,14 +2298,14 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Ajustar la hora de inicio, desplazar todo el subtítulo</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ajustar final, compensar el resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ajustar final, compensar el resto e ir al siguiente</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Ajustar el inicio de las líneas seleccionadas al siguiente cambio de escena</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Ajustar el inicio de las líneas seleccionadas al siguiente cambio de escena con un intervalo mínimo</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Ajustar el final de las líneas seleccionadas al cambio de escena anterior</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Ajustar el final de las líneas seleccionadas al cambio de escena anterior con un intervalo mínimo</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Extender las líneas seleccionadas hasta el siguiente cambio de escena (o el siguiente subtítulo)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Extender las líneas seleccionadas hasta el siguiente cambio de escena con intervalo mínimo (o siguiente subtítulo)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Extender las líneas seleccionadas al cambio de escena anterior (o al subtítulo anterior)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Extender las líneas seleccionadas al cambio de escena anterior con intervalo mínimo (o subtítulo anterior)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Ajustar el inicio de las líneas seleccionadas al siguiente cambio de escena</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Ajustar el inicio de las líneas seleccionadas al siguiente cambio de escena con un intervalo mínimo</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Ajustar el final de las líneas seleccionadas al cambio de escena anterior</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Ajustar el final de las líneas seleccionadas al cambio de escena anterior con un intervalo mínimo</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Extender las líneas seleccionadas hasta el siguiente cambio de escena (o el siguiente subtítulo)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Extender las líneas seleccionadas hasta el siguiente cambio de escena con intervalo mínimo (o siguiente subtítulo)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Extender las líneas seleccionadas al cambio de escena anterior (o al subtítulo anterior)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Extender las líneas seleccionadas al cambio de escena anterior con intervalo mínimo (o subtítulo anterior)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extender las líneas seleccionadas al subtítulo siguiente</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extender las líneas seleccionadas al subtítulo anterior</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Extender línea actual al siguiente subtítulo o la duración máx.</AdjustExtendCurrentSubtitle>
@@ -2359,10 +2359,10 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformPlayNewSelection>Reproducir nueva selección</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reproducir final de la selección</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproducir primer subtítulo seleccionado</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Ir al cambio de escena anterior</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Ir al cambio de escena siguiente</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Alternar cambio de escena</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Eliminar/exportar cambios de escena</WaveformRemoveOrExportSceneChanges>
+    <WaveformGoToPreviousShotChange>Ir al cambio de escena anterior</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Ir al cambio de escena siguiente</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Alternar cambio de escena</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Eliminar/exportar cambios de escena</WaveformRemoveOrExportShotChanges>
     <WaveformGuessStart>Autoajustar inicio mediante el cambio de volumen/escena</WaveformGuessStart>
     <GoBack1Frame>Un cuadro atrás</GoBack1Frame>
     <GoForward1Frame>Un cuadro adelante</GoForward1Frame>
@@ -2985,9 +2985,9 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <ShowWaveformAndSpectrogram>Mostrar forma de onda y espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar solo forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar solo espectrograma</ShowSpectrogramOnly>
-    <AddSceneChange>Añadir cambio de escena</AddSceneChange>
-    <RemoveSceneChange>Eliminar cambio de escena</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Eliminar cambios de escena de la selección</RemoveSceneChangesFromSelection>
+    <AddShotChange>Añadir cambio de escena</AddShotChange>
+    <RemoveShotChange>Eliminar cambio de escena</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Eliminar cambios de escena de la selección</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Adivinar códigos de tiempo...</GuessTimeCodes>
     <SeekSilence>Buscar silencio...</SeekSilence>
     <InsertSubtitleHere>Insertar subtítulo aquí...</InsertSubtitleHere>

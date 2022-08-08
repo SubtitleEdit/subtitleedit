@@ -34,8 +34,10 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.labelChangeBrightness = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.numericUpDownBrightness = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).BeginInit();
             this.SuspendLayout();
             // 
             // trackBarBrightness
@@ -78,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonOK.Location = new System.Drawing.Point(719, 342);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 8;
+            this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -92,16 +94,31 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.buttonCancel.MinimumSize = new System.Drawing.Size(75, 23);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 9;
+            this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // numericUpDownBrightness
+            // 
+            this.numericUpDownBrightness.DecimalPlaces = 2;
+            this.numericUpDownBrightness.Location = new System.Drawing.Point(474, 51);
+            this.numericUpDownBrightness.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownBrightness.Name = "numericUpDownBrightness";
+            this.numericUpDownBrightness.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownBrightness.TabIndex = 2;
+            this.numericUpDownBrightness.ValueChanged += new System.EventHandler(this.numericUpDownBrightness_ValueChanged);
             // 
             // BinEditBrightness
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(890, 377);
+            this.Controls.Add(this.numericUpDownBrightness);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelChangeBrightness);
@@ -117,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BinEditBrightness_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,5 +147,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
         private System.Windows.Forms.Label labelChangeBrightness;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.NumericUpDown numericUpDownBrightness;
     }
 }

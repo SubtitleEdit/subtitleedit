@@ -2,7 +2,7 @@
 <Language Name="slovenski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Prevedel: Hawk</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -586,7 +586,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Input>Vnos</Input>
     <InputDescription>Izberi datoteke za vnos (poišči ali povleci)</InputDescription>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Uvozi spremembe prizorov</Title>
     <OpenTextFile>Odpri datoteko besedila...</OpenTextFile>
     <ImportOptions>Uvozi možnosti</ImportOptions>
@@ -595,7 +595,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Frames>Slike</Frames>
     <Seconds>Sekunde</Seconds>
     <Milliseconds>Milisekunde</Milliseconds>
-  </ImportSceneChanges>
+  </ImportShotChanges>
   <ImportText>
     <Title>Uvozi samo besedilo</Title>
     <OneSubtitleIsOneFile>Več datotek - ena datoteka je en podnapis</OneSubtitleIsOneFile>
@@ -880,8 +880,8 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <OpenDvd>Odpri DVD...</OpenDvd>
         <ChooseAudioTrack>Izberi audio datoteko</ChooseAudioTrack>
         <CloseVideo>Zapri video datoteko</CloseVideo>
-        <ImportSceneChanges>Uvozi scenske spremembe...</ImportSceneChanges>
-        <RemoveSceneChanges>Odstrani scenske spremembe</RemoveSceneChanges>
+        <ImportShotChanges>Uvozi scenske spremembe...</ImportShotChanges>
+        <RemoveShotChanges>Odstrani scenske spremembe</RemoveShotChanges>
         <ShowHideVideo>Pokaži/Skrij video</ShowHideVideo>
         <ShowHideWaveform>Pokaži/Skrij krivuljo</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Pokaži/Skrij krivuljo in spektrogram</ShowHideWaveformAndSpectrogram>
@@ -1292,7 +1292,7 @@ Nadaljujem?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Pred združitvijo podnapisov</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Podnapisi združeni</SubtitlesJoined>
     <StatusLog>Poročilo stanja</StatusLog>
-    <XSceneChangesImported>{0} spremembe prizorov shranjene</XSceneChangesImported>
+    <XShotChangesImported>{0} spremembe prizorov shranjene</XShotChangesImported>
     <PluginXExecuted>Vtičnik '{0}' izvršen.</PluginXExecuted>
     <NotAValidXSubFile>Ni veljavna XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Pred združitvijo vrstic z enakim besedilom</BeforeMergeLinesWithSameText>

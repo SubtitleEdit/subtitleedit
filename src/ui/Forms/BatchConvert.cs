@@ -374,17 +374,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharacters.Text = LanguageSettings.Current.MergedShortLines.MaximumCharacters;
             labelMaxMillisecondsBetweenLines.Text = LanguageSettings.Current.MergedShortLines.MaximumMillisecondsBetween;
             checkBoxOnlyContinuationLines.Text = LanguageSettings.Current.MergedShortLines.OnlyMergeContinuationLines;
-            if (Configuration.Settings.General.SubtitleLineMaximumLength > numericUpDownMaxCharacters.Maximum)
+
+            if (Configuration.Settings.Tools.MergeShortLinesMaxChars > numericUpDownMaxCharacters.Maximum)
             {
                 numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Maximum;
             }
-            else if (Configuration.Settings.General.SubtitleLineMaximumLength < numericUpDownMaxCharacters.Minimum)
+            else if (Configuration.Settings.Tools.MergeShortLinesMaxChars < numericUpDownMaxCharacters.Minimum)
             {
                 numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Minimum;
             }
             else
             {
-                numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+                numericUpDownMaxCharacters.Value = Configuration.Settings.Tools.MergeShortLinesMaxChars;
             }
 
             if (Configuration.Settings.Tools.MergeShortLinesMaxGap >= numericUpDownMaxMillisecondsBetweenLines.Minimum &&
@@ -915,7 +916,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private TextEncoding GetCurrentEncoding(string fileName)
         {
-            bool useEncodingFromFile = comboBoxEncoding.SelectedIndex == comboBoxEncoding.Items.Count - 1;
+            var useEncodingFromFile = comboBoxEncoding.SelectedIndex == comboBoxEncoding.Items.Count - 1;
             if (useEncodingFromFile)
             {
                 if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
@@ -926,6 +927,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     return new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
                 }
+
                 var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 return new TextEncoding(enc, null);
             }
@@ -1391,7 +1393,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                         var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
                                         int dummy = 0;
-                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
                                         tsConvertedCount++;
                                     }
                                 }
@@ -1428,7 +1430,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         binaryParagraphs);
                                     ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
 
-                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, string.Empty, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
                                     tsConvertedCount++;
                                 }
                             }
@@ -1635,7 +1637,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines))
             {
-                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
+                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, (int)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, checkBoxOnlyContinuationLines.Checked);
                 if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
                 {
                     sub.Paragraphs.Clear();
@@ -2248,7 +2250,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dir = Path.GetDirectoryName(p.FileName);
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(p.FileName), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback);
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(p.FileName), dir, string.Empty, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback);
                     if (success)
                     {
                         p.Item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
@@ -3094,13 +3096,10 @@ namespace Nikse.SubtitleEdit.Forms
                         for (var i = 0; i < comboBoxEncoding.Items.Count; i++)
                         {
                             var item = comboBoxEncoding.Items[i];
-                            if (item is TextEncoding te)
+                            if (item is TextEncoding te && te.Encoding.WebName == encoding.WebName)
                             {
-                                if (te.Encoding.WebName == encoding.WebName)
-                                {
-                                    comboBoxEncoding.SelectedIndex = i;
-                                    break;
-                                }
+                                comboBoxEncoding.SelectedIndex = i;
+                                break;
                             }
                         }
                     }

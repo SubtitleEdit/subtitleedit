@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -885,7 +885,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <Remove>刪除</Remove>
     <RemoveAll>全部刪除</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>匯入場景變更</Title>
     <OpenTextFile>開啟文字檔案...</OpenTextFile>
     <Generate>產生場景變更</Generate>
@@ -895,11 +895,11 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <Frames>影格</Frames>
     <Seconds>秒</Seconds>
     <Milliseconds>毫秒</Milliseconds>
-    <GetSceneChangesWithFfmpeg>使用 FFmpeg 產生場景變更</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>使用 FFmpeg 產生場景變更</GetShotChangesWithFfmpeg>
     <Sensitivity>靈敏度</Sensitivity>
     <SensitivityDescription>Lower value gives more scene changes</SensitivityDescription>
-    <NoSceneChangesFound>找不到任何場景變更。</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>找不到任何場景變更。</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>匯入純文字</Title>
     <OneSubtitleIsOneFile>多個檔案 - 每個檔案是獨立的字幕</OneSubtitleIsOneFile>
@@ -1214,8 +1214,8 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>移除場景變更</RemoveSceneChanges>
+        <GenerateImportShotChanges>Generate/import scene changes...</GenerateImportShotChanges>
+        <RemoveShotChanges>移除場景變更</RemoveShotChanges>
         <WaveformBatchGenerate>大量產生波形...</WaveformBatchGenerate>
         <ShowHideVideo>顯示/隱藏視訊</ShowHideVideo>
         <ShowHideWaveform>顯示/隱藏波形</ShowHideWaveform>
@@ -1670,7 +1670,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <BeforeDisplaySubtitleJoin>合併字幕之前</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>字幕已合併</SubtitlesJoined>
     <StatusLog>狀態記錄</StatusLog>
-    <XSceneChangesImported>已匯入 {0} 個場景變更</XSceneChangesImported>
+    <XShotChangesImported>已匯入 {0} 個場景變更</XShotChangesImported>
     <PluginXExecuted>外掛程式 '{0}' 已執行。</PluginXExecuted>
     <NotAValidXSubFile>不是有效的 XSub 檔案！</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>合併文字相同的行之前</BeforeMergeLinesWithSameText>
@@ -2158,7 +2158,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <WaveformFocusMouseEnter>滑鼠移過後設定焦點</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>當滑鼠移過時將焦點設定到清單檢視</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Single click to select subtitles</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Snap to scene changes (hold Shift to override)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Snap to scene changes (hold Shift to override)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>邊框標記的最短相接間隔須為</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
     <WaveformColor>色彩</WaveformColor>
@@ -2291,14 +2291,14 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <AdjustSetStartAndOffsetTheWholeSubtitle>Set start time, offset the whole subtitle</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Snap selected lines start to next scene change</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Snap selected lines start to next scene change with min. gap</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Snap selected lines end to previous scene change</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Snap selected lines end to previous scene change with min. gap</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Extend selected lines to next scene change (or next subtitle)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Extend selected lines to next scene change with min. gap (or next subtitle)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Extend selected lines to previous scene change (or previous subtitle)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Extend selected lines to previous scene change with min. gap (or previous subtitle)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Snap selected lines start to next scene change</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Snap selected lines start to next scene change with min. gap</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Snap selected lines end to previous scene change</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Snap selected lines end to previous scene change with min. gap</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Extend selected lines to next scene change (or next subtitle)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Extend selected lines to next scene change with min. gap (or next subtitle)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Extend selected lines to previous scene change (or previous subtitle)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Extend selected lines to previous scene change with min. gap (or previous subtitle)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
@@ -2351,9 +2351,9 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <WaveformPlayNewSelection>播放新的選擇部份</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放第一個選擇的字幕</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>切換場景變更</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Go to previous scene change</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Go to next scene change</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>切換場景變更</WaveformToggleShotChange>
     <WaveformGuessStart>Auto adjust start via volume/scene change</WaveformGuessStart>
     <GoBack1Frame>向前一個影格</GoBack1Frame>
     <GoForward1Frame>向後一個影格</GoForward1Frame>
@@ -2959,9 +2959,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <ShowWaveformAndSpectrogram>顯示波形和頻譜圖</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>僅顯示波形</ShowWaveformOnly>
     <ShowSpectrogramOnly>僅顯示頻譜圖</ShowSpectrogramOnly>
-    <AddSceneChange>加入場景變更</AddSceneChange>
-    <RemoveSceneChange>刪除場景變更</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Remove scene changes from selection</RemoveSceneChangesFromSelection>
+    <AddShotChange>加入場景變更</AddShotChange>
+    <RemoveShotChange>刪除場景變更</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Remove scene changes from selection</RemoveShotChangesFromSelection>
     <GuessTimeCodes>猜測時間碼...</GuessTimeCodes>
     <SeekSilence>搜尋靜音...</SeekSilence>
     <InsertSubtitleHere>在這裡插入字幕...</InsertSubtitleHere>

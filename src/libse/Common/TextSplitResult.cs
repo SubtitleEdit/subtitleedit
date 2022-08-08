@@ -19,6 +19,26 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Font DefaultFont = SystemFonts.DefaultFont;
         private static readonly object GdiLock = new object();
 
+        private static float GetWidth(string text)
+        {
+            if (text.Length > 128)
+            {
+                return text.Length * 5;
+            }
+
+            lock (GdiLock)
+            {
+                try
+                {
+                    return Graphics.MeasureString(text, DefaultFont).Width;
+                }
+                catch
+                {
+                    return text.Length * 5;
+                }
+            }
+        }
+
         public TextSplitResult(List<string> lines)
         {
             Lines = lines;
@@ -31,11 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    lock (GdiLock)
-                    {
-                        var lineOneWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
-                        LengthPixels.Add(lineOneWidth);
-                    }
+                    LengthPixels.Add(GetWidth(Lines[0]));
                 }
 
                 if (Lines[1].Length > 1000)
@@ -44,19 +60,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    lock (GdiLock)
-                    {
-                        var lineTwoWidth = Graphics.MeasureString(Lines[1], DefaultFont).Width;
-                        LengthPixels.Add(lineTwoWidth);
-                    }
+                    LengthPixels.Add(GetWidth(Lines[1]));
                 }
 
                 if (Math.Abs(SpaceLengthPixels) < 0.01)
                 {
-                    lock (GdiLock)
-                    {
-                        SpaceLengthPixels = Graphics.MeasureString(" ", DefaultFont).Width;
-                    }
+                    SpaceLengthPixels = GetWidth(" ");
                 }
             }
 

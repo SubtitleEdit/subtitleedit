@@ -40,6 +40,7 @@
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.buttonEditCustomContinuationStyle = new System.Windows.Forms.Button();
             this.comboBoxCpsLineLenCalc = new System.Windows.Forms.ComboBox();
             this.labelCpsLineLenCalc = new System.Windows.Forms.Label();
             this.buttonGapChoose = new System.Windows.Forms.Button();
@@ -218,7 +219,7 @@
             this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
             this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
-            this.checkBoxWaveformSnapToSceneChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxWaveformSnapToShotChanges = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformSingleClickSelect = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowWpm = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowCps = new System.Windows.Forms.CheckBox();
@@ -279,6 +280,7 @@
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseWordSplitList = new System.Windows.Forms.CheckBox();
             this.buttonFixContinuationStyleSettings = new System.Windows.Forms.Button();
             this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
@@ -294,31 +296,6 @@
             this.comboBoxToolsStartSceneIndex = new System.Windows.Forms.ComboBox();
             this.comboBoxToolsVerifySeconds = new System.Windows.Forms.ComboBox();
             this.labelVerifyButton = new System.Windows.Forms.Label();
-            this.panelWordLists = new System.Windows.Forms.Panel();
-            this.groupBoxWordLists = new System.Windows.Forms.GroupBox();
-            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
-            this.groupBoxOcrFixList = new System.Windows.Forms.GroupBox();
-            this.textBoxOcrFixValue = new System.Windows.Forms.TextBox();
-            this.buttonRemoveOcrFix = new System.Windows.Forms.Button();
-            this.listBoxOcrFixList = new System.Windows.Forms.ListBox();
-            this.textBoxOcrFixKey = new System.Windows.Forms.TextBox();
-            this.buttonAddOcrFix = new System.Windows.Forms.Button();
-            this.groupBoxUserWordList = new System.Windows.Forms.GroupBox();
-            this.buttonRemoveUserWord = new System.Windows.Forms.Button();
-            this.listBoxUserWordLists = new System.Windows.Forms.ListBox();
-            this.textBoxUserWord = new System.Windows.Forms.TextBox();
-            this.buttonAddUserWord = new System.Windows.Forms.Button();
-            this.groupBoxWordListLocation = new System.Windows.Forms.GroupBox();
-            this.checkBoxNamesOnline = new System.Windows.Forms.CheckBox();
-            this.textBoxNamesOnline = new System.Windows.Forms.TextBox();
-            this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
-            this.listViewNames = new System.Windows.Forms.ListView();
-            this.columnHeaderNames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buttonRemoveNameEtc = new System.Windows.Forms.Button();
-            this.textBoxNameEtc = new System.Windows.Forms.TextBox();
-            this.buttonAddNames = new System.Windows.Forms.Button();
-            this.labelWordListLanguage = new System.Windows.Forms.Label();
-            this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
             this.panelToolBar = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
@@ -426,6 +403,7 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
+            this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -465,12 +443,6 @@
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
-            this.panelWordLists.SuspendLayout();
-            this.groupBoxWordLists.SuspendLayout();
-            this.groupBoxOcrFixList.SuspendLayout();
-            this.groupBoxUserWordList.SuspendLayout();
-            this.groupBoxWordListLocation.SuspendLayout();
-            this.groupBoxNamesIgonoreLists.SuspendLayout();
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
@@ -539,7 +511,6 @@
             "Video player",
             "Waveform/spectrogram",
             "Tools",
-            "Wordlists",
             "Toolbar",
             "Font",
             "Network",
@@ -655,6 +626,7 @@
             // 
             // groupBoxGeneralRules
             // 
+            this.groupBoxGeneralRules.Controls.Add(this.buttonEditCustomContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.labelCpsLineLenCalc);
             this.groupBoxGeneralRules.Controls.Add(this.buttonGapChoose);
@@ -690,10 +662,22 @@
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
             // 
+            // buttonEditCustomContinuationStyle
+            // 
+            this.buttonEditCustomContinuationStyle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonEditCustomContinuationStyle.Location = new System.Drawing.Point(346, 323);
+            this.buttonEditCustomContinuationStyle.Name = "buttonEditCustomContinuationStyle";
+            this.buttonEditCustomContinuationStyle.Size = new System.Drawing.Size(28, 23);
+            this.buttonEditCustomContinuationStyle.TabIndex = 59;
+            this.buttonEditCustomContinuationStyle.Text = "...";
+            this.buttonEditCustomContinuationStyle.UseVisualStyleBackColor = true;
+            this.buttonEditCustomContinuationStyle.Visible = false;
+            this.buttonEditCustomContinuationStyle.Click += new System.EventHandler(this.buttonEditCustomContinuationStyle_Click);
+            // 
             // comboBoxCpsLineLenCalc
             // 
             this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCpsLineLenCalc.DropDownWidth = 170;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 200;
             this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
             this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(203, 351);
             this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
@@ -712,7 +696,7 @@
             // 
             // buttonGapChoose
             // 
-            this.buttonGapChoose.Location = new System.Drawing.Point(264, 213);
+            this.buttonGapChoose.Location = new System.Drawing.Point(265, 214);
             this.buttonGapChoose.Name = "buttonGapChoose";
             this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
             this.buttonGapChoose.TabIndex = 46;
@@ -930,7 +914,7 @@
             // 
             this.numericUpDownDurationMin.Location = new System.Drawing.Point(203, 163);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
-            3000,
+            10000,
             0,
             0,
             0});
@@ -2815,7 +2799,7 @@
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformAutoGen);
             this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.buttonWaveformCursorColor);
-            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToSceneChanges);
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToShotChanges);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSingleClickSelect);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowWpm);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowCps);
@@ -2877,15 +2861,15 @@
             this.buttonWaveformCursorColor.UseVisualStyleBackColor = true;
             this.buttonWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
             // 
-            // checkBoxWaveformSnapToSceneChanges
+            // checkBoxWaveformSnapToShotChanges
             // 
-            this.checkBoxWaveformSnapToSceneChanges.AutoSize = true;
-            this.checkBoxWaveformSnapToSceneChanges.Location = new System.Drawing.Point(262, 161);
-            this.checkBoxWaveformSnapToSceneChanges.Name = "checkBoxWaveformSnapToSceneChanges";
-            this.checkBoxWaveformSnapToSceneChanges.Size = new System.Drawing.Size(249, 17);
-            this.checkBoxWaveformSnapToSceneChanges.TabIndex = 26;
-            this.checkBoxWaveformSnapToSceneChanges.Text = "Snap to scene changes (hold Shift to override)";
-            this.checkBoxWaveformSnapToSceneChanges.UseVisualStyleBackColor = true;
+            this.checkBoxWaveformSnapToShotChanges.AutoSize = true;
+            this.checkBoxWaveformSnapToShotChanges.Location = new System.Drawing.Point(262, 161);
+            this.checkBoxWaveformSnapToShotChanges.Name = "checkBoxWaveformSnapToShotChanges";
+            this.checkBoxWaveformSnapToShotChanges.Size = new System.Drawing.Size(242, 17);
+            this.checkBoxWaveformSnapToShotChanges.TabIndex = 26;
+            this.checkBoxWaveformSnapToShotChanges.Text = "Snap to shot changes (hold Shift to override)";
+            this.checkBoxWaveformSnapToShotChanges.UseVisualStyleBackColor = true;
             // 
             // checkBoxWaveformSingleClickSelect
             // 
@@ -3490,9 +3474,9 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(0, 348);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(0, 381);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 172);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 139);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -3549,6 +3533,7 @@
             // 
             // groupBoxFixCommonErrors
             // 
+            this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxUseWordSplitList);
             this.groupBoxFixCommonErrors.Controls.Add(this.buttonFixContinuationStyleSettings);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFceSkipStep1);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixShortDisplayTimesAllowMoveStartTime);
@@ -3559,17 +3544,27 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(0, 123);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 225);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 252);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
             // 
+            // checkBoxUseWordSplitList
+            // 
+            this.checkBoxUseWordSplitList.AutoSize = true;
+            this.checkBoxUseWordSplitList.Location = new System.Drawing.Point(15, 137);
+            this.checkBoxUseWordSplitList.Name = "checkBoxUseWordSplitList";
+            this.checkBoxUseWordSplitList.Size = new System.Drawing.Size(231, 17);
+            this.checkBoxUseWordSplitList.TabIndex = 3;
+            this.checkBoxUseWordSplitList.Text = "Fix common OCR errors - use word split list";
+            this.checkBoxUseWordSplitList.UseVisualStyleBackColor = true;
+            // 
             // buttonFixContinuationStyleSettings
             // 
-            this.buttonFixContinuationStyleSettings.Location = new System.Drawing.Point(15, 189);
+            this.buttonFixContinuationStyleSettings.Location = new System.Drawing.Point(16, 212);
             this.buttonFixContinuationStyleSettings.Name = "buttonFixContinuationStyleSettings";
             this.buttonFixContinuationStyleSettings.Size = new System.Drawing.Size(271, 23);
-            this.buttonFixContinuationStyleSettings.TabIndex = 37;
+            this.buttonFixContinuationStyleSettings.TabIndex = 6;
             this.buttonFixContinuationStyleSettings.Text = "Edit settings for fixing continuation style...";
             this.buttonFixContinuationStyleSettings.UseVisualStyleBackColor = true;
             this.buttonFixContinuationStyleSettings.Click += new System.EventHandler(this.buttonFixContinuationStyleSettings_Click);
@@ -3577,20 +3572,20 @@
             // checkBoxFceSkipStep1
             // 
             this.checkBoxFceSkipStep1.AutoSize = true;
-            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 161);
+            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 185);
             this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
             this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxFceSkipStep1.TabIndex = 36;
+            this.checkBoxFceSkipStep1.TabIndex = 5;
             this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
             this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixShortDisplayTimesAllowMoveStartTime
             // 
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.AutoSize = true;
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 138);
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 162);
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 35;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 4;
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
             // 
@@ -3623,7 +3618,7 @@
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
-            this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(274, 21);
+            this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(275, 21);
             this.textBoxMusicSymbolsToReplace.TabIndex = 0;
             // 
             // labelToolsMusicSymbolsToReplace
@@ -3729,273 +3724,6 @@
             this.labelVerifyButton.Size = new System.Drawing.Size(147, 13);
             this.labelVerifyButton.TabIndex = 3;
             this.labelVerifyButton.Text = "Play X seconds and back, X is";
-            // 
-            // panelWordLists
-            // 
-            this.panelWordLists.Controls.Add(this.groupBoxWordLists);
-            this.panelWordLists.Location = new System.Drawing.Point(230, 6);
-            this.panelWordLists.Name = "panelWordLists";
-            this.panelWordLists.Padding = new System.Windows.Forms.Padding(3);
-            this.panelWordLists.Size = new System.Drawing.Size(864, 521);
-            this.panelWordLists.TabIndex = 8;
-            this.panelWordLists.Text = "Word lists";
-            // 
-            // groupBoxWordLists
-            // 
-            this.groupBoxWordLists.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxWordLists.Controls.Add(this.linkLabelOpenDictionaryFolder);
-            this.groupBoxWordLists.Controls.Add(this.groupBoxOcrFixList);
-            this.groupBoxWordLists.Controls.Add(this.groupBoxUserWordList);
-            this.groupBoxWordLists.Controls.Add(this.groupBoxWordListLocation);
-            this.groupBoxWordLists.Controls.Add(this.groupBoxNamesIgonoreLists);
-            this.groupBoxWordLists.Controls.Add(this.labelWordListLanguage);
-            this.groupBoxWordLists.Controls.Add(this.comboBoxWordListLanguage);
-            this.groupBoxWordLists.Location = new System.Drawing.Point(0, 0);
-            this.groupBoxWordLists.Name = "groupBoxWordLists";
-            this.groupBoxWordLists.Size = new System.Drawing.Size(851, 521);
-            this.groupBoxWordLists.TabIndex = 2;
-            this.groupBoxWordLists.TabStop = false;
-            this.groupBoxWordLists.Text = "Word lists";
-            // 
-            // linkLabelOpenDictionaryFolder
-            // 
-            this.linkLabelOpenDictionaryFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 496);
-            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
-            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
-            this.linkLabelOpenDictionaryFolder.TabIndex = 29;
-            this.linkLabelOpenDictionaryFolder.TabStop = true;
-            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
-            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
-            // 
-            // groupBoxOcrFixList
-            // 
-            this.groupBoxOcrFixList.Controls.Add(this.textBoxOcrFixValue);
-            this.groupBoxOcrFixList.Controls.Add(this.buttonRemoveOcrFix);
-            this.groupBoxOcrFixList.Controls.Add(this.listBoxOcrFixList);
-            this.groupBoxOcrFixList.Controls.Add(this.textBoxOcrFixKey);
-            this.groupBoxOcrFixList.Controls.Add(this.buttonAddOcrFix);
-            this.groupBoxOcrFixList.Location = new System.Drawing.Point(510, 43);
-            this.groupBoxOcrFixList.Name = "groupBoxOcrFixList";
-            this.groupBoxOcrFixList.Size = new System.Drawing.Size(293, 334);
-            this.groupBoxOcrFixList.TabIndex = 6;
-            this.groupBoxOcrFixList.TabStop = false;
-            this.groupBoxOcrFixList.Text = "OCR fix list";
-            // 
-            // textBoxOcrFixValue
-            // 
-            this.textBoxOcrFixValue.Location = new System.Drawing.Point(99, 298);
-            this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
-            this.textBoxOcrFixValue.Size = new System.Drawing.Size(85, 21);
-            this.textBoxOcrFixValue.TabIndex = 45;
-            this.textBoxOcrFixValue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxOcrFixValueKeyDown);
-            // 
-            // buttonRemoveOcrFix
-            // 
-            this.buttonRemoveOcrFix.Location = new System.Drawing.Point(191, 16);
-            this.buttonRemoveOcrFix.Name = "buttonRemoveOcrFix";
-            this.buttonRemoveOcrFix.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemoveOcrFix.TabIndex = 42;
-            this.buttonRemoveOcrFix.Text = "Remove";
-            this.buttonRemoveOcrFix.UseVisualStyleBackColor = true;
-            this.buttonRemoveOcrFix.Click += new System.EventHandler(this.ButtonRemoveOcrFixClick);
-            // 
-            // listBoxOcrFixList
-            // 
-            this.listBoxOcrFixList.FormattingEnabled = true;
-            this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
-            this.listBoxOcrFixList.Name = "listBoxOcrFixList";
-            this.listBoxOcrFixList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxOcrFixList.Size = new System.Drawing.Size(179, 277);
-            this.listBoxOcrFixList.TabIndex = 40;
-            this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
-            this.listBoxOcrFixList.DoubleClick += new System.EventHandler(this.listBoxOcrFixList_DoubleClick);
-            this.listBoxOcrFixList.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
-            // 
-            // textBoxOcrFixKey
-            // 
-            this.textBoxOcrFixKey.Location = new System.Drawing.Point(5, 298);
-            this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
-            this.textBoxOcrFixKey.Size = new System.Drawing.Size(88, 21);
-            this.textBoxOcrFixKey.TabIndex = 44;
-            // 
-            // buttonAddOcrFix
-            // 
-            this.buttonAddOcrFix.Location = new System.Drawing.Point(190, 296);
-            this.buttonAddOcrFix.Name = "buttonAddOcrFix";
-            this.buttonAddOcrFix.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddOcrFix.TabIndex = 46;
-            this.buttonAddOcrFix.Text = "Add pair";
-            this.buttonAddOcrFix.UseVisualStyleBackColor = true;
-            this.buttonAddOcrFix.Click += new System.EventHandler(this.ButtonAddOcrFixClick);
-            // 
-            // groupBoxUserWordList
-            // 
-            this.groupBoxUserWordList.Controls.Add(this.buttonRemoveUserWord);
-            this.groupBoxUserWordList.Controls.Add(this.listBoxUserWordLists);
-            this.groupBoxUserWordList.Controls.Add(this.textBoxUserWord);
-            this.groupBoxUserWordList.Controls.Add(this.buttonAddUserWord);
-            this.groupBoxUserWordList.Location = new System.Drawing.Point(259, 43);
-            this.groupBoxUserWordList.Name = "groupBoxUserWordList";
-            this.groupBoxUserWordList.Size = new System.Drawing.Size(241, 334);
-            this.groupBoxUserWordList.TabIndex = 4;
-            this.groupBoxUserWordList.TabStop = false;
-            this.groupBoxUserWordList.Text = "User word list";
-            // 
-            // buttonRemoveUserWord
-            // 
-            this.buttonRemoveUserWord.Location = new System.Drawing.Point(159, 16);
-            this.buttonRemoveUserWord.Name = "buttonRemoveUserWord";
-            this.buttonRemoveUserWord.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemoveUserWord.TabIndex = 32;
-            this.buttonRemoveUserWord.Text = "Remove";
-            this.buttonRemoveUserWord.UseVisualStyleBackColor = true;
-            this.buttonRemoveUserWord.Click += new System.EventHandler(this.ButtonRemoveUserWordClick);
-            // 
-            // listBoxUserWordLists
-            // 
-            this.listBoxUserWordLists.FormattingEnabled = true;
-            this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
-            this.listBoxUserWordLists.Name = "listBoxUserWordLists";
-            this.listBoxUserWordLists.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 277);
-            this.listBoxUserWordLists.TabIndex = 30;
-            this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
-            this.listBoxUserWordLists.DoubleClick += new System.EventHandler(this.listBoxUserWordLists_DoubleClick);
-            this.listBoxUserWordLists.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
-            // 
-            // textBoxUserWord
-            // 
-            this.textBoxUserWord.Location = new System.Drawing.Point(2, 298);
-            this.textBoxUserWord.Name = "textBoxUserWord";
-            this.textBoxUserWord.Size = new System.Drawing.Size(150, 21);
-            this.textBoxUserWord.TabIndex = 34;
-            this.textBoxUserWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxUserWordKeyDown);
-            // 
-            // buttonAddUserWord
-            // 
-            this.buttonAddUserWord.Location = new System.Drawing.Point(159, 296);
-            this.buttonAddUserWord.Name = "buttonAddUserWord";
-            this.buttonAddUserWord.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddUserWord.TabIndex = 36;
-            this.buttonAddUserWord.Text = "Add word";
-            this.buttonAddUserWord.UseVisualStyleBackColor = true;
-            this.buttonAddUserWord.Click += new System.EventHandler(this.ButtonAddUserWordClick);
-            // 
-            // groupBoxWordListLocation
-            // 
-            this.groupBoxWordListLocation.Controls.Add(this.checkBoxNamesOnline);
-            this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesOnline);
-            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 386);
-            this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
-            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 92);
-            this.groupBoxWordListLocation.TabIndex = 8;
-            this.groupBoxWordListLocation.TabStop = false;
-            this.groupBoxWordListLocation.Text = "Location";
-            // 
-            // checkBoxNamesOnline
-            // 
-            this.checkBoxNamesOnline.AutoSize = true;
-            this.checkBoxNamesOnline.Location = new System.Drawing.Point(7, 22);
-            this.checkBoxNamesOnline.Name = "checkBoxNamesOnline";
-            this.checkBoxNamesOnline.Size = new System.Drawing.Size(145, 17);
-            this.checkBoxNamesOnline.TabIndex = 26;
-            this.checkBoxNamesOnline.Text = "Use online names xml file";
-            this.checkBoxNamesOnline.UseVisualStyleBackColor = true;
-            // 
-            // textBoxNamesOnline
-            // 
-            this.textBoxNamesOnline.Location = new System.Drawing.Point(6, 45);
-            this.textBoxNamesOnline.Name = "textBoxNamesOnline";
-            this.textBoxNamesOnline.Size = new System.Drawing.Size(764, 21);
-            this.textBoxNamesOnline.TabIndex = 28;
-            this.textBoxNamesOnline.Text = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/n" +
-    "ames.xml";
-            // 
-            // groupBoxNamesIgonoreLists
-            // 
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.listViewNames);
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonRemoveNameEtc);
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.textBoxNameEtc);
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNames);
-            this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(6, 43);
-            this.groupBoxNamesIgonoreLists.Name = "groupBoxNamesIgonoreLists";
-            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(241, 334);
-            this.groupBoxNamesIgonoreLists.TabIndex = 2;
-            this.groupBoxNamesIgonoreLists.TabStop = false;
-            this.groupBoxNamesIgonoreLists.Text = "Names/ignore lists";
-            // 
-            // listViewNames
-            // 
-            this.listViewNames.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderNames});
-            this.listViewNames.FullRowSelect = true;
-            this.listViewNames.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewNames.HideSelection = false;
-            this.listViewNames.Location = new System.Drawing.Point(3, 21);
-            this.listViewNames.Name = "listViewNames";
-            this.listViewNames.Size = new System.Drawing.Size(148, 270);
-            this.listViewNames.TabIndex = 27;
-            this.listViewNames.UseCompatibleStateImageBehavior = false;
-            this.listViewNames.View = System.Windows.Forms.View.Details;
-            this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListViewNamesSelectedIndexChanged);
-            this.listViewNames.DoubleClick += new System.EventHandler(this.listViewNames_DoubleClick);
-            this.listViewNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewNames_KeyDown);
-            // 
-            // columnHeaderNames
-            // 
-            this.columnHeaderNames.Width = 144;
-            // 
-            // buttonRemoveNameEtc
-            // 
-            this.buttonRemoveNameEtc.Location = new System.Drawing.Point(159, 16);
-            this.buttonRemoveNameEtc.Name = "buttonRemoveNameEtc";
-            this.buttonRemoveNameEtc.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemoveNameEtc.TabIndex = 22;
-            this.buttonRemoveNameEtc.Text = "Remove";
-            this.buttonRemoveNameEtc.UseVisualStyleBackColor = true;
-            this.buttonRemoveNameEtc.Click += new System.EventHandler(this.ButtonRemoveNameEtcClick);
-            // 
-            // textBoxNameEtc
-            // 
-            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 298);
-            this.textBoxNameEtc.Name = "textBoxNameEtc";
-            this.textBoxNameEtc.Size = new System.Drawing.Size(151, 21);
-            this.textBoxNameEtc.TabIndex = 24;
-            this.textBoxNameEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNameEtcKeyDown);
-            // 
-            // buttonAddNames
-            // 
-            this.buttonAddNames.Location = new System.Drawing.Point(157, 296);
-            this.buttonAddNames.Name = "buttonAddNames";
-            this.buttonAddNames.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddNames.TabIndex = 26;
-            this.buttonAddNames.Text = "Add name";
-            this.buttonAddNames.UseVisualStyleBackColor = true;
-            this.buttonAddNames.Click += new System.EventHandler(this.ButtonAddNamesClick);
-            // 
-            // labelWordListLanguage
-            // 
-            this.labelWordListLanguage.AutoSize = true;
-            this.labelWordListLanguage.Location = new System.Drawing.Point(6, 19);
-            this.labelWordListLanguage.Name = "labelWordListLanguage";
-            this.labelWordListLanguage.Size = new System.Drawing.Size(54, 13);
-            this.labelWordListLanguage.TabIndex = 1;
-            this.labelWordListLanguage.Text = "Language";
-            // 
-            // comboBoxWordListLanguage
-            // 
-            this.comboBoxWordListLanguage.FormattingEnabled = true;
-            this.comboBoxWordListLanguage.Location = new System.Drawing.Point(67, 16);
-            this.comboBoxWordListLanguage.Name = "comboBoxWordListLanguage";
-            this.comboBoxWordListLanguage.Size = new System.Drawing.Size(155, 21);
-            this.comboBoxWordListLanguage.TabIndex = 0;
-            this.comboBoxWordListLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxWordListLanguageSelectedIndexChanged);
             // 
             // panelToolBar
             // 
@@ -5112,23 +4840,28 @@
             this.imageListFileTypeAssociations.ImageSize = new System.Drawing.Size(32, 32);
             this.imageListFileTypeAssociations.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // toolTipDialogStylePreview
+            // 
+            this.toolTipDialogStylePreview.AutoPopDelay = 60000;
+            this.toolTipDialogStylePreview.InitialDelay = 500;
+            this.toolTipDialogStylePreview.ReshowDelay = 100;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelTools);
-            this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelFont);
+            this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelTools);
+            this.Controls.Add(this.panelToolBar);
+            this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelVideoPlayer);
-            this.Controls.Add(this.panelWordLists);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
@@ -5204,17 +4937,6 @@
             this.groupBoxFixCommonErrors.PerformLayout();
             this.groupBoxToolsVisualSync.ResumeLayout(false);
             this.groupBoxToolsVisualSync.PerformLayout();
-            this.panelWordLists.ResumeLayout(false);
-            this.groupBoxWordLists.ResumeLayout(false);
-            this.groupBoxWordLists.PerformLayout();
-            this.groupBoxOcrFixList.ResumeLayout(false);
-            this.groupBoxOcrFixList.PerformLayout();
-            this.groupBoxUserWordList.ResumeLayout(false);
-            this.groupBoxUserWordList.PerformLayout();
-            this.groupBoxWordListLocation.ResumeLayout(false);
-            this.groupBoxWordListLocation.PerformLayout();
-            this.groupBoxNamesIgonoreLists.ResumeLayout(false);
-            this.groupBoxNamesIgonoreLists.PerformLayout();
             this.panelToolBar.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -5318,25 +5040,6 @@
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
         private System.Windows.Forms.TextBox textBoxShowLineBreaksAs;
         private System.Windows.Forms.Label labelShowLineBreaksAs;
-        private System.Windows.Forms.Panel panelWordLists;
-        private System.Windows.Forms.GroupBox groupBoxWordLists;
-        private System.Windows.Forms.GroupBox groupBoxWordListLocation;
-        private System.Windows.Forms.GroupBox groupBoxOcrFixList;
-        private System.Windows.Forms.GroupBox groupBoxNamesIgonoreLists;
-        private System.Windows.Forms.TextBox textBoxNameEtc;
-        private System.Windows.Forms.Label labelWordListLanguage;
-        private System.Windows.Forms.Button buttonAddNames;
-        private System.Windows.Forms.ComboBox comboBoxWordListLanguage;
-        private System.Windows.Forms.Button buttonRemoveNameEtc;
-        private System.Windows.Forms.Button buttonRemoveOcrFix;
-        private System.Windows.Forms.ListBox listBoxOcrFixList;
-        private System.Windows.Forms.TextBox textBoxOcrFixKey;
-        private System.Windows.Forms.Button buttonAddOcrFix;
-        private System.Windows.Forms.GroupBox groupBoxUserWordList;
-        private System.Windows.Forms.Button buttonRemoveUserWord;
-        private System.Windows.Forms.ListBox listBoxUserWordLists;
-        private System.Windows.Forms.TextBox textBoxUserWord;
-        private System.Windows.Forms.Button buttonAddUserWord;
         private System.Windows.Forms.Panel panelNetwork;
         private System.Windows.Forms.GroupBox groupBoxProxySettings;
         private System.Windows.Forms.Label labelProxyPassword;
@@ -5345,9 +5048,6 @@
         private System.Windows.Forms.TextBox textBoxProxyPassword;
         private System.Windows.Forms.Label labelProxyAddress;
         private System.Windows.Forms.Label labelProxyUserName;
-        private System.Windows.Forms.CheckBox checkBoxNamesOnline;
-        private System.Windows.Forms.TextBox textBoxNamesOnline;
-        private System.Windows.Forms.TextBox textBoxOcrFixValue;
         private System.Windows.Forms.Panel panelTools;
         private System.Windows.Forms.GroupBox groupBoxToolsVisualSync;
         private System.Windows.Forms.ComboBox comboBoxToolsVerifySeconds;
@@ -5493,7 +5193,6 @@
         private System.Windows.Forms.Label labelWaveformTextSize;
         private System.Windows.Forms.CheckBox checkBoxWaveformTextBold;
         private System.Windows.Forms.ComboBox comboBoxWaveformTextSize;
-        private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
         private System.Windows.Forms.GroupBox groupBoxNetworkSession;
         private System.Windows.Forms.Button buttonNetworkSessionNewMessageSound;
         private System.Windows.Forms.TextBox textBoxNetworkSessionNewMessageSound;
@@ -5578,7 +5277,7 @@
         private System.Windows.Forms.ComboBox comboBoxDialogStyle;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripShortcuts;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShortcutsCollapse;
-        private System.Windows.Forms.CheckBox checkBoxWaveformSnapToSceneChanges;
+        private System.Windows.Forms.CheckBox checkBoxWaveformSnapToShotChanges;
         private System.Windows.Forms.CheckBox checkBoxWaveformSingleClickSelect;
         private System.Windows.Forms.Label labelSplitBehavior;
         private System.Windows.Forms.ComboBox comboBoxSplitBehavior;
@@ -5608,8 +5307,6 @@
         private System.Windows.Forms.Button buttonDarkThemeBackColor;
         private System.Windows.Forms.Panel panelDarkThemeColor;
         private System.Windows.Forms.Button buttonDarkThemeColor;
-        private System.Windows.Forms.ListView listViewNames;
-        private System.Windows.Forms.ColumnHeader columnHeaderNames;
         private System.Windows.Forms.Panel panelSubtitleFormats;
         private System.Windows.Forms.GroupBox groupBoxSubtitleFormats;
         private System.Windows.Forms.Label labelDefaultSubtitleFormat;
@@ -5658,5 +5355,8 @@
         private System.Windows.Forms.CheckBox checkBoxTBBurnIn;
         private System.Windows.Forms.ComboBox comboBoxCpsLineLenCalc;
         private System.Windows.Forms.Label labelCpsLineLenCalc;
+        private System.Windows.Forms.CheckBox checkBoxUseWordSplitList;
+        private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
+        private System.Windows.Forms.Button buttonEditCustomContinuationStyle;
     }
 }

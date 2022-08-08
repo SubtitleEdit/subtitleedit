@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -121,7 +121,7 @@ Command line: {1} {2}</WaveFileNotFound>
 
 Command line: {1} {2}
 
-Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
+Napomena: Provjeri slobodan prostor na disku.</WaveFileMalformed>
     <LowDiskSpace>JAKO MALO PROSTORA NA DISKU!</LowDiskSpace>
     <FreeDiskSpace>{0} slobodno</FreeDiskSpace>
   </AddWaveform>
@@ -689,7 +689,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Remove>Makni</Remove>
     <RemoveAll>Makni sve</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Uvozi promijenjene scene</Title>
     <OpenTextFile>Otvori tekstualnu datoteku...</OpenTextFile>
     <ImportOptions>Opcije uvoza</ImportOptions>
@@ -698,8 +698,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Frames>Okviri</Frames>
     <Seconds>Sekundi</Seconds>
     <Milliseconds>Milisekundi</Milliseconds>
-    <GetSceneChangesWithFfmpeg />
-  </ImportSceneChanges>
+  </ImportShotChanges>
   <ImportText>
     <Title>Uvoz običnog teksta</Title>
     <OneSubtitleIsOneFile>Više slika - jedna datoteka je jedan podnaslov</OneSubtitleIsOneFile>
@@ -1000,8 +999,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <ChooseAudioTrack>Izaberi zvučni zapis</ChooseAudioTrack>
         <CloseVideo>&amp;Zatvori video datoteku</CloseVideo>
         <SetVideoOffset />
-        <ImportSceneChanges>Uvezi promijenjene scene</ImportSceneChanges>
-        <RemoveSceneChanges>Ukloni promijenjene scene</RemoveSceneChanges>
+        <ImportShotChanges>Uvezi promijenjene scene</ImportShotChanges>
+        <RemoveShotChanges>Ukloni promijenjene scene</RemoveShotChanges>
         <WaveformBatchGenerate>Batch stvoreni valni oblik...</WaveformBatchGenerate>
         <ShowHideVideo>Prikaži/sakrij &amp;video datoteku</ShowHideVideo>
         <ShowHideWaveform>Pokaži/Sakrij valni oblik</ShowHideWaveform>
@@ -1432,7 +1431,7 @@ koji bi trebao biti usklađen s video datotekom.
     <BeforeDisplaySubtitleJoin>Prije spajanja podnaslova</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Podnaslovi spojeni</SubtitlesJoined>
     <StatusLog>Status izvješća</StatusLog>
-    <XSceneChangesImported>{0} izmijenjenih scena uvezeno</XSceneChangesImported>
+    <XShotChangesImported>{0} izmijenjenih scena uvezeno</XShotChangesImported>
     <PluginXExecuted>Dodataka '{0}' izvršeno</PluginXExecuted>
     <NotAValidXSubFile>Nevažeća XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Prije spajanja linije s istim tekstom</BeforeMergeLinesWithSameText>
@@ -1880,9 +1879,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformPlayNewSelectionEnd />
     <WaveformPlayFirstSelectedSubtitle>Reproduciraj prvi izabrani podnaslov</WaveformPlayFirstSelectedSubtitle>
     <WaveformGoToNextSubtitle>Idi na sljedeći titl (sa video pozicije)</WaveformGoToNextSubtitle>
-    <WaveformGoToPreviousSceneChange />
-    <WaveformGoToNextSceneChange />
-    <WaveformToggleSceneChange />
     <GoBack1Frame>Jedan okvir natrag</GoBack1Frame>
     <GoForward1Frame>Jedan okvir naprijed</GoForward1Frame>
     <GoBack1FrameWithPlay />
@@ -2327,8 +2323,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowWaveformAndSpectrogram>Pokaži valni oblik i spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaži samo valni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaži samo spektrogram</ShowSpectrogramOnly>
-    <AddSceneChange />
-    <RemoveSceneChange />
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Traži tišinu...</SeekSilence>
     <InsertSubtitleHere>Umetni titl ovdje...</InsertSubtitleHere>

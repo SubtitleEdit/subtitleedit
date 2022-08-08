@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -807,7 +807,7 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
     <Remove>Kaldır</Remove>
     <RemoveAll>Tümünü kaldır</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Sahne değişiklikleri oluştur/içe aktar</Title>
     <OpenTextFile>Metin dosyası aç...</OpenTextFile>
     <Generate>Sahne değişiklikleri oluşturun</Generate>
@@ -817,11 +817,11 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
     <Frames>Kareler</Frames>
     <Seconds>Saniye</Seconds>
     <Milliseconds>Milisaniye</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Bölüm değişikliklerini 'ffmpeg' ile al.</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Bölüm değişikliklerini 'ffmpeg' ile al.</GetShotChangesWithFfmpeg>
     <Sensitivity>Hassasiyet</Sensitivity>
     <SensitivityDescription>Daha düşük değer daha fazla sahne değişikliği sağlar</SensitivityDescription>
-    <NoSceneChangesFound>Sahne değişikliği bulunamadı.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Sahne değişikliği bulunamadı.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Düz metni içe aktar</Title>
     <OneSubtitleIsOneFile>Birden çok dosya - bir dosya bir altyazı</OneSubtitleIsOneFile>
@@ -1139,8 +1139,8 @@ Anahtarınızı girmek için "Seçenekler -&gt; Ayarlar -&gt; Araçlar" a gidin<
         <SmptTimeMode>SMPTE zamanlaması (kare düşürme)</SmptTimeMode>
         <GenerateTextFromVideo>Videodan metin oluştur...</GenerateTextFromVideo>
         <ImportChaptersFromVideo>Videodan bölümleri içe aktarın</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Sahne değişiklikleri oluştur/içe aktar...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Sahne değişikliklerini kaldır</RemoveSceneChanges>
+        <GenerateImportShotChanges>Sahne değişiklikleri oluştur/içe aktar...</GenerateImportShotChanges>
+        <RemoveShotChanges>Sahne değişikliklerini kaldır</RemoveShotChanges>
         <WaveformBatchGenerate>Toplu dalga formları oluştur...</WaveformBatchGenerate>
         <ShowHideVideo>Videoyu göster/gizle...</ShowHideVideo>
         <ShowHideWaveform>Dalga formunu göster/gizle...</ShowHideWaveform>
@@ -1585,7 +1585,7 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Altyazı birleştirmeden önce</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Altyazı birleştirildi</SubtitlesJoined>
     <StatusLog>Durum günlüğü</StatusLog>
-    <XSceneChangesImported>{0} bölüm değişikliği yüklendi</XSceneChangesImported>
+    <XShotChangesImported>{0} bölüm değişikliği yüklendi</XShotChangesImported>
     <PluginXExecuted>{0} düzenleme eklendi.</PluginXExecuted>
     <NotAValidXSubFile>Geçerli XSub dosyası değil</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Aynı metinleri birleştirmeden önce</BeforeMergeLinesWithSameText>
@@ -2068,7 +2068,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformFocusMouseEnter>Fare üzerinde odak girmeyi ayarla</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ayrıca liste görünümünde fare ile odaklanmaya izin ver</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Altyazıları seçmek için tek tıklama</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Sahne değişikliklerine tuttur (geçersiz kılmak için Shift tuşunu basılı tutun)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Sahne değişikliklerine tuttur (geçersiz kılmak için Shift tuşunu basılı tutun)</WaveformSnapToShotChanges>
     <WaveformBorderHitMs1>Sınır işaretleyici</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisaniye</WaveformBorderHitMs2>
     <WaveformColor>Renk</WaveformColor>
@@ -2198,14 +2198,14 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Başlangıç ​​zamanını ayarlayın, tüm altyazıyı kaydırın</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Bitişi ayarla, süreyi gir</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Bitişi ayarla süreyi gir, ve sonrakine git</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Seçili satırları yapıştır, sonraki sahne değiştiğinde başlar</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Seçili satırları yapıştır, sonraki sahne değiştiğinde min. aralıkla başlar</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Seçili satırları yapıştır, önceki sahne değiştiğinde başlar</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Seçili satırları yapıştır, önceki sahne değiştiğinde min. aralıkla başlar</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Seçili satırları bir sonraki sahne değişikliğine (veya sonraki altyazıya) genişlet</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Seçili satırları bir sonraki sahne değişikliğine min. aralıkla (veya sonraki altyazıya) genişlet</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Seçili satırları önceki sahne değişikliğine (veya önceki altyazıya) genişlet</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Seçili satırları önceki sahne değişikliğine min. aralıkla (veya önceki altyazıya) genişlet</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Seçili satırları yapıştır, sonraki sahne değiştiğinde başlar</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Seçili satırları yapıştır, sonraki sahne değiştiğinde min. aralıkla başlar</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Seçili satırları yapıştır, önceki sahne değiştiğinde başlar</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Seçili satırları yapıştır, önceki sahne değiştiğinde min. aralıkla başlar</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Seçili satırları bir sonraki sahne değişikliğine (veya sonraki altyazıya) genişlet</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Seçili satırları bir sonraki sahne değişikliğine min. aralıkla (veya sonraki altyazıya) genişlet</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Seçili satırları önceki sahne değişikliğine (veya önceki altyazıya) genişlet</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Seçili satırları önceki sahne değişikliğine min. aralıkla (veya önceki altyazıya) genişlet</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Seçili satırları sonraki altyazıya genişlet</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Seçili satırları önceki altyazıya genişlet</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Bir sonraki altyazı veya en uzun süre için geçerli satırı genişlet</AdjustExtendCurrentSubtitle>
@@ -2256,9 +2256,9 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformPlayNewSelection>Seçimi oynat</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Seçimin sonunu oynat</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Seçilmiş ilk altyazıyı oynat</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Bir önceki bölüm değişikliğine git</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Bir sonraki bölüm değişikliğine git</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Bölüm geçiş değişimi</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Bir önceki bölüm değişikliğine git</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Bir sonraki bölüm değişikliğine git</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Bölüm geçiş değişimi</WaveformToggleShotChange>
     <WaveformGuessStart>Ses/sahne değişikliği yoluyla otomatik ayar başlangıcı</WaveformGuessStart>
     <GoBack1Frame>Bir kare geri</GoBack1Frame>
     <GoForward1Frame>Bir kare ileri</GoForward1Frame>
@@ -2851,8 +2851,8 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Dalga formu ve spektrogramı göster...</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Sadece dalga formunu göster...</ShowWaveformOnly>
     <ShowSpectrogramOnly>Sadece spektrogramı göster...</ShowSpectrogramOnly>
-    <AddSceneChange>Bölüm değişikliği ekle...</AddSceneChange>
-    <RemoveSceneChange>Bölüm değişikliğini kaldır...</RemoveSceneChange>
+    <AddShotChange>Bölüm değişikliği ekle...</AddShotChange>
+    <RemoveShotChange>Bölüm değişikliğini kaldır...</RemoveShotChange>
     <GuessTimeCodes>Zaman kodlarını tahmin et...</GuessTimeCodes>
     <SeekSilence>Sessizlik arama...</SeekSilence>
     <InsertSubtitleHere>Altyazıyı buraya ekleyin...</InsertSubtitleHere>

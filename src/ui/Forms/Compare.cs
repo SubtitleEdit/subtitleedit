@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -21,10 +22,10 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
         private string _language;
-        private static readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
-        private static readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
-        private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
-        private static readonly Color _listViewRed = Configuration.Settings.General.UseDarkTheme ? Color.DarkRed : Color.Salmon;
+        private static readonly Color BackDifferenceColor = Color.FromArgb(255, 90, 90);
+        private static readonly Color ForegroundDifferenceColor = Color.FromArgb(225, 0, 0);
+        private static readonly Color ListViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
+        private static readonly Color ListViewRed = Configuration.Settings.General.UseDarkTheme ? Color.DarkRed : Color.Salmon;
         private bool _loadingConfig = true;
 
         public Compare()
@@ -82,6 +83,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             subtitleListView1.Fill(subtitle1);
+            subtitleListView1.AutoSizeAllColumns(this);
+            subtitleListView2.AutoSizeAllColumns(this);
 
             if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
             {
@@ -110,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitle2.Text = subtitleFileName2;
 
             _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
-            CompareSubtitles();
+            CompareSubtitles(0);
 
             if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
             {
@@ -123,6 +126,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadAndCompare(int subtitleNumber, string fileName)
         {
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+
             if (subtitleNumber == 1)
             {
                 _subtitle1 = LoadSubtitle(fileName);
@@ -134,11 +140,19 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView2.Fill(_subtitle2);
             }
 
-            subtitleListView1.SelectIndexAndEnsureVisible(0);
-            subtitleListView2.SelectIndexAndEnsureVisible(0);
+            if (_subtitle1.Paragraphs.Count < selectedIndex)
+            {
+                selectedIndex = 0;
+            }
+
             if (_subtitle1.Paragraphs.Count > 0 && _subtitle2?.Paragraphs.Count > 0)
             {
-                CompareSubtitles();
+                CompareSubtitles(selectedIndex);
+            }
+            else
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+                subtitleListView2.SelectIndexAndEnsureVisible(selectedIndex);
             }
         }
 
@@ -199,6 +213,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static Subtitle LoadSubtitle(string fileName)
         {
+            // EBU STL does not support eg drop frame, so we override the loading frame rate
+            Ebu.OverrideReadFrameRate = Configuration.Settings.General.DefaultFrameRate;
+
             var subtitle = new Subtitle();
             var format = subtitle.LoadSubtitle(fileName, out _, null);
             if (format == null)
@@ -212,10 +229,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            Ebu.OverrideReadFrameRate = 0;
             return subtitle;
         }
 
-        private void CompareSubtitles()
+        private void CompareSubtitles(int selectedIndex)
         {
             if (_loadingConfig || _subtitle2 == null || _subtitle2.Paragraphs.Count == 0)
             {
@@ -226,28 +245,29 @@ namespace Nikse.SubtitleEdit.Forms
             var sub1 = new Subtitle(_subtitle1);
             var sub2 = new Subtitle(_subtitle2);
 
-            int index = 0;
-            Paragraph p1 = sub1.GetParagraphOrDefault(index);
-            Paragraph p2 = sub2.GetParagraphOrDefault(index);
-            int max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            var index = 0;
+            var p1 = sub1.GetParagraphOrDefault(index);
+            var p2 = sub2.GetParagraphOrDefault(index);
+            var max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             while (index < max)
             {
                 if (p1 != null && p2 != null && GetColumnsEqualExceptNumberAndDuration(p1, p2) == 0)
                 {
-                    for (int i = index + 1; i < max; i++)
+                    for (var i = index + 1; i < max; i++)
                     {
-                        // Try to find atleast two matching properties
+                        // Try to find at least two matching properties
                         if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(i), p2) > 1)
                         {
-                            for (int j = index; j < i; j++)
+                            for (var j = index; j < i; j++)
                             {
                                 sub2.Paragraphs.Insert(index++, new Paragraph());
                             }
                             break;
                         }
+
                         if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(i)) > 1)
                         {
-                            for (int j = index; j < i; j++)
+                            for (var j = index; j < i; j++)
                             {
                                 sub1.Paragraphs.Insert(index++, new Paragraph());
                             }
@@ -274,33 +294,33 @@ namespace Nikse.SubtitleEdit.Forms
             index = 0;
             p1 = sub1.GetParagraphOrDefault(index);
             p2 = sub2.GetParagraphOrDefault(index);
-            int totalWords = 0;
-            int wordsChanged = 0;
+            var totalWords = 0;
+            var wordsChanged = 0;
             max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
-            int min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            var min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             var onlyTextDiff = checkBoxOnlyListDifferencesInText.Checked;
 
             if (onlyTextDiff)
             {
                 while (index < min)
                 {
-                    bool addIndexToDifferences = false;
+                    var addIndexToDifferences = false;
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
                     if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView1.ColorOut(index, _listViewRed);
+                        subtitleListView1.ColorOut(index, ListViewRed);
                     }
                     else if (p2.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView2.ColorOut(index, _listViewRed);
+                        subtitleListView2.ColorOut(index, ListViewRed);
                     }
                     else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
                     {
                         addIndexToDifferences = true;
-                        subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexText);
-                        subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexText);
+                        subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
+                        subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexText);
                     }
                     if (addIndexToDifferences)
                     {
@@ -313,30 +333,29 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                const double tolerance = 0.1;
                 while (index < min)
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
-                    bool addIndexToDifferences = false;
+                    var addIndexToDifferences = false;
                     if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView1.ColorOut(index, _listViewRed);
+                        subtitleListView1.ColorOut(index, ListViewRed);
                     }
                     else if (p2.IsDefault)
                     {
                         addIndexToDifferences = true;
-                        subtitleListView2.ColorOut(index, _listViewRed);
+                        subtitleListView2.ColorOut(index, ListViewRed);
                     }
                     else
                     {
-                        int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
+                        var columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
                         // Not alike paragraphs
                         if (columnsAlike == 0)
                         {
                             addIndexToDifferences = true;
-                            subtitleListView1.SetBackgroundColor(index, _listViewGreen);
-                            subtitleListView2.SetBackgroundColor(index, _listViewGreen);
+                            subtitleListView1.SetBackgroundColor(index, ListViewGreen);
+                            subtitleListView2.SetBackgroundColor(index, ListViewGreen);
                             subtitleListView1.SetBackgroundColor(index, subtitleListView1.BackColor, subtitleListView1.ColumnIndexNumber);
                             subtitleListView2.SetBackgroundColor(index, subtitleListView2.BackColor, subtitleListView2.ColumnIndexNumber);
                         }
@@ -344,28 +363,28 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             addIndexToDifferences = true;
                             // Start time
-                            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
+                            if (!IsTimeEqual(p1.StartTime, p2.StartTime))
                             {
-                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexStart);
-                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexStart);
+                                subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexStart);
+                                subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexStart);
                             }
                             // End time
-                            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
+                            if (!IsTimeEqual(p1.EndTime, p2.EndTime))
                             {
-                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexEnd);
-                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexEnd);
+                                subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexEnd);
+                                subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexEnd);
                             }
                             // Duration
-                            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
+                            if (!IsTimeEqual(p1.Duration, p2.Duration))
                             {
-                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexDuration);
-                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexDuration);
+                                subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexDuration);
+                                subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexDuration);
                             }
                             // Text
                             if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
                             {
-                                subtitleListView1.SetBackgroundColor(index, _listViewGreen, subtitleListView1.ColumnIndexText);
-                                subtitleListView2.SetBackgroundColor(index, _listViewGreen, subtitleListView2.ColumnIndexText);
+                                subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
+                                subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexText);
                             }
                         }
                         // Number
@@ -395,11 +414,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!onlyTextDiff)
                     {
                         listView.SetBackgroundColor(i, Color.FromArgb(255, 200, 100), listView.ColumnIndexNumber);
-                        listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexStart);
-                        listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexEnd);
-                        listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexDuration);
+                        listView.SetBackgroundColor(i, ListViewGreen, listView.ColumnIndexStart);
+                        listView.SetBackgroundColor(i, ListViewGreen, listView.ColumnIndexEnd);
+                        listView.SetBackgroundColor(i, ListViewGreen, listView.ColumnIndexDuration);
                     }
-                    listView.SetBackgroundColor(i, _listViewGreen, listView.ColumnIndexText);
+                    listView.SetBackgroundColor(i, ListViewGreen, listView.ColumnIndexText);
                 }
             }
 
@@ -460,7 +479,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             timer1.Start();
             subtitleListView1.FirstVisibleIndex = -1;
-            subtitleListView1.SelectIndexAndEnsureVisible(0);
+
+            if (subtitleListView1.Items.Count < selectedIndex)
+            {
+                selectedIndex = 0;
+            }
+
+            subtitleListView1.SelectIndexAndEnsureVisible(selectedIndex);
+            SelectLinesInBothListViews('L');
         }
 
         private bool ShouldBreakToLetter() => _language != null && (_language == "ja" || _language == "zh");
@@ -491,20 +517,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return 0;
             }
 
-            const double tolerance = 0.1;
-
-            int columnsEqual = 0;
-            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
+            var columnsEqual = 0;
+            if (IsTimeEqual(p1.StartTime, p2.StartTime))
             {
                 columnsEqual++;
             }
 
-            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
+            if (IsTimeEqual(p1.EndTime, p2.EndTime))
             {
                 columnsEqual++;
             }
 
-            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) < tolerance)
+            if (IsTimeEqual(p1.Duration, p2.Duration))
             {
                 columnsEqual++;
             }
@@ -518,6 +542,17 @@ namespace Nikse.SubtitleEdit.Forms
             return columnsEqual;
         }
 
+        private static bool IsTimeEqual(TimeCode t1, TimeCode t2)
+        {
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                return t1.ToDisplayString() == t2.ToDisplayString();
+            }
+
+            const double tolerance = 0.1;
+            return Math.Abs(t1.TotalMilliseconds - t2.TotalMilliseconds) < tolerance;
+        }
+
         private int GetColumnsEqualExceptNumberAndDuration(Paragraph p1, Paragraph p2)
         {
             if (p1 == null || p2 == null)
@@ -525,15 +560,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return 0;
             }
 
-            const double tolerance = 0.1;
-
-            int columnsEqual = 0;
-            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
+            var columnsEqual = 0;
+            if (IsTimeEqual(p1.StartTime, p2.StartTime))
             {
                 columnsEqual++;
             }
 
-            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
+            if (IsTimeEqual(p1.EndTime, p2.EndTime))
             {
                 columnsEqual++;
             }
@@ -636,12 +669,33 @@ namespace Nikse.SubtitleEdit.Forms
             ShowTextDifference();
         }
 
+        public class RemoveFormattingInfo
+        {
+
+            public RemoveFormattingInfo(int index, string tag)
+            {
+                Index = index;
+                Tag = tag;
+            }
+
+            public int Index { get; set; }
+            public string Tag { get; set; }
+        }
+
         private void ShowTextDifference()
         {
+            var tags1 = new List<RemoveFormattingInfo>();
+            var tags2 = new List<RemoveFormattingInfo>();
+            if (checkBoxIgnoreFormatting.Checked)
+            {
+                SeparateHtmlTags(richTextBox1, tags1);
+                SeparateHtmlTags(richTextBox2, tags2);
+            }
+
             // from start
-            int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
-            int startCharactersOk = 0;
-            for (int i = 0; i < minLength; i++)
+            var minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
+            var startCharactersOk = 0;
+            for (var i = 0; i < minLength; i++)
             {
                 if (richTextBox1.Text[i] == richTextBox2.Text[i])
                 {
@@ -659,19 +713,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                         richTextBox1.SelectionStart = i;
                         richTextBox1.SelectionLength = 1;
-                        richTextBox1.SelectionColor = _foregroundDifferenceColor;
+                        richTextBox1.SelectionColor = ForegroundDifferenceColor;
                         if (" .,".Contains(richTextBox1.SelectedText))
                         {
-                            richTextBox1.SelectionBackColor = _backDifferenceColor;
+                            richTextBox1.SelectionBackColor = BackDifferenceColor;
                             richTextBox1.SelectionColor = DefaultForeColor;
                         }
 
                         richTextBox2.SelectionStart = i;
                         richTextBox2.SelectionLength = 1;
-                        richTextBox2.SelectionColor = _foregroundDifferenceColor;
+                        richTextBox2.SelectionColor = ForegroundDifferenceColor;
                         if (" .,".Contains(richTextBox2.SelectedText))
                         {
-                            richTextBox2.SelectionBackColor = _backDifferenceColor;
+                            richTextBox2.SelectionBackColor = BackDifferenceColor;
                             richTextBox2.SelectionColor = DefaultForeColor;
                         }
                     }
@@ -682,17 +736,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            int maxLength = Math.Max(richTextBox1.Text.Length, richTextBox2.Text.Length);
-            for (int i = startCharactersOk; i < maxLength; i++)
+            var maxLength = Math.Max(richTextBox1.Text.Length, richTextBox2.Text.Length);
+            for (var i = startCharactersOk; i < maxLength; i++)
             {
                 if (i < richTextBox1.Text.Length)
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionColor = _foregroundDifferenceColor;
+                    richTextBox1.SelectionColor = ForegroundDifferenceColor;
                     if (" .,".Contains(richTextBox1.SelectedText))
                     {
-                        richTextBox1.SelectionBackColor = _backDifferenceColor;
+                        richTextBox1.SelectionBackColor = BackDifferenceColor;
                         richTextBox1.SelectionColor = DefaultForeColor;
                     }
                 }
@@ -700,17 +754,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox2.SelectionStart = i;
                     richTextBox2.SelectionLength = 1;
-                    richTextBox2.SelectionColor = _foregroundDifferenceColor;
+                    richTextBox2.SelectionColor = ForegroundDifferenceColor;
                     if (" .,".Contains(richTextBox2.SelectedText))
                     {
-                        richTextBox2.SelectionBackColor = _backDifferenceColor;
+                        richTextBox2.SelectionBackColor = BackDifferenceColor;
                         richTextBox2.SelectionColor = DefaultForeColor;
                     }
                 }
             }
 
             // from end
-            for (int i = 1; i < minLength; i++)
+            for (var i = 1; i < minLength; i++)
             {
                 if (richTextBox1.Text.Length - i < startCharactersOk || richTextBox2.Text.Length - i < startCharactersOk)
                 {
@@ -743,7 +797,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = richTextBox2.Text.Length;
                     richTextBox1.SelectionLength = richTextBox1.Text.Length - richTextBox2.Text.Length;
-                    richTextBox1.SelectionBackColor = _backDifferenceColor;
+                    richTextBox1.SelectionBackColor = BackDifferenceColor;
                 }
             }
             else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
@@ -752,8 +806,66 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox2.SelectionStart = richTextBox1.Text.Length;
                     richTextBox2.SelectionLength = richTextBox2.Text.Length - richTextBox1.Text.Length;
-                    richTextBox2.SelectionColor = _foregroundDifferenceColor;
+                    richTextBox2.SelectionColor = ForegroundDifferenceColor;
                 }
+            }
+
+            if (checkBoxIgnoreFormatting.Checked)
+            {
+                ReAddHtmlTags(richTextBox1, tags1);
+                ReAddHtmlTags(richTextBox2, tags2);
+            }
+        }
+
+        private static void SeparateHtmlTags(RichTextBox rtb, List<RemoveFormattingInfo> tags)
+        {
+            for (var i = rtb.Text.Length - 1; i >= 0; i--)
+            {
+                if (rtb.Text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    tags.Add(new RemoveFormattingInfo(i, "<i>"));
+                    rtb.Text = rtb.Text.Remove(i, 3);
+                }
+                else if (rtb.Text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    tags.Add(new RemoveFormattingInfo(i, "</i>"));
+                    rtb.Text = rtb.Text.Remove(i, 4);
+                }
+                if (rtb.Text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                {
+                    tags.Add(new RemoveFormattingInfo(i, "<b>"));
+                    rtb.Text = rtb.Text.Remove(i, 3);
+                }
+                else if (rtb.Text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                {
+                    tags.Add(new RemoveFormattingInfo(i, "</b>"));
+                    rtb.Text = rtb.Text.Remove(i, 4);
+                }
+                else if (rtb.Text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                {
+                    var endIdx = rtb.Text.Substring(i).IndexOf('>');
+                    if (endIdx > 0)
+                    {
+                        var tag = rtb.Text.Substring(0, endIdx + 1);
+                        tags.Add(new RemoveFormattingInfo(i, tag));
+                        rtb.Text = rtb.Text.Remove(i, tag.Length);
+                    }
+                }
+                else if (rtb.Text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                {
+                    tags.Add(new RemoveFormattingInfo(i, "</font>"));
+                    rtb.Text = rtb.Text.Remove(i, 7);
+                }
+            }
+        }
+
+        private static void ReAddHtmlTags(RichTextBox rtb, List<RemoveFormattingInfo> tags)
+        {
+            foreach (var tag in tags.OrderByDescending(p => p.Index))
+            {
+                rtb.SelectionLength = 0;
+                rtb.SelectionStart = tag.Index;
+                rtb.SelectedText = tag.Tag;
             }
         }
 
@@ -796,8 +908,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOpenSubtitle2.Left = subtitleListView2.Left;
             buttonReloadSubtitle2.Left = buttonOpenSubtitle2.Left + buttonOpenSubtitle2.Width + 7;
 
-            subtitleListView1.Height = Height - (subtitleListView1.Top + 140);
-            subtitleListView2.Height = Height - (subtitleListView2.Top + 140);
+            subtitleListView1.Height = Height - (subtitleListView1.Top + 155);
+            subtitleListView2.Height = Height - (subtitleListView2.Top + 155);
 
             richTextBox1.Width = subtitleListView1.Width;
             richTextBox2.Width = subtitleListView2.Width;
@@ -875,6 +987,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            SelectLinesInBothListViews(activeListView);
+        }
+
+        private void SelectLinesInBothListViews(char activeListView)
+        {
             if (subtitleListView1.SelectedItems.Count > 0 && activeListView == 'L')
             {
                 if (subtitleListView2.SelectedItems.Count > 0 &&
@@ -888,6 +1005,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     return;
                 }
+
                 subtitleListView2.SelectedIndexChanged -= SubtitleListView2SelectedIndexChanged;
                 subtitleListView2.SelectIndexAndEnsureVisible(subtitleListView1.SelectedItems[0].Index);
                 if (subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
@@ -911,6 +1029,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     return;
                 }
+
                 subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView2.SelectedItems[0].Index);
                 if (subtitleListView2.TopItem.Index != subtitleListView1.TopItem.Index &&
                     subtitleListView1.Items.Count > subtitleListView2.TopItem.Index)
@@ -928,17 +1047,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxShowOnlyDifferences_CheckedChanged(object sender, EventArgs e)
         {
-            CompareSubtitles();
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+            CompareSubtitles(selectedIndex);
         }
 
         private void checkBoxOnlyListDifferencesInText_CheckedChanged(object sender, EventArgs e)
         {
-            CompareSubtitles();
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+            CompareSubtitles(selectedIndex);
         }
 
         private void checkBoxIgnoreLineBreaks_CheckedChanged(object sender, EventArgs e)
         {
-            CompareSubtitles();
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+            CompareSubtitles(selectedIndex);
         }
 
         private void labelSubtitle1_MouseHover(object sender, EventArgs e)
@@ -1045,7 +1170,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                 {
-                    CompareSubtitles();
+                    var selectedIndices = subtitleListView1.GetSelectedIndices();
+                    var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+                    CompareSubtitles(selectedIndex);
                 }
             }
             else
@@ -1059,7 +1186,9 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonReloadSubtitle2.Enabled = true;
                 if (_subtitle2.Paragraphs.Count > 0)
                 {
-                    CompareSubtitles();
+                    var selectedIndices = subtitleListView1.GetSelectedIndices();
+                    var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+                    CompareSubtitles(selectedIndex);
                 }
             }
         }
@@ -1110,7 +1239,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxIgnoreFormatting_CheckedChanged(object sender, EventArgs e)
         {
-            CompareSubtitles();
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+            CompareSubtitles(selectedIndex);
         }
 
         private void Compare_Shown(object sender, EventArgs e)
@@ -1124,7 +1255,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
-                    string fileName = saveFile.FileName;
+                    var fileName = saveFile.FileName;
                     var sb = new StringBuilder();
                     sb.AppendLine("<!DOCTYPE html>");
                     sb.AppendLine("<html>");
@@ -1142,9 +1273,11 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine("      <th>&nbsp;</th>");
                     sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle2.Text + "</th>");
                     sb.AppendLine("    </tr>");
-                    for (int i = 0; i < subtitleListView1.Items.Count; i++)
+                    for (var i = 0; i < subtitleListView1.Items.Count; i++)
                     {
-                        if (subtitleListView1.Items[i].Tag is Paragraph itemLeft && subtitleListView2.Items[i].Tag is Paragraph itemRight)
+                        if (subtitleListView1.Items[i].Tag is Paragraph itemLeft &&
+                            subtitleListView2.Items.Count > i &&
+                            subtitleListView2.Items[i].Tag is Paragraph itemRight)
                         {
                             sb.AppendLine("    <tr>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
@@ -1176,21 +1309,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GetHtmlText(Paragraph p, string text)
+        private static string GetHtmlText(Paragraph p, string text)
         {
-            if (p.IsDefault)
-            {
-                return string.Empty;
-            }
-            return HtmlUtil.EncodeNamed(text);
+            return p.IsDefault ? string.Empty : HtmlUtil.EncodeNamed(text);
         }
 
-        private string GetHtmlBackgroundColor(ListViewItem.ListViewSubItem item)
+        private static string GetHtmlBackgroundColor(ListViewItem.ListViewSubItem item)
         {
             if (item.BackColor == DefaultBackColor)
             {
                 return string.Empty;
             }
+
             return " style='background-color:" + ColorTranslator.ToHtml(item.BackColor) + "'";
         }
     }

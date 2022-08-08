@@ -126,6 +126,7 @@
             this.timerClearStatus = new System.Windows.Forms.Timer(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.labelDuplicateStyleNames = new System.Windows.Forms.Label();
             this.contextMenuStripFile.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -249,6 +250,11 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(212, 6);
             // 
+            // addToStorageToolStripMenuItem1
+            // 
+            this.addToStorageToolStripMenuItem1.Name = "addToStorageToolStripMenuItem1";
+            this.addToStorageToolStripMenuItem1.Size = new System.Drawing.Size(215, 22);
+            // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
@@ -370,6 +376,13 @@
             this.groupBoxStyles.TabIndex = 0;
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "File styles";
+            // 
+            // buttonAddStyleToStorage
+            // 
+            this.buttonAddStyleToStorage.Location = new System.Drawing.Point(0, 0);
+            this.buttonAddStyleToStorage.Name = "buttonAddStyleToStorage";
+            this.buttonAddStyleToStorage.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddStyleToStorage.TabIndex = 0;
             // 
             // buttonExport
             // 
@@ -1156,11 +1169,24 @@
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
+            // labelDuplicateStyleNames
+            // 
+            this.labelDuplicateStyleNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelDuplicateStyleNames.AutoSize = true;
+            this.labelDuplicateStyleNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDuplicateStyleNames.ForeColor = System.Drawing.Color.Firebrick;
+            this.labelDuplicateStyleNames.Location = new System.Drawing.Point(12, 687);
+            this.labelDuplicateStyleNames.Name = "labelDuplicateStyleNames";
+            this.labelDuplicateStyleNames.Size = new System.Drawing.Size(154, 13);
+            this.labelDuplicateStyleNames.TabIndex = 9;
+            this.labelDuplicateStyleNames.Text = "labelDuplicateStyleNames";
+            // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 709);
+            this.Controls.Add(this.labelDuplicateStyleNames);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.labelStatus);
@@ -1313,5 +1339,6 @@
         private System.Windows.Forms.Label labelScaleY;
         private System.Windows.Forms.NumericUpDown numericUpDownScaleX;
         private System.Windows.Forms.Label labelScaleX;
+        private System.Windows.Forms.Label labelDuplicateStyleNames;
     }
 }

@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -720,7 +720,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
     <Remove>Ta bort</Remove>
     <RemoveAll>Ta bort alla</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Importera scenförändringar</Title>
     <OpenTextFile>Öppna textfil</OpenTextFile>
     <Generate>Skapa scenändringar</Generate>
@@ -730,11 +730,11 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
     <Frames>Bildrutor</Frames>
     <Seconds>Sekunder</Seconds>
     <Milliseconds>Millisekunder</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Hämta scenförändringar med FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Hämta scenförändringar med FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Känslighet</Sensitivity>
     <SensitivityDescription>Lägre värde ger mer scenändringar</SensitivityDescription>
-    <NoSceneChangesFound>Hittade inge scenändringar</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Hittade inge scenändringar</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Importera vanlig text</Title>
     <OneSubtitleIsOneFile>Flera filer - en fil är en undertext</OneSubtitleIsOneFile>
@@ -1044,8 +1044,8 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
         <SetVideoOffset>Ange videooffset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <GenerateTextFromVideo>Skapa text från video...</GenerateTextFromVideo>
-        <GenerateImportSceneChanges>Skapa/importera scenändringar...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Ta bort scenförändringar</RemoveSceneChanges>
+        <GenerateImportShotChanges>Skapa/importera scenändringar...</GenerateImportShotChanges>
+        <RemoveShotChanges>Ta bort scenförändringar</RemoveShotChanges>
         <WaveformBatchGenerate>Batch genererar vågformdata...</WaveformBatchGenerate>
         <ShowHideVideo>Visa/dölj video</ShowHideVideo>
         <ShowHideWaveform>Visa/dölj ljudformat</ShowHideWaveform>
@@ -1480,7 +1480,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Innan sammanfogning av undertexter</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Undertexter sammanfogade</SubtitlesJoined>
     <StatusLog>Statuslogg</StatusLog>
-    <XSceneChangesImported>{0} importerade scenförändringar</XSceneChangesImported>
+    <XShotChangesImported>{0} importerade scenförändringar</XShotChangesImported>
     <PluginXExecuted>Tillägg '{0}' körs.</PluginXExecuted>
     <NotAValidXSubFile>Inte en giltig XSub-fil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Innan du sammanfogar rader med samma text</BeforeMergeLinesWithSameText>
@@ -1972,9 +1972,9 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <WaveformPlayNewSelection>Spela upp urvalet</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Spela upp slutet av urvalet</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spela den första markerade undertexten</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Gå till föregående scenförändring</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Gå till nästa scenförändring</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Växla scenförändring</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Gå till föregående scenförändring</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Gå till nästa scenförändring</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Växla scenförändring</WaveformToggleShotChange>
     <GoBack1Frame>En bildruta bakåt</GoBack1Frame>
     <GoForward1Frame>En bildruta framåt</GoForward1Frame>
     <GoBack1FrameWithPlay>En bildruta bakåt (med spela upp)</GoBack1FrameWithPlay>
@@ -2446,8 +2446,8 @@ Behålla ändringarna?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Visa vågform och spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Visa endast vågform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Visa endast spektrogram</ShowSpectrogramOnly>
-    <AddSceneChange>Lägg till scenförändring</AddSceneChange>
-    <RemoveSceneChange>Ta bort scenförändring</RemoveSceneChange>
+    <AddShotChange>Lägg till scenförändring</AddShotChange>
+    <RemoveShotChange>Ta bort scenförändring</RemoveShotChange>
     <GuessTimeCodes>Gissa tidskoder...</GuessTimeCodes>
     <SeekSilence>Sök efter tystnad...</SeekSilence>
     <InsertSubtitleHere>Infoga undertexter här...</InsertSubtitleHere>

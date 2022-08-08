@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -723,7 +723,7 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
     <Remove>Ukloni</Remove>
     <RemoveAll>Ukloni sve</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
+  <ImportShotChanges>
     <Title>Uvoz Promena Scene</Title>
     <OpenTextFile>Tekstualna datoteka...</OpenTextFile>
     <Generate>Kreiraj promene scene</Generate>
@@ -733,11 +733,11 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
     <Frames>Kadrovi</Frames>
     <Seconds>Sekundi</Seconds>
     <Milliseconds>Milisekundi</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Kreiraj promene scene pomoću FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Kreiraj promene scene pomoću FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Osetljivost</Sensitivity>
     <SensitivityDescription>Niža vrednost daje veće promene scene</SensitivityDescription>
-    <NoSceneChangesFound>Nisu pronađene promene scene.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <NoShotChangesFound>Nisu pronađene promene scene.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Uvoz običnog teksta</Title>
     <OneSubtitleIsOneFile>Više datoteka - jedna datoteka je jedan prevod</OneSubtitleIsOneFile>
@@ -1049,8 +1049,8 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
         <SetVideoOffset>Izjednači video (video offset)...</SetVideoOffset>
         <SmptTimeMode>SMPTE vreme (ispušteni kadar)</SmptTimeMode>
         <GenerateTextFromVideo>Kreiraj tekst iz videa...</GenerateTextFromVideo>
-        <GenerateImportSceneChanges>Kreiraj/uvezi promene scene...</GenerateImportSceneChanges>
-        <RemoveSceneChanges>Ukloni promene scene</RemoveSceneChanges>
+        <GenerateImportShotChanges>Kreiraj/uvezi promene scene...</GenerateImportShotChanges>
+        <RemoveShotChanges>Ukloni promene scene</RemoveShotChanges>
         <WaveformBatchGenerate>Batch (serijsko) kreiranje Audio zapisa...</WaveformBatchGenerate>
         <ShowHideVideo>Prikaži/sakrij Video</ShowHideVideo>
         <ShowHideWaveform>Prikaži/sakrij Audio</ShowHideWaveform>
@@ -1485,7 +1485,7 @@ Nastaviti?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Pre spajanja prevoda</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Prevodi spojeni</SubtitlesJoined>
     <StatusLog>Status izveštaja</StatusLog>
-    <XSceneChangesImported>{0} izmenjenih scena uvezeno</XSceneChangesImported>
+    <XShotChangesImported>{0} izmenjenih scena uvezeno</XShotChangesImported>
     <PluginXExecuted>Dodatak '{0}' izvršeno.</PluginXExecuted>
     <NotAValidXSubFile>Nevažeća XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Pre spajanja linije s istim tekstom</BeforeMergeLinesWithSameText>
@@ -1978,9 +1978,9 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <WaveformPlayNewSelection>Reprodukuj selekciju</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reprodukuj kraj od selekcije</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reprodukuj prvi izabrani prevod</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Prethodne promena scene</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Sledeća promena scene</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Postavi promenu scene</WaveformToggleSceneChange>
+    <WaveformGoToPreviousShotChange>Prethodne promena scene</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Sledeća promena scene</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Postavi promenu scene</WaveformToggleShotChange>
     <GoBack1Frame>1 kadar nazad</GoBack1Frame>
     <GoForward1Frame>1 kadar napred</GoForward1Frame>
     <GoBack1FrameWithPlay>1 kadar nazad (sa reprodukcijom)</GoBack1FrameWithPlay>
@@ -2456,8 +2456,8 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <ShowWaveformAndSpectrogram>Pokaži Audio i Spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaži samo Audio</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaži samo Spektrogram</ShowSpectrogramOnly>
-    <AddSceneChange>Dodaj promenu scene</AddSceneChange>
-    <RemoveSceneChange>Ukloni promenu scene</RemoveSceneChange>
+    <AddShotChange>Dodaj promenu scene</AddShotChange>
+    <RemoveShotChange>Ukloni promenu scene</RemoveShotChange>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Pronađi tišinu...</SeekSilence>
     <InsertSubtitleHere>Uvezi prevod ovde...</InsertSubtitleHere>

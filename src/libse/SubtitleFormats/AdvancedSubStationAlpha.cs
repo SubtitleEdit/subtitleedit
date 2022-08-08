@@ -1731,32 +1731,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             {
                 foreach (var p in subtitle.Paragraphs)
                 {
-                    string s = p.Text;
-
+                    var s = p.Text;
                     if (s.Contains('{') && s.Contains('}'))
                     {
-                        var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
-                        var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
-                        if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
-                        {
-                            var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
-                            if (startTagIndex >= 0)
-                            {
-                                if (p0Index > p1Index)
-                                {
-                                    s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
-                                }
-                                else
-                                {
-                                    s = s.Remove(startTagIndex);
-                                }
-                            }
-                        }
+                        s = RemoveDrawingTag(s);
 
                         var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
                         if (karaokeStart >= 0)
                         {
-                            int l = s.IndexOf('}', karaokeStart + 1);
+                            var l = s.IndexOf('}', karaokeStart + 1);
                             if (l < karaokeStart)
                             {
                                 break;
@@ -1823,12 +1806,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     }
 
                     p.Text = GetFormattedText(p.Text);
+                    p.Text = RemoveDrawingTag(p.Text);
 
-                    int indexOfBegin = p.Text.IndexOf('{');
-                    string pre = string.Empty;
+                    var indexOfBegin = p.Text.IndexOf('{');
+                    var pre = string.Empty;
                     while (indexOfBegin >= 0 && p.Text.IndexOf('}') > indexOfBegin)
                     {
-                        string s = p.Text.Substring(indexOfBegin);
+                        var s = p.Text.Substring(indexOfBegin);
                         if (s.StartsWith("{\\an1}", StringComparison.Ordinal) ||
                             s.StartsWith("{\\an2}", StringComparison.Ordinal) ||
                             s.StartsWith("{\\an3}", StringComparison.Ordinal) ||
@@ -1853,7 +1837,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         {
                             pre = s.Substring(0, 5) + "}";
                         }
-                        int indexOfEnd = p.Text.IndexOf('}');
+
+                        var indexOfEnd = p.Text.IndexOf('}');
                         p.Text = p.Text.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
 
                         indexOfBegin = p.Text.IndexOf('{');
@@ -1861,6 +1846,40 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     p.Text = pre + p.Text;
                 }
             }
+        }
+
+        public static string RemoveDrawingTag(string input)
+        {
+            var s = input;
+            var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
+            if (p1Index == -1 && s.Contains("\\p"))
+            {
+                var findDrawStart = new Regex(@"\\p[123456789]");
+                var match = findDrawStart.Match(s);
+                if (match.Success)
+                {
+                    p1Index = match.Index;
+                }
+            }
+
+            var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
+            if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
+            {
+                var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
+                if (startTagIndex >= 0)
+                {
+                    if (p0Index > p1Index)
+                    {
+                        s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
+                    }
+                    else
+                    {
+                        s = s.Remove(startTagIndex);
+                    }
+                }
+            }
+
+            return s;
         }
 
         private static string RemoveTag(string s, string tag)

@@ -811,7 +811,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return _styleLookup.TryGetValue(code, out var style) ? style : null;
         }
 
-        public static string GetCodeFromPositionAndColor(int x, int y, FontStyle fontStyle, Color color)
+        public static string GetCodeFromPositionAndColor(int x, int y, SccFontStyle fontStyle, Color color)
         {
             var match = SccPositionAndStyleTable.SccPositionAndStyles.FirstOrDefault(p => p.X == x && p.Y == y && p.Style == fontStyle && p.ForeColor == color);
             return match == null ? string.Empty : match.Code;
@@ -1034,12 +1034,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fontOn = false;
                             }
 
-                            if ((cp.Style & FontStyle.Italic) == FontStyle.Italic && !italicOn)
+                            if ((cp.Style & SccFontStyle.Italic) == SccFontStyle.Italic && !italicOn)
                             {
                                 sb.Append("<i>");
                                 italicOn = true;
                             }
-                            else if (cp.Style == FontStyle.Regular && italicOn)
+                            else if (cp.Style == SccFontStyle.Regular && italicOn)
                             {
                                 sb.Append("</i>");
                                 italicOn = false;

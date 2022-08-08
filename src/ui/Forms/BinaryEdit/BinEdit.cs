@@ -317,7 +317,13 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             {
                 CleanUp();
                 var log = new StringBuilder();
+                var oldSkipMerge = Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge;
+                var oldForceMergeAll = Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll;
+                Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge = true;
+                Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll = false;
                 var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+                Configuration.Settings.SubtitleSettings.BluRaySupSkipMerge = oldSkipMerge;
+                Configuration.Settings.SubtitleSettings.BluRaySupForceMergeAll = oldForceMergeAll;
                 FixShortDisplayTimes(bluRaySubtitles);
                 _subtitle = new Subtitle();
                 _extra = new List<Extra>();
@@ -432,6 +438,16 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     _subtitle = new Subtitle(sub);
                     FillListView(_subtitle);
                 }
+            }
+            else if (FileUtil.IsManzanita(fileName))
+            {
+                if (!ImportSubtitleFromManzanitaTransportStream(fileName))
+                {
+                    return;
+                }
+
+                _subtitle.Renumber();
+                FillListView(_subtitle);
             }
 
             if (_subtitle != null)
@@ -769,6 +785,19 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
 
             return LoadTransportStreamSubtitle(tsParser.GetDvbSubtitles(tsParser.SubtitlePacketIds[0]));
+        }
+
+        private bool ImportSubtitleFromManzanitaTransportStream(string fileName)
+        {
+            var tsParser = new ManzanitaTransportStreamParser();
+            tsParser.Parse(fileName);
+            var subtitles = tsParser.GetDvbSup();
+            if (subtitles.Count > 0)
+            {
+                return LoadTransportStreamSubtitle(subtitles);
+            }
+
+            return false;  // no image based subtitles found
         }
 
         private bool LoadTransportStreamSubtitle(List<TransportStreamSubtitle> subtitles)
@@ -1886,7 +1915,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                      "Matroska|*.mkv;*.mks|" +
                                      "Transport stream|*.ts;*.m2ts;*.mts;*.rec;*.mpeg;*.mpg|" +
                                      "BdnXml|*.xml|" +
-                                     "TTML base64 inline images|*.ttml";
+                                     "TTML base64 inline images|*.ttml|" +
+                                     "All files|*.*";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 OpenBinSubtitle(openFileDialog1.FileName);
@@ -2876,7 +2906,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : s.GetBitmap();
             var nBmp = new NikseBitmap(bmp);
             nBmp.MakeTwoColor(200);
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nBmp, 8, false, true, 15, true);
+            nBmp.CropTop(0, Color.FromArgb(0, 0, 0, 0));
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nBmp, 10, false, true, 20, true);
             var sb = new StringBuilder();
             foreach (var item in list)
             {
@@ -2889,12 +2920,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    var match = nOcrDb.GetMatch(item.NikseBitmap, item.Top, true, 40);
+                    var match = nOcrDb.GetMatch(item.NikseBitmap, item.Top, true, 50);
                     sb.Append(match != null ? FixUppercaseLowercaseIssues(item, match) : "*");
                 }
             }
 
-            p.Text = sb.ToString().Trim();
+            p.Text = sb.ToString().Trim().Replace(Environment.NewLine, " ");
         }
 
         private void centerSelectedLinesHorizontallyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2934,7 +2965,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
-                extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
 
                 if (index == idx)
                 {
@@ -2958,7 +2989,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var index = subtitleListView1.SelectedIndices[i];
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
-                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
 
                 if (index == idx)
                 {
@@ -2996,15 +3027,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SetupProgressBar(GetIndices(true));
 
             int count = 0;
-            var lockObject = new object();
             var selectedIndices = GetIndices(true);
-            Parallel.ForEach(selectedIndices, index =>
+            foreach (var index in selectedIndices)
             {
                 Interlocked.Increment(ref count);
-                lock (lockObject)
-                {
-                    progressBar1.Value = count;
-                }
+                progressBar1.Value = count;
 
                 var extra = _extra[index];
                 var bmp = extra.Bitmap != null ? (Bitmap)extra.Bitmap.Clone() : GetBitmap(_binSubtitles[index]);
@@ -3022,12 +3049,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 bmp.Dispose();
-                lock (lockObject)
-                {
-                    progressBar1.Refresh();
-                    Application.DoEvents();
-                }
-            });
+                progressBar1.Refresh();
+                Application.DoEvents();
+            }
+
             progressBar1.Hide();
         }
 
@@ -3259,6 +3284,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                     bmp.Dispose();
                 }
+
                 progressBar1.Hide();
             }
         }
@@ -3269,15 +3295,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 case ContentAlignment.BottomLeft:
                     extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
                     break;
                 case ContentAlignment.BottomCenter:
                     extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
                     break;
                 case ContentAlignment.BottomRight:
                     extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditVerticalMargin);
+                    extra.Y = (int)Math.Round(numericUpDownScreenHeight.Value - bmp.Height - Configuration.Settings.Tools.BinEditBottomMargin);
                     break;
                 case ContentAlignment.MiddleLeft:
                     extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
@@ -3293,15 +3319,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     break;
                 case ContentAlignment.TopLeft:
                     extra.X = Configuration.Settings.Tools.BinEditLeftMargin;
-                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
                     break;
                 case ContentAlignment.TopCenter:
                     extra.X = (int)Math.Round((numericUpDownScreenWidth.Value - bmp.Width) / 2.0m);
-                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
                     break;
                 case ContentAlignment.TopRight:
                     extra.X = (int)Math.Round(numericUpDownScreenWidth.Value - bmp.Width - Configuration.Settings.Tools.BinEditRightMargin);
-                    extra.Y = Configuration.Settings.Tools.BinEditVerticalMargin;
+                    extra.Y = Configuration.Settings.Tools.BinEditTopMargin;
                     break;
             }
         }
@@ -3506,14 +3532,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var selectedIndices = GetIndices(onlySelectedLines);
                 SetupProgressBar(selectedIndices);
                 int count = 0;
-                var lockObject = new object();
-                Parallel.ForEach(selectedIndices, i =>
+                foreach (var i in selectedIndices)
                 {
                     Interlocked.Increment(ref count);
-                    lock (lockObject)
-                    {
-                        progressBar1.Value = count;
-                    }
+                    progressBar1.Value = count;
 
                     var sub = _binSubtitles[i];
                     var extraInner = _extra[i];
@@ -3532,12 +3554,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     bmpInner.Dispose();
-                    lock (lockObject)
-                    {
-                        progressBar1.Refresh();
-                        Application.DoEvents();
-                    }
-                });
+                    progressBar1.Refresh();
+                    Application.DoEvents();
+                }
+
                 progressBar1.Hide();
             }
         }
@@ -3595,14 +3615,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 SetupProgressBar(selectedIndices);
 
                 int count = 0;
-                var lockObject = new object();
-                Parallel.ForEach(selectedIndices, i =>
+                foreach (var i in selectedIndices)
                 {
                     Interlocked.Increment(ref count);
-                    lock (lockObject)
-                    {
-                        progressBar1.Value = count;
-                    }
+                    progressBar1.Value = count;
                     var sub = _binSubtitles[i];
                     var extraInner = _extra[i];
                     var bmpInner = extraInner.Bitmap != null ? (Bitmap)extraInner.Bitmap.Clone() : GetBitmap(sub);
@@ -3618,12 +3634,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     bmpInner.Dispose();
-                    lock (lockObject)
-                    {
-                        progressBar1.Refresh();
-                        Application.DoEvents();
-                    }
-                });
+                    progressBar1.Refresh();
+                    Application.DoEvents();
+                }
 
                 progressBar1.Hide();
             }
@@ -3665,14 +3678,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var selectedIndices = GetIndices(onlySelectedLines);
                 SetupProgressBar(selectedIndices);
                 int count = 0;
-                var lockObject = new object();
-                Parallel.ForEach(selectedIndices, i =>
+                foreach (var i in selectedIndices)
                 {
                     Interlocked.Increment(ref count);
-                    lock (lockObject)
-                    {
-                        progressBar1.Value = count;
-                    }
+                    progressBar1.Value = count;
 
                     var sub = _binSubtitles[i];
                     var extraInner = _extra[i];
@@ -3689,12 +3698,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     bmpInner.Dispose();
-                    lock (lockObject)
-                    {
-                        progressBar1.Refresh();
-                    }
+                    progressBar1.Refresh();
                     Application.DoEvents();
-                });
+                }
+
                 progressBar1.Hide();
             }
         }

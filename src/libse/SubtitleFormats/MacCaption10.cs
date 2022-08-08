@@ -15,6 +15,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "MacCaption 1.0";
 
+        // ANC data bytes may be represented by one ASCII character according to the following schema:
+        private static readonly Dictionary<char, string> AncDictionary = new Dictionary<char, string>
+        {
+            { 'G', "FA0000" },
+            { 'H', "FA0000FA0000" },
+            { 'I', "FA0000FA0000FA0000" },
+            { 'J', "FA0000FA0000FA0000FA0000" },
+            { 'K', "FA0000FA0000FA0000FA0000FA0000" },
+            { 'L', "FA0000FA0000FA0000FA0000FA0000FA0000" },
+            { 'M', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
+            { 'N', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
+            { 'O', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
+            { 'P', "FB8080" },
+            { 'Q', "FC8080" },
+            { 'R', "FD8080" },
+            { 'S', "9669" },
+            { 'T', "6101" },
+            { 'U', "E1000000" },
+            { 'Z', "00" },
+        };
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
@@ -216,31 +237,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetHex(string input)
         {
-            // ANC data bytes may be represented by one ASCII character according to the following schema:
-            var dictionary = new Dictionary<char, string>
-            {
-                { 'G', "FA0000" },
-                { 'H', "FA0000FA0000" },
-                { 'I', "FA0000FA0000FA0000" },
-                { 'J', "FA0000FA0000FA0000FA0000" },
-                { 'K', "FA0000FA0000FA0000FA0000FA0000" },
-                { 'L', "FA0000FA0000FA0000FA0000FA0000FA0000" },
-                { 'M', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
-                { 'N', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
-                { 'O', "FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000FA0000" },
-                { 'P', "FB8080" },
-                { 'Q', "FC8080" },
-                { 'R', "FD8080" },
-                { 'S', "9669" },
-                { 'T', "6101" },
-                { 'U', "E1000000" },
-                { 'Z', "00" },
-            };
-
             var sb = new StringBuilder();
             foreach (var ch in input)
             {
-                if (dictionary.TryGetValue(ch, out var hexValue))
+                if (AncDictionary.TryGetValue(ch, out var hexValue))
                 {
                     sb.Append(hexValue);
                 }
@@ -274,23 +274,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("00", "Z");
         }
 
-        private static byte[] HexStringToByteArray(string hex)
+        private static byte[] HexStringToByteArray(string hexString)
         {
-            try
-            {
-                var numberChars = hex.Length;
-                var bytes = new byte[numberChars / 2];
-                for (var i = 0; i < numberChars - 1; i += 2)
-                {
-                    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-                }
-
-                return bytes;
-            }
-            catch
+            if (hexString.Length % 2 != 0)
             {
                 return new byte[] { };
             }
+
+            var ret = new byte[hexString.Length / 2];
+            for (var i = 0; i < ret.Length; i++)
+            {
+                int high = hexString[i * 2];
+                int low = hexString[i * 2 + 1];
+                high = (high & 0xf) + ((high & 0x40) >> 6) * 9;
+                low = (low & 0xf) + ((low & 0x40) >> 6) * 9;
+
+                ret[i] = (byte)((high << 4) | low);
+            }
+
+            return ret;
         }
     }
 }

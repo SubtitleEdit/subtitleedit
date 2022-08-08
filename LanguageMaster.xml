@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.5</Version>
+    <Version>3.6.6</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -95,6 +95,7 @@
     <ShortcutX>Shortcut: {0}</ShortcutX>
     <ExampleX>Example: {0}</ExampleX>
     <Reset>Reset</Reset>
+    <Warning>Warning</Warning>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -172,7 +173,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UnableToFix>Unable to fix: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Audio/video to text</Title>
+    <Title>Audio to text</Title>
     <Info>Generate text from audio via Vosk/Kaldi speech recognition</Info>
     <VoskWebsite>Vosk website</VoskWebsite>
     <Models>Models</Models>
@@ -180,7 +181,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <OpenModelsFolder>Open models folder</OpenModelsFolder>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>
+    <TranscribingXOfY>Transcribing audio to text - file {0} of {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} files saved to video source folder</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
+    <BatchMode>Batch mode</BatchMode>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -592,6 +596,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TimeCode>Time code</TimeCode>
     <NewLine>New line</NewLine>
     <Footer>Footer</Footer>
+    <FileExtension>File extension</FileExtension>
     <DoNotModify>[Do not modify]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
@@ -834,6 +839,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <PassX>Pass {0}</PassX>
     <Encoding>Encoding</Encoding>
     <BitRate>Bit rate</BitRate>
+    <TotalBitRateX>Total bit rate: {0}</TotalBitRateX>
     <SampleRate>Sample rate</SampleRate>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
@@ -912,21 +918,21 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
     <Remove>Remove</Remove>
     <RemoveAll>Remove all</RemoveAll>
   </ImportImages>
-  <ImportSceneChanges>
-    <Title>Generate/import scene changes</Title>
+  <ImportShotChanges>
+    <Title>Generate/import shot changes</Title>
     <OpenTextFile>Open text file...</OpenTextFile>
-    <Generate>Generate scene changes</Generate>
-    <Import>Import scene changes</Import>
+    <Generate>Generate shot changes</Generate>
+    <Import>Import shot changes</Import>
     <TextFiles>Text files</TextFiles>
     <TimeCodes>Time codes</TimeCodes>
     <Frames>Frames</Frames>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Generate scene changes with FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Generate shot changes with FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Sensitivity</Sensitivity>
-    <SensitivityDescription>Lower value gives more scene changes</SensitivityDescription>
-    <NoSceneChangesFound>No scene changes found.</NoSceneChangesFound>
-  </ImportSceneChanges>
+    <SensitivityDescription>Lower value gives more shot changes</SensitivityDescription>
+    <NoShotChangesFound>No shot changes found.</NoShotChangesFound>
+  </ImportShotChanges>
   <ImportText>
     <Title>Import plain text</Title>
     <OneSubtitleIsOneFile>Multiple files - one file is one subtitle</OneSubtitleIsOneFile>
@@ -1241,10 +1247,10 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Video/audio to text...</VideoAudioToText>
+        <VideoAudioToText>Audio to text...</VideoAudioToText>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
-        <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
-        <RemoveOrExportSceneChanges>Remove/export scene changes...</RemoveOrExportSceneChanges>
+        <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -1276,6 +1282,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <Options>
         <Title>Options</Title>
         <Settings>&amp;Settings...</Settings>
+        <WordLists>Word lists...</WordLists>
         <ChooseLanguage>&amp;Choose language...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1396,6 +1403,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <RemoveBookmark>Remove bookmark</RemoveBookmark>
         <GoToSourceView>Go to source view</GoToSourceView>
         <GoToListView>Go to list view</GoToListView>
+        <ExtractAudio>Extract audio...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1699,7 +1707,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Before join of subtitles</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subtitles joined</SubtitlesJoined>
     <StatusLog>Status log</StatusLog>
-    <XSceneChangesImported>{0} scene changes imported</XSceneChangesImported>
+    <XShotChangesImported>{0} shot changes imported</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
     <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
@@ -1730,12 +1738,15 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
-    <DarkThemeRestart>Restart Subtitle Edit for dark theme changes to take effect.</DarkThemeRestart>
-    <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl - download and continue?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl.
+
+Download and continue?</VideoFromUrlRequirements>
+    <Url>Url</Url>
     <Errors>Errors</Errors>
     <ShowVideoControls>Show video controls</ShowVideoControls>
     <HideVideoControls>Hide video controls</HideVideoControls>
     <GeneratingWaveformInBackground>Generating waveform in background...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>Auto-backup saved</AutoBackupSaved>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -1893,6 +1904,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <EvenLines>Even-numbered lines</EvenLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
+    <ExactlyOneLine>Exactly one line</ExactlyOneLine>
+    <ExactlyTwoLines>Exactly two lines</ExactlyTwoLines>
     <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
     <Bookmarked>Bookmarked</Bookmarked>
     <BlankLines>Blank lines</BlankLines>
@@ -2135,6 +2148,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ApplyAssaOverrideTags>Apply ASSA override tags to selection</ApplyAssaOverrideTags>
     <SetAssaPosition>Set/get ASSA position</SetAssaPosition>
     <SetAssaResolution>Set ASSA resolution (PlayResX/PlayResY)</SetAssaResolution>
+    <TakeAutoBackup>Take auto-backup now</TakeAutoBackup>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Save as..." uses file name from</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
@@ -2198,7 +2212,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformFocusMouseEnter>Set focus on mouse enter</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Single click to select subtitles</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Snap to scene changes (hold Shift to override)</WaveformSnapToSceneChanges>
+    <WaveformSnapToShotChanges>Snap to shot changes (hold Shift to override)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Auto generate waveform when opening video</WaveformAutoGen>
     <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconds</WaveformBorderHitMs2>
@@ -2266,13 +2280,15 @@ can edit in same subtitle file (collaboration)</Information>
     <ContinuationStyleNone>None</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>None, dots for pauses (trailing only)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>None, dots for pauses</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>None, ellipsis for pauses (trailing only)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>None, ellipsis for pauses</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Dots (trailing only)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Dots</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>None, ellipsis for pauses</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Ellipsis (trailing only)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Ellipsis</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Dash</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Dash, but dots for pauses</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Custom</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/line-length</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Count all characters</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Count all except space, cps only</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2281,9 +2297,12 @@ can edit in same subtitle file (collaboration)</Information>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignore Arabic diacritics</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignore Arabic diacritics/space</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>No space or punctuation ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>No space or punctuation, cps only</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>Use word split list (OCR + FCE)</UseWordSplitList>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Skip step one (choose fix rules)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Default format</DefaultFormat>
@@ -2341,14 +2360,14 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Set start time, offset the whole subtitle</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextSceneChange>Snap selected lines start to next scene change</AdjustSnapStartToNextSceneChange>
-    <AdjustSnapStartToNextSceneChangeWithGap>Snap selected lines start to next scene change with min. gap</AdjustSnapStartToNextSceneChangeWithGap>
-    <AdjustSnapEndToPreviousSceneChange>Snap selected lines end to previous scene change</AdjustSnapEndToPreviousSceneChange>
-    <AdjustSnapEndToPreviousSceneChangeWithGap>Snap selected lines end to previous scene change with min. gap</AdjustSnapEndToPreviousSceneChangeWithGap>
-    <AdjustExtendToNextSceneChange>Extend selected lines to next scene change (or next subtitle)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToNextSceneChangeWithGap>Extend selected lines to next scene change with min. gap (or next subtitle)</AdjustExtendToNextSceneChangeWithGap>
-    <AdjustExtendToPreviousSceneChange>Extend selected lines to previous scene change (or previous subtitle)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToPreviousSceneChangeWithGap>Extend selected lines to previous scene change with min. gap (or previous subtitle)</AdjustExtendToPreviousSceneChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Snap selected lines start to next shot change</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Snap selected lines start to next shot change with min. gap</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Snap selected lines end to previous shot change</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Snap selected lines end to previous shot change with min. gap</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Extend selected lines to next shot change (or next subtitle)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Extend selected lines to next shot change with min. gap (or next subtitle)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Extend selected lines to previous shot change (or previous subtitle)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Extend selected lines to previous shot change with min. gap (or previous subtitle)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
@@ -2372,8 +2391,11 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Go to previous line and play</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Go to next line and play</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Go to previous line and focus waveform</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Go to next line and focus waveform</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleFocusWaveform>Toggle focus between list view and waveform/spectrogram</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Toggle focus between text box and waveform/spectrogram</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleQuotes>Toggle quotes</ToggleQuotes>
     <ToggleHiTags>Toggle HI tags</ToggleHiTags>
@@ -2406,11 +2428,11 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
-    <WaveformRemoveOrExportSceneChanges>Remove/export scene changes</WaveformRemoveOrExportSceneChanges>
-    <WaveformGuessStart>Auto adjust start via volume/scene change</WaveformGuessStart>
+    <WaveformGoToPreviousShotChange>Go to previous shot change</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Go to next shot change</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Toggle shot change</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Remove/export shot changes</WaveformRemoveOrExportShotChanges>
+    <WaveformGuessStart>Auto adjust start via volume/shot change</WaveformGuessStart>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
     <GoBack1FrameWithPlay>One frame back (with play)</GoBack1FrameWithPlay>
@@ -2444,6 +2466,7 @@ can edit in same subtitle file (collaboration)</Information>
     <VideoResetSpeedAndZoom>Reset speed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
     <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
+    <VideoAudioToText>Audio to text</VideoAudioToText>
     <VideoToggleBrightness>Toggle brightness (mpv only)</VideoToggleBrightness>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
@@ -2543,6 +2566,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Detect and uncheck single titles, or lyrics, in lowercase</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Hide unlikely continuation sentences</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignore lyrics between music symbols</IgnoreLyrics>
+    <ContinuationPause>Pause threshold:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Edit custom continuation style...</EditCustomContinuationStyle>
     <MinFrameGap>Min. gap in frames</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} frames at a frame rate of {1} gives {2} milliseconds.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
@@ -2552,6 +2578,18 @@ Continue?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Shortcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Update file type associations</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>File type associations updated</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Edit custom continuation style</CustomContinuationStyle>
+    <LoadStyle>Load style...</LoadStyle>
+    <Suffix>Suffix:</Suffix>
+    <AddSuffixForComma>Process if ends with comma</AddSuffixForComma>
+    <AddSpace>Add space</AddSpace>
+    <RemoveComma>Remove comma</RemoveComma>
+    <Prefix>Prefix:</Prefix>
+    <DifferentStyleGap>Use different style for gaps longer than</DifferentStyleGap>
+    <Preview>Preview</Preview>
+    <PreviewPause>(pause)</PreviewPause>
+    <CustomContinuationStyleNote>Note: The custom continuation style is shared across profiles.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>This will override the values in the dialog. Are you sure?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>
@@ -2715,7 +2753,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
-    <MinimalGap>Minimal gap: {0} ms</MinimalGap>
+    <GapMinimum>Gap - minimum: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>Gap - maximum: {0:#,##0} ms</GapMaximum>
+    <GapAverage>Gap - average: {0:#,##0.##} ms</GapAverage>
     <Export>Export...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2806,6 +2846,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Box per line (use outline color)</BoxPerLine>
     <BoxMultiLine>One box (use shadow color)</BoxMultiLine>
+    <DuplicateStyleNames>Duplicate style names: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Category</Category>
@@ -3038,9 +3079,9 @@ Keep changes?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
-    <AddSceneChange>Add scene change</AddSceneChange>
-    <RemoveSceneChange>Remove scene change</RemoveSceneChange>
-    <RemoveSceneChangesFromSelection>Remove scene changes from selection</RemoveSceneChangesFromSelection>
+    <AddShotChange>Add shot change</AddShotChange>
+    <RemoveShotChange>Remove shot change</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Remove shot changes from selection</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
     <InsertSubtitleHere>Insert subtitle here...</InsertSubtitleHere>

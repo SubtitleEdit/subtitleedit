@@ -1,6 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms.ShotChanges
 {
-    partial class ImportSceneChanges
+    partial class ImportShotChanges
     {
         /// <summary>
         /// Required designer variable.
@@ -39,7 +39,7 @@
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.textBoxLog = new System.Windows.Forms.TextBox();
-            this.groupBoxGenerateSceneChanges = new System.Windows.Forms.GroupBox();
+            this.groupBoxGenerateShotChanges = new System.Windows.Forms.GroupBox();
             this.labelThresholdDescription = new System.Windows.Forms.Label();
             this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
             this.labelFfmpegThreshold = new System.Windows.Forms.Label();
@@ -50,7 +50,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
-            this.groupBoxGenerateSceneChanges.SuspendLayout();
+            this.groupBoxGenerateShotChanges.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,7 +91,7 @@
             this.groupBoxImportText.Size = new System.Drawing.Size(359, 412);
             this.groupBoxImportText.TabIndex = 1;
             this.groupBoxImportText.TabStop = false;
-            this.groupBoxImportText.Text = "Import scene changes";
+            this.groupBoxImportText.Text = "Import shot changes";
             // 
             // textBoxIImport
             // 
@@ -190,23 +190,23 @@
             this.textBoxLog.Size = new System.Drawing.Size(337, 387);
             this.textBoxLog.TabIndex = 6;
             // 
-            // groupBoxGenerateSceneChanges
+            // groupBoxGenerateShotChanges
             // 
-            this.groupBoxGenerateSceneChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxGenerateShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.labelThresholdDescription);
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.numericUpDownThreshold);
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.labelFfmpegThreshold);
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonDownloadFfmpeg);
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonImportWithFfmpeg);
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.textBoxGenerate);
-            this.groupBoxGenerateSceneChanges.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxGenerateSceneChanges.Name = "groupBoxGenerateSceneChanges";
-            this.groupBoxGenerateSceneChanges.Size = new System.Drawing.Size(349, 413);
-            this.groupBoxGenerateSceneChanges.TabIndex = 0;
-            this.groupBoxGenerateSceneChanges.TabStop = false;
-            this.groupBoxGenerateSceneChanges.Text = "Generate scene changes";
+            this.groupBoxGenerateShotChanges.Controls.Add(this.labelThresholdDescription);
+            this.groupBoxGenerateShotChanges.Controls.Add(this.numericUpDownThreshold);
+            this.groupBoxGenerateShotChanges.Controls.Add(this.labelFfmpegThreshold);
+            this.groupBoxGenerateShotChanges.Controls.Add(this.buttonDownloadFfmpeg);
+            this.groupBoxGenerateShotChanges.Controls.Add(this.buttonImportWithFfmpeg);
+            this.groupBoxGenerateShotChanges.Controls.Add(this.textBoxGenerate);
+            this.groupBoxGenerateShotChanges.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxGenerateShotChanges.Name = "groupBoxGenerateShotChanges";
+            this.groupBoxGenerateShotChanges.Size = new System.Drawing.Size(349, 413);
+            this.groupBoxGenerateShotChanges.TabIndex = 0;
+            this.groupBoxGenerateShotChanges.TabStop = false;
+            this.groupBoxGenerateShotChanges.Text = "Generate shot changes";
             // 
             // labelThresholdDescription
             // 
@@ -214,18 +214,18 @@
             this.labelThresholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.labelThresholdDescription.Location = new System.Drawing.Point(6, 387);
             this.labelThresholdDescription.Name = "labelThresholdDescription";
-            this.labelThresholdDescription.Size = new System.Drawing.Size(195, 13);
+            this.labelThresholdDescription.Size = new System.Drawing.Size(186, 13);
             this.labelThresholdDescription.TabIndex = 5;
-            this.labelThresholdDescription.Text = "Lower value gives more scene changes";
+            this.labelThresholdDescription.Text = "Lower value gives more shot changes";
             // 
             // numericUpDownThreshold
             // 
-            this.numericUpDownThreshold.DecimalPlaces = 1;
+            this.numericUpDownThreshold.DecimalPlaces = 2;
             this.numericUpDownThreshold.Increment = new decimal(new int[] {
             1,
             0,
             0,
-            65536});
+            131072});
             this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 364);
             this.numericUpDownThreshold.Maximum = new decimal(new int[] {
             9,
@@ -238,7 +238,7 @@
             0,
             65536});
             this.numericUpDownThreshold.Name = "numericUpDownThreshold";
-            this.numericUpDownThreshold.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownThreshold.Size = new System.Drawing.Size(48, 20);
             this.numericUpDownThreshold.TabIndex = 4;
             this.numericUpDownThreshold.Value = new decimal(new int[] {
             4,
@@ -274,7 +274,7 @@
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
             this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(337, 23);
             this.buttonImportWithFfmpeg.TabIndex = 2;
-            this.buttonImportWithFfmpeg.Text = "Generate scene changes with FFmpeg";
+            this.buttonImportWithFfmpeg.Text = "Generate shot changes with FFmpeg";
             this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
             this.buttonImportWithFfmpeg.Click += new System.EventHandler(this.buttonImportWithFfmpeg_Click);
             // 
@@ -307,7 +307,7 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // ImportSceneChanges
+            // ImportShotChanges
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -316,24 +316,24 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportText);
-            this.Controls.Add(this.groupBoxGenerateSceneChanges);
+            this.Controls.Add(this.groupBoxGenerateShotChanges);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ImportSceneChanges";
+            this.Name = "ImportShotChanges";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "ImportSceneChanges";
-            this.Shown += new System.EventHandler(this.ImportSceneChanges_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportSceneChanges_KeyDown);
+            this.Text = "ImportShotChanges";
+            this.Shown += new System.EventHandler(this.ImportShotChanges_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportShotChanges_KeyDown);
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
             this.groupBoxTimeCodes.ResumeLayout(false);
             this.groupBoxTimeCodes.PerformLayout();
-            this.groupBoxGenerateSceneChanges.ResumeLayout(false);
-            this.groupBoxGenerateSceneChanges.PerformLayout();
+            this.groupBoxGenerateShotChanges.ResumeLayout(false);
+            this.groupBoxGenerateShotChanges.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             this.ResumeLayout(false);
 
@@ -349,7 +349,7 @@
         private System.Windows.Forms.RadioButton radioButtonSeconds;
         private System.Windows.Forms.RadioButton radioButtonFrames;
 		private System.Windows.Forms.RadioButton radioButtonHHMMSSMS;
-        private System.Windows.Forms.GroupBox groupBoxGenerateSceneChanges;
+        private System.Windows.Forms.GroupBox groupBoxGenerateShotChanges;
         private System.Windows.Forms.TextBox textBoxGenerate;
         private System.Windows.Forms.Button buttonOpenText;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

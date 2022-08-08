@@ -49,7 +49,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.checkBoxGenerateSceneChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxGenerateShotChanges = new System.Windows.Forms.CheckBox();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
             this.SuspendLayout();
@@ -238,23 +238,23 @@
             this.labelInfo.Text = "labelInfo";
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // checkBoxGenerateSceneChanges
+            // checkBoxGenerateShotChanges
             // 
-            this.checkBoxGenerateSceneChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBoxGenerateSceneChanges.AutoSize = true;
-            this.checkBoxGenerateSceneChanges.Location = new System.Drawing.Point(739, 510);
-            this.checkBoxGenerateSceneChanges.Name = "checkBoxGenerateSceneChanges";
-            this.checkBoxGenerateSceneChanges.Size = new System.Drawing.Size(209, 17);
-            this.checkBoxGenerateSceneChanges.TabIndex = 25;
-            this.checkBoxGenerateSceneChanges.Text = "Generate scene changes with FFmpeg";
-            this.checkBoxGenerateSceneChanges.UseVisualStyleBackColor = true;
+            this.checkBoxGenerateShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxGenerateShotChanges.AutoSize = true;
+            this.checkBoxGenerateShotChanges.Location = new System.Drawing.Point(739, 510);
+            this.checkBoxGenerateShotChanges.Name = "checkBoxGenerateShotChanges";
+            this.checkBoxGenerateShotChanges.Size = new System.Drawing.Size(209, 17);
+            this.checkBoxGenerateShotChanges.TabIndex = 25;
+            this.checkBoxGenerateShotChanges.Text = "Generate shot changes with FFmpeg";
+            this.checkBoxGenerateShotChanges.UseVisualStyleBackColor = true;
             // 
             // AddWaveformBatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1091, 590);
-            this.Controls.Add(this.checkBoxGenerateSceneChanges);
+            this.Controls.Add(this.checkBoxGenerateShotChanges);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonDone);
             this.Controls.Add(this.progressBar1);
@@ -299,6 +299,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Label labelInfo;
-        private System.Windows.Forms.CheckBox checkBoxGenerateSceneChanges;
+        private System.Windows.Forms.CheckBox checkBoxGenerateShotChanges;
     }
 }

@@ -136,6 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /resolution:<width>x<height>");
                 _stdOutWriter.WriteLine("        /inputfolder:<folder name>");
                 _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
+                _stdOutWriter.WriteLine("        /outputfilename:<file name> (for single file only)");
                 _stdOutWriter.WriteLine("        /overwrite");
                 _stdOutWriter.WriteLine("        /forcedonly");
                 _stdOutWriter.WriteLine("        /teletextonly");
@@ -181,6 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             int count = 0;
             int converted = 0;
             int errors = 0;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 var pattern = arguments[2].Trim();
@@ -290,6 +292,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
                     }
                 }
+
+                var targetFileName = GetArgument(unconsumedArguments, "outputfilename:");
 
                 var inputFolder = _currentFolder;
                 {
@@ -526,7 +530,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                         newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
                                                         mkvFileNames.Add(newFileName);
                                                     }
-                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
+
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
                                                     done = true;
                                                 }
                                                 else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
@@ -537,7 +542,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                         var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
                                                         if (string.Equals(targetFormat.RemoveChar(' '), BatchConvert.BluRaySubtitle.RemoveChar(' '), StringComparison.InvariantCultureIgnoreCase))
                                                         {
-                                                            var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(newFileName) + Path.GetExtension(newFileName), ".sup", outputFolder, overwrite);
+                                                            var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(newFileName) + Path.GetExtension(newFileName), ".sup", outputFolder, overwrite, targetFileName);
                                                             converted++;
                                                             _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                                                             BluRaySupToBluRaySup.ConvertFromBluRaySupToBluRaySup(outputFileName, bluRaySubtitles, resolution);
@@ -557,7 +562,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                                 _stdOutWriter?.WriteLine();
                                                                 sub = vobSubOcr.SubtitleFromOcr;
                                                             }
-                                                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                                                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
                                                         }
                                                         if (!mkvFileNames.Add(newFileName))
                                                         {
@@ -595,7 +600,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                         }
                                                     }
 
-                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
                                                     done = true;
                                                 }
                                             }
@@ -663,14 +668,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         }
 
                                         var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
-                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
                                         done = true;
                                     }
                                     else
                                     {
                                         var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
                                         sub.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
-                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
                                         done = true;
                                     }
                                 }
@@ -688,6 +693,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             }
 
                             done = true;
+                        }
+
+                        if (!done && fileName.EndsWith(".mcc", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var mcc = new MacCaption10();
+                            if (mcc.IsMine(null, fileName))
+                            {
+                                mcc.LoadSubtitle(sub, null, fileName);
+                                format = mcc;
+                            }
                         }
 
                         if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
@@ -767,7 +782,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, ebuHeaderFile: ebuHeaderFile, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, ebuHeaderFile: ebuHeaderFile, renumber: renumber, adjustDurationMs: adjustDurationMs);
                         }
                     }
                     else
@@ -795,7 +810,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (count > 0)
             {
                 _stdOutWriter.WriteLine();
-                _stdOutWriter.WriteLine($"{converted} file(s) converted");
+                _stdOutWriter.WriteLine($"{converted} file(s) converted in {sw.Elapsed}" );
                 _stdOutWriter.WriteLine();
             }
 
@@ -840,7 +855,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, renumber: renumber, adjustDurationMs: adjustDurationMs);
             }
         }
 
@@ -866,7 +881,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, renumber: renumber, adjustDurationMs: adjustDurationMs);
             }
         }
 
@@ -892,7 +907,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, renumber: renumber, adjustDurationMs: adjustDurationMs);
             }
         }
 
@@ -1174,7 +1189,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
+        internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors,
                                               List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
                                               Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null)
@@ -1252,7 +1267,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     {
                         targetFormatFound = true;
                         sf.BatchMode = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + sf.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + sf.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
 
                         if (sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber))
@@ -1327,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         s += "." + className + format.Extension;
                                     }
 
-                                    outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
+                                    outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite, targetFileName);
                                     FileUtil.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                 }
                             }
@@ -1342,13 +1357,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (ebu.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         if (!string.IsNullOrEmpty(ebuHeaderFile))
                         {
                             var ebuOriginal = new Ebu();
                             var temp = new Subtitle();
                             ebuOriginal.LoadSubtitle(temp, null, ebuHeaderFile);
+                            sub.Header = ebuOriginal.Header.ToString();
                             ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
                         }
                         else if (format != null && format.GetType() == typeof(Ebu))
@@ -1385,7 +1401,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         pac.BatchMode = true;
                         pac.CodePage = pacCodePage;
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         pac.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
@@ -1397,7 +1413,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (cavena890.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         cavena890.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
@@ -1409,7 +1425,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (cheetahCaption.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         CheetahCaption.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
@@ -1421,7 +1437,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (ayato.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         ayato.Save(outputFileName, null, sub);
                         _stdOutWriter?.WriteLine(" done.");
@@ -1433,7 +1449,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (capMakerPlus.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         CapMakerPlus.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
@@ -1444,7 +1460,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         var exportOptions = new ExportText.ExportOptions
                         {
@@ -1470,7 +1486,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + ".sup", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + ".sup", outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
@@ -1538,7 +1554,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     else if (BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sub", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sub", outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
@@ -1628,7 +1644,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     else if (BatchConvert.DostImageSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".dost", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".dost", outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
@@ -1691,7 +1707,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     else if (BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
@@ -1754,7 +1770,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     else if (BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite, targetFileName);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
@@ -1818,18 +1834,18 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var arr = targetFormat.Split(':');
                             if (arr.Length == 2)
                             {
-                                foreach (string template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                                foreach (var template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
                                 {
                                     if (template.StartsWith(arr[1] + "Æ", StringComparison.Ordinal))
                                     {
                                         targetFormatFound = true;
-                                        string title = string.Empty;
+                                        var title = string.Empty;
                                         if (!string.IsNullOrEmpty(fileName))
                                         {
                                             title = Path.GetFileNameWithoutExtension(fileName);
                                         }
 
-                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ExportCustomText.GetFileExtension(template), outputFolder, overwrite, targetFileName);
                                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                                         FileUtil.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);
                                         _stdOutWriter?.WriteLine(" done.");
@@ -2004,17 +2020,52 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return format is TimedTextImage || format is FinalCutProImage || format is SpuImage || format is Dost || format is SeImageHtmlIndex || format is BdnXml;
         }
 
-        internal static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
+        internal static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite, string targetFileName = null)
         {
-            string outputFileName = Path.ChangeExtension(fileName, extension);
+            var outputFileName = Path.ChangeExtension(fileName, extension);
             if (!string.IsNullOrEmpty(outputFolder) && Path.GetFileName(outputFileName) != null)
             {
                 outputFileName = Path.Combine(outputFolder, Path.GetFileName(outputFileName));
             }
 
-            if (!overwrite && File.Exists(outputFileName))
+            if (!string.IsNullOrEmpty(targetFileName))
             {
-                outputFileName = Path.ChangeExtension(outputFileName, Guid.NewGuid() + extension);
+                if (targetFileName.Contains(Path.DirectorySeparatorChar))
+                {
+                    outputFileName = targetFileName;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(outputFolder))
+                    {
+                        outputFileName = Path.Combine(outputFolder, targetFileName);
+                    }
+                    else
+                    {
+                        var path = Path.GetDirectoryName(fileName);
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            path = Directory.GetCurrentDirectory();
+                        }
+
+                        outputFileName = Path.Combine(path, targetFileName);
+                    }
+                }
+            }
+
+            if (!overwrite)
+            {
+                var tempFileName = outputFileName;
+                var number = 2;
+                while (File.Exists(tempFileName))
+                {
+                    var newExt = $"_{number}{extension}";
+                    tempFileName = Path.ChangeExtension(outputFileName, newExt);
+                    tempFileName = tempFileName.Remove(tempFileName.Length - (newExt.Length + 1), 1);
+                    number++;
+                }
+
+                outputFileName = tempFileName;
             }
 
             return outputFileName;

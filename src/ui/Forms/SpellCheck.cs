@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.BinaryEdit;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
@@ -146,15 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (FileUtil.IsBluRaySup(fileName))
             {
-                _imageSubFileName = fileName;
-                if (_binSubtitles == null)
-                {
-                    Width += 200;
-                }
-
-                groupBoxSuggestions.Top = groupBoxWordNotFound.Top;
-                groupBoxSuggestions.Height = buttonAbort.Top - groupBoxSuggestions.Top - 15;
-                pictureBoxBdSup.Visible = true;
+                MakeUiReadyForSourceImages(fileName);
                 var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(_imageSubFileName, new StringBuilder());
                 BinEdit.FixShortDisplayTimes(bluRaySubtitles);
                 _binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
@@ -163,6 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
             {
+                MakeUiReadyForSourceImages(fileName);
                 _binSubtitles = new List<IBinaryParagraphWithPosition>();
                 var bdnXml = new BdnXml();
                 var enc = LanguageAutoDetect.GetEncodingFromFile(fileName, true);
@@ -183,7 +177,55 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (FileUtil.IsVobSub(fileName))
+            {
+                MakeUiReadyForSourceImages(fileName);
+                _binSubtitles = new List<IBinaryParagraphWithPosition>();
+                var vobSubParser = new VobSubParser(true);
+                var idxFileName = Path.ChangeExtension(fileName, ".idx");
+                vobSubParser.OpenSubIdx(fileName, idxFileName);
+                var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
+                var palette = vobSubParser.IdxPalette;
+                vobSubParser.VobSubPacks.Clear();
+                var languageStreamIds = new List<int>();
+                foreach (var pack in vobSubMergedPackList)
+                {
+                    if (pack.SubPicture.Delay.TotalMilliseconds > 500 && !languageStreamIds.Contains(pack.StreamId))
+                    {
+                        languageStreamIds.Add(pack.StreamId);
+                    }
+                }
+
+                if (languageStreamIds.Count > 1)
+                {
+                    vobSubMergedPackList = vobSubMergedPackList.Where(p => p.StreamId == languageStreamIds[0]).ToList();
+                }
+
+                var max = vobSubMergedPackList.Count;
+                for (var i = 0; i < max; i++)
+                {
+                    var vobSubPack = vobSubMergedPackList[i];
+                    vobSubPack.Palette = palette;
+                    _binSubtitles.Add(vobSubPack);
+                }
+
+                return;
+            }
+
             pictureBoxBdSup.Visible = false;
+        }
+
+        private void MakeUiReadyForSourceImages(string fileName)
+        {
+            _imageSubFileName = fileName;
+            if (_binSubtitles == null)
+            {
+                Width += 200;
+            }
+
+            groupBoxSuggestions.Top = groupBoxWordNotFound.Top;
+            groupBoxSuggestions.Height = buttonAbort.Top - groupBoxSuggestions.Top - 15;
+            pictureBoxBdSup.Visible = true;
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
@@ -379,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml";
+                openFileDialog1.Filter = LanguageSettings.Current.Main.BluRaySupFiles + "|*.sup|BDN xml/png|*.xml|VobSub|*.sub";
                 openFileDialog1.FileName = string.Empty;
                 if (openFileDialog1.ShowDialog() != DialogResult.OK)
                 {

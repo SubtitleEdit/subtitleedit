@@ -872,5 +872,33 @@ namespace Test.Logic
             var result = Utilities.GetPathAndFileNameWithoutExtension("C:" + System.IO.Path.DirectorySeparatorChar + "my.files" + System.IO.Path.DirectorySeparatorChar + "file1.srt");
             Assert.AreEqual("C:" + System.IO.Path.DirectorySeparatorChar + "my.files" + System.IO.Path.DirectorySeparatorChar + "file1", result);
         }
+
+        [TestMethod]
+        public void RemoveSsaTags1()
+        {
+            var result = Utilities.RemoveSsaTags("{\\i1}Hallo world!{\\i0}");
+            Assert.AreEqual("Hallo world!", result);
+        }
+
+        [TestMethod]
+        public void RemoveSsaTags2()
+        {
+            var result = Utilities.RemoveSsaTags("{\\i1}Hallo world!");
+            Assert.AreEqual("Hallo world!", result);
+        }
+
+        [TestMethod]
+        public void RemoveSsaTags3()
+        {
+            var result = Utilities.RemoveSsaTags("Hallo {\\i1}my{\\i0} world!");
+            Assert.AreEqual("Hallo my world!", result);
+        }
+
+        [TestMethod]
+        public void RemoveSsaTags4()
+        {
+            var result = Utilities.RemoveSsaTags("{\\p2}m 0 0 l 1 1{\\p0}Hallo world!", true);
+            Assert.AreEqual("Hallo world!", result);
+        }
     }
 }

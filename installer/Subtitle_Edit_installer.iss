@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2021, Nikse"
+#define app_copyright "Copyright © 2001-2022, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -179,81 +179,83 @@ Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescript
 Name: associate_common;   Description: {cm:tsk_SetFileTypes};      GroupDescription: {cm:tsk_Other};
 
 [Files]
-Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\deu_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fin_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fra_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hrb_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hrv_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hun_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\mkd_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nld_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nob_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nor_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\pol_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\por_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\spa_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\srp_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\da_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\de_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\es_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fi_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nb_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nl_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\pt_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\ru_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\names.xml;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\ar_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\bg_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\da_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\el_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\es_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\hr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\mk_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\pt_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\ru_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\sr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_US_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\es_MX_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\fi_FI_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\nl_NL_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\dan_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\eng_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\fra_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\ita_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\pol_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\spa_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\deu_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\fin_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\fra_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\hrb_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\hrv_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\hun_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\mkd_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\nld_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\nob_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\nor_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\pol_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\por_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\spa_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\srp_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\da_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\de_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\en_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\es_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\fi_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\fr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\hr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\nb_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\nl_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\pt_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\ru_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\names.xml;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\ar_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\bg_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\da_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\el_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\es_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\hr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\mk_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\pt_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\ru_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\sr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_US_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_US_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\es_MX_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\fi_FI_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\nl_NL_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\dan_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\eng_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\fra_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\ita_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\pol_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\spa_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\deu_Nouns.txt;             DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 
 
 Source: ..\Ocr\Latin.db;                           DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Ocr\Latin.nocr;                         DestDir: {userappdata}\Subtitle Edit\Ocr;          Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 
-Source: ..\preview.mkv;                            DestDir: {userappdata}\Subtitle Edit;              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\preview.mkv;                            DestDir: {userappdata}\Subtitle Edit;              Flags: ignoreversion onlyifdoesntexist; Components: main
 
-Source: ..\Icons\ass.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\dfxp.ico;                         DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\sbv.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\srt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\ssa.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\stl.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\sub.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\sup.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\smi.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Icons\itt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+Source: ..\Icons\ass.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\dfxp.ico;                         DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\sbv.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\srt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\ssa.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\stl.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\sub.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\sup.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\vtt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\smi.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Icons\itt.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion onlyifdoesntexist; Components: main
   
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -358,6 +360,7 @@ Type: files;      Name: {app}\Dictionaries\en_US.aff;                  Check: Is
 Type: files;      Name: {app}\Dictionaries\en_US.dic;                  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_names.xml;               Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_US_user.xml;             Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US_se.xml;               Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml;  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\names.xml;                  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\no_names.xml;               Check: IsUpgrade()
@@ -368,6 +371,7 @@ Type: files;      Name: {app}\Dictionaries\fra_WordSplitList.txt;      Check: Is
 Type: files;      Name: {app}\Dictionaries\ita_WordSplitList.txt;      Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\pol_WordSplitList.txt;      Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\spa_WordSplitList.txt;      Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\deu_Nouns.txt;              Check: IsUpgrade()
 
 Type: dirifempty; Name: {app}\Dictionaries;                            Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                 Check: IsUpgrade()
@@ -456,65 +460,60 @@ Filename: {win}\Microsoft.NET\Framework64\v4.0.30319\ngen.exe; Parameters: "unin
 
 
 [Registry]
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""
-Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.EXE,0";
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass"; ValueData: "Advanced Sub Station Alpha subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "SubtitleEdit.ass"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('ass')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKCU ; Subkey: "Software\Classes\.ass"; ValueData: "{#SetupSetting('AppName')}.ass"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ass')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ass\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ass.ico"; Check: DoSystemAssoc('ass')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.dfxp"; ValueData: "Distribution Format Exchange Profile subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.dfxp\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.dfxp\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\dfxp.ico"; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\.dfxp"; ValueData: "SubtitleEdit.dfxp"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('dfxp')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKCU ; Subkey: "Software\Classes\.dfxp"; ValueData: "{#SetupSetting('AppName')}.dfxp"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('dfxp')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.dfxp\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\dfxp.ico"; Check: DoSystemAssoc('dfxp')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sbv"; ValueData: "SBV subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sbv\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sbv\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sbv.ico"; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\.sbv"; ValueData: "SubtitleEdit.sbv"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('sbv')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKCU ; Subkey: "Software\Classes\.sbv"; ValueData: "{#SetupSetting('AppName')}.sbv"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sbv')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sbv\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sbv.ico"; Check: DoSystemAssoc('sbv')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.srt"; ValueData: "SubRip subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.srt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\srt.ico"; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\.srt"; ValueData: "SubtitleEdit.srt"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('srt')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKCU ; Subkey: "Software\Classes\.srt"; ValueData: "{#SetupSetting('AppName')}.srt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('srt')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\srt.ico"; Check: DoSystemAssoc('srt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ssa"; ValueData: "Sub Station Alpha subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ssa\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.ssa\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ssa.ico"; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\.ssa"; ValueData: "SubtitleEdit.ssa"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('ssa')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKCU ; Subkey: "Software\Classes\.ssa"; ValueData: "{#SetupSetting('AppName')}.ssa"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('ssa')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.ssa\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\ssa.ico"; Check: DoSystemAssoc('ssa')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.stl"; ValueData: "STL subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.stl\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.stl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\stl.ico"; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\.stl"; ValueData: "SubtitleEdit.stl"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('stl')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKCU ; Subkey: "Software\Classes\.stl"; ValueData: "{#SetupSetting('AppName')}.stl"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('stl')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.stl\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\stl.ico"; Check: DoSystemAssoc('stl')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sub"; ValueData: "SUB subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sub\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sub.ico"; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\.sub"; ValueData: "SubtitleEdit.sub"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('sub')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKCU ; Subkey: "Software\Classes\.sub"; ValueData: "{#SetupSetting('AppName')}.sub"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sub')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sub.ico"; Check: DoSystemAssoc('sub')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sup"; ValueData: "Blu-ray PGS subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sup\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sup.ico"; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\.sup"; ValueData: "SubtitleEdit.sup"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('sup')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKCU ; Subkey: "Software\Classes\.sup"; ValueData: "{#SetupSetting('AppName')}.sup"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('sup')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\sup.ico"; Check: DoSystemAssoc('sup')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.vtt"; ValueData: "Web Video Text Tracks (WebVTT) subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.vtt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\.vtt"; ValueData: "SubtitleEdit.vtt"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('vtt')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKCU ; Subkey: "Software\Classes\.vtt"; ValueData: "{#SetupSetting('AppName')}.vtt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('vtt')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.vtt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\vtt.ico"; Check: DoSystemAssoc('vtt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.smi"; ValueData: "SAMI subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.smi\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.smi\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\smi.ico"; Check: DoSystemAssoc('smi')
+Root: HKCU ; Subkey: "Software\Classes\.smi"; ValueData: "SubtitleEdit.smi"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('smi')
 
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
-Root: HKCU ; Subkey: "Software\Classes\.smi"; ValueData: "{#SetupSetting('AppName')}.smi"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('smi')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.smi\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\smi.ico"; Check: DoSystemAssoc('smi')
-
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt"; ValueData: "{app}\{#SetupSetting('AppExeName')}";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
-Root: HKCU ; Subkey: "Software\Classes\.itt"; ValueData: "{#SetupSetting('AppName')}.itt"; Flags: uninsdeletevalue; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
-Root: HKCU ; Subkey: "Software\Classes\{#SetupSetting('AppName')}.itt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\itt.ico"; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.itt"; ValueData: "iTunes Timed Text subtitle file";  Flags: uninsdeletekey; ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.itt\shell\open\command"; ValueData: """{app}\SubtitleEdit.exe"" ""%1""";  ValueType: string; ValueName: ""; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\SubtitleEdit.itt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\itt.ico"; Check: DoSystemAssoc('itt')
+Root: HKCU ; Subkey: "Software\Classes\.itt"; ValueData: "SubtitleEdit.itt"; Flags: uninsdeletevalue; ValueType: string; Check: DoSystemAssoc('itt')
 
 ; Add .ass (Advanced SubStation Alpha) to the SE-supported file types
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".ass"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
@@ -681,6 +680,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_user.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\de_DE_user.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_user.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_se.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\es_MX_user.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\fi_FI_user.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nl_NL_user.xml'));

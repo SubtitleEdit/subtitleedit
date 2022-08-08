@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+﻿using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        public static bool IsNumber(string s) 
+        public static bool IsNumber(string s)
         {
             s = s.Trim('$', '£', '¥', '%', '*');
             if (RegexIsNumber.IsMatch(s))
@@ -143,26 +144,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static void SetSecurityProtocol()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-        }
-
-        /// <summary>
-        /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
-        /// </summary>
-        /// <param name="address">A <see cref="String"/> containing the URI to download.</param>
-        /// <param name="encoding">Encoding for source text</param>
-        /// <returns>A <see cref="String"/> containing the requested resource.</returns>
-        public static string DownloadString(string address, Encoding encoding = null)
-        {
-            using (var wc = new WebClient())
-            {
-                wc.Proxy = GetProxy();
-                if (encoding != null)
-                {
-                    wc.Encoding = encoding;
-                }
-
-                return wc.DownloadString(address).Trim();
-            }
         }
 
         public static WebProxy GetProxy()
@@ -758,32 +739,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return singleLine;
         }
 
-        public static string RemoveSsaTags(string input)
+        public static string RemoveSsaTags(string input, bool removeDrawingTags = false)
         {
             var s = input;
 
-            if (s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
+            if (removeDrawingTags && s.IndexOf('{') >= 0 && s.IndexOf('}') >= 0)
             {
-                var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
-                var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
-                if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
-                {
-                    var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
-                    if (startTagIndex >= 0)
-                    {
-                        if (p0Index > p1Index)
-                        {
-                            s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
-                        }
-                        else
-                        {
-                            s = s.Remove(startTagIndex);
-                        }
-                    }
-                }
+                s = AdvancedSubStationAlpha.RemoveDrawingTag(s);
             }
 
-            int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            var k = s.IndexOf("{\\", StringComparison.Ordinal);
             var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
             if (k == -1 || karaokeStart >= 0 && karaokeStart < k)
             {
@@ -792,7 +757,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k + 1);
+                var l = s.IndexOf('}', k + 1);
                 if (l < k)
                 {
                     break;
@@ -809,7 +774,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = s.Replace("\\h", " "); // Hard space
             }
 
-            if (s.StartsWith("m ", StringComparison.Ordinal))
+            if (removeDrawingTags && s.StartsWith("m ", StringComparison.Ordinal))
             {
                 var test = s.Remove(0, 2)
                     .RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'l', 'm', ' ', '.');
@@ -2868,11 +2833,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return true;
                     }
 
-                    bool isLineContinuation = s.EndsWith(',') ||
+                    var isLineContinuation = s.EndsWith(',') ||
                                               s.EndsWith('-') ||
                                               s.EndsWith("...", StringComparison.Ordinal) ||
-                                              s.EndsWith("…", StringComparison.Ordinal) || // Unicode Character 'HORIZONTAL ELLIPSIS' (U+2026)
-                                              AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
+                                              s.EndsWith("…", StringComparison.Ordinal) ||
+                                              AllLetters.Contains(s.Substring(s.Length - 1)) ||
+                                              CalcCjk.IsCjk(s[s.Length - 1]);
 
                     if (!onlyContinuationLines)
                     {
@@ -2994,6 +2960,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return true;
+        }
+
+        public static string GetSha512Hash(byte[] buffer)
+        {
+            using (var ms = new MemoryStream(buffer))
+            {
+                using (var sha512 = new SHA512Managed())
+                {
+                    var hash = sha512.ComputeHash(ms);
+                    var hashString = new StringBuilder(128);
+                    foreach (var x in hash)
+                    {
+                        hashString.Append($"{x:x2}");
+                    }
+
+                    return hashString.ToString();
+                }
+            }
         }
     }
 }
