@@ -2855,7 +2855,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<ListViewItem> _listViewItemBeforeSearch;
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
-            if (listViewInputFiles.Items.Count == 0)
+            if (listViewInputFiles.Items.Count == 0 &&_listViewItemBeforeSearch == null)
             {
                 return;
             }
