@@ -3734,6 +3734,7 @@
     <RegEx find="jdin" replaceWith="jedin" />
     <RegEx find="jerm" replaceWith="jem" />
     <RegEx find="jrl" replaceWith="jel" />
+    <RegEx find="jrs" replaceWith="jes" />
     <RegEx find="kcj" replaceWith="kcij" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
     <RegEx find="([kKpPvVtT])ratić" replaceWith="$1ratit ć" />
