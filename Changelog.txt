@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.7 (xth August 2022)
+3.6.7 (13th August 2022)
 * NEW:
    * Add custom "continuation style" - thx Flitskikker
    * Add Icelandic language auto detect - thx Elheym

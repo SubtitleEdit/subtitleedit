@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;netstandard2.1</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(VisualStudioVersion)' == '15.0' ">net472</TargetFrameworks>
     <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
     <AssemblyName>libse</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -15,9 +14,12 @@
     <Authors>Nikolaj Olsson</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>SE 3.6.4
-- fix bd sup palette issue
-- new subtitle formats</PackageReleaseNotes>
+    <PackageReleaseNotes>
+SE 3.6.7
+- Keep paltte when re-saving bd sup
+- Minor bug fixes
+- New subtitle formats
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,11 +52,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />

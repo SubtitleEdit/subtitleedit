@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.6</Version>
+    <Version>3.6.7</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
 Последующие правки и дополнения перевода: Elheym https://discord.gg/Z7a5qtDc || (mailto:Subs.for.everybody@gmail.com)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
@@ -215,17 +215,26 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Создать индикатор выполнения</Title>
     <Progressbar>Индикатор</Progressbar>
     <Chapters>Главы</Chapters>
-    <SplitterWidth></SplitterWidth>
-    <SplitterHeight></SplitterHeight>
-    <XAdjustment></XAdjustment>
-    <YAdjustment></YAdjustment>
+    <SplitterWidth>
+    </SplitterWidth>
+    <SplitterHeight>
+    </SplitterHeight>
+    <XAdjustment>
+    </XAdjustment>
+    <YAdjustment>
+    </YAdjustment>
     <Position>Позиция</Position>
     <TextAlignment>Выравнивание текста</TextAlignment>
-    <SquareCorners></SquareCorners>
-    <RoundedCorners></RoundedCorners>
-    <Top></Top>
-    <Bottom></Bottom>
-    <TakePosFromVideo></TakePosFromVideo>
+    <SquareCorners>
+    </SquareCorners>
+    <RoundedCorners>
+    </RoundedCorners>
+    <Top>
+    </Top>
+    <Bottom>
+    </Bottom>
+    <TakePosFromVideo>
+    </TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResulationChanger>
     <Title>Изменить разрешение скрипта ASSA</Title>
@@ -235,11 +244,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChangeResolutionFontSize>Изменить разрешение для размера шрифта</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Изменить разрешение для положения</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Изменить разрешение для отрисовки</ChangeResolutionDrawing>
-    <SourceAndTargetEqual></SourceAndTargetEqual>
+    <SourceAndTargetEqual>
+    </SourceAndTargetEqual>
   </AssaResulationChanger>
   <AssaSetBackgroundBox>
-    <Title></Title>
-    <Padding></Padding>
+    <Title>
+    </Title>
+    <Padding>
+    </Padding>
     <FillWidth>Ширина заполнения</FillWidth>
     <Drawing>Рисунок</Drawing>
     <BoxColor>Цвет обрамления</BoxColor>
@@ -248,10 +260,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <Spikes>Шипы</Spikes>
     <Bubbles>Пузыри</Bubbles>
     <Circle>Круг</Circle>
-    <MarginX></MarginX>
-    <MarginY></MarginY>
-    <OnlyDrawing></OnlyDrawing>
-    <DrawingFile></DrawingFile>
+    <MarginX>
+    </MarginX>
+    <MarginY>
+    </MarginY>
+    <OnlyDrawing>
+    </OnlyDrawing>
+    <DrawingFile>
+    </DrawingFile>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Установить позицию</SetPosition>
@@ -261,7 +277,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <CurrentTextPositionX>Позиция текста: {0}</CurrentTextPositionX>
     <SetPosInfo>Нажмите на видео для установки/перемещения позиции.</SetPosInfo>
     <Clipboard>Буфер обмена</Clipboard>
-    <ResolutionMissing></ResolutionMissing>
+    <ResolutionMissing>
+    </ResolutionMissing>
     <RotateXAxis>Повернуть ось {0}</RotateXAxis>
     <DistortX>Искажение {0}</DistortX>
   </AssaSetPosition>
@@ -1321,7 +1338,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <Help>Справка</Help>
         <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
-        <AssaDraw></AssaDraw>
+        <AssaDraw>
+        </AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Подогнать по длине</SizeAllColumnsToFit>
@@ -1749,8 +1767,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <NoSupportHereVobSub>VobSub файлы не поддерживаются здесь.</NoSupportHereVobSub>
     <NoSupportHereDivx>Divx файлы не поддерживаются здесь.</NoSupportHereDivx>
     <NoChapters>Главы в видео не найдены.</NoChapters>
-    <DarkThemeRestart></DarkThemeRestart>
-    <VideoFromUrlRequirements></VideoFromUrlRequirements>
+    <DarkThemeRestart>
+    </DarkThemeRestart>
+    <VideoFromUrlRequirements>
+    </VideoFromUrlRequirements>
     <Errors>Ошибки</Errors>
     <ShowVideoControls>Показать элементы управления видео</ShowVideoControls>
     <HideVideoControls>Скрыть элементы управления видео</HideVideoControls>
@@ -1826,7 +1846,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <PintsUS>Пинты (США)</PintsUS>
     <FluidOuncesUS>Унции жидкости (США)</FluidOuncesUS>
     <Bushels>Бушели</Bushels>
-    <Pecks></Pecks>
+    <Pecks>
+    </Pecks>
     <GallonsUK>Галлоны (Великобритания)</GallonsUK>
     <QuartsUK>Кварты (Великобритания)</QuartsUK>
     <PintsUK>Пинты (Великобритания)</PintsUK>
@@ -2154,9 +2175,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <StartInSourceView>После запуска показывать исходный список</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Удалить пустые строки при открытии субтитров</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Удалить пустые строки</RemoveBlankLines>
-    <ApplyAssaOverrideTags></ApplyAssaOverrideTags>
+    <ApplyAssaOverrideTags>
+    </ApplyAssaOverrideTags>
     <SetAssaPosition>Установить/получить позицию ASSA</SetAssaPosition>
-    <SetAssaResolution></SetAssaResolution>
+    <SetAssaResolution>
+    </SetAssaResolution>
     <TakeAutoBackup>Произвести автоматическое резервное копирование сейчас</TakeAutoBackup>
     <ShowLineBreaksAs>Показывать перенос строки как:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>«Сохранить как...» будет брать название для файла из:</SaveAsFileNameFrom>
@@ -2293,19 +2316,29 @@ https://github.com/SubtitleEdit/subtitleedit
     <ContinuationStyleOnlyTrailingDots>Точки (только в конце)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Точки</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>Многоточие</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis></ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneTrailingEllipsis>
+    </ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Многоточие (только в конце)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Тире</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Тире, но точки для пауз</ContinuationStyleLeadingTrailingDashDots>
-    <CpsLineLengthStyle></CpsLineLengthStyle>
-    <CpsLineLengthStyleCalcAll></CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly></CpsLineLengthStyleCalcNoSpaceCpsOnly>
-    <CpsLineLengthStyleCalcNoSpace></CpsLineLengthStyleCalcNoSpace>
-    <CpsLineLengthStyleCalcCjk></CpsLineLengthStyleCalcCjk>
-    <CpsLineLengthStyleCalcCjkNoSpace></CpsLineLengthStyleCalcCjkNoSpace>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacritics></CpsLineLengthStyleCalcIgnoreArabicDiacritics>
-    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace></CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
-    <CpsLineLengthStyleCalcNoSpaceOrPunctuation></CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyle>
+    </CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>
+    </CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    </CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>
+    </CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>
+    </CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>
+    </CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    </CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    </CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    </CpsLineLengthStyleCalcNoSpaceOrPunctuation>
     <MusicSymbol>Заменить музыкальным символом:</MusicSymbol>
     <MusicSymbolsReplace>Символы на замену (разделять "запятой")</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
@@ -2340,14 +2373,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <CreateSetEndAddNewAndGoToNew>Установить конец, добавить новый и перейти к нему</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Настроить через конечную позицию</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Установить конечное время в позиции курсора и перейти к следующему субтитру</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndMinusGapAndStartNextHere></AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndMinusGapAndStartNextHere>
+    </AdjustSetEndMinusGapAndStartNextHere>
     <AdjustSetEndTimeAndGoToNext>Установить конец и перейти к следующему</AdjustSetEndTimeAndGoToNext>
     <AdjustSetEndTimeAndPause>Установить конец (в месте расположения статус-бара) и остановить</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Установить начало, автопродолжительность и перейти далее</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Установить конец, следующее начало и перейти далее</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Клавиша DOWN=Установить начало, Клавиша UP=Установить конец и перейти далее</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSetStartAndEndOfPrevious></AdjustSetStartAndEndOfPrevious>
-    <AdjustSetStartAndEndOfPreviousAndGoToNext></AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>
+    </AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>
+    </AdjustSetStartAndEndOfPreviousAndGoToNext>
     <AdjustSelected100MsForward>Переместить выделенные строки на 100 мс вперед</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Переместить выделенные строки на 100 мс назад</AdjustSelected100MsBack>
     <AdjustStartXMsBack>Сместить начало на {0} мс назад</AdjustStartXMsBack>
@@ -2363,9 +2399,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustEndOneFrameBackKeepGapNext>Переместить конец на 1 кадр назад (сохраняет разрыв со следующ. строкой если она близко)</AdjustEndOneFrameBackKeepGapNext>
     <AdjustEndOneFrameForwardKeepGapNext>Переместить конец на 1 кадр вперёд (сохраняет разрыв со следующ. строкой если она близко [но при этом может её смещать!])</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Установить начальное время, сохранив длительность</AdjustSetStartTimeKeepDuration>
-    <AdjustVideoSetStartForAppropriateLine></AdjustVideoSetStartForAppropriateLine>
-    <AdjustVideoSetEndForAppropriateLine></AdjustVideoSetEndForAppropriateLine>
-    <AdjustSetStartAndOffsetTheWholeSubtitle></AdjustSetStartAndOffsetTheWholeSubtitle>
+    <AdjustVideoSetStartForAppropriateLine>
+    </AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>
+    </AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>
+    </AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustSnapStartToNextShotChange>Привязать выбранные линии к началу следующего изменения сцены</AdjustSnapStartToNextShotChange>
@@ -2379,20 +2418,29 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustExtendToNextSubtitle>Расширить выделенные строки до следующего субтитра</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Расширить выделенные строки до предыдущего субтитра</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Продлить строку до следующего субтитра/задать максимальную длительность</AdjustExtendCurrentSubtitle>
-    <AdjustExtendPreviousLineEndToCurrentStart></AdjustExtendPreviousLineEndToCurrentStart>
-    <AdjustExtendNextLineStartToCurrentEnd></AdjustExtendNextLineStartToCurrentEnd>
+    <AdjustExtendPreviousLineEndToCurrentStart>
+    </AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>
+    </AdjustExtendNextLineStartToCurrentEnd>
     <RecalculateDurationOfCurrentSubtitle>Пересчитать продолжительность текущих субтитров</RecalculateDurationOfCurrentSubtitle>
-    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed></RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
-    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed></RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    </RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    </RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
     <MainCreateStartDownEndUp>Создать новый - ВНИЗ, установить конечное время - ВВЕРХ</MainCreateStartDownEndUp>
     <MergeDialog>Объединить диалог (вставить тире)</MergeDialog>
-    <MergeDialogWithNext></MergeDialogWithNext>
-    <MergeDialogWithPrevious></MergeDialogWithPrevious>
+    <MergeDialogWithNext>
+    </MergeDialogWithNext>
+    <MergeDialogWithPrevious>
+    </MergeDialogWithPrevious>
     <GoToNext>Перейти к следующей строке</GoToNext>
-    <GoToNextPlayTranslate></GoToNextPlayTranslate>
-    <GoToNextCursorAtEnd></GoToNextCursorAtEnd>
+    <GoToNextPlayTranslate>
+    </GoToNextPlayTranslate>
+    <GoToNextCursorAtEnd>
+    </GoToNextCursorAtEnd>
     <GoToPrevious>Перейти к предыдущей строке</GoToPrevious>
-    <GoToPreviousPlayTranslate></GoToPreviousPlayTranslate>
+    <GoToPreviousPlayTranslate>
+    </GoToPreviousPlayTranslate>
     <GoToCurrentSubtitleStart>Перейти к началу текущей строки</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти к концу текущей строки</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Перейти к предыдущей строке и установить позицию видео</GoToPreviousSubtitleAndFocusVideo>
@@ -2400,10 +2448,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToPrevSubtitleAndPlay>Перейти к предыдущей строке и воспроизвести видео</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Перейти к следующей строке и воспроизвести видео</GoToNextSubtitleAndPlay>
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
-    <ToggleFocusWaveform></ToggleFocusWaveform>
+    <ToggleFocusWaveform>
+    </ToggleFocusWaveform>
     <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
-    <ToggleQuotes></ToggleQuotes>
-    <ToggleHiTags></ToggleHiTags>
+    <ToggleQuotes>
+    </ToggleQuotes>
+    <ToggleHiTags>
+    </ToggleHiTags>
     <ToggleMusicSymbols>Вкл./Откл. музыкальных символов</ToggleMusicSymbols>
     <Alignment>Выравнить (выделенные строки)</Alignment>
     <AlignmentN1>Выравнить в левый низ - {\an1}</AlignmentN1>
@@ -2504,13 +2555,18 @@ https://github.com/SubtitleEdit/subtitleedit
     <SplitSelectedLineBilingual>Разделить выделенную строку на двуязычную</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Вкл./Откл. режим перевода</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Переключение оригинала и перевода</SwitchOriginalAndTranslation>
-    <SwitchOriginalAndTranslationTextBoxes></SwitchOriginalAndTranslationTextBoxes>
+    <SwitchOriginalAndTranslationTextBoxes>
+    </SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Объединить оригинал и перевод</MergeOriginalAndTranslation>
     <MergeWithNext>Объединить со следующим</MergeWithNext>
-    <MergeWithPreviousAndUnbreak></MergeWithPreviousAndUnbreak>
-    <MergeWithNextAndUnbreak></MergeWithNextAndUnbreak>
-    <MergeWithPreviousAndBreak></MergeWithPreviousAndBreak>
-    <MergeWithNextAndBreak></MergeWithNextAndBreak>
+    <MergeWithPreviousAndUnbreak>
+    </MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>
+    </MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>
+    </MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>
+    </MergeWithNextAndBreak>
     <MergeWithPrevious>Объединить с предыдущим</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Команда уже определена:
 {0}</ShortcutIsAlreadyDefinedX>
@@ -2528,7 +2584,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxMoveLastWordDown>Переместить последнее слово вниз на следующую строку субтитров</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Переместить первое слово вверх на предыдущую строку субтитров</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Переместить первое слово из следующей строки вверх (текущий субтитр)</MainTextBoxMoveFirstWordUpCurrent>
-    <MainTextBoxMoveFromCursorToNext></MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveFromCursorToNext>
+    </MainTextBoxMoveFromCursorToNext>
     <MainTextBoxMoveLastWordDownCurrent>Переместить последнее слово из первой строки вниз (текущий субтитр)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Уменьшить регистр для выделения</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Увеличить регистр для выделения</MainTextBoxSelectionToUpper>
@@ -2539,9 +2596,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxAutoBreakFromPos>Разделить на первом пробеле в расположении курсора</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Разделить на первом пробеле в расположении курсора и перейти к следующему</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Отменить перенос текста</MainTextBoxUnbreak>
-    <MainTextBoxUnbreakNoSpace></MainTextBoxUnbreakNoSpace>
-    <MainTextBoxAssaIntellisense></MainTextBoxAssaIntellisense>
-    <MainTextBoxAssaRemoveTag></MainTextBoxAssaRemoveTag>
+    <MainTextBoxUnbreakNoSpace>
+    </MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>
+    </MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>
+    </MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>Сохранить всё</MainFileSaveAll>
     <Miscellaneous>Разное</Miscellaneous>
     <CpsIncludesSpace>Символов/сек (CPS) включая пробелы</CpsIncludesSpace>
@@ -2645,9 +2705,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <CheckOneLetterWords>Запрос при неизвестных словах</CheckOneLetterWords>
     <TreatINQuoteAsING>Менять окончание слов " in' " на " ing " (только для English)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Запомнить список "Всегда использовать"</RememberUseAlwaysList>
-    <LiveSpellCheck></LiveSpellCheck>
-    <LiveSpellCheckLanguage></LiveSpellCheckLanguage>
-    <NoDictionaryForLiveSpellCheck></NoDictionaryForLiveSpellCheck>
+    <LiveSpellCheck>
+    </LiveSpellCheck>
+    <LiveSpellCheckLanguage>
+    </LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>
+    </NoDictionaryForLiveSpellCheck>
     <ImageText>Текст изображения</ImageText>
     <SpellCheckCompleted>Проверка орфографии завершена.</SpellCheckCompleted>
     <SpellCheckAborted>Проверка орфографии прервана пользователем.</SpellCheckAborted>
@@ -2746,9 +2809,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <CharactersPerSecondMinimum>Символов/сек - мимимум: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Символов/сек - максимум: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Символов/сек - в среднем: {0:0.000}</CharactersPerSecondAverage>
-    <GapMinimum></GapMinimum>
-    <GapMaximum></GapMaximum>
-    <GapAverage></GapAverage>
+    <GapMinimum>
+    </GapMinimum>
+    <GapMaximum>
+    </GapMaximum>
+    <GapAverage>
+    </GapAverage>
     <Export>Экспорт</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2806,7 +2872,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MarginLeft>Левое поле</MarginLeft>
     <MarginRight>Правое поле</MarginRight>
     <MarginVertical>Вертикальное поле</MarginVertical>
-    <Vertical></Vertical>
+    <Vertical>
+    </Vertical>
     <Border>Граница</Border>
     <PlusShadow>+ Тень</PlusShadow>
     <OpaqueBox>Непрозрачное поле (используется цвет контура)</OpaqueBox>
@@ -2824,35 +2891,50 @@ https://github.com/SubtitleEdit/subtitleedit
     <StyleAlreadyExits>Такой стиль существует: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Стиль '{0}' экспортирован в файл '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Стиль '{0}' импортирован из файла '{1}'</StyleXImportedFromFileY>
-    <SetPreviewText></SetPreviewText>
+    <SetPreviewText>
+    </SetPreviewText>
     <AddToFile>Добавить в файл</AddToFile>
     <AddToStorage>Добавить в хранилище</AddToStorage>
     <StyleStorage>Хранение стилей</StyleStorage>
     <StyleCurrentFile>Стили в текущем файле</StyleCurrentFile>
     <OverwriteX>Перезаписать {0}?</OverwriteX>
-    <CategoryNote></CategoryNote>
-    <CategoriesManage></CategoriesManage>
-    <MoveToCategory></MoveToCategory>
-    <ScaleX></ScaleX>
-    <ScaleY></ScaleY>
-    <Spacing></Spacing>
+    <CategoryNote>
+    </CategoryNote>
+    <CategoriesManage>
+    </CategoriesManage>
+    <MoveToCategory>
+    </MoveToCategory>
+    <ScaleX>
+    </ScaleX>
+    <ScaleY>
+    </ScaleY>
+    <Spacing>
+    </Spacing>
     <Angle>Угол</Angle>
-    <BoxPerLine></BoxPerLine>
-    <BoxMultiLine></BoxMultiLine>
+    <BoxPerLine>
+    </BoxPerLine>
+    <BoxMultiLine>
+    </BoxMultiLine>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Категория</Category>
     <Categories>Категории</Categories>
     <CategoryName>Название категории</CategoryName>
-    <CategoryDelete></CategoryDelete>
+    <CategoryDelete>
+    </CategoryDelete>
     <NewCategory>Новая категория</NewCategory>
     <CategoryRename>Переименовать категорию</CategoryRename>
     <CategorySetDefault>Установить по-умолчанию</CategorySetDefault>
-    <NumberOfStyles></NumberOfStyles>
-    <CategoryDefault></CategoryDefault>
-    <ChooseCategories></ChooseCategories>
-    <ImportCategoriesTitle></ImportCategoriesTitle>
-    <ExportCategoriesTitle></ExportCategoriesTitle>
+    <NumberOfStyles>
+    </NumberOfStyles>
+    <CategoryDefault>
+    </CategoryDefault>
+    <ChooseCategories>
+    </ChooseCategories>
+    <ImportCategoriesTitle>
+    </ImportCategoriesTitle>
+    <ExportCategoriesTitle>
+    </ExportCategoriesTitle>
   </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Синхронизация по точкам</Title>
@@ -2865,10 +2947,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <ApplySync>Применить</ApplySync>
   </PointSync>
   <TimedTextSmpteTiming>
-    <Title></Title>
-    <UseSmpteTiming></UseSmpteTiming>
-    <SmpteTimingInfo></SmpteTimingInfo>
-    <YesAlways></YesAlways>
+    <Title>
+    </Title>
+    <UseSmpteTiming>
+    </UseSmpteTiming>
+    <SmpteTimingInfo>
+    </SmpteTimingInfo>
+    <YesAlways>
+    </YesAlways>
     <NoNever>Нет, никогда</NoNever>
   </TimedTextSmpteTiming>
   <TransportStreamSubtitleChooser>
@@ -2992,7 +3078,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <AlsoTrainBold>Также обучать жирный</AlsoTrainBold>
     <StartTraining>Начать обучение</StartTraining>
     <NowTraining>Обучаемый шрифт '{1}'. В целом символов обучено: {0:#,###,##0}, {2:#,###,##0} известно</NowTraining>
-    <ImagesWithTimeCodesInFileName></ImagesWithTimeCodesInFileName>
+    <ImagesWithTimeCodesInFileName>
+    </ImagesWithTimeCodesInFileName>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ручной перевод изображения в текст</Title>
