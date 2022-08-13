@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == UiUtil.HelpKeys)
             {
-                linkLabelVoskWebsite_LinkClicked(null, null);
+                UiUtil.ShowHelp("#audio_to_text");
                 e.SuppressKeyPress = true;
             }
         }
