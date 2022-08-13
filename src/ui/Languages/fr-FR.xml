@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.6</Version>
+    <Version>3.6.7</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/06/11</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -781,7 +781,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hé   toi , là bas. -&gt; Hé toi, là bas.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hé toi !. -&gt; Hé toi !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hétoi. -&gt; Hé toi.</FixMissingSpacesExample>
-    <FixUppercaseIInsideLowercaseWordsExample></FixUppercaseIInsideLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>
+    </FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Texte n°{0}: Le temps initial est postérieur au temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossible de corriger le texte n°{0}: Temps initial &gt; temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
