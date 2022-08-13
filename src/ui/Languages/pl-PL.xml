@@ -95,6 +95,7 @@
     <ShortcutX>Skrót: {0}</ShortcutX>
     <ExampleX>Przykład: {0}</ExampleX>
     <Reset>Resetuj</Reset>
+    <Warning>Ostrzeżenie</Warning>
   </General>
   <About>
     <Title>O programie Subtitle Edit</Title>
@@ -172,7 +173,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <UnableToFix>Nie można poprawić: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
-    <Title>Audio/wideo na tekst</Title>
+    <Title>Audio na tekst</Title>
     <Info>Generowanie tekstu z audio za pomocą rozpoznawania mowy Vosk/Kaldi</Info>
     <VoskWebsite>Strona internetowa Vosk</VoskWebsite>
     <Models>Modele</Models>
@@ -838,6 +839,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <PassX>Przebieg {0}</PassX>
     <Encoding>Kodowanie</Encoding>
     <BitRate>Bit rate</BitRate>
+    <TotalBitRateX>Całkowity bit rate: {0}</TotalBitRateX>
     <SampleRate>Sample rate</SampleRate>
     <Audio>Audio</Audio>
     <Stereo>Stereo</Stereo>
@@ -917,19 +919,19 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
     <RemoveAll>Usuń wszystko</RemoveAll>
   </ImportImages>
   <ImportShotChanges>
-    <Title>Wygeneruj/importuj zmiany scen</Title>
+    <Title>Generuj/importuj zmiany kadru</Title>
     <OpenTextFile>Otwórz plik tekstowy...</OpenTextFile>
-    <Generate>Generuj zmiany scen</Generate>
-    <Import>Importuj zmiany scen</Import>
+    <Generate>Generuj zmiany kadru</Generate>
+    <Import>Importuj zmiany kadru</Import>
     <TextFiles>Pliki tekstowe</TextFiles>
     <TimeCodes>Kody czasowe</TimeCodes>
     <Frames>Klatki</Frames>
     <Seconds>Sekundy</Seconds>
     <Milliseconds>Milisekundy</Milliseconds>
-    <GetShotChangesWithFfmpeg>Wygeneruj zmiany scen za pomocą FFmpeg</GetShotChangesWithFfmpeg>
+    <GetShotChangesWithFfmpeg>Generuj zmiany kadru za pomocą FFmpeg</GetShotChangesWithFfmpeg>
     <Sensitivity>Czułość</Sensitivity>
-    <SensitivityDescription>Niższa wartość daje więcej zmian scen</SensitivityDescription>
-    <NoShotChangesFound>Nie znaleziono zmian scen.</NoShotChangesFound>
+    <SensitivityDescription>Niższa wartość daje więcej zmian kadru</SensitivityDescription>
+    <NoShotChangesFound>Nie znaleziono zmian kadru.</NoShotChangesFound>
   </ImportShotChanges>
   <ImportText>
     <Title>Importuj zwykły tekst</Title>
@@ -1245,10 +1247,10 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <GenerateTextFromVideo>Wygeneruj tekst z wideo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Wideo/audio na tekst...</VideoAudioToText>
+        <VideoAudioToText>Audio na tekst...</VideoAudioToText>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
-        <GenerateImportShotChanges>Wygeneruj/Importuj zmiany scen...</GenerateImportShotChanges>
-        <RemoveOrExportShotChanges>Usuń/Eksportuj zmiany scen...</RemoveOrExportShotChanges>
+        <GenerateImportShotChanges>Generuj/importuj zmiany kadru...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>Usuń/eksportuj zmiany kadru...</RemoveOrExportShotChanges>
         <WaveformBatchGenerate>Wygeneruj wykresy falowe w trybie wsadowym...</WaveformBatchGenerate>
         <ShowHideVideo>Pokaż/Ukryj wideo</ShowHideVideo>
         <ShowHideWaveform>Pokaż/Ukryj wykres falowy</ShowHideWaveform>
@@ -1280,6 +1282,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
       <Options>
         <Title>Opcje</Title>
         <Settings>U&amp;stawienia...</Settings>
+        <WordLists>Listy słów...</WordLists>
         <ChooseLanguage>&amp;Wybierz język...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1400,6 +1403,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <RemoveBookmark>Usuń zakładkę</RemoveBookmark>
         <GoToSourceView>Przejdź do widoku źródła</GoToSourceView>
         <GoToListView>Przejdź do widoku listy</GoToListView>
+        <ExtractAudio>Wyodrębnij dźwięk...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1703,7 +1707,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Przed przyłączeniem napisów</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Przyłączanie napisów</SubtitlesJoined>
     <StatusLog>Dziennik stanu</StatusLog>
-    <XShotChangesImported>Zaimportowano {0} zmian w scenach</XShotChangesImported>
+    <XShotChangesImported>Zaimportowano {0} zmian kadru</XShotChangesImported>
     <PluginXExecuted>Wtyczka '{0}' wykonana.</PluginXExecuted>
     <NotAValidXSubFile>Niepoprawny plik XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Przed połączeniem linii z takim samym tekstem</BeforeMergeLinesWithSameText>
@@ -1734,8 +1738,10 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <NoSupportHereVobSub>Pliki VobSub nie są tutaj obsługiwane.</NoSupportHereVobSub>
     <NoSupportHereDivx>Pliki DivX nie są tutaj obsługiwane.</NoSupportHereDivx>
     <NoChapters>W wideo nie znaleziono żadnych rozdziałów.</NoChapters>
-    <DarkThemeRestart>Uruchom ponownie Subtitle Edit, aby zmiana motywu na ciemny zaczęła obowiązywać.</DarkThemeRestart>
-    <VideoFromUrlRequirements>Otwarcie wideo z adresu URL wymaga mpv i youtube-dl - pobrać i kontynuować?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Otwarcie wideo z adresu URL wymaga mpv i youtube-dl.
+
+Pobrać i kontynuować?</VideoFromUrlRequirements>
+    <Url>Url</Url>
     <Errors>Błędy</Errors>
     <ShowVideoControls>Pokaż elementy sterujące wideo</ShowVideoControls>
     <HideVideoControls>Ukryj elementy sterujące wideo</HideVideoControls>
@@ -2206,7 +2212,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <WaveformFocusMouseEnter>Ustaw koncentrację uwagi na wejście myszki</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Koncentruj także uwagę na "Widoku listy" po wejściu myszki w jej obszar</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Pojedyncze kliknięcie, aby wybrać napisy</WaveformSingleClickSelect>
-    <WaveformSnapToShotChanges>Przyciągaj do zmian sceny (przytrzymaj Shift, aby zastąpić)</WaveformSnapToShotChanges>
+    <WaveformSnapToShotChanges>Przyciągaj do zmian kadru (przytrzymaj klawisz Shift, aby nadpisać)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Automatycznie generuj wykres falowy podczas otwierania wideo</WaveformAutoGen>
     <WaveformBorderHitMs1>Trafiony znacznik graniczny musi być w obrębie</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisekund</WaveformBorderHitMs2>
@@ -2235,7 +2241,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <SsaOpaqueBox>Pole nieprzezroczyste</SsaOpaqueBox>
     <Testing123>Testowanie 123...</Testing123>
     <Language>Język</Language>
-    <NamesIgnoreLists>Lista imion/nazw (uwzględnij wielkość liter)</NamesIgnoreLists>
+    <NamesIgnoreLists>Lista imion/nazw (wielkość liter ma znaczenie)</NamesIgnoreLists>
     <AddName>Dodaj nazwę</AddName>
     <AddWord>Dodaj słowo</AddWord>
     <Remove>Usuń</Remove>
@@ -2274,13 +2280,15 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ContinuationStyleNone>Brak</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Brak, kropki oznaczają przerwy (tylko końcowe)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Brak, kropki oznaczają przerwy</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Brak, wielokropek dla przerw (tylko końcowy)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Brak, wielokropek dla przerw</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Kropki (tylko końcowe)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Kropki</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Wielokropek</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Brak, wielokropek dla przerw</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Wielokropek (tylko końcowy)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Wielokropek</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Myślnik</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Myślnik, ale kropki dla przerw</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Niestandardowy</ContinuationStyleCustom>
     <CpsLineLengthStyle>ZNS/długość linii</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Policz wszystkie znaki</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Policz wszystko oprócz spacji, tylko ZNS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2290,6 +2298,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignoruj arabskie znaki diakrytyczne</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignoruj arabskie znaki diakrytyczne/spacje</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Brak spacji i znaków interpunkcji ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Bez spacji i znaków interpunkcyjnych, tylko ZNS</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Symbol muzyczny</MusicSymbol>
     <MusicSymbolsReplace>Symbole muzyczne do zastąpienia (oddzielone przecinkiem)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem reguł zakodowanych na stałe</FixCommonOcrErrorsUseHardcodedRules>
@@ -2351,14 +2360,14 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AdjustSetStartAndOffsetTheWholeSubtitle>Ustaw czas rozpoczęcia, przesuń całe napisy</AdjustSetStartAndOffsetTheWholeSubtitle>
     <AdjustSetEndAndOffsetTheRest>Ustaw koniec, przesuń pozostałe</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ustaw koniec, przesuń pozostałe i przejdź do następnej</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustSnapStartToNextShotChange>Przeciągnij wybrane linie do następnej zmiany sceny</AdjustSnapStartToNextShotChange>
-    <AdjustSnapStartToNextShotChangeWithGap>Przeciągnij start wybranych linii do następnej zmiany sceny z minimalnym odstępem</AdjustSnapStartToNextShotChangeWithGap>
-    <AdjustSnapEndToPreviousShotChange>Przeciągnij koniec wybranych linii do poprzedniej zmiany sceny</AdjustSnapEndToPreviousShotChange>
-    <AdjustSnapEndToPreviousShotChangeWithGap>Przeciągnij koniec wybranych linii do poprzedniej zmiany sceny z minimalnym odstępem</AdjustSnapEndToPreviousShotChangeWithGap>
-    <AdjustExtendToNextShotChange>Rozciągnij wybrane linie do następnej zmiany sceny (lub następnego napisu)</AdjustExtendToNextShotChange>
-    <AdjustExtendToNextShotChangeWithGap>Rozciągnij wybrane linie do następnej zmiany sceny z minimalnym odstępem (lub następnego napisu)</AdjustExtendToNextShotChangeWithGap>
-    <AdjustExtendToPreviousShotChange>Rozciągnij wybrane linie do poprzedniej zmiany sceny (lub poprzedniego napisu)</AdjustExtendToPreviousShotChange>
-    <AdjustExtendToPreviousShotChangeWithGap>Rozciągnij wybrane linie do poprzedniej zmiany sceny z minimalnym odstępem (lub poprzedniego napisu)</AdjustExtendToPreviousShotChangeWithGap>
+    <AdjustSnapStartToNextShotChange>Przeciągnij start wybranych linii do następnej zmiany kadru</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>Przeciągnij start wybranych linii do następnej zmiany kadru z minimalnym odstępem</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>Przeciągnij koniec wybranych linii do poprzedniej zmiany kadru</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>Przeciągnij koniec wybranych linii do poprzedniej zmiany kadru z minimalnym odstępem</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>Rozciągnij wybrane linie do następnej zmiany kadru (lub następnego napisu)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>Rozciągnij wybrane linie do następnej zmiany kadru z minimalnym odstępem (lub następnego napisu)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>Rozciągnij wybrane linie do poprzedniej zmiany kadru (lub poprzedniego napisu)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>Rozciągnij wybrane linie do poprzedniej zmiany kadru z minimalnym odstępem (lub poprzedniego napisu)</AdjustExtendToPreviousShotChangeWithGap>
     <AdjustExtendToNextSubtitle>Rozciągnij wybrane linie do następnego napisu</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Rozciągnij wybrane linie do poprzedniego napisu</AdjustExtendToPreviousSubtitle>
     <AdjustExtendCurrentSubtitle>Rozciągnij bieżącą linię do następnych napisów lub do maksymalnego czasu trwania</AdjustExtendCurrentSubtitle>
@@ -2382,8 +2391,11 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <GoToNextSubtitleAndFocusVideo>Przejdź do następnej linii i ustaw pozycję wideo</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Przejdź do poprzedniej linii i odtwarzaj</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Przejdź do następnej linii i odtwarzaj</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Przejdź do poprzedniej linii i ustaw fokus na wykresie falowym</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Przejdź do następnej linii i ustaw fokus na wykresie falowym</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Przełącz fokus między "Widokiem listy", a polem tekstowym napisów</ToggleFocus>
     <ToggleFocusWaveform>Przełącz fokus między "Widokiem listy", a wykresem falowym/spektrogramem</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Przełącz fokus między polem tekstowym, a wykresem falowym/spektrogramem</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleQuotes>Przełącz cudzysłowy</ToggleQuotes>
     <ToggleHiTags>Przełącz tagi dla osób niedosłyszących</ToggleHiTags>
@@ -2416,11 +2428,11 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
-    <WaveformGoToPreviousShotChange>Przejdź do poprzedniej zmiany sceny</WaveformGoToPreviousShotChange>
-    <WaveformGoToNextShotChange>Przejdź do następnej zmiany sceny</WaveformGoToNextShotChange>
-    <WaveformToggleShotChange>Przełącz zmianę sceny</WaveformToggleShotChange>
-    <WaveformRemoveOrExportShotChanges>Usuń/Eksportuj zmiany scen</WaveformRemoveOrExportShotChanges>
-    <WaveformGuessStart>Automatyczna regulacja startu za pomocą głośności/zmiany sceny</WaveformGuessStart>
+    <WaveformGoToPreviousShotChange>Przejdź do poprzedniej zmiany kadru</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>Przejdź do następnej zmiany kadru</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>Przełącz zmianę kadru</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>Usuń/Eksportuj zmiany kadru</WaveformRemoveOrExportShotChanges>
+    <WaveformGuessStart>Automatyczna regulacja startu za pomocą głośności/zmiany kadru</WaveformGuessStart>
     <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
     <GoForward1Frame>Jedna klatka do przodu</GoForward1Frame>
     <GoBack1FrameWithPlay>Jedna klatka do tyłu (z odtworzeniem)</GoBack1FrameWithPlay>
@@ -2454,7 +2466,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Przełącz elementy sterujące wideo</MainToggleVideoControls>
     <VideoToggleContrast>Przełącz kontrast (tylko mpv)</VideoToggleContrast>
-    <VideoAudioToText>Wideo/audio na tekst (rozpoznawanie mowy)</VideoAudioToText>
+    <VideoAudioToText>Audio na tekst (rozpoznawanie mowy)</VideoAudioToText>
     <VideoToggleBrightness>Przełącz jasność (tylko mpv)</VideoToggleBrightness>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
@@ -2554,6 +2566,9 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Wykrywaj i odznaczaj pojedyncze napisy lub teksty piosenek pisane małymi literami</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Ukryj mało prawdopodobne kontynuacje zdania</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignoruj teksty piosenek między symbolami muzycznymi</IgnoreLyrics>
+    <ContinuationPause>Próg wstrzymania:</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Edytuj niestandardowy styl kontynuacji...</EditCustomContinuationStyle>
     <MinFrameGap>Minimalny odstęp w klatkach</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} klatki przy FPS {1} daje {2} milisekund(y).</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Użyć "{0}" milisekund, jako nowego minimalnego odstępu?</UseXAsNewGap>
@@ -2563,6 +2578,18 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Skróty: Zezwalaj na pojedyncze litery/cyfry w polu tekstowym</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Zaktualizuj skojarzenia typów plików</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Zaktualizowano skojarzenia typów plików</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Edytuj niestandardowy styl kontynuacji</CustomContinuationStyle>
+    <LoadStyle>Wczytaj styl...</LoadStyle>
+    <Suffix>Przyrostek:</Suffix>
+    <AddSuffixForComma>Przetwarzaj, jeśli kończy się przecinkiem</AddSuffixForComma>
+    <AddSpace>Dodaj spację</AddSpace>
+    <RemoveComma>Usuń przecinek</RemoveComma>
+    <Prefix>Prefiks:</Prefix>
+    <DifferentStyleGap>Użyj innego stylu dla przerw dłuższych niż</DifferentStyleGap>
+    <Preview>Podgląd</Preview>
+    <PreviewPause>(pauza)</PreviewPause>
+    <CustomContinuationStyleNote>Uwaga: Niestandardowy styl kontynuacji jest wspólny dla wszystkich profili.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Zastąpi to wartości w oknie dialogowym. Jesteś pewny?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Pobierz bibliotekę mpv</DownloadMpv>
@@ -2819,6 +2846,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <Angle>Kąt</Angle>
     <BoxPerLine>Pole nieprzezroczyste na linię (użyj koloru konturu)</BoxPerLine>
     <BoxMultiLine>Jedno pole nieprzezroczyste (użyj koloru cienia)</BoxMultiLine>
+    <DuplicateStyleNames>Zduplikowane nazwy stylów: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Kategoria</Category>
@@ -3051,9 +3079,9 @@ Zachować te zmiany?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Pokaż wykres falowy i spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaż tylko wykres falowy</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaż tylko spektrogram</ShowSpectrogramOnly>
-    <AddShotChange>Dodaj zmianę sceny</AddShotChange>
-    <RemoveShotChange>Usuń zmianę sceny</RemoveShotChange>
-    <RemoveShotChangesFromSelection>Usuń zmiany scen z zaznaczenia</RemoveShotChangesFromSelection>
+    <AddShotChange>Dodaj zmianę kadru</AddShotChange>
+    <RemoveShotChange>Usuń zmianę kadru</RemoveShotChange>
+    <RemoveShotChangesFromSelection>Usuń kadru scen z zaznaczenia</RemoveShotChangesFromSelection>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
     <InsertSubtitleHere>Wstaw napisy tutaj...</InsertSubtitleHere>
