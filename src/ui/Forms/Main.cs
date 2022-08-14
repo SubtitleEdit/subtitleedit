@@ -16276,7 +16276,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainGoToPrevSubtitleAndPlay == e.KeyData && mediaPlayer != null)
             {
                 int newIndex = _subtitleListViewIndex - 1;
-                if (newIndex > 0)
+                if (newIndex >= 0)
                 {
                     _subtitleListViewIndex = -1;
                     SelectListViewIndexAndEnsureVisible(newIndex);
