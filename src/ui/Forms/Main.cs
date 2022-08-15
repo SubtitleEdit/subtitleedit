@@ -32222,6 +32222,13 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, new WebVTT().Name);
                 toolStripButtonXProperties.Image = Properties.Resources.webvtt;
             }
+
+            if (formatType == typeof(Ebu))
+            {
+                toolStripButtonXProperties.Visible = true;
+                toolStripButtonXProperties.ToolTipText = string.Format(_language.Menu.File.FormatXProperties, new Ebu().Name);
+                toolStripButtonXProperties.Image = Properties.Resources.ebu;
+            }
         }
 
         private void NetflixGlyphCheck(bool isSaving)
