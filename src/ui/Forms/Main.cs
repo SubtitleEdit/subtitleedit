@@ -11193,7 +11193,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
-                if (textIndex != null && textIndex.Value > 1 && textIndex.Value < oldText.Length - 1)
+                if (textIndex != null)
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
@@ -11415,7 +11415,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         oldText = originalCurrent.Text;
-                        if (originalTextIndex != null && originalTextIndex.Value > 1 && originalTextIndex.Value < oldText.Length - 1)
+                        if (originalTextIndex != null)
                         {
                             var firstPart = oldText.Substring(0, originalTextIndex.Value).Trim();
                             var secondPart = oldText.Substring(originalTextIndex.Value).Trim();
@@ -28527,13 +28527,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemSplitViaWaveform_Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
-            if (tb.SelectionStart > 1 && tb.SelectionStart < tb.Text.Length - 1)
-            {
-                int? pos = tb.SelectionStart;
-                SplitSelectedParagraph(mediaPlayer.CurrentPosition, pos);
-                tb.Focus();
-                tb.SelectionStart = tb.Text.Length;
-            }
+            int? pos = tb.SelectionStart;
+            SplitSelectedParagraph(mediaPlayer.CurrentPosition, pos);
+            tb.Focus();
+            tb.SelectionStart = tb.Text.Length;
         }
 
         private void ContextMenuStripTextBoxListViewOpening(object sender, CancelEventArgs e)
