@@ -29,16 +29,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
-            if (Configuration.IsRunningOnWindows)
-            {
-                buttonSwap.Text = "🡙";
-            }
-            else
-            {
-                buttonSwap.Text = "<->";
-                buttonSwap.Width = 35;
-                buttonSwap.Font = new Font(Font.FontFamily, Font.Size);
-            }
         }
 
         private static void InitializeCombobox(ComboBox comboBox)

@@ -133,10 +133,10 @@
             // 
             // buttonSwap
             // 
-            this.buttonSwap.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSwap.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSwap.Location = new System.Drawing.Point(312, 57);
             this.buttonSwap.Name = "buttonSwap";
-            this.buttonSwap.Size = new System.Drawing.Size(25, 28);
+            this.buttonSwap.Size = new System.Drawing.Size(35, 28);
             this.buttonSwap.TabIndex = 8;
             this.buttonSwap.Text = "<->";
             this.buttonSwap.UseVisualStyleBackColor = true;
