@@ -2282,6 +2282,7 @@ $HorzAlign          =   Center
         public string MainVideoGoToStartCurrent { get; set; }
         public string MainVideoToggleStartEndCurrent { get; set; }
         public string MainVideoPlaySelectedLines { get; set; }
+        public string MainVideoLoopSelectedLines { get; set; }
         public string MainVideoGoToPrevSubtitle { get; set; }
         public string MainVideoGoToNextSubtitle { get; set; }
         public string MainVideoGoToPrevChapter { get; set; }
@@ -8403,6 +8404,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoPlaySelectedLines = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoLoopSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoLoopSelectedLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
                 if (subNode != null)
                 {
@@ -10713,6 +10720,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoGoToStartCurrent", shortcuts.MainVideoGoToStartCurrent);
             textWriter.WriteElementString("MainVideoToggleStartEndCurrent", shortcuts.MainVideoToggleStartEndCurrent);
             textWriter.WriteElementString("MainVideoPlaySelectedLines", shortcuts.MainVideoPlaySelectedLines);
+            textWriter.WriteElementString("MainVideoLoopSelectedLines", shortcuts.MainVideoLoopSelectedLines);
             textWriter.WriteElementString("MainVideoGoToPrevSubtitle", shortcuts.MainVideoGoToPrevSubtitle);
             textWriter.WriteElementString("MainVideoGoToNextSubtitle", shortcuts.MainVideoGoToNextSubtitle);
             textWriter.WriteElementString("MainVideoGoToPrevChapter", shortcuts.MainVideoGoToPrevChapter);

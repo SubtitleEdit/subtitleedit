@@ -6724,6 +6724,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/PlaySelectedLines":
                     language.Settings.PlaySelectedLines = reader.Value;
                     break;
+                case "Settings/LoopSelectedLines":
+                    language.Settings.LoopSelectedLines = reader.Value;
+                    break;
                 case "Settings/WaveformGoToPrevSubtitle":
                     language.Settings.WaveformGoToPrevSubtitle = reader.Value;
                     break;

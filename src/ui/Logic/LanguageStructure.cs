@@ -2634,6 +2634,7 @@
             public string GoToStartCurrent { get; set; }
             public string ToggleStartEndCurrent { get; set; }
             public string PlaySelectedLines { get; set; }
+            public string LoopSelectedLines { get; set; }
 
             public string WaveformGoToPrevSubtitle { get; set; }
             public string WaveformGoToNextSubtitle { get; set; }
