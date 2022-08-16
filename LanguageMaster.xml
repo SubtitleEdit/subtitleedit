@@ -2453,6 +2453,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
     <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
     <PlaySelectedLines>Play selected lines</PlaySelectedLines>
+    <LoopSelectedLines>Loop selected line</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Go to previous chapter</WaveformGoToPrevChapter>
