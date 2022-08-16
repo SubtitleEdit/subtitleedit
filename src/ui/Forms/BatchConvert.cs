@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
         private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
         RemoveTextForHISettings _removeTextForHiSettings;
+        private string _ocrEngine = "Tesseract";
 
         public BatchConvert(Icon icon)
         {
@@ -234,6 +235,16 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.BatchConvertOutputFolder;
+            }
+
+            toolStripMenuItemOcrEngine.Text = LanguageSettings.Current.VobSubOcr.OcrMethod;
+            if (Configuration.Settings.Tools.BatchConvertOcrEngine.Equals("nOcr", StringComparison.OrdinalIgnoreCase))
+            {
+                nOCRToolStripMenuItem_Click(null, null);
+            }
+            else
+            {
+                tesseractToolStripMenuItem_Click(null, null);
             }
 
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
@@ -1160,7 +1171,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                             listViewInputFiles.Refresh();
                                                         };
                                                         vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language, null);
+                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
                                                         sub = vobSubOcr.SubtitleFromOcr;
                                                     }
                                                 }
@@ -1214,7 +1225,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                                 listViewInputFiles.Refresh();
                                                             };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
+                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -1277,7 +1288,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         listViewInputFiles.Refresh();
                                     };
                                     vobSubOcr.FileName = Path.GetFileName(fileName);
-                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false);
+                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, null, _ocrEngine);
                                     sub = vobSubOcr.SubtitleFromOcr;
                                 }
                             }
@@ -1292,7 +1303,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
                                     listViewInputFiles.Refresh();
                                 };
-                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, null);
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine);
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
                         }
@@ -1365,7 +1376,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             var language = programMapTableParser.GetSubtitleLanguage(id);
                                             language = string.IsNullOrEmpty(language) ? null : language;
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
-                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, null);
+                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, _ocrEngine);
                                             subtitle = vobSubOcr.SubtitleFromOcr;
                                         }
 
@@ -2855,7 +2866,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<ListViewItem> _listViewItemBeforeSearch;
         private void textBoxFilter_TextChanged(object sender, EventArgs e)
         {
-            if (listViewInputFiles.Items.Count == 0 &&_listViewItemBeforeSearch == null)
+            if (listViewInputFiles.Items.Count == 0 && _listViewItemBeforeSearch == null)
             {
                 return;
             }
@@ -3193,6 +3204,20 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void tesseractToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _ocrEngine = "Tesseract";
+            tesseractToolStripMenuItem.Checked = true;
+            nOCRToolStripMenuItem.Checked = false;
+        }
+
+        private void nOCRToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _ocrEngine = "nOcr";
+            nOCRToolStripMenuItem.Checked = true;
+            tesseractToolStripMenuItem.Checked = false;
         }
     }
 }
