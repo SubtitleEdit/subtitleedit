@@ -641,6 +641,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return new SubtitleFormat[]
             {
+                new NkhCuePoints(),
                 new DlDd(),
                 new Ted20(),
                 new Captionate(),
