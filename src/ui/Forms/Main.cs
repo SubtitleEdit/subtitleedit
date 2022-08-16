@@ -16743,7 +16743,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    SetPlayRateAndPlay(150);
+                    if (mediaPlayer.IsPaused)
+                    {
+                        SetPlayRateAndPlay(150);
+                    }
+                    else
+                    {
+                        mediaPlayer.Pause();
+                    }
+
                     e.SuppressKeyPress = true; 
                 }
             }
@@ -16751,7 +16759,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    SetPlayRateAndPlay(200);
+                    if (mediaPlayer.IsPaused)
+                    {
+                        SetPlayRateAndPlay(200);
+                    }
+                    else
+                    {
+                        mediaPlayer.Pause();
+                    }
+
                     e.SuppressKeyPress = true;
                 }
             }
