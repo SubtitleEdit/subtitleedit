@@ -6742,6 +6742,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/TogglePlayPause":
                     language.Settings.TogglePlayPause = reader.Value;
                     break;
+                case "Settings/Play150Speed":
+                    language.Settings.Play150Speed = reader.Value;
+                    break;
+                case "Settings/Play200Speed":
+                    language.Settings.Play200Speed = reader.Value;
+                    break;
                 case "Settings/Pause":
                     language.Settings.Pause = reader.Value;
                     break;

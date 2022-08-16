@@ -16739,6 +16739,22 @@ namespace Nikse.SubtitleEdit.Forms
                     System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
             }
+            else if (e.KeyData == _shortcuts.VideoPlay150Speed)
+            {
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    SetPlayRateAndPlay(150);
+                    e.SuppressKeyPress = true; 
+                }
+            }
+            else if (e.KeyData == _shortcuts.VideoPlay200Speed)
+            {
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    SetPlayRateAndPlay(200);
+                    e.SuppressKeyPress = true;
+                }
+            }
             else if (e.KeyData == _shortcuts.VideoPause)
             {
                 if (mediaPlayer.VideoPlayer != null)
@@ -24434,7 +24450,7 @@ namespace Nikse.SubtitleEdit.Forms
             var backColor = UiUtil.BackColor;
             for (int i = 30; i <= 300; i += 10)
             {
-                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
+                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate, i.ToString()) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
             }
         }
 
@@ -24446,12 +24462,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void SetPlayRateAndPlay(int playRate)
+        {
+            SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[playRate.ToString()], null, false, true);
+            mediaPlayer.Play();
+        }
+
         private void SetPlayRate(object sender, EventArgs e)
         {
             SetPlayRate(sender, e, false);
         }
 
-        private void SetPlayRate(object sender, EventArgs e, bool skipStatusMessage)
+        private void SetPlayRate(object sender, EventArgs e, bool skipStatusMessage, bool playedWithCustomeSpeed = false)
         {
             if (!(sender is ToolStripMenuItem playRateDropDownItem) || mediaPlayer == null || mediaPlayer.VideoPlayer == null)
             {
@@ -24463,19 +24485,23 @@ namespace Nikse.SubtitleEdit.Forms
                 item.Checked = false;
             }
 
-            playRateDropDownItem.Checked = true;
             var percentText = playRateDropDownItem.Text.TrimEnd('%');
+            var factor = double.Parse(percentText) / 100.0;
             if (!skipStatusMessage)
             {
                 ShowStatus(string.Format(_language.SetPlayRateX, percentText));
             }
 
-            var factor = double.Parse(percentText) / 100.0;
-            toolStripSplitButtonPlayRate.Image = Math.Abs(factor - 1) < 0.01 ? imageListPlayRate.Images[0] : imageListPlayRate.Images[1];
+            if (!playedWithCustomeSpeed)
+            {
+                playRateDropDownItem.Checked = true;
+                toolStripSplitButtonPlayRate.Image = Math.Abs(factor - 1) < 0.01 ? imageListPlayRate.Images[0] : imageListPlayRate.Images[1];
+            }
 
             try
             {
                 mediaPlayer.VideoPlayer.PlayRate = factor;
+                mediaPlayer.PlayedWithCustomeSpeed = playedWithCustomeSpeed;
             }
             catch
             {
