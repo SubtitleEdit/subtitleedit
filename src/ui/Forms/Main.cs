@@ -23724,7 +23724,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
         {
-            UiUtil.OpenFolderFromFileName(_fileName);
+            if (!string.IsNullOrEmpty(_fileName) && File.Exists(_fileName))
+            {
+                UiUtil.OpenFolderFromFileName(_fileName); 
+            }
         }
 
         private void TabControlModes_SelectedIndexChanged(object sender, EventArgs e)
@@ -24546,6 +24549,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveAsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
             openOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenOriginal);
             removeOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCloseOriginal);
+            toolStripMenuItemOpenContainingFolder.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.OpenContainingFolder);
             toolStripMenuItemCompare.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCompare);
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
             toolStripMenuItemImportBluraySupFileForEdit.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportBdSupForEdit);
