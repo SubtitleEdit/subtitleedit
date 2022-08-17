@@ -2255,6 +2255,8 @@ $HorzAlign          =   Center
         public string MainVideoPlayFromJustBefore { get; set; }
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
+        public string MainVideoPlay150Speed { get; set; }
+        public string MainVideoPlay200Speed { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoShowWaveform { get; set; }
         public string MainVideoFoucsSetVideoPosition { get; set; }
@@ -8238,6 +8240,18 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoPlay150Speed");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlay150Speed = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoPlay200Speed");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlay200Speed = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
                 {
@@ -10665,6 +10679,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlayFromJustBefore", shortcuts.MainVideoPlayFromJustBefore);
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);
+            textWriter.WriteElementString("MainVideoPlay150Speed", shortcuts.MainVideoPlay150Speed);
+            textWriter.WriteElementString("MainVideoPlay200Speed", shortcuts.MainVideoPlay200Speed);
             textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoShowWaveform", shortcuts.MainVideoShowWaveform);
             textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
