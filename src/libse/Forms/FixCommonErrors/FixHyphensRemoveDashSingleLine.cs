@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -12,14 +13,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            int iFixes = 0;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            var iFixes = 0;
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                if (Helper.IsOneSentence(p.Text) && callbacks.AllowFix(p, Language.RemoveHyphensSingleLine))
+                if (Helper.IsOneSentence(p.Text) && !IsDialogInOneLine(p.Text) && callbacks.AllowFix(p, Language.RemoveHyphensSingleLine))
                 {
-                    string oldText = p.Text;
-                    string text = Helper.FixHyphensRemoveForSingleLine(subtitle, p.Text, i);
+                    var oldText = p.Text;
+                    var text = Helper.FixHyphensRemoveForSingleLine(subtitle, p.Text, i);
                     if (text != oldText)
                     {
                         p.Text = text;
@@ -29,6 +30,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             callbacks.UpdateFixStatus(iFixes, Language.RemoveHyphensSingleLine);
+        }
+
+        private static bool IsDialogInOneLine(string text)
+        {
+            if (Utilities.CountTagInText(text, '-') == 1)
+            {
+                return false;
+            }
+
+            var textNoSpace = text.RemoveChar(' ');
+            return Regex.IsMatch(textNoSpace, "-.*[/?/.!]-[A-Z]") ||
+                   Regex.IsMatch(textNoSpace, "-.*[/?/.!]<i>-[A-Z]");
         }
     }
 }
