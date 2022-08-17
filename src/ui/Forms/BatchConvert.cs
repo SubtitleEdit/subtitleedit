@@ -1572,7 +1572,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
             {
-                sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Style == textBoxRemoveStyle.Text);
+                sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Actor == textBoxRemoveStyle.Text);
                 sub.Renumber();
             }
 
