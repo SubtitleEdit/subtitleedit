@@ -2176,6 +2176,7 @@ $HorzAlign          =   Center
         public string GeneralChooseProfile { get; set; }
         public string GeneralDuplicateLine { get; set; }
         public string OpenDataFolder { get; set; }
+        public string OpenContainingFolder { get; set; }
         public string GeneralToggleView { get; set; }
         public string GeneralToggleMode { get; set; }
         public string GeneralTogglePreviewOnVideo { get; set; }
@@ -7868,6 +7869,12 @@ $HorzAlign          =   Center
                     shortcuts.OpenDataFolder = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("OpenContainingFolder");
+                if (subNode != null)
+                {
+                    shortcuts.OpenContainingFolder = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralDuplicateLine");
                 if (subNode != null)
                 {
@@ -10617,6 +10624,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToPreviousBookmark", shortcuts.GeneralGoToPreviousBookmark);
             textWriter.WriteElementString("GeneralChooseProfile", shortcuts.GeneralChooseProfile);
             textWriter.WriteElementString("OpenDataFolder", shortcuts.OpenDataFolder);
+            textWriter.WriteElementString("OpenContainingFolder", shortcuts.OpenContainingFolder);
             textWriter.WriteElementString("GeneralDuplicateLine", shortcuts.GeneralDuplicateLine);
             textWriter.WriteElementString("GeneralToggleView", shortcuts.GeneralToggleView);
             textWriter.WriteElementString("GeneralToggleMode", shortcuts.GeneralToggleMode);
