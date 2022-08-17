@@ -2641,6 +2641,8 @@
             public string WaveformGoToNextChapter { get; set; }
             public string WaveformSelectNextSubtitle { get; set; }
             public string TogglePlayPause { get; set; }
+            public string Play150Speed { get; set; }
+            public string Play200Speed { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
             public string PlayRateSlower { get; set; }
