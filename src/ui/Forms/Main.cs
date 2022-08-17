@@ -24285,6 +24285,7 @@ namespace Nikse.SubtitleEdit.Forms
             LoadPlugins();
 
             mediaPlayer.OnEmptyPlayerClicked += MediaPlayer_OnEmptyPlayerClicked;
+            mediaPlayer.OnPlayerClicked += MediaPlayer_OnPlayerClicked;
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
             if (Configuration.Settings.General.StartInSourceView)
             {
@@ -24546,6 +24547,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonOpenVideo_Click(sender, e);
             }
+        }
+
+        private void MediaPlayer_OnPlayerClicked(object sender, EventArgs e)
+        {
+            _endSeconds = -1;
+            _playSelectionIndex = -1;
+            _playSelectionIndexLoopStart = -1;
         }
 
         private void SetPlayRateAndPlay(int playRate)

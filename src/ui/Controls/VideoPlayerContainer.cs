@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public event EventHandler OnButtonClicked;
         public event EventHandler OnEmptyPlayerClicked;
+        public event EventHandler OnPlayerClicked;
 
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
@@ -366,6 +367,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void SubtitleTextBoxMouseClick(object sender, MouseEventArgs e)
         {
             TogglePlayPause();
+            OnPlayerClicked?.Invoke(sender, e);
         }
 
         public Paragraph LastParagraph { get; set; }
@@ -581,6 +583,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             TogglePlayPause();
+            OnPlayerClicked?.Invoke(sender, e);
         }
 
         public void InitializeVolume(double defaultVolume)
