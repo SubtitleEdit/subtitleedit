@@ -2291,13 +2291,13 @@ namespace Nikse.SubtitleEdit.Controls
             foreach (ListViewItem item in Items)
             {
                 var p = subtitle.GetParagraphOrDefault(i);
-                if (p != null)
+                if (p != null && ColumnIndexText < item.SubItems.Count)
                 {
                     item.SubItems[ColumnIndexText].Text = p.Text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
 
                 var original = Utilities.GetOriginalParagraph(i, p, subtitleOriginal.Paragraphs);
-                if (original != null)
+                if (original != null && ColumnIndexTextOriginal < item.SubItems.Count)
                 {
                     item.SubItems[ColumnIndexTextOriginal].Text = original.Text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
