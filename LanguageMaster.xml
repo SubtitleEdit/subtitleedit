@@ -282,7 +282,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UseStyleFromSource>Use style from source</UseStyleFromSource>
     <ConvertOptions>Convert options</ConvertOptions>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
-    <RemoveStyleActor>Remove style/actor</RemoveStyleActor>
+    <RemoveStyleActor>Remove lines w style/actor</RemoveStyleActor>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
     <RedoCasing>Redo casing</RedoCasing>
