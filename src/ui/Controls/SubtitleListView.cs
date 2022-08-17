@@ -2293,13 +2293,13 @@ namespace Nikse.SubtitleEdit.Controls
                 var p = subtitle.GetParagraphOrDefault(i);
                 if (p != null)
                 {
-                    Columns[ColumnIndexText].Text = p.Text.Replace(Environment.NewLine, _lineSeparatorString);
+                    item.SubItems[ColumnIndexText].Text = p.Text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
 
                 var original = Utilities.GetOriginalParagraph(i, p, subtitleOriginal.Paragraphs);
                 if (original != null)
                 {
-                    Columns[ColumnIndexTextOriginal].Text = original.Text.Replace(Environment.NewLine, _lineSeparatorString);
+                    item.SubItems[ColumnIndexTextOriginal].Text = original.Text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
 
                 i++;
