@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _repeatCount = -1;
         private double _endSeconds = -1;
         private int _playSelectionIndex = -1;
+        private int _playSelectionIndexLoopStart = -1;
         private double _endSecondsNewPosition = -1;
         private long _endSecondsNewPositionTicks;
         private const double EndDelay = 0.05;
@@ -907,6 +908,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _endSeconds = -1;
                 _playSelectionIndex = -1;
+                _playSelectionIndexLoopStart = -1;
                 if (e.Paragraph == null)
                 {
                     if (Configuration.Settings.VideoControls.WaveformDoubleClickOnNonParagraphAction == "PlayPause")
@@ -991,6 +993,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _endSeconds = -1;
             _playSelectionIndex = -1;
+            _playSelectionIndexLoopStart = -1;
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.Pause();
@@ -1002,6 +1005,7 @@ namespace Nikse.SubtitleEdit.Forms
             timerWaveform.Stop();
             _endSeconds = -1;
             _playSelectionIndex = -1;
+            _playSelectionIndexLoopStart = -1;
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.Pause();
@@ -2712,6 +2716,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _endSeconds = -1;
                 _playSelectionIndex = -1;
+                _playSelectionIndexLoopStart = -1;
                 mediaPlayer.Pause();
                 if (visualSync.ShowDialog(this) == DialogResult.OK)
                 {
@@ -16268,6 +16273,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
                         _playSelectionIndex = -1;
+                        _playSelectionIndexLoopStart = -1;
                     }
 
                     e.SuppressKeyPress = true;
@@ -16292,6 +16298,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
                         _playSelectionIndex = -1;
+                        _playSelectionIndexLoopStart = -1;
                     }
 
                     e.SuppressKeyPress = true;
@@ -16735,6 +16742,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _endSeconds = -1;
                     _playSelectionIndex = -1;
+                    _playSelectionIndexLoopStart = -1;
                     e.SuppressKeyPress = true;
                     System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
@@ -16777,6 +16785,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _endSeconds = -1;
                     _playSelectionIndex = -1;
+                    _playSelectionIndexLoopStart = -1;
                     mediaPlayer.Pause();
                     e.SuppressKeyPress = true;
                 }
@@ -16808,6 +16817,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _endSeconds = -1;
                         _playSelectionIndex = -1;
+                        _playSelectionIndexLoopStart = -1;
                         mediaPlayer.TogglePlayPause();
                         e.SuppressKeyPress = true;
                     }
@@ -16902,6 +16912,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
                         _playSelectionIndex = _subtitle.GetIndex(p);
+                        _playSelectionIndexLoopStart = -1;
                     }
                 }
 
@@ -17098,6 +17109,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
                     _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                     _playSelectionIndex = -1;
+                    _playSelectionIndexLoopStart = -1;
                     _endSecondsNewPosition = startSeconds;
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
@@ -17114,6 +17126,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                     _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                     _playSelectionIndex = -1;
+                    _playSelectionIndexLoopStart = -1;
                     _endSecondsNewPosition = startSeconds;
                     mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
@@ -19337,6 +19350,7 @@ namespace Nikse.SubtitleEdit.Forms
                 double startSeconds = paragraph.StartTime.TotalSeconds;
                 _endSeconds = paragraph.EndTime.TotalSeconds;
                 _playSelectionIndex = -1;
+                _playSelectionIndexLoopStart = -1;
                 mediaPlayer.CurrentPosition = startSeconds;
                 ShowSubtitle();
                 mediaPlayer.Play();
@@ -20841,6 +20855,7 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
                         _playSelectionIndex = _subtitle.GetIndex(p);
+                        _playSelectionIndexLoopStart = -1;
                     }
                 }
             }
@@ -21614,6 +21629,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _endSeconds = -1;
             _playSelectionIndex = -1;
+            _playSelectionIndexLoopStart = -1;
 
             _videoInfo = UiUtil.GetVideoInfo(fileName);
             if (_videoInfo.FramesPerSecond > 0)
@@ -22164,8 +22180,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
+
                         mediaPlayer.CurrentPosition = _endSeconds;
-                        _endSeconds = -1;
                         if (_playSelectionIndex >= 0)
                         {
                             var nextIndex = SubtitleListview1.GetSelectedIndices().OrderBy(pix => pix).FirstOrDefault(pix => pix > _playSelectionIndex);
@@ -22180,17 +22196,36 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                _playSelectionIndex = -1;
+                                var first = _subtitle.GetParagraphOrDefault(_playSelectionIndexLoopStart);
+                                if (first != null)
+                                { // nixe harboe debug
+                                    _endSeconds = first.EndTime.TotalSeconds;
+                                    mediaPlayer.CurrentPosition = first.StartTime.TotalSeconds;
+                                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(151), () =>
+                                    {
+                                        UiUtil.ShowSubtitle(_subtitle, mediaPlayer, GetCurrentSubtitleFormat());
+                                        _endSeconds = first.EndTime.TotalSeconds;
+                                        _playSelectionIndex = _playSelectionIndexLoopStart;
+                                        mediaPlayer.Play();
+                                    });
+                                }
+                                else
+                                {
+                                    _playSelectionIndex = -1;
+                                    _playSelectionIndexLoopStart = -1;
+                                    _endSeconds = -1;
+                                }
                             }
                         }
                         else
                         {
                             _endSecondsNewPosition = -1;
                             _endSecondsNewPositionTicks = 0;
+                            _endSeconds = -1;
                         }
                     }
 
-                    if (AutoRepeatContinueOn || AutoRepeatOn)
+                    if ((AutoRepeatContinueOn || AutoRepeatOn) && _playSelectionIndex < 0)
                     {
                         if (_endSeconds >= 0 && currentPosition >= _endSeconds && checkBoxAutoRepeatOn.Checked)
                         {
@@ -22289,6 +22324,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ShowSubtitleTimer.Start();
+
+            Text = "EndSeconds=" + _endSeconds + "  startIdx=" + _playSelectionIndexLoopStart + "  Idx=" + _playSelectionIndex;
         }
 
         private void AddTitleBarChangeAsterisk(bool currentChanged, bool originalChanged, bool originalActive)
@@ -22904,6 +22941,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _endSeconds = paragraph.EndTime.TotalSeconds;
                 _playSelectionIndex = -1;
+                _playSelectionIndexLoopStart = -1;
                 if (mediaPlayer.Duration > _endSeconds + 0.05)
                 {
                     _endSeconds += 0.05; // go a little forward
@@ -23545,6 +23583,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void timerAutoContinue_Tick(object sender, EventArgs e)
         {
+            if (_playSelectionIndex >= 0)
+            {
+                return;
+            }
+
             _autoContinueDelayCount--;
 
             if (_autoContinueDelayCount <= 0)
@@ -23654,6 +23697,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _endSeconds = -1;
             _playSelectionIndex = -1;
+            _playSelectionIndexLoopStart = -1;
             timerAutoContinue.Stop();
             mediaPlayer.Pause();
             labelStatus.Text = string.Empty;
@@ -26011,6 +26055,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double startSeconds = p.StartTime.TotalSeconds;
                     _endSeconds = p.EndTime.TotalSeconds;
                     _playSelectionIndex = _subtitle.GetIndex(p);
+                    _playSelectionIndexLoopStart = -1;
 
                     if (nearEnd)
                     {
@@ -31681,6 +31726,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _endSeconds = -1;
                     _playSelectionIndex = -1;
+                    _playSelectionIndexLoopStart = -1;
 
                     _videoInfo = new VideoInfo();
                     _videoInfo.Width = 720;
@@ -32494,6 +32540,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _endSeconds = -1;
             _playSelectionIndex = -1;
+            _playSelectionIndexLoopStart = -1;
             UiUtil.InitializeVideoPlayerAndContainer(url, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
             mediaPlayer.Volume = 0;
             mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
