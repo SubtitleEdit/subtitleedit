@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
@@ -282,7 +282,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <UseStyleFromSource>Usa stile originale</UseStyleFromSource>
     <ConvertOptions>Opzioni conversione</ConvertOptions>
     <RemoveFormatting>Rimuovi etichetta formato</RemoveFormatting>
-    <RemoveStyleActor>Rimuovi stile/attore</RemoveStyleActor>
+    <RemoveStyleActor>Rimuovi linee con stile/attore</RemoveStyleActor>
     <RemoveTextForHI>Elimina testo per NU</RemoveTextForHI>
     <OverwriteOriginalFiles>Sovrascrivi i file originali (nuova estensione se il formato è diverso)</OverwriteOriginalFiles>
     <RedoCasing>Annulla maiuscole/minuscole</RedoCasing>
@@ -2459,6 +2459,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformGoToNextChapter>Vai al capitolo successivo</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleziona il sottotitolo successivo (dalla posizione del video, mantieni la pos video)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Alterna riproduzione/pausa</TogglePlayPause>
+    <Play150Speed>Riproduci video a velocità 1.5x</Play150Speed>
+    <Play200Speed>Riproduci video a velocità 2.0x</Play200Speed>
     <Pause>Pausa</Pause>
     <Fullscreen>Schermo intero</Fullscreen>
     <PlayRateSlower>Velocità riproduzione più lenta</PlayRateSlower>
