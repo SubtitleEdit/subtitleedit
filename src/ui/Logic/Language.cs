@@ -444,7 +444,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OverwriteFiles = "Overwrite files",
                 RedoCasing = "Redo casing",
                 RemoveFormatting = "Remove formatting tags",
-                RemoveStyleActor = "Remove style/actor",
+                RemoveStyleActor = "Remove lines w style/actor",
                 Status = "Status",
                 Style = "Style...",
                 UseStyleFromSource = "Use style from source",

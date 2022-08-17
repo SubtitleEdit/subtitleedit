@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -150,13 +150,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.convertMkvSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemOcrEngine = new System.Windows.Forms.ToolStripMenuItem();
+            this.tesseractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nOCRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.toolStripMenuItemOcrEngine = new System.Windows.Forms.ToolStripMenuItem();
-            this.tesseractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nOCRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxAssaChangeRes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
@@ -218,7 +218,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
@@ -230,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
@@ -552,14 +552,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode3;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -1512,7 +1512,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.convertMkvSettingsToolStripMenuItem,
             this.toolStripMenuItemOcrEngine});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 170);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 148);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // addFilesToolStripMenuItem
@@ -1560,6 +1560,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.convertMkvSettingsToolStripMenuItem.Text = "Mkv language in output file name: Three letter language code";
             this.convertMkvSettingsToolStripMenuItem.Click += new System.EventHandler(this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem_Click);
             // 
+            // toolStripMenuItemOcrEngine
+            // 
+            this.toolStripMenuItemOcrEngine.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tesseractToolStripMenuItem,
+            this.nOCRToolStripMenuItem});
+            this.toolStripMenuItemOcrEngine.Name = "toolStripMenuItemOcrEngine";
+            this.toolStripMenuItemOcrEngine.Size = new System.Drawing.Size(399, 22);
+            this.toolStripMenuItemOcrEngine.Text = "OCR engine";
+            // 
+            // tesseractToolStripMenuItem
+            // 
+            this.tesseractToolStripMenuItem.Name = "tesseractToolStripMenuItem";
+            this.tesseractToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.tesseractToolStripMenuItem.Text = "Tesseract";
+            this.tesseractToolStripMenuItem.Click += new System.EventHandler(this.tesseractToolStripMenuItem_Click);
+            // 
+            // nOCRToolStripMenuItem
+            // 
+            this.nOCRToolStripMenuItem.Name = "nOCRToolStripMenuItem";
+            this.nOCRToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.nOCRToolStripMenuItem.Text = "nOCR";
+            this.nOCRToolStripMenuItem.Click += new System.EventHandler(this.nOCRToolStripMenuItem_Click);
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -1582,29 +1605,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // toolStripMenuItemOcrEngine
-            // 
-            this.toolStripMenuItemOcrEngine.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tesseractToolStripMenuItem,
-            this.nOCRToolStripMenuItem});
-            this.toolStripMenuItemOcrEngine.Name = "toolStripMenuItemOcrEngine";
-            this.toolStripMenuItemOcrEngine.Size = new System.Drawing.Size(399, 22);
-            this.toolStripMenuItemOcrEngine.Text = "OCR engine";
-            // 
-            // tesseractToolStripMenuItem
-            // 
-            this.tesseractToolStripMenuItem.Name = "tesseractToolStripMenuItem";
-            this.tesseractToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.tesseractToolStripMenuItem.Text = "Tesseract";
-            this.tesseractToolStripMenuItem.Click += new System.EventHandler(this.tesseractToolStripMenuItem_Click);
-            // 
-            // nOCRToolStripMenuItem
-            // 
-            this.nOCRToolStripMenuItem.Name = "nOCRToolStripMenuItem";
-            this.nOCRToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.nOCRToolStripMenuItem.Text = "nOCR";
-            this.nOCRToolStripMenuItem.Click += new System.EventHandler(this.nOCRToolStripMenuItem_Click);
             // 
             // BatchConvert
             // 
