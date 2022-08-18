@@ -1,5 +1,28 @@
 ﻿Subtitle Edit Changelog
 
+3.6.8 (xth November 2022) BETA
+* NEW:
+   * Add EBU stl file property icon - thx Leon 
+   * Add new sub format - thx Edward
+   * Add shortcut "Loop selection" - thx OmrSi
+   * Add shortcut for "Open containing folder" - thx OmrSi
+   * Add shorcuts for play with speed 1.5x/2x - thx OmrSi
+   * Add "nOCR" option to "Batch convert" - thx Gen3ric
+* IMPROVED:
+   * Update Polish translation - thx admas
+   * Update Bulgarian translation - thx Калин
+   * Update Chinese translation - thx nkh0472
+   * Update Italian translation - thx bovirus
+   * Update Korean translation - thx domddol
+   * Add error label for "Batch convert" - thx Leon
+   * Batch convert: Improved "Remove lines with style/actor"
+   * Allow empty splitting for split at video/cursor - thx OmrSi
+* FIXED:
+   * Fix crash when switching text-boxes/list-view-items - thx Leon
+   * Fix minor bug for shortcut "Go to prev line and play" - thx nissansz
+   * Fix minor issue with "FCE:Remove dash single line" - thx Minherre  
+
+
 3.6.7 (13th August 2022)
 * NEW:
    * Add custom "continuation style" - thx Flitskikker
