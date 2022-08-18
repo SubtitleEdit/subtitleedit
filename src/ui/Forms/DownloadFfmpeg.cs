@@ -1,9 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -12,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string FFmpegPath { get; internal set; }
         public bool AutoClose { get; internal set; }
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadFfmpeg()
         {
@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void DownloadFfmpeg_KeyDown(object sender, KeyEventArgs e)
@@ -39,62 +40,76 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
 
         private void DownloadFfmpeg_Shown(object sender, EventArgs e)
         {
+            var url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
+
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 buttonOK.Enabled = false;
-                Refresh();
                 Cursor = Cursors.WaitCursor;
-                string url = "https://github.com/SubtitleEdit/support-files/raw/master/ffpmeg/ffmpeg-" + IntPtr.Size * 8 + ".zip";
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadProgressChanged += (o, args) =>
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
                 {
-                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-                };
-                wc.DownloadDataAsync(new Uri(url));
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownload(downloadStream);
+                }
             }
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
+                    exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                DialogResult = DialogResult.Cancel;
             }
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void CompleteDownload(Stream downloadStream)
         {
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "ffmpeg");
-                buttonOK.Enabled = true;
-                Cursor = Cursors.Default;
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string folder = Path.Combine(Configuration.DataDirectory, "ffmpeg");
+            var folder = Path.Combine(Configuration.DataDirectory, "ffmpeg");
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            using (var ms = new MemoryStream(e.Result))
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
+            using (var zip = ZipExtractor.Open(downloadStream))
             {
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-                foreach (ZipExtractor.ZipFileEntry entry in dir)
+                var dir = zip.ReadCentralDir();
+                foreach (var entry in dir)
                 {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
+                    var fileName = Path.GetFileName(entry.FilenameInZip);
                     if (fileName != null)
                     {
-                        string path = Path.Combine(folder, fileName);
+                        var path = Path.Combine(folder, fileName);
                         if (fileName.EndsWith("ffmpeg.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             FFmpegPath = path;

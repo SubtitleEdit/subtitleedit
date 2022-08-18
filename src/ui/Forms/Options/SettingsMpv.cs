@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Options
@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
     {
         private readonly bool _justDownload;
         private string _downloadUrl;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public SettingsMpv(bool justDownload)
         {
@@ -31,27 +32,63 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             UiUtil.FixLargeFonts(this, buttonOK);
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void ButtonDownloadClick(object sender, EventArgs e)
         {
-            if (e.Error != null)
+            _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv2-" + IntPtr.Size * 8 + ".zip?raw=true";
+            try
             {
-                MessageBox.Show(LanguageSettings.Current.SettingsMpv.DownloadMpvFailed + Environment.NewLine +
-                                Environment.NewLine +
-                                $"Manual action: Download \"{_downloadUrl}\" and unpack to \"{Configuration.DataDirectory}\"." + Environment.NewLine +
-                                Environment.NewLine +
-                                e.Error.Message);
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
+                buttonOK.Enabled = false;
+                buttonDownload.Enabled = false;
+                Refresh();
+                Cursor = Cursors.WaitCursor;
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
+                {
+                    var downloadTask = httpClient.DownloadAsync(_downloadUrl, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownload(downloadStream);
+                }
+            }
+            catch (Exception exception)
+            {
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
-                buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
                 Cursor = Cursors.Default;
-                return;
+                MessageBox.Show($"Unable to download {_downloadUrl}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void CompleteDownload(MemoryStream downloadStream)
+        {
+            if (downloadStream.Length == 0)
+            {
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string dictionaryFolder = Configuration.DataDirectory;
-            using (var ms = new MemoryStream(e.Result))
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
+            var dictionaryFolder = Configuration.DataDirectory;
+            using (ZipExtractor zip = ZipExtractor.Open(downloadStream))
             {
                 List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
                 foreach (ZipExtractor.ZipFileEntry entry in dir)
@@ -83,35 +120,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             DialogResult = DialogResult.OK;
         }
 
-        private void ButtonDownloadClick(object sender, EventArgs e)
-        {
-            try
-            {
-                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
-                Refresh();
-                Cursor = Cursors.WaitCursor;
-                _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv2-" + IntPtr.Size * 8 + ".zip?raw=true";
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadProgressChanged += (o, args) =>
-                {
-                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-                };
-                wc.DownloadDataAsync(new Uri(_downloadUrl));
-            }
-            catch (Exception exception)
-            {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
-                Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
-            }
-        }
-
         private void buttonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -119,6 +127,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
 

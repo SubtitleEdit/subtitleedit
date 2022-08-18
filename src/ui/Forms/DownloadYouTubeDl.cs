@@ -2,7 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         public const string Url = "https://github.com/yt-dlp/yt-dlp/releases/download/2022.05.18/yt-dlp.exe";
         public const string Sha512Hash = "f8f55be89b8b4b5c9703bb594367ad10c245dd1e1de9182a8a3d8ae06220aeabe200ed9b797d6f176a5d10f99ff3bbb48176c4e52cd9f4cc3c1fac451df42dde";
         public bool AutoClose { get; internal set; }
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public DownloadYouTubeDl()
         {
@@ -22,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void DownloadFfmpeg_KeyDown(object sender, KeyEventArgs e)
@@ -39,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
 
@@ -50,48 +53,63 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadProgressChanged += (o, args) =>
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
                 {
-                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-                };
-                wc.DownloadDataAsync(new Uri(Url));
+                    var downloadTask = httpClient.DownloadAsync(Url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownload(downloadStream);
+                }
             }
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {Url}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                DialogResult = DialogResult.Cancel;
             }
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void CompleteDownload(MemoryStream downloadStream)
         {
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "youtube-dl");
-                buttonOK.Enabled = true;
-                Cursor = Cursors.Default;
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string folder = Path.Combine(Configuration.DataDirectory);
+            var folder = Path.Combine(Configuration.DataDirectory);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            var hash = Utilities.GetSha512Hash(e.Result);
+            var bytes = downloadStream.ToArray();
+            var hash = Utilities.GetSha512Hash(bytes);
             if (hash != Sha512Hash)
             {
                 MessageBox.Show("yt-dlp.exe SHA-512 hash does not match!");
                 return;
             }
 
-            File.WriteAllBytes(Path.Combine(folder, "yt-dlp.exe"), e.Result);
+            File.WriteAllBytes(Path.Combine(folder, "yt-dlp.exe"), bytes);
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
@@ -103,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonOK.Enabled = true;
-            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "youtube-dl");
+            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "yt-dlp.exe");
         }
     }
 }

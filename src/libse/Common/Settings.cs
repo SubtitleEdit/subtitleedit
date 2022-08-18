@@ -836,6 +836,8 @@ $HorzAlign          =   Center
     public class ProxySettings
     {
         public string ProxyAddress { get; set; }
+        public string AuthType { get; set; }
+        public bool UseDefaultCredentials { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Domain { get; set; }
