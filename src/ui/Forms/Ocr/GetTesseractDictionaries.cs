@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private string _dictionaryFileName;
         internal string ChosenLanguage { get; private set; }
         private readonly List<TesseractDictionary> _dictionaries;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public GetTesseractDictionaries(bool first)
         {
@@ -31,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             FixLargeFonts();
             _dictionaries = TesseractDictionary.List();
             LoadDictionaryList(first);
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void LoadDictionaryList(bool first)
@@ -70,6 +72,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
+            int index = comboBoxDictionaries.SelectedIndex;
+            string url = _dictionaries[index].Url;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -79,26 +83,39 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                int index = comboBoxDictionaries.SelectedIndex;
-                string url = _dictionaries[index].Url;
                 ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
 
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                if (url.EndsWith(".traineddata", StringComparison.OrdinalIgnoreCase) || url.EndsWith(".traineddata?raw=true", StringComparison.OrdinalIgnoreCase))
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
                 {
-                    _dictionaryFileName = Path.GetFileName(url);
-                    wc.DownloadDataCompleted += wc_DownloadTrainedDataCompleted;
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    if (url.EndsWith(".traineddata", StringComparison.OrdinalIgnoreCase) || url.EndsWith(".traineddata?raw=true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _dictionaryFileName = Path.GetFileName(url);
+                        DownloadTrainedDataCompleted(downloadStream);
+                    }
+                    else
+                    {
+                        DownloadDataCompleted(downloadStream);
+                    }
                 }
-                else
-                {
-                    wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                }
-                wc.DownloadProgressChanged += (o, args) =>
-                {
-                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-                };
-                wc.DownloadDataAsync(new Uri(url));
-                Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {
@@ -107,17 +124,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 buttonDownload.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void DownloadDataCompleted(Stream downloadStream)
         {
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
-                DialogResult = DialogResult.Cancel;
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
             string dictionaryFolder = Configuration.TesseractDataDirectory;
@@ -127,11 +143,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             int index = comboBoxDictionaries.SelectedIndex;
-
+            downloadStream.Position = 0;
             var tempFileName = FileUtil.GetTempFileName(".tar");
-            using (var ms = new MemoryStream(e.Result))
             using (var fs = new FileStream(tempFileName, FileMode.Create))
-            using (var zip = new GZipStream(ms, CompressionMode.Decompress))
+            using (var zip = new GZipStream(downloadStream, CompressionMode.Decompress))
             {
                 byte[] buffer = new byte[1024];
                 int nRead;
@@ -159,13 +174,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             MessageBox.Show(string.Format(LanguageSettings.Current.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
-        private void wc_DownloadTrainedDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void DownloadTrainedDataCompleted(Stream downloadStream)
         {
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
-                DialogResult = DialogResult.Cancel;
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
             string dictionaryFolder = Configuration.TesseractDataDirectory;
@@ -176,13 +189,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             int index = comboBoxDictionaries.SelectedIndex;
 
-            using (var ms = new MemoryStream(e.Result))
             using (var fs = new FileStream(Path.Combine(dictionaryFolder, _dictionaryFileName), FileMode.Create))
             {
-                ms.Position = 0;
+                downloadStream.Position = 0;
                 byte[] buffer = new byte[1024];
                 int nRead;
-                while ((nRead = ms.Read(buffer, 0, buffer.Length)) > 0)
+                while ((nRead = downloadStream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     fs.Write(buffer, 0, nRead);
                 }

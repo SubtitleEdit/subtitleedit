@@ -87,6 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
+            downloadStream.Position = 0;
             var dictionaryFolder = Configuration.DataDirectory;
             using (ZipExtractor zip = ZipExtractor.Open(downloadStream))
             {
@@ -131,8 +132,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             DialogResult = DialogResult.Cancel;
         }
 
-        private void SettingsMpv_Load(object sender, EventArgs e)
+        private void SettingsMpv_Shown(object sender, EventArgs e)
         {
+            Application.DoEvents();
             if (Configuration.IsRunningOnWindows && (!LibMpvDynamic.IsInstalled || _justDownload))
             {
                 ButtonDownloadClick(null, null);

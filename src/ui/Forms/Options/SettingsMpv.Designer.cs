@@ -96,7 +96,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings for mpv";
-            this.Load += new System.EventHandler(this.SettingsMpv_Load);
+            this.Shown += new System.EventHandler(this.SettingsMpv_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

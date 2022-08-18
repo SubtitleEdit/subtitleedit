@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(folder);
             }
 
+            downloadStream.Position = 0;
             var bytes = downloadStream.ToArray();
             var hash = Utilities.GetSha512Hash(bytes);
             if (hash != Sha512Hash)

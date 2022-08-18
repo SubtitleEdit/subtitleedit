@@ -3,13 +3,15 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class DownloadTesseract302 : Form
     {
+        private readonly CancellationTokenSource _cancellationTokenSource;
+
         public DownloadTesseract302()
         {
             UiUtil.PreInitialize(this);
@@ -18,35 +20,66 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract 3.02";
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " Tesseract OCR";
-
-            var wc = new WebClient { Proxy = Utilities.GetProxy() };
-            wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract302.tar.gz"));
-            wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-            wc.DownloadProgressChanged += (o, args) =>
-            {
-                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-            };
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void DownloadTesseract302_Shown(object sender, EventArgs e)
         {
-            if (e.Error != null)
+            var url = "https://github.com/SubtitleEdit/support-files/raw/master/Tesseract302.tar.gz";
+
+            try
             {
-                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
+                {
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownload(downloadStream);
+                }
+            }
+            catch (Exception exception)
+            {
+                labelPleaseWait.Text = string.Empty;
+                Cursor = Cursors.Default;
+                MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
                 DialogResult = DialogResult.Cancel;
-                return;
+            }
+        }
+
+        private void CompleteDownload(Stream downloadStream)
+        {
+            if (downloadStream.Length == 0)
+            {
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string dictionaryFolder = Configuration.Tesseract302Directory;
+            var dictionaryFolder = Configuration.Tesseract302Directory;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
+            downloadStream.Position = 0;
             var tempFileName = FileUtil.GetTempFileName(".tar");
-            using (var ms = new MemoryStream(e.Result))
             using (var fs = new FileStream(tempFileName, FileMode.Create))
-            using (var zip = new GZipStream(ms, CompressionMode.Decompress))
+            using (var zip = new GZipStream(downloadStream, CompressionMode.Decompress))
             {
                 byte[] buffer = new byte[1024];
                 int nRead;
