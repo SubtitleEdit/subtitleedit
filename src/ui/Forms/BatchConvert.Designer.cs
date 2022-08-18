@@ -35,16 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
-            this.groupBoxAssaChangeRes = new System.Windows.Forms.GroupBox();
-            this.checkBoxDrawing = new System.Windows.Forms.CheckBox();
-            this.checkBoxPosition = new System.Windows.Forms.CheckBox();
-            this.checkBoxFontSize = new System.Windows.Forms.CheckBox();
-            this.checkBoxMargins = new System.Windows.Forms.CheckBox();
-            this.labelTargetRes = new System.Windows.Forms.Label();
-            this.numericUpDownTargetHeight = new System.Windows.Forms.NumericUpDown();
-            this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
-            this.labelX = new System.Windows.Forms.Label();
-            this.numericUpDownTargetWidth = new System.Windows.Forms.NumericUpDown();
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -113,6 +103,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
             this.buttonConvertOptionsSettings = new System.Windows.Forms.Button();
+            this.groupBoxAssaChangeRes = new System.Windows.Forms.GroupBox();
+            this.checkBoxDrawing = new System.Windows.Forms.CheckBox();
+            this.checkBoxPosition = new System.Windows.Forms.CheckBox();
+            this.checkBoxFontSize = new System.Windows.Forms.CheckBox();
+            this.checkBoxMargins = new System.Windows.Forms.CheckBox();
+            this.labelTargetRes = new System.Windows.Forms.Label();
+            this.numericUpDownTargetHeight = new System.Windows.Forms.NumericUpDown();
+            this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
+            this.labelX = new System.Windows.Forms.Label();
+            this.numericUpDownTargetWidth = new System.Windows.Forms.NumericUpDown();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonBrowseEncoding = new System.Windows.Forms.Button();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
@@ -157,10 +157,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.labelError = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
-            this.groupBoxAssaChangeRes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).BeginInit();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxDeleteLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).BeginInit();
@@ -185,6 +183,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjustDurationRecalc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
+            this.groupBoxAssaChangeRes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).BeginInit();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
@@ -236,133 +237,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
-            // 
-            // groupBoxAssaChangeRes
-            // 
-            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxDrawing);
-            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxPosition);
-            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxFontSize);
-            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxMargins);
-            this.groupBoxAssaChangeRes.Controls.Add(this.labelTargetRes);
-            this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownTargetHeight);
-            this.groupBoxAssaChangeRes.Controls.Add(this.buttonGetResolutionFromVideo);
-            this.groupBoxAssaChangeRes.Controls.Add(this.labelX);
-            this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownTargetWidth);
-            this.groupBoxAssaChangeRes.Location = new System.Drawing.Point(301, 12);
-            this.groupBoxAssaChangeRes.Name = "groupBoxAssaChangeRes";
-            this.groupBoxAssaChangeRes.Size = new System.Drawing.Size(271, 240);
-            this.groupBoxAssaChangeRes.TabIndex = 309;
-            this.groupBoxAssaChangeRes.TabStop = false;
-            this.groupBoxAssaChangeRes.Text = "ASSA: change resolution";
-            this.groupBoxAssaChangeRes.Visible = false;
-            // 
-            // checkBoxDrawing
-            // 
-            this.checkBoxDrawing.AutoSize = true;
-            this.checkBoxDrawing.Checked = true;
-            this.checkBoxDrawing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDrawing.Location = new System.Drawing.Point(12, 163);
-            this.checkBoxDrawing.Name = "checkBoxDrawing";
-            this.checkBoxDrawing.Size = new System.Drawing.Size(166, 17);
-            this.checkBoxDrawing.TabIndex = 25;
-            this.checkBoxDrawing.Text = "Change resolution for drawing";
-            this.checkBoxDrawing.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxPosition
-            // 
-            this.checkBoxPosition.AutoSize = true;
-            this.checkBoxPosition.Checked = true;
-            this.checkBoxPosition.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxPosition.Location = new System.Drawing.Point(13, 140);
-            this.checkBoxPosition.Name = "checkBoxPosition";
-            this.checkBoxPosition.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxPosition.TabIndex = 24;
-            this.checkBoxPosition.Text = "Change resolution for position";
-            this.checkBoxPosition.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxFontSize
-            // 
-            this.checkBoxFontSize.AutoSize = true;
-            this.checkBoxFontSize.Checked = true;
-            this.checkBoxFontSize.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxFontSize.Location = new System.Drawing.Point(13, 117);
-            this.checkBoxFontSize.Name = "checkBoxFontSize";
-            this.checkBoxFontSize.Size = new System.Drawing.Size(168, 17);
-            this.checkBoxFontSize.TabIndex = 23;
-            this.checkBoxFontSize.Text = "Change resolution for font size";
-            this.checkBoxFontSize.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxMargins
-            // 
-            this.checkBoxMargins.AutoSize = true;
-            this.checkBoxMargins.Location = new System.Drawing.Point(13, 94);
-            this.checkBoxMargins.Name = "checkBoxMargins";
-            this.checkBoxMargins.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxMargins.TabIndex = 22;
-            this.checkBoxMargins.Text = "Change resolution for margins";
-            this.checkBoxMargins.UseVisualStyleBackColor = true;
-            // 
-            // labelTargetRes
-            // 
-            this.labelTargetRes.AutoSize = true;
-            this.labelTargetRes.Location = new System.Drawing.Point(9, 29);
-            this.labelTargetRes.Name = "labelTargetRes";
-            this.labelTargetRes.Size = new System.Drawing.Size(38, 13);
-            this.labelTargetRes.TabIndex = 17;
-            this.labelTargetRes.Text = "Target";
-            // 
-            // numericUpDownTargetHeight
-            // 
-            this.numericUpDownTargetHeight.Location = new System.Drawing.Point(82, 46);
-            this.numericUpDownTargetHeight.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDownTargetHeight.Name = "numericUpDownTargetHeight";
-            this.numericUpDownTargetHeight.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownTargetHeight.TabIndex = 20;
-            this.numericUpDownTargetHeight.Value = new decimal(new int[] {
-            288,
-            0,
-            0,
-            0});
-            // 
-            // buttonGetResolutionFromVideo
-            // 
-            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(133, 46);
-            this.buttonGetResolutionFromVideo.Name = "buttonGetResolutionFromVideo";
-            this.buttonGetResolutionFromVideo.Size = new System.Drawing.Size(27, 23);
-            this.buttonGetResolutionFromVideo.TabIndex = 21;
-            this.buttonGetResolutionFromVideo.Text = "...";
-            this.buttonGetResolutionFromVideo.UseVisualStyleBackColor = true;
-            this.buttonGetResolutionFromVideo.Click += new System.EventHandler(this.buttonGetResolutionFromVideo_Click);
-            // 
-            // labelX
-            // 
-            this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(64, 49);
-            this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(14, 13);
-            this.labelX.TabIndex = 19;
-            this.labelX.Text = "X";
-            // 
-            // numericUpDownTargetWidth
-            // 
-            this.numericUpDownTargetWidth.Location = new System.Drawing.Point(13, 46);
-            this.numericUpDownTargetWidth.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDownTargetWidth.Name = "numericUpDownTargetWidth";
-            this.numericUpDownTargetWidth.Size = new System.Drawing.Size(47, 20);
-            this.numericUpDownTargetWidth.TabIndex = 18;
-            this.numericUpDownTargetWidth.Value = new decimal(new int[] {
-            384,
-            0,
-            0,
-            0});
             // 
             // listViewConvertOptions
             // 
@@ -1173,6 +1047,133 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonConvertOptionsSettings.Visible = false;
             this.buttonConvertOptionsSettings.Click += new System.EventHandler(this.ButtonOptionConvertSettings);
             // 
+            // groupBoxAssaChangeRes
+            // 
+            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxDrawing);
+            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxPosition);
+            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxFontSize);
+            this.groupBoxAssaChangeRes.Controls.Add(this.checkBoxMargins);
+            this.groupBoxAssaChangeRes.Controls.Add(this.labelTargetRes);
+            this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownTargetHeight);
+            this.groupBoxAssaChangeRes.Controls.Add(this.buttonGetResolutionFromVideo);
+            this.groupBoxAssaChangeRes.Controls.Add(this.labelX);
+            this.groupBoxAssaChangeRes.Controls.Add(this.numericUpDownTargetWidth);
+            this.groupBoxAssaChangeRes.Location = new System.Drawing.Point(301, 12);
+            this.groupBoxAssaChangeRes.Name = "groupBoxAssaChangeRes";
+            this.groupBoxAssaChangeRes.Size = new System.Drawing.Size(271, 240);
+            this.groupBoxAssaChangeRes.TabIndex = 309;
+            this.groupBoxAssaChangeRes.TabStop = false;
+            this.groupBoxAssaChangeRes.Text = "ASSA: change resolution";
+            this.groupBoxAssaChangeRes.Visible = false;
+            // 
+            // checkBoxDrawing
+            // 
+            this.checkBoxDrawing.AutoSize = true;
+            this.checkBoxDrawing.Checked = true;
+            this.checkBoxDrawing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxDrawing.Location = new System.Drawing.Point(12, 163);
+            this.checkBoxDrawing.Name = "checkBoxDrawing";
+            this.checkBoxDrawing.Size = new System.Drawing.Size(166, 17);
+            this.checkBoxDrawing.TabIndex = 25;
+            this.checkBoxDrawing.Text = "Change resolution for drawing";
+            this.checkBoxDrawing.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPosition
+            // 
+            this.checkBoxPosition.AutoSize = true;
+            this.checkBoxPosition.Checked = true;
+            this.checkBoxPosition.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxPosition.Location = new System.Drawing.Point(13, 140);
+            this.checkBoxPosition.Name = "checkBoxPosition";
+            this.checkBoxPosition.Size = new System.Drawing.Size(165, 17);
+            this.checkBoxPosition.TabIndex = 24;
+            this.checkBoxPosition.Text = "Change resolution for position";
+            this.checkBoxPosition.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFontSize
+            // 
+            this.checkBoxFontSize.AutoSize = true;
+            this.checkBoxFontSize.Checked = true;
+            this.checkBoxFontSize.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxFontSize.Location = new System.Drawing.Point(13, 117);
+            this.checkBoxFontSize.Name = "checkBoxFontSize";
+            this.checkBoxFontSize.Size = new System.Drawing.Size(168, 17);
+            this.checkBoxFontSize.TabIndex = 23;
+            this.checkBoxFontSize.Text = "Change resolution for font size";
+            this.checkBoxFontSize.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMargins
+            // 
+            this.checkBoxMargins.AutoSize = true;
+            this.checkBoxMargins.Location = new System.Drawing.Point(13, 94);
+            this.checkBoxMargins.Name = "checkBoxMargins";
+            this.checkBoxMargins.Size = new System.Drawing.Size(165, 17);
+            this.checkBoxMargins.TabIndex = 22;
+            this.checkBoxMargins.Text = "Change resolution for margins";
+            this.checkBoxMargins.UseVisualStyleBackColor = true;
+            // 
+            // labelTargetRes
+            // 
+            this.labelTargetRes.AutoSize = true;
+            this.labelTargetRes.Location = new System.Drawing.Point(9, 29);
+            this.labelTargetRes.Name = "labelTargetRes";
+            this.labelTargetRes.Size = new System.Drawing.Size(38, 13);
+            this.labelTargetRes.TabIndex = 17;
+            this.labelTargetRes.Text = "Target";
+            // 
+            // numericUpDownTargetHeight
+            // 
+            this.numericUpDownTargetHeight.Location = new System.Drawing.Point(82, 46);
+            this.numericUpDownTargetHeight.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetHeight.Name = "numericUpDownTargetHeight";
+            this.numericUpDownTargetHeight.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownTargetHeight.TabIndex = 20;
+            this.numericUpDownTargetHeight.Value = new decimal(new int[] {
+            288,
+            0,
+            0,
+            0});
+            // 
+            // buttonGetResolutionFromVideo
+            // 
+            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(133, 46);
+            this.buttonGetResolutionFromVideo.Name = "buttonGetResolutionFromVideo";
+            this.buttonGetResolutionFromVideo.Size = new System.Drawing.Size(27, 23);
+            this.buttonGetResolutionFromVideo.TabIndex = 21;
+            this.buttonGetResolutionFromVideo.Text = "...";
+            this.buttonGetResolutionFromVideo.UseVisualStyleBackColor = true;
+            this.buttonGetResolutionFromVideo.Click += new System.EventHandler(this.buttonGetResolutionFromVideo_Click);
+            // 
+            // labelX
+            // 
+            this.labelX.AutoSize = true;
+            this.labelX.Location = new System.Drawing.Point(64, 49);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(14, 13);
+            this.labelX.TabIndex = 19;
+            this.labelX.Text = "X";
+            // 
+            // numericUpDownTargetWidth
+            // 
+            this.numericUpDownTargetWidth.Location = new System.Drawing.Point(13, 46);
+            this.numericUpDownTargetWidth.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetWidth.Name = "numericUpDownTargetWidth";
+            this.numericUpDownTargetWidth.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownTargetWidth.TabIndex = 18;
+            this.numericUpDownTargetWidth.Value = new decimal(new int[] {
+            384,
+            0,
+            0,
+            0});
+            // 
             // groupBoxOutput
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -1606,12 +1607,23 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
+            // labelError
+            // 
+            this.labelError.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelError.AutoSize = true;
+            this.labelError.Location = new System.Drawing.Point(175, 611);
+            this.labelError.Name = "labelError";
+            this.labelError.Size = new System.Drawing.Size(51, 13);
+            this.labelError.TabIndex = 10;
+            this.labelError.Text = "labelError";
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1035, 651);
+            this.Controls.Add(this.labelError);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBoxOutput);
@@ -1628,10 +1640,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
-            this.groupBoxAssaChangeRes.ResumeLayout(false);
-            this.groupBoxAssaChangeRes.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).EndInit();
             this.contextMenuStripOptions.ResumeLayout(false);
             this.groupBoxDeleteLines.ResumeLayout(false);
             this.groupBoxDeleteLines.PerformLayout();
@@ -1669,6 +1677,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelAdjustDurationRecalc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
+            this.groupBoxAssaChangeRes.ResumeLayout(false);
+            this.groupBoxAssaChangeRes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetWidth)).EndInit();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
             this.groupBoxInput.ResumeLayout(false);
@@ -1806,5 +1818,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOcrEngine;
         private System.Windows.Forms.ToolStripMenuItem tesseractToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nOCRToolStripMenuItem;
+        private System.Windows.Forms.Label labelError;
     }
 }

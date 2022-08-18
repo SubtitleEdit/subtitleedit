@@ -115,6 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
+            labelError.Visible = false;
             var l = LanguageSettings.Current.BatchConvert;
             Text = l.Title;
             groupBoxInput.Text = l.Input;
@@ -641,6 +642,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddInputFile(string fileName)
         {
+            _errors = 0;
+            labelError.Visible = false;
+
             if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
             {
                 return;
@@ -969,6 +973,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonConvert_Click(object sender, EventArgs e)
         {
+            _errors = 0;
+            labelError.Visible = false;
+            Refresh();
+
             if (buttonConvert.Text == LanguageSettings.Current.General.Cancel)
             {
                 _abort = true;
@@ -1137,6 +1145,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (fromFormat == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs)
                     {
+                        _errors++;
                         IncrementAndShowProgress();
                     }
                     else
@@ -2064,6 +2073,18 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Empty;
             }
 
+            if (_errors > 0)
+            {
+                labelError.Text = string.Format(LanguageSettings.Current.EbuSaveOptions.ErrorsX, _errors);
+                labelError.ForeColor = UiUtil.ErrorTextColor;
+                labelError.Left = labelStatus.Right + 9;
+                labelError.Visible = true;
+            }
+            else
+            {
+                labelError.Visible = false;
+            }
+
             Application.DoEvents();
         }
 
@@ -2269,6 +2290,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         p.Item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.NotConverted + "  " + p.Item.SubItems[3].Text.Trim('-').Trim();
+                        _errors++;
                     }
                 }
                 catch (Exception exception)
@@ -2473,6 +2495,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveAllToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _errors = 0;
+            labelError.Visible = false;
+
             listViewInputFiles.Items.Clear();
             UpdateNumberOfFiles();
             UpdateTransportStreamSettings();
@@ -2485,6 +2510,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
+
+            _errors = 0;
+            labelError.Visible = false;
 
             var first = int.MaxValue;
             for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)

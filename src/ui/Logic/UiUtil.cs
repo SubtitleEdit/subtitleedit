@@ -736,11 +736,13 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.Append(count);
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
-                    label.ForeColor = Color.Red;
+                    label.ForeColor = ErrorTextColor;
                 }
             }
             label.Text = sb.ToString();
         }
+
+        public static Color ErrorTextColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : Color.Red;
 
         public static void GetLinePixelWidths(Label label, string text)
         {
