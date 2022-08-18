@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _xmlName;
         private string _downloadLink;
         private int _testAllIndex = -1;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public string SelectedEnglishName { get; private set; }
         public string LastDownload { get; private set; }
@@ -47,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
+            _cancellationTokenSource = new CancellationTokenSource();
 #if DEBUG
             buttonDownloadAll.Visible = true; // For testing all download links
 #endif
@@ -113,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
                         dictionaryItem.DisplayText = displayText;
                     }
                 }
-                
+
                 // ReSharper disable once CoVariantArrayConversion
                 comboBoxDictionaries.Items.AddRange(dictionaryItems.ToArray());
                 comboBoxDictionaries.EndUpdate();
@@ -159,6 +161,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
+            var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
+            _downloadLink = item.DownloadLink;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -169,17 +173,29 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
-                _downloadLink = item.DownloadLink;
-                SelectedEnglishName = item.EnglishName;
-
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadProgressChanged += (o, args) =>
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
                 {
-                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-                };
-                wc.DownloadDataAsync(new Uri(item.DownloadLink));
+                    var downloadTask = httpClient.DownloadAsync(_downloadLink, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownload(downloadStream);
+                }
             }
             catch (Exception exception)
             {
@@ -189,46 +205,30 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownloadAll.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {_downloadLink}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                DialogResult = DialogResult.Cancel;
             }
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void CompleteDownload(MemoryStream downloadStream)
         {
+            if (downloadStream.Length == 0)
+            {
+                throw new Exception("No content downloaded - missing file or no internet connection!");
+            }
+
             Cursor = Cursors.Default;
-            if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz")
-            {
-                MessageBox.Show("Unable to download " + _downloadLink + Environment.NewLine +
-                                "Switching host - please re-try!");
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
-                return;
-            }
 
-            if (e.Error != null)
-            {
-                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
-                                Environment.NewLine +
-                                e.Error.Message);
-                DialogResult = DialogResult.Cancel;
-                return;
-            }
-
-            string dictionaryFolder = Utilities.DictionaryFolder;
+            var dictionaryFolder = Utilities.DictionaryFolder;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            int index = comboBoxDictionaries.SelectedIndex;
+            var index = comboBoxDictionaries.SelectedIndex;
 
-            using (var ms = new MemoryStream(e.Result))
-            using (var zip = ZipExtractor.Open(ms))
+            using (var zip = ZipExtractor.Open(downloadStream))
             {
                 var dir = zip.ReadCentralDir();
                 // Extract dic/aff files in dictionary folder

@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(folder);
             }
 
+            downloadStream.Position = 0;
             using (var zip = ZipExtractor.Open(downloadStream))
             {
                 var dir = zip.ReadCentralDir();

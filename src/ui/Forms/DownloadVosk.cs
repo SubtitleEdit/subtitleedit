@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
-
+            downloadStream.Position = 0;
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             if (!VoskNewSha512Hashes.Contains(hash))
             {
