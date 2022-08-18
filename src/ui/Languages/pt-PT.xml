@@ -283,7 +283,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
-    <RemoveStyleActor>Remover estilo/actor</RemoveStyleActor>
+    <RemoveStyleActor>Remover linhas w estilo/actor</RemoveStyleActor>
     <RemoveTextForHI>Remover texto para Deficientes Auditivos</RemoveTextForHI>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
     <RedoCasing>Refazer Maiúsculas/Minúsculas</RedoCasing>
@@ -2454,12 +2454,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproduzir linhas seleccionadas</PlaySelectedLines>
+    <LoopSelectedLines>Repetir linha seleccionada</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Ir para linha anterior (da posição do vídeo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Ir para linha seguinte (da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Ir para capítulo anterior</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Ir para capítulo seguinte</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleccionar linha seguinte (da posição de vídeo, manter posição de vídeo)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Alternar reproduzir/pausa</TogglePlayPause>
+    <Play150Speed>Reproduzir vídeo com velocidade de 1.5x</Play150Speed>
+    <Play200Speed>Reproduzir vídeo com velocidade de 2.0x</Play200Speed>
     <Pause>Pausa</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
     <PlayRateSlower>Taxa de velocidade lenta</PlayRateSlower>
