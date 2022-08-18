@@ -313,9 +313,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Plugins";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PluginsGet_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.PluginsGet_ResizeEnd);
             this.Shown += new System.EventHandler(this.PluginsGet_Shown);
+            this.ResizeEnd += new System.EventHandler(this.PluginsGet_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PluginsGet_KeyDown);
             this.tabControlPlugins.ResumeLayout(false);
             this.tabPageInstalledPlugins.ResumeLayout(false);
             this.tabPageGetPlugins.ResumeLayout(false);
