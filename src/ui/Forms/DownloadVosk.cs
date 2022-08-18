@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class DownloadVosk : Form
     {
         public bool AutoClose { get; internal set; }
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         private static readonly string[] VoskNewSha512Hashes =
         {
@@ -28,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             textBoxError.Visible = false;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void DownloadVosk_KeyDown(object sender, KeyEventArgs e)
@@ -45,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _cancellationTokenSource.Cancel();
             DialogResult = DialogResult.Cancel;
         }
 
@@ -59,50 +62,59 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadProgressChanged += (o, args) =>
+                var httpClient = HttpClientHelper.MakeHttpClient();
+                using (var downloadStream = new MemoryStream())
                 {
-                    labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + args.ProgressPercentage + "%";
-                };
-                wc.DownloadDataAsync(new Uri(VoskUrl));
+                    var downloadTask = httpClient.DownloadAsync(VoskUrl, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownload(downloadStream);
+                }
             }
             catch (Exception exception)
             {
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {VoskUrl}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                DialogResult = DialogResult.Cancel;
             }
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void CompleteDownload(MemoryStream downloadStream)
         {
-            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
-
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                Width = 630;
-                Height = 350;
-                labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadFailed, "Vosk");
-                textBoxError.Visible = true;
-                textBoxError.Text = $"You could manually download and unpack{Environment.NewLine}{VoskUrl}{Environment.NewLine}to{Environment.NewLine}{folder}" + Environment.NewLine +
-                                    Environment.NewLine +
-                                    e.Error;
-                buttonOK.Enabled = true;
-                Cursor = Cursors.Default;
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            var hash = Utilities.GetSha512Hash(e.Result);
+            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
+
+            var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
             if (!VoskNewSha512Hashes.Contains(hash))
             {
                 MessageBox.Show("Vosk SHA-512 hash does not match!");
                 return;
             }
 
-            using (var ms = new MemoryStream(e.Result))
-            using (var zip = ZipExtractor.Open(ms))
+            downloadStream.Position = 0;
+            using (var zip = ZipExtractor.Open(downloadStream))
             {
                 var dir = zip.ReadCentralDir();
                 foreach (var entry in dir)
