@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -13,7 +14,17 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     /// </summary>
     public class GoogleTranslator1 : ITranslationStrategy
     {
+        private readonly HttpClient _httpClient;
         private const char SplitChar = '\n';
+
+
+        public GoogleTranslator1()
+        {
+            _httpClient = HttpClientHelper.MakeHttpClient();
+            _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
+            _httpClient.BaseAddress = new Uri("https://translate.googleapis.com/");
+        }
 
         public string GetName()
         {
@@ -37,7 +48,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
-
             string jsonResultString;
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
@@ -59,23 +69,15 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
             try
             {
-                using (var wc = new WebClient())
-                {
-
-                    string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
-                    wc.Proxy = Utilities.GetProxy();
-                    wc.Encoding = Encoding.UTF8;
-                    wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                    jsonResultString = wc.DownloadString(url).Trim();
-                }
+                var url = $"translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode(input.ToString())}";
+                jsonResultString = _httpClient.GetStringAsync(url).Result;
             }
             catch (WebException webException)
             {
                 throw new TranslationException("Free API quota exceeded?", webException);
             }
 
-
-            List<string> resultList = ConvertJsonObjectToStringLines(jsonResultString);
+            var resultList = ConvertJsonObjectToStringLines(jsonResultString);
             resultList = ProcessPostFormatting(resultList, targetLanguage, formatList);
 
             //brummochse: I do not really understand under which circumstances the following code is executed and if it is still required or maybe obsolete?
