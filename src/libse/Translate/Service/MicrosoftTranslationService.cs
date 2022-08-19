@@ -19,20 +19,16 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         private const string TranslateUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
         private static List<TranslationPair> _translationPairs;
-        private string _accessToken;
+        private readonly string _accessToken;
         private readonly string _category;
-        private readonly string _apiKey;
-        private readonly string _tokenEndpoint;
 
         public MicrosoftTranslationService(string apiKey, string tokenEndpoint, string category)
         {
-            _apiKey = apiKey;
-            _tokenEndpoint = tokenEndpoint;
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
 
             try
             {
-                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+                _accessToken = GetAccessToken(apiKey, tokenEndpoint);
             }
             catch (Exception e)
             {
@@ -62,9 +58,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 return _translationPairs;
             }
 
-            using (var wc = new WebClient { Proxy = Utilities.GetProxy(), Encoding = Encoding.UTF8 })
+            using (var httpClient = HttpClientHelper.MakeHttpClient())
             {
-                var json = wc.DownloadString(LanguagesUrl);
+                httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
+                var json = httpClient.GetStringAsync(LanguagesUrl).Result;
                 _translationPairs = FillTranslationPairsFromJson(json);
                 return _translationPairs;
             }
