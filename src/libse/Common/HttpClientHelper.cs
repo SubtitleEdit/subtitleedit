@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Common
     {
         public static HttpClient MakeHttpClient()
         {
-            return new HttpClient(HttpClientHelper.GetHttpClientHandler(Configuration.Settings.Proxy));
+            return new HttpClient(GetHttpClientHandler(Configuration.Settings.Proxy));
         }
 
         public static HttpClientHandler GetHttpClientHandler(ProxySettings proxySettings)

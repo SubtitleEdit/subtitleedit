@@ -2,8 +2,8 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,33 +12,37 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     /// <summary>
     /// Google translate via Google Cloud V3 API - see https://cloud.google.com/translate/
     ///
-    /// brummochse: not used at the moment!?
+    /// Not used at the moment!
     /// </summary>
     public class GoogleTranslator3 : ITranslationStrategy
     {
         private readonly string _apiKey;
         private readonly string _projectNumberOrId;
+        private readonly HttpClient _httpClient;
 
         public GoogleTranslator3(string apiKey, string projectNumberOrId)
         {
             _apiKey = apiKey;
             _projectNumberOrId = projectNumberOrId;
+            _httpClient = HttpClientHelper.MakeHttpClient();
+            _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/v3/");
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public string GetName()
         {
             return "Google Translate Cloud V3";
         }
+
         public int GetMaxTextSize()
         {
-            return 1000; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
+            return 1000;
         }
 
 
         public int GetMaximumRequestArraySize()
         {
-            return 100; //brummochse: in the old code there is no value defined for Google trasnlate V3. this is simply the value from V2 in lack of better knowledge
-
+            return 100; 
         }
 
         public string GetUrl()
@@ -69,20 +73,9 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 input.Append("\"" + Json.EncodeJsonText(text) + "\"");
             }
 
-            var request = (HttpWebRequest)WebRequest.Create($"https://translation.googleapis.com/v3/{_projectNumberOrId}:translateText");
-            request.Proxy = Utilities.GetProxy();
-            request.ContentType = "application/json";
-            request.Method = "POST";
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                var requestJson = "{ \"sourceLanguageCode\": \"" + sourceLanguage + "\", \"targetLanguageCode\": \"" + targetLanguage + "\", " +
-                                  "\"contents\": [" + input + "]}";
-                streamWriter.Write(requestJson);
-            }
-            var response = request.GetResponse();
-            var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            string content = reader.ReadToEnd();
-            var skipCount = 0;
+            var url = $"{_projectNumberOrId}:translateText";
+            var result = _httpClient.PostAsync(url, new StringContent(string.Empty)).Result;
+            var content = result.Content.ReadAsStringAsync().Result;
             var resultList = new List<string>();
             var parser = new JsonParser();
             var x = (Dictionary<string, object>)parser.Parse(content);
@@ -106,10 +99,10 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                                             translatedText = Regex.Unescape(translatedText);
                                             translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
                                             translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
-                                            if (resultList.Count - skipCount < formatList.Count)
+                                            if (resultList.Count < formatList.Count)
                                             {
-                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText);
-                                                translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
+                                                translatedText = formatList[resultList.Count].ReAddFormatting(translatedText);
+                                                translatedText = formatList[resultList.Count].ReBreak(translatedText, targetLanguage);
                                             }
 
                                             resultList.Add(translatedText);
