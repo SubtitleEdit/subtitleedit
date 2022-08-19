@@ -2440,6 +2440,8 @@
             public string ProxyUserName { get; set; }
             public string ProxyPassword { get; set; }
             public string ProxyDomain { get; set; }
+            public string ProxyAuthType { get; set; }
+            public string ProxyUseDefaultCredentials { get; set; }
             public string NetworkSessionSettings { get; set; }
             public string NetworkSessionNewSound { get; set; }
             public string PlayXSecondsAndBack { get; set; }

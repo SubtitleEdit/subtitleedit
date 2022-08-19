@@ -6148,6 +6148,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ProxyDomain":
                     language.Settings.ProxyDomain = reader.Value;
                     break;
+                case "Settings/ProxyAuthType":
+                    language.Settings.ProxyAuthType = reader.Value;
+                    break;
+                case "Settings/ProxyUseDefaultCredentials":
+                    language.Settings.ProxyUseDefaultCredentials = reader.Value;
+                    break;
                 case "Settings/NetworkSessionSettings":
                     language.Settings.NetworkSessionSettings = reader.Value;
                     break;
