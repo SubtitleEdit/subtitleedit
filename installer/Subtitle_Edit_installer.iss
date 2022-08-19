@@ -312,7 +312,6 @@ Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};              
 Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindir}\System.Net.Http.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -352,7 +351,6 @@ Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsU
 Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Primitives.dll;         Check: IsUpgrade()
-Type: files;      Name: {app}\System.Net.Http.dll;                    Check: IsUpgrade()
 
 ; Remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_names.xml;               Check: IsUpgrade()
