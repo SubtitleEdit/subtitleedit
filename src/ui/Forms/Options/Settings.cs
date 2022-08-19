@@ -306,6 +306,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             textBoxProxyUserName.Text = proxy.UserName;
             textBoxProxyPassword.Text = proxy.Password == null ? string.Empty : proxy.DecodePassword();
             textBoxProxyDomain.Text = proxy.Domain;
+            comboBoxProxyAuthType.Text = proxy.AuthType;
+            checkBoxProxyUseDefaultCredentials.Checked = proxy.UseDefaultCredentials;
 
             textBoxNetworkSessionNewMessageSound.Text = Configuration.Settings.NetworkSettings.NewMessageSound;
 
@@ -690,6 +692,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelProxyUserName.Text = language.ProxyUserName;
             labelProxyPassword.Text = language.ProxyPassword;
             labelProxyDomain.Text = language.ProxyDomain;
+            labelProxyAuthType.Text = language.ProxyAuthType;
+            checkBoxProxyUseDefaultCredentials.Text = language.ProxyUseDefaultCredentials;
 
             groupBoxNetworkSession.Text = language.NetworkSessionSettings;
             labelNetworkSessionNewMessageSound.Text = language.NetworkSessionNewSound;
@@ -1995,6 +1999,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             proxy.Domain = textBoxProxyDomain.Text;
+            proxy.AuthType = comboBoxProxyAuthType.Text;
+            proxy.UseDefaultCredentials = checkBoxProxyUseDefaultCredentials.Checked;
 
             Configuration.Settings.NetworkSettings.NewMessageSound = textBoxNetworkSessionNewMessageSound.Text;
 
