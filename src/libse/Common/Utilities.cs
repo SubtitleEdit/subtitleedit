@@ -146,33 +146,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        public static WebProxy GetProxy()
-        {
-            if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
-            {
-                var proxy = new WebProxy(Configuration.Settings.Proxy.ProxyAddress);
-
-                if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.UserName))
-                {
-                    if (string.IsNullOrEmpty(Configuration.Settings.Proxy.Domain))
-                    {
-                        proxy.Credentials = new NetworkCredential(Configuration.Settings.Proxy.UserName, Configuration.Settings.Proxy.DecodePassword());
-                    }
-                    else
-                    {
-                        proxy.Credentials = new NetworkCredential(Configuration.Settings.Proxy.UserName, Configuration.Settings.Proxy.DecodePassword(), Configuration.Settings.Proxy.Domain);
-                    }
-                }
-                else
-                {
-                    proxy.UseDefaultCredentials = true;
-                }
-
-                return proxy;
-            }
-            return null;
-        }
-
         public static bool IsBetweenNumbers(string s, int position)
         {
             if (string.IsNullOrEmpty(s) || position < 1 || position + 2 > s.Length)

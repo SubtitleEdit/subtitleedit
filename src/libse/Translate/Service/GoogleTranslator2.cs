@@ -1,8 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     public class GoogleTranslator2 : ITranslationStrategy
     {
         private readonly string _apiKey;
+        private readonly HttpClient _httpClient;
 
         public string GetName()
         {
@@ -33,6 +35,9 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         public GoogleTranslator2(string apiKey)
         {
             _apiKey = apiKey;
+            _httpClient = HttpClientHelper.MakeHttpClient();
+            _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/language/translate/v2/");
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public string GetUrl()
@@ -42,13 +47,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> sourceParagraphs)
         {
-            var baseUrl = "https://translation.googleapis.com/language/translate/v2";
             var format = "text";
             var input = new StringBuilder();
             var formatList = new List<Formatting>();
             for (var index = 0; index < sourceParagraphs.Count; index++)
             {
-
                 var p = sourceParagraphs[index];
                 var f = new Formatting();
                 formatList.Add(f);
@@ -63,18 +66,26 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 input.Append("q=" + Utilities.UrlEncode(text));
             }
 
-            string uri = $"{baseUrl}/?{input}&target={targetLanguage}&source={sourceLanguage}&format={format}&key={_apiKey}";
+            var uri = $"?{input}&target={targetLanguage}&source={sourceLanguage}&format={format}&key={_apiKey}";
             string content;
             try
             {
-                var request = WebRequest.Create(uri);
-                request.Proxy = Utilities.GetProxy();
-                request.ContentType = "application/json";
-                request.ContentLength = 0;
-                request.Method = "POST";
-                var response = request.GetResponse();
-                var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-                content = reader.ReadToEnd();
+                var result = _httpClient.PostAsync(uri, new StringContent(string.Empty)).Result;
+                if ((int)result.StatusCode == 400)
+                {
+                    throw new TranslationException("API key invalid (or perhaps billing is not enabled)?");
+                }
+                if ((int)result.StatusCode == 403)
+                {
+                    throw new TranslationException("\"Perhaps billing is not enabled (or API key is invalid)?\"");
+                }
+
+                if (!result.IsSuccessStatusCode)
+                {
+                    throw new TranslationException($"An error occurred calling GT translate - status code: {result.StatusCode}");
+                }
+
+                content = result.Content.ReadAsStringAsync().Result;
             }
             catch (WebException webException)
             {
