@@ -16754,6 +16754,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SetPlayRateAndPlay(150);
                     }
+                    else if (mediaPlayer.VideoPlayer.PlayRate != 1.5)
+                    {
+                        SetPlayRateAndPlay(150, false);
+                    }
                     else
                     {
                         mediaPlayer.Pause();
@@ -16769,6 +16773,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (mediaPlayer.IsPaused)
                     {
                         SetPlayRateAndPlay(200);
+                    }
+                    else if (mediaPlayer.VideoPlayer.PlayRate != 2.0)
+                    {
+                        SetPlayRateAndPlay(200, false);
                     }
                     else
                     {
@@ -24537,10 +24545,13 @@ namespace Nikse.SubtitleEdit.Forms
             ResetPlaySelection();
         }
 
-        private void SetPlayRateAndPlay(int playRate)
+        private void SetPlayRateAndPlay(int playRate, bool play = true)
         {
             SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[playRate.ToString()], null, false, true);
-            mediaPlayer.Play();
+            if (play)
+            {
+                mediaPlayer.Play();
+            }
         }
 
         private void SetPlayRate(object sender, EventArgs e)
