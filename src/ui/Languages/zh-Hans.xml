@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.6</Version>
+    <Version>3.6.7</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -1730,8 +1730,8 @@ Command line: {1} {2}
     <NoSupportHereVobSub>此处不支持 VobSub 文件。</NoSupportHereVobSub>
     <NoSupportHereDivx>此处不支持 Divx 文件。</NoSupportHereDivx>
     <NoChapters>视频中未找到章节。</NoChapters>
-    <DarkThemeRestart>重启 Subtitle Edit 使暗色主题设置生效。</DarkThemeRestart>
     <VideoFromUrlRequirements>从 url 打开视频需要 mpv 和 youtube-dl - 下载并继续吗？</VideoFromUrlRequirements>
+    <Url>Url</Url>
     <Errors>错误</Errors>
     <ShowVideoControls>显示视频控件</ShowVideoControls>
     <HideVideoControls>隐藏视频控件</HideVideoControls>
@@ -2447,6 +2447,8 @@ Command line: {1} {2}
     <WaveformGoToNextChapter>转到下一章节</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>选择下一行字幕 (从当前视频位置起, 保持视频位置不变)</WaveformSelectNextSubtitle>
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
+    <Play150Speed>以1.5倍速播放视频</Play150Speed>
+    <Play200Speed>以2倍速播放视频</Play200Speed>
     <Pause>暂停</Pause>
     <Fullscreen>全屏幕</Fullscreen>
     <PlayRateSlower>减慢播放速度</PlayRateSlower>

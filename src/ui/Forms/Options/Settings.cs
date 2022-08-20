@@ -306,6 +306,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             textBoxProxyUserName.Text = proxy.UserName;
             textBoxProxyPassword.Text = proxy.Password == null ? string.Empty : proxy.DecodePassword();
             textBoxProxyDomain.Text = proxy.Domain;
+            comboBoxProxyAuthType.Text = proxy.AuthType;
+            checkBoxProxyUseDefaultCredentials.Checked = proxy.UseDefaultCredentials;
 
             textBoxNetworkSessionNewMessageSound.Text = Configuration.Settings.NetworkSettings.NewMessageSound;
 
@@ -690,6 +692,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelProxyUserName.Text = language.ProxyUserName;
             labelProxyPassword.Text = language.ProxyPassword;
             labelProxyDomain.Text = language.ProxyDomain;
+            labelProxyAuthType.Text = language.ProxyAuthType;
+            checkBoxProxyUseDefaultCredentials.Text = language.ProxyUseDefaultCredentials;
 
             groupBoxNetworkSession.Text = language.NetworkSessionSettings;
             labelNetworkSessionNewMessageSound.Text = language.NetworkSessionNewSound;
@@ -1265,6 +1269,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.GeneralChooseProfile));
             AddNode(generalNode, language.DuplicateLine, nameof(Configuration.Settings.Shortcuts.GeneralDuplicateLine));
             AddNode(generalNode, language.OpenDataFolder, nameof(Configuration.Settings.Shortcuts.OpenDataFolder));
+            AddNode(generalNode, LanguageSettings.Current.Main.Menu.File.OpenContainingFolder, nameof(Configuration.Settings.Shortcuts.OpenContainingFolder), true);
             AddNode(generalNode, language.ToggleView, nameof(Configuration.Settings.Shortcuts.GeneralToggleView));
             AddNode(generalNode, language.ToggleMode, nameof(Configuration.Settings.Shortcuts.GeneralToggleMode));
             AddNode(generalNode, language.TogglePreviewOnVideo, nameof(Configuration.Settings.Shortcuts.GeneralTogglePreviewOnVideo));
@@ -1340,6 +1345,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.OpenVideo, nameof(Configuration.Settings.Shortcuts.MainVideoOpen), true);
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.CloseVideo, nameof(Configuration.Settings.Shortcuts.MainVideoClose), true);
             AddNode(videoNode, language.TogglePlayPause, nameof(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
+            AddNode(videoNode, language.Play150Speed, nameof(Configuration.Settings.Shortcuts.MainVideoPlay150Speed));
+            AddNode(videoNode, language.Play200Speed, nameof(Configuration.Settings.Shortcuts.MainVideoPlay200Speed));
             AddNode(videoNode, language.Pause, nameof(Configuration.Settings.Shortcuts.MainVideoPause));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.Stop, nameof(Configuration.Settings.Shortcuts.MainVideoStop));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.PlayFromJustBeforeText, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore));
@@ -1368,6 +1375,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.GoToStartCurrent, nameof(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent));
             AddNode(videoNode, language.ToggleStartEndCurrent, nameof(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent));
             AddNode(videoNode, language.PlaySelectedLines, nameof(Configuration.Settings.Shortcuts.MainVideoPlaySelectedLines));
+            AddNode(videoNode, language.LoopSelectedLines, nameof(Configuration.Settings.Shortcuts.MainVideoLoopSelectedLines));
             AddNode(videoNode, language.WaveformGoToPrevSubtitle, nameof(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle));
             AddNode(videoNode, language.WaveformGoToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle));
             AddNode(videoNode, language.WaveformGoToPrevChapter, nameof(Configuration.Settings.Shortcuts.MainVideoGoToPrevChapter));
@@ -1991,6 +1999,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             proxy.Domain = textBoxProxyDomain.Text;
+            proxy.AuthType = comboBoxProxyAuthType.Text;
+            proxy.UseDefaultCredentials = checkBoxProxyUseDefaultCredentials.Checked;
 
             Configuration.Settings.NetworkSettings.NewMessageSound = textBoxNetworkSessionNewMessageSound.Text;
 

@@ -64,6 +64,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Download Tesseract 3.02";
+            this.Shown += new System.EventHandler(this.DownloadTesseract302_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -2,8 +2,8 @@
 <Language Name="Български">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.6</Version>
-    <TranslatedBy>Превод на български: KalinM, Ivo Ivanov, JJD</TranslatedBy>
+    <Version>3.6.7</Version>
+    <TranslatedBy>Последен превод на български: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -82,7 +82,7 @@
     <StyleLanguage>Стил / Език</StyleLanguage>
     <Character>Характер</Character>
     <Class>Клас</Class>
-    <GeneralText>Основен</GeneralText>
+    <GeneralText>Основни</GeneralText>
     <LineNumber>Ред №</LineNumber>
     <Before>Преди</Before>
     <After>След</After>
@@ -95,6 +95,7 @@
     <ShortcutX>Пряк път: {0}</ShortcutX>
     <ExampleX>Пример: {0}</ExampleX>
     <Reset>Нулиране</Reset>
+    <Warning>Внимание</Warning>
   </General>
   <About>
     <Title>Относно Subtitle Edit</Title>
@@ -835,6 +836,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <PassX>Пас {0}</PassX>
     <Encoding>Кодиране</Encoding>
     <BitRate>Битрейт</BitRate>
+    <TotalBitRateX>Общ битрейт: {0}</TotalBitRateX>
     <SampleRate>Честота на дискретизация</SampleRate>
     <Audio>Аудио</Audio>
     <Stereo>Стерео</Stereo>
@@ -1222,7 +1224,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Style>Стил</Style>
         <Ascending>Възходящ ред</Ascending>
         <Descending>Низходящ ред</Descending>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Създай нов празен превод с тайминги от настоящите субтитри</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Създаване на нов празен превод с тайминги от настоящите субтитри</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Пакетно конвертиране...</BatchConvert>
         <GenerateTimeAsText>Генериране на време като текст...</GenerateTimeAsText>
         <MeasurementConverter>Конвертиране на мерни единици...</MeasurementConverter>
@@ -1278,6 +1280,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <Options>
         <Title>Опции</Title>
         <Settings>Настройки...</Settings>
+        <WordLists>Списъци с думи...</WordLists>
         <ChooseLanguage>Избор на език...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1398,6 +1401,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <RemoveBookmark>Премахване на отметката</RemoveBookmark>
         <GoToSourceView>Към първоначалния изглед</GoToSourceView>
         <GoToListView>Преглед на списъка</GoToListView>
+        <ExtractAudio>Извличане на аудио...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1736,8 +1740,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <NoSupportHereVobSub>Тук не се поддържат VobSub файлове</NoSupportHereVobSub>
     <NoSupportHereDivx>Тук не се поддържат DivX файлове</NoSupportHereDivx>
     <NoChapters>Няма намерени глави във видеото.</NoChapters>
-    <DarkThemeRestart>Рестартирайте Subtitle Edit, за да влязат в сила промените в тъмната тема.</DarkThemeRestart>
     <VideoFromUrlRequirements>Отварянето на видео от url изисква mpv и youtube-dl - изтегляне и продължаване?</VideoFromUrlRequirements>
+    <Url>URL адрес</Url>
     <Errors>Грешки</Errors>
     <ShowVideoControls>Показване на видео управлението</ShowVideoControls>
     <HideVideoControls>Скриване на видео управлението</HideVideoControls>
@@ -2088,7 +2092,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Find>Търсене</Find>
     <Replace>Замяна</Replace>
     <VisualSync>Визуална синхр.</VisualSync>
-    <BurnIn>Вписване в</BurnIn>
+    <BurnIn>Записване в</BurnIn>
     <SpellCheck>Правопис</SpellCheck>
     <NetflixQualityCheck>Качествен контрол на Netflix</NetflixQualityCheck>
     <SettingsName>Настройки</SettingsName>
@@ -2275,15 +2279,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <DialogStyleDashSecondLineWithoutSpace>Тире на втория ред без интервал</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>Продължение на стила</ContinuationStyle>
     <ContinuationStyleNone>Няма</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>Няма, точки за паузи (само за крайни)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneTrailingDots>Няма, точки за паузи (само в края)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Няма, точки за паузи</ContinuationStyleNoneLeadingTrailingDots>
-    <ContinuationStyleOnlyTrailingDots>Точки (само за крайни)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Няма, многоточие за паузи (само в края)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Няма, многоточие за паузи</ContinuationStyleNoneLeadingTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingDots>Точки (само в края)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Точки</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Многоточие</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Няма, многоточие за паузи</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Многоточие (само в края)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Многоточие</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Тире</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Тире, освен точки за паузи</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Потребителски</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/дължина на реда</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Преброяване на всички символи</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Преброяване на всички, без интервалите, само cps</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2293,6 +2299,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Игнорирай Арабските диакритични символи</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Игнорирай Арабските диакритични символи/интервал</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Без интервал или препинателни знаци ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Без интервал или препинателни знаци, само cps</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Замяна с музикален символ</MusicSymbol>
     <MusicSymbolsReplace>Музикални символи за замяна (разделени със запетая)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR(разпознаване на текст) грешки</FixCommonOcrErrorsUseHardcodedRules>
@@ -2385,8 +2392,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToNextSubtitleAndFocusVideo>Преминаване на следващия ред и задаване позиция на видеото</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Преминаване на предишния ред и възпроизвеждане</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Преминаване на следващия ред и възпроизвеждане</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Преминаване на предишния ред и фокусиране Wav форма на вълната</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Преминаване на следващия ред и фокусираве Wav форма на вълната</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Превключване на фокуса между изглед на списъка и реда за писане</ToggleFocus>
     <ToggleFocusWaveform>Превключване на фокуса между изглед на списъка и Wav форма на вълната/спектрограма</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Превключване на фокуса между текстово поле и Wav форма на вълната/спектрограма</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleQuotes>Превключване на кавички</ToggleQuotes>
     <ToggleHiTags>Превключване на HI тагове</ToggleHiTags>
@@ -2558,6 +2568,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <UncheckInsertsLowercase>Откр. и премахв. отметки на отделни заглавия или текстове с малки букви</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Скриване на вероятни изречения за продължаване</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Игнориране текстовете на песни между музикалните символи</IgnoreLyrics>
+    <ContinuationPause>Праг на паузата:</ContinuationPause>
+    <Milliseconds>мс</Milliseconds>
+    <EditCustomContinuationStyle>Редактиране на персонализиран стил на продължение...</EditCustomContinuationStyle>
     <MinFrameGap>Мин. разлика в кадрите</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} кадрите със скорост на кадър от {1} дава {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
@@ -2567,6 +2580,18 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Преки пътища: Разрешава единична буква/цифра в текстовото поле</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Обнови асоциациите типове файлове</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Асоциациите на типовете файлове са актуализирани</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Редактиране на персонализиран стил на продължение</CustomContinuationStyle>
+    <LoadStyle>Зареди стил...</LoadStyle>
+    <Suffix>Суфикс:</Suffix>
+    <AddSuffixForComma>Обработка, ако завършва със запетая</AddSuffixForComma>
+    <AddSpace>Добавяне на пространство</AddSpace>
+    <RemoveComma>Премахнете запетаята</RemoveComma>
+    <Prefix>Префикс:</Prefix>
+    <DifferentStyleGap>Използвайте различен стил за празнини, по-дълги от</DifferentStyleGap>
+    <Preview>Преглед</Preview>
+    <PreviewPause>(пауза)</PreviewPause>
+    <CustomContinuationStyleNote>Забележка: Персонализираният стил на продължение се споделя между профилите.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Това ще замени стойностите в диалоговия прозорец.  Сигурен ли си?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Изтегляне на mpv</DownloadMpv>
@@ -2823,6 +2848,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Angle>Ъгъл</Angle>
     <BoxPerLine>Кутия на ред (използвайте цвят на контура)</BoxPerLine>
     <BoxMultiLine>Една кутия (използвайте цвят на сянка)</BoxMultiLine>
+    <DuplicateStyleNames>Дублирани имена на стилове: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Категория</Category>

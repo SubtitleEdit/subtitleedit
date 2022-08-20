@@ -2440,6 +2440,8 @@
             public string ProxyUserName { get; set; }
             public string ProxyPassword { get; set; }
             public string ProxyDomain { get; set; }
+            public string ProxyAuthType { get; set; }
+            public string ProxyUseDefaultCredentials { get; set; }
             public string NetworkSessionSettings { get; set; }
             public string NetworkSessionNewSound { get; set; }
             public string PlayXSecondsAndBack { get; set; }
@@ -2634,6 +2636,7 @@
             public string GoToStartCurrent { get; set; }
             public string ToggleStartEndCurrent { get; set; }
             public string PlaySelectedLines { get; set; }
+            public string LoopSelectedLines { get; set; }
 
             public string WaveformGoToPrevSubtitle { get; set; }
             public string WaveformGoToNextSubtitle { get; set; }
@@ -2641,6 +2644,8 @@
             public string WaveformGoToNextChapter { get; set; }
             public string WaveformSelectNextSubtitle { get; set; }
             public string TogglePlayPause { get; set; }
+            public string Play150Speed { get; set; }
+            public string Play200Speed { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
             public string PlayRateSlower { get; set; }

@@ -6767,7 +6767,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    fileName = Path.Combine(Configuration.OcrDirectory, Configuration.Settings.VobSubOcr.LineOcrLastLanguages + ".nocr");
+                    fileName = Path.Combine(Configuration.OcrDirectory, fileName + ".nocr");
                 }
             }
 

@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public event EventHandler OnButtonClicked;
         public event EventHandler OnEmptyPlayerClicked;
+        public event EventHandler OnPlayerClicked;
 
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
@@ -85,6 +86,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool _isMuted;
         private double? _muteOldVolume;
+        public bool PlayedWithCustomeSpeed;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         public int ControlsHeight = 47;
         private const int OriginalSubtitlesHeight = 57;
@@ -365,6 +367,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void SubtitleTextBoxMouseClick(object sender, MouseEventArgs e)
         {
             TogglePlayPause();
+            OnPlayerClicked?.Invoke(sender, e);
         }
 
         public Paragraph LastParagraph { get; set; }
@@ -580,6 +583,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             TogglePlayPause();
+            OnPlayerClicked?.Invoke(sender, e);
         }
 
         public void InitializeVolume(double defaultVolume)
@@ -1759,6 +1763,11 @@ namespace Nikse.SubtitleEdit.Controls
                 _pictureBoxPlay.Visible = true;
                 _pictureBoxPlay.BringToFront();
                 RefreshProgressBar();
+
+                if (PlayedWithCustomeSpeed)
+                {
+                    VideoPlayer.PlayRate = 1.0;
+                }
             }
         }
 

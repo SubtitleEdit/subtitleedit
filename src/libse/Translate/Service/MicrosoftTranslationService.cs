@@ -2,8 +2,9 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Translate.Service
@@ -16,23 +17,20 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
         public const string GoToUrl = "https://www.bing.com/translator";
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
-        private const string TranslateUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={0}&to={1}";
+        private const string TranslateUrl = "translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
         private static List<TranslationPair> _translationPairs;
-        private string _accessToken;
+        private readonly string _accessToken;
         private readonly string _category;
-        private readonly string _apiKey;
-        private readonly string _tokenEndpoint;
+        private HttpClient _httpClient;
 
         public MicrosoftTranslationService(string apiKey, string tokenEndpoint, string category)
         {
-            _apiKey = apiKey;
-            _tokenEndpoint = tokenEndpoint;
             _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
 
             try
             {
-                _accessToken = GetAccessToken(_apiKey, _tokenEndpoint);
+                _accessToken = GetAccessToken(apiKey, tokenEndpoint);
             }
             catch (Exception e)
             {
@@ -40,31 +38,42 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
         }
 
-        private static string GetAccessToken(string apiKey, string tokenEndpoint)
+        private HttpClient GetTranslateClient()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(tokenEndpoint);
-            httpWebRequest.Proxy = Utilities.GetProxy();
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-            httpWebRequest.Headers.Add(SecurityHeaderName, apiKey);
-            httpWebRequest.ContentLength = 0;
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
+            if (_httpClient == null)
             {
-                return streamReader.ReadToEnd();
+                _httpClient = HttpClientHelper.MakeHttpClient();
+                _httpClient.BaseAddress = new Uri("https://api.cognitive.microsofttranslator.com/");
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
+
+            return _httpClient;
         }
 
-        private List<TranslationPair> GetTranslationPairs()
+        private static string GetAccessToken(string apiKey, string tokenEndpoint)
+        {
+            var httpClient = HttpClientHelper.MakeHttpClient();
+            httpClient.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(SecurityHeaderName, apiKey);
+            var response = httpClient.PostAsync(tokenEndpoint, new StringContent(string.Empty)).Result;
+            return response.Content.ReadAsStringAsync().Result;
+        }
+
+        private static List<TranslationPair> GetTranslationPairs()
         {
             if (_translationPairs != null)
             {
                 return _translationPairs;
             }
 
-            using (var wc = new WebClient { Proxy = Utilities.GetProxy(), Encoding = Encoding.UTF8 })
+            using (var httpClient = HttpClientHelper.MakeHttpClient())
             {
-                var json = wc.DownloadString(LanguagesUrl);
+                httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=UTF-8");
+                var json = httpClient.GetStringAsync(LanguagesUrl).Result;
                 _translationPairs = FillTranslationPairsFromJson(json);
                 return _translationPairs;
             }
@@ -111,15 +120,10 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             var results = new List<string>();
             try
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.Proxy = Utilities.GetProxy();
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-                httpWebRequest.Headers.Add("Authorization", "Bearer " + _accessToken);
-
+                var httpClient = GetTranslateClient();
                 var jsonBuilder = new StringBuilder();
                 jsonBuilder.Append("[");
-                bool isFirst = true;
+                var isFirst = true;
                 var formatList = new List<Formatting>();
                 for (var index = 0; index < sourceParagraphs.Count; index++)
                 {
@@ -142,39 +146,28 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
                 jsonBuilder.Append("]");
                 var json = jsonBuilder.ToString();
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var result = httpClient.PostAsync(url, content).Result;
+
+                var parser = new JsonParser();
+                var x = (List<object>)parser.Parse(result.Content.ReadAsStringAsync().Result);
+                foreach (var xElement in x)
                 {
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                var skipCount = 0;
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
-                {
-                    var result = streamReader.ReadToEnd();
-
-                    var parser = new JsonParser();
-                    var x = (List<object>)parser.Parse(result);
-                    foreach (var xElement in x)
+                    var dict = (Dictionary<string, object>)xElement;
+                    var y = (List<object>)dict["translations"];
+                    foreach (var o in y)
                     {
-                        var dict = (Dictionary<string, object>)xElement;
-                        var y = (List<object>)dict["translations"];
-                        foreach (var o in y)
-                        {
-                            var textDics = (Dictionary<string, object>)o;
-                            var res = (string)textDics["text"];
+                        var textDics = (Dictionary<string, object>)o;
+                        var res = (string)textDics["text"];
 
-                            if (formatList.Count > results.Count - skipCount)
-                            {
-                                res = formatList[results.Count - skipCount].ReAddFormatting(res);
-                                res = formatList[results.Count - skipCount].ReBreak(res, targetLanguage);
-                            }
-                            res = TranslationHelper.PostTranslate(res, targetLanguage);
-                            results.Add(res);
+                        if (formatList.Count > results.Count)
+                        {
+                            res = formatList[results.Count].ReAddFormatting(res);
+                            res = formatList[results.Count].ReBreak(res, targetLanguage);
                         }
+                        res = TranslationHelper.PostTranslate(res, targetLanguage);
+                        results.Add(res);
                     }
                 }
             }
@@ -188,12 +181,12 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
 
         public List<TranslationPair> GetSupportedSourceLanguages()
         {
-            return this.GetTranslationPairs();
+            return GetTranslationPairs();
         }
 
         public List<TranslationPair> GetSupportedTargetLanguages()
         {
-            return this.GetTranslationPairs();
+            return GetTranslationPairs();
         }
 
         public int GetMaxTextSize()

@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Net;
-using System.Net.Cache;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -25,17 +24,17 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private List<PluginInfoItem> _downloadList;
-
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
         private List<string> _updateAllListUrls;
         private bool _updatingAllPlugins;
         private int _updatingAllPluginsCount;
         private bool _fetchingData;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         private static string GetPluginXmlFileUrl()
         {
-            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml"; // .net 4-
+            return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml";
         }
 
         public PluginsGet()
@@ -70,60 +69,72 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
 
             buttonUpdateAll.Visible = false;
+            _cancellationTokenSource = new CancellationTokenSource();
             DownloadPluginMetadataInfos();
         }
 
         private void DownloadPluginMetadataInfos()
         {
+            var url = GetPluginXmlFileUrl();
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Refresh();
                 ShowInstalledPlugins();
-                string url = GetPluginXmlFileUrl();
-                var wc = new WebClient
+
+                using (var httpClient = HttpClientHelper.MakeHttpClient())
+                using (var downloadStream = new MemoryStream())
                 {
-                    Proxy = Utilities.GetProxy(),
-                    Encoding = System.Text.Encoding.UTF8,
-                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                };
-                wc.Headers.Add("Accept-Encoding", "");
-                wc.DownloadStringCompleted += wc_DownloadStringCompleted;
-                _fetchingData = true;
-                wc.DownloadStringAsync(new Uri(url));
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
+
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
+
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    CompleteDownloadString(downloadStream);
+                }
             }
             catch (Exception exception)
             {
                 ChangeControlsState(true);
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
+                                    exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
         }
 
-        private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        private void CompleteDownloadString(MemoryStream downloadStream)
         {
-            _fetchingData = false;
-            labelPleaseWait.Text = string.Empty;
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, e.Error.Message));
-                if (e.Error.InnerException != null)
-                {
-                    MessageBox.Show(e.Error.InnerException.Source + ": " + e.Error.InnerException.Message + Environment.NewLine + Environment.NewLine + e.Error.InnerException.StackTrace);
-                }
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
+            _fetchingData = false;
+            labelPleaseWait.Text = string.Empty;
             var pluginDoc = new XmlDocument();
             _downloadList = new List<PluginInfoItem>();
             listViewGetPlugins.BeginUpdate();
             try
             {
-                pluginDoc.LoadXml(e.Result);
-                string[] arr = pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split(new[] { '.', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1], CultureInfo.InvariantCulture);
+                downloadStream.Position = 0;
+                pluginDoc.Load(downloadStream);
+                var arr = pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split(new[] { '.', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1], CultureInfo.InvariantCulture);
 
-                string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-                double currentVersion = Convert.ToDouble(versionInfo[0] + "." + versionInfo[1], CultureInfo.InvariantCulture);
+                var versionInfo = Utilities.AssemblyVersion.Split('.');
+                var currentVersion = Convert.ToDouble(versionInfo[0] + "." + versionInfo[1], CultureInfo.InvariantCulture);
 
                 if (currentVersion < requiredVersion)
                 {
@@ -190,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private long MakeComparableVersionNumber(string versionNumber)
+        private static long MakeComparableVersionNumber(string versionNumber)
         {
             var s = versionNumber.Replace(',', '.').Replace(" ", string.Empty);
             var arr = s.Split('.');
@@ -248,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowInstalledPlugins()
         {
-            string path = Configuration.PluginsDirectory;
+            var path = Configuration.PluginsDirectory;
             if (!Directory.Exists(path))
             {
                 return;
@@ -285,6 +296,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _updatingAllPlugins = false;
+            var plugin = (PluginInfoItem)listViewGetPlugins.SelectedItems[0].Tag;
+            _downloadedPluginName = plugin.Name;
+            var url = plugin.Url;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -292,36 +307,48 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                var plugin = (PluginInfoItem)listViewGetPlugins.SelectedItems[0].Tag;
+                using (var httpClient = HttpClientHelper.MakeHttpClient())
+                using (var downloadStream = new MemoryStream())
+                {
+                    var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
+                    {
+                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                    }), _cancellationTokenSource.Token);
 
-                string url = plugin.Url;
-                _downloadedPluginName = plugin.Name;
+                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                    {
+                        Application.DoEvents();
+                    }
 
-                var wc = new WebClient { Proxy = Utilities.GetProxy(), CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
+                    if (downloadTask.IsCanceled)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        labelPleaseWait.Refresh();
+                        return;
+                    }
+
+                    DownloadDataCompleted(downloadStream);
+                }
             }
             catch (Exception exception)
             {
                 ChangeControlsState(true);
                 Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
+                                exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
         }
 
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void DownloadDataCompleted(MemoryStream downloadStream)
         {
             labelPleaseWait.Text = string.Empty;
-            if (e.Error != null)
+            if (downloadStream.Length == 0)
             {
-                MessageBox.Show(LanguageSettings.Current.GetTesseractDictionaries.DownloadFailed);
-                ChangeControlsState(true);
-                Cursor = Cursors.Default;
-                DialogResult = DialogResult.Cancel;
-                return;
+                throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            string pluginsFolder = Configuration.PluginsDirectory;
+            var pluginsFolder = Configuration.PluginsDirectory;
             if (!Directory.Exists(pluginsFolder))
             {
                 try
@@ -337,16 +364,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var ms = new MemoryStream(e.Result);
-            using (var zip = ZipExtractor.Open(ms))
+            downloadStream.Position = 0;
+            using (var zip = ZipExtractor.Open(downloadStream))
             {
                 var dir = zip.ReadCentralDir();
 
                 // Extract dic/aff files in dictionary folder
                 foreach (ZipExtractor.ZipFileEntry entry in dir)
                 {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
-                    string fullPath = Path.Combine(pluginsFolder, fileName);
+                    var fileName = Path.GetFileName(entry.FilenameInZip);
+                    var fullPath = Path.Combine(pluginsFolder, fileName);
                     if (File.Exists(fullPath))
                     {
                         try
@@ -364,6 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
                     zip.ExtractFile(entry, fullPath);
                 }
             }
+
             Cursor = Cursors.Default;
             ChangeControlsState(true);
             if (_updatingAllPlugins)
@@ -378,9 +406,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
             }
-            ShowInstalledPlugins();
 
-            ((WebClient)sender).Dispose();
+            ShowInstalledPlugins();
         }
 
         private void ChangeControlsState(bool enable)
@@ -486,13 +513,36 @@ namespace Nikse.SubtitleEdit.Forms
                 ChangeControlsState(false);
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                _updatingAllPluginsCount = 0;
-                _updatingAllPlugins = true;
-                for (int i = 0; i < _updateAllListUrls.Count; i++)
+
+                using (var httpClient = HttpClientHelper.MakeHttpClient())
                 {
-                    var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                    wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                    wc.DownloadDataAsync(new Uri(_updateAllListUrls[i]));
+                    _updatingAllPluginsCount = 0;
+                    _updatingAllPlugins = true;
+                    for (var i = 0; i < _updateAllListUrls.Count; i++)
+                    {
+                        using (var downloadStream = new MemoryStream())
+                        {
+                            var downloadTask = httpClient.DownloadAsync(_updateAllListUrls[i], downloadStream, new Progress<float>((progress) =>
+                            {
+                                var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                            }), _cancellationTokenSource.Token);
+
+                            while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                            {
+                                Application.DoEvents();
+                            }
+
+                            if (downloadTask.IsCanceled)
+                            {
+                                DialogResult = DialogResult.Cancel;
+                                labelPleaseWait.Refresh();
+                                return;
+                            }
+
+                            DownloadDataCompleted(downloadStream);
+                        }
+                    }
                 }
             }
             catch (Exception exception)

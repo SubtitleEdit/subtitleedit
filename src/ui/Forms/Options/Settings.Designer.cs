@@ -404,6 +404,9 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.comboBoxProxyAuthType = new System.Windows.Forms.ComboBox();
+            this.checkBoxProxyUseDefaultCredentials = new System.Windows.Forms.CheckBox();
+            this.labelProxyAuthType = new System.Windows.Forms.Label();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -4633,9 +4636,9 @@
             this.groupBoxNetworkSession.Controls.Add(this.buttonNetworkSessionNewMessageSound);
             this.groupBoxNetworkSession.Controls.Add(this.textBoxNetworkSessionNewMessageSound);
             this.groupBoxNetworkSession.Controls.Add(this.labelNetworkSessionNewMessageSound);
-            this.groupBoxNetworkSession.Location = new System.Drawing.Point(0, 183);
+            this.groupBoxNetworkSession.Location = new System.Drawing.Point(0, 242);
             this.groupBoxNetworkSession.Name = "groupBoxNetworkSession";
-            this.groupBoxNetworkSession.Size = new System.Drawing.Size(851, 337);
+            this.groupBoxNetworkSession.Size = new System.Drawing.Size(851, 278);
             this.groupBoxNetworkSession.TabIndex = 30;
             this.groupBoxNetworkSession.TabStop = false;
             this.groupBoxNetworkSession.Text = "Network session settings";
@@ -4675,13 +4678,16 @@
             this.groupBoxProxySettings.Controls.Add(this.labelProxyAddress);
             this.groupBoxProxySettings.Location = new System.Drawing.Point(0, 0);
             this.groupBoxProxySettings.Name = "groupBoxProxySettings";
-            this.groupBoxProxySettings.Size = new System.Drawing.Size(851, 177);
+            this.groupBoxProxySettings.Size = new System.Drawing.Size(851, 233);
             this.groupBoxProxySettings.TabIndex = 1;
             this.groupBoxProxySettings.TabStop = false;
             this.groupBoxProxySettings.Text = "Proxy server settings";
             // 
             // groupBoxProxyAuthentication
             // 
+            this.groupBoxProxyAuthentication.Controls.Add(this.labelProxyAuthType);
+            this.groupBoxProxyAuthentication.Controls.Add(this.checkBoxProxyUseDefaultCredentials);
+            this.groupBoxProxyAuthentication.Controls.Add(this.comboBoxProxyAuthType);
             this.groupBoxProxyAuthentication.Controls.Add(this.textBoxProxyDomain);
             this.groupBoxProxyAuthentication.Controls.Add(this.labelProxyDomain);
             this.groupBoxProxyAuthentication.Controls.Add(this.textBoxProxyUserName);
@@ -4690,7 +4696,7 @@
             this.groupBoxProxyAuthentication.Controls.Add(this.textBoxProxyPassword);
             this.groupBoxProxyAuthentication.Location = new System.Drawing.Point(28, 60);
             this.groupBoxProxyAuthentication.Name = "groupBoxProxyAuthentication";
-            this.groupBoxProxyAuthentication.Size = new System.Drawing.Size(318, 101);
+            this.groupBoxProxyAuthentication.Size = new System.Drawing.Size(392, 162);
             this.groupBoxProxyAuthentication.TabIndex = 29;
             this.groupBoxProxyAuthentication.TabStop = false;
             this.groupBoxProxyAuthentication.Text = "Authentication";
@@ -4748,7 +4754,7 @@
             // 
             this.textBoxProxyAddress.Location = new System.Drawing.Point(134, 34);
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
-            this.textBoxProxyAddress.Size = new System.Drawing.Size(192, 21);
+            this.textBoxProxyAddress.Size = new System.Drawing.Size(285, 21);
             this.textBoxProxyAddress.TabIndex = 20;
             // 
             // labelProxyAddress
@@ -4846,12 +4852,47 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // comboBoxProxyAuthType
+            // 
+            this.comboBoxProxyAuthType.FormattingEnabled = true;
+            this.comboBoxProxyAuthType.Items.AddRange(new object[] {
+            "",
+            "Basic",
+            "Digest",
+            "NTLM",
+            "Negotiate",
+            "Kerberos"});
+            this.comboBoxProxyAuthType.Location = new System.Drawing.Point(106, 105);
+            this.comboBoxProxyAuthType.Name = "comboBoxProxyAuthType";
+            this.comboBoxProxyAuthType.Size = new System.Drawing.Size(192, 21);
+            this.comboBoxProxyAuthType.TabIndex = 31;
+            // 
+            // checkBoxProxyUseDefaultCredentials
+            // 
+            this.checkBoxProxyUseDefaultCredentials.AutoSize = true;
+            this.checkBoxProxyUseDefaultCredentials.Location = new System.Drawing.Point(107, 135);
+            this.checkBoxProxyUseDefaultCredentials.Name = "checkBoxProxyUseDefaultCredentials";
+            this.checkBoxProxyUseDefaultCredentials.Size = new System.Drawing.Size(136, 17);
+            this.checkBoxProxyUseDefaultCredentials.TabIndex = 32;
+            this.checkBoxProxyUseDefaultCredentials.Text = "Use default credentials";
+            this.checkBoxProxyUseDefaultCredentials.UseVisualStyleBackColor = true;
+            // 
+            // labelProxyAuthType
+            // 
+            this.labelProxyAuthType.AutoSize = true;
+            this.labelProxyAuthType.Location = new System.Drawing.Point(12, 113);
+            this.labelProxyAuthType.Name = "labelProxyAuthType";
+            this.labelProxyAuthType.Size = new System.Drawing.Size(55, 13);
+            this.labelProxyAuthType.TabIndex = 33;
+            this.labelProxyAuthType.Text = "Auth type";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
@@ -4860,7 +4901,6 @@
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
-            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
@@ -5358,5 +5398,8 @@
         private System.Windows.Forms.CheckBox checkBoxUseWordSplitList;
         private System.Windows.Forms.ToolTip toolTipDialogStylePreview;
         private System.Windows.Forms.Button buttonEditCustomContinuationStyle;
+        private System.Windows.Forms.Label labelProxyAuthType;
+        private System.Windows.Forms.CheckBox checkBoxProxyUseDefaultCredentials;
+        private System.Windows.Forms.ComboBox comboBoxProxyAuthType;
     }
 }

@@ -232,6 +232,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string BatchConvertTsFileNameAppend { get; set; }
         public bool BatchConvertTsOnlyTeletext { get; set; }
         public string BatchConvertMkvLanguageCodeStyle { get; set; }
+        public string BatchConvertOcrEngine { get; set; }
         public string WaveformBatchLastFolder { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -468,6 +469,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BatchConvertTsOverrideBottomMargin = 5; // pct
             BatchConvertTsScreenWidth = 1920;
             BatchConvertTsScreenHeight = 1080;
+            BatchConvertOcrEngine = "Tesseract";
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
@@ -834,6 +836,8 @@ $HorzAlign          =   Center
     public class ProxySettings
     {
         public string ProxyAddress { get; set; }
+        public string AuthType { get; set; }
+        public bool UseDefaultCredentials { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Domain { get; set; }
@@ -2174,6 +2178,7 @@ $HorzAlign          =   Center
         public string GeneralChooseProfile { get; set; }
         public string GeneralDuplicateLine { get; set; }
         public string OpenDataFolder { get; set; }
+        public string OpenContainingFolder { get; set; }
         public string GeneralToggleView { get; set; }
         public string GeneralToggleMode { get; set; }
         public string GeneralTogglePreviewOnVideo { get; set; }
@@ -2253,6 +2258,8 @@ $HorzAlign          =   Center
         public string MainVideoPlayFromJustBefore { get; set; }
         public string MainVideoPlayFromBeginning { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
+        public string MainVideoPlay150Speed { get; set; }
+        public string MainVideoPlay200Speed { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoShowWaveform { get; set; }
         public string MainVideoFoucsSetVideoPosition { get; set; }
@@ -2277,6 +2284,7 @@ $HorzAlign          =   Center
         public string MainVideoGoToStartCurrent { get; set; }
         public string MainVideoToggleStartEndCurrent { get; set; }
         public string MainVideoPlaySelectedLines { get; set; }
+        public string MainVideoLoopSelectedLines { get; set; }
         public string MainVideoGoToPrevSubtitle { get; set; }
         public string MainVideoGoToNextSubtitle { get; set; }
         public string MainVideoGoToPrevChapter { get; set; }
@@ -4999,6 +5007,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertMkvLanguageCodeStyle = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertOcrEngine");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertOcrEngine = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("WaveformBatchLastFolder");
@@ -7858,6 +7872,12 @@ $HorzAlign          =   Center
                     shortcuts.OpenDataFolder = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("OpenContainingFolder");
+                if (subNode != null)
+                {
+                    shortcuts.OpenContainingFolder = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralDuplicateLine");
                 if (subNode != null)
                 {
@@ -8230,6 +8250,18 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoPlay150Speed");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlay150Speed = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoPlay200Speed");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoPlay200Speed = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
                 {
@@ -8372,6 +8404,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainVideoPlaySelectedLines = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoLoopSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoLoopSelectedLines = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
@@ -9958,6 +9996,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertTsOnlyTeletext", settings.Tools.BatchConvertTsOnlyTeletext.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
                 textWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
+                textWriter.WriteElementString("BatchConvertOcrEngine", settings.Tools.BatchConvertOcrEngine);
                 textWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
@@ -10594,6 +10633,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralGoToPreviousBookmark", shortcuts.GeneralGoToPreviousBookmark);
             textWriter.WriteElementString("GeneralChooseProfile", shortcuts.GeneralChooseProfile);
             textWriter.WriteElementString("OpenDataFolder", shortcuts.OpenDataFolder);
+            textWriter.WriteElementString("OpenContainingFolder", shortcuts.OpenContainingFolder);
             textWriter.WriteElementString("GeneralDuplicateLine", shortcuts.GeneralDuplicateLine);
             textWriter.WriteElementString("GeneralToggleView", shortcuts.GeneralToggleView);
             textWriter.WriteElementString("GeneralToggleMode", shortcuts.GeneralToggleMode);
@@ -10656,6 +10696,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoPlayFromJustBefore", shortcuts.MainVideoPlayFromJustBefore);
             textWriter.WriteElementString("MainVideoPlayFromBeginning", shortcuts.MainVideoPlayFromBeginning);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", shortcuts.MainVideoPlayPauseToggle);
+            textWriter.WriteElementString("MainVideoPlay150Speed", shortcuts.MainVideoPlay150Speed);
+            textWriter.WriteElementString("MainVideoPlay200Speed", shortcuts.MainVideoPlay200Speed);
             textWriter.WriteElementString("MainVideoShowHideVideo", shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoShowWaveform", shortcuts.MainVideoShowWaveform);
             textWriter.WriteElementString("MainVideoFoucsSetVideoPosition", shortcuts.MainVideoFoucsSetVideoPosition);
@@ -10680,6 +10722,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoGoToStartCurrent", shortcuts.MainVideoGoToStartCurrent);
             textWriter.WriteElementString("MainVideoToggleStartEndCurrent", shortcuts.MainVideoToggleStartEndCurrent);
             textWriter.WriteElementString("MainVideoPlaySelectedLines", shortcuts.MainVideoPlaySelectedLines);
+            textWriter.WriteElementString("MainVideoLoopSelectedLines", shortcuts.MainVideoLoopSelectedLines);
             textWriter.WriteElementString("MainVideoGoToPrevSubtitle", shortcuts.MainVideoGoToPrevSubtitle);
             textWriter.WriteElementString("MainVideoGoToNextSubtitle", shortcuts.MainVideoGoToNextSubtitle);
             textWriter.WriteElementString("MainVideoGoToPrevChapter", shortcuts.MainVideoGoToPrevChapter);

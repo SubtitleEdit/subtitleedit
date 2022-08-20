@@ -39,6 +39,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys VideoPause { get; set; }
         public Keys VideoStop { get; set; }
         public Keys VideoPlayPauseToggle { get; set; }
+        public Keys VideoPlay150Speed { get; set; }
+        public Keys VideoPlay200Speed { get; set; }
         public Keys MainVideoPlayFromJustBefore { get; set; }
         public Keys MainVideoPlayFromBeginning { get; set; }
         public Keys Video1FrameLeft { get; set; }
@@ -61,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainVideoGoToStartCurrent { get; set; }
         public Keys MainVideoToggleStartEndCurrent { get; set; }
         public Keys MainVideoPlaySelectedLines { get; set; }
+        public Keys MainVideoLoopSelectedLines { get; set; }
         public Keys VideoGoToPrevSubtitle { get; set; }
         public Keys VideoGoToNextSubtitle { get; set; }
         public Keys VideoGoToPrevChapter { get; set; }
@@ -270,6 +273,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoFocusSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
+            VideoPlay150Speed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlay150Speed);
+            VideoPlay200Speed = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlay200Speed);
             Video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
             Video1FrameRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
             Video1FrameLeftWithPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeftWithPlay);
@@ -290,6 +295,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoGoToStartCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
             MainVideoToggleStartEndCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent);
             MainVideoPlaySelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlaySelectedLines);
+            MainVideoLoopSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoLoopSelectedLines);
             VideoGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle);
             VideoGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle);
             VideoGoToPrevChapter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevChapter);

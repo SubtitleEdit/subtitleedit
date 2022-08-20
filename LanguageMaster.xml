@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.6</Version>
+    <Version>3.6.7</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -282,7 +282,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UseStyleFromSource>Use style from source</UseStyleFromSource>
     <ConvertOptions>Convert options</ConvertOptions>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
-    <RemoveStyleActor>Remove style/actor</RemoveStyleActor>
+    <RemoveStyleActor>Remove lines w style/actor</RemoveStyleActor>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
     <RedoCasing>Redo casing</RedoCasing>
@@ -2261,6 +2261,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ProxyUserName>User name</ProxyUserName>
     <ProxyPassword>Password</ProxyPassword>
     <ProxyDomain>Domain</ProxyDomain>
+    <ProxyAuthType>Auth type</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Use default credentials</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Network session settings</NetworkSessionSettings>
     <NetworkSessionNewSound>Play sound file when new message arrives</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Play X seconds and back, X is</PlayXSecondsAndBack>
@@ -2453,12 +2455,15 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
     <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
     <PlaySelectedLines>Play selected lines</PlaySelectedLines>
+    <LoopSelectedLines>Loop selected line</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Go to previous chapter</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Go to next chapter</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Select next subtitle (from video position, keep video pos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
+    <Play150Speed>Play video with 1.5x speed</Play150Speed>
+    <Play200Speed>Play video with 2.0x speed</Play200Speed>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
     <PlayRateSlower>Play rate slower</PlayRateSlower>

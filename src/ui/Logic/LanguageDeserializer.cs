@@ -6148,6 +6148,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ProxyDomain":
                     language.Settings.ProxyDomain = reader.Value;
                     break;
+                case "Settings/ProxyAuthType":
+                    language.Settings.ProxyAuthType = reader.Value;
+                    break;
+                case "Settings/ProxyUseDefaultCredentials":
+                    language.Settings.ProxyUseDefaultCredentials = reader.Value;
+                    break;
                 case "Settings/NetworkSessionSettings":
                     language.Settings.NetworkSessionSettings = reader.Value;
                     break;
@@ -6724,6 +6730,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/PlaySelectedLines":
                     language.Settings.PlaySelectedLines = reader.Value;
                     break;
+                case "Settings/LoopSelectedLines":
+                    language.Settings.LoopSelectedLines = reader.Value;
+                    break;
                 case "Settings/WaveformGoToPrevSubtitle":
                     language.Settings.WaveformGoToPrevSubtitle = reader.Value;
                     break;
@@ -6741,6 +6750,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/TogglePlayPause":
                     language.Settings.TogglePlayPause = reader.Value;
+                    break;
+                case "Settings/Play150Speed":
+                    language.Settings.Play150Speed = reader.Value;
+                    break;
+                case "Settings/Play200Speed":
+                    language.Settings.Play200Speed = reader.Value;
                     break;
                 case "Settings/Pause":
                     language.Settings.Pause = reader.Value;
