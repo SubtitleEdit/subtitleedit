@@ -148,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(473, 162);
             this.Controls.Add(this.buttonPickOffset);
             this.Controls.Add(this.checkBoxKeepTimeCodes);
