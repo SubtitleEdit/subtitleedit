@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 19.08.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 20.08.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2261,6 +2261,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ProxyUserName>Nome utente:</ProxyUserName>
     <ProxyPassword>Password:</ProxyPassword>
     <ProxyDomain>Dominio:</ProxyDomain>
+    <ProxyAuthType>Tipo autenticazione</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Usa credenziali predefinite</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Impostazioni sessione di rete</NetworkSessionSettings>
     <NetworkSessionNewSound>Quando arriva un nuovo messaggio riproduci questo file audio</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Riproduci X secondi se X è uguale:</PlayXSecondsAndBack>
