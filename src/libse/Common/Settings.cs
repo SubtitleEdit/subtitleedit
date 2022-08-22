@@ -1345,6 +1345,7 @@ $HorzAlign          =   Center
         public string MpcHcLocation { get; set; }
         public string MkvMergeLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
+        public bool FFmpegUseCenterChannelOnly { get; set; }
         public string FFmpegLocation { get; set; }
         public string FFmpegSceneThreshold { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
@@ -4018,6 +4019,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UseFFmpegForWaveExtraction = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("FFmpegUseCenterChannelOnly");
+            if (subNode != null)
+            {
+                settings.General.FFmpegUseCenterChannelOnly = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("FFmpegLocation");
@@ -9819,6 +9826,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FFmpegUseCenterChannelOnly", settings.General.FFmpegUseCenterChannelOnly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
                 textWriter.WriteElementString("FFmpegSceneThreshold", settings.General.FFmpegSceneThreshold);
                 textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));

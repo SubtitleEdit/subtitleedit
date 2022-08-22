@@ -238,6 +238,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public void SetAudioChannelFrontCenter()
+        {
+            _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("af"), GetUtf8Bytes("lavfi=[pan=mono|c0=FC]"));
+        }
+
+        public void SetAudioChannelFrontReset()
+        {
+            _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("af"), GetUtf8Bytes(""));
+        }
+
         public void GetNextFrame()
         {
             if (_mpvHandle == IntPtr.Zero)
