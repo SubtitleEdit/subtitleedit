@@ -6055,6 +6055,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformUseFFmpeg":
                     language.Settings.WaveformUseFFmpeg = reader.Value;
                     break;
+                case "Settings/WaveformUseCenterChannelOnly":
+                    language.Settings.WaveformUseCenterChannelOnly = reader.Value;
+                    break;
                 case "Settings/DownloadX":
                     language.Settings.DownloadX = reader.Value;
                     break;
