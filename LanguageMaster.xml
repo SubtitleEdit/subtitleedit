@@ -2230,6 +2230,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SpectrogramOneColorGradient>One color gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classic</SpectrogramClassic>
     <WaveformUseFFmpeg>Use FFmpeg for wave extraction</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Use front center channel only (for 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Download {0}</DownloadX>
     <WaveformFFmpegPath>Path to FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Browse to FFmpeg</WaveformBrowseToFFmpeg>
