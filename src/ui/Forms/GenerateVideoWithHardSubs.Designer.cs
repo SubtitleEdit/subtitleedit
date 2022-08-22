@@ -614,7 +614,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.numericUpDownTargetFileSize.Location = new System.Drawing.Point(120, 401);
             this.numericUpDownTargetFileSize.Maximum = new decimal(new int[] {
-            25000,
+            1000000,
             0,
             0,
             0});
