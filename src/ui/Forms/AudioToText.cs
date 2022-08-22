@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _bytesWavRead;
         private readonly List<string> _filesToDelete;
         private readonly Form _parentForm;
+        private bool _useCenterChannelOnly;
         private Model _model;
 
         public Subtitle TranscribedSubtitle { get; private set; }
@@ -115,6 +116,9 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownload_Click(null, null);
                 return;
             }
+
+            _useCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
+                                    FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
             if (_batchMode)
             {
@@ -426,7 +430,7 @@ namespace Nikse.SubtitleEdit.Forms
             return outWaveFile;
         }
 
-        private static Process GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile)
+        private Process GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile)
         {
             if (!File.Exists(Configuration.Settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
             {
@@ -439,7 +443,12 @@ namespace Nikse.SubtitleEdit.Forms
                 audioParameter = $"-map 0:a:{audioTrackNumber}";
             }
 
-            const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
+            var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
+            if (_useCenterChannelOnly)
+            {
+                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ab 128 -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
+            }
+
             //-i indicates the input
             //-vn means no video output
             //-ar 44100 indicates the sampling frequency.

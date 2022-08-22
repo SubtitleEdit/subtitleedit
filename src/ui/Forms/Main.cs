@@ -5483,6 +5483,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
             var oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
+            var oldUseCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly;
             var oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CpsLineLengthStrategy;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
@@ -5710,6 +5711,22 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText)
             {
                 mediaPlayer.UpdateMpvStyle();
+            }
+
+            if (oldUseCenterChannelOnly != Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
+                !string.IsNullOrEmpty(_videoFileName) &&
+                !VideoFileNameIsUrl &&
+                mediaPlayer.VideoPlayer is LibMpvDynamic libmpvCenterChannel &&
+                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_videoAudioTrackNumber))
+            {
+                if (Configuration.Settings.General.FFmpegUseCenterChannelOnly)
+                {
+                    libmpvCenterChannel.SetAudioChannelFrontCenter();
+                }
+                else
+                {
+                    libmpvCenterChannel.SetAudioChannelFrontReset();
+                }
             }
 
             StartOrStopAutoBackup();
@@ -8734,7 +8751,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             };
 
-            if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName))
+            if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName) && !VideoFileNameIsUrl)
             {
                 var audio = new ToolStripMenuItem(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio);
                 UiUtil.FixFonts(audio);
@@ -10178,7 +10195,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_playSelectionIndexLoopStart >= 0)
             {
-                ResetPlaySelection(); 
+                ResetPlaySelection();
             }
 
             if (SubtitleListview1.SelectedIndices.Count == 0)
@@ -22005,6 +22022,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     libMpv2.AudioTrackNumber = VideoAudioTrackNumber;
                 }
+            }
+
+            if (!VideoFileNameIsUrl &&
+                Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
+                Configuration.Settings.General.MpvHandlesPreviewText &&
+                mediaPlayer.VideoPlayer is LibMpvDynamic libMpv2a &&
+                FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(VideoAudioTrackNumber))
+            {
+                libMpv2a?.SetAudioChannelFrontCenter(); // front center
             }
         }
 
