@@ -2076,7 +2076,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_errors > 0)
             {
                 labelError.Text = string.Format(LanguageSettings.Current.EbuSaveOptions.ErrorsX, _errors);
-                labelError.ForeColor = UiUtil.ErrorTextColor;
+                labelError.ForeColor = Color.Red;
                 labelError.Left = labelStatus.Right + 9;
                 labelError.Visible = true;
             }
