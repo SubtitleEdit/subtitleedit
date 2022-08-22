@@ -2249,6 +2249,8 @@ Command line: {1} {2}
     <ProxyUserName>用户名</ProxyUserName>
     <ProxyPassword>密码</ProxyPassword>
     <ProxyDomain>域</ProxyDomain>
+    <ProxyAuthType>认证类型</ProxyAuthType>
+    <ProxyUseDefaultCredentials>使用默认凭据</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>网络会话设置</NetworkSessionSettings>
     <NetworkSessionNewSound>当有新消息到达时播放声音文件</NetworkSessionNewSound>
     <PlayXSecondsAndBack>播放 X 秒后返回，X 为</PlayXSecondsAndBack>
@@ -2441,6 +2443,7 @@ Command line: {1} {2}
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
     <PlaySelectedLines>播放选定的行</PlaySelectedLines>
+    <LoopSelectedLines>循环播放选定的行</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>转到上一条字幕（从当前视频位置起）</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>转到下一条字幕（从当前视频位置起）</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>转到上一章节</WaveformGoToPrevChapter>
