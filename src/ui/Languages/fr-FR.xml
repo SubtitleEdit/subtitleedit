@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/06/11</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/08/23</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -95,6 +95,7 @@
     <ShortcutX>Raccourci : {0}</ShortcutX>
     <ExampleX>Exemple : {0}</ExampleX>
     <Reset>Réinitialiser</Reset>
+    <Warning>Attention</Warning>
   </General>
   <About>
     <Title>A propos de Subtitle Edit</Title>
@@ -781,8 +782,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hé   toi , là bas. -&gt; Hé toi, là bas.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hé toi !. -&gt; Hé toi !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hétoi. -&gt; Hé toi.</FixMissingSpacesExample>
-    <FixUppercaseIInsideLowercaseWordsExample>
-    </FixUppercaseIInsideLowercaseWordsExample>
+    <FixUppercaseIInsideLowercaseWordsExample>La fIn est proche. -&gt; La fin est proche.</FixUppercaseIInsideLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Texte n°{0}: Le temps initial est postérieur au temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossible de corriger le texte n°{0}: Temps initial &gt; temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -839,6 +839,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <PassX>Passe {0}</PassX>
     <Encoding>Encodage</Encoding>
     <BitRate>Débit</BitRate>
+    <TotalBitRateX>Débit total : {0}</TotalBitRateX>
     <SampleRate>Echantillonnage</SampleRate>
     <Audio>Audio</Audio>
     <Stereo>Stéréo</Stereo>
@@ -890,7 +891,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
     <AutoCopyLineSeparator>Séparateur de ligne</AutoCopyLineSeparator>
     <TranslateBlockXOfY>Traduire le bloc {0} de {1}</TranslateBlockXOfY>
     <TranslateBlockInfo>Allez au traducteur et collez le texte, Copiez le résultat dans le presse-papiers et cliquez sur le bouton ci-dessous</TranslateBlockInfo>
-    <TranslateBlockGetFromClipboard>Prendre le texte traduit hors du presse-papiers(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockGetFromClipboard>Prendre le texte traduit hors du presse-papiers (Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>Copier le presse-papiers du texte source</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Le presse-papiers contient le texte source !</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Allez au traducteur et traduisez. Copiez le résultat dans le presse-papiers et cliquez à nouveau sur ce bouton.</TranslateBlockClipboardError2>
@@ -1121,9 +1122,9 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
   <Main>
     <Menu>
       <File>
-        <Title>Fichier</Title>
-        <New>Nouveau</New>
-        <Open>Ouvrir</Open>
+        <Title>&amp;Fichier</Title>
+        <New>&amp;Nouveau</New>
+        <Open>&amp;Ouvrir ...</Open>
         <OpenKeepVideo>Ouvrir (garder vidéo)</OpenKeepVideo>
         <Reopen>Ré-ouvrir</Reopen>
         <Save>Sauvegarder</Save>
@@ -1280,6 +1281,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       <Options>
         <Title>Options</Title>
         <Settings>Paramètres ...</Settings>
+        <WordLists>Listes de mots ...</WordLists>
         <ChooseLanguage>Choix de la langue ...</ChooseLanguage>
       </Options>
       <Networking>
@@ -1400,6 +1402,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
         <RemoveBookmark>Retirer le signet</RemoveBookmark>
         <GoToSourceView>Aller à la vue Source</GoToSourceView>
         <GoToListView>Aller à la vue Liste</GoToListView>
+        <ExtractAudio>Extraire l'audio ...</ExtractAudio>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1493,8 +1496,8 @@ Le sous-titre semble vide - réessayez de sauvegarder si vous êtes sûr qu'il e
     <New>Nouveau</New>
     <BeforeConvertingToX>Avant de convertir en {0}</BeforeConvertingToX>
     <ConvertedToX>Converti en {0}</ConvertedToX>
-    <BeforeShowEarlier>Avant d’afficher précédent</BeforeShowEarlier>
-    <BeforeShowLater>Avant d’afficher suivant</BeforeShowLater>
+    <BeforeShowEarlier>Avant d’afficher plus tôt</BeforeShowEarlier>
+    <BeforeShowLater>Avant d’afficher plus tard</BeforeShowLater>
     <LineNumberX>Ligne numéro: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Ouvrir fichier vidéo ...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nouvelle fréquence d'image ({0}) a été utilisée pour calculer l'heure de début/fin</NewFrameRateUsedToCalculateTimeCodes>
@@ -1734,8 +1737,8 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <NoSupportHereVobSub>Les fichiers VobSub ne sont pas supportés ici.</NoSupportHereVobSub>
     <NoSupportHereDivx>Les fichiers DivX ne sont pas supportés ici.</NoSupportHereDivx>
     <NoChapters>Pas de chapitres trouvés dans cette vidéo.</NoChapters>
-    <DarkThemeRestart>Redémarrez Subtitle Edit pour rendre effectifs les changements de thème sombre</DarkThemeRestart>
     <VideoFromUrlRequirements>Ouvrir une vidéo depuis l'URL nécessite 'mpv' et 'youtube-dl' - télécharger et continuer ??</VideoFromUrlRequirements>
+    <Url>URL</Url>
     <Errors>Erreurs</Errors>
     <ShowVideoControls>Afficher les contôles vidéo</ShowVideoControls>
     <HideVideoControls>Masquer les contôles vidéo</HideVideoControls>
@@ -1776,22 +1779,22 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <MilesTerrestial>Miles (terrestres)</MilesTerrestial>
     <MilesNautical>Miles (nautiques)</MilesNautical>
     <Yards>Yards</Yards>
-    <Feet>Feet</Feet>
-    <Inches>Inches</Inches>
+    <Feet>Pieds</Feet>
+    <Inches>Pouces</Inches>
     <Chains>Chains</Chains>
     <Fathoms>Fathoms</Fathoms>
-    <Hands>Hands</Hands>
+    <Hands>Mains</Hands>
     <Rods>Rods</Rods>
     <Spans>Spans</Spans>
-    <LongTonnes>Long tons</LongTonnes>
-    <ShortTonnes>Short tons</ShortTonnes>
+    <LongTonnes>Tonnes longues</LongTonnes>
+    <ShortTonnes>Tonnes courtes</ShortTonnes>
     <Tonnes>Tonnes</Tonnes>
     <Kilos>Kilogrammes</Kilos>
     <Grams>Grammes</Grams>
     <Milligrams>Milligrames</Milligrams>
     <Micrograms>Microgrames</Micrograms>
-    <Pounds>Pounds</Pounds>
-    <Ounces>Ounces</Ounces>
+    <Pounds>Livres</Pounds>
+    <Ounces>Onces</Ounces>
     <Carats>Carats</Carats>
     <Drams>Drams</Drams>
     <Grains>Grains</Grains>
@@ -2224,6 +2227,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <SpectrogramOneColorGradient>Gradient d'une seule couleur</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classique</SpectrogramClassic>
     <WaveformUseFFmpeg>Utiliser FFmpeg pour extraire l'audio</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>N'utiliser que le canal avant central (pour 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Télécharger {0}</DownloadX>
     <WaveformFFmpegPath>Chemin de FFmpeg :</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Rechercher FFmpeg.exe ...</WaveformBrowseToFFmpeg>
@@ -2255,6 +2259,8 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ProxyUserName>Nom utilisateur</ProxyUserName>
     <ProxyPassword>Mot de passe</ProxyPassword>
     <ProxyDomain>Domaine</ProxyDomain>
+    <ProxyAuthType>Type d'authentification</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Crédit par défaut</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Paramètres de session réseau</NetworkSessionSettings>
     <NetworkSessionNewSound>Signal sonore d'arrivée d'un nouveau message</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Lire X secondes puis retour avec X =</PlayXSecondsAndBack>
@@ -2274,6 +2280,8 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ContinuationStyleNone>Aucun</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Aucun, points aux pauses de clôture</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Aucun, points aux pauses</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>Aucun, ellipse aux pauses de clôture</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>Aucun, points aux pauses</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Points de clôture</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Points</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingEllipsis>Ellipse</ContinuationStyleLeadingTrailingEllipsis>
@@ -2283,13 +2291,14 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ContinuationStyleLeadingTrailingDashDots>Tiret mais points aux pauses</ContinuationStyleLeadingTrailingDashDots>
     <CpsLineLengthStyle>Cps/longueur ligne</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Compter tous caractères</CpsLineLengthStyleCalcAll>
-    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Compter tou sauf blancs majuscules</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>Compter tout sauf blancs majuscules</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Compter tout sauf blancs</CpsLineLengthStyleCalcNoSpace>
     <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
     <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, blanc 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignorer les diacritiques arabes</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignorer les diacritiques arabes/blanc</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Pas d'espace / ponctuation ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>Pas d'espace / ponctuation, majusc.</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
     <MusicSymbol>Symbole musical</MusicSymbol>
     <MusicSymbolsReplace>Symboles musicaux à remplacer (séparés par une virgule)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corriger les erreurs OCR - utiliser aussi les règles intégrées</FixCommonOcrErrorsUseHardcodedRules>
@@ -2382,8 +2391,11 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <GoToNextSubtitleAndFocusVideo>Aller à la ligne suivante et définir la position vidéo</GoToNextSubtitleAndFocusVideo>
     <GoToPrevSubtitleAndPlay>Aller à la ligne précédente et lire</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Aller à la ligne suivante et lire</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>Aller à la ligne précédente et focus sur l'audio</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>Aller à la ligne suivante et focus sur l'audio</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Commuter entre mode Liste et boîte du texte sous-titre</ToggleFocus>
     <ToggleFocusWaveform>Commuter le focus entre vue Liste et forme d'onde/spectrogramme</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Commuter le focus entre boîte texte et forme d'onde/spectrogramme</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Commuter les tirets de dialogue</ToggleDialogDashes>
     <ToggleQuotes>Commuter les guillemets</ToggleQuotes>
     <ToggleHiTags>Commuter les balises HI</ToggleHiTags>
@@ -2441,12 +2453,15 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <GoToStartCurrent>Positionner la vidéo au début du sous-titre actuel</GoToStartCurrent>
     <ToggleStartEndCurrent>Commuter la position vidéo entre début/fin du sous-titre actuel</ToggleStartEndCurrent>
     <PlaySelectedLines>Lire les lignes sélectionnées</PlaySelectedLines>
+    <LoopSelectedLines>Boucler sur la ligne sélectionnées</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Aller au sous-titre précédent (depuis la position vidéo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Aller au sous-titre suivant (depuis la position vidéo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Aller au chapitre précédent</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Aller au chapitre suivant</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Sélectionner le sous-titre suivant la position vidéo (rester positionné)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Commuter lecture / pause</TogglePlayPause>
+    <Play150Speed>Lire la vidéo à V=1,5x</Play150Speed>
+    <Play200Speed>Lire la vidéo à V=2,0x</Play200Speed>
     <Pause>Pause</Pause>
     <Fullscreen>Plein écran</Fullscreen>
     <PlayRateSlower>Ralentir la lecture</PlayRateSlower>
@@ -2554,6 +2569,9 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Détecter et décocher les titres, ou paroles de chanson, en minuscules</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Masquer les phrases de suite improbables</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignorer les paroles de chanson entre des symbôles de musique</IgnoreLyrics>
+    <ContinuationPause>Seuil de pause :</ContinuationPause>
+    <Milliseconds>ms</Milliseconds>
+    <EditCustomContinuationStyle>Editer le style personnel ...</EditCustomContinuationStyle>
     <MinFrameGap>Ecart min. en images</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} images à une fréquence de {1} donne {2} millisecondes.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Utiliser "{0}" millisecondes comme nouvel écart minimum ?</UseXAsNewGap>
@@ -2563,6 +2581,18 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Raccourcis : Autoriser lettre/nombre isolé dans la boîte texte</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Actualiser les associations de type de fichier</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Associations de type de fichier actualisée</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>Personnaliser le style de continuation</CustomContinuationStyle>
+    <LoadStyle>Charger un style ...</LoadStyle>
+    <Suffix>Suffixe :</Suffix>
+    <AddSuffixForComma>Traiter en cas de virgule finale</AddSuffixForComma>
+    <AddSpace>Ajouter un espacement</AddSpace>
+    <RemoveComma>Retirer la virgule</RemoveComma>
+    <Prefix>Préfixe :</Prefix>
+    <DifferentStyleGap>Style différent si les écarts sont > que :</DifferentStyleGap>
+    <Preview>Aperçu</Preview>
+    <PreviewPause>(pause)</PreviewPause>
+    <CustomContinuationStyleNote>NB: Le style de continuation personnalisé est partagé par tous les profils.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>Ceci va écraser les valeurs dans le dialogue. Etes-vous sûr ?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Télécharger "mpv lib"</DownloadMpv>
@@ -2819,6 +2849,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <Angle>Angle</Angle>
     <BoxPerLine>Boîte par ligne (avec couleur de contour)</BoxPerLine>
     <BoxMultiLine>Une boîte (avec couleur d'ombre)</BoxMultiLine>
+    <DuplicateStyleNames>Noms de style en double : {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
     <Category>Catégorie</Category>
