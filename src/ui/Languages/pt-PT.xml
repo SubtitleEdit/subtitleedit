@@ -2231,6 +2231,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
     <WaveformUseFFmpeg>Usar o FFmpeg para extrair a onda áudio</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Usar apenas o canal central frontal (para 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Transferir o {0}</DownloadX>
     <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
@@ -2256,13 +2257,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WordNotFound>Palavra não encontrada</WordNotFound>
     <RemoveX>Remover {0}?</RemoveX>
     <CannotUpdateNamesOnline>Não foi possível actualizar a lista de nomes xml online!</CannotUpdateNamesOnline>
-    <ProxyServerSettings>Configuração do servidor proxy</ProxyServerSettings>
+    <ProxyServerSettings>Definições do servidor proxy</ProxyServerSettings>
     <ProxyAddress>Endereço proxy</ProxyAddress>
     <ProxyAuthentication>Autenticação</ProxyAuthentication>
     <ProxyUserName>Nome do utilizador</ProxyUserName>
     <ProxyPassword>Palavra-passe</ProxyPassword>
     <ProxyDomain>Domínio</ProxyDomain>
-    <NetworkSessionSettings>Definições da Sessão de rede</NetworkSessionSettings>
+    <ProxyAuthType>Tipo de autorização</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Usar credenciais predefinidas</ProxyUseDefaultCredentials>
+    <NetworkSessionSettings>Definições da sessão de rede</NetworkSessionSettings>
     <NetworkSessionNewSound>Reproduzir o ficheiro de som quando houver uma nova mensagem</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Reproduzir X segundos e voltar, X é</PlayXSecondsAndBack>
     <StartSceneIndex>O parágrafo de início da cena é</StartSceneIndex>
