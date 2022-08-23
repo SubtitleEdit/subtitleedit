@@ -19,6 +19,7 @@
    * Update Italian translation - thx bovirus
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx hugok79
+   * Update French translation - the Peirre
    * Add error label for "Batch convert" - thx Leon
    * Batch convert: Improved "Remove lines with style/actor"
    * Allow empty split for "split at video/cursor" - thx OmrSi
