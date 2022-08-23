@@ -70,7 +70,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(688, 412);
+            this.buttonCancel.Location = new System.Drawing.Point(739, 412);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 21;
@@ -82,7 +82,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(607, 412);
+            this.buttonOK.Location = new System.Drawing.Point(658, 412);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 20;
@@ -116,7 +116,7 @@
             this.groupBoxContinuationStyle.Controls.Add(this.comboBoxSuffix);
             this.groupBoxContinuationStyle.Location = new System.Drawing.Point(12, 27);
             this.groupBoxContinuationStyle.Name = "groupBoxContinuationStyle";
-            this.groupBoxContinuationStyle.Size = new System.Drawing.Size(375, 379);
+            this.groupBoxContinuationStyle.Size = new System.Drawing.Size(426, 379);
             this.groupBoxContinuationStyle.TabIndex = 2;
             this.groupBoxContinuationStyle.TabStop = false;
             // 
@@ -362,7 +362,7 @@
             this.groupBoxPreview.Controls.Add(this.labelPreviewLine3);
             this.groupBoxPreview.Controls.Add(this.labelPreviewLine2);
             this.groupBoxPreview.Controls.Add(this.labelPreviewLine1);
-            this.groupBoxPreview.Location = new System.Drawing.Point(393, 27);
+            this.groupBoxPreview.Location = new System.Drawing.Point(444, 27);
             this.groupBoxPreview.Name = "groupBoxPreview";
             this.groupBoxPreview.Size = new System.Drawing.Size(370, 379);
             this.groupBoxPreview.TabIndex = 3;
@@ -425,7 +425,7 @@
             this.toolStripMenuItemLoadStyle});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(775, 24);
+            this.menuStrip.Size = new System.Drawing.Size(826, 24);
             this.menuStrip.TabIndex = 22;
             // 
             // toolStripMenuItemLoadStyle
@@ -450,7 +450,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(775, 447);
+            this.ClientSize = new System.Drawing.Size(826, 447);
             this.Controls.Add(this.labelNote);
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.groupBoxContinuationStyle);
