@@ -203,6 +203,7 @@
             this.radioButtonVideoPlayerMpcHc = new System.Windows.Forms.RadioButton();
             this.panelWaveform = new System.Windows.Forms.Panel();
             this.groupBoxFfmpeg = new System.Windows.Forms.GroupBox();
+            this.checkBoxFfmpegUseCenterChannel = new System.Windows.Forms.CheckBox();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
             this.textBoxFFmpegPath = new System.Windows.Forms.TextBox();
@@ -407,7 +408,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBoxFfmpegUseCenterChannel = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -2674,6 +2674,16 @@
             this.groupBoxFfmpeg.TabStop = false;
             this.groupBoxFfmpeg.Text = "FFmpeg";
             // 
+            // checkBoxFfmpegUseCenterChannel
+            // 
+            this.checkBoxFfmpegUseCenterChannel.AutoSize = true;
+            this.checkBoxFfmpegUseCenterChannel.Location = new System.Drawing.Point(6, 99);
+            this.checkBoxFfmpegUseCenterChannel.Name = "checkBoxFfmpegUseCenterChannel";
+            this.checkBoxFfmpegUseCenterChannel.Size = new System.Drawing.Size(219, 17);
+            this.checkBoxFfmpegUseCenterChannel.TabIndex = 24;
+            this.checkBoxFfmpegUseCenterChannel.Text = "Use center channel only for audio tracks";
+            this.checkBoxFfmpegUseCenterChannel.UseVisualStyleBackColor = true;
+            // 
             // buttonDownloadFfmpeg
             // 
             this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(274, 17);
@@ -4698,7 +4708,7 @@
             this.groupBoxProxyAuthentication.Controls.Add(this.textBoxProxyPassword);
             this.groupBoxProxyAuthentication.Location = new System.Drawing.Point(28, 60);
             this.groupBoxProxyAuthentication.Name = "groupBoxProxyAuthentication";
-            this.groupBoxProxyAuthentication.Size = new System.Drawing.Size(392, 162);
+            this.groupBoxProxyAuthentication.Size = new System.Drawing.Size(459, 162);
             this.groupBoxProxyAuthentication.TabIndex = 29;
             this.groupBoxProxyAuthentication.TabStop = false;
             this.groupBoxProxyAuthentication.Text = "Authentication";
@@ -4715,7 +4725,7 @@
             // checkBoxProxyUseDefaultCredentials
             // 
             this.checkBoxProxyUseDefaultCredentials.AutoSize = true;
-            this.checkBoxProxyUseDefaultCredentials.Location = new System.Drawing.Point(107, 135);
+            this.checkBoxProxyUseDefaultCredentials.Location = new System.Drawing.Point(139, 132);
             this.checkBoxProxyUseDefaultCredentials.Name = "checkBoxProxyUseDefaultCredentials";
             this.checkBoxProxyUseDefaultCredentials.Size = new System.Drawing.Size(136, 17);
             this.checkBoxProxyUseDefaultCredentials.TabIndex = 32;
@@ -4732,14 +4742,14 @@
             "NTLM",
             "Negotiate",
             "Kerberos"});
-            this.comboBoxProxyAuthType.Location = new System.Drawing.Point(106, 105);
+            this.comboBoxProxyAuthType.Location = new System.Drawing.Point(138, 102);
             this.comboBoxProxyAuthType.Name = "comboBoxProxyAuthType";
             this.comboBoxProxyAuthType.Size = new System.Drawing.Size(192, 21);
             this.comboBoxProxyAuthType.TabIndex = 31;
             // 
             // textBoxProxyDomain
             // 
-            this.textBoxProxyDomain.Location = new System.Drawing.Point(106, 71);
+            this.textBoxProxyDomain.Location = new System.Drawing.Point(138, 68);
             this.textBoxProxyDomain.Name = "textBoxProxyDomain";
             this.textBoxProxyDomain.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyDomain.TabIndex = 30;
@@ -4755,7 +4765,7 @@
             // 
             // textBoxProxyUserName
             // 
-            this.textBoxProxyUserName.Location = new System.Drawing.Point(106, 19);
+            this.textBoxProxyUserName.Location = new System.Drawing.Point(138, 16);
             this.textBoxProxyUserName.Name = "textBoxProxyUserName";
             this.textBoxProxyUserName.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyUserName.TabIndex = 22;
@@ -4780,7 +4790,7 @@
             // 
             // textBoxProxyPassword
             // 
-            this.textBoxProxyPassword.Location = new System.Drawing.Point(106, 45);
+            this.textBoxProxyPassword.Location = new System.Drawing.Point(138, 42);
             this.textBoxProxyPassword.Name = "textBoxProxyPassword";
             this.textBoxProxyPassword.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyPassword.TabIndex = 24;
@@ -4788,9 +4798,9 @@
             // 
             // textBoxProxyAddress
             // 
-            this.textBoxProxyAddress.Location = new System.Drawing.Point(134, 34);
+            this.textBoxProxyAddress.Location = new System.Drawing.Point(166, 34);
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
-            this.textBoxProxyAddress.Size = new System.Drawing.Size(285, 21);
+            this.textBoxProxyAddress.Size = new System.Drawing.Size(321, 21);
             this.textBoxProxyAddress.TabIndex = 20;
             // 
             // labelProxyAddress
@@ -4888,24 +4898,14 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // checkBoxFfmpegUseCenterChannel
-            // 
-            this.checkBoxFfmpegUseCenterChannel.AutoSize = true;
-            this.checkBoxFfmpegUseCenterChannel.Location = new System.Drawing.Point(6, 99);
-            this.checkBoxFfmpegUseCenterChannel.Name = "checkBoxFfmpegUseCenterChannel";
-            this.checkBoxFfmpegUseCenterChannel.Size = new System.Drawing.Size(219, 17);
-            this.checkBoxFfmpegUseCenterChannel.TabIndex = 24;
-            this.checkBoxFfmpegUseCenterChannel.Text = "Use center channel only for audio tracks";
-            this.checkBoxFfmpegUseCenterChannel.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelNetwork);
+            this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
