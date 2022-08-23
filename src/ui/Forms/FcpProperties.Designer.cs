@@ -126,6 +126,8 @@
             this.Controls.Add(this.groupBoxFont);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FcpProperties";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
