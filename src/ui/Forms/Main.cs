@@ -23831,6 +23831,12 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
             }
 
+            if (ft == typeof(FinalCutProXml))
+            {
+                toolStripMenuItemFileFormatProperties.Visible = true;
+                toolStripMenuItemFileFormatProperties.Text = string.Format(_language.Menu.File.FormatXProperties, format.Name);
+            }
+
             if (format.Name == "Nuendo")
             {
                 toolStripMenuItemFileFormatProperties.Visible = true;
@@ -30731,6 +30737,20 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var properties = new WebVttProperties())
                 {
                     properties.ShowDialog(this);
+                }
+
+                return;
+            }
+
+            if (ft == typeof(FinalCutProXml))
+            {
+                using (var form = new FcpProperties())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Configuration.Settings.SubtitleSettings.FcpFontSize = form.FcpFontSize;
+                        Configuration.Settings.SubtitleSettings.FcpFontName = form.FcpFontName;
+                    }
                 }
 
                 return;
