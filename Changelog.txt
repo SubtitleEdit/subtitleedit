@@ -6,6 +6,7 @@
      (for 5.1/7.1 audio)
    * Add EBU stl file property icon - thx Leon 
    * Add new sub format - thx Edward
+   * Add new json sub format - thx Flitskikker
    * Add shortcut "Loop selection" - thx OmrSi
    * Add shortcut for "Open containing folder" - thx OmrSi
    * Add shorcuts for play with speed 1.5x/2x - thx OmrSi
@@ -17,6 +18,7 @@
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus
    * Update Korean translation - thx domddol
+   * Update Portuguese translation - thx hugok79
    * Add error label for "Batch convert" - thx Leon
    * Batch convert: Improved "Remove lines with style/actor"
    * Allow empty split for "split at video/cursor" - thx OmrSi
@@ -26,6 +28,7 @@
    * Fix minor bug for shortcut "Go to prev line and play" - thx nissansz
    * Fix minor issue with "FCE:Remove dash single line" - thx Minherre  
    * Re-add FinalCutProXml properties - thx hu
+   * Don't check Continuation Style when merging dialog - thx OmrSi  
 
 
 3.6.7 (13th August 2022)
