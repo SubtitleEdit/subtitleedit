@@ -2218,6 +2218,7 @@ Command line: {1} {2}
     <SpectrogramOneColorGradient>单色梯度</SpectrogramOneColorGradient>
     <SpectrogramClassic>经典</SpectrogramClassic>
     <WaveformUseFFmpeg>使用 FFmpeg 提取波形</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>仅使用前置/中置声道（适用于 5.1/7.1声道）</WaveformUseCenterChannelOnly>
     <DownloadX>下载 {0}</DownloadX>
     <WaveformFFmpegPath>FFmpeg 文件路径</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>浏览 FFmpeg 文件</WaveformBrowseToFFmpeg>
