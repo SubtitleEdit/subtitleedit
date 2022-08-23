@@ -16410,8 +16410,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralChooseProfile == e.KeyData)
             {
-                ChooseProfile();
                 e.SuppressKeyPress = true;
+                BeginInvoke(new Action(() => ChooseProfile()));
             }
             else if (_shortcuts.MainGeneralOpenDataFolder == e.KeyData)
             {
