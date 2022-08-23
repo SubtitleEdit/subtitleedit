@@ -43,7 +43,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var info = audioTracks[trackNumber].TrackInfo;
             return info.Contains("5.1", StringComparison.Ordinal) ||
-                   info.Contains("7.1", StringComparison.Ordinal);
+                   info.Contains("7.1", StringComparison.Ordinal) ||
+                   info.Contains("9.1", StringComparison.Ordinal);
         }
 
         internal static FfmpegMediaInfo ParseLog(string log)
