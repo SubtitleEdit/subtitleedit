@@ -12255,7 +12255,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeMergeLines);
 
                 var continuationStyle = Configuration.Settings.General.ContinuationStyle;
-                if (continuationStyle != ContinuationStyle.None)
+                if (continuationStyle != ContinuationStyle.None && !insertDash)
                 {
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                     var mergeResult = ContinuationUtilities.MergeHelper(currentParagraph.Text, nextParagraph.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
@@ -12270,7 +12270,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (original != null && originalNext != null)
                     {
-                        if (continuationStyle != ContinuationStyle.None)
+                        if (continuationStyle != ContinuationStyle.None  && !insertDash)
                         {
                             var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                             var mergeResult = ContinuationUtilities.MergeHelper(original.Text, originalNext.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
