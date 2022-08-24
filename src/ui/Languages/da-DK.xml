@@ -396,8 +396,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Tjek for opdateringer</Title>
-    <CheckingForUpdates>Kontrollerer for opdateringer...</CheckingForUpdates>
-    <CheckingForUpdatesFailedX>Kontrol for opdateringer mislykkedes: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdates>Tjek for opdateringer...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Tjek for opdateringer mislykkedes: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Du bruger den nyeste version af Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Ny version tilgængelig!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Gå til download side</InstallUpdate>
@@ -2222,6 +2222,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
     <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Brug kun forreste centerkanal (til 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Download {0}</DownloadX>
     <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
@@ -2253,6 +2254,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ProxyUserName>Bruger-navn</ProxyUserName>
     <ProxyPassword>Password</ProxyPassword>
     <ProxyDomain>Domæne</ProxyDomain>
+    <ProxyAuthType>Auth type</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Brug standard brugerlogin</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Netværk session indstillinger</NetworkSessionSettings>
     <NetworkSessionNewSound>Afspil lydfil ved ny meddelelse</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Spil X sekunder og tilbage, X</PlayXSecondsAndBack>
@@ -2445,12 +2448,15 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
     <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
     <PlaySelectedLines>Afspil valgte linjer</PlaySelectedLines>
+    <LoopSelectedLines>Loop valgt linjer</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Gå til forrige kapitel</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Gå til næste kapitel</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Vælg næste undertekst (fra videoposition, behold videopos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
+    <Play150Speed>Afspil video med 1,5x hastighed</Play150Speed>
+    <Play200Speed>Afspil video med 2,0x hastighed</Play200Speed>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
     <PlayRateSlower>Afspilningshastigheden langsommere</PlayRateSlower>
