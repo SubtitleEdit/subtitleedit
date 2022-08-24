@@ -4090,6 +4090,7 @@ namespace Nikse.SubtitleEdit.Forms
             ResetShowEarlierOrLater();
             FixRightToLeftDependingOnLanguage();
             textBoxSource.SelectionLength = 0;
+            toolStripMenuItemOpenContainingFolder.Enabled = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
         }
 
         private bool LoadSeJob(byte[] bytes)
@@ -5127,6 +5128,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
                 return DialogResult.Cancel;
+            }
+            finally
+            {
+                toolStripMenuItemOpenContainingFolder.Enabled = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
             }
         }
 
@@ -21670,6 +21675,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
             mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
             closeVideoToolStripMenuItem.Enabled = true;
+            toolStripMenuItemOpenKeepVideo.Enabled = true;
 
             if (_videoInfo.VideoCodec != null)
             {
@@ -23849,6 +23855,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(_fileName) && File.Exists(_fileName))
             {
                 UiUtil.OpenFolderFromFileName(_fileName);
+            }
+            else
+            {
+                toolStripMenuItemOpenContainingFolder.Enabled = false;
             }
         }
 
