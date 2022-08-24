@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool InListView => !textBoxSource.Visible;
         private bool InSourceView => textBoxSource.Visible;
         private int MinGapBetweenLines => Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+        private bool IsOriginalEditable => _subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle;
 
         private Subtitle _subtitle = new Subtitle();
         private Subtitle _subtitleOriginal = new Subtitle();
@@ -808,7 +809,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var p = tmp.Paragraphs[i];
                         var idx = _subtitle.InsertParagraphInCorrectTimeOrder(p);
                         selectIndices.Add(idx);
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                        if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                         {
                             var original = Utilities.GetOriginalParagraph(idx + i + 1, p, _subtitleOriginal.Paragraphs);
                             if (original == null)
@@ -6084,7 +6085,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal.Paragraphs.Count > 0)
+            if (IsOriginalEditable && _subtitleOriginal.Paragraphs.Count > 0)
             {
                 SaveOriginalToolStripMenuItemClick(null, null);
                 _disableShowStatus = false;
@@ -9553,7 +9554,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(i);
                     if (p != null)
                     {
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        if (IsOriginalEditable)
                         {
                             var original = Utilities.GetOriginalParagraph(i, p, _subtitleOriginal.Paragraphs);
                             if (original != null)
@@ -12093,7 +12094,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // original subtitle
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -13139,7 +13140,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var fixedText = removeNewLineOnly ? textBoxListViewText.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewText.Text);
                 var makeHistory = textBoxListViewText.Text != fixedText;
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var originalFixedText = removeNewLineOnly ? textBoxListViewText.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewTextOriginal.Text);
                     if (!makeHistory)
@@ -13239,7 +13240,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var fixedText = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
                 var makeHistory = textBoxListViewText.Text != fixedText;
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var originalFixedText = Utilities.AutoBreakLine(textBoxListViewTextOriginal.Text, languageOriginal);
                     if (!makeHistory)
@@ -13712,7 +13713,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         SubtitleListview1.SetText(item.Index, p.Text);
 
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                        if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                         {
                             var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleOriginal.Paragraphs);
                             if (original != null)
@@ -13924,7 +13925,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 SetFontName(p, form.FontName);
                                 SubtitleListview1.SetText(item.Index, p.Text);
-                                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                                if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                                 {
                                     var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleOriginal.Paragraphs);
                                     if (original != null)
@@ -18046,7 +18047,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendCurrentSubtitle));
 
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -18086,7 +18087,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - MinGapBetweenLines;
                 }
 
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -18119,7 +18120,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var previous = _subtitle.GetParagraphOrDefault(idx - 1);
                 if (previous != null)
                 {
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -18166,7 +18167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendPreviousLineEndToCurrentStart));
                 previous.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - MinGapBetweenLines;
 
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -18199,7 +18200,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.AdjustExtendNextLineStartToCurrentEnd));
                 next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + MinGapBetweenLines;
 
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -18229,7 +18230,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     double nearestShotChange = nextShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -18317,7 +18318,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -18380,7 +18381,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.EndTime.TotalMilliseconds = Math.Min(nearestShotChange * 1000 - MinGapBetweenLines, nearestStartTimeWithGap);
                     }
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -18425,7 +18426,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double nearestShotChange = previousShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
                     double nearestEndTimeWithGap = previous != null ? previous.EndTime.TotalMilliseconds + MinGapBetweenLines : -9999;
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -18604,7 +18605,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     MakeHistoryForUndo(string.Format(LanguageSettings.Current.Main.BeforeX, LanguageSettings.Current.Settings.WaveformGuessStart));
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(index, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -19082,7 +19083,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (keepGapPrevIfClose && isClose && prev != null)
             {
                 prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - prevGap;
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(prev), prev, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -19094,7 +19095,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTimeAndDuration(i - 1, prev, p, _subtitle.GetParagraphOrDefault(i - 2));
             }
 
-            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            if (IsOriginalEditable)
             {
                 var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleOriginal.Paragraphs);
                 if (original != null)
@@ -19189,7 +19190,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (keepGapNextIfClose && isClose && next != null)
             {
                 next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + nextGap;
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(next), next, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -19201,7 +19202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTimeAndDuration(i + 1, next, _subtitle.GetParagraphOrDefault(i + 2), p);
             }
 
-            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            if (IsOriginalEditable)
             {
                 var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleOriginal.Paragraphs);
                 if (original != null)
@@ -19291,7 +19292,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // original subtitle
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -20068,7 +20069,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.EndTime.TotalMilliseconds += addMs;
                             _subtitle.Paragraphs.Insert(firstIndex + i + 1, p);
                             selectIndices.Insert(0, firstIndex + i + 1);
-                            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                            if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                             {
                                 var original = Utilities.GetOriginalParagraph(firstIndex + i + 1, p, _subtitleOriginal.Paragraphs);
                                 if (original == null)
@@ -20095,7 +20096,7 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (var p in tmp.Paragraphs)
                         {
                             _subtitle.Paragraphs.Add(p);
-                            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                            if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                             {
                                 var original = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.Count - 1, p, _subtitleOriginal.Paragraphs);
                                 if (original == null)
@@ -20126,7 +20127,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _subtitle.Paragraphs.Insert(idx, p);
                                 selectedIndices.Add(idx);
-                                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                                if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                                 {
                                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                                     if (original == null)
@@ -20313,7 +20314,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (int i in indices)
             {
-                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                 {
                     var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                     if (original != null)
@@ -20366,7 +20367,7 @@ namespace Nikse.SubtitleEdit.Forms
                         first = false;
                     }
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                    if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                     {
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -21120,7 +21121,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var p = pointSync.FixedSubtitle.Paragraphs[index];
                         _subtitle.Paragraphs.Add(p);
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                        if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                         {
                             var oldP = oldParagraphs[index];
                             var original = Utilities.GetOriginalParagraph(index, oldP, _subtitleOriginal.Paragraphs);
@@ -21288,7 +21289,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var p = pointSync.FixedSubtitle.Paragraphs[index];
                             _subtitle.Paragraphs.Add(p);
-                            if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                            if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                             {
                                 var oldP = oldParagraphs[index];
                                 var original = Utilities.GetOriginalParagraph(index, oldP, _subtitleOriginal.Paragraphs);
@@ -29822,7 +29823,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.BeginUpdate();
                     foreach (int i in indices)
                     {
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        if (IsOriginalEditable)
                         {
                             var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                             if (original != null)
@@ -30997,7 +30998,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (SubtitleListview1.SelectedItems.Count == 1 && text.Length > 0)
             {
-                var form = new ColumnPaste(SubtitleListview1.IsOriginalTextColumnVisible && _subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle, tmp.Paragraphs.Count == 0);
+                var form = new ColumnPaste(SubtitleListview1.IsOriginalTextColumnVisible && IsOriginalEditable, tmp.Paragraphs.Count == 0);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeColumnPaste);
@@ -31353,7 +31354,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (form.AdjustAllLines)
                     {
                         _subtitle = form.AdjustAllParagraphs(_subtitle);
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                        if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                         {
                             _subtitleOriginal = form.AdjustAllParagraphs(_subtitleOriginal);
                         }
@@ -31366,7 +31367,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (p != null)
                             {
                                 form.AdjustParagraph(p);
-                                if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsOriginalTextColumnVisible)
+                                if (IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible)
                                 {
                                     var original = Utilities.GetOriginalParagraph(index, p, _subtitle.Paragraphs);
                                     if (original != null)
@@ -32174,7 +32175,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _changeSubtitleHash = GetFastSubtitleHash();
 
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        if (IsOriginalEditable)
                         {
                             _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
                         }
@@ -32185,7 +32186,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _changeSubtitleHash = -1;
                         }
-                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _changeOriginalSubtitleHash == GetFastSubtitleOriginalHash())
+                        if (IsOriginalEditable && _changeOriginalSubtitleHash == GetFastSubtitleOriginalHash())
                         {
                             _changeOriginalSubtitleHash = -1;
                         }
@@ -32907,7 +32908,7 @@ namespace Nikse.SubtitleEdit.Forms
                         linesUpdated++;
                     }
 
-                    if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleOriginal.Paragraphs);
                         if (original != null)
