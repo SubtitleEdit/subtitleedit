@@ -2457,7 +2457,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproduzir linhas seleccionadas</PlaySelectedLines>
-    <LoopSelectedLines>Repetir linha seleccionada</LoopSelectedLines>
+    <LoopSelectedLines>Repetir linhas seleccionadas</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Ir para linha anterior (da posição do vídeo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Ir para linha seguinte (da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Ir para capítulo anterior</WaveformGoToPrevChapter>
