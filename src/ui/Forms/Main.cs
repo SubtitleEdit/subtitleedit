@@ -32173,10 +32173,22 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!change)
                     {
                         _changeSubtitleHash = GetFastSubtitleHash();
+
+                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        {
+                            _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
+                        }
                     }
-                    else if (change && _changeSubtitleHash == GetFastSubtitleHash())
+                    else if (change)
                     {
-                        _changeSubtitleHash = -1;
+                        if (_changeSubtitleHash == GetFastSubtitleHash())
+                        {
+                            _changeSubtitleHash = -1;
+                        }
+                        if (_subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _changeOriginalSubtitleHash == GetFastSubtitleOriginalHash())
+                        {
+                            _changeOriginalSubtitleHash = -1;
+                        }
                     }
 
                     SaveSubtitleListviewIndices();
