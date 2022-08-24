@@ -5129,6 +5129,10 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(exception.Message);
                 return DialogResult.Cancel;
             }
+            finally
+            {
+                toolStripMenuItemOpenContainingFolder.Enabled = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
+            }
         }
 
         private DialogResult SaveOriginalSubtitle(SubtitleFormat format, bool skipPrompts = false)
