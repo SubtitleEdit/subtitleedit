@@ -3,7 +3,6 @@
 3.6.8 (xth November 2022) BETA
 * NEW:
    * Option to use only "front center" audio channel - thx shanedk
-     (for 5.1/7.1 audio)
    * Add EBU stl file property icon - thx Leon 
    * Add new sub format - thx Edward
    * Add new json sub format - thx Flitskikker

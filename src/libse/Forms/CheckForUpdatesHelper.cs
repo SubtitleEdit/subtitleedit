@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -8,6 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
     public class CheckForUpdatesHelper
     {
         private static readonly Regex VersionNumberRegex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
+        readonly List<string> _months = new List<string> { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
         private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Changelog.txt";
 
@@ -27,12 +30,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
             _successCount = 0;
         }
 
-        private static string GetLatestVersionNumber(string latestChangeLog)
+        private string GetLatestVersionNumber(string latestChangeLog)
         {
             foreach (var line in latestChangeLog.Replace(Environment.NewLine, "\n").Split('\n'))
             {
                 var s = line.Trim();
-                if (!s.Contains("BETA", StringComparison.OrdinalIgnoreCase) && !s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
+                if (!s.Contains("BETA", StringComparison.OrdinalIgnoreCase) &&
+                    !s.Contains('x') && 
+                    !s.Contains('*') && 
+                    s.Contains('(') && 
+                    s.Contains(')') && 
+                    _months.Any(month=>s.Contains(month)) &&
+                    VersionNumberRegex.IsMatch(s))
                 {
                     var indexOfSpace = s.IndexOf(' ');
                     if (indexOfSpace > 0)
@@ -41,10 +50,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                 }
             }
+
             return null;
         }
 
-        private static string GetLatestChangeLog(string changeLog)
+        private string GetLatestChangeLog(string changeLog)
         {
             var releaseOn = false;
             var sb = new StringBuilder();
@@ -58,7 +68,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 if (!releaseOn)
                 {
-                    if (!s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
+                    if (!s.Contains('x') && 
+                        !s.Contains('*') && 
+                        s.Contains('(') && 
+                        s.Contains(')') &&
+                        _months.Any(month => s.Contains(month)) &&
+                        VersionNumberRegex.IsMatch(s))
                     {
                         releaseOn = true;
                     }
