@@ -63,7 +63,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(622, 427);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.TabIndex = 10;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -75,7 +75,7 @@
             this.buttonGenerate.Location = new System.Drawing.Point(373, 427);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
-            this.buttonGenerate.TabIndex = 6;
+            this.buttonGenerate.TabIndex = 8;
             this.buttonGenerate.Text = "&Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
@@ -87,7 +87,7 @@
             this.progressBar1.Location = new System.Drawing.Point(12, 427);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(355, 12);
-            this.progressBar1.TabIndex = 5;
+            this.progressBar1.TabIndex = 7;
             this.progressBar1.Visible = false;
             // 
             // labelProgress
@@ -97,7 +97,7 @@
             this.labelProgress.Location = new System.Drawing.Point(12, 409);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
-            this.labelProgress.TabIndex = 4;
+            this.labelProgress.TabIndex = 6;
             this.labelProgress.Text = "labelProgress";
             // 
             // textBoxLog
@@ -153,7 +153,7 @@
             this.linkLabelOpenModelsFolder.Location = new System.Drawing.Point(301, 51);
             this.linkLabelOpenModelsFolder.Name = "linkLabelOpenModelsFolder";
             this.linkLabelOpenModelsFolder.Size = new System.Drawing.Size(98, 13);
-            this.linkLabelOpenModelsFolder.TabIndex = 0;
+            this.linkLabelOpenModelsFolder.TabIndex = 3;
             this.linkLabelOpenModelsFolder.TabStop = true;
             this.linkLabelOpenModelsFolder.Text = "Open models folder";
             this.linkLabelOpenModelsFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenModelFolder_LinkClicked);
@@ -220,7 +220,7 @@
             this.buttonBatchMode.Location = new System.Drawing.Point(504, 427);
             this.buttonBatchMode.Name = "buttonBatchMode";
             this.buttonBatchMode.Size = new System.Drawing.Size(112, 23);
-            this.buttonBatchMode.TabIndex = 7;
+            this.buttonBatchMode.TabIndex = 9;
             this.buttonBatchMode.Text = "Batch mode";
             this.buttonBatchMode.UseVisualStyleBackColor = true;
             this.buttonBatchMode.Click += new System.EventHandler(this.buttonBatchMode_Click);

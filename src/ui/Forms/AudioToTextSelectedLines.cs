@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
-            FillModels();
+            FillModels(string.Empty);
 
             textBoxLog.Visible = false;
             textBoxLog.Dock = DockStyle.Fill;
@@ -64,8 +64,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FillModels()
+        private void FillModels(string lastDownloadedModel)
         {
+            var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.VoskModel : lastDownloadedModel;
             comboBoxModels.Items.Clear();
             foreach (var directory in Directory.GetDirectories(_voskFolder))
             {
@@ -76,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 comboBoxModels.Items.Add(name);
-                if (name == Configuration.Settings.Tools.VoskModel)
+                if (name == selectName)
                 {
                     comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
                 }
@@ -125,6 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
+                comboBoxModels.Enabled = false;
                 var waveFileName = videoFileName;
                 textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);
@@ -382,10 +384,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
-            using (var form = new AudioToTextModelDownload() { AutoClose = true })
+            using (var form = new AudioToTextModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                FillModels();
+                FillModels(form.LastDownloadedModel);
             }
         }
 

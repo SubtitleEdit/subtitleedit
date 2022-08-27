@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class AudioToTextModelDownload : Form
     {
         public bool AutoClose { get; internal set; }
+        public string LastDownloadedModel { get; internal set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public AudioToTextModelDownload()
@@ -123,6 +124,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var dir = zip.ReadCentralDir();
                 foreach (var entry in dir)
                 {
+                    if (LastDownloadedModel == null)
+                    {
+                        LastDownloadedModel = Path.GetDirectoryName(entry.FilenameInZip);
+                    }
+
                     var path = Path.Combine(folder, entry.FilenameInZip);
                     zip.ExtractFile(entry, path);
                 }
@@ -130,6 +136,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
+
+            
 
             if (AutoClose)
             {

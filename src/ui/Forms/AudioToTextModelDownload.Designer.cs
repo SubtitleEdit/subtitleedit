@@ -42,7 +42,7 @@
             this.labelPleaseWait.Location = new System.Drawing.Point(12, 92);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
-            this.labelPleaseWait.TabIndex = 2;
+            this.labelPleaseWait.TabIndex = 3;
             this.labelPleaseWait.Text = "Please wait...";
             // 
             // buttonDownload
@@ -64,7 +64,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(328, 87);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 3;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -88,7 +88,7 @@
             this.textBoxError.Name = "textBoxError";
             this.textBoxError.ReadOnly = true;
             this.textBoxError.Size = new System.Drawing.Size(388, 12);
-            this.textBoxError.TabIndex = 19;
+            this.textBoxError.TabIndex = 2;
             // 
             // AudioToTextModelDownload
             // 
