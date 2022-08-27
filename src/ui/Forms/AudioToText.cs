@@ -179,6 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
+                comboBoxModels.Enabled = false;
                 var waveFileName = GenerateWavFile(videoFileName, _audioTrackNumber);
                 textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 progressBar1.Style = ProgressBarStyle.Blocks;
