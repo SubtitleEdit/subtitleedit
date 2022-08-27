@@ -3805,6 +3805,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/AutoBackupSaved":
                     language.Main.AutoBackupSaved = reader.Value;
                     break;
+                case "Main/UsingOnlyFrontCenterChannel":
+                    language.Main.UsingOnlyFrontCenterChannel = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;

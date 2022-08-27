@@ -1646,6 +1646,7 @@ namespace Nikse.SubtitleEdit.Logic
                 HideVideoControls = "Hide video controls",
                 GeneratingWaveformInBackground = "Generating waveform in background...",
                 AutoBackupSaved = "Auto-backup saved",
+                UsingOnlyFrontCenterChannel = "Using only front center audio channel",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
