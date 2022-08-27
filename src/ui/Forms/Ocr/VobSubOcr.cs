@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
         private static readonly Color _listViewYellow = Configuration.Settings.General.UseDarkTheme ? Color.FromArgb(218, 135, 32) : Color.Yellow;
         private static readonly Color _listViewOrange = Configuration.Settings.General.UseDarkTheme ? Color.OrangeRed : Color.Orange;
+        private static readonly int WEIRD_IMAGE_HEIGHT = 400;
 
         internal class CompareItem
         {
@@ -1560,7 +1561,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return false;
         }
 
-        public Bitmap GetSubtitleBitmap(int index, bool crop = true)
+        public Bitmap GetSubtitleBitmap(int index, bool crop = true, bool preCheck = false)
         {
             Bitmap returnBmp = null;
             Color background;
@@ -1897,6 +1898,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             if (returnBmp == null)
+            {
+                return null;
+            }
+            // Skip weird images
+            if (preCheck && returnBmp.Height > WEIRD_IMAGE_HEIGHT)
             {
                 return null;
             }
@@ -9500,16 +9506,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             var bestDbName = string.Empty;
             int bestHits = -1;
+
+            int bitmapIndex = 0;
+            var bitmap = GetSubtitleBitmap(bitmapIndex, true, true);
+            // Skip suspicious images
+            while (bitmap == null && bitmapIndex < 50)
+            {
+                bitmap = GetSubtitleBitmap(bitmapIndex++, true, true);
+            }
+
+            if (bitmap == null)
+            {
+                return string.Empty;
+            }
+            var parentBitmap = new NikseBitmap(bitmap);
+            int minLineHeight = GetMinLineHeight();
+
             foreach (string s in BinaryOcrDb.GetDatabases())
             {
                 var binaryOcrDb = new BinaryOcrDb(Path.Combine(Configuration.OcrDirectory, s + ".db"), true);
-                var bitmap = GetSubtitleBitmap(0);
-                if (bitmap == null)
-                {
-                    return string.Empty;
-                }
-                var parentBitmap = new NikseBitmap(bitmap);
-                int minLineHeight = GetMinLineHeight();
                 var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
                 int index = 0;
                 int hits = 0;

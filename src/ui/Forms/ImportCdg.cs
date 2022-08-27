@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
             bw.RunWorkerAsync();
         }
 
-        public Bitmap GetSubtitleBitmap(int index, bool crop = true)
+        public Bitmap GetSubtitleBitmap(int index, bool crop = true, bool preCheck = false)
         {
             return _imageList[index].GetBitmap();
         }
