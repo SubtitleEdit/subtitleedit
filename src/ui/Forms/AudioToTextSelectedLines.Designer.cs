@@ -59,7 +59,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(622, 427);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -68,10 +68,10 @@
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(373, 427);
+            this.buttonGenerate.Location = new System.Drawing.Point(491, 427);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
-            this.buttonGenerate.TabIndex = 6;
+            this.buttonGenerate.TabIndex = 5;
             this.buttonGenerate.Text = "&Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
@@ -82,8 +82,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 427);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(355, 12);
-            this.progressBar1.TabIndex = 5;
+            this.progressBar1.Size = new System.Drawing.Size(473, 12);
+            this.progressBar1.TabIndex = 4;
             this.progressBar1.Visible = false;
             // 
             // labelProgress
@@ -128,7 +128,7 @@
             this.groupBoxModels.Location = new System.Drawing.Point(15, 66);
             this.groupBoxModels.Name = "groupBoxModels";
             this.groupBoxModels.Size = new System.Drawing.Size(682, 82);
-            this.groupBoxModels.TabIndex = 3;
+            this.groupBoxModels.TabIndex = 1;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Models";
             // 
@@ -138,7 +138,7 @@
             this.buttonDownload.Location = new System.Drawing.Point(265, 43);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(28, 23);
-            this.buttonDownload.TabIndex = 2;
+            this.buttonDownload.TabIndex = 1;
             this.buttonDownload.Text = "...";
             this.buttonDownload.UseVisualStyleBackColor = true;
             this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
@@ -149,7 +149,7 @@
             this.linkLabelOpenModelsFolder.Location = new System.Drawing.Point(301, 51);
             this.linkLabelOpenModelsFolder.Name = "linkLabelOpenModelsFolder";
             this.linkLabelOpenModelsFolder.Size = new System.Drawing.Size(98, 13);
-            this.linkLabelOpenModelsFolder.TabIndex = 0;
+            this.linkLabelOpenModelsFolder.TabIndex = 2;
             this.linkLabelOpenModelsFolder.TabStop = true;
             this.linkLabelOpenModelsFolder.Text = "Open models folder";
             this.linkLabelOpenModelsFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenModelFolder_LinkClicked);
@@ -170,7 +170,7 @@
             this.comboBoxModels.Location = new System.Drawing.Point(19, 45);
             this.comboBoxModels.Name = "comboBoxModels";
             this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
-            this.comboBoxModels.TabIndex = 1;
+            this.comboBoxModels.TabIndex = 0;
             this.comboBoxModels.SelectedIndexChanged += new System.EventHandler(this.comboBoxModels_SelectedIndexChanged);
             // 
             // linkLabelVoskWebSite
@@ -179,7 +179,7 @@
             this.linkLabelVoskWebSite.Location = new System.Drawing.Point(12, 26);
             this.linkLabelVoskWebSite.Name = "linkLabelVoskWebSite";
             this.linkLabelVoskWebSite.Size = new System.Drawing.Size(70, 13);
-            this.linkLabelVoskWebSite.TabIndex = 2;
+            this.linkLabelVoskWebSite.TabIndex = 0;
             this.linkLabelVoskWebSite.TabStop = true;
             this.linkLabelVoskWebSite.Text = "Vosk website";
             this.linkLabelVoskWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVoskWebsite_LinkClicked);
@@ -205,7 +205,7 @@
             this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 162);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
-            this.checkBoxUsePostProcessing.TabIndex = 4;
+            this.checkBoxUsePostProcessing.TabIndex = 2;
             this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
             this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
             // 
@@ -218,7 +218,7 @@
             this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 200);
             this.groupBoxInputFiles.Name = "groupBoxInputFiles";
             this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 185);
-            this.groupBoxInputFiles.TabIndex = 5;
+            this.groupBoxInputFiles.TabIndex = 3;
             this.groupBoxInputFiles.TabStop = false;
             this.groupBoxInputFiles.Text = "Input files";
             // 
