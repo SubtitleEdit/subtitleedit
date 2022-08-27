@@ -1498,6 +1498,7 @@
             public string HideVideoControls { get; set; }
             public string GeneratingWaveformInBackground { get; set; }
             public string AutoBackupSaved { get; set; }
+            public string UsingOnlyFrontCenterChannel { get; set; }
 
             public class MainMenu
             {

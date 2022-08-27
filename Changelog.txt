@@ -12,6 +12,7 @@
    * Add shorcuts for play with speed 1.5x/2x - thx OmrSi
    * Add "nOCR" option to "Batch convert" - thx Gen3ric
    * New proxy settings
+   * Add color picker to "set assa background box" - thx Érico
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -29,7 +30,10 @@
    * Fix minor bug for shortcut "Go to prev line and play" - thx nissansz
    * Fix minor issue with "FCE:Remove dash single line" - thx Minherre  
    * Re-add FinalCutProXml properties - thx hu
-   * Don't check Continuation Style when merging dialog - thx OmrSi  
+   * Don't check Continuation Style when merging dialog - thx OmrSi 
+   * Fix assa background box issue - thx Érico
+   * Fix asterisk showing after offsetting with no change - thx OmrSi
+   * Fix issues with NQC shot change rules - thx OmrSi
 
 
 3.6.7 (13th August 2022)

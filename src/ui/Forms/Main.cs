@@ -5727,6 +5727,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.FFmpegUseCenterChannelOnly)
                 {
+                    ShowStatus("Using only front center audio channel");
                     libmpvCenterChannel.SetAudioChannelFrontCenter();
                 }
                 else
@@ -22037,7 +22038,8 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.VideoPlayer is LibMpvDynamic libMpv2a &&
                 FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(VideoAudioTrackNumber))
             {
-                libMpv2a?.SetAudioChannelFrontCenter(); // front center
+                ShowStatus("Using only front center audio channel");
+                libMpv2a.SetAudioChannelFrontCenter(); // front center
             }
         }
 

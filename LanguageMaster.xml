@@ -1748,6 +1748,7 @@ Download and continue?</VideoFromUrlRequirements>
     <HideVideoControls>Hide video controls</HideVideoControls>
     <GeneratingWaveformInBackground>Generating waveform in background...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Auto-backup saved</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Using only front center audio channel</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
