@@ -246,6 +246,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MarginY>МаржY</MarginY>
     <OnlyDrawing>Само рисуване</OnlyDrawing>
     <DrawingFile>Файл с рисунки</DrawingFile>
+    <ColorPickerSetLastColor>Последният цвят на инструмента за избор на цвят сега е: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Задай позиция</SetPosition>
@@ -255,7 +256,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CurrentTextPositionX>Текстова позиция: {0}</CurrentTextPositionX>
     <SetPosInfo>Щракнете върху видеото, за да превключите задаване/преместване на позиция</SetPosInfo>
     <Clipboard>Клипборд</Clipboard>
-    <ResolutionMissing>PlayResX/PlayResY не са зададени - задай резолюцията сега?</ResolutionMissing>
+    <ResolutionMissing>PlayResX/PlayResY не са зададени - задайте резолюцията сега?</ResolutionMissing>
     <RotateXAxis>Завъртане {0} по оста</RotateXAxis>
     <DistortX>Изкривяване {0}</DistortX>
   </AssaSetPosition>
@@ -279,7 +280,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <UseStyleFromSource>Използвайте стил от източника</UseStyleFromSource>
     <ConvertOptions>Опции при конвертиране</ConvertOptions>
     <RemoveFormatting>Премахване форматирането на тагове</RemoveFormatting>
-    <RemoveStyleActor>Премахване на стил/актьор</RemoveStyleActor>
+    <RemoveStyleActor>Премахване на редове със стил/актьор</RemoveStyleActor>
     <RemoveTextForHI>Премахв. текст за глухи</RemoveTextForHI>
     <OverwriteOriginalFiles>Презаписване на ориг.файлове (с ново разширение, ако формата е променен)</OverwriteOriginalFiles>
     <RedoCasing>Смяна на регистъра</RedoCasing>
@@ -398,7 +399,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <CheckForUpdates>
     <Title>Проверка за обновяване</Title>
     <CheckingForUpdates>Проверка за обновяване...</CheckingForUpdates>
-    <CheckingForUpdatesFailedX>Грешка при проверката за обновяване: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesFailedX>Проверката за обновяване е неуспешна: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Използвате последната версия на Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Налична е нова версия!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Към страницата за изтегляне</InstallUpdate>
@@ -2230,6 +2231,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpectrogramOneColorGradient>Преливане в един цвят</SpectrogramOneColorGradient>
     <SpectrogramClassic>Класически</SpectrogramClassic>
     <WaveformUseFFmpeg>FFmpeg за извлич.вълнова диаграмаОТзв.сигнал</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Само предния централен канал (за 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Изтегляне на {0}</DownloadX>
     <WaveformFFmpegPath>Път до FFmpeg:</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Преминете към FFmpeg</WaveformBrowseToFFmpeg>
@@ -2261,6 +2263,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ProxyUserName>Потребител:</ProxyUserName>
     <ProxyPassword>Парола:</ProxyPassword>
     <ProxyDomain>Домейн:</ProxyDomain>
+    <ProxyAuthType>Тип удостоверяване</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Потребителски вход по подразбиране</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Настройки за мрежова сесия</NetworkSessionSettings>
     <NetworkSessionNewSound>Файл за озвучаване при пристигане на ново съобщение</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Възпроизвеждане X сек. и връщане, X е:</PlayXSecondsAndBack>
@@ -2454,12 +2458,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToStartCurrent>Задаване на видео поз. за старт на текущия субтитър</GoToStartCurrent>
     <ToggleStartEndCurrent>Превключване на видео поз. между начало/край на текущия субтитър</ToggleStartEndCurrent>
     <PlaySelectedLines>Възпроизв. на избраните редове</PlaySelectedLines>
+    <LoopSelectedLines>Контур на избраните редове</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Преминаване на предишния субтитър (от видео позицията)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Преминаване на следващия субтитър (от видео позицията)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Преминаване на предишната глава</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Преминаване на следващата глава</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Избор на следващия субтитър (от видео позицията, запазване на видео поз.)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Превключване на Пусни/Пауза</TogglePlayPause>
+    <Play150Speed>Възпроизвеждане на видео със скорост 1,5x</Play150Speed>
+    <Play200Speed>Възпроизвеждане на видео със скорост 2.0x</Play200Speed>
     <Pause>Пауза</Pause>
     <Fullscreen>Цял екран</Fullscreen>
     <PlayRateSlower>По-бавно възпроизвеждане</PlayRateSlower>
@@ -2541,7 +2548,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainFileSaveAll>Запис на всички</MainFileSaveAll>
     <Miscellaneous>Разни</Miscellaneous>
     <CpsIncludesSpace>Символи/сек (CPS-Chars per Second), включително интервалите</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Неразделяй след списъка(заАвт.пренасяне)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Неразделяне списъка(заАвт.пренасяне)</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Прекъсване в началото за завършване на реда (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Прекъсване по ширина на пикселите</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Предпочитане отдолу получерен</BreakPreferBottomHeavy>
@@ -2581,17 +2588,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <UpdateFileTypeAssociations>Обнови асоциациите типове файлове</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Асоциациите на типовете файлове са актуализирани</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Редактиране на персонализиран стил на продължение</CustomContinuationStyle>
-    <LoadStyle>Зареди стил...</LoadStyle>
+    <LoadStyle>Зареждане на стил...</LoadStyle>
     <Suffix>Суфикс:</Suffix>
     <AddSuffixForComma>Обработка, ако завършва със запетая</AddSuffixForComma>
     <AddSpace>Добавяне на пространство</AddSpace>
-    <RemoveComma>Премахнете запетаята</RemoveComma>
+    <RemoveComma>Премахване на запетаята</RemoveComma>
     <Prefix>Префикс:</Prefix>
-    <DifferentStyleGap>Използвайте различен стил за празнини, по-дълги от</DifferentStyleGap>
+    <DifferentStyleGap>Използване различен стил за празнини, по-дълги от</DifferentStyleGap>
     <Preview>Преглед</Preview>
     <PreviewPause>(пауза)</PreviewPause>
     <CustomContinuationStyleNote>Забележка: Персонализираният стил на продължение се споделя между профилите.</CustomContinuationStyleNote>
-    <ResetCustomContinuationStyleWarning>Това ще замени стойностите в диалоговия прозорец.  Сигурен ли си?</ResetCustomContinuationStyleWarning>
+    <ResetCustomContinuationStyleWarning>Това ще замени стойностите в диалоговия прозорец.  Сигурни ли сте?</ResetCustomContinuationStyleWarning>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Изтегляне на mpv</DownloadMpv>
