@@ -91,15 +91,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxPadding = new System.Windows.Forms.GroupBox();
             this.groupBoxStyle = new System.Windows.Forms.GroupBox();
+            this.panelCircle = new System.Windows.Forms.Panel();
+            this.labelCircleY = new System.Windows.Forms.Label();
+            this.numericUpDownCircleY = new System.Windows.Forms.NumericUpDown();
             this.panelBubbles = new System.Windows.Forms.Panel();
             this.numericUpDownBubbleStep = new System.Windows.Forms.NumericUpDown();
             this.labelBubbleHeight = new System.Windows.Forms.Label();
             this.labelBubbleStep = new System.Windows.Forms.Label();
             this.numericUpDownBubbleHeight = new System.Windows.Forms.NumericUpDown();
-            this.panelCircle = new System.Windows.Forms.Panel();
-            this.labelCircleY = new System.Windows.Forms.Label();
-            this.numericUpDownCircleY = new System.Windows.Forms.NumericUpDown();
             this.timerFileChange = new System.Windows.Forms.Timer(this.components);
+            this.buttonPickColor = new System.Windows.Forms.Button();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -122,11 +123,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpikesStep)).BeginInit();
             this.groupBoxPadding.SuspendLayout();
             this.groupBoxStyle.SuspendLayout();
+            this.panelCircle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).BeginInit();
             this.panelBubbles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleStep)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleHeight)).BeginInit();
-            this.panelCircle.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxPreview
@@ -135,9 +136,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(12, 195);
+            this.groupBoxPreview.Location = new System.Drawing.Point(12, 211);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(949, 499);
+            this.groupBoxPreview.Size = new System.Drawing.Size(949, 483);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -147,10 +148,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(943, 480);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(943, 464);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             this.pictureBoxPreview.Click += new System.EventHandler(this.pictureBoxPreview_Click);
+            this.pictureBoxPreview.MouseLeave += new System.EventHandler(this.pictureBoxPreview_MouseLeave);
+            this.pictureBoxPreview.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxPreview_MouseMove);
             // 
             // buttonOK
             // 
@@ -904,6 +907,47 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxStyle.TabStop = false;
             this.groupBoxStyle.Text = "Style";
             // 
+            // panelCircle
+            // 
+            this.panelCircle.Controls.Add(this.labelCircleY);
+            this.panelCircle.Controls.Add(this.numericUpDownCircleY);
+            this.panelCircle.Location = new System.Drawing.Point(0, 60);
+            this.panelCircle.Name = "panelCircle";
+            this.panelCircle.Size = new System.Drawing.Size(167, 58);
+            this.panelCircle.TabIndex = 53;
+            // 
+            // labelCircleY
+            // 
+            this.labelCircleY.AutoSize = true;
+            this.labelCircleY.Location = new System.Drawing.Point(3, 11);
+            this.labelCircleY.Name = "labelCircleY";
+            this.labelCircleY.Size = new System.Drawing.Size(14, 13);
+            this.labelCircleY.TabIndex = 51;
+            this.labelCircleY.Text = "Y";
+            // 
+            // numericUpDownCircleY
+            // 
+            this.numericUpDownCircleY.Location = new System.Drawing.Point(31, 9);
+            this.numericUpDownCircleY.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numericUpDownCircleY.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCircleY.Name = "numericUpDownCircleY";
+            this.numericUpDownCircleY.Size = new System.Drawing.Size(52, 20);
+            this.numericUpDownCircleY.TabIndex = 52;
+            this.numericUpDownCircleY.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownCircleY.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
+            // 
             // panelBubbles
             // 
             this.panelBubbles.Controls.Add(this.numericUpDownBubbleStep);
@@ -979,57 +1023,27 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             0});
             this.numericUpDownBubbleHeight.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
             // 
-            // panelCircle
-            // 
-            this.panelCircle.Controls.Add(this.labelCircleY);
-            this.panelCircle.Controls.Add(this.numericUpDownCircleY);
-            this.panelCircle.Location = new System.Drawing.Point(0, 60);
-            this.panelCircle.Name = "panelCircle";
-            this.panelCircle.Size = new System.Drawing.Size(167, 58);
-            this.panelCircle.TabIndex = 53;
-            // 
-            // labelCircleY
-            // 
-            this.labelCircleY.AutoSize = true;
-            this.labelCircleY.Location = new System.Drawing.Point(3, 11);
-            this.labelCircleY.Name = "labelCircleY";
-            this.labelCircleY.Size = new System.Drawing.Size(14, 13);
-            this.labelCircleY.TabIndex = 51;
-            this.labelCircleY.Text = "Y";
-            // 
-            // numericUpDownCircleY
-            // 
-            this.numericUpDownCircleY.Location = new System.Drawing.Point(31, 9);
-            this.numericUpDownCircleY.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.numericUpDownCircleY.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCircleY.Name = "numericUpDownCircleY";
-            this.numericUpDownCircleY.Size = new System.Drawing.Size(52, 20);
-            this.numericUpDownCircleY.TabIndex = 52;
-            this.numericUpDownCircleY.Value = new decimal(new int[] {
-            25,
-            0,
-            0,
-            0});
-            this.numericUpDownCircleY.ValueChanged += new System.EventHandler(this.PreviewValueChanged);
-            // 
             // timerFileChange
             // 
             this.timerFileChange.Interval = 250;
             this.timerFileChange.Tick += new System.EventHandler(this.timerFileChange_Tick);
+            // 
+            // buttonPickColor
+            // 
+            this.buttonPickColor.Image = global::Nikse.SubtitleEdit.Properties.Resources.color_picker_small2;
+            this.buttonPickColor.Location = new System.Drawing.Point(15, 167);
+            this.buttonPickColor.Name = "buttonPickColor";
+            this.buttonPickColor.Size = new System.Drawing.Size(43, 38);
+            this.buttonPickColor.TabIndex = 32;
+            this.buttonPickColor.UseVisualStyleBackColor = true;
+            this.buttonPickColor.Click += new System.EventHandler(this.button1_Click);
             // 
             // AssSetBackground
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(973, 734);
+            this.Controls.Add(this.buttonPickColor);
             this.Controls.Add(this.groupBoxStyle);
             this.Controls.Add(this.groupBoxPadding);
             this.Controls.Add(this.labelProgress);
@@ -1057,7 +1071,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Generate background box";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ApplyCustomStyles_FormClosing);
-            this.Load += new System.EventHandler(this.AssSetBackground_Load);
             this.Shown += new System.EventHandler(this.AssSetBackground_Shown);
             this.ResizeEnd += new System.EventHandler(this.SetPosition_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AssSetBackground_KeyDown);
@@ -1089,13 +1102,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.groupBoxPadding.ResumeLayout(false);
             this.groupBoxPadding.PerformLayout();
             this.groupBoxStyle.ResumeLayout(false);
+            this.panelCircle.ResumeLayout(false);
+            this.panelCircle.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).EndInit();
             this.panelBubbles.ResumeLayout(false);
             this.panelBubbles.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleStep)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleHeight)).EndInit();
-            this.panelCircle.ResumeLayout(false);
-            this.panelCircle.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCircleY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1172,5 +1185,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelBubbleHeight;
         private System.Windows.Forms.Label labelBubbleStep;
         private System.Windows.Forms.NumericUpDown numericUpDownBubbleHeight;
+        private System.Windows.Forms.Button buttonPickColor;
     }
 }

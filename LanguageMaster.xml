@@ -249,6 +249,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MarginY>MarginY</MarginY>
     <OnlyDrawing>Only drawing</OnlyDrawing>
     <DrawingFile>Drawing file</DrawingFile>
+    <ColorPickerSetLastColor>Color picker last color is now: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Set position</SetPosition>

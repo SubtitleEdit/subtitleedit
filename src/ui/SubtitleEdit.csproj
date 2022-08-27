@@ -2042,9 +2042,8 @@
     <None Include="Resources\webvtt.bmp" />
     <None Include="Resources\webvtt.png" />
     <None Include="Resources\itt.png" />
-    <None Include="Resources\ebustl.bmp" />
-    <None Include="Resources\ebustl.png" />
     <None Include="Resources\ebu.png" />
+    <None Include="Resources\color-picker-small2.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
     <None Include="Hunspellx64.dll">
