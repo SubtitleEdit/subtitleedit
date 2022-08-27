@@ -850,6 +850,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            SetLastColor(Color);
+            DialogResult = DialogResult.OK;
+        }
+
+        public static void SetLastColor(Color color)
+        {
             var colorList = new List<Color>
             {
                 Configuration.Settings.General.LastColorPickerColor,
@@ -862,14 +868,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.LastColorPickerColor7,
             };
 
-            colorList = colorList.Where(c => c != Color).ToList();
+            colorList = colorList.Where(c => c != color).ToList();
             var random = new Random();
             while (colorList.Count < 7)
             {
                 colorList.Add(Color.FromArgb(random.Next(byte.MaxValue), random.Next(byte.MaxValue), random.Next(byte.MaxValue)));
             }
 
-            Configuration.Settings.General.LastColorPickerColor = Color;
+            Configuration.Settings.General.LastColorPickerColor = color;
             Configuration.Settings.General.LastColorPickerColor1 = colorList[0];
             Configuration.Settings.General.LastColorPickerColor2 = colorList[1];
             Configuration.Settings.General.LastColorPickerColor3 = colorList[2];
@@ -877,8 +883,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LastColorPickerColor5 = colorList[4];
             Configuration.Settings.General.LastColorPickerColor6 = colorList[5];
             Configuration.Settings.General.LastColorPickerColor7 = colorList[6];
-
-            DialogResult = DialogResult.OK;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

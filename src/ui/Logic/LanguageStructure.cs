@@ -263,6 +263,7 @@
             public string MarginY { get; set; }
             public string OnlyDrawing { get; set; }
             public string DrawingFile { get; set; }
+            public string ColorPickerSetLastColor { get; set; }
         }
 
         public class AssaSetPosition

@@ -405,6 +405,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MarginY = "MarginY",
                 OnlyDrawing = "Only drawing",
                 DrawingFile = "Drawing file",
+                ColorPickerSetLastColor = "Color picker last color is now: {0}",
             };
 
             AssaSetPosition = new LanguageStructure.AssaSetPosition

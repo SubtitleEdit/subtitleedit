@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private string _mpvTextFileName;
         private bool _closing;
         private bool _videoLoaded;
+        private string _videoText;
         private bool _updatePreview = true;
         private bool _updateDrawingFile;
         private readonly string _videoFileName;
@@ -211,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             SetPosition_ResizeEnd(null, null);
             buttonAssaDraw.Visible = File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
             progressBar1.Visible = false;
-            labelProgress.Visible = false;
+            labelProgress.Text = string.Empty;
         }
 
         private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
@@ -515,10 +516,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _videoLoaded = true;
                 timerPreview.Start();
 
-                labelProgress.Text = $"{Path.GetFileName(_videoFileName)} - {string.Format(LanguageSettings.Current.Main.LineNumberX, _subtitleWithNewHeader.GetIndex(p) + 1)} - {p.StartTime}";
+                _videoText = $"{Path.GetFileName(_videoFileName)} - {string.Format(LanguageSettings.Current.Main.LineNumberX, _subtitleWithNewHeader.GetIndex(p) + 1)} - {p.StartTime}";
+                labelProgress.Text = _videoText;
                 if (p.StartTime.TotalSeconds > _videoInfo.TotalSeconds)
                 {
                     labelProgress.Text = "Video position is after end of video - NO PREVIEW!";
+                    _videoText = string.Empty;
                 }
 
                 labelProgress.Visible = true;
@@ -757,11 +760,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             GeneratePreviewViaMpv();
             _loading = false;
             timerFileChange.Start();
-        }
-
-        private void pictureBoxPreview_Click(object sender, EventArgs e)
-        {
-            VideoLoaded(null, null);
         }
 
         private void SetPosition_ResizeEnd(object sender, EventArgs e)
@@ -1384,9 +1382,70 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void AssSetBackground_Load(object sender, EventArgs e)
+        private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
+            if (_colorPickerOn)
+            {
+                ColorChooser.SetLastColor(buttonPickColor.BackColor);
+                pictureBoxPreview_MouseLeave(null, null);
+                labelProgress.Text = string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor , Utilities.ColorToHexWithTransparency(buttonPickColor.BackColor));
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                {
+                    labelProgress.Text = _videoText;
+                });
 
+            }
+            else
+            {
+                VideoLoaded(null, null);
+            }
+        }
+
+        private bool _colorPickerOn = false;
+        private int _colorPickerX = -1;
+        private int _colorPickerY = -1;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _colorPickerOn = true;
+        }
+
+        private void pictureBoxPreview_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_colorPickerOn)
+            {
+                return;
+            }
+
+            Cursor.Current = Cursors.Cross;
+            var x = MousePosition.X;
+            var y = MousePosition.Y;
+            if (x != _colorPickerX || y != _colorPickerY)
+            {
+                using (var bmp = new Bitmap(1, 1))
+                {
+                    var bounds = new Rectangle(x, y, 1, 1);
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+                    }
+
+                    buttonPickColor.BackColor = bmp.GetPixel(0, 0);
+                }
+
+                _colorPickerX = x;
+                _colorPickerY = y;
+            }
+        }
+
+        private void pictureBoxPreview_MouseLeave(object sender, EventArgs e)
+        {
+            if (_colorPickerOn)
+            {
+                Cursor.Current = Cursors.Default;
+                _colorPickerOn = false;
+                buttonPickColor.BackColor = buttonOK.BackColor;
+                labelProgress.Text = _videoText;
+            }
         }
     }
 }

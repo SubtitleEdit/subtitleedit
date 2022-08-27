@@ -664,6 +664,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaSetBackgroundBox/DrawingFile":
                     language.AssaSetBackgroundBox.DrawingFile = reader.Value;
                     break;
+                case "AssaSetBackgroundBox/ColorPickerSetLastColor":
+                    language.AssaSetBackgroundBox.ColorPickerSetLastColor = reader.Value;
+                    break;
                 case "AssaSetPosition/SetPosition":
                     language.AssaSetPosition.SetPosition = reader.Value;
                     break;
