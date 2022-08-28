@@ -1,39 +1,37 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
     public partial class ImageColorPicker : Form
     {
-        private Bitmap _image;
+        private readonly Bitmap _bitmap;
         private bool _colorPickerOn = true;
         private int _colorPickerX = -1;
         private int _colorPickerY = -1;
 
-        public Color Color { get; set;  }
+        public Color Color { get; set; }
 
         public ImageColorPicker(Bitmap bitmap)
         {
             InitializeComponent();
 
-            _image = bitmap;
-            pictureBoxImage.Image = bitmap;
+            _bitmap = bitmap;
+            var screen = Screen.PrimaryScreen.WorkingArea.Size;
+            while (_bitmap.Width + 10 >= screen.Width || _bitmap.Height + 40 >= screen.Height)
+            {
+                _bitmap = OcrPreprocessingT4.ResizeBitmap(_bitmap,
+                    (int)Math.Round(_bitmap.Width * 0.75, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(_bitmap.Height * 0.75, MidpointRounding.AwayFromZero));
+            }
+
+            pictureBoxImage.Image = _bitmap;
             labelInfo.Text = string.Empty;
 
-            Width = _image.Width + 10;
-            Height = _image.Height + (Height - pictureBoxImage.Height);
-        }
-
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
-
-        private void buttonCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
+            Width = _bitmap.Width + 10;
+            Height = _bitmap.Height + (Height - pictureBoxImage.Height);
         }
 
         private void pictureBoxImage_MouseMove(object sender, MouseEventArgs e)
@@ -49,9 +47,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var y = pos.Y;
             if (x != _colorPickerX || y != _colorPickerY)
             {
-                if (x < _image.Width && y < _image.Height)
+                if (x < _bitmap.Width && y < _bitmap.Height)
                 {
-                    Color = _image.GetPixel(x, y);
+                    Color = _bitmap.GetPixel(x, y);
                     panelMouseOverColor.BackColor = Color;
                     labelInfo.Text = $"R={Color.R} G={Color.G} B={Color.B}";
                 }
@@ -63,12 +61,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void pictureBoxImage_Click(object sender, EventArgs e)
         {
-            _colorPickerOn = !_colorPickerOn;
-
-            if (!_colorPickerOn)
-            {
-                Cursor.Current = Cursors.Default;
-            }
+            _colorPickerOn = false;
+            Cursor.Current = Cursors.Default;
+            DialogResult = DialogResult.OK;
         }
 
         private void ImageColorPicker_KeyDown(object sender, KeyEventArgs e)
