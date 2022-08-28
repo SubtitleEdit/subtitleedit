@@ -207,14 +207,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_hexEditOn)
             {
-                if (_showAlpha)
-                {
-                    _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
-                }
-                else
-                {
-                    _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
-                }
+                ShowHexColorCode(argb);
+            }
+        }
+
+        private void ShowHexColorCode(ColorHandler.Argb argb)
+        {
+            if (_showAlpha)
+            {
+                _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
+            }
+            else
+            {
+                _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
         }
 
@@ -981,52 +986,59 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
+        private void PanelColorClick(Panel panel)
+        {
+            var c = panel.BackColor;
+            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            _tbHexCode.TextChanged -= _tbHexCode_TextChanged;
+            ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.R, Blue = c.B });
+            _tbHexCode.TextChanged += _tbHexCode_TextChanged;
+        }
+
+
         private void panelC0_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC0.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC0);
         }
 
         private void panelC1_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC1.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC1);
         }
 
         private void panelC2_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC2.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC2);
+
         }
 
         private void panelC3_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC3.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC3);
+
         }
 
         private void panelC4_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC4.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC4);
+
         }
 
         private void panelC5_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC5.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC5);
+
         }
 
         private void panelC6_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC6.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC6);
+
         }
 
         private void panelC7_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC7.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC7);
         }
 
         private void _tbHexCode_MouseUp(object sender, MouseEventArgs e)
