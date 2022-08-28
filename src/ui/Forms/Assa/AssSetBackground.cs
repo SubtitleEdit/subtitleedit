@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private long _totalFrames;
         private FileSystemWatcher _drawingFileWatcher;
         private readonly Subtitle _wholeSubtitle;
+        private static bool _bt601Bt709On = false;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double videoPositionSeconds)
         {
@@ -227,6 +228,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
 
             noneToolStripMenuItem.Checked = true;
+            if (_bt601Bt709On)
+            {
+                bt601bt709ToolStripMenuItem_Click(null, null);
+            }
         }
 
         private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
@@ -1465,11 +1470,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void bt601bt709ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             bt601bt709ToolStripMenuItem.Checked = true;
+            _bt601Bt709On = true;
         }
 
         private void noneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             noneToolStripMenuItem.Checked = true;
+            _bt601Bt709On = false;
         }
     }
 }
