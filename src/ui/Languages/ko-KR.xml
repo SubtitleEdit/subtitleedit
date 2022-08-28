@@ -245,6 +245,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MarginY>Y여백</MarginY>
     <OnlyDrawing>밑그림 만</OnlyDrawing>
     <DrawingFile>밑그림 파일</DrawingFile>
+    <ColorPickerSetLastColor>색상 선택기의 최근 색상은 다음과 같음 : {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>위치 설정</SetPosition>
@@ -278,7 +279,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UseStyleFromSource>원본 스타일 사용</UseStyleFromSource>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
-    <RemoveStyleActor>스타일/배우 제거</RemoveStyleActor>
+    <RemoveStyleActor>스타일/배우 줄 제거</RemoveStyleActor>
     <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
     <RedoCasing>대/소문자 구분</RedoCasing>
@@ -1737,12 +1738,16 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <NoSupportHereVobSub>VobSub 파일은 여기서 지원되지 않습니다.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX 파일은 여기서 지원되지 않습니다.</NoSupportHereDivx>
     <NoChapters>비디오에 챕터가 없습니다.</NoChapters>
-    <VideoFromUrlRequirements>URL에서 동영상을 열려면 mpv 및 Youtube-dl이 필요합니다. 다운로드 후 계속하시겠습니까?</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>URL에서 동영상을 열려면 mpv 및 Youtube-dl이 필요합니다. 
+	
+다운로드 후 계속하시겠습니까?</VideoFromUrlRequirements>
+    <Url>Url</Url>
     <Errors>오류</Errors>
     <ShowVideoControls>비디오 컨트롤 표시</ShowVideoControls>
     <HideVideoControls>비디오 컨트롤 숨김</HideVideoControls>
     <GeneratingWaveformInBackground>배경에 파형 생성...</GeneratingWaveformInBackground>
     <AutoBackupSaved>자동 백업 저장됨</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>전면 중앙 오디오 채널만 사용</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -2226,6 +2231,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SpectrogramOneColorGradient>단색 그라데이션</SpectrogramOneColorGradient>
     <SpectrogramClassic>클래식</SpectrogramClassic>
     <WaveformUseFFmpeg>파형 추출을 위해 FFmpeg 사용</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>전면 중앙 채널만 사용 (5.1/7.1용)</WaveformUseCenterChannelOnly>
     <DownloadX>{0} 다운로드</DownloadX>
     <WaveformFFmpegPath>- FFmpeg 경로</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>FFmpeg 찾기...</WaveformBrowseToFFmpeg>
@@ -2257,6 +2263,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ProxyUserName>이름:</ProxyUserName>
     <ProxyPassword>암호:</ProxyPassword>
     <ProxyDomain>도메인:</ProxyDomain>
+    <ProxyAuthType>인증 유형</ProxyAuthType>
+    <ProxyUseDefaultCredentials>기본 자격 증명 사용</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>네트워크 세션 설정</NetworkSessionSettings>
     <NetworkSessionNewSound>새로운 메시지가 도착할 때 사운드 파일을 재생합니다</NetworkSessionNewSound>
     <PlayXSecondsAndBack>X초 재생하고 돌아가기</PlayXSecondsAndBack>
@@ -2449,12 +2457,15 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GoToStartCurrent>비디오 위치를  현재 자막의 시작으로 설정</GoToStartCurrent>
     <ToggleStartEndCurrent>현재 자막의 시작/끝 사이의 비디오 위치 전환</ToggleStartEndCurrent>
     <PlaySelectedLines>선택한 줄 재생</PlaySelectedLines>
+    <LoopSelectedLines>선택한 줄 반복</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>이전 자막으로 이동 (비디오 위치에서)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>이전 챕터로 이동</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>다음 챕터로 이동</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>다음 자막 선택 (비디오 위치에서, 비디오 위치를 유지)</WaveformSelectNextSubtitle>
     <TogglePlayPause>재생 및 일시 중지</TogglePlayPause>
+    <Play150Speed>1.5 배속으로 비디오 재생</Play150Speed>
+    <Play200Speed>2.0 배속으로 비디오 재생</Play200Speed>
     <Pause>일시 중지</Pause>
     <Fullscreen>전체 화면</Fullscreen>
     <PlayRateSlower>재생 속도 느리게</PlayRateSlower>
