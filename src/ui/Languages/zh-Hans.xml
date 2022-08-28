@@ -248,6 +248,7 @@ Command line: {1} {2}
     <MarginY>Y边距</MarginY>
     <OnlyDrawing>仅绘制</OnlyDrawing>
     <DrawingFile>绘制文件</DrawingFile>
+    <ColorPickerSetLastColor>当前拾色器为最近选择的颜色: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
@@ -1737,6 +1738,7 @@ Command line: {1} {2}
     <HideVideoControls>隐藏视频控件</HideVideoControls>
     <GeneratingWaveformInBackground>在后台生成波形...</GeneratingWaveformInBackground>
     <AutoBackupSaved>自动备份 已保存</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>仅使用前置中置音频通道</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
