@@ -225,6 +225,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _boxStyleName = $"SE-box-bg{_random.Next(1234)}";
                 tryCount++;
             }
+
+            noneToolStripMenuItem.Checked = true;
         }
 
         private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
@@ -1409,68 +1411,65 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
-            if (_colorPickerOn)
-            {
-                ColorChooser.SetLastColor(buttonPickColor.BackColor);
-                pictureBoxPreview_MouseLeave(null, null);
-                labelProgress.Text = string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(buttonPickColor.BackColor));
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
-                {
-                    labelProgress.Text = _videoText;
-                });
-
-            }
-            else
-            {
-                VideoLoaded(null, null);
-            }
+            VideoLoaded(null, null);
         }
 
-        private bool _colorPickerOn = false;
-        private int _colorPickerX = -1;
-        private int _colorPickerY = -1;
-        private void button1_Click(object sender, EventArgs e)
+        private void ColorPickerClick(object sender, EventArgs e)
         {
-            _colorPickerOn = true;
-        }
-
-        private void pictureBoxPreview_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (!_colorPickerOn)
+            try
             {
-                return;
-            }
+                Cursor = Cursors.WaitCursor;
+                var timeCode = new TimeCode(_mpv.CurrentPosition * 1000.0 + 1000).ToHHMMSS();
 
-            Cursor.Current = Cursors.Cross;
-            var x = MousePosition.X;
-            var y = MousePosition.Y;
-            if (x != _colorPickerX || y != _colorPickerY)
-            {
-                using (var bmp = new Bitmap(1, 1))
+                var colorMatrix = string.Empty;
+                if (bt601bt709ToolStripMenuItem.Checked)
                 {
-                    var bounds = new Rectangle(x, y, 1, 1);
-                    using (var g = Graphics.FromImage(bmp))
-                    {
-                        g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
-                    }
-
-                    buttonPickColor.BackColor = bmp.GetPixel(0, 0);
+                    colorMatrix = "bt601:bt709";
                 }
 
-                _colorPickerX = x;
-                _colorPickerY = y;
+                var bmpFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, timeCode, colorMatrix);
+                using (var bmp = new Bitmap(bmpFileName))
+                {
+                    Cursor = Cursors.Default;
+                    using (var form = new ImageColorPicker(bmp))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        ColorChooser.SetLastColor(form.Color);
+                        labelProgress.Text = string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(form.Color));
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                        {
+                            labelProgress.Text = _videoText;
+                        });
+                    }
+                }
+
+                try
+                {
+                    File.Delete(bmpFileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
-        private void pictureBoxPreview_MouseLeave(object sender, EventArgs e)
+        private void bt601bt709ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_colorPickerOn)
-            {
-                Cursor.Current = Cursors.Default;
-                _colorPickerOn = false;
-                buttonPickColor.BackColor = buttonOK.BackColor;
-                labelProgress.Text = _videoText;
-            }
+            bt601bt709ToolStripMenuItem.Checked = true;
+        }
+
+        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            noneToolStripMenuItem.Checked = true;
         }
     }
 }
