@@ -284,6 +284,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _mainOcrIndex;
         private bool _mainOcrRunning;
         private Bitmap _mainOcrBitmap;
+        private List<int> _mainOcrSelectedIndices;
 
         private Type _modiType;
         private object _modiDoc;
@@ -543,6 +544,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
+            oCRSelectedLinesToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.OcrSelectedLines;
             normalToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll;
             italicToolStripMenuItem.Text = LanguageSettings.Current.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
@@ -5078,6 +5080,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             subtitleListView1.MultiSelect = true;
             checkBoxUseTimeCodesFromIdx.Enabled = checkBoxUseTimeCodesFromIdx.Visible;
             checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
+            _mainOcrSelectedIndices = null;
         }
 
         private bool _isLatinDb;
@@ -5672,7 +5675,24 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else
             {
-                _mainOcrIndex++;
+                if (_mainOcrSelectedIndices != null)
+                {
+                    var idx = _mainOcrSelectedIndices.IndexOf(_mainOcrIndex);
+                    if (idx >= 0 && idx + 1 < _mainOcrSelectedIndices.Count)
+                    {
+                        _mainOcrIndex = _mainOcrSelectedIndices[idx + 1];
+                    }
+                    else
+                    {
+                        _abort = true;
+                        _mainOcrSelectedIndices = null;
+                    }
+                }
+                else
+                {
+                    _mainOcrIndex++;
+                }
+
                 _mainOcrTimer.Start();
             }
         }
@@ -7543,24 +7563,35 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.Cancel = true;
             }
 
-            // Enable toolstrips if event was raised by Subtitle listview.
+            // Enable toolstrips if event was raised by Subtitle listview
             bool enableIfRaisedBySubListView = contextMenuStripListview.SourceControl == subtitleListView1;
             normalToolStripMenuItem.Visible = enableIfRaisedBySubListView;
             italicToolStripMenuItem.Visible = enableIfRaisedBySubListView;
             toolStripSeparator1.Visible = enableIfRaisedBySubListView && subtitleListView1.SelectedItems.Count == 1;
             saveImageAsToolStripMenuItem.Visible = !enableIfRaisedBySubListView || subtitleListView1.SelectedItems.Count == 1;
 
-            // Image compare.
+            // Image compare
             bool enableIfImageCompare = _ocrMethodIndex == _ocrMethodBinaryImageCompare;
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = enableIfImageCompare;
             EditLastAdditionsToolStripMenuItem.Visible = enableIfImageCompare && _lastAdditions != null && _lastAdditions.Count > 0;
 
-            // Use N-OCR compare. (Only available in Beta mode).
+            // Use N-OCR compare
             bool useNocrCompare = _ocrMethodIndex == _ocrMethodNocr;
             toolStripMenuItemInspectNOcrMatches.Visible = useNocrCompare;
             OcrTrainingToolStripMenuItem.Visible = useNocrCompare || enableIfImageCompare;
 
             toolStripSeparatorImageCompare.Visible = useNocrCompare || enableIfImageCompare;
+
+            if (subtitleListView1.SelectedItems.Count > 0 && (_ocrMethodIndex == _ocrMethodNocr || _ocrMethodIndex == _ocrMethodBinaryImageCompare))
+            {
+                oCRSelectedLinesToolStripMenuItem.Visible = true;
+                toolStripSeparatorOcrSelected.Visible = true;
+            }
+            else
+            {
+                oCRSelectedLinesToolStripMenuItem.Visible = true;
+                toolStripSeparatorOcrSelected.Visible = true;
+            }
         }
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
@@ -10009,6 +10040,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 removeAllXToolStripMenuItem.Visible = true;
                 removeAllXToolStripMenuItem.Text = string.Format(LanguageSettings.Current.Settings.RemoveX.RemoveChar('?'), word);
             }
+        }
+
+        private void oCRSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _mainOcrSelectedIndices = subtitleListView1.GetSelectedIndices().ToList();
+            ButtonStartOcrClick(null, null);
         }
     }
 }

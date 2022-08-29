@@ -1734,7 +1734,6 @@
                     public string SplitLineAtCursorAndWaveformPosition { get; set; }
                     public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
-                    public string Insert { get; set; }
                     public string InsertFirstLine { get; set; }
                     public string InsertBefore { get; set; }
                     public string InsertAfter { get; set; }
@@ -1750,6 +1749,7 @@
                     public string ColumnTextUp { get; set; }
                     public string ColumnTextDown { get; set; }
                     public string ColumnCopyOriginalTextToCurrent { get; set; }
+                    public string OcrSelectedLines { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
                     public string MergeSelectedLinesAsDialog { get; set; }
