@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             this.components = new System.ComponentModel.Container();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.oCRSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorOcrSelected = new System.Windows.Forms.ToolStripSeparator();
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -209,6 +211,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // contextMenuStripListview
             // 
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.oCRSelectedLinesToolStripMenuItem,
+            this.toolStripSeparatorOcrSelected,
             this.normalToolStripMenuItem,
             this.italicToolStripMenuItem,
             this.toolStripSeparator1,
@@ -231,8 +235,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 386);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 436);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
+            // 
+            // oCRSelectedLinesToolStripMenuItem
+            // 
+            this.oCRSelectedLinesToolStripMenuItem.Name = "oCRSelectedLinesToolStripMenuItem";
+            this.oCRSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.oCRSelectedLinesToolStripMenuItem.Text = "OCR selected lines...";
+            this.oCRSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.oCRSelectedLinesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorOcrSelected
+            // 
+            this.toolStripSeparatorOcrSelected.Name = "toolStripSeparatorOcrSelected";
+            this.toolStripSeparatorOcrSelected.Size = new System.Drawing.Size(302, 6);
             // 
             // normalToolStripMenuItem
             // 
@@ -2175,5 +2191,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem imageWithTimeCodeInFileNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeAllXToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem oCRSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOcrSelected;
     }
 }

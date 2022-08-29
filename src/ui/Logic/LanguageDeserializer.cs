@@ -4387,9 +4387,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SelectAll":
                     language.Main.Menu.ContextMenu.SelectAll = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/Insert":
-                    language.Main.Menu.ContextMenu.Insert = reader.Value;
-                    break;
                 case "Main/Menu/ContextMenu/InsertFirstLine":
                     language.Main.Menu.ContextMenu.InsertFirstLine = reader.Value;
                     break;
@@ -4434,6 +4431,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/ColumnCopyOriginalTextToCurrent":
                     language.Main.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/OcrSelectedLines":
+                    language.Main.Menu.ContextMenu.OcrSelectedLines = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/Split":
                     language.Main.Menu.ContextMenu.Split = reader.Value;

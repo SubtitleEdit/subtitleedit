@@ -1339,7 +1339,6 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>
-        <Insert>Insert</Insert>
         <InsertFirstLine>Insert line</InsertFirstLine>
         <InsertBefore>Insert before</InsertBefore>
         <InsertAfter>Insert after</InsertAfter>
@@ -1355,6 +1354,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <ColumnTextUp>Text up</ColumnTextUp>
         <ColumnTextDown>Text down</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR selected lines</OcrSelectedLines>
         <Split>Split</Split>
         <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Merge selected lines as dialog</MergeSelectedLinesAsDialog>
