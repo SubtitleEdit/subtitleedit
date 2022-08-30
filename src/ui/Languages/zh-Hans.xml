@@ -1350,6 +1350,7 @@ Command line: {1} {2}
         <ColumnTextUp>文本上移</ColumnTextUp>
         <ColumnTextDown>文本下移</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>从原始文本列复制到当前列</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR所选行</OcrSelectedLines>
         <Split>分割</Split>
         <MergeSelectedLines>合并所选行</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>合并所选行为对话</MergeSelectedLinesAsDialog>
