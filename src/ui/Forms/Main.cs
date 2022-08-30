@@ -8771,20 +8771,17 @@ namespace Nikse.SubtitleEdit.Forms
                 UiUtil.FixFonts(audioToText);
                 audio.DropDownItems.Insert(0, audioClip);
 
-                if (Configuration.IsRunningOnWindows)
+                audio.DropDownItems.Insert(0, audioToText);
+                audioClip.Click += (senderNew, eNew) =>
                 {
-                    audio.DropDownItems.Insert(0, audioToText);
-                    audioClip.Click += (senderNew, eNew) =>
+                    if (!RequireFfmpegOk())
                     {
-                        if (!RequireFfmpegOk())
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        var audioClips = GetAudioClips();
-                        UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
-                    };
-                }
+                    var audioClips = GetAudioClips();
+                    UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
+                };
 
                 audioToText.Click += (senderNew, eNew) =>
                 {
@@ -12277,7 +12274,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (original != null && originalNext != null)
                     {
-                        if (continuationStyle != ContinuationStyle.None  && !insertDash)
+                        if (continuationStyle != ContinuationStyle.None && !insertDash)
                         {
                             var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                             var mergeResult = ContinuationUtilities.MergeHelper(original.Text, originalNext.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal));
@@ -27982,8 +27979,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemImportChapters.Visible = false;
             }
-
-            videoaudioToTextToolStripMenuItem.Visible = Configuration.IsRunningOnWindows;
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -34277,6 +34272,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool HasCurrentVosk(string voskFolder)
         {
+            if (Configuration.IsRunningOnLinux)
+            {
+                return true;
+            }
+
             var voskDll = Path.Combine(voskFolder, "libvosk.dll");
             if (!File.Exists(voskDll))
             {
