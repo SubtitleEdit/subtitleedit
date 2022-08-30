@@ -187,6 +187,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             if (IsRunningOnLinux || IsRunningOnMac)
             {
+                if (Directory.Exists("/usr/share/tesseract-ocr/5/tessdata"))
+                {
+                    return "/usr/share/tesseract-ocr/5/tessdata";
+                }
+
                 if (Directory.Exists("/usr/share/tesseract-ocr/4.00/tessdata"))
                 {
                     return "/usr/share/tesseract-ocr/4.00/tessdata";
