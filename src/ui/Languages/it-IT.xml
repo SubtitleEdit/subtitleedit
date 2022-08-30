@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 20.08.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.08.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -249,6 +249,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <MarginY>Margine Y</MarginY>
     <OnlyDrawing>Solo disegno</OnlyDrawing>
     <DrawingFile>File disegno</DrawingFile>
+    <ColorPickerSetLastColor>L'ultimo colore del selettore colore è ora: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Imposta posizione</SetPosition>
@@ -1338,7 +1339,6 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <SplitLineAtCursorAndWaveformPosition>Linea divisa alla posizione cursore/video</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Durata automatica (riga attuale)</AutoDurationCurrentLine>
         <SelectAll>Seleziona tutto</SelectAll>
-        <Insert>Inserisci</Insert>
         <InsertFirstLine>Inserisci riga</InsertFirstLine>
         <InsertBefore>Inserisci prima</InsertBefore>
         <InsertAfter>Inserisci dopo</InsertAfter>
@@ -1354,6 +1354,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <ColumnTextUp>Testo in alto</ColumnTextUp>
         <ColumnTextDown>Testo in basso</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copia testo da originale ad attuale</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR linee selezionate</OcrSelectedLines>
         <Split>Dividi</Split>
         <MergeSelectedLines>Unisci righe selezionate</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Unisci righe selezionate come dialogo</MergeSelectedLinesAsDialog>
@@ -1747,6 +1748,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <HideVideoControls>Nascondi controlli video</HideVideoControls>
     <GeneratingWaveformInBackground>Genera forme d'onda in background...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Backup automatico salvato</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Usando solo il canale audio centrale anteriore</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
@@ -2230,6 +2232,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <SpectrogramOneColorGradient>Sfumatura di colore</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classico</SpectrogramClassic>
     <WaveformUseFFmpeg>Usa FFMPEG per l'estrazione dell'audio</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Usa solo il canale centrale anteriore (per 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadFFmpeg>Download FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>Percorso FFMPEG</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Sfoglia per FFMPEG</WaveformBrowseToFFmpeg>
