@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private MpvWaitEvent _mpvWaitEvent;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvSetOption(IntPtr mpvHandle, byte[] name, int format, ref long data);
+        private delegate int MpvSetOption(IntPtr mpvHandle, byte[] name, int format, ref ulong data);
         private MpvSetOption _mpvSetOption;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -744,7 +744,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     return;
                 }
-                var windowId = ownerControl.Handle.ToInt64();
+
+                var windowId = (ulong)ownerControl.Handle.ToInt64();
                 while (returnCode != 0 && iterations > 0)
                 {
                     Application.DoEvents();
@@ -764,6 +765,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     }
                 }
             }
+
             Pause();
         }
 
