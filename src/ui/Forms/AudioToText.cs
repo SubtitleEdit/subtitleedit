@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Vosk;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -134,9 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
-            progressBar1.Visible = true;
+            ShowProgressBar();
             var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
             buttonGenerate.Enabled = false;
             buttonDownload.Enabled = false;
@@ -161,6 +160,16 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private void ShowProgressBar()
+        {
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            progressBar1.Visible = true;
+            progressBar1.BringToFront();
+            progressBar1.Refresh();
+            progressBar1.Top = labelProgress.Bottom + 3;
+        }
+
         private void GenerateBatch()
         {
             groupBoxInputFiles.Enabled = false;
@@ -172,9 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var videoFileName = lvi.Text;
                 listViewInputFiles.SelectedIndices.Clear();
                 lvi.Selected = true;
-                progressBar1.Maximum = 100;
-                progressBar1.Value = 0;
-                progressBar1.Visible = true;
+                ShowProgressBar();
                 var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
@@ -361,8 +368,8 @@ namespace Nikse.SubtitleEdit.Forms
             _filesToDelete.Add(outWaveFile);
             var process = GetFfmpegProcess(videoFileName, audioTrackNumber, outWaveFile);
             process.Start();
+            ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
-            progressBar1.Visible = true;
             double seconds = 0;
             buttonCancel.Visible = true;
             try

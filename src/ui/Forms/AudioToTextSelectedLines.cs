@@ -106,6 +106,16 @@ namespace Nikse.SubtitleEdit.Forms
             TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
         }
 
+        private void ShowProgressBar()
+        {
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            progressBar1.Visible = true;
+            progressBar1.BringToFront();
+            progressBar1.Refresh();
+            progressBar1.Top = labelProgress.Bottom + 3;
+        }
+
         private void GenerateBatch()
         {
             groupBoxInputFiles.Enabled = false;
@@ -116,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
 
-            progressBar1.Visible = true;
+            ShowProgressBar();
             foreach (ListViewItem lvi in listViewInputFiles.Items)
             {
                 _batchFileNumber++;
