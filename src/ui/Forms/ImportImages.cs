@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         // 0_00_01_042__0_00_03_919_01.jpeg
         private static readonly Regex TimeCodeFormat1 = new Regex(@"^\d+_\d+_\d+_\d+__\d+_\d+_\d+_\d+_\d+$", RegexOptions.Compiled);
+        private static readonly Regex TimeCodeFormat1WithExtension = new Regex(@"^\d+_\d+_\d+_\d+__\d+_\d+_\d+_\d+_\d+\..+$", RegexOptions.Compiled);
         private static readonly Regex TimeCodeFormat2 = new Regex(@"^\d+_\d+_\d+_\d+__\d+_\d+_\d+_\d+$", RegexOptions.Compiled);
 
         public Subtitle Subtitle { get; private set; }
@@ -99,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds = endTime;
                 }
             }
-            else if (TimeCodeFormat1.IsMatch(name) || TimeCodeFormat2.IsMatch(name))
+            else if (TimeCodeFormat1.IsMatch(name) || TimeCodeFormat1WithExtension.IsMatch(name) || TimeCodeFormat2.IsMatch(name))
             {
                 var arr = name.Replace("__", "_").Split('_');
                 if (arr.Length >= 8)
