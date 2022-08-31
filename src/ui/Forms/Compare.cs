@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = LanguageSettings.Current.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = LanguageSettings.Current.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = LanguageSettings.Current.CompareSubtitles.IgnoreLineBreaks;
+            checkBoxIgnoreWhitespace.Text = LanguageSettings.Current.CompareSubtitles.IgnoreWhitespace;
             checkBoxIgnoreFormatting.Text = LanguageSettings.Current.CompareSubtitles.IgnoreFormatting;
             checkBoxOnlyListDifferencesInText.Text = LanguageSettings.Current.CompareSubtitles.OnlyLookForDifferencesInText;
             buttonExport.Text = LanguageSettings.Current.Statistics.Export;
@@ -316,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, ListViewRed);
                     }
-                    else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
+                    else if (IsTextDifferent(p1, p2))
                     {
                         addIndexToDifferences = true;
                         subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
@@ -381,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexDuration);
                             }
                             // Text
-                            if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
+                            else if (IsTextDifferent(p1, p2))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexText);
@@ -491,23 +492,67 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ShouldBreakToLetter() => _language != null && (_language == "ja" || _language == "zh");
 
-        private string FixWhitespace(string p)
+        private bool IsTextDifferent(Paragraph p1, Paragraph p2)
         {
-            if (checkBoxIgnoreLineBreaks.Checked)
-            {
-                p = p.Replace(Environment.NewLine, " ");
-                while (p.Contains("  "))
-                {
-                    p = p.Replace("  ", " ");
-                }
-            }
+            var t1 = p1.Text;
+            var t2 = p2.Text;
 
             if (checkBoxIgnoreFormatting.Checked)
             {
-                p = HtmlUtil.RemoveHtmlTags(p, true);
+                t1 = HtmlUtil.RemoveHtmlTags(t1, true);
+                t2 = HtmlUtil.RemoveHtmlTags(t2, true);
             }
 
-            return p;
+            else if (checkBoxIgnoreWhitespace.Checked)
+            {
+                t1 = RemoveWhitespace(t1);
+                t2 = RemoveWhitespace(t2);
+            }
+            else if (checkBoxIgnoreLineBreaks.Checked)
+            {
+                t1 = t1.Replace(Environment.NewLine, " ");
+                t2 = t2.Replace(Environment.NewLine, " ");
+
+                t1 = RemoveDoubleSpace(t1);
+                t2 = RemoveDoubleSpace(t2);
+            }
+
+            return t1 != t2;
+        }
+
+        private static string RemoveWhitespace(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder(s.Length);
+            foreach (var ch in s)
+            {
+                if (!char.IsWhiteSpace(ch))
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static string RemoveDoubleSpace(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            s = s.Replace(Environment.NewLine, " ");
+            while (s.Contains("  "))
+            {
+                s = s.Replace("  ", " ");
+            }
+
+            return s;
         }
 
         private int GetColumnsEqualExceptNumber(Paragraph p1, Paragraph p2)
@@ -908,8 +953,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOpenSubtitle2.Left = subtitleListView2.Left;
             buttonReloadSubtitle2.Left = buttonOpenSubtitle2.Left + buttonOpenSubtitle2.Width + 7;
 
-            subtitleListView1.Height = Height - (subtitleListView1.Top + 155);
-            subtitleListView2.Height = Height - (subtitleListView2.Top + 155);
+            subtitleListView1.Height = Height - (subtitleListView1.Top + 165);
+            subtitleListView2.Height = Height - (subtitleListView2.Top + 165);
 
             richTextBox1.Width = subtitleListView1.Width;
             richTextBox2.Width = subtitleListView2.Width;
@@ -1224,6 +1269,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowOnlyDifferences.Checked = config.ShowOnlyDifferences;
             checkBoxOnlyListDifferencesInText.Checked = config.OnlyLookForDifferenceInText;
             checkBoxIgnoreLineBreaks.Checked = config.IgnoreLineBreaks;
+            checkBoxIgnoreWhitespace.Checked = config.IgnoreWhitespace;
             checkBoxIgnoreFormatting.Checked = config.IgnoreFormatting;
             _loadingConfig = false;
         }
@@ -1234,6 +1280,7 @@ namespace Nikse.SubtitleEdit.Forms
             config.ShowOnlyDifferences = checkBoxShowOnlyDifferences.Checked;
             config.OnlyLookForDifferenceInText = checkBoxOnlyListDifferencesInText.Checked;
             config.IgnoreLineBreaks = checkBoxIgnoreLineBreaks.Checked;
+            config.IgnoreWhitespace = checkBoxIgnoreWhitespace.Checked;
             config.IgnoreFormatting = checkBoxIgnoreFormatting.Checked;
         }
 
@@ -1322,6 +1369,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return " style='background-color:" + ColorTranslator.ToHtml(item.BackColor) + "'";
+        }
+
+        private void checkBoxIgnoreWhiteSpace_CheckedChanged(object sender, EventArgs e)
+        {
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+            CompareSubtitles(selectedIndex);
         }
     }
 }

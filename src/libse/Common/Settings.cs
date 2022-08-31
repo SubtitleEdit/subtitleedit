@@ -2668,6 +2668,7 @@ $HorzAlign          =   Center
         public bool ShowOnlyDifferences { get; set; }
         public bool OnlyLookForDifferenceInText { get; set; }
         public bool IgnoreLineBreaks { get; set; }
+        public bool IgnoreWhitespace { get; set; }
         public bool IgnoreFormatting { get; set; }
 
         public CompareSettings()
@@ -2908,6 +2909,12 @@ $HorzAlign          =   Center
                 if (xnode != null)
                 {
                     settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
+                }
+
+                xnode = nodeCompare.SelectSingleNode("IgnoreWhitespace");
+                if (xnode != null)
+                {
+                    settings.Compare.IgnoreWhitespace = Convert.ToBoolean(xnode.InnerText);
                 }
 
                 xnode = nodeCompare.SelectSingleNode("IgnoreFormatting");
@@ -9607,6 +9614,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OnlyLookForDifferenceInText", settings.Compare.OnlyLookForDifferenceInText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("IgnoreWhitespace", settings.Compare.IgnoreWhitespace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
