@@ -24629,7 +24629,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 mediaPlayer.VideoPlayer.PlayRate = factor;
-                mediaPlayer.PlayedWithCustomeSpeed = playedWithCustomeSpeed;
+                mediaPlayer.PlayedWithCustomSpeed = playedWithCustomeSpeed;
             }
             catch
             {

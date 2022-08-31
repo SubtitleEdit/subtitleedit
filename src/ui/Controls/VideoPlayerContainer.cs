@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -86,7 +85,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool _isMuted;
         private double? _muteOldVolume;
-        public bool PlayedWithCustomeSpeed;
+        public bool PlayedWithCustomSpeed;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         public int ControlsHeight = 47;
         private const int OriginalSubtitlesHeight = 57;
@@ -604,7 +603,15 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _panelSubtitle.Height += ControlsHeight;
                 _panelControls.Visible = false;
+
+
+                var useCompleteFullscreen = VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText;
+                if (useCompleteFullscreen)
+                {
+                    PanelPlayer.Dock = DockStyle.Fill;
+                }
             }
+
             if (hideCursor)
             {
                 HideCursor();
@@ -618,7 +625,13 @@ namespace Nikse.SubtitleEdit.Controls
                 _panelControls.Visible = true;
                 _panelControls.BringToFront();
                 _panelSubtitle.Height -= ControlsHeight;
+
+                if (PanelPlayer.Dock == DockStyle.Fill)
+                {
+                    PanelPlayer.Dock = DockStyle.None;
+                }
             }
+
             ShowCursor();
         }
 
@@ -1764,7 +1777,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _pictureBoxPlay.BringToFront();
                 RefreshProgressBar();
 
-                if (PlayedWithCustomeSpeed)
+                if (PlayedWithCustomSpeed)
                 {
                     VideoPlayer.PlayRate = 1.0;
                 }
