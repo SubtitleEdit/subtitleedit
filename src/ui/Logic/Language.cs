@@ -3383,6 +3383,7 @@ Keep changes?",
                 ImagesWithTimeCodesInFileName = "Images with time codes in file name...",
                 APIKey = "API key",
                 LanguageHint = "Language hint",
+                SendOriginalImages = "Send original images",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
