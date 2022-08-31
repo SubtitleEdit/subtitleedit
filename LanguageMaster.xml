@@ -2950,7 +2950,6 @@ Keep changes?</KeepChangesMessage>
     <New>New</New>
     <Edit>Edit</Edit>
     <StartOcr>Start OCR</StartOcr>
-    <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR from subtitle no:</StartOcrFrom>
     <LoadingVobSubImages>Loading VobSub images...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Loading image compare database...</LoadingImageCompareDatabase>

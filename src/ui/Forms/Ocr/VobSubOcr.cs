@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelNoOfPixelsIsSpace.Text = language.NoOfPixelsIsSpace;
             labelMaxErrorPercent.Text = language.MaxErrorPercent;
             buttonStartOcr.Text = language.StartOcr;
-            buttonStop.Text = language.Stop;
+            buttonPause.Text = LanguageSettings.Current.Settings.Pause;
             labelStartFrom.Text = language.StartOcrFrom;
             labelStatus.Text = language.LoadingVobSubImages;
             groupBoxSubtitleImage.Text = language.SubtitleImage;
@@ -4126,7 +4126,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_ocrFixEngine.Abort)
                 {
-                    ButtonStopClick(null, null);
+                    ButtonPauseClick(null, null);
                     _ocrFixEngine.Abort = false;
 
                     if (_ocrFixEngine.LastAction == OcrSpellCheck.Action.InspectCompareMatches)
@@ -4521,7 +4521,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_ocrFixEngine.Abort)
                 {
-                    ButtonStopClick(null, null);
+                    ButtonPauseClick(null, null);
                     _ocrFixEngine.Abort = false;
 
                     if (_ocrFixEngine.LastAction == OcrSpellCheck.Action.InspectCompareMatches)
@@ -5058,7 +5058,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = true;
+            buttonPause.Enabled = true;
             buttonChooseEditBinaryImageCompareDb.Enabled = false;
             checkBoxTransportStreamGrayscale.Enabled = false;
             checkBoxTransportStreamGetColorAndSplit.Enabled = false;
@@ -5075,7 +5075,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Enabled = true;
             buttonCancel.Enabled = true;
             buttonStartOcr.Enabled = true;
-            buttonStop.Enabled = false;
+            buttonPause.Enabled = false;
             buttonChooseEditBinaryImageCompareDb.Enabled = true;
             checkBoxTransportStreamGrayscale.Enabled = true;
             checkBoxTransportStreamGetColorAndSplit.Enabled = true;
@@ -6492,7 +6492,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_ocrFixEngine.Abort)
                 {
-                    ButtonStopClick(null, null);
+                    ButtonPauseClick(null, null);
                     _ocrFixEngine.Abort = false;
                     return string.Empty;
                 }
@@ -6917,13 +6917,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return ((ModiLanguage)comboBoxModiLanguage.SelectedItem).Id;
         }
 
-        private void ButtonStopClick(object sender, EventArgs e)
+        private void ButtonPauseClick(object sender, EventArgs e)
         {
             _mainOcrTimer?.Stop();
             _abort = true;
             _ocrThreadStop = true;
             _tesseractThreadRunner?.Cancel();
-            buttonStop.Enabled = false;
+            buttonPause.Enabled = false;
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
             SetButtonsEnabledAfterOcrDone();

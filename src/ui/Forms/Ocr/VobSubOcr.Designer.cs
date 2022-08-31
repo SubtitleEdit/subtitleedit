@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.numericUpDownStartNumber = new System.Windows.Forms.NumericUpDown();
-            this.buttonStop = new System.Windows.Forms.Button();
+            this.buttonPause = new System.Windows.Forms.Button();
             this.buttonStartOcr = new System.Windows.Forms.Button();
             this.groupBoxOcrAutoFix = new System.Windows.Forms.GroupBox();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 436);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 414);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // oCRSelectedLinesToolStripMenuItem
@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOCRControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOCRControls.Controls.Add(this.labelStartFrom);
             this.groupBoxOCRControls.Controls.Add(this.numericUpDownStartNumber);
-            this.groupBoxOCRControls.Controls.Add(this.buttonStop);
+            this.groupBoxOCRControls.Controls.Add(this.buttonPause);
             this.groupBoxOCRControls.Controls.Add(this.buttonStartOcr);
             this.groupBoxOCRControls.Location = new System.Drawing.Point(368, 207);
             this.groupBoxOCRControls.Name = "groupBoxOCRControls";
@@ -1145,16 +1145,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0});
             // 
-            // buttonStop
+            // buttonPause
             // 
-            this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStop.Location = new System.Drawing.Point(11, 52);
-            this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(105, 23);
-            this.buttonStop.TabIndex = 2;
-            this.buttonStop.Text = "Stop OCR";
-            this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.ButtonStopClick);
+            this.buttonPause.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonPause.Location = new System.Drawing.Point(11, 52);
+            this.buttonPause.Name = "buttonPause";
+            this.buttonPause.Size = new System.Drawing.Size(105, 23);
+            this.buttonPause.TabIndex = 2;
+            this.buttonPause.Text = "Pause OCR";
+            this.buttonPause.UseVisualStyleBackColor = true;
+            this.buttonPause.Click += new System.EventHandler(this.ButtonPauseClick);
             // 
             // buttonStartOcr
             // 
@@ -2053,7 +2053,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.GroupBox groupBoxOCRControls;
         private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.NumericUpDown numericUpDownStartNumber;
-        private System.Windows.Forms.Button buttonStop;
+        private System.Windows.Forms.Button buttonPause;
         private System.Windows.Forms.Button buttonStartOcr;
         private System.Windows.Forms.GroupBox groupBoxOcrAutoFix;
         private System.Windows.Forms.Label labelFixesMade;

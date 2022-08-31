@@ -3170,7 +3170,6 @@
             public string New { get; set; }
             public string Edit { get; set; }
             public string StartOcr { get; set; }
-            public string Stop { get; set; }
             public string StartOcrFrom { get; set; }
             public string LoadingVobSubImages { get; set; }
             public string LoadingImageCompareDatabase { get; set; }

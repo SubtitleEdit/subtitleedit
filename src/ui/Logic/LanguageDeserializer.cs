@@ -8065,9 +8065,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/StartOcr":
                     language.VobSubOcr.StartOcr = reader.Value;
                     break;
-                case "VobSubOcr/Stop":
-                    language.VobSubOcr.Stop = reader.Value;
-                    break;
                 case "VobSubOcr/StartOcrFrom":
                     language.VobSubOcr.StartOcrFrom = reader.Value;
                     break;
