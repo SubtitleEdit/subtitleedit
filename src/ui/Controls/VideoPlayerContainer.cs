@@ -1648,6 +1648,8 @@ namespace Nikse.SubtitleEdit.Controls
         /// </summary>
         public bool SmpteMode => Configuration.Settings.General.CurrentVideoIsSmpte;
 
+        public bool UsingFrontCenterAudioChannelOnly { get; set; } = false;
+
         public void RefreshProgressBar()
         {
             if (VideoPlayer == null)
@@ -1683,6 +1685,12 @@ namespace Nikse.SubtitleEdit.Controls
                     var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
                     _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()}";
                 }
+
+                if (UsingFrontCenterAudioChannelOnly)
+                {
+                    _labelTimeCode.Text += " FC";
+                }
+
                 ResizeTimeCode();
 
                 RefreshPlayPauseButtons();

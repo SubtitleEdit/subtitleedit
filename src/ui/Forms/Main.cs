@@ -5727,12 +5727,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.FFmpegUseCenterChannelOnly)
                 {
-                    ShowStatus("Using only front center audio channel");
+                    mediaPlayer.UsingFrontCenterAudioChannelOnly = true;
                     libmpvCenterChannel.SetAudioChannelFrontCenter();
                 }
                 else
                 {
                     libmpvCenterChannel.SetAudioChannelFrontReset();
+                    mediaPlayer.UsingFrontCenterAudioChannelOnly = false;
                 }
             }
 
@@ -21641,6 +21642,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             CheckSecondSubtitleReset();
             ShowSubtitleTimer.Stop();
+            mediaPlayer.UsingFrontCenterAudioChannelOnly = false;
             Cursor = Cursors.WaitCursor;
             _videoFileName = fileName;
             if (mediaPlayer.VideoPlayer != null)
@@ -22035,8 +22037,8 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.VideoPlayer is LibMpvDynamic libMpv2a &&
                 FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(VideoAudioTrackNumber))
             {
-                ShowStatus("Using only front center audio channel");
                 libMpv2a.SetAudioChannelFrontCenter(); // front center
+                mediaPlayer.UsingFrontCenterAudioChannelOnly = true;
             }
         }
 
