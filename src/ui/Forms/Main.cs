@@ -24603,7 +24603,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetPlayRate(sender, e, false);
         }
 
-        private void SetPlayRate(object sender, EventArgs e, bool skipStatusMessage, bool playedWithCustomeSpeed = false)
+        private void SetPlayRate(object sender, EventArgs e, bool skipStatusMessage, bool playedWithCustomSpeed = false)
         {
             if (!(sender is ToolStripMenuItem playRateDropDownItem) || mediaPlayer == null || mediaPlayer.VideoPlayer == null)
             {
@@ -24622,7 +24622,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SetPlayRateX, percentText));
             }
 
-            if (!playedWithCustomeSpeed)
+            if (!playedWithCustomSpeed)
             {
                 playRateDropDownItem.Checked = true;
                 toolStripSplitButtonPlayRate.Image = Math.Abs(factor - 1) < 0.01 ? imageListPlayRate.Images[0] : imageListPlayRate.Images[1];
@@ -24631,7 +24631,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 mediaPlayer.VideoPlayer.PlayRate = factor;
-                mediaPlayer.PlayedWithCustomSpeed = playedWithCustomeSpeed;
+                mediaPlayer.PlayedWithCustomSpeed = playedWithCustomSpeed;
             }
             catch
             {
