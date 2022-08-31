@@ -449,6 +449,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Number of differences: {0} ({1:0.##}% of letters changed)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Show only differences</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignore line breaks</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignore whitespace</IgnoreWhitespace>
     <IgnoreFormatting>Ignore formatting</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
