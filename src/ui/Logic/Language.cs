@@ -3311,6 +3311,7 @@ Keep changes?",
                 OcrViaImageCompare = "Binary image compare",
                 OcrViaModi = "Microsoft Office Document Imaging (MODI). Requires Microsoft Office",
                 OcrViaNOCR = "OCR via nOCR",
+                OcrViaCloudVision = "OCR via Cloud Vision API",
                 TesseractEngineMode = "Engine mode",
                 TesseractEngineModeLegacy = "Original Tesseract only (can detect italic)",
                 TesseractEngineModeNeural = "Neural nets LSTM only",
@@ -3380,6 +3381,8 @@ Keep changes?",
                 StartTraining = "Start training",
                 NowTraining = "Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known",
                 ImagesWithTimeCodesInFileName = "Images with time codes in file name...",
+                APIKey = "API key",
+                LanguageHint = "Language hint",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
