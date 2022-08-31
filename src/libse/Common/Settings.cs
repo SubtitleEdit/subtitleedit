@@ -2065,6 +2065,7 @@ $HorzAlign          =   Center
         public int UnfocusedAttentionPlaySoundCount { get; set; }
         public string CloudVisionAPIKey { get; set; }
         public string CloudVisionLanguage { get; set; }
+        public bool CloudVisionSendOriginalImages { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -2095,6 +2096,7 @@ $HorzAlign          =   Center
             UnfocusedAttentionPlaySoundCount = 1;
             CloudVisionAPIKey = string.Empty;
             CloudVisionLanguage = "en";
+            CloudVisionSendOriginalImages = false;
         }
     }
 
@@ -7395,6 +7397,12 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.CloudVisionLanguage = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("CloudVisionSendOriginalImages");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.CloudVisionSendOriginalImages = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
                 var group = new MultipleSearchAndReplaceGroup
@@ -10476,6 +10484,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CloudVisionAPIKey", settings.VobSubOcr.CloudVisionAPIKey);
                 textWriter.WriteElementString("CloudVisionLanguage", settings.VobSubOcr.CloudVisionLanguage);
+                textWriter.WriteElementString("CloudVisionSendOriginalImages", settings.VobSubOcr.CloudVisionSendOriginalImages.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();
 

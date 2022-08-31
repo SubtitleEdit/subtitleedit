@@ -3230,6 +3230,7 @@
             public string ImagesWithTimeCodesInFileName { get; set; } 
             public string APIKey { get; set; }
             public string LanguageHint { get; set; }
+            public string SendOriginalImages { get; set; }
         }
 
         public class VobSubOcrCharacter

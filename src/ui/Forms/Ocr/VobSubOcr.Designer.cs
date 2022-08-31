@@ -56,6 +56,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.groupBoxCloudVision = new System.Windows.Forms.GroupBox();
+            this.checkBoxCloudVisionSendOriginalImages = new System.Windows.Forms.CheckBox();
+            this.comboBoxCloudVisionLanguageHint = new System.Windows.Forms.ComboBox();
+            this.labelCloudVisionLanguageHint = new System.Windows.Forms.Label();
             this.textBoxCloudVisionAPIKey = new System.Windows.Forms.TextBox();
             this.labelCloudVisionAPIKey = new System.Windows.Forms.Label();
             this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
@@ -174,8 +177,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.underlineToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.labelCloudVisionLanguage = new System.Windows.Forms.Label();
-            this.comboBoxCloudVisionLanguageHint = new System.Windows.Forms.ComboBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxCloudVision.SuspendLayout();
@@ -530,8 +531,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxCloudVision
             // 
+            this.groupBoxCloudVision.Controls.Add(this.checkBoxCloudVisionSendOriginalImages);
             this.groupBoxCloudVision.Controls.Add(this.comboBoxCloudVisionLanguageHint);
-            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguage);
+            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguageHint);
             this.groupBoxCloudVision.Controls.Add(this.textBoxCloudVisionAPIKey);
             this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionAPIKey);
             this.groupBoxCloudVision.Location = new System.Drawing.Point(7, 38);
@@ -540,6 +542,97 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxCloudVision.TabIndex = 8;
             this.groupBoxCloudVision.TabStop = false;
             this.groupBoxCloudVision.Text = "Cloud Vision API";
+            // 
+            // checkBoxCloudVisionSendOriginalImages
+            // 
+            this.checkBoxCloudVisionSendOriginalImages.AutoSize = true;
+            this.checkBoxCloudVisionSendOriginalImages.Location = new System.Drawing.Point(9, 80);
+            this.checkBoxCloudVisionSendOriginalImages.Name = "checkBoxCloudVisionSendOriginalImages";
+            this.checkBoxCloudVisionSendOriginalImages.Size = new System.Drawing.Size(123, 17);
+            this.checkBoxCloudVisionSendOriginalImages.TabIndex = 4;
+            this.checkBoxCloudVisionSendOriginalImages.Text = "Send original images";
+            this.checkBoxCloudVisionSendOriginalImages.UseVisualStyleBackColor = true;
+            this.checkBoxCloudVisionSendOriginalImages.Visible = false;
+            this.checkBoxCloudVisionSendOriginalImages.CheckedChanged += new System.EventHandler(this.checkBoxCloudVisionSendOriginalImages_CheckedChanged);
+            // 
+            // comboBoxCloudVisionLanguageHint
+            // 
+            this.comboBoxCloudVisionLanguageHint.FormattingEnabled = true;
+            this.comboBoxCloudVisionLanguageHint.Items.AddRange(new object[] {
+            "af",
+            "ar",
+            "be",
+            "bg",
+            "bn",
+            "ca",
+            "cs",
+            "da",
+            "de",
+            "el",
+            "en",
+            "es",
+            "et",
+            "fa",
+            "fi",
+            "fil",
+            "fr",
+            "gu",
+            "hi",
+            "hr",
+            "hu",
+            "hy",
+            "id",
+            "is",
+            "it",
+            "iw",
+            "ja",
+            "km",
+            "kn",
+            "ko",
+            "lo",
+            "lt",
+            "lv",
+            "mk",
+            "ml",
+            "mr",
+            "ms",
+            "ne",
+            "nl",
+            "no",
+            "pa",
+            "pl",
+            "pt",
+            "ro",
+            "ru",
+            "ru-PETR1708",
+            "sk",
+            "sl",
+            "sq",
+            "sr",
+            "sr-Latn",
+            "sv",
+            "ta",
+            "te",
+            "th",
+            "tl",
+            "tr",
+            "uk",
+            "vi",
+            "yi",
+            "zh"});
+            this.comboBoxCloudVisionLanguageHint.Location = new System.Drawing.Point(87, 49);
+            this.comboBoxCloudVisionLanguageHint.Name = "comboBoxCloudVisionLanguageHint";
+            this.comboBoxCloudVisionLanguageHint.Size = new System.Drawing.Size(279, 21);
+            this.comboBoxCloudVisionLanguageHint.TabIndex = 3;
+            // 
+            // labelCloudVisionLanguageHint
+            // 
+            this.labelCloudVisionLanguageHint.AutoSize = true;
+            this.labelCloudVisionLanguageHint.Location = new System.Drawing.Point(6, 52);
+            this.labelCloudVisionLanguageHint.Name = "labelCloudVisionLanguageHint";
+            this.labelCloudVisionLanguageHint.Size = new System.Drawing.Size(75, 13);
+            this.labelCloudVisionLanguageHint.TabIndex = 2;
+            this.labelCloudVisionLanguageHint.Text = "Language hint";
             // 
             // textBoxCloudVisionAPIKey
             // 
@@ -2000,85 +2093,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
-            // labelCloudVisionLanguage
-            // 
-            this.labelCloudVisionLanguage.AutoSize = true;
-            this.labelCloudVisionLanguage.Location = new System.Drawing.Point(6, 52);
-            this.labelCloudVisionLanguage.Name = "labelCloudVisionLanguage";
-            this.labelCloudVisionLanguage.Size = new System.Drawing.Size(75, 13);
-            this.labelCloudVisionLanguage.TabIndex = 2;
-            this.labelCloudVisionLanguage.Text = "Language hint";
-            // 
-            // comboBoxCloudVisionLanguageHint
-            // 
-            this.comboBoxCloudVisionLanguageHint.FormattingEnabled = true;
-            this.comboBoxCloudVisionLanguageHint.Items.AddRange(new object[] {
-            "af",
-            "ar",
-            "be",
-            "bg",
-            "bn",
-            "ca",
-            "cs",
-            "da",
-            "de",
-            "el",
-            "en",
-            "es",
-            "et",
-            "fa",
-            "fi",
-            "fil",
-            "fr",
-            "gu",
-            "hi",
-            "hr",
-            "hu",
-            "hy",
-            "id",
-            "is",
-            "it",
-            "iw",
-            "ja",
-            "km",
-            "kn",
-            "ko",
-            "lo",
-            "lt",
-            "lv",
-            "mk",
-            "ml",
-            "mr",
-            "ms",
-            "ne",
-            "nl",
-            "no",
-            "pa",
-            "pl",
-            "pt",
-            "ro",
-            "ru",
-            "ru-PETR1708",
-            "sk",
-            "sl",
-            "sq",
-            "sr",
-            "sr-Latn",
-            "sv",
-            "ta",
-            "te",
-            "th",
-            "tl",
-            "tr",
-            "uk",
-            "vi",
-            "yi",
-            "zh"});
-            this.comboBoxCloudVisionLanguageHint.Location = new System.Drawing.Point(87, 49);
-            this.comboBoxCloudVisionLanguageHint.Name = "comboBoxCloudVisionLanguageHint";
-            this.comboBoxCloudVisionLanguageHint.Size = new System.Drawing.Size(279, 21);
-            this.comboBoxCloudVisionLanguageHint.TabIndex = 3;
-            // 
             // VobSubOcr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2314,6 +2328,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.TextBox textBoxCloudVisionAPIKey;
         private System.Windows.Forms.Label labelCloudVisionAPIKey;
         private System.Windows.Forms.ComboBox comboBoxCloudVisionLanguageHint;
-        private System.Windows.Forms.Label labelCloudVisionLanguage;
+        private System.Windows.Forms.Label labelCloudVisionLanguageHint;
+        private System.Windows.Forms.CheckBox checkBoxCloudVisionSendOriginalImages;
     }
 }

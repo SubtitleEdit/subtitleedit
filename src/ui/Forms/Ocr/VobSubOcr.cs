@@ -589,10 +589,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             numericUpDownNOcrMaxWrongPixels.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
 
             labelCloudVisionAPIKey.Text = language.APIKey;
-            labelCloudVisionLanguage.Text = language.LanguageHint;
+            labelCloudVisionLanguageHint.Text = language.LanguageHint;
+            checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
 
             textBoxCloudVisionAPIKey.Text = Configuration.Settings.VobSubOcr.CloudVisionAPIKey;
             comboBoxCloudVisionLanguageHint.Text = Configuration.Settings.VobSubOcr.CloudVisionLanguage;
+            checkBoxCloudVisionSendOriginalImages.Checked = Configuration.Settings.VobSubOcr.CloudVisionSendOriginalImages;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
             buttonGetTesseractDictionaries.Left = comboBoxTesseractLanguages.Left + comboBoxTesseractLanguages.Width + 5;
@@ -1670,10 +1672,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     else
                     {
-
                         foreach (string fn in fileNames)
                         {
                             fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
+
+                            if (checkBoxCloudVisionSendOriginalImages.Visible && checkBoxCloudVisionSendOriginalImages.Checked)
+                            {
+                                var originalFileName = GetVSFOriginalImageFileName(fullFileName);
+                                if (originalFileName != fullFileName && File.Exists(originalFileName))
+                                {
+                                    fullFileName = originalFileName;
+                                }
+                            }
+
                             if (!File.Exists(fullFileName))
                             {
                                 // fix AVISubDetector lines
@@ -8073,6 +8084,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxEmphasis2.BackColor = Color.White;
             }
 
+            checkBoxCloudVisionSendOriginalImages.Visible = false;
+            if (bdnSubtitle.Paragraphs.Count > 0)
+            {
+                var firstImageFileName = bdnSubtitle.Paragraphs[0].Text;
+                var originalImageFileName = GetVSFOriginalImageFileName(firstImageFileName);
+                if (firstImageFileName != originalImageFileName && File.Exists(originalImageFileName))
+                {
+                    checkBoxCloudVisionSendOriginalImages.Visible = true;
+                }
+            }
+
             SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
@@ -8092,7 +8114,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             autoTransparentBackgroundToolStripMenuItem.Checked = true;
             autoTransparentBackgroundToolStripMenuItem.Visible = true;
-
         }
 
         private void SetOcrMethod()
@@ -10141,6 +10162,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _mainOcrSelectedIndices = subtitleListView1.GetSelectedIndices().ToList();
             ButtonStartOcrClick(null, null);
+        }
+
+        private string GetVSFOriginalImageFileName(string fileName)
+        {
+            return fileName.Replace("\\RGBResults", "\\RGBImages").Replace("\\TXTImages", "\\RGBImages").Replace(".jpeg.png", ".jpeg").Replace(".png", ".jpeg");
+        }
+
+        private void checkBoxCloudVisionSendOriginalImages_CheckedChanged(object sender, EventArgs e)
+        {
+            // Toggle subtitle image refresh
+            SubtitleListView1SelectedIndexChanged(sender, e);
         }
     }
 }
