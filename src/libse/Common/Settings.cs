@@ -2063,6 +2063,8 @@ $HorzAlign          =   Center
         public bool CaptureTopAlign { get; set; }
         public int UnfocusedAttentionBlinkCount { get; set; }
         public int UnfocusedAttentionPlaySoundCount { get; set; }
+        public string CloudVisionAPIKey { get; set; }
+        public string CloudVisionLanguage { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -2091,6 +2093,8 @@ $HorzAlign          =   Center
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;
             UnfocusedAttentionPlaySoundCount = 1;
+            CloudVisionAPIKey = string.Empty;
+            CloudVisionLanguage = "en";
         }
     }
 
@@ -7379,6 +7383,18 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.UnfocusedAttentionPlaySoundCount = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("CloudVisionAPIKey");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.CloudVisionAPIKey = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("CloudVisionLanguage");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.CloudVisionLanguage = subNode.InnerText;
+            }
+
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
                 var group = new MultipleSearchAndReplaceGroup
@@ -10458,6 +10474,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CloudVisionAPIKey", settings.VobSubOcr.CloudVisionAPIKey);
+                textWriter.WriteElementString("CloudVisionLanguage", settings.VobSubOcr.CloudVisionLanguage);
 
                 textWriter.WriteEndElement();
 
