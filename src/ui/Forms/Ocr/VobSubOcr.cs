@@ -5629,7 +5629,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_abort)
             {
-                textBoxCurrentText.Text = text;
+                if (textBoxCurrentText.Text == "")
+                {
+                    textBoxCurrentText.Text = text;
+                }
                 _mainOcrRunning = false;
                 SetButtonsEnabledAfterOcrDone();
                 return true;
