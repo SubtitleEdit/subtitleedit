@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (_shotChanges?.Count > 0)
                 {
-                    _shotChanges = _shotChanges.Select(sc => sc /= 1.001).ToList();
+                    _shotChanges = _shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
                 }
             }
         }
