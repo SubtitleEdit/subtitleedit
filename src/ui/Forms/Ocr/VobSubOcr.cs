@@ -1692,6 +1692,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
 
+                            // Check if we need to load the original VSF image
                             if (checkBoxCloudVisionSendOriginalImages.Visible && checkBoxCloudVisionSendOriginalImages.Checked)
                             {
                                 var originalFileName = GetVSFOriginalImageFileName(fullFileName);
@@ -5702,10 +5703,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_abort)
             {
-                if (textBoxCurrentText.Text == "")
+                // Only overwrite text when empty
+                if (textBoxCurrentText.Text == String.Empty)
                 {
                     textBoxCurrentText.Text = text;
                 }
+
                 _mainOcrRunning = false;
                 SetButtonsEnabledAfterOcrDone();
                 return true;
