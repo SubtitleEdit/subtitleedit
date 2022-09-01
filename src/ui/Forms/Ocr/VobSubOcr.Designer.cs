@@ -57,8 +57,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.groupBoxCloudVision = new System.Windows.Forms.GroupBox();
             this.checkBoxCloudVisionSendOriginalImages = new System.Windows.Forms.CheckBox();
-            this.comboBoxCloudVisionLanguageHint = new System.Windows.Forms.ComboBox();
-            this.labelCloudVisionLanguageHint = new System.Windows.Forms.Label();
+            this.comboBoxCloudVisionLanguage = new System.Windows.Forms.ComboBox();
+            this.labelCloudVisionLanguage = new System.Windows.Forms.Label();
             this.textBoxCloudVisionApiKey = new System.Windows.Forms.TextBox();
             this.labelCloudVisionApiKey = new System.Windows.Forms.Label();
             this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
@@ -532,8 +532,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxCloudVision
             // 
             this.groupBoxCloudVision.Controls.Add(this.checkBoxCloudVisionSendOriginalImages);
-            this.groupBoxCloudVision.Controls.Add(this.comboBoxCloudVisionLanguageHint);
-            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguageHint);
+            this.groupBoxCloudVision.Controls.Add(this.comboBoxCloudVisionLanguage);
+            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguage);
             this.groupBoxCloudVision.Controls.Add(this.textBoxCloudVisionApiKey);
             this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionApiKey);
             this.groupBoxCloudVision.Location = new System.Drawing.Point(7, 38);
@@ -555,23 +555,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxCloudVisionSendOriginalImages.Visible = false;
             this.checkBoxCloudVisionSendOriginalImages.CheckedChanged += new System.EventHandler(this.checkBoxCloudVisionSendOriginalImages_CheckedChanged);
             // 
-            // comboBoxCloudVisionLanguageHint
+            // comboBoxCloudVisionLanguage
             // 
-            this.comboBoxCloudVisionLanguageHint.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCloudVisionLanguageHint.FormattingEnabled = true;
-            this.comboBoxCloudVisionLanguageHint.Location = new System.Drawing.Point(87, 49);
-            this.comboBoxCloudVisionLanguageHint.Name = "comboBoxCloudVisionLanguageHint";
-            this.comboBoxCloudVisionLanguageHint.Size = new System.Drawing.Size(279, 21);
-            this.comboBoxCloudVisionLanguageHint.TabIndex = 3;
+            this.comboBoxCloudVisionLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCloudVisionLanguage.FormattingEnabled = true;
+            this.comboBoxCloudVisionLanguage.Location = new System.Drawing.Point(87, 49);
+            this.comboBoxCloudVisionLanguage.Name = "comboBoxCloudVisionLanguage";
+            this.comboBoxCloudVisionLanguage.Size = new System.Drawing.Size(279, 21);
+            this.comboBoxCloudVisionLanguage.TabIndex = 3;
             // 
-            // labelCloudVisionLanguageHint
+            // labelCloudVisionLanguage
             // 
-            this.labelCloudVisionLanguageHint.AutoSize = true;
-            this.labelCloudVisionLanguageHint.Location = new System.Drawing.Point(6, 52);
-            this.labelCloudVisionLanguageHint.Name = "labelCloudVisionLanguageHint";
-            this.labelCloudVisionLanguageHint.Size = new System.Drawing.Size(54, 13);
-            this.labelCloudVisionLanguageHint.TabIndex = 2;
-            this.labelCloudVisionLanguageHint.Text = "Language";
+            this.labelCloudVisionLanguage.AutoSize = true;
+            this.labelCloudVisionLanguage.Location = new System.Drawing.Point(6, 52);
+            this.labelCloudVisionLanguage.Name = "labelCloudVisionLanguage";
+            this.labelCloudVisionLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelCloudVisionLanguage.TabIndex = 2;
+            this.labelCloudVisionLanguage.Text = "Language";
             // 
             // textBoxCloudVisionApiKey
             // 
@@ -2266,8 +2266,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.GroupBox groupBoxCloudVision;
         private System.Windows.Forms.TextBox textBoxCloudVisionApiKey;
         private System.Windows.Forms.Label labelCloudVisionApiKey;
-        private System.Windows.Forms.ComboBox comboBoxCloudVisionLanguageHint;
-        private System.Windows.Forms.Label labelCloudVisionLanguageHint;
+        private System.Windows.Forms.ComboBox comboBoxCloudVisionLanguage;
+        private System.Windows.Forms.Label labelCloudVisionLanguage;
         private System.Windows.Forms.CheckBox checkBoxCloudVisionSendOriginalImages;
     }
 }

@@ -37,28 +37,47 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
 
         public List<OcrLanguage> GetLanguages()
         {
+            // Currently (Sep 1, 2022) supported and experimental languages from https://cloud.google.com/vision/docs/languages
             var list = new List<OcrLanguage>();
             var codes = new List<string>
                 {
+                    "af",
+                    "am",
                     "ar",
+                    "as",
+                    "az",
+                    "az-Cyrl",
                     "be",
                     "bg",
                     "bn",
+                    "bo",
+                    "bs",
                     "ca",
+                    "ceb",
+                    "chr",
                     "cs",
+                    "cy",
                     "da",
                     "de",
+                    "dv",
+                    "dz",
                     "el",
                     "en",
+                    "eo",
                     "es",
                     "et",
+                    "eu",
                     "fa",
                     "fi",
                     "fil",
                     "fr",
+                    "ga",
+                    "gl",
+                    "grc",
                     "gu",
                     "hi",
                     "hr",
+                    "ht",
                     "hu",
                     "hy",
                     "id",
@@ -66,40 +85,59 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                     "it",
                     "iw",
                     "ja",
+                    "jv",
+                    "ka",
+                    "kk",
                     "km",
                     "kn",
                     "ko",
+                    "ky",
+                    "la",
                     "lo",
                     "lt",
                     "lv",
                     "mk",
                     "ml",
+                    "mn",
                     "mr",
                     "ms",
+                    "mt",
+                    "my",
                     "ne",
                     "nl",
                     "no",
+                    "or",
                     "pa",
                     "pl",
+                    "ps",
                     "pt",
                     "ro",
                     "ru",
                     "ru-PETR1708",
+                    "sa",
+                    "si",
                     "sk",
                     "sl",
                     "sq",
                     "sr",
                     "sr-Latn",
                     "sv",
+                    "sw",
+                    "syr",
                     "ta",
                     "te",
                     "th",
+                    "ti",
                     "tl",
                     "tr",
                     "uk",
+                    "ur",
+                    "uz",
+                    "uz-Cyrl",
                     "vi",
                     "yi",
                     "zh",
+                    "zu",
                 };
 
             foreach (var code in codes)
@@ -205,6 +243,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                                 {
                                     if (textAnnotations.Count > 0)
                                     {
+                                        // The first annotation contains the whole text
                                         if (textAnnotations[0] is Dictionary<string, object> firstTextAnnotation)
                                         {
                                             if (firstTextAnnotation.ContainsKey("description"))
@@ -253,7 +292,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 public Request(string imageContent, string language)
                 {
                     this.image = new Image(imageContent);
-                    this.imageContext = new ImageContext(new List<string>() { language, "en" });
+                    this.imageContext = new ImageContext(new List<string>() { language, "en" }); // English as fallback
                     this.features = new List<Feature>() { new Feature("TEXT_DETECTION", 1) };
                 }
 
