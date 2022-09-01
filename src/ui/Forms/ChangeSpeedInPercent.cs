@@ -83,8 +83,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void AdjustParagraph(Paragraph p)
         {
-            p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * AdjustFactor;
-            p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * AdjustFactor;
+            p.StartTime.TotalMilliseconds = Math.Round(p.StartTime.TotalMilliseconds * AdjustFactor, MidpointRounding.AwayFromZero);
+            p.EndTime.TotalMilliseconds = Math.Round(p.EndTime.TotalMilliseconds * AdjustFactor, MidpointRounding.AwayFromZero);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
