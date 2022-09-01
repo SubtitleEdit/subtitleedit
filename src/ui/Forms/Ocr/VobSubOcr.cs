@@ -1600,6 +1600,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color pattern;
             Color emphasis1;
             Color emphasis2;
+                        
+            var makeTransparent = true;
+            if (_ocrMethodIndex == _ocrMethodCloudVision)
+            {
+                // Cloud Vision doesn't like transparent images
+                makeTransparent = false;
+            }
 
             if (_mp4List != null)
             {
@@ -1610,7 +1617,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                         returnBmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1618,7 +1625,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else
                     {
                         returnBmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1634,7 +1641,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                         returnBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1642,7 +1649,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else
                     {
                         returnBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1669,7 +1676,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         try
                         {
                             returnBmp = new Bitmap(fullFileName);
-                            if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                            if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                             {
                                 returnBmp.MakeTransparent();
                             }
@@ -1736,7 +1743,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             for (int k = 0; k < bitmaps.Count; k++)
                             {
                                 Bitmap part = bitmaps[k];
-                                if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                                if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                                 {
                                     part.MakeTransparent();
                                 }
@@ -1796,7 +1803,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 fbmp.UnlockImage();
                             }
 
-                            if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                            if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                             {
                                 b.MakeTransparent();
                             }
@@ -1834,7 +1841,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     }
 
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                     }
@@ -1861,7 +1868,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     }
 
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                     }
@@ -1886,7 +1893,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                 }
 
-                if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                 {
                     nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                 }
@@ -1923,7 +1930,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                     returnBmp = _vobSubMergedPackList[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         returnBmp.MakeTransparent();
                     }
@@ -1931,7 +1938,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 else
                 {
                     returnBmp = _vobSubMergedPackList[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, crop);
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         returnBmp.MakeTransparent();
                     }
