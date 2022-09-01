@@ -55,6 +55,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
+            this.groupBoxCloudVision = new System.Windows.Forms.GroupBox();
+            this.checkBoxCloudVisionSendOriginalImages = new System.Windows.Forms.CheckBox();
+            this.comboBoxCloudVisionLanguageHint = new System.Windows.Forms.ComboBox();
+            this.labelCloudVisionLanguageHint = new System.Windows.Forms.Label();
+            this.textBoxCloudVisionAPIKey = new System.Windows.Forms.TextBox();
+            this.labelCloudVisionAPIKey = new System.Windows.Forms.Label();
             this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxNOcrLineSplitMinHeight = new System.Windows.Forms.ComboBox();
@@ -173,6 +179,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
+            this.groupBoxCloudVision.SuspendLayout();
             this.groupBoxNOCR.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNOcrMaxWrongPixels)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).BeginInit();
@@ -494,6 +501,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxCloudVision);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
@@ -520,6 +528,127 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
             this.comboBoxOcrMethod.TabIndex = 0;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
+            // 
+            // groupBoxCloudVision
+            // 
+            this.groupBoxCloudVision.Controls.Add(this.checkBoxCloudVisionSendOriginalImages);
+            this.groupBoxCloudVision.Controls.Add(this.comboBoxCloudVisionLanguageHint);
+            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionLanguageHint);
+            this.groupBoxCloudVision.Controls.Add(this.textBoxCloudVisionAPIKey);
+            this.groupBoxCloudVision.Controls.Add(this.labelCloudVisionAPIKey);
+            this.groupBoxCloudVision.Location = new System.Drawing.Point(7, 38);
+            this.groupBoxCloudVision.Name = "groupBoxCloudVision";
+            this.groupBoxCloudVision.Size = new System.Drawing.Size(372, 143);
+            this.groupBoxCloudVision.TabIndex = 8;
+            this.groupBoxCloudVision.TabStop = false;
+            this.groupBoxCloudVision.Text = "Cloud Vision API";
+            // 
+            // checkBoxCloudVisionSendOriginalImages
+            // 
+            this.checkBoxCloudVisionSendOriginalImages.AutoSize = true;
+            this.checkBoxCloudVisionSendOriginalImages.Location = new System.Drawing.Point(9, 80);
+            this.checkBoxCloudVisionSendOriginalImages.Name = "checkBoxCloudVisionSendOriginalImages";
+            this.checkBoxCloudVisionSendOriginalImages.Size = new System.Drawing.Size(123, 17);
+            this.checkBoxCloudVisionSendOriginalImages.TabIndex = 4;
+            this.checkBoxCloudVisionSendOriginalImages.Text = "Send original images";
+            this.checkBoxCloudVisionSendOriginalImages.UseVisualStyleBackColor = true;
+            this.checkBoxCloudVisionSendOriginalImages.Visible = false;
+            this.checkBoxCloudVisionSendOriginalImages.CheckedChanged += new System.EventHandler(this.checkBoxCloudVisionSendOriginalImages_CheckedChanged);
+            // 
+            // comboBoxCloudVisionLanguageHint
+            // 
+            this.comboBoxCloudVisionLanguageHint.FormattingEnabled = true;
+            this.comboBoxCloudVisionLanguageHint.Items.AddRange(new object[] {
+            "af",
+            "ar",
+            "be",
+            "bg",
+            "bn",
+            "ca",
+            "cs",
+            "da",
+            "de",
+            "el",
+            "en",
+            "es",
+            "et",
+            "fa",
+            "fi",
+            "fil",
+            "fr",
+            "gu",
+            "hi",
+            "hr",
+            "hu",
+            "hy",
+            "id",
+            "is",
+            "it",
+            "iw",
+            "ja",
+            "km",
+            "kn",
+            "ko",
+            "lo",
+            "lt",
+            "lv",
+            "mk",
+            "ml",
+            "mr",
+            "ms",
+            "ne",
+            "nl",
+            "no",
+            "pa",
+            "pl",
+            "pt",
+            "ro",
+            "ru",
+            "ru-PETR1708",
+            "sk",
+            "sl",
+            "sq",
+            "sr",
+            "sr-Latn",
+            "sv",
+            "ta",
+            "te",
+            "th",
+            "tl",
+            "tr",
+            "uk",
+            "vi",
+            "yi",
+            "zh"});
+            this.comboBoxCloudVisionLanguageHint.Location = new System.Drawing.Point(87, 49);
+            this.comboBoxCloudVisionLanguageHint.Name = "comboBoxCloudVisionLanguageHint";
+            this.comboBoxCloudVisionLanguageHint.Size = new System.Drawing.Size(279, 21);
+            this.comboBoxCloudVisionLanguageHint.TabIndex = 3;
+            // 
+            // labelCloudVisionLanguageHint
+            // 
+            this.labelCloudVisionLanguageHint.AutoSize = true;
+            this.labelCloudVisionLanguageHint.Location = new System.Drawing.Point(6, 52);
+            this.labelCloudVisionLanguageHint.Name = "labelCloudVisionLanguageHint";
+            this.labelCloudVisionLanguageHint.Size = new System.Drawing.Size(75, 13);
+            this.labelCloudVisionLanguageHint.TabIndex = 2;
+            this.labelCloudVisionLanguageHint.Text = "Language hint";
+            // 
+            // textBoxCloudVisionAPIKey
+            // 
+            this.textBoxCloudVisionAPIKey.Location = new System.Drawing.Point(87, 22);
+            this.textBoxCloudVisionAPIKey.Name = "textBoxCloudVisionAPIKey";
+            this.textBoxCloudVisionAPIKey.Size = new System.Drawing.Size(279, 21);
+            this.textBoxCloudVisionAPIKey.TabIndex = 1;
+            // 
+            // labelCloudVisionAPIKey
+            // 
+            this.labelCloudVisionAPIKey.AutoSize = true;
+            this.labelCloudVisionAPIKey.Location = new System.Drawing.Point(6, 25);
+            this.labelCloudVisionAPIKey.Name = "labelCloudVisionAPIKey";
+            this.labelCloudVisionAPIKey.Size = new System.Drawing.Size(44, 13);
+            this.labelCloudVisionAPIKey.TabIndex = 0;
+            this.labelCloudVisionAPIKey.Text = "API key";
             // 
             // groupBoxNOCR
             // 
@@ -1990,6 +2119,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
+            this.groupBoxCloudVision.ResumeLayout(false);
+            this.groupBoxCloudVision.PerformLayout();
             this.groupBoxNOCR.ResumeLayout(false);
             this.groupBoxNOCR.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNOcrMaxWrongPixels)).EndInit();
@@ -2193,5 +2324,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem removeAllXToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oCRSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorOcrSelected;
+        private System.Windows.Forms.GroupBox groupBoxCloudVision;
+        private System.Windows.Forms.TextBox textBoxCloudVisionAPIKey;
+        private System.Windows.Forms.Label labelCloudVisionAPIKey;
+        private System.Windows.Forms.ComboBox comboBoxCloudVisionLanguageHint;
+        private System.Windows.Forms.Label labelCloudVisionLanguageHint;
+        private System.Windows.Forms.CheckBox checkBoxCloudVisionSendOriginalImages;
     }
 }

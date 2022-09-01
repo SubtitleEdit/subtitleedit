@@ -3158,6 +3158,7 @@
             public string OcrViaImageCompare { get; set; }
             public string OcrViaModi { get; set; }
             public string OcrViaNOCR { get; set; }
+            public string OcrViaCloudVision { get; set; }
             public string TesseractEngineMode { get; set; }
             public string TesseractEngineModeLegacy { get; set; }
             public string TesseractEngineModeNeural { get; set; }
@@ -3227,6 +3228,9 @@
             public string StartTraining { get; set; }
             public string NowTraining { get; set; }
             public string ImagesWithTimeCodesInFileName { get; set; } 
+            public string APIKey { get; set; }
+            public string LanguageHint { get; set; }
+            public string SendOriginalImages { get; set; }
         }
 
         public class VobSubOcrCharacter
