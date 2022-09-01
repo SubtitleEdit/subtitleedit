@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
 {
-    public interface IOcrStrategy
+    public interface IOcrStrategy_1
     {
         string GetName();
         string GetUrl();
