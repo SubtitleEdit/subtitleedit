@@ -588,6 +588,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxNOcrItalic.Checked = Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic;
             numericUpDownNOcrMaxWrongPixels.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
 
+            groupBoxCloudVision.Text = language.CloudVisionApi;
             labelCloudVisionApiKey.Text = language.ApiKey;
             labelCloudVisionLanguageHint.Text = language.Language;
             checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
