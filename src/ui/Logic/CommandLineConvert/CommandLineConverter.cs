@@ -1948,7 +1948,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                             break;
                         case BatchAction.MergeSameTimeCodes:
-                            var mergedSameTimeCodesSub = Core.Forms.MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                            var mergedSameTimeCodesSub = Core.Forms.MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, Configuration.Settings.Tools.MergeTextWithSameTimeCodesMakeDialog, Configuration.Settings.Tools.MergeTextWithSameTimeCodesReBreakLines, Configuration.Settings.Tools.MergeTextWithSameTimeCodesMaxGap, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
                             if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
                             {
                                 sub.Paragraphs.Clear();
