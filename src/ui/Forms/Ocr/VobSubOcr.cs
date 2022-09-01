@@ -5272,10 +5272,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
 
-                    var ocrLanguages = _ocrService.GetLanguages();
+                    var ocrLanguages = _ocrService.GetLanguages().OrderBy(p => p.ToString());
+                    var previouslySelectedLanguage = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
                     comboBoxCloudVisionLanguageHint.Items.Clear();
                     comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
-                    var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p=>p.Code == Configuration.Settings.VobSubOcr.CloudVisionLanguage);
+                    var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == previouslySelectedLanguage);
                     if (selectedOcrLanguage == null)
                     {
                         selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
@@ -8630,7 +8631,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
             Configuration.Settings.VobSubOcr.CloudVisionApiKey = textBoxCloudVisionApiKey.Text;
-            Configuration.Settings.VobSubOcr.CloudVisionLanguage = comboBoxCloudVisionLanguageHint.Text;
+            Configuration.Settings.VobSubOcr.CloudVisionLanguage = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
 
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
