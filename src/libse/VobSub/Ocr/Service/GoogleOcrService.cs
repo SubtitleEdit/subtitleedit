@@ -3,12 +3,12 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
 {
-    public class GoogleOcrService_1 : IOcrStrategy_1
+    public class GoogleOcrService : IOcrStrategy
     {
 
-        private readonly IOcrStrategy_1 _ocrStrategy;
+        private readonly IOcrStrategy _ocrStrategy;
 
-        public GoogleOcrService_1(IOcrStrategy_1 translationStrategy)
+        public GoogleOcrService(IOcrStrategy translationStrategy)
         {
             _ocrStrategy = translationStrategy;
         }
