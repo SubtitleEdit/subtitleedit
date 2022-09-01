@@ -35,6 +35,81 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return 16;
         }
 
+        public List<OcrLanguage> GetLanguages()
+        {
+            var list = new List<OcrLanguage>();
+            var codes = new List<string>
+                {
+                    "ar",
+                    "be",
+                    "bg",
+                    "bn",
+                    "ca",
+                    "cs",
+                    "da",
+                    "de",
+                    "el",
+                    "en",
+                    "es",
+                    "et",
+                    "fa",
+                    "fi",
+                    "fil",
+                    "fr",
+                    "gu",
+                    "hi",
+                    "hr",
+                    "hu",
+                    "hy",
+                    "id",
+                    "is",
+                    "it",
+                    "iw",
+                    "ja",
+                    "km",
+                    "kn",
+                    "ko",
+                    "lo",
+                    "lt",
+                    "lv",
+                    "mk",
+                    "ml",
+                    "mr",
+                    "ms",
+                    "ne",
+                    "nl",
+                    "no",
+                    "pa",
+                    "pl",
+                    "pt",
+                    "ro",
+                    "ru",
+                    "ru-PETR1708",
+                    "sk",
+                    "sl",
+                    "sq",
+                    "sr",
+                    "sr-Latn",
+                    "sv",
+                    "ta",
+                    "te",
+                    "th",
+                    "tl",
+                    "tr",
+                    "uk",
+                    "vi",
+                    "yi",
+                    "zh",
+                };
+
+            foreach (var code in codes)
+            {
+                list.Add(new OcrLanguage { Code = code });
+            }
+
+            return list;
+        }
+
         public GoogleCloudVisionApi(string apiKey)
         {
             _apiKey = apiKey;
@@ -51,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         public List<string> PerformOcr(string language, List<Bitmap> images)
         {
             var requestBody = new RequestBody();
-            
+
             foreach (var image in images)
             {
                 string imageBase64;
