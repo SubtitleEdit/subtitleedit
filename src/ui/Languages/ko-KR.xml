@@ -445,6 +445,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <XNumberOfDifferenceAndPercentLettersChanged>차이나는 줄: {0}개 (변경된 문자 비율: {1:0.##}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>차이나는 줄만 표시</ShowOnlyDifferences>
     <IgnoreLineBreaks>줄바꿈 무시</IgnoreLineBreaks>
+    <IgnoreWhitespace>공백 무시</IgnoreWhitespace>
     <IgnoreFormatting>형식 무시</IgnoreFormatting>
     <OnlyLookForDifferencesInText>변경된 텍스트에 색칠</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>이미지 기반 자막과는 비교할 수 없습니다!</CannotCompareWithImageBasedSubtitles>
@@ -1335,7 +1336,6 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <SplitLineAtCursorAndWaveformPosition>커서/비디오 위치에서 줄 분할</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>표시시간 자동 설정 (현재 줄)</AutoDurationCurrentLine>
         <SelectAll>모두 선택</SelectAll>
-        <Insert>삽입</Insert>
         <InsertFirstLine>줄 삽입</InsertFirstLine>
         <InsertBefore>앞에 빈 줄 삽입...</InsertBefore>
         <InsertAfter>뒤에 빈 줄 삽입...</InsertAfter>
@@ -1351,6 +1351,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <ColumnTextUp>텍스트 위로</ColumnTextUp>
         <ColumnTextDown>텍스트 아래로</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>원본에서 텍스트 복사</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>선택한 줄 OCR </OcrSelectedLines>
         <Split>줄 분할</Split>
         <MergeSelectedLines>선택한 줄 병합</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>선택한 대화 라인 병합</MergeSelectedLinesAsDialog>
@@ -2947,7 +2948,6 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <New>신규</New>
     <Edit>편집</Edit>
     <StartOcr>OCR 시작</StartOcr>
-    <Stop>OCR 중지</Stop>
     <StartOcrFrom>OCR 시작 번호:</StartOcrFrom>
     <LoadingVobSubImages>VobSub 이미지를 불러오는 중...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>이미지 데이터베이스 불러오기...</LoadingImageCompareDatabase>
