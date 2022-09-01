@@ -8239,6 +8239,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/ImagesWithTimeCodesInFileName":
                     language.VobSubOcr.ImagesWithTimeCodesInFileName = reader.Value;
                     break;
+                case "VobSubOcr/CloudVisionApi":
+                    language.VobSubOcr.CloudVisionApi = reader.Value;
+                    break;
                 case "VobSubOcr/ApiKey":
                     language.VobSubOcr.ApiKey = reader.Value;
                     break;
