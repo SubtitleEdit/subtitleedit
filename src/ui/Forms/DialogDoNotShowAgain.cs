@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            Rectangle screenRectangle = RectangleToScreen(ClientRectangle);
-            int titleBarHeight = screenRectangle.Top - Top;
+            var screenRectangle = RectangleToScreen(ClientRectangle);
+            var titleBarHeight = screenRectangle.Top - Top;
 
             checkBoxDoNotDisplayAgain.Text = LanguageSettings.Current.Main.DoNotDisplayMessageAgain;
 
@@ -24,9 +24,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelText.Text = text;
             UiUtil.FixLargeFonts(this, buttonOK);
 
-            int width = Math.Max(checkBoxDoNotDisplayAgain.Width, labelText.Width);
+            var width = Math.Max(checkBoxDoNotDisplayAgain.Width, labelText.Width);
             Width = width + buttonOK.Width + 75;
             Height = labelText.Top + labelText.Height + buttonOK.Height + titleBarHeight + 40;
+
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
         }
 
         private void SpellCheckCompleted_KeyDown(object sender, KeyEventArgs e)
