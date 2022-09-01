@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
     /// <summary>
     /// OCR via Google Cloud Vision API - see https://cloud.google.com/vision/docs/ocr
     /// </summary>
-    public class GoogleCloudVisionApi_1 : IOcrStrategy_1
+    public class GoogleCloudVisionApi : IOcrStrategy
     {
         private readonly string _apiKey;
         private readonly HttpClient _httpClient;
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return 16;
         }
 
-        public GoogleCloudVisionApi_1(string apiKey)
+        public GoogleCloudVisionApi(string apiKey)
         {
             _apiKey = apiKey;
             _httpClient = HttpClientHelper.MakeHttpClient();
@@ -81,17 +81,17 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 var result = _httpClient.PostAsync(uri, new StringContent(requestBodyString)).Result;
                 if ((int)result.StatusCode == 400)
                 {
-                    throw new OcrException_1("API key invalid (or perhaps billing is not enabled)?");
+                    throw new OcrException("API key invalid (or perhaps billing is not enabled)?");
                 }
 
                 if ((int)result.StatusCode == 403)
                 {
-                    throw new OcrException_1("\"Perhaps billing is not enabled (or API key is invalid)?\"");
+                    throw new OcrException("\"Perhaps billing is not enabled (or API key is invalid)?\"");
                 }
 
                 if (!result.IsSuccessStatusCode)
                 {
-                    throw new OcrException_1($"An error occurred calling Cloud Vision API - status code: {result.StatusCode}");
+                    throw new OcrException($"An error occurred calling Cloud Vision API - status code: {result.StatusCode}");
                 }
 
                 content = result.Content.ReadAsStringAsync().Result;
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                 {
                     message = "Perhaps billing is not enabled (or API key is invalid)?";
                 }
-                throw new OcrException_1(message, webException);
+                throw new OcrException(message, webException);
             }
 
             var resultList = new List<string>();
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                                             {
                                                 if (firstTextAnnotation["description"] is string description)
                                                 {
-                                                    result = OcrHelper_1.PostOcr(description, language);
+                                                    result = OcrHelper.PostOcr(description, language);
                                                 }
                                             }
                                         }
