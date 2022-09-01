@@ -437,6 +437,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            Application.DoEvents();
+            System.Threading.Thread.Sleep(100);
+
+            if (!File.Exists(outWaveFile))
+            {
+                SeLogger.Error("Generated wave file not found: " + outWaveFile + Environment.NewLine + 
+                               "ffmpeg: " + process.StartInfo.FileName + Environment.NewLine +
+                               "Parameters: "  + process.StartInfo.Arguments + Environment.NewLine +
+                               "OS: " + Environment.OSVersion + Environment.NewLine +
+                               "64-bit: " + Environment.Is64BitOperatingSystem);
+            }
+
             return outWaveFile;
         }
 
