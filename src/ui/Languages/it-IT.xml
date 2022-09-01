@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 29.08.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 01.09.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -449,6 +449,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Numero differenze: {0} ({1:0.##}% lettere modificate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Visualizza solo le differenze</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora divisioni di riga</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignora spazi bianchi</IgnoreWhitespace>
     <IgnoreFormatting>Ignora formattazione</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Impossibile confrontare sottotitoli basati su immagini</CannotCompareWithImageBasedSubtitles>
@@ -2936,6 +2937,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR via confronto immagine</OcrViaImageCompare>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI) - Richiede Microsoft Office</OcrViaModi>
+    <OcrViaCloudVision>OCR via API Cloud Vision</OcrViaCloudVision>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <TesseractEngineMode>Modalità motore</TesseractEngineMode>
     <TesseractEngineModeLegacy>Solo Tesseract originale (in grado di rilevare il corsivo)</TesseractEngineModeLegacy>
@@ -2948,8 +2950,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <MaxErrorPercent>Massimo Errori %</MaxErrorPercent>
     <New>Nuovo</New>
     <Edit>Modifica</Edit>
-    <StartOcr>Inizia OCR</StartOcr>
-    <Stop>Ferma</Stop>
+    <StartOcr>Avvia OCR</StartOcr>
     <StartOcrFrom>Inizia OCR dal sottotitolo n.:</StartOcrFrom>
     <LoadingVobSubImages>Caricamento immagini VobSub...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Carica database immagine comparativa</LoadingImageCompareDatabase>
@@ -3007,6 +3008,8 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <StartTraining>Inizia formazione</StartTraining>
     <NowTraining>Tipo di carattere '{1}'. Lettere addestrate: {0:#,###,##0}, {2:#,###,##0} note</NowTraining>
     <ImagesWithTimeCodesInFileName>Immagini con time code nel nome file...</ImagesWithTimeCodesInFileName>
+    <ApiKey>Chiave API</ApiKey>
+    <SendOriginalImages>Invia immagini originali</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Immagine manuale in testo</Title>
