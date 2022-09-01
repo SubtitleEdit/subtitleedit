@@ -8029,6 +8029,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/OcrViaNOCR":
                     language.VobSubOcr.OcrViaNOCR = reader.Value;
                     break;
+                case "VobSubOcr/OcrViaCloudVision":
+                    language.VobSubOcr.OcrViaCloudVision = reader.Value;
+                    break;
                 case "VobSubOcr/TesseractEngineMode":
                     language.VobSubOcr.TesseractEngineMode = reader.Value;
                     break;
@@ -8235,6 +8238,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "VobSubOcr/ImagesWithTimeCodesInFileName":
                     language.VobSubOcr.ImagesWithTimeCodesInFileName = reader.Value;
+                    break;
+                case "VobSubOcr/ApiKey":
+                    language.VobSubOcr.ApiKey = reader.Value;
+                    break;
+                case "VobSubOcr/SendOriginalImages":
+                    language.VobSubOcr.SendOriginalImages = reader.Value;
                     break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;

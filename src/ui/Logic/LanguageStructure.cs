@@ -3228,8 +3228,7 @@
             public string StartTraining { get; set; }
             public string NowTraining { get; set; }
             public string ImagesWithTimeCodesInFileName { get; set; } 
-            public string APIKey { get; set; }
-            public string LanguageHint { get; set; }
+            public string ApiKey { get; set; }
             public string SendOriginalImages { get; set; }
         }
 
