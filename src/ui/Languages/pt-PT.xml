@@ -81,7 +81,7 @@ Email: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <Advanced>Avançado</Advanced>
     <Style>Estilo</Style>
     <StyleLanguage>Estilo / Idioma</StyleLanguage>
-    <Character>Caractere</Character>
+    <Character>Carácter</Character>
     <Class>Classe</Class>
     <GeneralText>Geral</GeneralText>
     <LineNumber>Linha#</LineNumber>
@@ -250,6 +250,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <MarginY>MargemY</MarginY>
     <OnlyDrawing>Apenas desenho</OnlyDrawing>
     <DrawingFile>Ficheiro de desenho</DrawingFile>
+    <ColorPickerSetLastColor>A última cor do selector de cores é agora: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Definir posição</SetPosition>
@@ -449,6 +450,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1:0.##}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostrar só as diferenças</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorar quebra de linha</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignorar espaço em branco</IgnoreWhitespace>
     <IgnoreFormatting>Ignorar formatação</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Procurar só as diferenças no texto</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Não é possível comparar legendas baseadas em imagens</CannotCompareWithImageBasedSubtitles>
@@ -753,7 +755,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <RemoveDialogFirstInNonDialogs>Remover o travessão inicial na primeira linha para não diálogos</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizar linhas</NormalizeStrings>
     <FixTurkishAnsi>Corrigir ANSI turco (Islandês) caracteres para Unicode</FixTurkishAnsi>
-    <FixDanishLetterI>Corrigir caractere Dinamarquês 'i'</FixDanishLetterI>
+    <FixDanishLetterI>Corrigir carácter Dinamarquês 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Corrigir sinais invertidos (interrogação e exclamação) do espanhol</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Adicionar aspa em falta (")</AddMissingQuote>
     <AddMissingQuotes>Adicionar aspas em falta (")</AddMissingQuotes>
@@ -1330,16 +1332,15 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <TimedTextStyles>Estilos do Timed Text...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
-        <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
+        <NuendoSetStyle>Nuendo - Definir carácter</NuendoSetStyle>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
         <Delete>Eliminar</Delete>
         <SplitLineAtCursorPosition>Dividir linha a partir do cursor</SplitLineAtCursorPosition>
         <SplitLineAtCursorAndWaveformPosition>Dividir linha a partir do cursor/posição de vídeo</SplitLineAtCursorAndWaveformPosition>
-        <AutoDurationCurrentLine>Duração automática (linha corrente)</AutoDurationCurrentLine>
+        <AutoDurationCurrentLine>Duração automática (linha actual)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar tudo</SelectAll>
-        <Insert>Inserir</Insert>
         <InsertFirstLine>Inserir linha</InsertFirstLine>
         <InsertBefore>Inserir antes</InsertBefore>
         <InsertAfter>Inserir depois</InsertAfter>
@@ -1355,6 +1356,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <ColumnTextUp>Texto para cima</ColumnTextUp>
         <ColumnTextDown>Texto para baixo</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>Linhas seleccionadas do OCR</OcrSelectedLines>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
@@ -1748,6 +1750,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <HideVideoControls>Ocultar controlos de vídeo</HideVideoControls>
     <GeneratingWaveformInBackground>A gerar forma de onda em segundo plano...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Cópia de segurança automática guardada</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Usando apenas o canal de áudio central frontal</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -2001,7 +2004,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NewLineShort>Nova linha (\n)</NewLineShort>
     <AnyDigit>Qualquer número de 0 a 9 (\d)</AnyDigit>
     <NonDigit>Sem ser número (\D)</NonDigit>
-    <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
+    <AnyCharacter>Qualquer carácter (.)</AnyCharacter>
     <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
     <NonSpaceCharacter>Sem ser espaço em espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
@@ -2948,8 +2951,7 @@ Manter as alterações?</KeepChangesMessage>
     <New>Novo</New>
     <Edit>Editar</Edit>
     <StartOcr>Iniciar OCR</StartOcr>
-    <Stop>Parar</Stop>
-    <StartOcrFrom>Iniciar OCR da legenda:</StartOcrFrom>
+    <StartOcrFrom>Iniciar OCR da legenda nº:</StartOcrFrom>
     <LoadingVobSubImages>Carregamento de imagens VobSub...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Carregamento de imagem comparativa da base de dados...</LoadingImageCompareDatabase>
     <ConvertingImageCompareDatabase>Converter imagem comparativa da base de daddos para o novo formato (images.db/images.xml)...</ConvertingImageCompareDatabase>
