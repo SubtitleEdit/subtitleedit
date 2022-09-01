@@ -3227,7 +3227,8 @@
             public string AlsoTrainBold { get; set; }
             public string StartTraining { get; set; }
             public string NowTraining { get; set; }
-            public string ImagesWithTimeCodesInFileName { get; set; } 
+            public string ImagesWithTimeCodesInFileName { get; set; }
+            public string CloudVisionApi { get; set; }
             public string ApiKey { get; set; }
             public string SendOriginalImages { get; set; }
         }
