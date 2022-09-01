@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return GetName();
         }
 
-       public int GetMaxImageSize()
+        public int GetMaxImageSize()
         {
             return _ocrStrategy.GetMaxImageSize();
         }
@@ -31,6 +31,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         public int GetMaximumRequestArraySize()
         {
             return _ocrStrategy.GetMaximumRequestArraySize();
+        }
+
+        public List<OcrLanguage> GetLanguages()
+        {
+            return _ocrStrategy.GetLanguages();
         }
 
         public string GetUrl()

@@ -10,5 +10,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         List<string> PerformOcr(string language, List<Bitmap> images);
         int GetMaxImageSize();
         int GetMaximumRequestArraySize();
+        List<OcrLanguage> GetLanguages();
     }
 }

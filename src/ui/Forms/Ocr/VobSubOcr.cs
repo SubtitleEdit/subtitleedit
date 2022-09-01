@@ -593,7 +593,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
 
             textBoxCloudVisionApiKey.Text = Configuration.Settings.VobSubOcr.CloudVisionApiKey;
-            comboBoxCloudVisionLanguageHint.Text = Configuration.Settings.VobSubOcr.CloudVisionLanguage;
             checkBoxCloudVisionSendOriginalImages.Checked = Configuration.Settings.VobSubOcr.CloudVisionSendOriginalImages;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
@@ -643,6 +642,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 comboBoxDictionaries.SelectedIndex = 0;
             }
+
+            var ocrLanguages = new GoogleOcrService(new GoogleCloudVisionApi(string.Empty)).GetLanguages().OrderBy(p => p.ToString());
+            comboBoxCloudVisionLanguageHint.Items.Clear();
+            comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
+            var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == Configuration.Settings.VobSubOcr.CloudVisionLanguage);
+            if (selectedOcrLanguage == null)
+            {
+                selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
+            }
+            comboBoxCloudVisionLanguageHint.Text = selectedOcrLanguage.ToString();
         }
 
         private void FillSpellCheckDictionaries()
@@ -5253,6 +5262,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_ocrService == null)
                 {
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
+
+                    var ocrLanguages = _ocrService.GetLanguages();
+                    comboBoxCloudVisionLanguageHint.Items.Clear();
+                    comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
+                    var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p=>p.Code == Configuration.Settings.VobSubOcr.CloudVisionLanguage);
+                    if (selectedOcrLanguage == null)
+                    {
+                        selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
+                    }
+                    comboBoxCloudVisionLanguageHint.Text = selectedOcrLanguage.ToString();
                 }
             }
 
@@ -6841,7 +6860,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string OcrViaCloudVision(Bitmap bitmap, int listViewIndex)
         {
-            var language = comboBoxCloudVisionLanguageHint.Text;
+            var language = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
             var cloudVisionResult = _ocrService.PerformOcr(language, new List<Bitmap>() { bitmap });
 
             if (cloudVisionResult.Count > 0)
