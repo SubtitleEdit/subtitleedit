@@ -119,7 +119,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public double TotalMilliseconds { get; set; }
+        private double _totalMilliseconds;
+        public double TotalMilliseconds 
+        {
+            get => _totalMilliseconds;
+            set => _totalMilliseconds = Math.Round(value, MidpointRounding.AwayFromZero);
+        }
 
         public double TotalSeconds
         {
