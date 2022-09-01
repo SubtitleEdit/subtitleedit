@@ -2938,7 +2938,7 @@ Keep changes?</KeepChangesMessage>
     <OcrViaImageCompare>Binary image compare</OcrViaImageCompare>
     <OcrViaModi>Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
-    <OcrViaCloudVision>OCR via Cloud Vision API</OcrViaCloudVision>
+    <OcrViaCloudVision>OCR via Google Cloud Vision API</OcrViaCloudVision>
     <TesseractEngineMode>Engine mode</TesseractEngineMode>
     <TesseractEngineModeLegacy>Original Tesseract only (can detect italic)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Neural nets LSTM only</TesseractEngineModeNeural>
@@ -3008,6 +3008,7 @@ Keep changes?</KeepChangesMessage>
     <StartTraining>Start training</StartTraining>
     <NowTraining>Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known</NowTraining>
     <ImagesWithTimeCodesInFileName>Images with time codes in file name...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API key</ApiKey>
     <SendOriginalImages>Send original images</SendOriginalImages>
   </VobSubOcr>
