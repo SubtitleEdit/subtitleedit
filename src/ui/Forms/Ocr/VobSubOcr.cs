@@ -1601,7 +1601,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color pattern;
             Color emphasis1;
             Color emphasis2;
-                        
+
             var makeTransparent = true;
             if (_ocrMethodIndex == _ocrMethodCloudVision)
             {
@@ -5265,23 +5265,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrMinLineHeight = -1;
                 }
-            } 
+            }
             else if (_ocrMethodIndex == _ocrMethodCloudVision)
             {
+                if (string.IsNullOrWhiteSpace(textBoxCloudVisionApiKey.Text))
+                {
+                    MessageBox.Show("No API key found!");
+                    textBoxCloudVisionApiKey.Focus();
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
                 if (_ocrService == null)
                 {
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
-
-                    var ocrLanguages = _ocrService.GetLanguages().OrderBy(p => p.ToString());
-                    var previouslySelectedLanguage = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
-                    comboBoxCloudVisionLanguage.Items.Clear();
-                    comboBoxCloudVisionLanguage.Items.AddRange(ocrLanguages.ToArray());
-                    var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == previouslySelectedLanguage);
-                    if (selectedOcrLanguage == null)
-                    {
-                        selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
-                    }
-                    comboBoxCloudVisionLanguage.Text = selectedOcrLanguage.ToString();
                 }
             }
 
@@ -7713,7 +7710,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             toolStripSeparatorImageCompare.Visible = useNocrCompare || enableIfImageCompare;
 
-            if (subtitleListView1.SelectedItems.Count > 0 && (_ocrMethodIndex == _ocrMethodNocr || _ocrMethodIndex == _ocrMethodBinaryImageCompare))
+            if (subtitleListView1.SelectedItems.Count > 0 && (_ocrMethodIndex == _ocrMethodNocr ||
+                                                              _ocrMethodIndex == _ocrMethodBinaryImageCompare ||
+                                                              _ocrMethodIndex == _ocrMethodCloudVision))
             {
                 oCRSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripSeparatorOcrSelected.Visible = true;
