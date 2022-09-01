@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
@@ -346,6 +347,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private NOcrThreadResult[] _nOcrThreadResults;
         private bool _ocrThreadStop;
 
+        private IOCRService _ocrService;
+
         private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
@@ -370,6 +373,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly int _ocrMethodTesseract5 = -1;
         private readonly int _ocrMethodModi = -1;
         private readonly int _ocrMethodNocr = -1;
+        private readonly int _ocrMethodCloudVision = -1;
 
         private FindReplaceDialogHelper _findHelper;
 
@@ -514,6 +518,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
+            _ocrMethodCloudVision = comboBoxOcrMethod.Items.Add(language.OcrViaCloudVision);
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = LanguageSettings.Current.General.Italic;
@@ -582,6 +587,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxNOcrLineSplitMinHeight.SelectedIndex = Configuration.Settings.VobSubOcr.LineOcrMaxLineHeight;
             checkBoxNOcrItalic.Checked = Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic;
             numericUpDownNOcrMaxWrongPixels.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
+
+            labelCloudVisionAPIKey.Text = language.APIKey;
+            labelCloudVisionLanguageHint.Text = language.LanguageHint;
+            checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
+
+            textBoxCloudVisionAPIKey.Text = Configuration.Settings.VobSubOcr.CloudVisionAPIKey;
+            comboBoxCloudVisionLanguageHint.Text = Configuration.Settings.VobSubOcr.CloudVisionLanguage;
+            checkBoxCloudVisionSendOriginalImages.Checked = Configuration.Settings.VobSubOcr.CloudVisionSendOriginalImages;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
             buttonGetTesseractDictionaries.Left = comboBoxTesseractLanguages.Left + comboBoxTesseractLanguages.Width + 5;
@@ -988,6 +1001,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_ocrMethodIndex == _ocrMethodNocr)
                 {
                     text = OcrViaNOCR(GetSubtitleBitmap(i), i);
+                }
+                else if (_ocrMethodIndex == _ocrMethodCloudVision)
+                {
+                    text = OcrViaCloudVision(GetSubtitleBitmap(i), i);
                 }
                 else
                 {
@@ -1655,10 +1672,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     else
                     {
-
                         foreach (string fn in fileNames)
                         {
                             fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
+
+                            if (checkBoxCloudVisionSendOriginalImages.Visible && checkBoxCloudVisionSendOriginalImages.Checked)
+                            {
+                                var originalFileName = GetVSFOriginalImageFileName(fullFileName);
+                                if (originalFileName != fullFileName && File.Exists(originalFileName))
+                                {
+                                    fullFileName = originalFileName;
+                                }
+                            }
+
                             if (!File.Exists(fullFileName))
                             {
                                 // fix AVISubDetector lines
@@ -3949,7 +3975,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     else
                     {
-                        matches.Add(new CompareMatch("*", false, 0, null));
+                        string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+
+                        if (text != "")
+                        {
+                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
+                        }
+                        else
+                        {
+                            matches.Add(new CompareMatch("*", false, 0, null));
+                        }
                     }
 
                     _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
@@ -4005,7 +4040,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         else
                         {
-                            matches.Add(new CompareMatch("*", false, 0, null, item));
+                            string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+
+                            if (text != "")
+                            {
+                                matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
+                            }
+                            else
+                            {
+                                matches.Add(new CompareMatch("*", false, 0, null));
+                            }
                         }
 
                         _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
@@ -4369,7 +4413,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         else
                         {
-                            matches.Add(new CompareMatch("*", false, 0, null));
+                            var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
+
+                            if (text != "")
+                            {
+                                matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
+                            }
+                            else
+                            {
+                                matches.Add(new CompareMatch("*", false, 0, null));
+                            }
                         }
 
                         _italicCheckedLast = _vobSubOcrNOcrCharacter.IsItalic;
@@ -4404,7 +4457,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                             else
                             {
-                                matches.Add(new CompareMatch("*", false, 0, null));
+                                var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
+
+                                if (text != "")
+                                {
+                                    matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
+                                }
+                                else
+                                {
+                                    matches.Add(new CompareMatch("*", false, 0, null));
+                                }
                             }
 
                             _italicCheckedLast = _vobSubOcrNOcrCharacter.IsItalic;
@@ -5185,6 +5247,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrMinLineHeight = -1;
                 }
+            } 
+            else if (_ocrMethodIndex == _ocrMethodCloudVision)
+            {
+                if (_ocrService == null)
+                {
+                    _ocrService = new GoogleOCRService(new GoogleCloudVisionAPI(textBoxCloudVisionAPIKey.Text));
+                }
             }
 
             progressBar1.Maximum = max;
@@ -5564,6 +5633,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 text = CallModi(i);
             }
+            else if (_ocrMethodIndex == _ocrMethodCloudVision)
+            {
+                text = OcrViaCloudVision(bmp, i);
+            }
 
             _lastLine = text;
 
@@ -5603,7 +5676,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_abort)
             {
-                textBoxCurrentText.Text = text;
+                if (textBoxCurrentText.Text == "")
+                {
+                    textBoxCurrentText.Text = text;
+                }
                 _mainOcrRunning = false;
                 SetButtonsEnabledAfterOcrDone();
                 return true;
@@ -6763,6 +6839,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private string OcrViaCloudVision(Bitmap bitmap, int listViewIndex)
+        {
+            var language = comboBoxCloudVisionLanguageHint.Text;
+            var cloudVisionResult = _ocrService.PerformOCR(language, new List<Bitmap>() { bitmap });
+
+            if (cloudVisionResult.Count > 0)
+            {
+                return cloudVisionResult[0];
+            }
+
+            return string.Empty;
+        }
+
         private void InitializeNOcrForBatch(string db)
         {
             _ocrMethodIndex = _ocrMethodNocr;
@@ -7522,6 +7611,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ShowOcrMethodGroupBox(groupBoxModiMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "MODI";
             }
+            else if (_ocrMethodIndex == _ocrMethodCloudVision)
+            {
+                ShowOcrMethodGroupBox(groupBoxCloudVision);
+                Configuration.Settings.VobSubOcr.LastOcrMethod = "CloudVision";
+            }
 
             _ocrFixEngine = null;
             SubtitleListView1SelectedIndexChanged(null, null);
@@ -7543,6 +7637,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             groupBoxImageCompareMethod.Visible = false;
             groupBoxModiMethod.Visible = false;
             groupBoxNOCR.Visible = false;
+            groupBoxCloudVision.Visible = false;
 
             groupBox.Visible = true;
             groupBox.BringToFront();
@@ -7989,6 +8084,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxEmphasis2.BackColor = Color.White;
             }
 
+            checkBoxCloudVisionSendOriginalImages.Visible = false;
+            if (bdnSubtitle.Paragraphs.Count > 0)
+            {
+                var firstImageFileName = bdnSubtitle.Paragraphs[0].Text;
+                var originalImageFileName = GetVSFOriginalImageFileName(firstImageFileName);
+                if (firstImageFileName != originalImageFileName && File.Exists(originalImageFileName))
+                {
+                    checkBoxCloudVisionSendOriginalImages.Visible = true;
+                }
+            }
+
             SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
@@ -8008,7 +8114,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             autoTransparentBackgroundToolStripMenuItem.Checked = true;
             autoTransparentBackgroundToolStripMenuItem.Visible = true;
-
         }
 
         private void SetOcrMethod()
@@ -8016,6 +8121,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > _ocrMethodBinaryImageCompare)
             {
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
+            }
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "CloudVision" && comboBoxOcrMethod.Items.Count > _ocrMethodCloudVision)
+            {
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodCloudVision;
             }
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > _ocrMethodModi)
             {
@@ -8490,6 +8599,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels = (int)numericUpDownNOcrMaxWrongPixels.Value;
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
+            Configuration.Settings.VobSubOcr.CloudVisionAPIKey = textBoxCloudVisionAPIKey.Text;
+            Configuration.Settings.VobSubOcr.CloudVisionLanguage = comboBoxCloudVisionLanguageHint.Text;
 
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
@@ -10051,6 +10162,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _mainOcrSelectedIndices = subtitleListView1.GetSelectedIndices().ToList();
             ButtonStartOcrClick(null, null);
+        }
+
+        private string GetVSFOriginalImageFileName(string fileName)
+        {
+            return fileName.Replace("\\RGBResults", "\\RGBImages").Replace("\\TXTImages", "\\RGBImages").Replace(".jpeg.png", ".jpeg").Replace(".png", ".jpeg");
+        }
+
+        private void checkBoxCloudVisionSendOriginalImages_CheckedChanged(object sender, EventArgs e)
+        {
+            // Toggle subtitle image refresh
+            SubtitleListView1SelectedIndexChanged(sender, e);
         }
     }
 }
