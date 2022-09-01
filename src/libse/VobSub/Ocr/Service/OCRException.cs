@@ -3,18 +3,18 @@ using System.Net;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
 {
-    public class OCRException : Exception
+    public class OcrException : Exception
     {
-        public OCRException(WebException webException) : base("",webException)
+        public OcrException(WebException webException) : base("",webException)
         {
         }
 
-        public OCRException(string message, Exception exception) : base(message, exception)
+        public OcrException(string message, Exception exception) : base(message, exception)
         {
 
         }
 
-        public OCRException(string message) : base(message)
+        public OcrException(string message) : base(message)
         {
 
         }

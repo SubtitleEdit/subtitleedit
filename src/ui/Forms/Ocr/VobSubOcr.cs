@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private NOcrThreadResult[] _nOcrThreadResults;
         private bool _ocrThreadStop;
 
-        private IOCRService _ocrService;
+        private IOcrStrategy _ocrService;
 
         private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
@@ -588,11 +588,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxNOcrItalic.Checked = Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic;
             numericUpDownNOcrMaxWrongPixels.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
 
-            labelCloudVisionAPIKey.Text = language.APIKey;
-            labelCloudVisionLanguageHint.Text = language.LanguageHint;
+            labelCloudVisionApiKey.Text = language.ApiKey;
+            labelCloudVisionLanguageHint.Text = language.Language;
             checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
 
-            textBoxCloudVisionAPIKey.Text = Configuration.Settings.VobSubOcr.CloudVisionAPIKey;
+            textBoxCloudVisionApiKey.Text = Configuration.Settings.VobSubOcr.CloudVisionApiKey;
             comboBoxCloudVisionLanguageHint.Text = Configuration.Settings.VobSubOcr.CloudVisionLanguage;
             checkBoxCloudVisionSendOriginalImages.Checked = Configuration.Settings.VobSubOcr.CloudVisionSendOriginalImages;
 
@@ -3977,7 +3977,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
 
-                        if (text != "")
+                        if (text != string.Empty)
                         {
                             matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
                         }
@@ -4042,7 +4042,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
 
-                            if (text != "")
+                            if (text != string.Empty)
                             {
                                 matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
                             }
@@ -4415,7 +4415,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
 
-                            if (text != "")
+                            if (text != string.Empty)
                             {
                                 matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
                             }
@@ -4459,7 +4459,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             {
                                 var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
 
-                                if (text != "")
+                                if (text != string.Empty)
                                 {
                                     matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
                                 }
@@ -5252,7 +5252,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_ocrService == null)
                 {
-                    _ocrService = new GoogleOCRService(new GoogleCloudVisionAPI(textBoxCloudVisionAPIKey.Text));
+                    _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
                 }
             }
 
@@ -6842,7 +6842,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private string OcrViaCloudVision(Bitmap bitmap, int listViewIndex)
         {
             var language = comboBoxCloudVisionLanguageHint.Text;
-            var cloudVisionResult = _ocrService.PerformOCR(language, new List<Bitmap>() { bitmap });
+            var cloudVisionResult = _ocrService.PerformOcr(language, new List<Bitmap>() { bitmap });
 
             if (cloudVisionResult.Count > 0)
             {
@@ -8599,7 +8599,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels = (int)numericUpDownNOcrMaxWrongPixels.Value;
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
-            Configuration.Settings.VobSubOcr.CloudVisionAPIKey = textBoxCloudVisionAPIKey.Text;
+            Configuration.Settings.VobSubOcr.CloudVisionApiKey = textBoxCloudVisionApiKey.Text;
             Configuration.Settings.VobSubOcr.CloudVisionLanguage = comboBoxCloudVisionLanguageHint.Text;
 
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)

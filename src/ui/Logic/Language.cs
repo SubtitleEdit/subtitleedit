@@ -3381,8 +3381,7 @@ Keep changes?",
                 StartTraining = "Start training",
                 NowTraining = "Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known",
                 ImagesWithTimeCodesInFileName = "Images with time codes in file name...",
-                APIKey = "API key",
-                LanguageHint = "Language hint",
+                ApiKey = "API key",
                 SendOriginalImages = "Send original images",
             };
 

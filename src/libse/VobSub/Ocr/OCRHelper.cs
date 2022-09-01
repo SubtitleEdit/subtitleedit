@@ -3,17 +3,15 @@ using System;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr
 {
-    public static class OCRHelper
+    public static class OcrHelper
     {
-        public static string PostOCR(string input, string language)
+        public static string PostOcr(string input, string language)
         {
-            var s = input;
-            return FixInvalidCarriageReturnLineFeedCharacters(s);
+            return FixInvalidCarriageReturnLineFeedCharacters(input);
         }
 
         private static string FixInvalidCarriageReturnLineFeedCharacters(string input)
         {
-            // Fix new line chars
             return string.Join(Environment.NewLine, input.SplitToLines()).Trim();
         }
     }
