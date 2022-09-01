@@ -431,6 +431,7 @@
             public string Custom { get; set; }
             public string ToDropFrame { get; set; }
             public string FromDropFrame { get; set; }
+            public string AllowOverlap { get; set; }
         }
 
         public class CheckForUpdates

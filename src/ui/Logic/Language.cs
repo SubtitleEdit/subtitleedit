@@ -572,6 +572,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Custom = "Custom",
                 ToDropFrame = "To drop frame",
                 FromDropFrame = "From drop frame",
+                AllowOverlap = "Allow overlap"
             };
 
             CheckForUpdates = new LanguageStructure.CheckForUpdates

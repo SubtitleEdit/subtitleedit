@@ -1060,6 +1060,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ChangeSpeedInPercent/FromDropFrame":
                     language.ChangeSpeedInPercent.FromDropFrame = reader.Value;
                     break;
+                case "ChangeSpeedInPercent/AllowOverlap":
+                    language.ChangeSpeedInPercent.AllowOverlap = reader.Value;
+                    break;
                 case "CheckForUpdates/Title":
                     language.CheckForUpdates.Title = reader.Value;
                     break;
