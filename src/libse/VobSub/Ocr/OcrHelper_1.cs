@@ -3,7 +3,7 @@ using System;
 
 namespace Nikse.SubtitleEdit.Core.VobSub.Ocr
 {
-    public static class OcrHelper
+    public static class OcrHelper_1
     {
         public static string PostOcr(string input, string language)
         {

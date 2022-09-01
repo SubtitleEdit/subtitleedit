@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private NOcrThreadResult[] _nOcrThreadResults;
         private bool _ocrThreadStop;
 
-        private IOcrStrategy _ocrService;
+        private IOcrStrategy_1 _ocrService;
 
         private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
@@ -5252,7 +5252,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_ocrService == null)
                 {
-                    _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
+                    _ocrService = new GoogleOcrService_1(new GoogleCloudVisionApi_1(textBoxCloudVisionApiKey.Text));
                 }
             }
 
