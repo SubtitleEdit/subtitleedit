@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             groupBoxCloudVision.Text = language.CloudVisionApi;
             labelCloudVisionApiKey.Text = language.ApiKey;
-            labelCloudVisionLanguageHint.Text = language.Language;
+            labelCloudVisionLanguage.Text = language.Language;
             checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
 
             textBoxCloudVisionApiKey.Text = Configuration.Settings.VobSubOcr.CloudVisionApiKey;
@@ -645,14 +645,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var ocrLanguages = new GoogleOcrService(new GoogleCloudVisionApi(string.Empty)).GetLanguages().OrderBy(p => p.ToString());
-            comboBoxCloudVisionLanguageHint.Items.Clear();
-            comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
+            comboBoxCloudVisionLanguage.Items.Clear();
+            comboBoxCloudVisionLanguage.Items.AddRange(ocrLanguages.ToArray());
             var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == Configuration.Settings.VobSubOcr.CloudVisionLanguage);
             if (selectedOcrLanguage == null)
             {
                 selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
             }
-            comboBoxCloudVisionLanguageHint.Text = selectedOcrLanguage.ToString();
+            comboBoxCloudVisionLanguage.Text = selectedOcrLanguage.ToString();
         }
 
         private void FillSpellCheckDictionaries()
@@ -5273,15 +5273,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
 
                     var ocrLanguages = _ocrService.GetLanguages().OrderBy(p => p.ToString());
-                    var previouslySelectedLanguage = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
-                    comboBoxCloudVisionLanguageHint.Items.Clear();
-                    comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
+                    var previouslySelectedLanguage = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
+                    comboBoxCloudVisionLanguage.Items.Clear();
+                    comboBoxCloudVisionLanguage.Items.AddRange(ocrLanguages.ToArray());
                     var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == previouslySelectedLanguage);
                     if (selectedOcrLanguage == null)
                     {
                         selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
                     }
-                    comboBoxCloudVisionLanguageHint.Text = selectedOcrLanguage.ToString();
+                    comboBoxCloudVisionLanguage.Text = selectedOcrLanguage.ToString();
                 }
             }
 
@@ -6872,7 +6872,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string OcrViaCloudVision(Bitmap bitmap, int listViewIndex)
         {
-            var language = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
+            var language = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
             var cloudVisionResult = _ocrService.PerformOcr(language, new List<Bitmap>() { bitmap });
 
             if (cloudVisionResult.Count > 0)
@@ -8631,7 +8631,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
             Configuration.Settings.VobSubOcr.CloudVisionApiKey = textBoxCloudVisionApiKey.Text;
-            Configuration.Settings.VobSubOcr.CloudVisionLanguage = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
+            Configuration.Settings.VobSubOcr.CloudVisionLanguage = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
 
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
