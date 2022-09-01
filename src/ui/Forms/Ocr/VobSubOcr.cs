@@ -588,8 +588,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxNOcrItalic.Checked = Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic;
             numericUpDownNOcrMaxWrongPixels.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
 
+            groupBoxCloudVision.Text = language.CloudVisionApi;
             labelCloudVisionApiKey.Text = language.ApiKey;
-            labelCloudVisionLanguageHint.Text = language.Language;
+            labelCloudVisionLanguage.Text = language.Language;
             checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
 
             textBoxCloudVisionApiKey.Text = Configuration.Settings.VobSubOcr.CloudVisionApiKey;
@@ -644,14 +645,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var ocrLanguages = new GoogleOcrService(new GoogleCloudVisionApi(string.Empty)).GetLanguages().OrderBy(p => p.ToString());
-            comboBoxCloudVisionLanguageHint.Items.Clear();
-            comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
+            comboBoxCloudVisionLanguage.Items.Clear();
+            comboBoxCloudVisionLanguage.Items.AddRange(ocrLanguages.ToArray());
             var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == Configuration.Settings.VobSubOcr.CloudVisionLanguage);
             if (selectedOcrLanguage == null)
             {
                 selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
             }
-            comboBoxCloudVisionLanguageHint.Text = selectedOcrLanguage.ToString();
+            comboBoxCloudVisionLanguage.Text = selectedOcrLanguage.ToString();
         }
 
         private void FillSpellCheckDictionaries()
@@ -1600,6 +1601,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Color pattern;
             Color emphasis1;
             Color emphasis2;
+                        
+            var makeTransparent = true;
+            if (_ocrMethodIndex == _ocrMethodCloudVision)
+            {
+                // Cloud Vision doesn't like transparent images
+                makeTransparent = false;
+            }
 
             if (_mp4List != null)
             {
@@ -1610,7 +1618,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                         returnBmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1618,7 +1626,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else
                     {
                         returnBmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1634,7 +1642,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                         returnBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1642,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else
                     {
                         returnBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                        if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                        if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                         {
                             returnBmp.MakeTransparent();
                         }
@@ -1669,7 +1677,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         try
                         {
                             returnBmp = new Bitmap(fullFileName);
-                            if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                            if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                             {
                                 returnBmp.MakeTransparent();
                             }
@@ -1685,6 +1693,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
 
+                            // Check if we need to load the original VSF image
                             if (checkBoxCloudVisionSendOriginalImages.Visible && checkBoxCloudVisionSendOriginalImages.Checked)
                             {
                                 var originalFileName = GetVSFOriginalImageFileName(fullFileName);
@@ -1736,7 +1745,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             for (int k = 0; k < bitmaps.Count; k++)
                             {
                                 Bitmap part = bitmaps[k];
-                                if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                                if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                                 {
                                     part.MakeTransparent();
                                 }
@@ -1796,7 +1805,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 fbmp.UnlockImage();
                             }
 
-                            if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                            if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                             {
                                 b.MakeTransparent();
                             }
@@ -1834,7 +1843,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     }
 
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                     }
@@ -1861,7 +1870,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     }
 
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                     }
@@ -1886,7 +1895,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _dvbSubColor[index] = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                 }
 
-                if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                 {
                     nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                 }
@@ -1923,7 +1932,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                     returnBmp = _vobSubMergedPackList[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         returnBmp.MakeTransparent();
                     }
@@ -1931,7 +1940,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 else
                 {
                     returnBmp = _vobSubMergedPackList[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, crop);
-                    if (autoTransparentBackgroundToolStripMenuItem.Checked)
+                    if (makeTransparent && autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         returnBmp.MakeTransparent();
                     }
@@ -5263,15 +5272,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrService = new GoogleOcrService(new GoogleCloudVisionApi(textBoxCloudVisionApiKey.Text));
 
-                    var ocrLanguages = _ocrService.GetLanguages();
-                    comboBoxCloudVisionLanguageHint.Items.Clear();
-                    comboBoxCloudVisionLanguageHint.Items.AddRange(ocrLanguages.ToArray());
-                    var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p=>p.Code == Configuration.Settings.VobSubOcr.CloudVisionLanguage);
+                    var ocrLanguages = _ocrService.GetLanguages().OrderBy(p => p.ToString());
+                    var previouslySelectedLanguage = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
+                    comboBoxCloudVisionLanguage.Items.Clear();
+                    comboBoxCloudVisionLanguage.Items.AddRange(ocrLanguages.ToArray());
+                    var selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == previouslySelectedLanguage);
                     if (selectedOcrLanguage == null)
                     {
                         selectedOcrLanguage = ocrLanguages.FirstOrDefault(p => p.Code == "en");
                     }
-                    comboBoxCloudVisionLanguageHint.Text = selectedOcrLanguage.ToString();
+                    comboBoxCloudVisionLanguage.Text = selectedOcrLanguage.ToString();
                 }
             }
 
@@ -5695,10 +5705,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_abort)
             {
-                if (textBoxCurrentText.Text == "")
+                // Only overwrite text when empty
+                if (textBoxCurrentText.Text == String.Empty)
                 {
                     textBoxCurrentText.Text = text;
                 }
+
                 _mainOcrRunning = false;
                 SetButtonsEnabledAfterOcrDone();
                 return true;
@@ -6860,7 +6872,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string OcrViaCloudVision(Bitmap bitmap, int listViewIndex)
         {
-            var language = (comboBoxCloudVisionLanguageHint.SelectedItem as OcrLanguage).Code;
+            var language = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
             var cloudVisionResult = _ocrService.PerformOcr(language, new List<Bitmap>() { bitmap });
 
             if (cloudVisionResult.Count > 0)
@@ -8619,7 +8631,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
             Configuration.Settings.VobSubOcr.CloudVisionApiKey = textBoxCloudVisionApiKey.Text;
-            Configuration.Settings.VobSubOcr.CloudVisionLanguage = comboBoxCloudVisionLanguageHint.Text;
+            Configuration.Settings.VobSubOcr.CloudVisionLanguage = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
 
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
