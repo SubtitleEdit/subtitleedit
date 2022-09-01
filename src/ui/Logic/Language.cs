@@ -2180,6 +2180,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Merge lines with same time codes",
                 MaxDifferenceMilliseconds = "Max. milliseconds difference",
+                MakeDialog = "Make dialog",
                 ReBreakLines = "Re-break lines",
                 NumberOfMergesX = "Number of merges: {0}",
                 MergedText = "Merged text",
