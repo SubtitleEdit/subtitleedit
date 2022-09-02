@@ -193,9 +193,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.listViewTranslate.FullRowSelect = true;
             this.listViewTranslate.GridLines = true;
             this.listViewTranslate.HideSelection = false;
-            this.listViewTranslate.Location = new System.Drawing.Point(12, -6);
+            this.listViewTranslate.Location = new System.Drawing.Point(12, 43);
             this.listViewTranslate.Name = "listViewTranslate";
-            this.listViewTranslate.Size = new System.Drawing.Size(886, 441);
+            this.listViewTranslate.Size = new System.Drawing.Size(900, 441);
             this.listViewTranslate.TabIndex = 7;
             this.listViewTranslate.UseCompatibleStateImageBehavior = false;
             this.listViewTranslate.View = System.Windows.Forms.View.Details;
