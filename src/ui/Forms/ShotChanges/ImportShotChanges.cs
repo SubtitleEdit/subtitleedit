@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                     {
                         if (radioButtonFrames.Checked)
                         {
-                            ShotChangesInSeconds.Add(d / _frameRate);
+                            ShotChangesInSeconds.Add(Math.Round(d / _frameRate, 3, MidpointRounding.AwayFromZero));
                         }
                         else if (radioButtonSeconds.Checked)
                         {
