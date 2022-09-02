@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/08/23</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/09/02</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -101,14 +101,14 @@
     <Title>A propos de Subtitle Edit</Title>
     <AboutText1>Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
 Vous pouvez le distribuer, le modifier et l'utiliser librement.
-
 Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
 
 Visitez www.nikse.dk pour obtenir la dernière version.
-
 Les suggestions sont plus que bienvenues.
 
-Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions pour le français</AboutText1>
+Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions.com pour le français.
+.<!-- Ce point a été ajouté ce 31/08/22, pour mieux cadrer le texte -->
+</AboutText1>
   </About>
   <AddToNames>
     <Title>Ajouter à la liste de noms</Title>
@@ -249,6 +249,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <MarginY>Marge Y</MarginY>
     <OnlyDrawing>Dessin seul</OnlyDrawing>
     <DrawingFile>Fichier dessin</DrawingFile>
+    <ColorPickerSetLastColor>Dernière couleur de pipette : {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Définir la position</SetPosition>
@@ -448,6 +449,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Nombre de différences: {0} ({1:0.##}% de lettres modifiées)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Cacher les lignes identiques</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer les sauts de ligne</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignorer l'espacement</IgnoreWhitespace>
     <IgnoreFormatting>Ignorer le format</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Uniquement les différences de texte</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Ne comparer pas les sous-titres avec l'image de base</CannotCompareWithImageBasedSubtitles>
@@ -1337,7 +1339,6 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
         <SplitLineAtCursorAndWaveformPosition>Scinder la ligne à la position curseur/vidéo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Durée auto. (ligne actuelle)</AutoDurationCurrentLine>
         <SelectAll>Tout sélectionner</SelectAll>
-        <Insert>Insérer</Insert>
         <InsertFirstLine>Insérer une ligne</InsertFirstLine>
         <InsertBefore>Insérer avant</InsertBefore>
         <InsertAfter>Insérer après</InsertAfter>
@@ -1353,6 +1354,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
         <ColumnTextUp>Texte vers le haut</ColumnTextUp>
         <ColumnTextDown>Texte vers le bas</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copier le texte original vers l'actuel</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>Lignes OCR sélectionnées</OcrSelectedLines>
         <Split>Scinder</Split>
         <MergeSelectedLines>Joindre les lignes sélectionnées</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Joindre les lignes sélectionnées comme dialogue</MergeSelectedLinesAsDialog>
@@ -1411,7 +1413,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       <UndoChangesInEditPanel>Défaire modif. édition</UndoChangesInEditPanel>
       <Previous>&lt; Préc.</Previous>
       <Next>Suiv. &gt;</Next>
-      <AutoBreak>Saut auto.</AutoBreak>
+      <AutoBreak>Coupure automatique</AutoBreak>
       <Unbreak>Joindre</Unbreak>
     </Controls>
     <VideoControls>
@@ -1428,7 +1430,7 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
       <DelayInSeconds>Retard (secondes)</DelayInSeconds>
       <OriginalText>Texte original</OriginalText>
       <Previous>&lt; Précédent</Previous>
-      <Stop>Stop</Stop>
+      <Stop>&amp;Stop</Stop>
       <PlayCurrent>Lire</PlayCurrent>
       <Next>Suivant &gt;</Next>
       <Playing>Lecture ...</Playing>
@@ -1737,13 +1739,16 @@ Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sa
     <NoSupportHereVobSub>Les fichiers VobSub ne sont pas supportés ici.</NoSupportHereVobSub>
     <NoSupportHereDivx>Les fichiers DivX ne sont pas supportés ici.</NoSupportHereDivx>
     <NoChapters>Pas de chapitres trouvés dans cette vidéo.</NoChapters>
-    <VideoFromUrlRequirements>Ouvrir une vidéo depuis l'URL nécessite 'mpv' et 'youtube-dl' - télécharger et continuer ??</VideoFromUrlRequirements>
+    <VideoFromUrlRequirements>Ouvrir une vidéo depuis l'URL nécessite 'mpv' et 'youtube-dl'
+	
+	Télécharger et continuer ??</VideoFromUrlRequirements>
     <Url>URL</Url>
     <Errors>Erreurs</Errors>
     <ShowVideoControls>Afficher les contôles vidéo</ShowVideoControls>
     <HideVideoControls>Masquer les contôles vidéo</HideVideoControls>
     <GeneratingWaveformInBackground>Générer l'onde sonore en arrière-plan ...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Auto-sauvegardé</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>N'utilise que le canal audio central avant</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
@@ -2453,7 +2458,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <GoToStartCurrent>Positionner la vidéo au début du sous-titre actuel</GoToStartCurrent>
     <ToggleStartEndCurrent>Commuter la position vidéo entre début/fin du sous-titre actuel</ToggleStartEndCurrent>
     <PlaySelectedLines>Lire les lignes sélectionnées</PlaySelectedLines>
-    <LoopSelectedLines>Boucler sur la ligne sélectionnées</LoopSelectedLines>
+    <LoopSelectedLines>Boucler sur les lignes sélectionnées</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Aller au sous-titre précédent (depuis la position vidéo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Aller au sous-titre suivant (depuis la position vidéo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Aller au chapitre précédent</WaveformGoToPrevChapter>
@@ -2545,7 +2550,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <UseDoNotBreakAfterList>Liste continue (auto-coupure)</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Couper tôt en fin de phrase (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Couper par largeur de pixel</BreakByPixelWidth>
-    <BreakPreferBottomHeavy>Préférer le bas lourd</BreakPreferBottomHeavy>
+    <BreakPreferBottomHeavy>Préférer le fond lourd</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>Couper tôt aux tirets de dialogue</BreakEarlyForDashDialog>
     <BreakEarlyForComma>Couper tôt aux virgules</BreakEarlyForComma>
     <GoogleTranslate>Google Translate</GoogleTranslate>
@@ -2932,7 +2937,8 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <OcrViaImageCompare>Par comparaison binaire d'image</OcrViaImageCompare>
     <OcrViaModi>Par Microsoft Office Document Imaging (MODI)</OcrViaModi>
     <OcrViaNOCR>Par nOCR</OcrViaNOCR>
-    <TesseractEngineMode>Moteur</TesseractEngineMode>
+     <OcrViaCloudVision>OCR via l'API Google Cloud Vision</OcrViaCloudVision>
+   <TesseractEngineMode>Moteur</TesseractEngineMode>
     <TesseractEngineModeLegacy>Rien que Tesseract original (détecte l'italique)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Rien que réseaux neuronaux LSTM</TesseractEngineModeNeural>
     <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
@@ -2944,7 +2950,6 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <New>Nouveau</New>
     <Edit>Editer</Edit>
     <StartOcr>Lancer OCR</StartOcr>
-    <Stop>Stop</Stop>
     <StartOcrFrom>Démarrer OCR au sous-titre n° :</StartOcrFrom>
     <LoadingVobSubImages>Chargement des images VobSub ...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Télécharger base de données de comparaison d'images</LoadingImageCompareDatabase>
@@ -3002,6 +3007,9 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <StartTraining>Démarrer l'initiation</StartTraining>
     <NowTraining>Initiation de la police '{1}'. Total carac. acquis : {0:#,###,##0}, {2:#,###,##0} connus</NowTraining>
     <ImagesWithTimeCodesInFileName>Images au nom de fichier horodaté ...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
+    <ApiKey>Clé d'API</ApiKey>
+    <SendOriginalImages>Envoyer les images originales</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversion manuelle d'image en texte</Title>
