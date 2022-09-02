@@ -51,6 +51,7 @@
             this.buttonAddFile = new System.Windows.Forms.Button();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.labelFC = new System.Windows.Forms.Label();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.SuspendLayout();
@@ -296,11 +297,23 @@
             this.columnHeaderFileName.Text = "File name";
             this.columnHeaderFileName.Width = 455;
             // 
+            // labelFC
+            // 
+            this.labelFC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelFC.ForeColor = System.Drawing.Color.Gray;
+            this.labelFC.Location = new System.Drawing.Point(247, 442);
+            this.labelFC.Name = "labelFC";
+            this.labelFC.Size = new System.Drawing.Size(120, 17);
+            this.labelFC.TabIndex = 19;
+            this.labelFC.Text = "labelFC";
+            this.labelFC.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // AudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
+            this.Controls.Add(this.labelFC);
             this.Controls.Add(this.groupBoxInputFiles);
             this.Controls.Add(this.buttonBatchMode);
             this.Controls.Add(this.checkBoxUsePostProcessing);
@@ -358,5 +371,6 @@
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button buttonRemoveFile;
         private System.Windows.Forms.Button buttonAddFile;
+        private System.Windows.Forms.Label labelFC;
     }
 }

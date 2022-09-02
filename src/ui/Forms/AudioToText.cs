@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Vosk;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -84,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             listViewInputFiles.Visible = false;
+            labelFC.Text = string.Empty;
         }
 
         private void FillModels(string lastDownloadedModel)
@@ -442,9 +442,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!File.Exists(outWaveFile))
             {
-                SeLogger.Error("Generated wave file not found: " + outWaveFile + Environment.NewLine + 
+                SeLogger.Error("Generated wave file not found: " + outWaveFile + Environment.NewLine +
                                "ffmpeg: " + process.StartInfo.FileName + Environment.NewLine +
-                               "Parameters: "  + process.StartInfo.Arguments + Environment.NewLine +
+                               "Parameters: " + process.StartInfo.Arguments + Environment.NewLine +
                                "OS: " + Environment.OSVersion + Environment.NewLine +
                                "64-bit: " + Environment.Is64BitOperatingSystem);
             }
@@ -465,10 +465,12 @@ namespace Nikse.SubtitleEdit.Forms
                 audioParameter = $"-map 0:a:{audioTrackNumber}";
             }
 
+            labelFC.Text = string.Empty;
             var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
             if (_useCenterChannelOnly)
             {
                 fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ab 128 -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
+                labelFC.Text = "FC";
             }
 
             //-i indicates the input

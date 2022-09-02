@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
                     FfmpegMediaInfo.Parse(inputVideoFile).HasFrontCenterAudio(audioTrackNumber))
                 {
                     fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ab 128 -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
+                    encoderName += " FC";
                 }
 
                 //-i indicates the input
