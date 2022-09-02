@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 01.09.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 02.09.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -398,6 +398,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Custom>Personalizzata</Custom>
     <ToDropFrame>Al calo fotogramma</ToDropFrame>
     <FromDropFrame>Dal calo fotogramma</FromDropFrame>
+    <AllowOverlap>Consenti sovrapposizione</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Verifica aggiornamenti</Title>
@@ -2937,7 +2938,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR via confronto immagine</OcrViaImageCompare>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI) - Richiede Microsoft Office</OcrViaModi>
-    <OcrViaCloudVision>OCR via API Cloud Vision</OcrViaCloudVision>
+    <OcrViaCloudVision>OCR via API Google eCloud Vision</OcrViaCloudVision>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <TesseractEngineMode>Modalità motore</TesseractEngineMode>
     <TesseractEngineModeLegacy>Solo Tesseract originale (in grado di rilevare il corsivo)</TesseractEngineModeLegacy>
@@ -3008,6 +3009,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <StartTraining>Inizia formazione</StartTraining>
     <NowTraining>Tipo di carattere '{1}'. Lettere addestrate: {0:#,###,##0}, {2:#,###,##0} note</NowTraining>
     <ImagesWithTimeCodesInFileName>Immagini con time code nel nome file...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
     <ApiKey>Chiave API</ApiKey>
     <SendOriginalImages>Invia immagini originali</SendOriginalImages>
   </VobSubOcr>
