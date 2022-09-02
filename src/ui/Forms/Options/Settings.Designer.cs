@@ -681,7 +681,7 @@
             // comboBoxCpsLineLenCalc
             // 
             this.comboBoxCpsLineLenCalc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCpsLineLenCalc.DropDownWidth = 200;
+            this.comboBoxCpsLineLenCalc.DropDownWidth = 220;
             this.comboBoxCpsLineLenCalc.FormattingEnabled = true;
             this.comboBoxCpsLineLenCalc.Location = new System.Drawing.Point(203, 351);
             this.comboBoxCpsLineLenCalc.Name = "comboBoxCpsLineLenCalc";
@@ -4904,10 +4904,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelFont);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelFileTypeAssociations);
