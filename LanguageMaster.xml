@@ -398,6 +398,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Custom>Custom</Custom>
     <ToDropFrame>To drop frame</ToDropFrame>
     <FromDropFrame>From drop frame</FromDropFrame>
+    <AllowOverlap>Allow overlap</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Check for updates</Title>
