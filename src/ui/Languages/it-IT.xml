@@ -2938,7 +2938,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR via confronto immagine</OcrViaImageCompare>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI) - Richiede Microsoft Office</OcrViaModi>
-    <OcrViaCloudVision>OCR via API Google eCloud Vision</OcrViaCloudVision>
+    <OcrViaCloudVision>OCR via API Google Cloud Vision</OcrViaCloudVision>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <TesseractEngineMode>Modalità motore</TesseractEngineMode>
     <TesseractEngineModeLegacy>Solo Tesseract originale (in grado di rilevare il corsivo)</TesseractEngineModeLegacy>
