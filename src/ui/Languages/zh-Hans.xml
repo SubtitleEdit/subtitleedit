@@ -2921,8 +2921,9 @@ Command line: {1} {2}
     <OcrMethod>OCR 方式</OcrMethod>
     <OcrViaTesseractVersionX>Tesseract: {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>使用图像比较 OCR</OcrViaImageCompare>
-    <OcrViaModi>使用 Microsoft Office 文档图像(MODI) OCR，需要 Microsoft Office</OcrViaModi>
-    <OcrViaNOCR>用 nOCR 执行 OCR</OcrViaNOCR>
+    <OcrViaModi>通过 Microsoft Office 文档图像(MODI) OCR，需要 Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>通过 nOCR 进行 OCR</OcrViaNOCR>
+    <OcrViaCloudVision>通过 Google Cloud Vision API 进行 OCR</OcrViaCloudVision>
     <TesseractEngineMode>引擎模式</TesseractEngineMode>
     <TesseractEngineModeLegacy>仅使用原始Tesseract (可侦测斜体)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>仅使用神经网络 LSTM</TesseractEngineModeNeural>
@@ -2993,6 +2994,7 @@ Command line: {1} {2}
     <StartTraining>开始训练</StartTraining>
     <NowTraining>正在训练字体 '{1}', 已训练字符数: {0:#,###,##0}, 已获知 {2:#,###,##0}</NowTraining>
     <ImagesWithTimeCodesInFileName>文件名中带有时间码的图像...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
