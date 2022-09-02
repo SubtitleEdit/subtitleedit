@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
             if (Configuration.Settings.General.CurrentVideoIsSmpte)
             {
-                shotChanges = shotChanges.Select(sc => sc /= 1.001).ToList();
+                shotChanges = shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
             }
 
             int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
