@@ -30,6 +30,7 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
             this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
             this.labelPercent = new System.Windows.Forms.Label();
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
@@ -50,7 +51,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(295, 158);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -62,10 +63,20 @@
             this.buttonOK.Location = new System.Drawing.Point(214, 158);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 3;
+            this.buttonOK.TabIndex = 4;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
+            // checkBoxAllowOverlap
+            // 
+            this.checkBoxAllowOverlap.AutoSize = true;
+            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(24, 160);
+            this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
+            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(109, 21);
+            this.checkBoxAllowOverlap.TabIndex = 3;
+            this.checkBoxAllowOverlap.Text = "Allow overlap";
+            this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
             // numericUpDownPercent
             // 
@@ -180,6 +191,7 @@
             this.Controls.Add(this.groupBoxInfo);
             this.Controls.Add(this.radioButtonSelectedLinesOnly);
             this.Controls.Add(this.radioButtonAllLines);
+            this.Controls.Add(this.checkBoxAllowOverlap);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
@@ -203,6 +215,7 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
         private System.Windows.Forms.NumericUpDown numericUpDownPercent;
         private System.Windows.Forms.Label labelPercent;
         private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
