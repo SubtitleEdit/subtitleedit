@@ -1821,6 +1821,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBarToolStripMenuItem.Text = _language.Menu.ContextMenu.GenerateProgressBar;
             videoResolutionResamplerToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaResolutionChanger;
             generateBackgroundBoxToolStripMenuItem.Text = _language.Menu.ContextMenu.AssaGenerateBackgroundBox;
+            colorPickerToolStripMenuItem.Text = _language.Menu.ContextMenu.ImageColorPicker;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -24803,6 +24804,7 @@ namespace Nikse.SubtitleEdit.Forms
             translateToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateAuto);
             applyCustomStylesToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralApplyAssaOverrideTags);
             setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaPosition);
+            colorPickerToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralColorPicker);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             audioVisualizer.Move100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsLeft);
@@ -34307,6 +34309,43 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new WordLists())
             {
                 form.ShowDialog(this);
+            }
+        }
+
+        private void colorPickerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_videoFileName))
+            {
+                MessageBox.Show(_languageGeneral.NoVideoLoaded);
+                return;
+            }
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                var timeCode = new TimeCode(mediaPlayer.CurrentPosition * 1000.0 + 1000).ToHHMMSS();
+                var colorMatrix =  "bt601:bt709"; // ffmpeg bug with assa color?
+                var bmpFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, timeCode, colorMatrix);
+                using (var bmp = new Bitmap(bmpFileName))
+                {
+                    Cursor = Cursors.Default;
+                    using (var form = new ImageColorPicker(bmp))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        ColorChooser.SetLastColor(form.Color);
+                        ShowStatus(string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(form.Color)));
+                    }
+                }
+
+                _filesToDelete.Add(bmpFileName);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
     }

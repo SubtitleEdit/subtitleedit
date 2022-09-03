@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private bool _loading = true;
         private string _assaBox;
         private readonly Random _random = new Random();
-        private string _boxStyleName;
+        private readonly string _boxStyleName;
         private int _top;
         private int _bottom;
         private int _left;
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private long _totalFrames;
         private FileSystemWatcher _drawingFileWatcher;
         private readonly Subtitle _wholeSubtitle;
-        private static bool _bt601Bt709On = false;
+        private static bool _bt601Bt709On = true;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double videoPositionSeconds)
         {

@@ -247,6 +247,11 @@
             public string SourceAndTargetEqual { get; set; }
         }
 
+        public class ImageColorPicker
+        {
+            public string Title { get; set; }
+        }
+
         public class AssaSetBackgroundBox
         {
             public string Title { get; set; }
@@ -1790,6 +1795,7 @@
                     public string GenerateProgressBar { get; set; }
                     public string AssaResolutionChanger { get; set; }
                     public string AssaGenerateBackgroundBox { get; set; }
+                    public string ImageColorPicker { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
                     public string SaveSelectedLines { get; set; }
