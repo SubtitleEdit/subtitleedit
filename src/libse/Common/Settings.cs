@@ -708,6 +708,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string NuendoCharacterListFile { get; set; }
 
         public bool WebVttUseXTimestampMap { get; set; }
+        public bool WebVttUseMultipleXTimestampMap { get; set; }
         public long WebVttTimescale { get; set; }
         public string WebVttCueAn1 { get; set; }
         public string WebVttCueAn2 { get; set; }
@@ -789,6 +790,7 @@ $HorzAlign          =   Center
 
             WebVttTimescale = 90000;
             WebVttUseXTimestampMap = true;
+            WebVttUseMultipleXTimestampMap = true;
             WebVttCueAn1 = "position:20%";
             WebVttCueAn2 = "";
             WebVttCueAn3 = "position:80%";
@@ -6536,6 +6538,12 @@ $HorzAlign          =   Center
                 {
                     settings.SubtitleSettings.WebVttUseXTimestampMap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
+
+                subNode = node.SelectSingleNode("WebVttUseMultipleXTimestampMap");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttUseMultipleXTimestampMap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
             }
 
             // Proxy
@@ -10331,6 +10339,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BluRaySupSkipMerge", settings.SubtitleSettings.BluRaySupSkipMerge.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BluRaySupForceMergeAll", settings.SubtitleSettings.BluRaySupForceMergeAll.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WebVttUseMultipleXTimestampMap", settings.SubtitleSettings.WebVttUseMultipleXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("Proxy", string.Empty);
