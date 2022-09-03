@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelFrameRate.Text = LanguageSettings.Current.General.FrameRate;
             groupBoxBackground.Text = LanguageSettings.Current.GenerateBlankVideo.Background;
             buttonColor.Text = LanguageSettings.Current.Settings.ChooseColor;
-            buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
+            buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EnableDisableControls(bool enable)
         {
-            buttonOK.Enabled = enable;
+            buttonGenerate.Enabled = enable;
             numericUpDownDurationMinutes.Enabled = enable;
             numericUpDownWidth.Enabled = enable;
             numericUpDownHeight.Enabled = enable;
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             _abort = true;
-            if (buttonOK.Enabled)
+            if (buttonGenerate.Enabled)
             {
                 DialogResult = DialogResult.Cancel;
             }
@@ -352,6 +352,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void GenerateVideo_Shown(object sender, EventArgs e)
+        {
+            buttonGenerate.Show();
         }
     }
 }
