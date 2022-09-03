@@ -12,7 +12,7 @@
    * Add shorcuts for play with speed 1.5x/2x - thx OmrSi
    * Add "nOCR" option to "Batch convert" - thx Gen3ric
    * New proxy settings
-   * Add color picker to "set assa background box" - thx Érico
+   * Add "ASSA image color picker" incl. shortcut - thx Érico
    * Add cli param /deletecontains:word - thx sweetngx
    * Add ignore white space to compare - thx Leon
    * Enable "Audio to text" for Linux - thx edcol/coastal45
