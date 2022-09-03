@@ -1334,6 +1334,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
             }
+
             return AdvancedSubStationAlpha.GetSsaColorString(c);
         }
 

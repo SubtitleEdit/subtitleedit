@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Forms.Ocr;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
@@ -14,6 +16,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private int _colorPickerY = -1;
 
         public Color Color { get; set; }
+        public string HexColor => Utilities.ColorToHex(Color).ToUpper();
+        public string AssaColor => AdvancedSubStationAlpha.GetSsaColorStringNoTransparency(Color);
 
         public ImageColorPicker(Bitmap bitmap)
         {
@@ -54,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 {
                     Color = _bitmap.GetPixel(x, y);
                     panelMouseOverColor.BackColor = Color;
-                    labelInfo.Text = $"R={Color.R} G={Color.G} B={Color.B}";
+                    labelInfo.Text = $"R={Color.R} G={Color.G} B={Color.B}      {HexColor}      {AssaColor}";
                 }
 
                 _colorPickerX = x;
@@ -66,6 +70,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             _colorPickerOn = false;
             Cursor.Current = Cursors.Default;
+
+            MouseEventArgs me = (MouseEventArgs)e;
+            if (me.Button == MouseButtons.Right)
+            {
+                Clipboard.SetText(AssaColor);
+            }
+            else
+            {
+                Clipboard.SetText(HexColor);
+            }
+
             DialogResult = DialogResult.OK;
         }
 
