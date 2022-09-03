@@ -1470,12 +1470,14 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private void bt601bt709ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             bt601bt709ToolStripMenuItem.Checked = true;
+            noneToolStripMenuItem.Checked = false;
             _bt601Bt709On = true;
         }
 
         private void noneToolStripMenuItem_Click(object sender, EventArgs e)
         {
             noneToolStripMenuItem.Checked = true;
+            bt601bt709ToolStripMenuItem.Checked = false;
             _bt601Bt709On = false;
         }
     }
