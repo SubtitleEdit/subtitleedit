@@ -2,10 +2,11 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    public partial class ImageColorPicker : Form
+    public sealed partial class ImageColorPicker : Form
     {
         private readonly Bitmap _bitmap;
         private bool _colorPickerOn = true;
@@ -32,6 +33,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             Width = _bitmap.Width + 10;
             Height = _bitmap.Height + (Height - pictureBoxImage.Height);
+
+            Text = LanguageSettings.Current.ImageColorPicker.Title;
         }
 
         private void pictureBoxImage_MouseMove(object sender, MouseEventArgs e)

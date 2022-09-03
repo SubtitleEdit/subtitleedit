@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Assa
 {
-    partial class ImageColorPicker
+    sealed partial class ImageColorPicker
     {
         /// <summary>
         /// Required designer variable.

@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
         public LanguageStructure.AssaProgressBarGenerator AssaProgressBarGenerator;
         public LanguageStructure.AssaResulationChanger AssaResulationChanger;
+        public LanguageStructure.ImageColorPicker ImageColorPicker;
         public LanguageStructure.AssaSetBackgroundBox AssaSetBackgroundBox;
         public LanguageStructure.AssaSetPosition AssaSetPosition;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -387,6 +388,11 @@ namespace Nikse.SubtitleEdit.Logic
                 ChangeResolutionPositions = "Change resolution for position",
                 ChangeResolutionDrawing = "Change resolution for drawing",
                 SourceAndTargetEqual = "Source and target resolution is the same - nothing to do.",
+            };
+
+            ImageColorPicker = new LanguageStructure.ImageColorPicker
+            {
+                Title = "Image color picker",
             };
 
             AssaSetBackgroundBox = new LanguageStructure.AssaSetBackgroundBox
@@ -1945,6 +1951,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateProgressBar = "Generate progress bar...",
                         AssaResolutionChanger = "Change ASSA script resolution...",
                         AssaGenerateBackgroundBox = "Generate background box...",
+                        ImageColorPicker = "Image color picker...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
                         SaveSelectedLines = "Save selected lines as...",
