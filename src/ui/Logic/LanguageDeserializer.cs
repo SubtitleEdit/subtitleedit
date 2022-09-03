@@ -622,6 +622,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaResulationChanger/SourceAndTargetEqual":
                     language.AssaResulationChanger.SourceAndTargetEqual = reader.Value;
                     break;
+                case "ImageColorPicker/Title":
+                    language.ImageColorPicker.Title = reader.Value;
+                    break;
                 case "AssaSetBackgroundBox/Title":
                     language.AssaSetBackgroundBox.Title = reader.Value;
                     break;
@@ -4554,6 +4557,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/AssaGenerateBackgroundBox":
                     language.Main.Menu.ContextMenu.AssaGenerateBackgroundBox = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ImageColorPicker":
+                    language.Main.Menu.ContextMenu.ImageColorPicker = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/FixCommonErrorsInSelectedLines":
                     language.Main.Menu.ContextMenu.FixCommonErrorsInSelectedLines = reader.Value;

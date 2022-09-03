@@ -234,6 +234,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Source and target resolution is the same - nothing to do.</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <ImageColorPicker>
+    <Title>Image color picker</Title>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Generate background box</Title>
     <Padding>Padding</Padding>
@@ -1395,6 +1398,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <GenerateProgressBar>Generate progress bar...</GenerateProgressBar>
         <AssaResolutionChanger>Change ASSA script resolution...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Generate background box...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Image color picker...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
