@@ -338,6 +338,7 @@
             this.Text = "Audio to text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.Load += new System.EventHandler(this.AudioToText_Load);
+            this.Shown += new System.EventHandler(this.AudioToText_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
             this.groupBoxModels.ResumeLayout(false);
             this.groupBoxModels.PerformLayout();
