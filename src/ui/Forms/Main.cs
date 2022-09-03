@@ -34320,6 +34320,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
             try
             {
                 Cursor = Cursors.WaitCursor;
