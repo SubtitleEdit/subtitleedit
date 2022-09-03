@@ -30,7 +30,8 @@
    * Improve fullscreen play video size with mpv - thx GrampaWildWilly
    * Can detect Tesseract 5 on Linux - thx shag00
    * nOCR selected lines only (list view context menu)
-   * Audio to text: Select model after download
+   * Audio to text: Auto select downloaded model after download
+   * Allow for multiple X-TIMESTAMP-MAPs in WebVTT - thx doctorm
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
@@ -41,6 +42,7 @@
    * Fix assa background box issue - thx Érico
    * Fix asterisk showing after offsetting with no change - thx OmrSi
    * Fix issues with NQC shot change rules - thx OmrSi
+   * Fix UI issue in copy-paste translate
 
 
 3.6.7 (13th August 2022)
