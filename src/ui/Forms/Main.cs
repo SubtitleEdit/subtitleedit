@@ -34342,6 +34342,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         ColorChooser.SetLastColor(form.Color);
+                        Configuration.Settings.General.LastColorPickerDropper = form.Color;
                         ShowStatus(string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(form.Color)));
                     }
                 }

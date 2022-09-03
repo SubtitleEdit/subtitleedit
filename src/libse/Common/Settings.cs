@@ -1393,6 +1393,7 @@ $HorzAlign          =   Center
         public Color LastColorPickerColor5 { get; set; }
         public Color LastColorPickerColor6 { get; set; }
         public Color LastColorPickerColor7 { get; set; }
+        public Color LastColorPickerDropper { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -1549,6 +1550,7 @@ $HorzAlign          =   Center
             LastColorPickerColor5 = Color.Black;
             LastColorPickerColor6 = Color.Cyan;
             LastColorPickerColor7 = Color.DarkOrange;
+            LastColorPickerDropper = Color.Transparent;
             UseDarkTheme = false;
             DarkThemeShowListViewGridLines = false;
             AutoSetVideoSmpteForTtml = true;

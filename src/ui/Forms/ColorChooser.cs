@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Panel panelC6;
         private Panel panelC5;
         private Panel panelC4;
+        private Button buttonColorPicker;
         private bool _hexEditOn;
 
         public ColorChooser()
@@ -102,6 +103,18 @@ namespace Nikse.SubtitleEdit.Forms
             panelC5.BackColor = Configuration.Settings.General.LastColorPickerColor5;
             panelC6.BackColor = Configuration.Settings.General.LastColorPickerColor6;
             panelC7.BackColor = Configuration.Settings.General.LastColorPickerColor7;
+
+            if (Configuration.Settings.General.LastColorPickerDropper == Color.Transparent)
+            {
+                buttonColorPicker.Visible = false;
+            }
+            else
+            {
+                buttonColorPicker.BackColor = Configuration.Settings.General.LastColorPickerDropper;
+                buttonColorPicker.BackgroundImage = Properties.Resources.color_picker_small2;
+                buttonColorPicker.ImageAlign = ContentAlignment.MiddleCenter;
+                buttonColorPicker.BackgroundImageLayout = ImageLayout.Center;
+            }
         }
 
         public bool ShowAlpha
@@ -373,6 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelC6 = new System.Windows.Forms.Panel();
             this.panelC5 = new System.Windows.Forms.Panel();
             this.panelC4 = new System.Windows.Forms.Panel();
+            this.buttonColorPicker = new System.Windows.Forms.Button();
             this._flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._tbRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._tbGreen)).BeginInit();
@@ -788,10 +802,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelC4.TabIndex = 65;
             this.panelC4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC4_MouseClick);
             // 
+            // buttonColorPicker
+            // 
+            this.buttonColorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonColorPicker.Location = new System.Drawing.Point(295, 150);
+            this.buttonColorPicker.Name = "buttonColorPicker";
+            this.buttonColorPicker.Size = new System.Drawing.Size(102, 74);
+            this.buttonColorPicker.TabIndex = 69;
+            this.buttonColorPicker.UseVisualStyleBackColor = true;
+            this.buttonColorPicker.Click += new System.EventHandler(this.buttonColorPicker_Click);
+            // 
             // ColorChooser
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(413, 441);
+            this.Controls.Add(this.buttonColorPicker);
             this.Controls.Add(this.panelC7);
             this.Controls.Add(this.panelC3);
             this.Controls.Add(this.panelC6);
@@ -841,6 +866,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this._tbValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion Windows Form Designer generated code
@@ -986,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        private void PanelColorClick(Panel panel)
+        private void PanelColorClick(Control panel)
         {
             var c = panel.BackColor;
             UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
@@ -1033,7 +1059,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void panelC6_MouseClick(object sender, MouseEventArgs e)
         {
             PanelColorClick(panelC6);
-
         }
 
         private void panelC7_MouseClick(object sender, MouseEventArgs e)
@@ -1047,6 +1072,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 CheckValidHexInput();
             }
+        }
+
+        private void buttonColorPicker_Click(object sender, EventArgs e)
+        {
+            PanelColorClick(buttonColorPicker);
         }
     }
 }

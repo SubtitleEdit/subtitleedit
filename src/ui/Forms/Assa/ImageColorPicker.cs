@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms.Ocr;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Assa
 {
