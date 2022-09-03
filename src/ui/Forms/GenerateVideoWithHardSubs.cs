@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
-            buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
+            buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
             labelPreviewPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -172,14 +172,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
             textBoxLog.Visible = false;
 
-            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonGenerate);
             UiUtil.FixFonts(this, 2000);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             _abort = true;
-            if (buttonOK.Enabled)
+            if (buttonGenerate.Enabled)
             {
                 DialogResult = DialogResult.Cancel;
             }
@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             _log = new StringBuilder();
-            buttonOK.Enabled = false;
+            buttonGenerate.Enabled = false;
             var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
-                    buttonOK.Enabled = true;
+                    buttonGenerate.Enabled = true;
                     numericUpDownFontSize.Enabled = true;
                     return;
                 }
@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     MessageBox.Show($"Cannot overwrite video file { VideoFileName} - probably in use!");
-                    buttonOK.Enabled = true;
+                    buttonGenerate.Enabled = true;
                     numericUpDownFontSize.Enabled = oldFontSizeEnabled;
                     return;
                 }
@@ -929,7 +929,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!File.Exists(_inputVideoFileName))
             {
                 MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileNotFound, _inputVideoFileName));
-                buttonOK.Enabled = false;
+                buttonGenerate.Enabled = false;
                 return;
             }
 
@@ -937,6 +937,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownTargetFileSize.Value = Math.Max(targetFileSizeMb, numericUpDownTargetFileSize.Minimum);
             _loading = false;
             UiUtil.FixFonts(groupBoxSettings, 2000);
+
+            buttonGenerate.Focus();
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
