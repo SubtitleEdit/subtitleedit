@@ -147,41 +147,10 @@ namespace Nikse.SubtitleEdit.Controls
             };
         }
 
-        private bool _fixedArabicComma;
         public override string Text
         {
-            get
-            {
-                var s = base.Text;
-                if (_fixedArabicComma)
-                {
-                    s = s.Replace("\u202A،", "،");
-                    s = s.Replace("،\u202A", "،");
-                }
-
-                return string.Join(Environment.NewLine, s.SplitToLines());
-            }
-            set
-            {
-                _fixedArabicComma = false;
-                var s = value ?? string.Empty;
-                if (!Configuration.Settings.General.RightToLeftMode && !s.ContainsUnicodeControlChars())
-                {
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(s, true);
-                    if (textNoTags.EndsWith('،'))
-                    {
-                        s = Regex.Replace(s, @"،(?=(?:<[^>]+>)?(?:{[^}]+})?$)", "\u202A،");
-                    }
-                    else if (textNoTags.StartsWith('،'))
-                    {
-                        s = Regex.Replace(s, @"(?<=^(?:{[^}]+})?(?:<[^>]+>)?)،", "،\u202A");
-                    }
-
-                    _fixedArabicComma = true;
-                }
-
-                base.Text = string.Join("\n", s.SplitToLines());
-            }
+            get => string.Join(Environment.NewLine, base.Text.SplitToLines());
+            set => base.Text = string.Join("\n", value.SplitToLines());
         }
 
         public new int SelectionStart
