@@ -397,6 +397,7 @@ Command line: {1} {2}
     <Custom>自定义</Custom>
     <ToDropFrame>至丢失帧</ToDropFrame>
     <FromDropFrame>自丢失帧</FromDropFrame>
+    <AllowOverlap>允许重叠</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>检查更新</Title>
