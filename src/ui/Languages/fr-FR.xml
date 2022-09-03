@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/09/02</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/09/03</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -397,7 +397,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Info>Modifier la vitesse des sous-titres en pourcentage</Info>
     <Custom>Personnaliser</Custom>
     <ToDropFrame>Vers l'image balise</ToDropFrame>
-    <FromDropFrame>De l'ilage balise</FromDropFrame>
+    <FromDropFrame>De l'image balise</FromDropFrame>
+    <AllowOverlap>Chevauchement autorisé</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Vérifier les mises à jour</Title>
@@ -893,7 +894,8 @@ Pour utiliser une clé API allez à "Options -&gt; Paramètres -&gt; Outils" et 
     <AutoCopyLineSeparator>Séparateur de ligne</AutoCopyLineSeparator>
     <TranslateBlockXOfY>Traduire le bloc {0} de {1}</TranslateBlockXOfY>
     <TranslateBlockInfo>Allez au traducteur et collez le texte, Copiez le résultat dans le presse-papiers et cliquez sur le bouton ci-dessous</TranslateBlockInfo>
-    <TranslateBlockGetFromClipboard>Prendre le texte traduit hors du presse-papiers (Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockGetFromClipboard>Prendre le texte traduit hors du presse-papiers
+	(Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>Copier le presse-papiers du texte source</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Le presse-papiers contient le texte source !</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Allez au traducteur et traduisez. Copiez le résultat dans le presse-papiers et cliquez à nouveau sur ce bouton.</TranslateBlockClipboardError2>
