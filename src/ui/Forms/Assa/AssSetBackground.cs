@@ -1444,6 +1444,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         }
 
                         ColorChooser.SetLastColor(form.Color);
+                        Configuration.Settings.General.LastColorPickerDropper = form.Color;
                         labelProgress.Text = string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(form.Color));
                         System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
                         {
