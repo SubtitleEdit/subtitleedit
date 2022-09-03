@@ -399,6 +399,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Custom>Personalizado</Custom>
     <ToDropFrame>Para descer fotograma</ToDropFrame>
     <FromDropFrame>Da descida fotograma</FromDropFrame>
+    <AllowOverlap>Permitir sobreposição</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Verificar se há actualizações</Title>
@@ -2939,6 +2940,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrViaImageCompare>Comparação binária de imagens</OcrViaImageCompare>
     <OcrViaModi>Microsoft Office Document Imaging (MODI). Necessita do Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR com o nOCR</OcrViaNOCR>
+    <OcrViaCloudVision>OCR com o Google Cloud Vision API</OcrViaCloudVision>
     <TesseractEngineMode>Modo do mecanismo</TesseractEngineMode>
     <TesseractEngineModeLegacy>Apenas Tesseract original (pode detectar itálicos)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Apenas redes neurais LSTM</TesseractEngineModeNeural>
@@ -3008,6 +3010,9 @@ Manter as alterações?</KeepChangesMessage>
     <StartTraining>Iniciar o treino</StartTraining>
     <NowTraining>Agora o tipo de letra de treino '{1}'. Total de caracteres treinados: {0:#,###,##0}, {2:#,###,##0} reconhecido</NowTraining>
     <ImagesWithTimeCodesInFileName>Imagens com os tempos no nome do ficheiro...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>Chave API</ApiKey>
+    <SendOriginalImages>Enviar imagens originais</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Imagem para texto manualmente</Title>
