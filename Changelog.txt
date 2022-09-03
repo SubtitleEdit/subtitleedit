@@ -40,7 +40,7 @@
    * Re-add FinalCutProXml properties - thx hu
    * Don't check "Continuation style" when merging dialog - thx OmrSi 
    * Fix assa background box issue - thx Érico
-   * Fix asterisk showing after offsetting with no change - thx OmrSi
+   * Fix "*" showing in titlebar after offsetting with no change - thx OmrSi
    * Fix issues with NQC shot change rules - thx OmrSi
    * Fix UI issue in copy-paste translate
 

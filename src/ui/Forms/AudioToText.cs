@@ -668,5 +668,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _model = null;
         }
+
+        private void AudioToText_Shown(object sender, EventArgs e)
+        {
+            buttonGenerate.Focus();
+        }
     }
 }

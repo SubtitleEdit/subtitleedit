@@ -417,5 +417,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _model = null;
         }
+
+        private void AudioToTextSelectedLines_Shown(object sender, EventArgs e)
+        {
+            buttonGenerate.Focus();
+        }
     }
 }
