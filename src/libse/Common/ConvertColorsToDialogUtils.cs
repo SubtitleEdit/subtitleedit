@@ -55,16 +55,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                             } 
                             else if (addNewLines && p.Text.Substring(index - 1, 1) != "\r" && p.Text.Substring(index - 1, 1) != "\n")
                             {
-                                if (p.Text.Substring(index - 1, 1) == " ")
-                                {
-                                    p.Text = p.Text.Substring(0, index - 1) + Environment.NewLine + p.Text.Substring(index);
-                                    index += Environment.NewLine.Length - 1;
-                                }
-                                else
-                                {
-                                    p.Text = p.Text.Substring(0, index) + Environment.NewLine + p.Text.Substring(index);
-                                    index += Environment.NewLine.Length;
-                                }
+                                p.Text = p.Text.Substring(0, index) + Environment.NewLine + p.Text.Substring(index);
+                                index += Environment.NewLine.Length;
                             }
 
                             p.Text = p.Text.Substring(0, index) + dash + p.Text.Substring(index);
@@ -119,16 +111,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                                     }
                                     else if (addNewLines && p.Text.Substring(index - 1, 1) != "\r" && p.Text.Substring(index - 1, 1) != "\n")
                                     {
-                                        if (p.Text.Substring(index - 1, 1) == " ")
-                                        {
-                                            p.Text = p.Text.Substring(0, index - 1) + Environment.NewLine + p.Text.Substring(index);
-                                            index += Environment.NewLine.Length - 1;
-                                        } 
-                                        else
-                                        {
-                                            p.Text = p.Text.Substring(0, index) + Environment.NewLine + p.Text.Substring(index);
-                                            index += Environment.NewLine.Length;
-                                        }
+                                        p.Text = p.Text.Substring(0, index) + Environment.NewLine + p.Text.Substring(index);
+                                        index += Environment.NewLine.Length;
                                     }
 
                                     p.Text = p.Text.Substring(0, index) + dash + p.Text.Substring(index);
@@ -147,7 +131,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (removeColorTags)
                 {
                     p.Text = HtmlUtil.RemoveColorTags(p.Text);
-                    p.Text = p.Text.Replace("  ", " ");
+                    p.Text = p.Text.Replace("  ", " ").Replace(" " + Environment.NewLine, Environment.NewLine);
+                } 
+                else
+                {
+                    p.Text = p.Text.Replace(" </font> ", "</font> ").Replace(" </font>" + Environment.NewLine, "</font>" + Environment.NewLine);
                 }
 
                 p.Text = p.Text.Trim();

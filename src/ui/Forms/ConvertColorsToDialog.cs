@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void ConvertColorsToDialogInSubtitle(Subtitle subtitle)
         {
-            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, checkBoxRemoveColorTags.Checked, checkBoxAddNewLines.Checked);
+            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(subtitle, checkBoxRemoveColorTags.Checked, checkBoxAddNewLines.Checked, checkBoxReBreakLines.Checked);
         }
     }
 }

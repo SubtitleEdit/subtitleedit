@@ -197,6 +197,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
+        public bool BatchConvertConvertColorsToDialog { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
         public bool BatchConvertMultipleReplace { get; set; }
         public bool BatchConvertFixRtl { get; set; }
@@ -550,7 +551,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             MergeShortLinesOnlyContinuous = true;
             ConvertColorsToDialogRemoveColorTags = true;
             ConvertColorsToDialogAddNewLines = true;
-            ConvertColorsToDialogReBreakLines = true;
+            ConvertColorsToDialogReBreakLines = false;
             ColumnPasteColumn = "all";
             ColumnPasteOverwriteMode = "overwrite";
             AssaAttachmentFontTextPreview =
@@ -2260,6 +2261,7 @@ $HorzAlign          =   Center
 
         public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
+        public string MainToolsConvertColorsToDialog { get; set; }
         public string MainToolsChangeCasing { get; set; }
         public string MainToolsAutoDuration { get; set; }
         public string MainToolsBatchConvert { get; set; }
@@ -4829,6 +4831,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertRemoveTextForHI = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertConvertColorsToDialog");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertConvertColorsToDialog = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
@@ -8222,6 +8230,12 @@ $HorzAlign          =   Center
                     shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsConvertColorsToDialog");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsConvertColorsToDialog = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsChangeCasing");
                 if (subNode != null)
                 {
@@ -10049,6 +10063,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertConvertColorsToDialog", settings.Tools.BatchConvertConvertColorsToDialog.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString(CultureInfo.InvariantCulture));
@@ -10774,6 +10789,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainToolsDurationsBridgeGap", shortcuts.MainToolsDurationsBridgeGap);
             textWriter.WriteElementString("MainToolsRenumber", shortcuts.MainToolsRenumber);
             textWriter.WriteElementString("MainToolsRemoveTextForHI", shortcuts.MainToolsRemoveTextForHI);
+            textWriter.WriteElementString("MainToolsConvertColorsToDialog", shortcuts.MainToolsConvertColorsToDialog);
             textWriter.WriteElementString("MainToolsChangeCasing", shortcuts.MainToolsChangeCasing);
             textWriter.WriteElementString("MainToolsAutoDuration", shortcuts.MainToolsAutoDuration);
             textWriter.WriteElementString("MainToolsBatchConvert", shortcuts.MainToolsBatchConvert);

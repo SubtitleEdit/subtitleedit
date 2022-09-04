@@ -310,6 +310,7 @@
             public string RemoveFormatting { get; set; }
             public string RemoveStyleActor { get; set; }
             public string RemoveTextForHI { get; set; }
+            public string ConvertColorsToDialog { get; set; }
             public string OverwriteOriginalFiles { get; set; }
             public string RedoCasing { get; set; }
             public string Convert { get; set; }
@@ -1602,6 +1603,7 @@
                     public string FixCommonErrors { get; set; }
                     public string StartNumberingFrom { get; set; }
                     public string RemoveTextForHearingImpaired { get; set; }
+                    public string ConvertColorsToDialog { get; set; }
                     public string ChangeCasing { get; set; }
                     public string ChangeFrameRate { get; set; }
                     public string ChangeSpeedInPercent { get; set; }
