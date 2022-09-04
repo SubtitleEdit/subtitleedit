@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Lrc(),
                     new LrcNoEndTime(),
                     new MacSub(),
+                    new MagicVideoTitler(),
                     new MediaTransData(),
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
