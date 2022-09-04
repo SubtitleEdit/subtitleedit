@@ -1604,7 +1604,7 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems.Add(GetDisplayTime(paragraph.EndTime));
                         break;
                     case SubtitleColumn.Duration:
-                        item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
+                        item.SubItems.Add(GetDisplayDuration(paragraph));
                         break;
                     case SubtitleColumn.CharactersPerSeconds:
                         item.SubItems.Add($"{Utilities.GetCharactersPerSecond(paragraph):0.00}");
@@ -1640,6 +1640,16 @@ namespace Nikse.SubtitleEdit.Controls
             item.StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
             item.Font = font;
             return item;
+        }
+
+        private static string GetDisplayDuration(Paragraph paragraph)
+        {
+            if (paragraph.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
+            {
+                return "-";
+            }
+
+            return paragraph.Duration.ToShortDisplayString();
         }
 
         public void SelectNone()
@@ -1837,7 +1847,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (ColumnIndexDuration >= 0)
                 {
-                    item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                    item.SubItems[ColumnIndexDuration].Text = GetDisplayDuration(paragraph);
                 }
 
                 if (ColumnIndexGap >= 0)
@@ -1961,7 +1971,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (ColumnIndexDuration >= 0)
                 {
-                    item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                    item.SubItems[ColumnIndexDuration].Text = GetDisplayDuration(paragraph);
                 }
 
                 if (ColumnIndexGap >= 0)
@@ -2004,7 +2014,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (ColumnIndexDuration >= 0)
                         {
-                            item.SubItems[ColumnIndexDuration].Text = p.Duration.ToShortDisplayString();
+                            item.SubItems[ColumnIndexDuration].Text = GetDisplayDuration(p);
                         }
                     }
                 }
@@ -2056,7 +2066,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (ColumnIndexDuration >= 0)
                 {
-                    item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                    item.SubItems[ColumnIndexDuration].Text = GetDisplayDuration(paragraph);
                 }
 
                 if (ColumnIndexGap >= 0)

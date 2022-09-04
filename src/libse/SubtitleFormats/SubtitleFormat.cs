@@ -149,6 +149,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new KanopyHtml(),
                     new LambdaCap(),
                     new Lrc(),
+                    new LrcNoEndTime(),
                     new MacSub(),
                     new MediaTransData(),
                     new MicroDvd(),
