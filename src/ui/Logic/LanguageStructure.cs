@@ -508,6 +508,14 @@
             public string CannotCompareWithImageBasedSubtitles { get; set; }
         }
 
+        public class ConvertColorsToDialog
+        {
+            public string Title { get; set; }
+            public string RemoveColorTags { get; set; }
+            public string AddNewLines { get; set; }
+            public string ReBreakLines { get; set; }
+        }
+
         public class DCinemaProperties
         {
             public string Title { get; set; }
@@ -1506,6 +1514,8 @@
             public string GeneratingWaveformInBackground { get; set; }
             public string AutoBackupSaved { get; set; }
             public string UsingOnlyFrontCenterChannel { get; set; }
+            public string BeforeConvertingColorsToDialog { get; set; }
+            public string ConvertedColorsToDialog { get; set; }
 
             public class MainMenu
             {
