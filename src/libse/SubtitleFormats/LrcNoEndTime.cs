@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class LrcNoEndTime : SubtitleFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
-        private const string BySeText = "SE Lrc No End Time";
+        private const string BySeText = "Subtitle Edit - LRC No End Time";
 
         public override string Extension => ".lrc";
 
@@ -60,8 +60,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (subtitle.Paragraphs.Count > _errorCount)
             {
-                return !new UnknownSubtitle33().IsMine(lines, fileName) && 
-                       !new UnknownSubtitle36().IsMine(lines, fileName) && 
+                return !new UnknownSubtitle33().IsMine(lines, fileName) &&
+                       !new UnknownSubtitle36().IsMine(lines, fileName) &&
                        !new TMPlayer().IsMine(lines, fileName);
             }
 
@@ -207,6 +207,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     header.AppendLine(line);
                 }
             }
+
+            header = new StringBuilder(Lrc.RemoveSoftwareAndVersion(header.ToString()));
+            header.AppendLine();
 
             if (!header.ToString().Contains("[re:", StringComparison.Ordinal))
             {

@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Type.GetType("Mono.Runtime") != null;
         }
 
-        public static string AssemblyVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
+        public static string AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version.ToString();
 
         public static string AssemblyDescription
         {
