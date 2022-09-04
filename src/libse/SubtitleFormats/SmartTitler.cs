@@ -6,13 +6,13 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Tek : SubtitleFormat
+    public class SmartTitler : SubtitleFormat
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+ \d+ \d \d \d$", RegexOptions.Compiled);
 
         public override string Extension => ".tek";
 
-        public override string Name => "TEK";
+        public override string Name => "Smart Titler";
 
         public override bool IsTimeBased => false;
 
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ý
 ý                                       Kraj info blocka.");
             sb.AppendLine();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
                 sb.AppendLine(string.Format(paragraphWriteFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds), MillisecondsToFrames(p.EndTime.TotalMilliseconds), text));
@@ -57,9 +57,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
-                string s = line.Trim();
+                var s = line.Trim();
                 if (RegexTimeCode.IsMatch(s))
                 {
                     if (paragraph != null)
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     paragraph = new Paragraph();
-                    string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 5)
                     {
                         try
@@ -96,6 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
             if (paragraph != null)
             {
                 subtitle.Paragraphs.Add(paragraph);
