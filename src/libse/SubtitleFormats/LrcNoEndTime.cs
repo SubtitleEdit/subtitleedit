@@ -21,19 +21,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     ///     [ti:''Lyrics(song) title'']
     ///     [ve:''version of program'']
     /// </summary>
-    public class Lrc : SubtitleFormat
+    public class LrcNoEndTime : SubtitleFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
+        private const string BySeText = "SE Lrc No End Time";
 
         public override string Extension => ".lrc";
 
-        public override string Name => "LRC Lyrics";
+        public override string Name => "LRC Lyrics, no end time";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            var sb = new StringBuilder();
+            lines.ForEach(p => sb.Append(p));
+            if (!sb.ToString().Contains(BySeText, StringComparison.Ordinal))
+            {
+                return false;
+            }
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-
             if (subtitle.Paragraphs.Count > 4)
             {
                 var allStartWithNumber = true;
@@ -53,10 +60,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (subtitle.Paragraphs.Count > _errorCount)
             {
-                return !new UnknownSubtitle33().IsMine(lines, fileName) &&
-                       !new UnknownSubtitle36().IsMine(lines, fileName) &&
-                       !new TMPlayer().IsMine(lines, fileName) &&
-                       !new LrcNoEndTime().IsMine(lines, fileName);
+                return !new UnknownSubtitle33().IsMine(lines, fileName) && 
+                       !new UnknownSubtitle36().IsMine(lines, fileName) && 
+                       !new TMPlayer().IsMine(lines, fileName);
             }
 
             return false;
@@ -64,11 +70,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var header = RemoveSoftwareAndVersion(subtitle.Header);
+            var header = Lrc.RemoveSoftwareAndVersion(subtitle.Header);
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(header) && (header.Contains("[ar:") || header.Contains("[ti:") || header.Contains("[by:") || header.Contains("[id:")))
             {
-                sb.AppendLine(header);
+                sb.AppendLine(header.Trim());
             }
             else if (!string.IsNullOrEmpty(title))
             {
@@ -77,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (!header.Contains("[re:", StringComparison.Ordinal))
             {
-                sb.AppendLine("[re: Subtitle Edit]");
+                sb.AppendLine($"[re: {BySeText}]");
             }
 
             if (!header.Contains("[ve:", StringComparison.Ordinal))
@@ -86,41 +92,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
-            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+            foreach (var p in subtitle.Paragraphs)
             {
-                var p = subtitle.Paragraphs[i];
-                var next = subtitle.GetParagraphOrDefault(i + 1);
-
                 var text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " ");
                 sb.AppendLine(string.Format(timeCodeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
-
-                if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
-                {
-                    var tc = new TimeCode(p.EndTime.TotalMilliseconds);
-                    sb.AppendLine(string.Format(timeCodeFormat, tc.Hours * 60 + tc.Minutes, tc.Seconds, (int)Math.Round(tc.Milliseconds / 10.0), string.Empty));
-                }
-            }
-
-            return sb.ToString().Trim();
-        }
-
-        public static string RemoveSoftwareAndVersion(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-
-            var sb = new StringBuilder();
-            foreach (var line in s.SplitToLines())
-            {
-                if (line.Trim().StartsWith("[re:") || line.Trim().StartsWith("[re:"))
-                {
-                    continue;
-                }
-
-                sb.AppendLine(line.Trim());
             }
 
             return sb.ToString().Trim();
@@ -231,17 +207,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     header.AppendLine(line);
                 }
             }
-            subtitle.Header = header.ToString();
 
             if (!header.ToString().Contains("[re:", StringComparison.Ordinal))
             {
-                header.AppendLine("[re: Subtitle Edit]");
+                header.AppendLine($"[re: {BySeText}]");
             }
 
             if (!header.ToString().Contains("[ve:", StringComparison.Ordinal))
             {
                 header.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
+
+            subtitle.Header = header.ToString();
 
             var max = subtitle.Paragraphs.Count;
             for (var i = 0; i < max; i++)
@@ -271,35 +248,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Sort(SubtitleSortCriteria.StartTime);
 
-            int index = 0;
-            foreach (var p in subtitle.Paragraphs)
-            {
-                p.Text = Utilities.AutoBreakLine(p.Text);
-                var next = subtitle.GetParagraphOrDefault(index + 1);
-                if (next != null)
-                {
-                    if (string.IsNullOrEmpty(next.Text))
-                    {
-                        p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
-                    }
-                    else
-                    {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
-                    if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                    {
-                        double duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                        p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + duration);
-                    }
-                }
-                else
-                {
-                    var duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, 16) + 1500;
-                    p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + duration);
-                }
-                index++;
-            }
-
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
             if (Math.Abs(offsetInMilliseconds) > 0.01)
@@ -307,8 +255,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (var paragraph in subtitle.Paragraphs)
                 {
                     paragraph.StartTime.TotalMilliseconds += offsetInMilliseconds;
-                    paragraph.EndTime.TotalMilliseconds += offsetInMilliseconds;
                 }
+            }
+
+            foreach (var p in subtitle.Paragraphs)
+            {
+                p.Text = Utilities.AutoBreakLine(p.Text);
+                p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
             }
         }
 
