@@ -158,6 +158,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
+            this.groupBoxConvertColorsToDialog = new System.Windows.Forms.GroupBox();
+            this.checkBoxConvertColorsToDialogReBreakLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxConvertColorsToDialogAddNewLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxConvertColorsToDialogRemoveColorTags = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxDeleteLines.SuspendLayout();
@@ -189,6 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
+            this.groupBoxConvertColorsToDialog.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonConvert
@@ -219,6 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxConvertColorsToDialog);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
@@ -1617,6 +1623,49 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
             // 
+            // groupBoxConvertColorsToDialog
+            // 
+            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogReBreakLines);
+            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogAddNewLines);
+            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogRemoveColorTags);
+            this.groupBoxConvertColorsToDialog.Location = new System.Drawing.Point(305, 15);
+            this.groupBoxConvertColorsToDialog.Name = "groupBoxConvertColorsToDialog";
+            this.groupBoxConvertColorsToDialog.Size = new System.Drawing.Size(268, 149);
+            this.groupBoxConvertColorsToDialog.TabIndex = 310;
+            this.groupBoxConvertColorsToDialog.TabStop = false;
+            this.groupBoxConvertColorsToDialog.Text = "Convert colors to dialog";
+            this.groupBoxConvertColorsToDialog.Visible = false;
+            // 
+            // checkBoxConvertColorsToDialogReBreakLines
+            // 
+            this.checkBoxConvertColorsToDialogReBreakLines.AutoSize = true;
+            this.checkBoxConvertColorsToDialogReBreakLines.Location = new System.Drawing.Point(9, 69);
+            this.checkBoxConvertColorsToDialogReBreakLines.Name = "checkBoxConvertColorsToDialogReBreakLines";
+            this.checkBoxConvertColorsToDialogReBreakLines.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxConvertColorsToDialogReBreakLines.TabIndex = 6;
+            this.checkBoxConvertColorsToDialogReBreakLines.Text = "Re-break lines";
+            this.checkBoxConvertColorsToDialogReBreakLines.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxConvertColorsToDialogAddNewLines
+            // 
+            this.checkBoxConvertColorsToDialogAddNewLines.AutoSize = true;
+            this.checkBoxConvertColorsToDialogAddNewLines.Location = new System.Drawing.Point(9, 46);
+            this.checkBoxConvertColorsToDialogAddNewLines.Name = "checkBoxConvertColorsToDialogAddNewLines";
+            this.checkBoxConvertColorsToDialogAddNewLines.Size = new System.Drawing.Size(165, 17);
+            this.checkBoxConvertColorsToDialogAddNewLines.TabIndex = 5;
+            this.checkBoxConvertColorsToDialogAddNewLines.Text = "Place every dash on new line";
+            this.checkBoxConvertColorsToDialogAddNewLines.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxConvertColorsToDialogRemoveColorTags
+            // 
+            this.checkBoxConvertColorsToDialogRemoveColorTags.AutoSize = true;
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Location = new System.Drawing.Point(9, 23);
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Name = "checkBoxConvertColorsToDialogRemoveColorTags";
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxConvertColorsToDialogRemoveColorTags.TabIndex = 4;
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Text = "Remove color tags";
+            this.checkBoxConvertColorsToDialogRemoveColorTags.UseVisualStyleBackColor = true;
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -1686,6 +1735,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
+            this.groupBoxConvertColorsToDialog.ResumeLayout(false);
+            this.groupBoxConvertColorsToDialog.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1819,5 +1870,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem tesseractToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nOCRToolStripMenuItem;
         private System.Windows.Forms.Label labelError;
+        private System.Windows.Forms.GroupBox groupBoxConvertColorsToDialog;
+        private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogReBreakLines;
+        private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogAddNewLines;
+        private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogRemoveColorTags;
     }
 }
