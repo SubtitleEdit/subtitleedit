@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (var line in s.SplitToLines())
             {
-                if (line.Trim().StartsWith("[re:") || line.Trim().StartsWith("[re:"))
+                if (line.Trim().StartsWith("[re:") || line.Trim().StartsWith("[ve:"))
                 {
                     continue;
                 }
@@ -231,7 +231,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     header.AppendLine(line);
                 }
             }
-            subtitle.Header = header.ToString();
+
+            header = new StringBuilder(Lrc.RemoveSoftwareAndVersion(header.ToString()));
+            header.AppendLine();
 
             if (!header.ToString().Contains("[re:", StringComparison.Ordinal))
             {
@@ -242,6 +244,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 header.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
+
+            subtitle.Header = header.ToString();
 
             var max = subtitle.Paragraphs.Count;
             for (var i = 0; i < max; i++)
