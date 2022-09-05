@@ -2037,6 +2037,7 @@
         {
             public string Title { get; set; }
             public string MaxDifferenceMilliseconds { get; set; }
+            public string MakeDialog { get; set; }
             public string ReBreakLines { get; set; }
             public string NumberOfMergesX { get; set; }
             public string MergedText { get; set; }
