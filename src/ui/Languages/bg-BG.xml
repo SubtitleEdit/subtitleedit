@@ -231,6 +231,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChangeResolutionDrawing>Промяна на резолюцията за фигурата</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Разделителната способност на източника и целта е една и съща - няма какво да се прави.</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <ImageColorPicker>
+    <Title>Избор на цвят на изображението</Title>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Генериране на фоново поле</Title>
     <Padding>Подложка</Padding>
@@ -395,6 +398,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Custom>Потребителски</Custom>
     <ToDropFrame>До избран кадър</ToDropFrame>
     <FromDropFrame>От избран кадър</FromDropFrame>
+    <AllowOverlap>Разрешаване на припокриване</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Проверка за обновяване</Title>
@@ -446,6 +450,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <XNumberOfDifferenceAndPercentLettersChanged>Брой разлики: {0} ({1:0.##}% букви са променени)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показване само разликите</ShowOnlyDifferences>
     <IgnoreLineBreaks>Игнориране пренасянето на редове</IgnoreLineBreaks>
+    <IgnoreWhitespace>Игнориране на празното пространство</IgnoreWhitespace>
     <IgnoreFormatting>Игнориране на форматирането</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Показване само разликите в текста</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Не може да сравни със субтитрите в изображението</CannotCompareWithImageBasedSubtitles>
@@ -793,8 +798,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixMissingPeriodAtEndOfLine>Добавяне на липсващи точки в края на ред</FixMissingPeriodAtEndOfLine>
     <RefreshFixes>Обнови наличните поправки</RefreshFixes>
     <ApplyFixes>Приложи за избраните поправки</ApplyFixes>
-    <AutoBreak>Прекъсни ред</AutoBreak>
-    <Unbreak>Обедини редове</Unbreak>
+    <AutoBreak>Прекъсни реда</AutoBreak>
+    <Unbreak>Обедини реда</Unbreak>
     <FixDoubleDash>Поправяне символ тире (--) -&gt;на многоточие (...)</FixDoubleDash>
     <FixDoubleGreaterThan>Премахване символите &gt;&gt; в началото на реда</FixDoubleGreaterThan>
     <FixEllipsesStart>Изтриване на многоточие (...) в началото на реда</FixEllipsesStart>
@@ -1337,7 +1342,6 @@ https://github.com/SubtitleEdit/subtitleedit
         <SplitLineAtCursorAndWaveformPosition>Разделяне на реда по курсора/видео позиция</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Авт. продължителност</AutoDurationCurrentLine>
         <SelectAll>Избери всичко</SelectAll>
-        <Insert>Вмъкване</Insert>
         <InsertFirstLine>Вмъкване на ред</InsertFirstLine>
         <InsertBefore>Вмъкване на ред ПРЕДИ този ред</InsertBefore>
         <InsertAfter>Вмъкване на ред СЛЕД този ред</InsertAfter>
@@ -1353,6 +1357,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ColumnTextUp>Текста нагоре</ColumnTextUp>
         <ColumnTextDown>Текста надолу</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Копиране на текста от оригинал към работните</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>Избрани редове за (OCR) разпознаване на текст</OcrSelectedLines>
         <Split>Разделяне на реда</Split>
         <MergeSelectedLines>Обединяване на избраните редове</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Обединяване на избраните редове като диалог</MergeSelectedLinesAsDialog>
@@ -1391,6 +1396,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateProgressBar>Генериране на лента за напредък...</GenerateProgressBar>
         <AssaResolutionChanger>Промяна резолюцията на скрипт ASSA...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Генериране на фоново поле...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Избор на цвят на изображението...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Поправяне на грешки в избраните редове...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Промяна големината на буквите в избраните редове...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Запис на избраните редове като...</SaveSelectedLines>
@@ -1748,6 +1754,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <HideVideoControls>Скриване на видео управлението</HideVideoControls>
     <GeneratingWaveformInBackground>Генериране вълнова форма на зв. сигнал във фонов режим...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Автоматичното архивиране е запазено</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Използване само на предния централен аудиоканал</UsingOnlyFrontCenterChannel>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -2052,8 +2059,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SearchDirection>Посока на търсене</SearchDirection>
     <Forward>Напред</Forward>
     <Back>Назад</Back>
-    <LengthInSeconds>Тишината (паузата) трябва да е поне (сек.)</LengthInSeconds>
-    <MaxVolume>Силата на звука трябва да е под (dB)</MaxVolume>
+    <LengthInSeconds>Паузата трябва да е поне (сек.)</LengthInSeconds>
+    <MaxVolume>Силата на звука трябва да е под(dB)</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Задаване на минимален интервал от време за показване между субтитрите</Title>
@@ -2230,8 +2237,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpectrogramAppearance>Изглед на спектрограмата</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Преливане в един цвят</SpectrogramOneColorGradient>
     <SpectrogramClassic>Класически</SpectrogramClassic>
-    <WaveformUseFFmpeg>FFmpeg за извлич.вълнова диаграмаОТзв.сигнал</WaveformUseFFmpeg>
-    <WaveformUseCenterChannelOnly>Само предния централен канал (за 5.1/7.1)</WaveformUseCenterChannelOnly>
+    <WaveformUseFFmpeg>FFmpeg за извлич. вълнова диагр. от зв.сигнал</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Използване само на предния централен канал (за 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Изтегляне на {0}</DownloadX>
     <WaveformFFmpegPath>Път до FFmpeg:</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Преминете към FFmpeg</WaveformBrowseToFFmpeg>
@@ -2581,8 +2588,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MinFrameGap>Мин. разлика в кадрите</MinFrameGap>
     <XFramesAtYFrameRateGivesZMs>{0} кадрите със скорост на кадър от {1} дава {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
     <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
-    <BDOpensIn>BD sup/bdn-xml се отваря в</BDOpensIn>
-    <BDOpensInOcr>OCR(разпознаване на текст)</BDOpensInOcr>
+    <BDOpensIn>BD sup/bdn-xml се отваря в:</BDOpensIn>
+    <BDOpensInOcr>OCR (разпознаване на текст)</BDOpensInOcr>
     <BDOpensInEdit>Редактиране</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Преки пътища: Разрешава единична буква/цифра в текстовото поле</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Обнови асоциациите типове файлове</UpdateFileTypeAssociations>
@@ -2934,9 +2941,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <TitleBluRay>Внасяне на OCR Blu-ray (.sup) субтитри</TitleBluRay>
     <OcrMethod>OCR метод</OcrMethod>
     <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
-    <OcrViaImageCompare>OCR чрез сравняване на изображение</OcrViaImageCompare>
-    <OcrViaModi>OCR чрез Microsoft Office Document Imaging (MODI). Необходим е Microsoft Office</OcrViaModi>
-    <OcrViaNOCR>OCR чрез nOCR</OcrViaNOCR>
+    <OcrViaImageCompare>OCR(разпознаване на текст) чрез сравняване на изображение</OcrViaImageCompare>
+    <OcrViaModi>OCR(разпознаване на текст) чрез Microsoft Office Document Imaging (MODI). Необходим е Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR(разпознаване на текст) чрез nOCR</OcrViaNOCR>
+    <OcrViaCloudVision>OCR(разпознаване на текст) чрез Google Cloud Vision API</OcrViaCloudVision>
     <TesseractEngineMode>Режим на машината</TesseractEngineMode>
     <TesseractEngineModeLegacy>Само оригинален Tesseract (може да открие наклонен)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Само невронни мрежи LSTM</TesseractEngineModeNeural>
@@ -2949,7 +2957,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <New>Нов</New>
     <Edit>Редакция</Edit>
     <StartOcr>Старт на OCR</StartOcr>
-    <Stop>Стоп</Stop>
     <StartOcrFrom>Старт на OCR от субтитри №:</StartOcrFrom>
     <LoadingVobSubImages>Зареждане на VobSub изображения...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Зареждане на сравнителна база данни за изображенията</LoadingImageCompareDatabase>
@@ -3007,6 +3014,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <StartTraining>Започнете да тренирате</StartTraining>
     <NowTraining>Шрифт за обучение '{1}'. Общо обучени символи: {0:#,###,##0}, {2:#,###,##0} известни</NowTraining>
     <ImagesWithTimeCodesInFileName>Изображения с времеви кодове в името на файла...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>API за виждане в облака на Google</CloudVisionApi>
+    <ApiKey>API ключ</ApiKey>
+    <SendOriginalImages>Изпращане на оригинални изображения</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub – Ръчно изображение към текст</Title>
@@ -3075,7 +3085,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AddParagraphHereAndPasteText>Добави текста от клипборда тук</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Задаване на текущия като нов избор</SetParagraphAsSelection>
     <FocusTextBox>Фокусиране върху текстовото поле</FocusTextBox>
-    <GoToPrevious>Към предишния субтитър</GoToPrevious>
+    <GoToPrevious>Преминаване към предишния субтитър</GoToPrevious>
     <GoToNext>Преминаване към следващия субтитър</GoToNext>
     <DeleteParagraph>Изтриване на реда</DeleteParagraph>
     <Split>Разделяне на реда</Split>
