@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"`TITLIN={MillisecondsToFrames(p.StartTime.TotalMilliseconds):00000000}");
-                sb.AppendLine($"`TITLOUT={MillisecondsToFrames(p.EndTime.TotalMilliseconds):00000000}");
+                sb.AppendLine($"`TITLIN={(p.StartTime.TotalMilliseconds / 10):00000000}");
+                sb.AppendLine($"`TITLOUT={(p.EndTime.TotalMilliseconds / 10):00000000}");
 
                 var lineLetters = new[] { 'A', 'B', 'C', 'D', 'E' };
                 var list = p.Text.SplitToLines();
@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         var line = list[index];
                         var lineLetter = lineLetters[index];
-                        sb.AppendLine($"`TITL{lineLetter}=" + line);
+                        sb.AppendLine($"`TITL{lineLetter}=" + EncodeText(line));
                     }
                 }
 
@@ -53,23 +53,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     p = new Paragraph();
-                    var framesText = s.Remove(0, 8).Trim();
-                    if (long.TryParse(framesText, out var frames))
+                    var numberText = s.Remove(0, 8).Trim();
+                    if (long.TryParse(numberText, out var number))
                     {
-                        p.StartTime.TotalMilliseconds = FramesToMilliseconds(frames);
+                        p.StartTime.TotalMilliseconds = number * 10;
                     }
                 }
                 else if (s.StartsWith("`TITLOUT=", StringComparison.Ordinal))
                 {
-                    var framesText = s.Remove(0, 9).Trim();
-                    if (long.TryParse(framesText, out var frames))
+                    var numberText = s.Remove(0, 9).Trim();
+                    if (long.TryParse(numberText, out var number))
                     {
-                        p.EndTime.TotalMilliseconds = FramesToMilliseconds(frames);
+                        p.EndTime.TotalMilliseconds = number * 10;
                     }
                 }
                 else if (s.Length > 7 && s[6] == '=' && s.StartsWith("`TITL", StringComparison.Ordinal))
                 {
-                    p.Text = (p.Text + Environment.NewLine + s.Remove(0, 7)).Trim();
+                    p.Text = (p.Text + Environment.NewLine + DecodeText(s.Remove(0, 7))).Trim();
                 }
             }
 
@@ -77,6 +77,76 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 subtitle.Paragraphs.Add(p);
             }
+        }
+
+        private static readonly Dictionary<string, string> DecodeDictionary = new Dictionary<string, string>
+        {
+            { "Q", "Lj" },
+            { "q", "lj" },
+            { "W", "Nj" },
+            { "w", "nj" },
+            { "|", "Ž" },
+            { "\\", "ž" },
+            { "}", "Đ" },
+            { "]", "đ" },
+            { "{", "Š" },
+            { "[", "š" },
+            { "\"", "Ć" },
+            { "'", "ć" },
+            { ":", "Č" },
+            { ";", "č" },
+            { "Y", "Dž" },
+            { "y", "dž" },
+            { "@", "\"" },
+            { ">", ":" },
+            { "`", "'" },
+        };
+
+        private static string DecodeText(string s)
+        {
+            var sb = new StringBuilder();
+            foreach (var ch in s)
+            {
+                if (DecodeDictionary.TryGetValue(ch.ToString(), out var v))
+                {
+                    sb.Append(v);
+                }
+                else
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static Dictionary<string, string> _encodeDictionary;
+
+        public static string EncodeText(string s)
+        {
+            if (_encodeDictionary == null)
+            {
+                _encodeDictionary = new Dictionary<string, string>();
+                foreach (var kvp in DecodeDictionary)
+                {
+                    _encodeDictionary.Add(kvp.Value, kvp.Key);
+                }
+            }
+
+            var sb = new StringBuilder();
+            foreach (var ch in s)
+            {
+                if (_encodeDictionary.TryGetValue(ch.ToString(), out var v))
+                {
+                    sb.Append(v);
+                }
+                else
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
