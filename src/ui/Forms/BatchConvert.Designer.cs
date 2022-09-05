@@ -158,6 +158,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
+            this.groupBoxMergeSameTimeCodes = new System.Windows.Forms.GroupBox();
+            this.checkBoxMergeSameTimeCodesMakeDialog = new System.Windows.Forms.CheckBox();
+            this.numericUpDownMergeSameTimeCodesMaxDifference = new System.Windows.Forms.NumericUpDown();
+            this.labelMergeSameTimeCodesMaxDifference = new System.Windows.Forms.Label();
+            this.checkBoxMergeSameTimeCodesReBreakLines = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxDeleteLines.SuspendLayout();
@@ -189,6 +194,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
+            this.groupBoxMergeSameTimeCodes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMergeSameTimeCodesMaxDifference)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonConvert
@@ -219,6 +226,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeSameTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
@@ -1617,6 +1625,70 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
             // 
+            // groupBoxMergeSameTimeCodes
+            // 
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.checkBoxMergeSameTimeCodesReBreakLines);
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.checkBoxMergeSameTimeCodesMakeDialog);
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.numericUpDownMergeSameTimeCodesMaxDifference);
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.labelMergeSameTimeCodesMaxDifference);
+            this.groupBoxMergeSameTimeCodes.Location = new System.Drawing.Point(308, 17);
+            this.groupBoxMergeSameTimeCodes.Name = "groupBoxMergeSameTimeCodes";
+            this.groupBoxMergeSameTimeCodes.Size = new System.Drawing.Size(268, 149);
+            this.groupBoxMergeSameTimeCodes.TabIndex = 310;
+            this.groupBoxMergeSameTimeCodes.TabStop = false;
+            this.groupBoxMergeSameTimeCodes.Text = "Merge lines with same time codes";
+            this.groupBoxMergeSameTimeCodes.Visible = false;
+            // 
+            // checkBoxMergeSameTimeCodesMakeDialog
+            // 
+            this.checkBoxMergeSameTimeCodesMakeDialog.AutoSize = true;
+            this.checkBoxMergeSameTimeCodesMakeDialog.Checked = true;
+            this.checkBoxMergeSameTimeCodesMakeDialog.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMergeSameTimeCodesMakeDialog.Location = new System.Drawing.Point(15, 79);
+            this.checkBoxMergeSameTimeCodesMakeDialog.Name = "checkBoxMergeSameTimeCodesMakeDialog";
+            this.checkBoxMergeSameTimeCodesMakeDialog.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxMergeSameTimeCodesMakeDialog.TabIndex = 42;
+            this.checkBoxMergeSameTimeCodesMakeDialog.Text = "Make dialog";
+            this.checkBoxMergeSameTimeCodesMakeDialog.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownMergeSameTimeCodesMaxDifference
+            // 
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Location = new System.Drawing.Point(15, 41);
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Name = "numericUpDownMergeSameTimeCodesMaxDifference";
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMergeSameTimeCodesMaxDifference.TabIndex = 38;
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            // 
+            // labelMergeSameTimeCodesMaxDifference
+            // 
+            this.labelMergeSameTimeCodesMaxDifference.AutoSize = true;
+            this.labelMergeSameTimeCodesMaxDifference.Location = new System.Drawing.Point(12, 23);
+            this.labelMergeSameTimeCodesMaxDifference.Name = "labelMergeSameTimeCodesMaxDifference";
+            this.labelMergeSameTimeCodesMaxDifference.Size = new System.Drawing.Size(139, 13);
+            this.labelMergeSameTimeCodesMaxDifference.TabIndex = 40;
+            this.labelMergeSameTimeCodesMaxDifference.Text = "Max. milliseconds difference";
+            // 
+            // checkBoxMergeSameTimeCodesReBreakLines
+            // 
+            this.checkBoxMergeSameTimeCodesReBreakLines.AutoSize = true;
+            this.checkBoxMergeSameTimeCodesReBreakLines.Checked = true;
+            this.checkBoxMergeSameTimeCodesReBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMergeSameTimeCodesReBreakLines.Location = new System.Drawing.Point(15, 102);
+            this.checkBoxMergeSameTimeCodesReBreakLines.Name = "checkBoxMergeSameTimeCodesReBreakLines";
+            this.checkBoxMergeSameTimeCodesReBreakLines.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxMergeSameTimeCodesReBreakLines.TabIndex = 43;
+            this.checkBoxMergeSameTimeCodesReBreakLines.Text = "Re-break lines";
+            this.checkBoxMergeSameTimeCodesReBreakLines.UseVisualStyleBackColor = true;
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -1686,6 +1758,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
+            this.groupBoxMergeSameTimeCodes.ResumeLayout(false);
+            this.groupBoxMergeSameTimeCodes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMergeSameTimeCodesMaxDifference)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1819,5 +1894,10 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem tesseractToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nOCRToolStripMenuItem;
         private System.Windows.Forms.Label labelError;
+        private System.Windows.Forms.GroupBox groupBoxMergeSameTimeCodes;
+        private System.Windows.Forms.CheckBox checkBoxMergeSameTimeCodesReBreakLines;
+        private System.Windows.Forms.CheckBox checkBoxMergeSameTimeCodesMakeDialog;
+        private System.Windows.Forms.NumericUpDown numericUpDownMergeSameTimeCodesMaxDifference;
+        private System.Windows.Forms.Label labelMergeSameTimeCodesMaxDifference;
     }
 }
