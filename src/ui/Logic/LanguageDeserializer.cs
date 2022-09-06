@@ -5137,6 +5137,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "MergeTextWithSameTimeCodes/MaxDifferenceMilliseconds":
                     language.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds = reader.Value;
                     break;
+                case "MergeTextWithSameTimeCodes/MakeDialog":
+                    language.MergeTextWithSameTimeCodes.MakeDialog = reader.Value;
+                    break;
                 case "MergeTextWithSameTimeCodes/ReBreakLines":
                     language.MergeTextWithSameTimeCodes.ReBreakLines = reader.Value;
                     break;

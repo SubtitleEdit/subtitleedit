@@ -1892,6 +1892,7 @@ Download and continue?</VideoFromUrlRequirements>
   <MergeTextWithSameTimeCodes>
     <Title>Merge lines with same time codes</Title>
     <MaxDifferenceMilliseconds>Max. milliseconds difference</MaxDifferenceMilliseconds>
+    <MakeDialog>Make dialog</MakeDialog>
     <ReBreakLines>Re-break lines</ReBreakLines>
     <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
     <MergedText>Merged text</MergedText>
