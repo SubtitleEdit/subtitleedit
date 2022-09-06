@@ -1982,6 +1982,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             return $"alpha&H{alpha:X2}&\\c&H{c.B:X2}{c.G:X2}{c.R:X2}";
         }
 
+        public static string GetSsaColorStringNoTransparency(Color c) => $"&H{c.B:X2}{c.G:X2}{c.R:X2}";
+
         public static string CheckForErrors(string header)
         {
             if (string.IsNullOrEmpty(header))
