@@ -408,6 +408,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
 
+            groupBoxMergeSameTimeCodes.Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.Title;
+            labelMergeSameTimeCodesMaxDifference.Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds;
+            checkBoxMergeSameTimeCodesMakeDialog.Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.MakeDialog;
+            checkBoxMergeSameTimeCodesReBreakLines.Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.ReBreakLines;
+
+            numericUpDownMergeSameTimeCodesMaxDifference.Value = Configuration.Settings.Tools.MergeTextWithSameTimeCodesMaxGap;
+            checkBoxMergeSameTimeCodesMakeDialog.Checked = Configuration.Settings.Tools.MergeTextWithSameTimeCodesMakeDialog;
+            checkBoxMergeSameTimeCodesReBreakLines.Checked = Configuration.Settings.Tools.MergeTextWithSameTimeCodesReBreakLines;
+
             groupBoxConvertColorsToDialog.Text = LanguageSettings.Current.ConvertColorsToDialog.Title;
             checkBoxConvertColorsToDialogRemoveColorTags.Text = LanguageSettings.Current.ConvertColorsToDialog.RemoveColorTags;
             checkBoxConvertColorsToDialogAddNewLines.Text = LanguageSettings.Current.ConvertColorsToDialog.AddNewLines;
@@ -526,7 +535,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Text = LanguageSettings.Current.MergeTextWithSameTimeCodes.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeSameTimeCodes,
-                    Action = CommandLineConverter.BatchAction.MergeSameTimeCodes
+                    Action = CommandLineConverter.BatchAction.MergeSameTimeCodes,
+                    Control = groupBoxMergeSameTimeCodes
                 },
                 new FixActionItem
                 {
@@ -1701,7 +1711,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes))
             {
-                var mergedSameTimeCodesSub = MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                var mergedSameTimeCodesSub = MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, checkBoxMergeSameTimeCodesMakeDialog.Checked, checkBoxMergeSameTimeCodesReBreakLines.Checked, Convert.ToInt32(numericUpDownMergeSameTimeCodesMaxDifference.Value), "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
                 if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
                 {
                     sub.Paragraphs.Clear();
@@ -2656,6 +2666,9 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
             Configuration.Settings.Tools.BatchConvertDeleteLines = IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines);
             Configuration.Settings.Tools.BatchConvertAssaChangeRes = IsActionEnabled(CommandLineConverter.BatchAction.AssaChangeRes);
+            Configuration.Settings.Tools.MergeTextWithSameTimeCodesMaxGap = Convert.ToInt32(numericUpDownMergeSameTimeCodesMaxDifference.Value);
+            Configuration.Settings.Tools.MergeTextWithSameTimeCodesMakeDialog = checkBoxMergeSameTimeCodesMakeDialog.Checked;
+            Configuration.Settings.Tools.MergeTextWithSameTimeCodesReBreakLines = checkBoxMergeSameTimeCodesReBreakLines.Checked;
 
             Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags = checkBoxConvertColorsToDialogRemoveColorTags.Checked;
             Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines = checkBoxConvertColorsToDialogAddNewLines.Checked;

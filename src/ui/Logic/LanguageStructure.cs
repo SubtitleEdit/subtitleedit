@@ -250,6 +250,9 @@
         public class ImageColorPicker
         {
             public string Title { get; set; }
+            public string CopyColorHex { get; set; }
+            public string CopyColorAssa { get; set; }
+            public string CopyColorRgb { get; set; }
         }
 
         public class AssaSetBackgroundBox
@@ -2049,6 +2052,7 @@
         {
             public string Title { get; set; }
             public string MaxDifferenceMilliseconds { get; set; }
+            public string MakeDialog { get; set; }
             public string ReBreakLines { get; set; }
             public string NumberOfMergesX { get; set; }
             public string MergedText { get; set; }

@@ -343,6 +343,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int MergeShortLinesMaxGap { get; set; }
         public int MergeShortLinesMaxChars { get; set; }
         public bool MergeShortLinesOnlyContinuous { get; set; }
+        public int MergeTextWithSameTimeCodesMaxGap { get; set; }
+        public bool MergeTextWithSameTimeCodesMakeDialog { get; set; }
+        public bool MergeTextWithSameTimeCodesReBreakLines { get; set; }
         public bool ConvertColorsToDialogRemoveColorTags { get; set; }
         public bool ConvertColorsToDialogAddNewLines { get; set; }
         public bool ConvertColorsToDialogReBreakLines { get; set; }
@@ -549,6 +552,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             MergeShortLinesMaxGap = 250;
             MergeShortLinesMaxChars = 55;
             MergeShortLinesOnlyContinuous = true;
+            MergeTextWithSameTimeCodesMaxGap = 250;
+            MergeTextWithSameTimeCodesReBreakLines = false;
+            MergeTextWithSameTimeCodesMakeDialog = false;
             ConvertColorsToDialogRemoveColorTags = true;
             ConvertColorsToDialogAddNewLines = true;
             ConvertColorsToDialogReBreakLines = false;
@@ -5709,6 +5715,24 @@ $HorzAlign          =   Center
                 settings.Tools.MergeShortLinesOnlyContinuous = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("MergeTextWithSameTimeCodesMaxGap");
+            if (subNode != null)
+            {
+                settings.Tools.MergeTextWithSameTimeCodesMaxGap = Convert.ToInt32(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("MergeTextWithSameTimeCodesMakeDialog");
+            if (subNode != null)
+            {
+                settings.Tools.MergeTextWithSameTimeCodesMakeDialog = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MergeTextWithSameTimeCodesReBreakLines");
+            if (subNode != null)
+            {
+                settings.Tools.MergeTextWithSameTimeCodesReBreakLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ConvertColorsToDialogRemoveColorTags");
             if (subNode != null)
             {
@@ -5725,7 +5749,7 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ConvertColorsToDialogReBreakLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
+			}
 
             subNode = node.SelectSingleNode("ColumnPasteColumn");
             if (subNode != null)
@@ -10208,6 +10232,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeTextWithSameTimeCodesMaxGap", settings.Tools.MergeTextWithSameTimeCodesMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeTextWithSameTimeCodesMakeDialog", settings.Tools.MergeTextWithSameTimeCodesMakeDialog.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeTextWithSameTimeCodesReBreakLines", settings.Tools.MergeTextWithSameTimeCodesReBreakLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConvertColorsToDialogRemoveColorTags", settings.Tools.ConvertColorsToDialogRemoveColorTags.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConvertColorsToDialogAddNewLines", settings.Tools.ConvertColorsToDialogAddNewLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConvertColorsToDialogReBreakLines", settings.Tools.ConvertColorsToDialogReBreakLines.ToString(CultureInfo.InvariantCulture));

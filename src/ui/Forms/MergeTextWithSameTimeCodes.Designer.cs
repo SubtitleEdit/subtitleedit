@@ -37,12 +37,13 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.checkBoxMakeDialog = new System.Windows.Forms.CheckBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -58,7 +59,7 @@
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
             this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 55;
+            this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
             this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
             250,
             0,
@@ -72,16 +73,16 @@
             this.labelMaxDifferenceMS.Location = new System.Drawing.Point(12, 14);
             this.labelMaxDifferenceMS.Name = "labelMaxDifferenceMS";
             this.labelMaxDifferenceMS.Size = new System.Drawing.Size(171, 13);
-            this.labelMaxDifferenceMS.TabIndex = 56;
+            this.labelMaxDifferenceMS.TabIndex = 1;
             this.labelMaxDifferenceMS.Text = "Maximum difference in milliseconds";
             // 
             // checkBoxAutoBreakOn
             // 
             this.checkBoxAutoBreakOn.AutoSize = true;
-            this.checkBoxAutoBreakOn.Location = new System.Drawing.Point(291, 15);
+            this.checkBoxAutoBreakOn.Location = new System.Drawing.Point(401, 14);
             this.checkBoxAutoBreakOn.Name = "checkBoxAutoBreakOn";
             this.checkBoxAutoBreakOn.Size = new System.Drawing.Size(90, 17);
-            this.checkBoxAutoBreakOn.TabIndex = 54;
+            this.checkBoxAutoBreakOn.TabIndex = 4;
             this.checkBoxAutoBreakOn.Text = "Re-break text";
             this.checkBoxAutoBreakOn.UseVisualStyleBackColor = true;
             this.checkBoxAutoBreakOn.CheckedChanged += new System.EventHandler(this.checkBoxAutoBreakOn_CheckedChanged);
@@ -94,7 +95,7 @@
             this.groupBoxLinesFound.Location = new System.Drawing.Point(9, 41);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
             this.groupBoxLinesFound.Size = new System.Drawing.Size(983, 207);
-            this.groupBoxLinesFound.TabIndex = 53;
+            this.groupBoxLinesFound.TabIndex = 5;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be merged";
             // 
@@ -133,6 +134,28 @@
             this.columnHeaderText.Text = "New text";
             this.columnHeaderText.Width = 500;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -140,7 +163,7 @@
             this.buttonOK.Location = new System.Drawing.Point(836, 501);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 51;
+            this.buttonOK.TabIndex = 10;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -153,10 +176,21 @@
             this.buttonCancel.Location = new System.Drawing.Point(917, 501);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 52;
+            this.buttonCancel.TabIndex = 11;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // checkBoxMakeDialog
+            // 
+            this.checkBoxMakeDialog.AutoSize = true;
+            this.checkBoxMakeDialog.Location = new System.Drawing.Point(286, 14);
+            this.checkBoxMakeDialog.Name = "checkBoxMakeDialog";
+            this.checkBoxMakeDialog.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxMakeDialog.TabIndex = 3;
+            this.checkBoxMakeDialog.Text = "Make dialog";
+            this.checkBoxMakeDialog.UseVisualStyleBackColor = true;
+            this.checkBoxMakeDialog.CheckedChanged += new System.EventHandler(this.checkBoxMakeDialog_CheckedChanged);
             // 
             // SubtitleListview1
             // 
@@ -178,38 +212,17 @@
             this.SubtitleListview1.SubtitleFontBold = false;
             this.SubtitleListview1.SubtitleFontName = "Tahoma";
             this.SubtitleListview1.SubtitleFontSize = 8;
-            this.SubtitleListview1.TabIndex = 50;
+            this.SubtitleListview1.TabIndex = 6;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.toolStripMenuItemInverseSelection});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
-            // 
-            // toolStripMenuItemSelectAll
-            // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
-            // 
-            // toolStripMenuItemInverseSelection
-            // 
-            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
             // 
             // MergeTextWithSameTimeCodes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1004, 534);
+            this.Controls.Add(this.checkBoxMakeDialog);
             this.Controls.Add(this.numericUpDownMaxMillisecondsBetweenLines);
             this.Controls.Add(this.labelMaxDifferenceMS);
             this.Controls.Add(this.checkBoxAutoBreakOn);
@@ -224,9 +237,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergeTextWithSameTimeCodes";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeTextWithSameTimeCodes_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.MergeTextWithSameTimeCodes_ResizeEnd);
             this.Shown += new System.EventHandler(this.MergeTextWithSameTimeCodes_Shown);
+            this.ResizeEnd += new System.EventHandler(this.MergeTextWithSameTimeCodes_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeTextWithSameTimeCodes_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxLinesFound.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -251,5 +264,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
+        private System.Windows.Forms.CheckBox checkBoxMakeDialog;
     }
 }
