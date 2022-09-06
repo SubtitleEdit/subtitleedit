@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var pos = pictureBoxImage.PointToClient(MousePosition);
             var x = pos.X;
             var y = pos.Y;
-            if (x != _colorPickerX || y != _colorPickerY)
+            if (x >= 0 && x < _bitmap.Width && y >= 0 && y < _bitmap.Height)
             {
                 if (x < _bitmap.Width && y < _bitmap.Height)
                 {
