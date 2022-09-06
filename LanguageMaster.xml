@@ -236,6 +236,9 @@ Note: Do check free disk space.</WaveFileMalformed>
   </AssaResulationChanger>
   <ImageColorPicker>
     <Title>Image color picker</Title>
+    <CopyColorHex>Copy to clipboard as HEX color {0}</CopyColorHex>
+    <CopyColorAssa>Copy to clipboard as ASSA color {0}</CopyColorAssa>
+    <CopyColorRgb>Copy to clipboard as RGB color {0}</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Generate background box</Title>

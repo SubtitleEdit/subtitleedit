@@ -393,6 +393,9 @@ namespace Nikse.SubtitleEdit.Logic
             ImageColorPicker = new LanguageStructure.ImageColorPicker
             {
                 Title = "Image color picker",
+                CopyColorHex = "Copy to clipboard as HEX color {0}",
+                CopyColorAssa = "Copy to clipboard as ASSA color {0}",
+                CopyColorRgb = "Copy to clipboard as RGB color {0}"
             };
 
             AssaSetBackgroundBox = new LanguageStructure.AssaSetBackgroundBox
