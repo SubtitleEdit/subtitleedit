@@ -250,6 +250,9 @@
         public class ImageColorPicker
         {
             public string Title { get; set; }
+            public string CopyColorHex { get; set; }
+            public string CopyColorAssa { get; set; }
+            public string CopyColorRgb { get; set; }
         }
 
         public class AssaSetBackgroundBox
