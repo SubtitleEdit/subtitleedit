@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Forms.Ocr;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
@@ -14,10 +16,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private int _colorPickerY = -1;
 
         public Color Color { get; set; }
+        public string HexColor => Utilities.ColorToHex(Color).ToUpper();
+        public string AssaColor => AdvancedSubStationAlpha.GetSsaColorStringNoTransparency(Color);
+        public string RgbColor => $"RGB({Color.R},{Color.G},{Color.B})";
 
         public ImageColorPicker(Bitmap bitmap)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+            UiUtil.FixFonts(contextMenuStripCopy);
 
             _bitmap = bitmap;
             var screen = Screen.PrimaryScreen.WorkingArea.Size;
@@ -35,6 +43,9 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             Height = _bitmap.Height + (Height - pictureBoxImage.Height);
 
             Text = LanguageSettings.Current.ImageColorPicker.Title;
+            copyHexToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorHex, "#000000");
+            copyAssaToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorAssa, "&H000000");
+            copyRgbToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorRgb, "RGB(0,0,0)");
         }
 
         private void pictureBoxImage_MouseMove(object sender, MouseEventArgs e)
@@ -44,17 +55,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            Cursor.Current = Cursors.Cross;
             var pos = pictureBoxImage.PointToClient(MousePosition);
             var x = pos.X;
             var y = pos.Y;
-            if (x != _colorPickerX || y != _colorPickerY)
+            if (x >= 0 && x < _bitmap.Width && y >= 0 && y < _bitmap.Height)
             {
                 if (x < _bitmap.Width && y < _bitmap.Height)
                 {
                     Color = _bitmap.GetPixel(x, y);
                     panelMouseOverColor.BackColor = Color;
-                    labelInfo.Text = $"R={Color.R} G={Color.G} B={Color.B}";
+                    labelInfo.Text = $"{RgbColor}      {HexColor}      &{AssaColor}";
                 }
 
                 _colorPickerX = x;
@@ -62,7 +72,29 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void pictureBoxImage_Click(object sender, EventArgs e)
+        private void contextMenuStripCopy_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            copyHexToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorHex, HexColor);
+            copyAssaToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorAssa, $"&{AssaColor}");
+            copyRgbToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorAssa, RgbColor);
+        }
+
+        private void copyHexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(HexColor);
+        }
+
+        private void copyAssaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(AssaColor);
+        }
+
+        private void copyRgbToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(RgbColor);
+        }
+
+        private void pictureBoxImage_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             _colorPickerOn = false;
             Cursor.Current = Cursors.Default;
