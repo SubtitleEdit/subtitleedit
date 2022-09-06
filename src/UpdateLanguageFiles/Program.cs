@@ -29,8 +29,8 @@ namespace UpdateLanguageFiles
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
             if (args.Length != 2)
             {
-                Console.Write("Usage: " + myName + @" <LanguageMaster> <LanguageDeserializer>
-  <LanguageMaster>       Path to the LanguageMaster xml file (LanguageMaster.xml)
+                Console.Write("Usage: " + myName + @" <LanguageBaseEnglish> <LanguageDeserializer>
+  <LanguageBaseEnglish>  Path to the LanguageBaseEnglish xml file (LanguageBaseEnglish.xml)
   <LanguageDeserializer> Path to the LanguageDeserializer source code file (LanguageDeserializer.cs)
 ");
                 return 1;

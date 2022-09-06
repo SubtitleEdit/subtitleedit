@@ -106,7 +106,7 @@ SET "LanguageToolPath=src\UpdateLanguageFiles\bin\debug\UpdateLanguageFiles.exe"
 IF NOT EXIST "%LanguageToolPath%" (
   ECHO Compile UpdateLanguageFiles!
 )
-"%LanguageToolPath%" "LanguageMaster.xml" "src\ui\Logic\LanguageDeserializer.cs"
+"%LanguageToolPath%" "LanguageBaseEnglish.xml" "src\ui\Logic\LanguageDeserializer.cs"
 ECHO.
 
 
