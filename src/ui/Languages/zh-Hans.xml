@@ -233,6 +233,12 @@ Command line: {1} {2}
     <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
     <SourceAndTargetEqual>源视频与目标分辨率相同 - 别管了……</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <ImageColorPicker>
+    <Title>取色器</Title>
+    <CopyColorHex>以 HEX 格式复制到剪切板 {0}</CopyColorHex>
+    <CopyColorAssa>以 ASSA 格式复制到剪切板 {0}</CopyColorAssa>
+    <CopyColorRgb>以 RGB 格式复制到剪切板 {0}</CopyColorRgb>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>生成背景框</Title>
     <Padding>填充</Padding>
