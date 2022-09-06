@@ -55,7 +55,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            Cursor.Current = Cursors.Cross;
             var pos = pictureBoxImage.PointToClient(MousePosition);
             var x = pos.X;
             var y = pos.Y;
