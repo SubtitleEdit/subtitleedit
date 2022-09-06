@@ -77,6 +77,7 @@
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxImage.ContextMenuStrip = this.contextMenuStripCopy;
+            this.pictureBoxImage.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBoxImage.Location = new System.Drawing.Point(-7, -2);
             this.pictureBoxImage.Name = "pictureBoxImage";
             this.pictureBoxImage.Size = new System.Drawing.Size(808, 441);
