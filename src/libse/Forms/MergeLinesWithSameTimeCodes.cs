@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public static class MergeLinesWithSameTimeCodes
     {
-        public static Subtitle Merge(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, int maxMsBetween, string language, List<int> removed, Dictionary<int, bool> isFixAllowedList, Subtitle info)
+        public static Subtitle Merge(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool makeDialog, bool reBreak, int maxMsBetween, string language, List<int> removed, Dictionary<int, bool> isFixAllowedList, Subtitle info)
         {
             numberOfMerges = 0;
             var mergedSubtitle = new Subtitle();
@@ -39,12 +39,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                         if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && nextText.StartsWith("<i>", StringComparison.Ordinal) && nextText.EndsWith("</i>", StringComparison.Ordinal))
                         {
-                            p.Text = p.Text.Remove(p.Text.Length - 4) + Environment.NewLine + nextText.Remove(0, 3);
+                            p.Text = GetMergedLines(p.Text.Remove(p.Text.Length - 4), nextText.Remove(0, 3), makeDialog);
                         }
                         else
                         {
-                            p.Text = p.Text + Environment.NewLine + nextText;
+                            p.Text = GetMergedLines(p.Text, nextText, makeDialog);
                         }
+
                         if (reBreak)
                         {
                             p.Text = Utilities.AutoBreakLine(p.Text, language);
@@ -103,6 +104,28 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             mergedSubtitle.Renumber();
             return mergedSubtitle;
+        }
+
+        private static string GetMergedLines(string line1, string line2, bool makeDialog)
+        {
+            if (makeDialog)
+            {
+                switch (Configuration.Settings.General.DialogStyle)
+                {
+                    case Enums.DialogType.DashBothLinesWithoutSpace:
+                        return (line1.StartsWith("-") ? "" : "-") + line1 + Environment.NewLine + "-" + line2;
+                    case Enums.DialogType.DashSecondLineWithSpace:
+                        return line1 + Environment.NewLine + "- " + line2;
+                    case Enums.DialogType.DashSecondLineWithoutSpace:
+                        return line1 + Environment.NewLine + "-" + line2;
+                    default:
+                        return (line1.StartsWith("- ") ? "" : "- ") + line1 + Environment.NewLine + "- " + line2;
+                }
+            }
+            else
+            {
+                return line1 + Environment.NewLine + line2;
+            }
         }
 
         private static bool QualifiesForMerge(Paragraph p, Paragraph next, int maxMsBetween)

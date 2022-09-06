@@ -625,6 +625,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ImageColorPicker/Title":
                     language.ImageColorPicker.Title = reader.Value;
                     break;
+                case "ImageColorPicker/CopyColorHex":
+                    language.ImageColorPicker.CopyColorHex = reader.Value;
+                    break;
+                case "ImageColorPicker/CopyColorAssa":
+                    language.ImageColorPicker.CopyColorAssa = reader.Value;
+                    break;
+                case "ImageColorPicker/CopyColorRgb":
+                    language.ImageColorPicker.CopyColorRgb = reader.Value;
+                    break;
                 case "AssaSetBackgroundBox/Title":
                     language.AssaSetBackgroundBox.Title = reader.Value;
                     break;

@@ -230,6 +230,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ChangeResolutionDrawing>밑그림을 위해 해상도 변경</ChangeResolutionDrawing>
     <SourceAndTargetEqual>원본 해상도와 대상 해상도가 같습니다! - 작업 안됨</SourceAndTargetEqual>
   </AssaResulationChanger>
+  <ImageColorPicker>
+    <Title>이미지 색상 선택기</Title>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>배경 박스 생성</Title>
     <Padding>여백</Padding>
@@ -394,6 +397,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Custom>사용자 지정</Custom>
     <ToDropFrame>드롭 프레임까지</ToDropFrame>
     <FromDropFrame>드롭 프레임에서</FromDropFrame>
+    <AllowOverlap>오버랩 허용</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>* 업데이트 확인</Title>
@@ -1390,6 +1394,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GenerateProgressBar>진행 표시줄 생성...</GenerateProgressBar>
         <AssaResolutionChanger>ASSA 스크립트 해상도 변경...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>배경 박스 생성...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>이미지 색상 선택기...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>일반 오류 수정...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>대/소문자 바꾸기</ChangeCasingForSelectedLines>
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
@@ -2936,6 +2941,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <OcrViaImageCompare>이미지 비교에 의한 OCR...</OcrViaImageCompare>
     <OcrViaModi>Microsoft Office 문서 이미징(MODI). Microsoft Office 필요함</OcrViaModi>
     <OcrViaNOCR>NOCR에 의한 OCR</OcrViaNOCR>
+    <OcrViaCloudVision>Google Cloud Vision API를 통한 OCR</OcrViaCloudVision>
     <TesseractEngineMode>엔진 모드</TesseractEngineMode>
     <TesseractEngineModeLegacy>원본 Tesseract 전용 (기울임꼴 감지 가능)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>신경망 LSTM 전용</TesseractEngineModeNeural>
@@ -3005,6 +3011,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <StartTraining>연습 시작</StartTraining>
     <NowTraining>현재 글꼴 '{1}' 연습중입니다.  연습한 총 문자 수: {0:#,###,##0}, {2:#,###,##0} </NowTraining>
     <ImagesWithTimeCodesInFileName>파일 이름에 타임코드를 포함한 이미지...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>API 키</ApiKey>
+    <SendOriginalImages>원본 이미지 보내기</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - 이미지 자막을 텍스트로</Title>

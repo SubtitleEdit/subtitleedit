@@ -394,6 +394,9 @@ namespace Nikse.SubtitleEdit.Logic
             ImageColorPicker = new LanguageStructure.ImageColorPicker
             {
                 Title = "Image color picker",
+                CopyColorHex = "Copy to clipboard as HEX color {0}",
+                CopyColorAssa = "Copy to clipboard as ASSA color {0}",
+                CopyColorRgb = "Copy to clipboard as RGB color {0}"
             };
 
             AssaSetBackgroundBox = new LanguageStructure.AssaSetBackgroundBox
@@ -2202,6 +2205,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Merge lines with same time codes",
                 MaxDifferenceMilliseconds = "Max. milliseconds difference",
+                MakeDialog = "Make dialog",
                 ReBreakLines = "Re-break lines",
                 NumberOfMergesX = "Number of merges: {0}",
                 MergedText = "Merged text",
