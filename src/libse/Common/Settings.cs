@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public WordListSettings()
         {
             LastLanguage = "en-US";
-            NamesUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/names.xml";
+            NamesUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/Dictionaries/names.xml";
         }
     }
 

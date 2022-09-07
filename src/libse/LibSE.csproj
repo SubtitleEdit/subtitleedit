@@ -7,8 +7,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/master/libse</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/libse</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SubtitleEdit/subtitleedit/tree/main/libse</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>subtitle subtitles subrip srt blu-ray sup</PackageTags>
     <Authors>Nikolaj Olsson</Authors>
