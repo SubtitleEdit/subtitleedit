@@ -4,9 +4,11 @@
 * NEW:
    * Option to use only "front center" audio channel - thx shanedk
    * Add support for OCR via Google's Cloud Vision API - thx Flitskikker 
+   * "Convert colors to dialog" (also batch) - thx Flitskikker 
    * Add EBU stl file property icon - thx Leon 
    * Add new sub format - thx Edward
    * Add new json sub format - thx Flitskikker
+   * Add new sub format - thx George
    * Add shortcut "Loop selection" - thx OmrSi
    * Add shortcut for "Open containing folder" - thx OmrSi
    * Add shorcuts for play with speed 1.5x/2x - thx OmrSi
@@ -16,6 +18,7 @@
    * Add cli param /deletecontains:word - thx sweetngx
    * Add ignore white space to compare - thx Leon
    * Enable "Audio to text" for Linux - thx edcol/coastal45
+   * Add "Allow overlap" to "Change speed" - thx OmrSi
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
