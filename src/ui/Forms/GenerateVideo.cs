@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class GenerateVideo : Form
     {
         public string VideoFileName { get; private set; }
+        private string _subtitleFileName;
         private bool _abort;
         private long _processedFrames;
         private long _startTicks;
@@ -27,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            _subtitleFileName = Utilities.GetFileNameWithoutExtension(subtitle.FileName);
             numericUpDownDurationMinutes.Value = Configuration.Settings.Tools.BlankVideoMinutes;
             
             double? maxTimeP = null;
@@ -136,8 +138,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             EnableDisableControls(false);
-            var fileName = radioButtonColor.Checked ? "blank_video_solid" : (radioButtonCheckeredImage.Checked ? "blank_video_checkered" : "blank_video_image");
-            using (var saveDialog = new SaveFileDialog { FileName = fileName, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
+
+            if (string.IsNullOrEmpty(_subtitleFileName) || _subtitleFileName == "Untitled")
+            {
+                _subtitleFileName = radioButtonColor.Checked ? "blank_video_solid" : (radioButtonCheckeredImage.Checked ? "blank_video_checkered" : "blank_video_image");
+            }
+
+            using (var saveDialog = new SaveFileDialog { FileName = _subtitleFileName, Filter = "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm" })
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
