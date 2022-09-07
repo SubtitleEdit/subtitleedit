@@ -224,7 +224,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Bottom>Bottom</Bottom>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Change ASSA script resolution</Title>
     <SourceVideoRes>Source video resolution</SourceVideoRes>
     <TargetVideoRes>Target video resolution</TargetVideoRes>
@@ -233,7 +233,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Source and target resolution is the same - nothing to do.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>Image color picker</Title>
     <CopyColorHex>Copy to clipboard as HEX color {0}</CopyColorHex>

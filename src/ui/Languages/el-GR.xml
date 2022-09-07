@@ -223,7 +223,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Bottom>Κάτω μέρος</Bottom>
     <TakePosFromVideo>Λήψη θέσης βίντεο</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Αλλαγή ανάλυσης κειμένου ASSA</Title>
     <SourceVideoRes>Ανάλυση αρχικού βίντεο</SourceVideoRes>
     <TargetVideoRes>Καθορισμός ανάλυσης βίντεο</TargetVideoRes>
@@ -232,7 +232,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ChangeResolutionPositions>Αλλαγή ανάλυσης για θέση</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Αλλαγή ανάλυσης για σχέδιο</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Η αρχική και η καθορισμένη ανάλυση είναι ίδιες. Καμία ενέργεια.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Αλλαγή ανάλυσης κειμένου ASSA</Title>
     <Padding>Κενό</Padding>

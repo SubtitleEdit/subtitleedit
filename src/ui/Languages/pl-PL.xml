@@ -224,7 +224,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <Bottom>Dół</Bottom>
     <TakePosFromVideo>Zajmij pozycję wideo</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Zmiana rozdzielczości skryptu ASSA</Title>
     <SourceVideoRes>Rozdzielczość wideo źródłowego</SourceVideoRes>
     <TargetVideoRes>Docelowa rozdzielczość wideo</TargetVideoRes>
@@ -233,7 +233,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <ChangeResolutionPositions>Zmiana rozdzielczości dla pozycji</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Zmiana rozdzielczości dla rysowania</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Rozdzielczość źródłowa i docelowa jest taka sama - nic do zrobienia.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Generowanie tła nieprzezroczystego pola</Title>
     <Padding>Pokrywanie</Padding>

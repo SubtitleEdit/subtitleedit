@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AssaAttachments AssaAttachments;
         public LanguageStructure.AssaOverrideTags AssaOverrideTags;
         public LanguageStructure.AssaProgressBarGenerator AssaProgressBarGenerator;
-        public LanguageStructure.AssaResulationChanger AssaResulationChanger;
+        public LanguageStructure.AssaResolutionChanger AssaResolutionChanger;
         public LanguageStructure.ImageColorPicker ImageColorPicker;
         public LanguageStructure.AssaSetBackgroundBox AssaSetBackgroundBox;
         public LanguageStructure.AssaSetPosition AssaSetPosition;
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TakePosFromVideo = "Take video position",
             };
 
-            AssaResulationChanger = new LanguageStructure.AssaResulationChanger
+            AssaResolutionChanger = new LanguageStructure.AssaResolutionChanger
             {
                 Title = "Change ASSA script resolution",
                 SourceVideoRes = "Source video resolution",

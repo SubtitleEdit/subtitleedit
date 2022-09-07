@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            var l = LanguageSettings.Current.AssaResulationChanger;
+            var l = LanguageSettings.Current.AssaResolutionChanger;
             Text = l.Title;
             labelSourceRes.Text = l.SourceVideoRes;
             labelTargetRes.Text = l.TargetVideoRes;
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (sourceWidth == targetWidth && sourceHeight == targetHeight)
             {
-                MessageBox.Show(LanguageSettings.Current.AssaResulationChanger.SourceAndTargetEqual);
+                MessageBox.Show(LanguageSettings.Current.AssaResolutionChanger.SourceAndTargetEqual);
                 return;
             }
 

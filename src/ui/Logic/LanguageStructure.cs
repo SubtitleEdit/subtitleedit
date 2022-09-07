@@ -235,7 +235,7 @@
             public string TakePosFromVideo { get; set; }
         }
 
-        public class AssaResulationChanger
+        public class AssaResolutionChanger
         {
             public string Title { get; set; }
             public string SourceVideoRes { get; set; }

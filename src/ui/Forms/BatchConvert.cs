@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxAdjustDuration.Text = LanguageSettings.Current.AdjustDisplayDuration.Title;
             addFilesToolStripMenuItem.Text = l.AddFiles;
             groupBoxDeleteLines.Text = l.DeleteLines;
-            groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResulationChanger.Title;
+            groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResolutionChanger.Title;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
@@ -362,11 +362,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxExtendOnly.Text = LanguageSettings.Current.AdjustDisplayDuration.ExtendOnly;
             labelAdjustViaPercent.Text = LanguageSettings.Current.AdjustDisplayDuration.SetAsPercent;
 
-            labelTargetRes.Text = LanguageSettings.Current.AssaResulationChanger.TargetVideoRes;
-            checkBoxMargins.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionMargins;
-            checkBoxFontSize.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionFontSize;
-            checkBoxPosition.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionPositions;
-            checkBoxDrawing.Text = LanguageSettings.Current.AssaResulationChanger.ChangeResolutionDrawing;
+            labelTargetRes.Text = LanguageSettings.Current.AssaResolutionChanger.TargetVideoRes;
+            checkBoxMargins.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionMargins;
+            checkBoxFontSize.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionFontSize;
+            checkBoxPosition.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionPositions;
+            checkBoxDrawing.Text = LanguageSettings.Current.AssaResolutionChanger.ChangeResolutionDrawing;
 
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
             if (mode == RemoveUnicode)
@@ -581,7 +581,7 @@ namespace Nikse.SubtitleEdit.Forms
                 },
                 new FixActionItem
                 {
-                    Text =  LanguageSettings.Current.AssaResulationChanger.Title,
+                    Text =  LanguageSettings.Current.AssaResolutionChanger.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertAssaChangeRes,
                     Action = CommandLineConverter.BatchAction.AssaChangeRes,
                     Control = groupBoxAssaChangeRes

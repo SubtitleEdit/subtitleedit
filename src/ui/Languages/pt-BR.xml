@@ -222,7 +222,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <Bottom>Inferior</Bottom>
     <TakePosFromVideo>Obter posição do vídeo</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Alterar resolução do script ASSA</Title>
     <SourceVideoRes>Resolução do vídeo fonte</SourceVideoRes>
     <TargetVideoRes>Resolução do vídeo de destino</TargetVideoRes>
@@ -231,7 +231,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <ChangeResolutionPositions>Alterar resolução para posição</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Alterar resolução para desenho</ChangeResolutionDrawing>
     <SourceAndTargetEqual>A resoluções de origem e destino são iguais, nada a ser feito.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Gerar caixa de fundo</Title>
     <Padding>Preenchimento</Padding>

@@ -212,7 +212,7 @@ Các video hướng dẫn Subtitle Edit
     <Bottom>Bottom</Bottom>
     <TakePosFromVideo>Nhận vị trí từ video</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Đổi độ phân giải phụ đề</Title>
     <SourceVideoRes>Độ phân giải video nguồn</SourceVideoRes>
     <TargetVideoRes>Độ phân giải video đích</TargetVideoRes>
@@ -221,7 +221,7 @@ Các video hướng dẫn Subtitle Edit
     <ChangeResolutionPositions>Đổi độ phân giải cho vị trí (position)</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Đổi độ phân giải cho vẽ (drawing)</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Độ phân giải nguồn và mục tiêu giống nhau - không phải làm gì cả.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Chỉnh độ phân giải phụ đề theo video</Title>
     <Padding>Padding</Padding>

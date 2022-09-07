@@ -213,7 +213,7 @@
     <Bottom>پایین</Bottom>
     <TakePosFromVideo>موقعیت ویدئو را بگیرید</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>وضوح اسکریپت ASSA را تغییر دهید</Title>
     <SourceVideoRes>وضوح تصویر منبع</SourceVideoRes>
     <TargetVideoRes>وضوح ویدئو را هدف قرار دهید</TargetVideoRes>
@@ -222,7 +222,7 @@
     <ChangeResolutionPositions>تغییر وضوح برای موقعیت</ChangeResolutionPositions>
     <ChangeResolutionDrawing>تغییر وضوح برای طراحی</ChangeResolutionDrawing>
     <SourceAndTargetEqual>وضوح منبع و هدف یکسان است - کاری برای انجام دادن ندارد.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>جعبه پس زمینه را ایجاد کنید</Title>
     <Padding>لایه گذاری</Padding>
