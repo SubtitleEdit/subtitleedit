@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.7</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 03.09.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.09.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -236,6 +236,9 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
   </AssaResulationChanger>
   <ImageColorPicker>
     <Title>Selettore colore immagine</Title>
+    <CopyColorHex>Copia negli Appunti come colore HEX {0}</CopyColorHex>
+    <CopyColorAssa>Copia negli Appunti come colore ASSA {0}</CopyColorAssa>
+    <CopyColorRgb>Copia negli Appunti come colore RGB {0}</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Genera riquadro sfondo</Title>
@@ -1889,6 +1892,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
   <MergeTextWithSameTimeCodes>
     <Title>Unisci linee con gli stessi codici temporali</Title>
     <MaxDifferenceMilliseconds>Differenza massima millisecondi</MaxDifferenceMilliseconds>
+    <MakeDialog>Crea dialogo</MakeDialog>
     <ReBreakLines>Ri-dividi righe</ReBreakLines>
     <NumberOfMergesX>Numero di unioni: {0}</NumberOfMergesX>
     <MergedText>Testo unito</MergedText>
