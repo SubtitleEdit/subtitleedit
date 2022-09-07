@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private static readonly Regex VersionNumberRegex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
         readonly List<string> _months = new List<string> { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
-        private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Changelog.txt";
+        private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/Changelog.txt";
 
         private string _changeLog;
         private int _successCount;
