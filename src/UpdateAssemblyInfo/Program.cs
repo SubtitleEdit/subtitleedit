@@ -254,7 +254,7 @@ namespace UpdateAssemblyInfo
             {
                 currentRepositoryVersion = new VersionInfo(); // no git repository
             }
-            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify refs/heads/master", workingDirectory) && clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags refs/heads/master", workingDirectory))
+            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify refs/heads/main", workingDirectory) && clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags refs/heads/main", workingDirectory))
             {
                 if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
