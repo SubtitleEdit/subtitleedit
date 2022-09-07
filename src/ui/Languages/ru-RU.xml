@@ -236,7 +236,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TakePosFromVideo>
     </TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Изменить разрешение скрипта ASSA</Title>
     <SourceVideoRes>Исходное разрешение видео</SourceVideoRes>
     <TargetVideoRes>Целевое разрешение видео</TargetVideoRes>
@@ -246,7 +246,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChangeResolutionDrawing>Изменить разрешение для отрисовки</ChangeResolutionDrawing>
     <SourceAndTargetEqual>
     </SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>
     </Title>

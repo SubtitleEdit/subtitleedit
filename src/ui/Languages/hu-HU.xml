@@ -220,7 +220,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Bottom>Lent</Bottom>
     <TakePosFromVideo>Videó pozíció felvétele</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>ASSA-parancsfájl felbontásának módosítása</Title>
     <SourceVideoRes>Forrás videó felbontása</SourceVideoRes>
     <TargetVideoRes>Cél videó felbontása</TargetVideoRes>
@@ -229,7 +229,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <ChangeResolutionPositions>Felbontás módosítása a pozícióhoz</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Felbontás módosítása a rajzhoz</ChangeResolutionDrawing>
     <SourceAndTargetEqual>A forrás és a célfelbontás ugyanaz - nincs mit tenni.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Háttérdoboz létrehozása</Title>
     <Padding>Kitöltés</Padding>

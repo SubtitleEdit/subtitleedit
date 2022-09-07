@@ -220,7 +220,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Bottom>Bund</Bottom>
     <TakePosFromVideo>Tag videoposition</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Skift scriptopløsning</Title>
     <SourceVideoRes>Kilde video opløsning</SourceVideoRes>
     <TargetVideoRes>Mål videoopløsning</TargetVideoRes>
@@ -229,7 +229,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ChangeResolutionPositions>Skift opløsning for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Skift opløsning for tegninger</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Kilde og målopløsning er den samme - intet at gøre.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Generer baggrundsboks</Title>
     <Padding>Padding</Padding>

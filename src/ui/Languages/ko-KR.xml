@@ -220,7 +220,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Bottom>맨 아래</Bottom>
     <TakePosFromVideo>비디오 위치 얻기</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>ASSA 스크립트 해상도 변경</Title>
     <SourceVideoRes>원본 비디오 해상도</SourceVideoRes>
     <TargetVideoRes>대상 비디오 해상도</TargetVideoRes>
@@ -229,7 +229,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ChangeResolutionPositions>위치를 위해 해상도 변경</ChangeResolutionPositions>
     <ChangeResolutionDrawing>밑그림을 위해 해상도 변경</ChangeResolutionDrawing>
     <SourceAndTargetEqual>원본 해상도와 대상 해상도가 같습니다! - 작업 안됨</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>이미지 색상 선택기</Title>
   </ImageColorPicker>

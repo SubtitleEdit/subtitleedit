@@ -204,7 +204,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Bottom>底部</Bottom>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Change script resolution</Title>
     <SourceVideoRes>原始影片解析度</SourceVideoRes>
     <TargetVideoRes>目標影片解析度</TargetVideoRes>
@@ -212,7 +212,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetPosition>
     <SetPosition>設定位置</SetPosition>
     <VideoResolutionX>影片解析度: {0}</VideoResolutionX>

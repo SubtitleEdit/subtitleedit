@@ -223,7 +223,7 @@ Command line: {1} {2}
     <Bottom>底部</Bottom>
     <TakePosFromVideo>从视频中获取位置</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>更改 ASSA 脚本分辨率</Title>
     <SourceVideoRes>源视频分辨率</SourceVideoRes>
     <TargetVideoRes>目标视频分辨率</TargetVideoRes>
@@ -232,7 +232,7 @@ Command line: {1} {2}
     <ChangeResolutionPositions>缩放位置</ChangeResolutionPositions>
     <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
     <SourceAndTargetEqual>源视频与目标分辨率相同 - 别管了……</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>取色器</Title>
     <CopyColorHex>以 HEX 格式复制到剪切板 {0}</CopyColorHex>

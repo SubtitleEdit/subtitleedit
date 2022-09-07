@@ -224,7 +224,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Bottom>Bas</Bottom>
     <TakePosFromVideo>Prendre la pos. vidéo</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Changer résolution script</Title>
     <SourceVideoRes>Résolution vidéo source</SourceVideoRes>
     <TargetVideoRes>Résolution vidéo cible</TargetVideoRes>
@@ -233,7 +233,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ChangeResolutionPositions>Changer résolution : position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Changer résolution : dessin</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Résolutions source et cible identiques - rien à faire.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Générer la boîte d'arrière-plan</Title>
     <Padding>Remplissage</Padding>

@@ -224,7 +224,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Bottom>Inferiore</Bottom>
     <TakePosFromVideo>Prendi posizione video</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Modifica risoluzione script</Title>
     <SourceVideoRes>Risoluzione video sorgente</SourceVideoRes>
     <TargetVideoRes>Risoluzione video destinazione</TargetVideoRes>
@@ -233,7 +233,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <ChangeResolutionPositions>Modifica risoluzione per posizione</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Modifica risoluzione per disegno</ChangeResolutionDrawing>
     <SourceAndTargetEqual>La risoluzione di sorgente e destinazione è la stessa: Nessuna operazione necessaria.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>Selettore colore immagine</Title>
     <CopyColorHex>Copia negli Appunti come colore HEX {0}</CopyColorHex>

@@ -598,29 +598,29 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AssaProgressBarGenerator/TakePosFromVideo":
                     language.AssaProgressBarGenerator.TakePosFromVideo = reader.Value;
                     break;
-                case "AssaResulationChanger/Title":
-                    language.AssaResulationChanger.Title = reader.Value;
+                case "AssaResolutionChanger/Title":
+                    language.AssaResolutionChanger.Title = reader.Value;
                     break;
-                case "AssaResulationChanger/SourceVideoRes":
-                    language.AssaResulationChanger.SourceVideoRes = reader.Value;
+                case "AssaResolutionChanger/SourceVideoRes":
+                    language.AssaResolutionChanger.SourceVideoRes = reader.Value;
                     break;
-                case "AssaResulationChanger/TargetVideoRes":
-                    language.AssaResulationChanger.TargetVideoRes = reader.Value;
+                case "AssaResolutionChanger/TargetVideoRes":
+                    language.AssaResolutionChanger.TargetVideoRes = reader.Value;
                     break;
-                case "AssaResulationChanger/ChangeResolutionMargins":
-                    language.AssaResulationChanger.ChangeResolutionMargins = reader.Value;
+                case "AssaResolutionChanger/ChangeResolutionMargins":
+                    language.AssaResolutionChanger.ChangeResolutionMargins = reader.Value;
                     break;
-                case "AssaResulationChanger/ChangeResolutionFontSize":
-                    language.AssaResulationChanger.ChangeResolutionFontSize = reader.Value;
+                case "AssaResolutionChanger/ChangeResolutionFontSize":
+                    language.AssaResolutionChanger.ChangeResolutionFontSize = reader.Value;
                     break;
-                case "AssaResulationChanger/ChangeResolutionPositions":
-                    language.AssaResulationChanger.ChangeResolutionPositions = reader.Value;
+                case "AssaResolutionChanger/ChangeResolutionPositions":
+                    language.AssaResolutionChanger.ChangeResolutionPositions = reader.Value;
                     break;
-                case "AssaResulationChanger/ChangeResolutionDrawing":
-                    language.AssaResulationChanger.ChangeResolutionDrawing = reader.Value;
+                case "AssaResolutionChanger/ChangeResolutionDrawing":
+                    language.AssaResolutionChanger.ChangeResolutionDrawing = reader.Value;
                     break;
-                case "AssaResulationChanger/SourceAndTargetEqual":
-                    language.AssaResulationChanger.SourceAndTargetEqual = reader.Value;
+                case "AssaResolutionChanger/SourceAndTargetEqual":
+                    language.AssaResolutionChanger.SourceAndTargetEqual = reader.Value;
                     break;
                 case "ImageColorPicker/Title":
                     language.ImageColorPicker.Title = reader.Value;

@@ -200,7 +200,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Bottom>Dolů</Bottom>
     <TakePosFromVideo>Vzít pozici videa</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Změnit rozlišení skriptu</Title>
     <SourceVideoRes>Rozlišení zdrojového videa</SourceVideoRes>
     <TargetVideoRes>Rozlišení cílového videa</TargetVideoRes>
@@ -208,7 +208,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <ChangeResolutionFontSize>Změnit rozlišení pro velikost písma</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Změnit rozlišení pro pozici</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Změnit rozlišení pro kresbu</ChangeResolutionDrawing>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetPosition>
     <SetPosition>Nastavit pozici</SetPosition>
     <VideoResolutionX>Rozlišení videa: {0}</VideoResolutionX>

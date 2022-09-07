@@ -221,7 +221,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Bottom>Alareuna</Bottom>
     <TakePosFromVideo>Kaappaa videon sijainti</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Muuta skripin tarkkuutta</Title>
     <SourceVideoRes>Lähdevideon tarkkuus</SourceVideoRes>
     <TargetVideoRes>Kohdevideon tarkkuus</TargetVideoRes>
@@ -230,7 +230,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <ChangeResolutionPositions>Muuta sijainnin tarkkuutta</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Muuta piirroksen tarkkuutta</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Lähde- ja kohde tarkkuudet ovat identtiset, ei muutettavaa.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Luo taustalaatikko</Title>
     <Padding>Pehmuste

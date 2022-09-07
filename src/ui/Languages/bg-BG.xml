@@ -221,7 +221,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Bottom>Отдолу</Bottom>
     <TakePosFromVideo>Заемане на видео позиция</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Промяна резолюцията на скрипта</Title>
     <SourceVideoRes>Изходна видео резолюция</SourceVideoRes>
     <TargetVideoRes>Целева видео резолюция</TargetVideoRes>
@@ -230,7 +230,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChangeResolutionPositions>Промяна на резолюцията за позицията</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Промяна на резолюцията за фигурата</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Разделителната способност на източника и целта е една и съща - няма какво да се прави.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>Избор на цвят на изображението</Title>
   </ImageColorPicker>
