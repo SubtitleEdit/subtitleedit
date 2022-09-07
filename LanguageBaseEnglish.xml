@@ -291,6 +291,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveStyleActor>Remove lines w style/actor</RemoveStyleActor>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
+    <ConvertColorsToDialog>Convert colors to dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
     <RedoCasing>Redo casing</RedoCasing>
     <Convert>Convert</Convert>
@@ -461,6 +462,12 @@ Note: Do check free disk space.</WaveFileMalformed>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Convert colors to dialog</Title>
+    <RemoveColorTags>Remove color tags</RemoveColorTags>
+    <AddNewLines>Place every dash on new line</AddNewLines>
+    <ReBreakLines>Re-break lines</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>D-Cinema properties (interop)</Title>
     <TitleSmpte>D-Cinema properties (SMPTE)</TitleSmpte>
@@ -1211,6 +1218,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <FixCommonErrors>&amp;Fix common errors...</FixCommonErrors>
         <StartNumberingFrom>Renumber...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remove text for hearing impaired...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Convert colors to dialog...</ConvertColorsToDialog>
         <ChangeCasing>Change casing...</ChangeCasing>
         <ChangeFrameRate>Change frame rate...</ChangeFrameRate>
         <ChangeSpeedInPercent>Changed speed (percent)...</ChangeSpeedInPercent>
@@ -1758,6 +1766,8 @@ Download and continue?</VideoFromUrlRequirements>
     <GeneratingWaveformInBackground>Generating waveform in background...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Auto-backup saved</AutoBackupSaved>
     <UsingOnlyFrontCenterChannel>Using only front center audio channel</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Before converting colors to dialog</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Converted colors to dialog</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>

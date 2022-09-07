@@ -766,6 +766,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/RemoveTextForHI":
                     language.BatchConvert.RemoveTextForHI = reader.Value;
                     break;
+                case "BatchConvert/ConvertColorsToDialog":
+                    language.BatchConvert.ConvertColorsToDialog = reader.Value;
+                    break;
                 case "BatchConvert/OverwriteOriginalFiles":
                     language.BatchConvert.OverwriteOriginalFiles = reader.Value;
                     break;
@@ -1197,6 +1200,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "CompareSubtitles/CannotCompareWithImageBasedSubtitles":
                     language.CompareSubtitles.CannotCompareWithImageBasedSubtitles = reader.Value;
+                    break;
+                case "ConvertColorsToDialog/Title":
+                    language.ConvertColorsToDialog.Title = reader.Value;
+                    break;
+                case "ConvertColorsToDialog/RemoveColorTags":
+                    language.ConvertColorsToDialog.RemoveColorTags = reader.Value;
+                    break;
+                case "ConvertColorsToDialog/AddNewLines":
+                    language.ConvertColorsToDialog.AddNewLines = reader.Value;
+                    break;
+                case "ConvertColorsToDialog/ReBreakLines":
+                    language.ConvertColorsToDialog.ReBreakLines = reader.Value;
                     break;
                 case "DCinemaProperties/Title":
                     language.DCinemaProperties.Title = reader.Value;
@@ -3826,6 +3841,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/UsingOnlyFrontCenterChannel":
                     language.Main.UsingOnlyFrontCenterChannel = reader.Value;
                     break;
+                case "Main/BeforeConvertingColorsToDialog":
+                    language.Main.BeforeConvertingColorsToDialog = reader.Value;
+                    break;
+                case "Main/ConvertedColorsToDialog":
+                    language.Main.ConvertedColorsToDialog = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -4050,6 +4071,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Tools/RemoveTextForHearingImpaired":
                     language.Main.Menu.Tools.RemoveTextForHearingImpaired = reader.Value;
+                    break;
+                case "Main/Menu/Tools/ConvertColorsToDialog":
+                    language.Main.Menu.Tools.ConvertColorsToDialog = reader.Value;
                     break;
                 case "Main/Menu/Tools/ChangeCasing":
                     language.Main.Menu.Tools.ChangeCasing = reader.Value;
