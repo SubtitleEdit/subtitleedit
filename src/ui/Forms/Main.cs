@@ -1683,6 +1683,7 @@ namespace Nikse.SubtitleEdit.Forms
             fixToolStripMenuItem.Text = _language.Menu.Tools.FixCommonErrors;
             startNumberingFromToolStripMenuItem.Text = _language.Menu.Tools.StartNumberingFrom;
             removeTextForHearImpairedToolStripMenuItem.Text = _language.Menu.Tools.RemoveTextForHearingImpaired;
+            convertColorsToDialogToolStripMenuItem.Text = _language.Menu.Tools.ConvertColorsToDialog;
             ChangeCasingToolStripMenuItem.Text = _language.Menu.Tools.ChangeCasing;
             toolStripMenuItemChangeFrameRate2.Text = _language.Menu.Tools.ChangeFrameRate;
             changeSpeedInPercentToolStripMenuItem.Text = _language.Menu.Tools.ChangeSpeedInPercent;
@@ -24737,6 +24738,7 @@ namespace Nikse.SubtitleEdit.Forms
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
             startNumberingFromToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
             removeTextForHearImpairedToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
+            convertColorsToDialogToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsConvertColorsToDialog);
             ChangeCasingToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
             toolStripMenuItemShowOriginalInPreview.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
             toolStripMenuItemBatchConvert.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
@@ -29063,6 +29065,8 @@ namespace Nikse.SubtitleEdit.Forms
             styleToolStripMenuItem.Visible = f.HasStyleSupport;
             var formatType = f.GetType();
             actorToolStripMenuItem.Visible = formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha);
+
+            convertColorsToDialogToolStripMenuItem.Visible = _subtitle.Paragraphs.Any(p => p.Text.Contains("<font color"));
         }
 
         private void ContextMenuStripWaveformOpening(object sender, CancelEventArgs e)
@@ -33019,50 +33023,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return x;
                 }
 
-                var r = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*");
-                var s = p.Text;
-                var match = r.Match(s);
-                while (match.Success)
-                {
-                    s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
-                    if (match.Index > 4)
-                    {
-                        var font = s.Substring(match.Index - 5);
-                        if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
-                        {
-                            s = s.Remove(match.Index - 5, 7);
-                            var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
-                            if (endIndex >= 0)
-                            {
-                                s = s.Remove(endIndex, 7);
-                            }
-                            else
-                            {
-                                endIndex = s.IndexOf("< /font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
-                                if (endIndex >= 0)
-                                {
-                                    s = s.Remove(endIndex, 7);
-                                }
-                                else
-                                {
-                                    endIndex = s.IndexOf("</ font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
-                                    if (endIndex >= 0)
-                                    {
-                                        s = s.Remove(endIndex, 7);
-                                    }
-                                }
-                            }
-                        }
-                        else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
-                        {
-                            s = s.Remove(match.Index, 1);
-                        }
-                    }
-
-                    match = r.Match(s);
-                }
-
-                return s.Trim();
+                return HtmlUtil.RemoveColorTags(p.Text);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingColor));
         }
 
@@ -34352,6 +34313,32 @@ namespace Nikse.SubtitleEdit.Forms
             finally
             {
                 Cursor = Cursors.Default;
+            }
+        }
+
+        private void convertColorsToDialogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
+
+            ReloadFromSourceView();
+            using (var convertColorsToDialogForm = new ConvertColorsToDialog())
+            {
+                if (convertColorsToDialogForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    Cursor = Cursors.WaitCursor;
+                    SaveSubtitleListviewIndices();
+                    MakeHistoryForUndo(_language.BeforeConvertingColorsToDialog);
+                    ShowStatus(_language.ConvertedColorsToDialog);
+                    convertColorsToDialogForm.ConvertColorsToDialogInSubtitle(_subtitle);
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+                    Cursor = Cursors.Default;
+                }
             }
         }
     }

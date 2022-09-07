@@ -1003,5 +1003,52 @@ namespace Nikse.SubtitleEdit.Core.Common
             return c;
         }
 
+        public static string RemoveColorTags(string input)
+        {
+            var r = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*");
+            var s = input;
+            var match = r.Match(s);
+            while (match.Success)
+            {
+                s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
+                if (match.Index > 4)
+                {
+                    var font = s.Substring(match.Index - 5);
+                    if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                    {
+                        s = s.Remove(match.Index - 5, 7);
+                        var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            s = s.Remove(endIndex, 7);
+                        }
+                        else
+                        {
+                            endIndex = s.IndexOf("< /font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex >= 0)
+                            {
+                                s = s.Remove(endIndex, 7);
+                            }
+                            else
+                            {
+                                endIndex = s.IndexOf("</ font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                                if (endIndex >= 0)
+                                {
+                                    s = s.Remove(endIndex, 7);
+                                }
+                            }
+                        }
+                    }
+                    else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
+                    {
+                        s = s.Remove(match.Index, 1);
+                    }
+                }
+
+                match = r.Match(s);
+            }
+
+            return s.Trim();
+        }
     }
 }

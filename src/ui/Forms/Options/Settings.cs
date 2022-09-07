@@ -1329,6 +1329,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.FixCommonErrors, nameof(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.StartNumberingFrom, nameof(Configuration.Settings.Shortcuts.MainToolsRenumber), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.RemoveTextForHearingImpaired, nameof(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI), true);
+            AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.ConvertColorsToDialog, nameof(Configuration.Settings.Shortcuts.MainToolsConvertColorsToDialog), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.ChangeCasing, nameof(Configuration.Settings.Shortcuts.MainToolsChangeCasing), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsMakeEmptyFromCurrent), true);
             AddNode(toolsNode, LanguageSettings.Current.Main.Menu.Tools.MergeShortLines, nameof(Configuration.Settings.Shortcuts.MainToolsMergeShortLines), true);
