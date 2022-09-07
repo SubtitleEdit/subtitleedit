@@ -313,6 +313,7 @@
             public string RemoveFormatting { get; set; }
             public string RemoveStyleActor { get; set; }
             public string RemoveTextForHI { get; set; }
+            public string ConvertColorsToDialog { get; set; }
             public string OverwriteOriginalFiles { get; set; }
             public string RedoCasing { get; set; }
             public string Convert { get; set; }
@@ -509,6 +510,14 @@
             public string IgnoreFormatting { get; set; }
             public string OnlyLookForDifferencesInText { get; set; }
             public string CannotCompareWithImageBasedSubtitles { get; set; }
+        }
+
+        public class ConvertColorsToDialog
+        {
+            public string Title { get; set; }
+            public string RemoveColorTags { get; set; }
+            public string AddNewLines { get; set; }
+            public string ReBreakLines { get; set; }
         }
 
         public class DCinemaProperties
@@ -1509,6 +1518,8 @@
             public string GeneratingWaveformInBackground { get; set; }
             public string AutoBackupSaved { get; set; }
             public string UsingOnlyFrontCenterChannel { get; set; }
+            public string BeforeConvertingColorsToDialog { get; set; }
+            public string ConvertedColorsToDialog { get; set; }
 
             public class MainMenu
             {
@@ -1595,6 +1606,7 @@
                     public string FixCommonErrors { get; set; }
                     public string StartNumberingFrom { get; set; }
                     public string RemoveTextForHearingImpaired { get; set; }
+                    public string ConvertColorsToDialog { get; set; }
                     public string ChangeCasing { get; set; }
                     public string ChangeFrameRate { get; set; }
                     public string ChangeSpeedInPercent { get; set; }

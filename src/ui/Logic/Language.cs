@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ColorChooser ColorChooser;
         public LanguageStructure.ColumnPaste ColumnPaste;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
+        public LanguageStructure.ConvertColorsToDialog ConvertColorsToDialog;
         public LanguageStructure.DCinemaProperties DCinemaProperties;
         public LanguageStructure.DurationsBridgeGaps DurationsBridgeGaps;
         public LanguageStructure.DvdSubRip DvdSubRip;
@@ -449,6 +450,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SaveInOutputFolder = "Save in output folder below",
                 ConvertOptions = "Convert options",
                 RemoveTextForHI = "Remove text for HI",
+                ConvertColorsToDialog = "Convert colors to dialog",
                 InputDescription = "Input files (browse or drag-n-drop)",
                 Convert = "Convert",
                 OverwriteFiles = "Overwrite files",
@@ -651,6 +653,14 @@ namespace Nikse.SubtitleEdit.Logic
                 IgnoreFormatting = "Ignore formatting",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
                 CannotCompareWithImageBasedSubtitles = "Cannot compare with image based subtitles",
+            };
+
+            ConvertColorsToDialog = new LanguageStructure.ConvertColorsToDialog
+            {
+                Title = "Convert colors to dialog",
+                RemoveColorTags = "Remove color tags",
+                AddNewLines = "Place every dash on new line",
+                ReBreakLines = "Re-break lines",
             };
 
             DCinemaProperties = new LanguageStructure.DCinemaProperties
@@ -1658,6 +1668,9 @@ namespace Nikse.SubtitleEdit.Logic
                 GeneratingWaveformInBackground = "Generating waveform in background...",
                 AutoBackupSaved = "Auto-backup saved",
                 UsingOnlyFrontCenterChannel = "Using only front center audio channel",
+                BeforeConvertingColorsToDialog = "Before converting colors to dialog",
+                ConvertedColorsToDialog = "Converted colors to dialog",
+
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1746,6 +1759,7 @@ namespace Nikse.SubtitleEdit.Logic
                         FixCommonErrors = "&Fix common errors...",
                         StartNumberingFrom = "Renumber...",
                         RemoveTextForHearingImpaired = "Remove text for hearing impaired...",
+                        ConvertColorsToDialog = "Convert colors to dialog...",
                         ChangeCasing = "Change casing...",
                         ChangeFrameRate = "Change frame rate...",
                         ChangeSpeedInPercent = "Changed speed (percent)...",

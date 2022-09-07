@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             MergeSameTexts,
             MergeSameTimeCodes,
             RemoveTextForHI,
+            ConvertColorsToDialog,
             RemoveFormatting,
             RemoveStyle,
             RedoCasing,
@@ -160,6 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.ReverseRtlStartEnd);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveFormatting);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
+                _stdOutWriter.WriteLine("        /" + BatchAction.ConvertColorsToDialog);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
                 _stdOutWriter.WriteLine("        /" + BatchAction.BalanceLines);
                 _stdOutWriter.WriteLine();
@@ -1950,6 +1952,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
                             }
 
+                            break;
+                        case BatchAction.ConvertColorsToDialog:
+                            ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(sub, Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags, Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines, Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines);
                             break;
                         case BatchAction.RemoveFormatting:
                             foreach (var p in sub.Paragraphs)

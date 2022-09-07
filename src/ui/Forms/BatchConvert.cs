@@ -417,6 +417,15 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMergeSameTimeCodesMakeDialog.Checked = Configuration.Settings.Tools.MergeTextWithSameTimeCodesMakeDialog;
             checkBoxMergeSameTimeCodesReBreakLines.Checked = Configuration.Settings.Tools.MergeTextWithSameTimeCodesReBreakLines;
 
+            groupBoxConvertColorsToDialog.Text = LanguageSettings.Current.ConvertColorsToDialog.Title;
+            checkBoxConvertColorsToDialogRemoveColorTags.Text = LanguageSettings.Current.ConvertColorsToDialog.RemoveColorTags;
+            checkBoxConvertColorsToDialogAddNewLines.Text = LanguageSettings.Current.ConvertColorsToDialog.AddNewLines;
+            checkBoxConvertColorsToDialogReBreakLines.Text = LanguageSettings.Current.ConvertColorsToDialog.ReBreakLines;
+
+            checkBoxConvertColorsToDialogRemoveColorTags.Checked = Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags;
+            checkBoxConvertColorsToDialogAddNewLines.Checked = Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines;
+            checkBoxConvertColorsToDialogReBreakLines.Checked = Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines;
+
             inverseSelectionToolStripMenuItem.Text = LanguageSettings.Current.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = LanguageSettings.Current.Main.Menu.ContextMenu.SelectAll;
             UpdateNumberOfFiles();
@@ -449,6 +458,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI,
                     Action = CommandLineConverter.BatchAction.RemoveTextForHI,
                     Control = buttonConvertOptionsSettings
+                },
+                new FixActionItem
+                {
+                    Text = l.ConvertColorsToDialog,
+                    Checked = Configuration.Settings.Tools.BatchConvertConvertColorsToDialog,
+                    Action = CommandLineConverter.BatchAction.ConvertColorsToDialog,
+                    Control = groupBoxConvertColorsToDialog
                 },
                 new FixActionItem
                 {
@@ -1703,6 +1719,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog))
+            {
+                ConvertColorsToDialogUtils.ConvertColorsToDialogInSubtitle(sub, checkBoxConvertColorsToDialogRemoveColorTags.Checked, checkBoxConvertColorsToDialogAddNewLines.Checked, checkBoxConvertColorsToDialogReBreakLines.Checked);
+            }
+
             if (IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate) &&
                 double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fromFrameRate) &&
                 double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
@@ -1914,6 +1935,7 @@ namespace Nikse.SubtitleEdit.Forms
                    !IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines) &&
@@ -2622,6 +2644,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting);
             Configuration.Settings.Tools.BatchConvertBridgeGaps = IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps);
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI);
+            Configuration.Settings.Tools.BatchConvertConvertColorsToDialog = IsActionEnabled(CommandLineConverter.BatchAction.ConvertColorsToDialog);
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap);
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
@@ -2646,6 +2669,10 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.MergeTextWithSameTimeCodesMaxGap = Convert.ToInt32(numericUpDownMergeSameTimeCodesMaxDifference.Value);
             Configuration.Settings.Tools.MergeTextWithSameTimeCodesMakeDialog = checkBoxMergeSameTimeCodesMakeDialog.Checked;
             Configuration.Settings.Tools.MergeTextWithSameTimeCodesReBreakLines = checkBoxMergeSameTimeCodesReBreakLines.Checked;
+
+            Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags = checkBoxConvertColorsToDialogRemoveColorTags.Checked;
+            Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines = checkBoxConvertColorsToDialogAddNewLines.Checked;
+            Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines = checkBoxConvertColorsToDialogReBreakLines.Checked;
 
             UpdateRtlSettings();
         }
@@ -2999,6 +3026,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxAdjustDuration.Visible = false;
             groupBoxDeleteLines.Visible = false;
             groupBoxAssaChangeRes.Visible = false;
+            groupBoxConvertColorsToDialog.Visible = false;
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {

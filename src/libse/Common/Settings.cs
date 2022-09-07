@@ -197,6 +197,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
+        public bool BatchConvertConvertColorsToDialog { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
         public bool BatchConvertMultipleReplace { get; set; }
         public bool BatchConvertFixRtl { get; set; }
@@ -345,6 +346,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int MergeTextWithSameTimeCodesMaxGap { get; set; }
         public bool MergeTextWithSameTimeCodesMakeDialog { get; set; }
         public bool MergeTextWithSameTimeCodesReBreakLines { get; set; }
+        public bool ConvertColorsToDialogRemoveColorTags { get; set; }
+        public bool ConvertColorsToDialogAddNewLines { get; set; }
+        public bool ConvertColorsToDialogReBreakLines { get; set; }
         public string ColumnPasteColumn { get; set; }
         public string ColumnPasteOverwriteMode { get; set; }
         public string AssaAttachmentFontTextPreview { get; set; }
@@ -551,6 +555,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             MergeTextWithSameTimeCodesMaxGap = 250;
             MergeTextWithSameTimeCodesReBreakLines = false;
             MergeTextWithSameTimeCodesMakeDialog = false;
+            ConvertColorsToDialogRemoveColorTags = true;
+            ConvertColorsToDialogAddNewLines = true;
+            ConvertColorsToDialogReBreakLines = false;
             ColumnPasteColumn = "all";
             ColumnPasteOverwriteMode = "overwrite";
             AssaAttachmentFontTextPreview =
@@ -2260,6 +2267,7 @@ $HorzAlign          =   Center
 
         public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
+        public string MainToolsConvertColorsToDialog { get; set; }
         public string MainToolsChangeCasing { get; set; }
         public string MainToolsAutoDuration { get; set; }
         public string MainToolsBatchConvert { get; set; }
@@ -4831,6 +4839,12 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertRemoveTextForHI = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("BatchConvertConvertColorsToDialog");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertConvertColorsToDialog = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
             if (subNode != null)
             {
@@ -5718,6 +5732,24 @@ $HorzAlign          =   Center
             {
                 settings.Tools.MergeTextWithSameTimeCodesReBreakLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
+
+            subNode = node.SelectSingleNode("ConvertColorsToDialogRemoveColorTags");
+            if (subNode != null)
+            {
+                settings.Tools.ConvertColorsToDialogRemoveColorTags = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ConvertColorsToDialogAddNewLines");
+            if (subNode != null)
+            {
+                settings.Tools.ConvertColorsToDialogAddNewLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ConvertColorsToDialogReBreakLines");
+            if (subNode != null)
+            {
+                settings.Tools.ConvertColorsToDialogReBreakLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+			}
 
             subNode = node.SelectSingleNode("ColumnPasteColumn");
             if (subNode != null)
@@ -8222,6 +8254,12 @@ $HorzAlign          =   Center
                     shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsConvertColorsToDialog");
+                if (subNode != null)
+                {
+                    shortcuts.MainToolsConvertColorsToDialog = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsChangeCasing");
                 if (subNode != null)
                 {
@@ -10049,6 +10087,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertConvertColorsToDialog", settings.Tools.BatchConvertConvertColorsToDialog.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString(CultureInfo.InvariantCulture));
@@ -10196,6 +10235,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MergeTextWithSameTimeCodesMaxGap", settings.Tools.MergeTextWithSameTimeCodesMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeTextWithSameTimeCodesMakeDialog", settings.Tools.MergeTextWithSameTimeCodesMakeDialog.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeTextWithSameTimeCodesReBreakLines", settings.Tools.MergeTextWithSameTimeCodesReBreakLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConvertColorsToDialogRemoveColorTags", settings.Tools.ConvertColorsToDialogRemoveColorTags.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConvertColorsToDialogAddNewLines", settings.Tools.ConvertColorsToDialogAddNewLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConvertColorsToDialogReBreakLines", settings.Tools.ConvertColorsToDialogReBreakLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ColumnPasteColumn", settings.Tools.ColumnPasteColumn);
                 textWriter.WriteElementString("ColumnPasteOverwriteMode", settings.Tools.ColumnPasteOverwriteMode);
                 textWriter.WriteElementString("AssaAttachmentFontTextPreview", settings.Tools.AssaAttachmentFontTextPreview);
@@ -10774,6 +10816,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainToolsDurationsBridgeGap", shortcuts.MainToolsDurationsBridgeGap);
             textWriter.WriteElementString("MainToolsRenumber", shortcuts.MainToolsRenumber);
             textWriter.WriteElementString("MainToolsRemoveTextForHI", shortcuts.MainToolsRemoveTextForHI);
+            textWriter.WriteElementString("MainToolsConvertColorsToDialog", shortcuts.MainToolsConvertColorsToDialog);
             textWriter.WriteElementString("MainToolsChangeCasing", shortcuts.MainToolsChangeCasing);
             textWriter.WriteElementString("MainToolsAutoDuration", shortcuts.MainToolsAutoDuration);
             textWriter.WriteElementString("MainToolsBatchConvert", shortcuts.MainToolsBatchConvert);
