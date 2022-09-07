@@ -455,6 +455,7 @@ Command line: {1} {2}
     <XNumberOfDifferenceAndPercentLettersChanged>忽略断行</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>仅显示差异</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略断行</IgnoreLineBreaks>
+    <IgnoreWhitespace>忽略空格</IgnoreWhitespace>
     <IgnoreFormatting>忽略格式</IgnoreFormatting>
     <OnlyLookForDifferencesInText>仅查找差异文本</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>无法比较基于图像的字幕</CannotCompareWithImageBasedSubtitles>
@@ -1341,7 +1342,6 @@ Command line: {1} {2}
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
-        <Insert>插入</Insert>
         <InsertFirstLine>插入行</InsertFirstLine>
         <InsertBefore>之前插入</InsertBefore>
         <InsertAfter>之后插入</InsertAfter>
@@ -1396,6 +1396,7 @@ Command line: {1} {2}
         <GenerateProgressBar>生成进度条...</GenerateProgressBar>
         <AssaResolutionChanger>更改ASSA脚本分辨率...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>生成背景框...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>图像颜色选择器...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -1881,6 +1882,7 @@ Command line: {1} {2}
   <MergeTextWithSameTimeCodes>
     <Title>合并时间码相同的行</Title>
     <MaxDifferenceMilliseconds>最大毫秒差</MaxDifferenceMilliseconds>
+    <MakeDialog>制作对话框</MakeDialog>
     <ReBreakLines>再次添加断行线</ReBreakLines>
     <NumberOfMergesX>合并行数：{0}</NumberOfMergesX>
     <MergedText>已合并文本</MergedText>
@@ -2943,7 +2945,6 @@ Command line: {1} {2}
     <New>新建</New>
     <Edit>编辑</Edit>
     <StartOcr>开始 OCR</StartOcr>
-    <Stop>停止</Stop>
     <StartOcrFrom>从下列字幕编号开始 OCR:</StartOcrFrom>
     <LoadingVobSubImages>正在加载 VobSub 图像...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>正在加载图像比照数据库...</LoadingImageCompareDatabase>
@@ -3002,6 +3003,8 @@ Command line: {1} {2}
     <NowTraining>正在训练字体 '{1}', 已训练字符数: {0:#,###,##0}, 已获知 {2:#,###,##0}</NowTraining>
     <ImagesWithTimeCodesInFileName>文件名中带有时间码的图像...</ImagesWithTimeCodesInFileName>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>API 密钥</ApiKey>
+    <SendOriginalImages>发送原始图像</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
