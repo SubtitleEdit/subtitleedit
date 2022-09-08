@@ -17252,6 +17252,29 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else if (e.KeyData == _shortcuts.MainVideoSpeedToggle)
+            {
+                e.SuppressKeyPress = true;
+                if (!string.IsNullOrEmpty(_videoFileName) && mediaPlayer.VideoPlayer != null)
+                {
+                    if (Math.Abs(mediaPlayer.VideoPlayer.PlayRate - 2) < 0.1)
+                    {
+                        SetPlayRateAndPlay(50, false);
+                    }
+                    else if (Math.Abs(mediaPlayer.VideoPlayer.PlayRate - 1) < 0.1)
+                    {
+                        SetPlayRateAndPlay(150, false);
+                    }
+                    else if (Math.Abs(mediaPlayer.VideoPlayer.PlayRate - 1.5) < 0.1)
+                    {
+                        SetPlayRateAndPlay(200, false);
+                    }
+                    else 
+                    {
+                        SetPlayRateAndPlay(100, false);
+                    }
+                }
+            }
             else if (e.KeyData == _shortcuts.MainVideoReset)
             {
                 e.SuppressKeyPress = true;

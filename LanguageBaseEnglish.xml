@@ -2485,12 +2485,13 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformGoToNextChapter>Go to next chapter</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Select next subtitle (from video position, keep video pos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
-    <Play150Speed>Play video with 1.5x speed</Play150Speed>
-    <Play200Speed>Play video with 2.0x speed</Play200Speed>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
-    <PlayRateSlower>Play rate slower</PlayRateSlower>
-    <PlayRateFaster>Play rate faster</PlayRateFaster>
+    <Play150Speed>Play rate 1.5x speed</Play150Speed>
+    <Play200Speed>Play rate 2.0x speed</Play200Speed>
+    <PlayRateSlower>Play rate slower (speed)</PlayRateSlower>
+    <PlayRateFaster>Play rate faster (speed)</PlayRateFaster>
+    <PlayRateToggle>Play rate (speed) toggle (05.x, 1x, 1.5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Reset speed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
     <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>

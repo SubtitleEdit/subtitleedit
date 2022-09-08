@@ -1349,8 +1349,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.OpenVideo, nameof(Configuration.Settings.Shortcuts.MainVideoOpen), true);
             AddNode(videoNode, LanguageSettings.Current.Main.Menu.Video.CloseVideo, nameof(Configuration.Settings.Shortcuts.MainVideoClose), true);
             AddNode(videoNode, language.TogglePlayPause, nameof(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
-            AddNode(videoNode, language.Play150Speed, nameof(Configuration.Settings.Shortcuts.MainVideoPlay150Speed));
-            AddNode(videoNode, language.Play200Speed, nameof(Configuration.Settings.Shortcuts.MainVideoPlay200Speed));
             AddNode(videoNode, language.Pause, nameof(Configuration.Settings.Shortcuts.MainVideoPause));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.Stop, nameof(Configuration.Settings.Shortcuts.MainVideoStop));
             AddNode(videoNode, LanguageSettings.Current.Main.VideoControls.PlayFromJustBeforeText, nameof(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore));
@@ -1386,8 +1384,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.WaveformGoToNextChapter, nameof(Configuration.Settings.Shortcuts.MainVideoGoToNextChapter));
             AddNode(videoNode, language.WaveformSelectNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainVideoSelectNextSubtitle));
             AddNode(videoNode, language.Fullscreen, nameof(Configuration.Settings.Shortcuts.MainVideoFullscreen));
+            AddNode(videoNode, language.Play150Speed, nameof(Configuration.Settings.Shortcuts.MainVideoPlay150Speed));
+            AddNode(videoNode, language.Play200Speed, nameof(Configuration.Settings.Shortcuts.MainVideoPlay200Speed));
             AddNode(videoNode, language.PlayRateSlower, nameof(Configuration.Settings.Shortcuts.MainVideoSlower));
             AddNode(videoNode, language.PlayRateFaster, nameof(Configuration.Settings.Shortcuts.MainVideoFaster));
+            AddNode(videoNode, language.PlayRateToggle, nameof(Configuration.Settings.Shortcuts.MainVideoSpeedToggle));
             AddNode(videoNode, language.VideoResetSpeedAndZoom, nameof(Configuration.Settings.Shortcuts.MainVideoReset));
             AddNode(videoNode, language.MainToggleVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleControls));
             AddNode(videoNode, language.VideoAudioToText, nameof(Configuration.Settings.Shortcuts.MainVideoAudioToText));

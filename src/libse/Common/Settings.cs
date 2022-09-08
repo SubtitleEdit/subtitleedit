@@ -2320,6 +2320,7 @@ $HorzAlign          =   Center
         public string MainVideoFullscreen { get; set; }
         public string MainVideoSlower { get; set; }
         public string MainVideoFaster { get; set; }
+        public string MainVideoSpeedToggle { get; set; }
         public string MainVideoReset { get; set; }
         public string MainVideoToggleBrightness { get; set; }
         public string MainVideoToggleContrast { get; set; }
@@ -8578,6 +8579,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoFaster = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoSpeedToggle");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoSpeedToggle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoReset");
                 if (subNode != null)
                 {
@@ -10870,6 +10877,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoFullscreen", shortcuts.MainVideoFullscreen);
             textWriter.WriteElementString("MainVideoSlower", shortcuts.MainVideoSlower);
             textWriter.WriteElementString("MainVideoFaster", shortcuts.MainVideoFaster);
+            textWriter.WriteElementString("MainVideoSpeedToggle", shortcuts.MainVideoSpeedToggle);
             textWriter.WriteElementString("MainVideoReset", shortcuts.MainVideoReset);
             textWriter.WriteElementString("MainVideoToggleBrightness", shortcuts.MainVideoToggleBrightness);
             textWriter.WriteElementString("MainVideoToggleContrast", shortcuts.MainVideoToggleContrast);
