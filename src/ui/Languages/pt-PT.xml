@@ -235,6 +235,12 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <ChangeResolutionDrawing>Alterar a resolução para desenho</ChangeResolutionDrawing>
     <SourceAndTargetEqual>A fonte e a resolução de destino são as mesmas - nada a fazer.</SourceAndTargetEqual>
   </AssaResolutionChanger>
+  <ImageColorPicker>
+    <Title>Selector de cores de imagem</Title>
+    <CopyColorHex>Copiar para a área de transferência como cor HEX {0}</CopyColorHex>
+    <CopyColorAssa>Copiar para a área de transferência como cor ASSA {0}</CopyColorAssa>
+    <CopyColorRgb>Copiar para a área de transferência como cor RGB {0}</CopyColorRgb>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Gerar caixa de fundo</Title>
     <Padding>Preenchimento</Padding>
@@ -286,6 +292,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveStyleActor>Remover linhas w estilo/actor</RemoveStyleActor>
     <RemoveTextForHI>Remover texto para Deficientes Auditivos</RemoveTextForHI>
+    <ConvertColorsToDialog>Converter cores para diálogos</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
     <RedoCasing>Refazer Maiúsculas/Minúsculas</RedoCasing>
     <Convert>Converter</Convert>
@@ -456,6 +463,12 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <OnlyLookForDifferencesInText>Procurar só as diferenças no texto</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Não é possível comparar legendas baseadas em imagens</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Converter cores para diálogos</Title>
+    <RemoveColorTags>Remover etiquetas de cor</RemoveColorTags>
+    <AddNewLines>Colocar cada travessão numa nova linha</AddNewLines>
+    <ReBreakLines>Requebrar as linhas</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>Propriedades Cinema Digital (interoperabilidade)</Title>
     <TitleSmpte>Propriedades Cinema Digital (SMPTE)</TitleSmpte>
@@ -1206,6 +1219,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <FixCommonErrors>&amp;Corrigir erros frequentes...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remover texto para Deficientes Auditivos...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Converter cores para diálogos...</ConvertColorsToDialog>
         <ChangeCasing>Alterar Maiúsculas/Minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
@@ -1396,6 +1410,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <GenerateProgressBar>Gerar barra de progressão...</GenerateProgressBar>
         <AssaResolutionChanger>Alterar a resolução do script ASSA...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Gerar caixa de fundo...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Selector de cores de imagem...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
@@ -1752,6 +1767,8 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <GeneratingWaveformInBackground>A gerar forma de onda em segundo plano...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Cópia de segurança automática guardada</AutoBackupSaved>
     <UsingOnlyFrontCenterChannel>Usando apenas o canal de áudio central frontal</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Antes de converter cores para diálogos</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Converter cores para diálogos</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -1886,6 +1903,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
   <MergeTextWithSameTimeCodes>
     <Title>Combinar linhas com os mesmos tempos</Title>
     <MaxDifferenceMilliseconds>Max. diferença milissegundos</MaxDifferenceMilliseconds>
+    <MakeDialog>Fazer diálogos</MakeDialog>
     <ReBreakLines>Requebrar as linhas</ReBreakLines>
     <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
     <MergedText>Texto combinado</MergedText>
