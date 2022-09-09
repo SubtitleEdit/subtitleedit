@@ -77,6 +77,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 subtitle.Paragraphs.Add(p);
             }
+
+            subtitle.Renumber();
         }
 
         private static readonly Dictionary<string, string> DecodeDictionary = new Dictionary<string, string>
