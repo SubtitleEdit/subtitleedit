@@ -15,10 +15,10 @@
    * Add "nOCR" option to "Batch convert" - thx Gen3ric
    * New proxy settings
    * Add "ASSA image color picker" incl. shortcut - thx Érico
-   * Add cli param /deletecontains:word - thx sweetngx
+   * Add CLI param /deletecontains:word - thx sweetngx
    * Add ignore white space to compare - thx Leon
    * Enable "Audio to text" for Linux - thx edcol/coastal45
-   * Add "Allow overlap" to "Change speed" - thx OmrSi
+   * Add "Allow overlap" in "Change speed" - thx OmrSi
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -35,6 +35,7 @@
    * nOCR selected lines only (list view context menu)
    * Audio to text: Auto select downloaded model after download
    * Allow for multiple X-TIMESTAMP-MAPs in WebVTT - thx doctorm
+   * Use subtitle file name for blank video - thx OmrSi
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
@@ -42,7 +43,7 @@
    * Fix minor issue with "FCE:Remove dash single line" - thx Minherre  
    * Re-add FinalCutProXml properties - thx hu
    * Don't check "Continuation style" when merging dialog - thx OmrSi 
-   * Fix assa background box issue - thx Érico
+   * Fix ASSA background box issue - thx Érico
    * Fix "*" showing in titlebar after offsetting with no change - thx OmrSi
    * Fix issues with NQC shot change rules - thx OmrSi
    * Fix UI issue in copy-paste translate
