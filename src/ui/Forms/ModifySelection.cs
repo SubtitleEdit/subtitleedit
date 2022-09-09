@@ -353,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 try
                                 {
-                                    regEx = new Regex(text, RegexOptions.Compiled);
+                                    regEx = new Regex(RegexUtils.FixNewLine(text), RegexOptions.Compiled);
                                 }
                                 catch (Exception e)
                                 {
