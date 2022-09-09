@@ -34235,9 +34235,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var form = new AudioToText(_videoFileName, _videoAudioTrackNumber, this))
+            var oldVideoFileName = _videoFileName;
+            var isVlc = mediaPlayer.VideoPlayer is LibVlcDynamic;
+            if (isVlc)
+            {
+                CloseVideoToolStripMenuItemClick(sender, e);
+            }
+
+            using (var form = new AudioToText(oldVideoFileName, _videoAudioTrackNumber, this))
             {
                 var result = form.ShowDialog(this);
+
+                if (isVlc)
+                {
+                    OpenVideo(oldVideoFileName);
+                }
+
                 if (result != DialogResult.OK)
                 {
                     return;
