@@ -2491,7 +2491,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Play200Speed>Play rate 2.0x speed</Play200Speed>
     <PlayRateSlower>Play rate slower (speed)</PlayRateSlower>
     <PlayRateFaster>Play rate faster (speed)</PlayRateFaster>
-    <PlayRateToggle>Play rate (speed) toggle (05.x, 1x, 1.5x, 2x)</PlayRateToggle>
+    <PlayRateToggle>Play rate (speed) toggle (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Reset play rate (speed) and waveform zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle video controls</MainToggleVideoControls>
     <VideoToggleContrast>Toggle contrast (mpv only)</VideoToggleContrast>
