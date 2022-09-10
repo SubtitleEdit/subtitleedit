@@ -328,8 +328,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
             MainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
             MainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);
-            MainVideoSpeedToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoReset);
-            MainVideoReset = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSpeedToggle);
+            MainVideoSpeedToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSpeedToggle);
+            MainVideoReset = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoReset);
             MainVideoAudioToText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoAudioToText);
             MainVideoToggleBrightness = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleBrightness);
             MainVideoToggleContrast = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleContrast);
