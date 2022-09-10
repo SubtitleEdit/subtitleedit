@@ -230,6 +230,12 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ChangeResolutionDrawing>Skift opløsning for tegninger</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Kilde og målopløsning er den samme - intet at gøre.</SourceAndTargetEqual>
   </AssaResolutionChanger>
+  <ImageColorPicker>
+    <Title>Vælg farve fra billede</Title>
+    <CopyColorHex>Kopiér til udklipsholder som HEX-farve {0}</CopyColorHex>
+    <CopyColorAssa>Kopiér til udklipsholder som ASSA-farve {0}</CopyColorAssa>
+    <CopyColorRgb>Kopiér til udklipsholder som RGB-farve {0}</CopyColorRgb>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Generer baggrundsboks</Title>
     <Padding>Padding</Padding>
@@ -245,6 +251,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MarginY>Margen Y</MarginY>
     <OnlyDrawing>Kun tegning</OnlyDrawing>
     <DrawingFile>Tegning fil</DrawingFile>
+    <ColorPickerSetLastColor>Farvevælgerens sidste farve er nu: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Indstil/hent position</SetPosition>
@@ -280,6 +287,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveStyleActor>Fjern style/skuespiller</RemoveStyleActor>
     <RemoveTextForHI>Fjern tekst for høre-hæmmede</RemoveTextForHI>
+    <ConvertColorsToDialog>Konverter farver til dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
     <RedoCasing>Sæt store/små bogstaver</RedoCasing>
     <Convert>Konverter</Convert>
@@ -393,6 +401,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Custom>Brugerdefineret</Custom>
     <ToDropFrame>Til drop-frame</ToDropFrame>
     <FromDropFrame>Fra drop-frame</FromDropFrame>
+    <AllowOverlap>Tillad overlap</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Tjek for opdateringer</Title>
@@ -444,10 +453,17 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1:0.##}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer linjeskift</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignorer mellemrum/linjeskift</IgnoreWhitespace>
     <IgnoreFormatting>Ignorer formatering</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan ikke sammenligne med billede baseret undertekster</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Konverter farver til dialog</Title>
+    <RemoveColorTags>Fjern farvemærker</RemoveColorTags>
+    <AddNewLines>Placer hver tankestreg på ny linje</AddNewLines>
+    <ReBreakLines>Bryd linjer igen</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>D-Cinema egenskaber (INTEROP)</Title>
     <TitleSmpte>D-Cinema egenskaber (SMPTE)</TitleSmpte>
@@ -1197,6 +1213,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <FixCommonErrors>&amp;Ret almindelige fejl...</FixCommonErrors>
         <StartNumberingFrom>Begynd nummerering fra...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Fjern tekst for hørehæmmede...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Konverter farver til dialog...</ConvertColorsToDialog>
         <ChangeCasing>Skift store/små bogstaver...</ChangeCasing>
         <ChangeFrameRate>Skift frame rate...</ChangeFrameRate>
         <ChangeSpeedInPercent>Ændr hastighed (procent)...</ChangeSpeedInPercent>
@@ -1333,7 +1350,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
-        <Insert>Indsæt</Insert>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
@@ -1349,6 +1365,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <ColumnTextUp>Tekst op</ColumnTextUp>
         <ColumnTextDown>Tekst ned</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Kopier text fra original to aktuel</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR valgte linjer</OcrSelectedLines>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesAsDialog>
@@ -1387,6 +1404,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateProgressBar>Generer statuslinje...</GenerateProgressBar>
         <AssaResolutionChanger>Skift scriptopløsning...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Generer baggrundsboks...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Vælg farve fra billeder...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
@@ -1739,6 +1757,9 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <HideVideoControls>Skjul vide vindue</HideVideoControls>
     <GeneratingWaveformInBackground>Genererer bølgeform i baggrunden...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Auto-backup gemt</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Bruger kun lydkanal foran i midten</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Før konverterering af farver til dialog</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Konverterede farver til dialog</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1873,6 +1894,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
   <MergeTextWithSameTimeCodes>
     <Title>Flet linjer med samme tidskoder</Title>
     <MaxDifferenceMilliseconds>Max. millisekunder forskel</MaxDifferenceMilliseconds>
+    <MakeDialog>Lav dialog</MakeDialog>
     <ReBreakLines>Auto-bryd linjer</ReBreakLines>
     <NumberOfMergesX>Antal fletninger: {0}</NumberOfMergesX>
     <MergedText>Fusioneret tekst</MergedText>
@@ -2455,12 +2477,13 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformGoToNextChapter>Gå til næste kapitel</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Vælg næste undertekst (fra videoposition, behold videopos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
-    <Play150Speed>Afspil video med 1,5x hastighed</Play150Speed>
-    <Play200Speed>Afspil video med 2,0x hastighed</Play200Speed>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
+    <Play150Speed>Afspil video med 1,5x hastighed</Play150Speed>
+    <Play200Speed>Afspil video med 2,0x hastighed</Play200Speed>
     <PlayRateSlower>Afspilningshastigheden langsommere</PlayRateSlower>
     <PlayRateFaster>Afspilningshastighed hurtigere</PlayRateFaster>
+    <PlayRateToggle>Skift mellem afspilningshastighed (0,5x, 1x, 1,5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
@@ -2925,6 +2948,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <OcrViaImageCompare>OCR via billede sammenligning</OcrViaImageCompare>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
+    <OcrViaCloudVision>OCR via Google Cloud Vision API</OcrViaCloudVision>
     <TesseractEngineMode>Motor</TesseractEngineMode>
     <TesseractEngineModeLegacy>Kun original Tesseract (kan registrere kursiv)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Neurale net kun LSTM</TesseractEngineModeNeural>
@@ -2937,7 +2961,6 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <New>Ny</New>
     <Edit>Ret</Edit>
     <StartOcr>Start OCR</StartOcr>
-    <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR fra undertekst nr:</StartOcrFrom>
     <LoadingVobSubImages>Indlæser VobSub billeder...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Loader billede database...</LoadingImageCompareDatabase>
@@ -2995,6 +3018,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <StartTraining>Start træning</StartTraining>
     <NowTraining>Træner nu font '{1}'. Bogstaver trænet: {0:#,###,##0}, {2:#,###,##0} kendte</NowTraining>
     <ImagesWithTimeCodesInFileName>Billeder med tidskoder i filnavn...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>API nøgle</ApiKey>
+    <SendOriginalImages>Send originale billeder</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
