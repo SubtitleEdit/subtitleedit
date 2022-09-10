@@ -25736,25 +25736,39 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
                 {
+                    var isVlc = mediaPlayer.VideoPlayer is LibVlcDynamic;
+                    var oldVideoFileName = _videoFileName;
+                    if (isVlc)
+                    {
+                        CloseVideoToolStripMenuItemClick(sender, e);
+                    }
+
                     var videoAudioTrackNumber = VideoAudioTrackNumber;
-                    if (mediaPlayer.VideoPlayer is LibVlcDynamic && VideoAudioTrackNumber != -1)
+                    if (isVlc && VideoAudioTrackNumber != -1)
                     {
                         videoAudioTrackNumber -= 1;
                     }
 
-                    var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName, videoAudioTrackNumber);
-                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName, videoAudioTrackNumber);
+                    var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(oldVideoFileName, videoAudioTrackNumber);
+                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(oldVideoFileName, videoAudioTrackNumber);
 
-                    if (WavePeakGenerator.IsFileValidForVisualizer(_videoFileName))
+                    if (WavePeakGenerator.IsFileValidForVisualizer(oldVideoFileName))
                     {
-                        addWaveform.InitializeViaWaveFile(_videoFileName, peakWaveFileName, spectrogramFolder);
+                        addWaveform.InitializeViaWaveFile(oldVideoFileName, peakWaveFileName, spectrogramFolder);
                     }
                     else
                     {
-                        addWaveform.Initialize(_videoFileName, peakWaveFileName, spectrogramFolder, videoAudioTrackNumber);
+                        addWaveform.Initialize(oldVideoFileName, peakWaveFileName, spectrogramFolder, videoAudioTrackNumber);
                     }
 
-                    if (addWaveform.ShowDialog() == DialogResult.OK)
+                    var dialogResult = addWaveform.ShowDialog();
+
+                    if (isVlc)
+                    {
+                        OpenVideo(oldVideoFileName);
+                    }
+
+                    if (dialogResult == DialogResult.OK)
                     {
                         audioVisualizer.ZoomFactor = 1.0;
                         audioVisualizer.VerticalZoomFactor = 1.0;
