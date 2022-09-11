@@ -232,6 +232,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>이미지 색상 선택기</Title>
+    <CopyColorHex>HEX 색상 {0} 클립보드에 복사</CopyColorHex>
+    <CopyColorAssa>ASSA 색상 {0} 클립보드에 복사</CopyColorAssa>
+    <CopyColorRgb>RGB 색상 {0} 클립보드에 복사</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>배경 박스 생성</Title>
@@ -284,6 +287,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
     <RemoveStyleActor>스타일/배우 줄 제거</RemoveStyleActor>
     <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
+    <ConvertColorsToDialog>색상을 대화 상자로 변환</ConvertColorsToDialog>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
     <RedoCasing>대/소문자 구분</RedoCasing>
     <Convert>변환</Convert>
@@ -454,6 +458,12 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <OnlyLookForDifferencesInText>변경된 텍스트에 색칠</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>이미지 기반 자막과는 비교할 수 없습니다!</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>색상을 대화 상자로 변환</Title>
+    <RemoveColorTags>색상 태그 제거</RemoveColorTags>
+    <AddNewLines>새 줄에 모두 대시를 배치</AddNewLines>
+    <ReBreakLines>다시 줄바꾼 줄</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>* D-Cinema의 속성 (interop)</Title>
     <TitleSmpte>D-Cinema의 속성 (SMPTE)</TitleSmpte>
@@ -1204,6 +1214,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <FixCommonErrors>일반적인 오류 수정...</FixCommonErrors>
         <StartNumberingFrom>자막 시작 번호 다시 매기기</StartNumberingFrom>
         <RemoveTextForHearingImpaired>청각 장애인용 텍스트 삭제...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>색상을 대화 상자로 변환...</ConvertColorsToDialog>
         <ChangeCasing>대/소문자 바꾸기</ChangeCasing>
         <ChangeFrameRate>프레임 속도 변경...</ChangeFrameRate>
         <ChangeSpeedInPercent>비율로 속도 조정...</ChangeSpeedInPercent>
@@ -1754,6 +1765,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GeneratingWaveformInBackground>배경에 파형 생성...</GeneratingWaveformInBackground>
     <AutoBackupSaved>자동 백업 저장됨</AutoBackupSaved>
     <UsingOnlyFrontCenterChannel>전면 중앙 오디오 채널만 사용</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>색상을 대화 상자로 변환하기 전</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>색상을 대화 상자로 변환 완료</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -1888,6 +1901,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   <MergeTextWithSameTimeCodes>
     <Title>* 동일한 타임코드 라인 병합하기</Title>
     <MaxDifferenceMilliseconds>최대 차이 (밀리초)</MaxDifferenceMilliseconds>
+    <MakeDialog>대화 상자 만들기</MakeDialog>
     <ReBreakLines>다시 줄바꾸기</ReBreakLines>
     <NumberOfMergesX>병합: {0}개</NumberOfMergesX>
     <MergedText>병합된 텍스트</MergedText>
@@ -2470,13 +2484,14 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformGoToNextChapter>다음 챕터로 이동</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>다음 자막 선택 (비디오 위치에서, 비디오 위치를 유지)</WaveformSelectNextSubtitle>
     <TogglePlayPause>재생 및 일시 중지</TogglePlayPause>
-    <Play150Speed>1.5 배속으로 비디오 재생</Play150Speed>
-    <Play200Speed>2.0 배속으로 비디오 재생</Play200Speed>
     <Pause>일시 중지</Pause>
     <Fullscreen>전체 화면</Fullscreen>
-    <PlayRateSlower>재생 속도 느리게</PlayRateSlower>
-    <PlayRateFaster>재생 속도 빠르게</PlayRateFaster>
-    <VideoResetSpeedAndZoom>속도/줌 재설정</VideoResetSpeedAndZoom>
+    <Play150Speed>1.5 배속으로 비디오 재생</Play150Speed>
+    <Play200Speed>2.0 배속으로 비디오 재생</Play200Speed>
+    <PlayRateSlower>재생 배속 느리게(속도)</PlayRateSlower>
+    <PlayRateFaster>재생 배속 빠르게(속도)</PlayRateFaster>
+    <PlayRateToggle>재생 배속(속도) 전환 (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
+    <VideoResetSpeedAndZoom>재생 배속(속도) 및 파형 줌 재설정</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
     <VideoAudioToText>오디오를 텍스트로</VideoAudioToText>
