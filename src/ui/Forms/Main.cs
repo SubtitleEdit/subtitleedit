@@ -8226,7 +8226,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (result == DialogResult.No)
                         {
                             _spellCheckForm.Dispose();
-                            _spellCheckForm = new SpellCheck(GetCurrentSubtitleFormat(), _imageSubFileName);
+                            _spellCheckForm = new SpellCheck(GetCurrentSubtitleFormat(), _imageSubFileName, this);
                             _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this, startFromLine);
                         }
                         else
@@ -8236,7 +8236,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        _spellCheckForm = new SpellCheck(GetCurrentSubtitleFormat(), _imageSubFileName);
+                        _spellCheckForm = new SpellCheck(GetCurrentSubtitleFormat(), _imageSubFileName, this);
                         _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this, startFromLine);
                     }
                 }
@@ -10877,7 +10877,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralToggleBookmarksAddComment == e.KeyData)
             {
-                BeginInvoke(new Action(() => ToggleBookmarks(true)));
+                BeginInvoke(new Action(() => ToggleBookmarks(true, this)));
                 e.SuppressKeyPress = true;
             }
 
@@ -16382,7 +16382,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainGeneralToggleBookmarks == e.KeyData)
             {
-                ToggleBookmarks(false);
+                ToggleBookmarks(false, this);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralEditBookmark == e.KeyData)
@@ -18713,7 +18713,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToggleBookmarks(bool setText)
+        public void ToggleBookmarks(bool setText, Form parentForm)
         {
             bool first = true;
             string newValue = null;
@@ -18737,7 +18737,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             using (var form = new BookmarkAdd(p))
                             {
-                                var result = form.ShowDialog(this);
+                                var result = form.ShowDialog(parentForm);
                                 if (result != DialogResult.OK)
                                 {
                                     return;
@@ -32843,19 +32843,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // remove bookmark
             menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark);
-            menuItem.Click += (sender2, e2) =>
-            {
-                var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                if (p2 != null)
-                {
-                    MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark));
-                    p2.Bookmark = null;
-                    SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
-                    ShowHideBookmark(p2);
-                    SetListViewStateImages();
-                    new BookmarkPersistence(_subtitle, _fileName).Save();
-                }
-            };
+            menuItem.Click += (sender2, e2) => { RemoveBookmark(_subtitleListViewIndex, this); };
             _bookmarkContextMenu.Items.Add(menuItem);
 
             _bookmarkContextMenu.Items.Add("-");
@@ -32879,20 +32867,39 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxBookmark.ContextMenuStrip = _bookmarkContextMenu;
         }
 
+        public void RemoveBookmark(int index, Form parentForm)
+        {
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p != null)
+            {
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark));
+                p.Bookmark = null;
+                SubtitleListview1.ShowState(_subtitleListViewIndex, p);
+                ShowHideBookmark(p);
+                SetListViewStateImages();
+                new BookmarkPersistence(_subtitle, _fileName).Save();
+            }
+        }
+
         private void labelBookmark_DoubleClick(object sender, EventArgs e)
         {
-            var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-            if (p1 != null)
+            EditBookmark(_subtitleListViewIndex, this);
+        }
+
+        public void EditBookmark(int index, Form parentForm)
+        {
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p != null)
             {
-                using (var form = new BookmarkAdd(p1))
+                using (var form = new BookmarkAdd(p))
                 {
-                    var result = form.ShowDialog(this);
+                    var result = form.ShowDialog(parentForm);
                     if (result == DialogResult.OK)
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.ContextMenu.EditBookmark));
-                        p1.Bookmark = form.Comment;
-                        SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
-                        ShowHideBookmark(p1);
+                        p.Bookmark = form.Comment;
+                        SubtitleListview1.ShowState(_subtitleListViewIndex, p);
+                        ShowHideBookmark(p);
                         SetListViewStateImages();
                         new BookmarkPersistence(_subtitle, _fileName).Save();
                     }
@@ -32902,7 +32909,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemBookmark_Click(object sender, EventArgs e)
         {
-            ToggleBookmarks(true);
+            ToggleBookmarks(true, this);
         }
 
         private void toolStripMenuItemGoToSourceView_Click(object sender, EventArgs e)

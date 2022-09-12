@@ -61,6 +61,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string _currentDictionary;
         private string _imageSubFileName;
         private List<IBinaryParagraphWithPosition> _binSubtitles;
+        private ContextMenuStrip _bookmarkContextMenu;
+        private readonly Main _mainForm;
 
         public class SuggestionParameter
         {
@@ -96,13 +98,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public SpellCheck(SubtitleFormat subtitleFormat, string imageSubFileName)
+        public SpellCheck(SubtitleFormat subtitleFormat, string imageSubFileName, Main mainForm)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             _subtitleFormat = subtitleFormat;
             _imageSubFileName = imageSubFileName;
+            _mainForm = mainForm;
             labelActionInfo.Text = string.Empty;
             Text = LanguageSettings.Current.SpellCheck.Title;
             labelFullText.Text = LanguageSettings.Current.SpellCheck.FullText;
@@ -126,6 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
+            bookmarkToolStripMenuItem.Text = LanguageSettings.Current.Settings.ToggleBookmarksWithComment;
 
             var gs = Configuration.Settings.General;
             var textBoxFont = gs.SubtitleTextBoxFontBold ? new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold) : new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
@@ -748,6 +752,17 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _currentIndex++;
                         _currentParagraph = _subtitle.Paragraphs[_currentIndex];
+
+                        panelBookmark.Hide();
+                        if (!string.IsNullOrEmpty(_currentParagraph.Bookmark))
+                        {
+                            pictureBoxBookmark.Show();
+                        }
+                        else
+                        {
+                            pictureBoxBookmark.Hide();
+                        }
+
                         SetWords(_currentParagraph.Text);
                         _wordsIndex = 0;
                         if (_words.Count == 0)
@@ -1584,6 +1599,98 @@ namespace Nikse.SubtitleEdit.Forms
         private void openImagedBasedSourceFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenImageBasedSourceFile();
+        }
+
+        private void pictureBoxBookmark_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (panelBookmark.Visible)
+                {
+                    panelBookmark.Hide();
+                }
+                else
+                {
+                    var p = _subtitle.GetParagraphOrDefault(_currentIndex);
+                    if (p != null && !string.IsNullOrEmpty(p.Bookmark))
+                    {
+                        labelBookmark.Text = p.Bookmark;
+                        labelBookmark.Show();
+                        try
+                        {
+                            using (var graphics = CreateGraphics())
+                            {
+                                var textSize = graphics.MeasureString(p.Bookmark, Font);
+                                labelBookmark.Text = p.Bookmark;
+                                panelBookmark.Left = pictureBoxBookmark.Right + 9;
+                                panelBookmark.Top = pictureBoxBookmark.Top - 4;
+                                panelBookmark.Width = (int)textSize.Width + 20;
+                                panelBookmark.Height = (int)textSize.Height + 20;
+                                panelBookmark.Show();
+                            }
+                        }
+                        catch
+                        {
+                            // ignore
+                            panelBookmark.Show();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void pictureBoxBookmark_MouseEnter(object sender, EventArgs e)
+        {
+            if (_bookmarkContextMenu != null)
+            {
+                return;
+            }
+
+            _bookmarkContextMenu = MakeContextMenu(_currentIndex);
+            pictureBoxBookmark.ContextMenuStrip = _bookmarkContextMenu;
+        }
+
+        public ContextMenuStrip MakeContextMenu(int index)
+        {
+            var bookmarkContextMenu = new ContextMenuStrip();
+
+            // edit bookmark
+            var menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.EditBookmark);
+            menuItem.Click += (sender2, e2) => { _mainForm.EditBookmark(index, this); };
+            bookmarkContextMenu.Items.Add(menuItem);
+
+            // remove bookmark
+            menuItem = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.RemoveBookmark);
+            menuItem.Click += (sender2, e2) =>
+            {
+                _mainForm.RemoveBookmark(index, _mainForm);
+                pictureBoxBookmark.Hide();
+            };
+            bookmarkContextMenu.Items.Add(menuItem);
+
+            UiUtil.FixFonts(bookmarkContextMenu);
+            return bookmarkContextMenu;
+        }
+
+        private void bookmarkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var p = _subtitle.GetParagraphOrDefault(_currentIndex);
+            if (p == null)
+            {
+                return;
+            }
+
+            _mainForm.ToggleBookmarks(string.IsNullOrEmpty(p.Bookmark), this);
+            if (p?.Bookmark?.Length > 0)
+            {
+                pictureBoxBookmark.Show();
+                labelBookmark.Text = p.Bookmark;
+            }
+            else
+            {
+                pictureBoxBookmark.Hide();
+                labelBookmark.Hide();
+            }
         }
     }
 }
