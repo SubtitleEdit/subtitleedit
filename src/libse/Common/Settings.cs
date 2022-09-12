@@ -1350,6 +1350,7 @@ $HorzAlign          =   Center
         public string MpvVideoOutputWindows { get; set; }
         public string MpvVideoOutputLinux { get; set; }
         public string MpvVideoVf { get; set; }
+        public string MpvVideoAf { get; set; }
         public string MpvExtraOptions { get; set; }
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
@@ -3989,6 +3990,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvVideoVf = subNode.InnerText.Trim();
+            }
+
+            subNode = node.SelectSingleNode("MpvVideoAf");
+            if (subNode != null)
+            {
+                settings.General.MpvVideoAf = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("MpvExtraOptions");
@@ -9947,6 +9954,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvVideoOutputWindows", settings.General.MpvVideoOutputWindows);
                 textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
                 textWriter.WriteElementString("MpvVideoVf", settings.General.MpvVideoVf);
+                textWriter.WriteElementString("MpvVideoAf", settings.General.MpvVideoAf);
                 textWriter.WriteElementString("MpvExtraOptions", settings.General.MpvExtraOptions);
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
