@@ -692,7 +692,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpvVideoVf))
                 {
-                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vf"), GetUtf8Bytes("lavfi=[" + Configuration.Settings.General.MpvVideoVf + "]"));
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vf"), GetUtf8Bytes(Configuration.Settings.General.MpvVideoVf));
+                }
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.MpvVideoAf))
+                {
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("af"), GetUtf8Bytes(Configuration.Settings.General.MpvVideoAf));
                 }
 
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
