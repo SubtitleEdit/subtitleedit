@@ -690,6 +690,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput));
                 }
 
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.MpvVideoVf))
+                {
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vf"), GetUtf8Bytes("lavfi=[" + Configuration.Settings.General.MpvVideoVf + "]"));
+                }
+
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes(string.Empty)); // don't load subtitles (does not seem to work anymore)
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("sid"), GetUtf8Bytes("no")); // don't load subtitles
