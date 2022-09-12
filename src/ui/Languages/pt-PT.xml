@@ -2486,13 +2486,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformGoToNextChapter>Ir para capítulo seguinte</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleccionar linha seguinte (da posição de vídeo, manter posição de vídeo)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Alternar reproduzir/pausa</TogglePlayPause>
-    <Play150Speed>Reproduzir vídeo com velocidade de 1.5x</Play150Speed>
-    <Play200Speed>Reproduzir vídeo com velocidade de 2.0x</Play200Speed>
     <Pause>Pausa</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
-    <PlayRateSlower>Taxa de velocidade lenta</PlayRateSlower>
-    <PlayRateFaster>Taxa de velocidade rápida</PlayRateFaster>
-    <VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
+    <Play150Speed>Taxa de reprodução 1.5x velocidade</Play150Speed>
+    <Play200Speed>Taxa de reprodução 2.0x velocidade</Play200Speed>
+    <PlayRateSlower>Taxa de reprodução lenta (velocidade)</PlayRateSlower>
+    <PlayRateFaster>Taxa de reprodução rápida (velocidade)</PlayRateFaster>
+    <PlayRateToggle>Alternar taxa de reprodução (velocidade) (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
+    <VideoResetSpeedAndZoom>Repor a taxa de reprodução (velocidade) e zoom da forma de onda</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Alternar controlos vídeo</MainToggleVideoControls>
     <VideoToggleContrast>Alternar contraste (apenas mpv)</VideoToggleContrast>
     <VideoAudioToText>Áudio para texto</VideoAudioToText>
