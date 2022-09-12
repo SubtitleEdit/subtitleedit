@@ -222,17 +222,20 @@ https://github.com/SubtitleEdit/subtitleedit
     <TakePosFromVideo>Заемане на видео позиция</TakePosFromVideo>
   </AssaProgressBarGenerator>
   <AssaResolutionChanger>
-    <Title>Промяна резолюцията на скрипта</Title>
-    <SourceVideoRes>Изходна видео резолюция</SourceVideoRes>
+    <Title>Промяна резолюцията на скрипт ASSA</Title>
+    <SourceVideoRes>Резолюция на изходното видео</SourceVideoRes>
     <TargetVideoRes>Целева видео резолюция</TargetVideoRes>
     <ChangeResolutionMargins>Промяна на резолюцията за маржа</ChangeResolutionMargins>
     <ChangeResolutionFontSize>Промяна на резолюцията за размера на шрифта</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Промяна на резолюцията за позицията</ChangeResolutionPositions>
-    <ChangeResolutionDrawing>Промяна на резолюцията за фигурата</ChangeResolutionDrawing>
-    <SourceAndTargetEqual>Разделителната способност на източника и целта е една и съща - няма какво да се прави.</SourceAndTargetEqual>
+    <ChangeResolutionDrawing>Промяна на резолюцията за рисуване</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>Изходната и целевата резолюция са едни и същи - няма какво да се прави.</SourceAndTargetEqual>
   </AssaResolutionChanger>
   <ImageColorPicker>
     <Title>Избор на цвят на изображението</Title>
+    <CopyColorHex>Копиране в клипборда като шестнадесетичен цвят(HEX) {0}</CopyColorHex>
+    <CopyColorAssa>Копиране в клипборда като ASSA цвят {0}</CopyColorAssa>
+    <CopyColorRgb>Копиране в клипборда като RGB цвят {0}</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Генериране на фоново поле</Title>
@@ -285,6 +288,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveFormatting>Премахване форматирането на тагове</RemoveFormatting>
     <RemoveStyleActor>Премахване на редове със стил/актьор</RemoveStyleActor>
     <RemoveTextForHI>Премахв. текст за глухи</RemoveTextForHI>
+    <ConvertColorsToDialog>Конвертиране на цветовете в диалогов режим</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Презаписване на ориг.файлове (с ново разширение, ако формата е променен)</OverwriteOriginalFiles>
     <RedoCasing>Смяна на регистъра</RedoCasing>
     <Convert>Конвертиране</Convert>
@@ -455,6 +459,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <OnlyLookForDifferencesInText>Показване само разликите в текста</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Не може да сравни със субтитрите в изображението</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Конвертиране на цветовете в диалогов режим</Title>
+    <RemoveColorTags>Премахване етикетите на цветовете</RemoveColorTags>
+    <AddNewLines>Поставяне всяко тире на нов ред</AddNewLines>
+    <ReBreakLines>Повторно прекъсване на редовете</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>D-Cinema свойства (interop)</Title>
     <TitleSmpte>D-Cinema свойства (SMPTE)</TitleSmpte>
@@ -1206,6 +1216,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <FixCommonErrors>Поправяне на грешки...</FixCommonErrors>
         <StartNumberingFrom>Начално номериране...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Премахване на текст за увредени със слуха...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Конвертиране на цветовете в диалогов режим...</ConvertColorsToDialog>
         <ChangeCasing>Промяна големината на буквите...</ChangeCasing>
         <ChangeFrameRate>Промяна честотата на кадрите...</ChangeFrameRate>
         <ChangeSpeedInPercent>Промяна на скоростта (в проценти)...</ChangeSpeedInPercent>
@@ -1755,6 +1766,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <GeneratingWaveformInBackground>Генериране вълнова форма на зв. сигнал във фонов режим...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Автоматичното архивиране е запазено</AutoBackupSaved>
     <UsingOnlyFrontCenterChannel>Използване само на предния централен аудиоканал</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Преди да конвертирате цветовете в диалогов режим</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Конвертирани цветове в диалогов режим</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -1889,6 +1902,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <MergeTextWithSameTimeCodes>
     <Title>Обединяване на редове с еднакъв тайм код</Title>
     <MaxDifferenceMilliseconds>Макс. разлика (милисек.)</MaxDifferenceMilliseconds>
+    <MakeDialog>Създаване на диалог</MakeDialog>
     <ReBreakLines>Пре-разделяне на редове</ReBreakLines>
     <NumberOfMergesX>Брой обединявания: {0}</NumberOfMergesX>
     <MergedText>Обединен текст</MergedText>
