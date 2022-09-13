@@ -129,8 +129,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
-            bookmarkToolStripMenuItem.Text = LanguageSettings.Current.Settings.ToggleBookmarks;
             bookmarkCommentToolStripMenuItem.Text = LanguageSettings.Current.Settings.ToggleBookmarksWithComment;
+            bookmarkCommentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
 
             var gs = Configuration.Settings.General;
             var textBoxFont = gs.SubtitleTextBoxFontBold ? new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize, FontStyle.Bold) : new Font(gs.SubtitleFontName, gs.SubtitleTextBoxFontSize);
@@ -421,12 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks))
             {
                 e.SuppressKeyPress = true;
-                bookmarkToolStripMenuItem_Click(null, null);
-            }
-            else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText))
-            {
-                e.SuppressKeyPress = true;
-                bookmarkCommentToolStripMenuItem_Click(null, null);
+                ToggleBookmark();
             }
             else if (e.KeyData == UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralEditBookmarks))
             {
@@ -437,7 +432,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (p?.Bookmark != null)
+                if (p.Bookmark != null)
                 {
                     _mainForm.EditBookmark(_currentIndex, this);
                 }
@@ -721,12 +716,12 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainWindow.ShowStatus(string.Format(LanguageSettings.Current.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
-                    _currentIndex--; // re-spellcheck current line
+                    _currentIndex--; // re-spell-check current line
                     _wordsIndex = int.MaxValue - 1;
                     break;
                 case SpellCheckAction.DeleteLine:
                     _mainWindow.DeleteLine();
-                    _currentIndex--; // re-spellcheck current line
+                    _currentIndex--; // re-spell-check current line
                     _wordsIndex = int.MaxValue - 1;
                     break;
             }
@@ -1706,7 +1701,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _mainForm.ToggleBookmarks(string.IsNullOrEmpty(p.Bookmark), this);
-            if (p?.Bookmark != null)
+            if (p.Bookmark != null)
             {
                 pictureBoxBookmark.Show();
                 labelBookmark.Text = p.Bookmark;
@@ -1718,7 +1713,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void bookmarkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToggleBookmark()
         {
             var p = _subtitle.GetParagraphOrDefault(_currentIndex);
             if (p == null)
@@ -1727,7 +1722,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _mainForm.ToggleBookmarks(false, this);
-            if (p?.Bookmark != null)
+            if (p.Bookmark != null)
             {
                 pictureBoxBookmark.Show();
             }
