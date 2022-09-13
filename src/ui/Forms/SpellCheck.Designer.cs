@@ -54,6 +54,7 @@
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
             this.bookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookmarkCommentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -127,6 +128,7 @@
             this.toolStripSeparator1,
             this.deleteToolStripMenuItem,
             this.bookmarkToolStripMenuItem,
+            this.bookmarkCommentToolStripMenuItem,
             this.openImagedBasedSourceFileToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(247, 142);
@@ -461,6 +463,13 @@
             this.bookmarkToolStripMenuItem.Text = "Bookmark...";
             this.bookmarkToolStripMenuItem.Click += new System.EventHandler(this.bookmarkToolStripMenuItem_Click);
             // 
+            // bookmarkCommentToolStripMenuItem
+            // 
+            this.bookmarkCommentToolStripMenuItem.Name = "bookmarkCommentToolStripMenuItem";
+            this.bookmarkCommentToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.bookmarkCommentToolStripMenuItem.Text = "Bookmark text...";
+            this.bookmarkCommentToolStripMenuItem.Click += new System.EventHandler(this.bookmarkCommentToolStripMenuItem_Click);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -547,5 +556,6 @@
         private System.Windows.Forms.Panel panelBookmark;
         private System.Windows.Forms.Label labelBookmark;
         private System.Windows.Forms.ToolStripMenuItem bookmarkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bookmarkCommentToolStripMenuItem;
     }
 }
