@@ -26,6 +26,7 @@
             this.addXToUserDictionaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookmarkCommentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBoxSuggestions = new System.Windows.Forms.ListBox();
             this.labelFullText = new System.Windows.Forms.Label();
@@ -53,8 +54,6 @@
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
-            this.bookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bookmarkCommentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -127,7 +126,6 @@
             this.addXToUserDictionaryToolStripMenuItem,
             this.toolStripSeparator1,
             this.deleteToolStripMenuItem,
-            this.bookmarkToolStripMenuItem,
             this.bookmarkCommentToolStripMenuItem,
             this.openImagedBasedSourceFileToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
@@ -159,6 +157,13 @@
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.deleteToolStripMenuItem.Text = "Delete...";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // bookmarkCommentToolStripMenuItem
+            // 
+            this.bookmarkCommentToolStripMenuItem.Name = "bookmarkCommentToolStripMenuItem";
+            this.bookmarkCommentToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.bookmarkCommentToolStripMenuItem.Text = "Bookmark text...";
+            this.bookmarkCommentToolStripMenuItem.Click += new System.EventHandler(this.bookmarkCommentToolStripMenuItem_Click);
             // 
             // openImagedBasedSourceFileToolStripMenuItem
             // 
@@ -456,20 +461,6 @@
             this.labelBookmark.TabIndex = 0;
             this.labelBookmark.Text = "labelBookmark";
             // 
-            // bookmarkToolStripMenuItem
-            // 
-            this.bookmarkToolStripMenuItem.Name = "bookmarkToolStripMenuItem";
-            this.bookmarkToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
-            this.bookmarkToolStripMenuItem.Text = "Bookmark...";
-            this.bookmarkToolStripMenuItem.Click += new System.EventHandler(this.bookmarkToolStripMenuItem_Click);
-            // 
-            // bookmarkCommentToolStripMenuItem
-            // 
-            this.bookmarkCommentToolStripMenuItem.Name = "bookmarkCommentToolStripMenuItem";
-            this.bookmarkCommentToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
-            this.bookmarkCommentToolStripMenuItem.Text = "Bookmark text...";
-            this.bookmarkCommentToolStripMenuItem.Click += new System.EventHandler(this.bookmarkCommentToolStripMenuItem_Click);
-            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,7 +488,7 @@
             this.Name = "SpellCheck";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Spell check";
+            this.Text = "Kom";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SpellCheck_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSpellCheck_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -555,7 +546,6 @@
         private System.Windows.Forms.PictureBox pictureBoxBookmark;
         private System.Windows.Forms.Panel panelBookmark;
         private System.Windows.Forms.Label labelBookmark;
-        private System.Windows.Forms.ToolStripMenuItem bookmarkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bookmarkCommentToolStripMenuItem;
     }
 }
