@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         {
             copyHexToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorHex, HexColor);
             copyAssaToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorAssa, $"&{AssaColor}");
-            copyRgbToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorAssa, RgbColor);
+            copyRgbToolStripMenuItem.Text = string.Format(LanguageSettings.Current.ImageColorPicker.CopyColorRgb, RgbColor);
         }
 
         private void copyHexToolStripMenuItem_Click(object sender, EventArgs e)
