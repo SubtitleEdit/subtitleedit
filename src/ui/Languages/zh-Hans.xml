@@ -290,6 +290,7 @@ Command line: {1} {2}
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
     <RemoveStyleActor>删除样式/演员</RemoveStyleActor>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
+    <ConvertColorsToDialog>将颜色转换为对话框</ConvertColorsToDialog>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
     <RedoCasing>重做外壳</RedoCasing>
     <Convert>转换</Convert>
@@ -460,6 +461,12 @@ Command line: {1} {2}
     <OnlyLookForDifferencesInText>仅查找差异文本</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>无法比较基于图像的字幕</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>将颜色转换为对话框</Title>
+    <RemoveColorTags>去除颜色标签</RemoveColorTags>
+    <AddNewLines>将每个破折号放在新行上</AddNewLines>
+    <ReBreakLines>重新分行</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>数字电影性能 (协同)</Title>
     <TitleSmpte>数字电影性能 (美国影视协会)</TitleSmpte>
@@ -1206,6 +1213,7 @@ Command line: {1} {2}
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>将颜色转换为对话框...</ConvertColorsToDialog>
         <ChangeCasing>更改大小写...</ChangeCasing>
         <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <ChangeSpeedInPercent>更改速度 (百分比)...</ChangeSpeedInPercent>
@@ -1748,6 +1756,8 @@ Command line: {1} {2}
     <GeneratingWaveformInBackground>在后台生成波形...</GeneratingWaveformInBackground>
     <AutoBackupSaved>自动备份 已保存</AutoBackupSaved>
     <UsingOnlyFrontCenterChannel>仅使用前置中置音频通道</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>在将颜色转换为对话框之前</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>将颜色转换为对话框</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -2463,12 +2473,13 @@ Command line: {1} {2}
     <WaveformGoToNextChapter>转到下一章节</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>选择下一行字幕 (从当前视频位置起, 保持视频位置不变)</WaveformSelectNextSubtitle>
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
-    <Play150Speed>以1.5倍速播放视频</Play150Speed>
-    <Play200Speed>以2倍速播放视频</Play200Speed>
     <Pause>暂停</Pause>
     <Fullscreen>全屏幕</Fullscreen>
+    <Play150Speed>以1.5倍速播放视频</Play150Speed>
+    <Play200Speed>以2倍速播放视频</Play200Speed>
     <PlayRateSlower>减慢播放速度</PlayRateSlower>
     <PlayRateFaster>加快播放速度</PlayRateFaster>
+    <PlayRateToggle>播放速度切换 (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
