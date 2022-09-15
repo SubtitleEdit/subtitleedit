@@ -2486,12 +2486,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformGoToNextChapter>Преминаване на следващата глава</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Избор на следващия субтитър (от видео позицията, запазване на видео поз.)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Превключване на Пусни/Пауза</TogglePlayPause>
-    <Play150Speed>Възпроизвеждане на видео със скорост 1,5x</Play150Speed>
-    <Play200Speed>Възпроизвеждане на видео със скорост 2.0x</Play200Speed>
     <Pause>Пауза</Pause>
     <Fullscreen>Цял екран</Fullscreen>
+    <Play150Speed>Възпроизвеждане на видео със скорост 1,5x</Play150Speed>
+    <Play200Speed>Възпроизвеждане на видео със скорост 2.0x</Play200Speed>
     <PlayRateSlower>По-бавно възпроизвеждане</PlayRateSlower>
     <PlayRateFaster>По-бързо възпроизвеждане</PlayRateFaster>
+    <PlayRateToggle>Скорост на възпроизвеждане (0,5x, 1x, 1,5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Нулиране на скорост/увеличение</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Превключване на видео управлението</MainToggleVideoControls>
     <VideoToggleContrast>Превключване на контраста (само за mpv)</VideoToggleContrast>
