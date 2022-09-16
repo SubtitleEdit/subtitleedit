@@ -466,10 +466,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelFC.Text = string.Empty;
-            var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";
+            var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 32k -af volume=1.75 -f wav {2} \"{1}\"";
             if (_useCenterChannelOnly)
             {
-                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ab 128 -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
+                fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ab 32k -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
                 labelFC.Text = "FC";
             }
 
