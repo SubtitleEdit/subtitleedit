@@ -29,23 +29,22 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle55 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle56 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle57 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle58 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle59 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle60 = new System.Windows.Forms.DataGridViewCellStyle();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonSkip = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
             this.textBoxCharacters = new System.Windows.Forms.TextBox();
@@ -79,10 +78,16 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelItalicOn2 = new System.Windows.Forms.Label();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
+            this.contextMenuStripSkipOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSkipOptionsInsert = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSkipOptionsInsertAsterisk = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSkipOptionsInsertCurrentText = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonSkip = new Nikse.SubtitleEdit.Controls.SplitButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.contextMenuStripSkipOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -96,19 +101,6 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
-            // buttonSkip
-            // 
-            this.buttonSkip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSkip.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonSkip.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSkip.Location = new System.Drawing.Point(410, 373);
-            this.buttonSkip.Name = "buttonSkip";
-            this.buttonSkip.Size = new System.Drawing.Size(75, 23);
-            this.buttonSkip.TabIndex = 4;
-            this.buttonSkip.Text = "&Skip";
-            this.buttonSkip.UseVisualStyleBackColor = true;
-            this.buttonSkip.Click += new System.EventHandler(this.buttonSkip_Click);
             // 
             // pictureBoxSubtitleImage
             // 
@@ -323,8 +315,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle46;
             this.Column1.HeaderText = "Column1";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -333,8 +325,8 @@
             // 
             // Column2
             // 
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle47;
             this.Column2.HeaderText = "Column2";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
@@ -343,8 +335,8 @@
             // 
             // Column3
             // 
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column3.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle48;
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
@@ -353,8 +345,8 @@
             // 
             // Column4
             // 
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column4.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column4.DefaultCellStyle = dataGridViewCellStyle49;
             this.Column4.HeaderText = "Column4";
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
@@ -363,8 +355,8 @@
             // 
             // Column5
             // 
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column5.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column5.DefaultCellStyle = dataGridViewCellStyle50;
             this.Column5.HeaderText = "Column5";
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
@@ -373,8 +365,8 @@
             // 
             // Column6
             // 
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column6.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column6.DefaultCellStyle = dataGridViewCellStyle51;
             this.Column6.HeaderText = "Column6";
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
@@ -383,8 +375,8 @@
             // 
             // Column7
             // 
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column7.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column7.DefaultCellStyle = dataGridViewCellStyle52;
             this.Column7.HeaderText = "Column7";
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
@@ -393,8 +385,8 @@
             // 
             // Column8
             // 
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column8.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column8.DefaultCellStyle = dataGridViewCellStyle53;
             this.Column8.HeaderText = "Column8";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
@@ -403,8 +395,8 @@
             // 
             // Column9
             // 
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column9.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column9.DefaultCellStyle = dataGridViewCellStyle54;
             this.Column9.HeaderText = "Column9";
             this.Column9.Name = "Column9";
             this.Column9.ReadOnly = true;
@@ -413,8 +405,8 @@
             // 
             // Column10
             // 
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column10.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column10.DefaultCellStyle = dataGridViewCellStyle55;
             this.Column10.HeaderText = "Column10";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
@@ -423,8 +415,8 @@
             // 
             // Column11
             // 
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column11.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column11.DefaultCellStyle = dataGridViewCellStyle56;
             this.Column11.HeaderText = "Column11";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
@@ -433,8 +425,8 @@
             // 
             // Column12
             // 
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column12.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column12.DefaultCellStyle = dataGridViewCellStyle57;
             this.Column12.HeaderText = "Column12";
             this.Column12.Name = "Column12";
             this.Column12.ReadOnly = true;
@@ -443,8 +435,8 @@
             // 
             // Column13
             // 
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column13.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle58.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column13.DefaultCellStyle = dataGridViewCellStyle58;
             this.Column13.HeaderText = "Column13";
             this.Column13.Name = "Column13";
             this.Column13.ReadOnly = true;
@@ -453,8 +445,8 @@
             // 
             // Column14
             // 
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle59;
             this.Column14.HeaderText = "Column14";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -463,8 +455,8 @@
             // 
             // Column15
             // 
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column15.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column15.DefaultCellStyle = dataGridViewCellStyle60;
             this.Column15.HeaderText = "Column15";
             this.Column15.Name = "Column15";
             this.Column15.ReadOnly = true;
@@ -493,12 +485,56 @@
             this.labelSubtitleImage.TabIndex = 29;
             this.labelSubtitleImage.Text = "subtitle image";
             // 
+            // contextMenuStripSkipOptions
+            // 
+            this.contextMenuStripSkipOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSkipOptionsInsert,
+            this.toolStripMenuItemSkipOptionsInsertAsterisk,
+            this.toolStripMenuItemSkipOptionsInsertCurrentText});
+            this.contextMenuStripSkipOptions.Name = "contextMenuStripSkipOptions";
+            this.contextMenuStripSkipOptions.Size = new System.Drawing.Size(181, 92);
+            // 
+            // toolStripMenuItemSkipOptionsInsert
+            // 
+            this.toolStripMenuItemSkipOptionsInsert.Enabled = false;
+            this.toolStripMenuItemSkipOptionsInsert.Name = "toolStripMenuItemSkipOptionsInsert";
+            this.toolStripMenuItemSkipOptionsInsert.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSkipOptionsInsert.Text = "Insert:";
+            // 
+            // toolStripMenuItemSkipOptionsInsertAsterisk
+            // 
+            this.toolStripMenuItemSkipOptionsInsertAsterisk.Name = "toolStripMenuItemSkipOptionsInsertAsterisk";
+            this.toolStripMenuItemSkipOptionsInsertAsterisk.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSkipOptionsInsertAsterisk.Text = "*";
+            this.toolStripMenuItemSkipOptionsInsertAsterisk.Click += new System.EventHandler(this.toolStripMenuItemSkipOptionsInsertAsterisk_Click);
+            // 
+            // toolStripMenuItemSkipOptionsInsertCurrentText
+            // 
+            this.toolStripMenuItemSkipOptionsInsertCurrentText.Name = "toolStripMenuItemSkipOptionsInsertCurrentText";
+            this.toolStripMenuItemSkipOptionsInsertCurrentText.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSkipOptionsInsertCurrentText.Text = "Current text";
+            this.toolStripMenuItemSkipOptionsInsertCurrentText.Click += new System.EventHandler(this.toolStripMenuItemSkipOptionsInsertCurrentText_Click);
+            // 
+            // buttonSkip
+            // 
+            this.buttonSkip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSkip.Location = new System.Drawing.Point(410, 373);
+            this.buttonSkip.Name = "buttonSkip";
+            this.buttonSkip.ShowSplit = true;
+            this.buttonSkip.Size = new System.Drawing.Size(75, 23);
+            this.buttonSkip.SplitButtonContextMenuStrip = this.contextMenuStripSkipOptions;
+            this.buttonSkip.TabIndex = 4;
+            this.buttonSkip.Text = "&Skip";
+            this.buttonSkip.UseVisualStyleBackColor = true;
+            this.buttonSkip.Click += new System.EventHandler(this.buttonSkip_Click);
+            // 
             // VobSubOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(577, 404);
+            this.Controls.Add(this.buttonSkip);
             this.Controls.Add(this.textBoxCharacters);
             this.Controls.Add(this.labelSubtitleImage);
             this.Controls.Add(this.labelItalicOn2);
@@ -514,7 +550,6 @@
             this.Controls.Add(this.pictureBoxCharacter);
             this.Controls.Add(this.labelCharactersAsText);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.buttonSkip);
             this.Controls.Add(this.pictureBoxSubtitleImage);
             this.Controls.Add(this.pictureBoxLastEdit);
             this.Controls.Add(this.labelItalicOn);
@@ -535,6 +570,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.contextMenuStripSkipOptions.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -543,7 +579,6 @@
         #endregion
 
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Button buttonSkip;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.Label labelCharactersAsText;
         private System.Windows.Forms.TextBox textBoxCharacters;
@@ -577,5 +612,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.Label labelItalicOn2;
         private System.Windows.Forms.Label labelSubtitleImage;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripSkipOptions;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSkipOptionsInsert;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSkipOptionsInsertAsterisk;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSkipOptionsInsertCurrentText;
+        private Controls.SplitButton buttonSkip;
     }
 }

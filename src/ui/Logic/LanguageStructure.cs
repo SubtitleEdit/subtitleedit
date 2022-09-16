@@ -3268,6 +3268,9 @@
             public string Italic { get; set; }
             public string Abort { get; set; }
             public string Skip { get; set; }
+            public string SkipInsert { get; set; }
+            public string SkipInsertAsterisk { get; set; }
+            public string SkipInsertCurrentText { get; set; }
             public string Nordic { get; set; }
             public string Spanish { get; set; }
             public string German { get; set; }

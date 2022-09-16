@@ -99,6 +99,9 @@
     <Compile Include="Controls\SimpleTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\SplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\VideoPlayerContainer.cs">
       <SubType>Component</SubType>
     </Compile>

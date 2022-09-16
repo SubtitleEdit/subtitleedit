@@ -3428,12 +3428,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _abort = true;
                     }
                     else
-                    {
-                        string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-
-                        if (text != string.Empty)
+                    {                        
+                        if (Configuration.Settings.VobSubOcr.SkipInsertCurrentText)
                         {
-                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
+                            string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count, null));
                         }
                         else
                         {
@@ -3493,12 +3492,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             _abort = true;
                         }
                         else
-                        {
-                            string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-
-                            if (text != string.Empty)
+                        {                            
+                            if (Configuration.Settings.VobSubOcr.SkipInsertCurrentText)
                             {
-                                matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
+                                string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+                                matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null, item));
                             }
                             else
                             {
@@ -3866,12 +3864,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             _abort = true;
                         }
                         else
-                        {
-                            var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
-
-                            if (text != string.Empty)
+                        {                            
+                            if (Configuration.Settings.VobSubOcr.SkipInsertCurrentText)
                             {
-                                matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
+                                var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
+                                matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, expandSelectionList.Count, null));
                             }
                             else
                             {
@@ -3911,11 +3908,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                             else
                             {
-                                var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
-
-                                if (text != string.Empty)
+                                if (Configuration.Settings.VobSubOcr.SkipInsertCurrentText)
                                 {
-                                    matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
+                                    var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
+                                    matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null) { ImageSplitterItem = item });
                                 }
                                 else
                                 {

@@ -38,6 +38,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonSkip.Text = language.Skip;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
+            toolStripMenuItemSkipOptionsInsert.Text = language.SkipInsert;
+            toolStripMenuItemSkipOptionsInsertAsterisk.Text = language.SkipInsertAsterisk;
+            toolStripMenuItemSkipOptionsInsertCurrentText.Text = language.SkipInsertCurrentText;
+
+            toolStripMenuItemSkipOptionsInsertAsterisk.Checked = !Configuration.Settings.VobSubOcr.SkipInsertCurrentText;
+            toolStripMenuItemSkipOptionsInsertCurrentText.Checked = Configuration.Settings.VobSubOcr.SkipInsertCurrentText;
+
+            contextMenuStripSkipOptions.Renderer = new NoHoverForDisabledItemsToolStripMenuRenderer();
+            toolStripMenuItemSkipOptionsInsert.Font = new Font(toolStripMenuItemSkipOptionsInsert.Font, FontStyle.Bold);
+
             dataGridView1.Columns.Clear();
             var row1 = Configuration.Settings.Tools.OcrAddLetterRow1.Split(';').ToArray<object>();
             var row2 = Configuration.Settings.Tools.OcrAddLetterRow2.Split(';').ToArray<object>();
@@ -335,6 +345,43 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void buttonSkip_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void toolStripMenuItemSkipOptionsInsertAsterisk_Click(object sender, EventArgs e)
+        {
+            SetSkipInsertCurrentText(false);
+        }
+
+        private void toolStripMenuItemSkipOptionsInsertCurrentText_Click(object sender, EventArgs e)
+        {
+            SetSkipInsertCurrentText(true);
+        }
+
+        private void SetSkipInsertCurrentText(bool setting)
+        {
+            toolStripMenuItemSkipOptionsInsertAsterisk.Checked = !setting;
+            toolStripMenuItemSkipOptionsInsertCurrentText.Checked = setting;
+
+            Configuration.Settings.VobSubOcr.SkipInsertCurrentText = setting;
+        }
+                
+        class NoHoverForDisabledItemsToolStripMenuRenderer : ToolStripProfessionalRenderer
+        {
+            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+            {
+                if (e.Item.Enabled)
+                {
+                    base.OnRenderMenuItemBackground(e);
+                }
+            }
+
+            protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+            {
+                if (e.Item.Enabled)
+                {
+                    base.OnRenderMenuItemBackground(e);
+                }
+            }
         }
     }
 }

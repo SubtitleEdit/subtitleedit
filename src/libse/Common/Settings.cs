@@ -2083,6 +2083,7 @@ $HorzAlign          =   Center
         public bool CaptureTopAlign { get; set; }
         public int UnfocusedAttentionBlinkCount { get; set; }
         public int UnfocusedAttentionPlaySoundCount { get; set; }
+        public bool SkipInsertCurrentText { get; set; }
         public string CloudVisionApiKey { get; set; }
         public string CloudVisionLanguage { get; set; }
         public bool CloudVisionSendOriginalImages { get; set; }
@@ -2114,6 +2115,7 @@ $HorzAlign          =   Center
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;
             UnfocusedAttentionPlaySoundCount = 1;
+            SkipInsertCurrentText = false;
             CloudVisionApiKey = string.Empty;
             CloudVisionLanguage = "en";
             CloudVisionSendOriginalImages = false;
@@ -7474,6 +7476,12 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.UnfocusedAttentionPlaySoundCount = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("SkipInsertCurrentText");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.SkipInsertCurrentText = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("CloudVisionApiKey");
             if (subNode != null)
             {
@@ -10600,6 +10608,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SkipInsertCurrentText", settings.VobSubOcr.SkipInsertCurrentText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CloudVisionApiKey", settings.VobSubOcr.CloudVisionApiKey);
                 textWriter.WriteElementString("CloudVisionLanguage", settings.VobSubOcr.CloudVisionLanguage);
                 textWriter.WriteElementString("CloudVisionSendOriginalImages", settings.VobSubOcr.CloudVisionSendOriginalImages.ToString(CultureInfo.InvariantCulture));
