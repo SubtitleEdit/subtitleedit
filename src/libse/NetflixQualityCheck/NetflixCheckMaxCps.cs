@@ -29,6 +29,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     calc = CalcFactory.MakeCalculator(nameof(CalcCjk));
                 }
 
+                if (controller.Language == "ar")
+                {
+                    calc = CalcFactory.MakeCalculator(nameof(CalcIgnoreArabicDiacritics));
+                }
+
                 var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp, calc);
                 if (charactersPerSeconds > charactersPerSecond && !p.StartTime.IsMaxTime)
                 {
