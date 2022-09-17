@@ -51,6 +51,7 @@
             this.insertendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertnumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertdurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemActor = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +64,6 @@
             this.textlengthnobrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textlengthbr1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textlengthbr2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelHeader = new System.Windows.Forms.Label();
             this.textBoxHeader = new System.Windows.Forms.TextBox();
             this.contextMenuStripHeader = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -74,6 +74,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.bookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -286,9 +287,10 @@
             this.textlengthToolStripMenuItem,
             this.textlengthnobrToolStripMenuItem,
             this.textlengthbr1ToolStripMenuItem,
-            this.textlengthbr2ToolStripMenuItem});
+            this.textlengthbr2ToolStripMenuItem,
+            this.bookmarkToolStripMenuItem});
             this.contextMenuStripParagraph.Name = "contextMenuStrip1";
-            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 400);
+            this.contextMenuStripParagraph.Size = new System.Drawing.Size(181, 422);
             this.contextMenuStripParagraph.Text = "{text-length-br1}";
             // 
             // insertHHMMSSMSToolStripMenuItem
@@ -318,6 +320,13 @@
             this.insertdurationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.insertdurationToolStripMenuItem.Text = "{duration}";
             this.insertdurationToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // gapToolStripMenuItem
+            // 
+            this.gapToolStripMenuItem.Name = "gapToolStripMenuItem";
+            this.gapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gapToolStripMenuItem.Text = "{gap}";
+            this.gapToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // textToolStripMenuItem
             // 
@@ -402,13 +411,6 @@
             this.textlengthbr2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.textlengthbr2ToolStripMenuItem.Text = "{text-length-br2}";
             this.textlengthbr2ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
-            // 
-            // gapToolStripMenuItem
-            // 
-            this.gapToolStripMenuItem.Name = "gapToolStripMenuItem";
-            this.gapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.gapToolStripMenuItem.Text = "{gap}";
-            this.gapToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // labelHeader
             // 
@@ -506,6 +508,13 @@
             this.textBoxPreview.Size = new System.Drawing.Size(340, 432);
             this.textBoxPreview.TabIndex = 0;
             // 
+            // bookmarkToolStripMenuItem
+            // 
+            this.bookmarkToolStripMenuItem.Name = "bookmarkToolStripMenuItem";
+            this.bookmarkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bookmarkToolStripMenuItem.Text = "{bookmark}";
+            this.bookmarkToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
             // ExportCustomTextFormat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -583,5 +592,6 @@
         private System.Windows.Forms.TextBox textBoxFileExtension;
         private System.Windows.Forms.Label labelFileExt;
         private System.Windows.Forms.ToolStripMenuItem gapToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bookmarkToolStripMenuItem;
     }
 }
