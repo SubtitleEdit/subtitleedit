@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -136,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{text-length-br1}", "{14}");
             s = s.Replace("{text-length-br2}", "{15}");
             s = s.Replace("{gap}", "{16}");
+            s = s.Replace("{bookmark}", "{17}");
             s = s.Replace("{tab}", "\t");
             return s;
         }
@@ -426,7 +426,8 @@ namespace Nikse.SubtitleEdit.Forms
                               p.Text.RemoveChar('\r', '\n').Length,
                               p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1,
                               p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2,
-                              gap)
+                              gap,
+                              p.Bookmark == string.Empty ? "*" : p.Bookmark)
                 ;
             s = PostCurly(s, replaceStart, replaceEnd);
             return s;
