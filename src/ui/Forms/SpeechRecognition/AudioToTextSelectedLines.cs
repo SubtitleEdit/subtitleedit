@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
-            FillModels(string.Empty);
+            AudioToText.FillModels(comboBoxModels, string.Empty);
 
             textBoxLog.Visible = false;
             textBoxLog.Dock = DockStyle.Fill;
@@ -61,31 +61,6 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             foreach (var audioClip in audioClips)
             {
                 listViewInputFiles.Items.Add(audioClip.AudioFileName);
-            }
-        }
-
-        private void FillModels(string lastDownloadedModel)
-        {
-            var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.VoskModel : lastDownloadedModel;
-            comboBoxModels.Items.Clear();
-            foreach (var directory in Directory.GetDirectories(_voskFolder))
-            {
-                var name = Path.GetFileName(directory);
-                if (!File.Exists(Path.Combine(directory, "final.mdl")) && !File.Exists(Path.Combine(directory, "am", "final.mdl")))
-                {
-                    continue;
-                }
-
-                comboBoxModels.Items.Add(name);
-                if (name == selectName)
-                {
-                    comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
-                }
-            }
-
-            if (comboBoxModels.SelectedIndex < 0 && comboBoxModels.Items.Count > 0)
-            {
-                comboBoxModels.SelectedIndex = 0;
             }
         }
 
@@ -258,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                     if (rec.AcceptWaveform(buffer, bytesRead))
                     {
                         var res = rec.Result();
-                        var results = ParseJsonToResult(res);
+                        var results = AudioToText.ParseJsonToResult(res);
                         list.AddRange(results);
                     }
                     else
@@ -276,33 +251,9 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             }
 
             var finalResult = rec.FinalResult();
-            var finalResults = ParseJsonToResult(finalResult);
+            var finalResults = AudioToText.ParseJsonToResult(finalResult);
             list.AddRange(finalResults);
             timer1.Stop();
-            return list;
-        }
-
-        private static List<ResultText> ParseJsonToResult(string result)
-        {
-            var list = new List<ResultText>();
-            var jsonParser = new SeJsonParser();
-            var root = jsonParser.GetArrayElementsByName(result, "result");
-            foreach (var item in root)
-            {
-                var conf = jsonParser.GetFirstObject(item, "conf");
-                var start = jsonParser.GetFirstObject(item, "start");
-                var end = jsonParser.GetFirstObject(item, "end");
-                var word = jsonParser.GetFirstObject(item, "word");
-                if (!string.IsNullOrWhiteSpace(word) &&
-                    decimal.TryParse(conf, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var confidence) &&
-                    decimal.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
-                    decimal.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
-                {
-                    var rt = new ResultText { Confidence = confidence, Text = word, Start = startSeconds, End = endSeconds };
-                    list.Add(rt);
-                }
-            }
-
             return list;
         }
 
@@ -397,7 +348,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             using (var form = new AudioToTextModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                FillModels(form.LastDownloadedModel);
+                AudioToText.FillModels(comboBoxModels, form.LastDownloadedModel);
             }
         }
 

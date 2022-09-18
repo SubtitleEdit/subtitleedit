@@ -7036,6 +7036,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainTextBoxAutoBreakFromPosAndGoToNext":
                     language.Settings.MainTextBoxAutoBreakFromPosAndGoToNext = reader.Value;
                     break;
+                case "Settings/MainTextBoxDictate":
+                    language.Settings.MainTextBoxDictate = reader.Value;
+                    break;
                 case "Settings/MainTextBoxUnbreak":
                     language.Settings.MainTextBoxUnbreak = reader.Value;
                     break;
