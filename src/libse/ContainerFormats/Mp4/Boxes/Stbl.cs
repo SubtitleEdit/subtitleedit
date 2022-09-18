@@ -254,7 +254,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     timeEnd = allTimes[index + 1];
                 }
 
-                if (Texts.Count > textIndex)
+                if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
+                {
+                    paragraphs.Add(new Paragraph(string.Empty, timeStart * 1000.0, timeEnd * 1000.0));
+                }
+                else if (Texts.Count > textIndex)
                 {
                     paragraphs.Add(new Paragraph(Texts[textIndex], timeStart * 1000.0, timeEnd * 1000.0));
                 }
