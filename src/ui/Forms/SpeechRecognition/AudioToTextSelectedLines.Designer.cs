@@ -1,6 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 {
-    sealed partial class AudioToText
+    sealed partial class AudioToTextSelectedLines
     {
         /// <summary>
         /// Required designer variable.
@@ -44,14 +44,9 @@
             this.labelTime = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.checkBoxUsePostProcessing = new System.Windows.Forms.CheckBox();
-            this.buttonBatchMode = new System.Windows.Forms.Button();
             this.groupBoxInputFiles = new System.Windows.Forms.GroupBox();
-            this.buttonClear = new System.Windows.Forms.Button();
-            this.buttonRemoveFile = new System.Windows.Forms.Button();
-            this.buttonAddFile = new System.Windows.Forms.Button();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.labelFC = new System.Windows.Forms.Label();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.SuspendLayout();
@@ -64,7 +59,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(622, 427);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 10;
+            this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -73,10 +68,10 @@
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(373, 427);
+            this.buttonGenerate.Location = new System.Drawing.Point(491, 427);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
-            this.buttonGenerate.TabIndex = 8;
+            this.buttonGenerate.TabIndex = 5;
             this.buttonGenerate.Text = "&Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
@@ -87,8 +82,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 427);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(355, 12);
-            this.progressBar1.TabIndex = 7;
+            this.progressBar1.Size = new System.Drawing.Size(473, 12);
+            this.progressBar1.TabIndex = 4;
             this.progressBar1.Visible = false;
             // 
             // labelProgress
@@ -98,7 +93,7 @@
             this.labelProgress.Location = new System.Drawing.Point(12, 409);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
-            this.labelProgress.TabIndex = 6;
+            this.labelProgress.TabIndex = 4;
             this.labelProgress.Text = "labelProgress";
             // 
             // textBoxLog
@@ -133,7 +128,7 @@
             this.groupBoxModels.Location = new System.Drawing.Point(15, 66);
             this.groupBoxModels.Name = "groupBoxModels";
             this.groupBoxModels.Size = new System.Drawing.Size(682, 82);
-            this.groupBoxModels.TabIndex = 3;
+            this.groupBoxModels.TabIndex = 1;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Models";
             // 
@@ -143,7 +138,7 @@
             this.buttonDownload.Location = new System.Drawing.Point(265, 43);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(28, 23);
-            this.buttonDownload.TabIndex = 2;
+            this.buttonDownload.TabIndex = 1;
             this.buttonDownload.Text = "...";
             this.buttonDownload.UseVisualStyleBackColor = true;
             this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
@@ -154,7 +149,7 @@
             this.linkLabelOpenModelsFolder.Location = new System.Drawing.Point(301, 51);
             this.linkLabelOpenModelsFolder.Name = "linkLabelOpenModelsFolder";
             this.linkLabelOpenModelsFolder.Size = new System.Drawing.Size(98, 13);
-            this.linkLabelOpenModelsFolder.TabIndex = 3;
+            this.linkLabelOpenModelsFolder.TabIndex = 2;
             this.linkLabelOpenModelsFolder.TabStop = true;
             this.linkLabelOpenModelsFolder.Text = "Open models folder";
             this.linkLabelOpenModelsFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenModelFolder_LinkClicked);
@@ -175,7 +170,7 @@
             this.comboBoxModels.Location = new System.Drawing.Point(19, 45);
             this.comboBoxModels.Name = "comboBoxModels";
             this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
-            this.comboBoxModels.TabIndex = 1;
+            this.comboBoxModels.TabIndex = 0;
             this.comboBoxModels.SelectedIndexChanged += new System.EventHandler(this.comboBoxModels_SelectedIndexChanged);
             // 
             // linkLabelVoskWebSite
@@ -184,7 +179,7 @@
             this.linkLabelVoskWebSite.Location = new System.Drawing.Point(12, 26);
             this.linkLabelVoskWebSite.Name = "linkLabelVoskWebSite";
             this.linkLabelVoskWebSite.Size = new System.Drawing.Size(70, 13);
-            this.linkLabelVoskWebSite.TabIndex = 2;
+            this.linkLabelVoskWebSite.TabIndex = 0;
             this.linkLabelVoskWebSite.TabStop = true;
             this.linkLabelVoskWebSite.Text = "Vosk website";
             this.linkLabelVoskWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVoskWebsite_LinkClicked);
@@ -210,70 +205,22 @@
             this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 162);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
-            this.checkBoxUsePostProcessing.TabIndex = 4;
+            this.checkBoxUsePostProcessing.TabIndex = 2;
             this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
             this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
-            // 
-            // buttonBatchMode
-            // 
-            this.buttonBatchMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonBatchMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonBatchMode.Location = new System.Drawing.Point(504, 427);
-            this.buttonBatchMode.Name = "buttonBatchMode";
-            this.buttonBatchMode.Size = new System.Drawing.Size(112, 23);
-            this.buttonBatchMode.TabIndex = 9;
-            this.buttonBatchMode.Text = "Batch mode";
-            this.buttonBatchMode.UseVisualStyleBackColor = true;
-            this.buttonBatchMode.Click += new System.EventHandler(this.buttonBatchMode_Click);
             // 
             // groupBoxInputFiles
             // 
             this.groupBoxInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxInputFiles.Controls.Add(this.buttonClear);
-            this.groupBoxInputFiles.Controls.Add(this.buttonRemoveFile);
-            this.groupBoxInputFiles.Controls.Add(this.buttonAddFile);
             this.groupBoxInputFiles.Controls.Add(this.listViewInputFiles);
             this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 200);
             this.groupBoxInputFiles.Name = "groupBoxInputFiles";
             this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 185);
-            this.groupBoxInputFiles.TabIndex = 5;
+            this.groupBoxInputFiles.TabIndex = 3;
             this.groupBoxInputFiles.TabStop = false;
             this.groupBoxInputFiles.Text = "Input files";
-            // 
-            // buttonClear
-            // 
-            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClear.Location = new System.Drawing.Point(602, 73);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(74, 23);
-            this.buttonClear.TabIndex = 3;
-            this.buttonClear.Text = "Clear";
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
-            // 
-            // buttonRemoveFile
-            // 
-            this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveFile.Location = new System.Drawing.Point(603, 46);
-            this.buttonRemoveFile.Name = "buttonRemoveFile";
-            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
-            this.buttonRemoveFile.TabIndex = 2;
-            this.buttonRemoveFile.Text = "Remove";
-            this.buttonRemoveFile.UseVisualStyleBackColor = true;
-            this.buttonRemoveFile.Click += new System.EventHandler(this.buttonRemoveFile_Click);
-            // 
-            // buttonAddFile
-            // 
-            this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddFile.Location = new System.Drawing.Point(603, 19);
-            this.buttonAddFile.Name = "buttonAddFile";
-            this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
-            this.buttonAddFile.TabIndex = 1;
-            this.buttonAddFile.Text = "Add...";
-            this.buttonAddFile.UseVisualStyleBackColor = true;
-            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
             // 
             // listViewInputFiles
             // 
@@ -287,7 +234,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 18);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(591, 150);
+            this.listViewInputFiles.Size = new System.Drawing.Size(670, 150);
             this.listViewInputFiles.TabIndex = 0;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -297,25 +244,12 @@
             this.columnHeaderFileName.Text = "File name";
             this.columnHeaderFileName.Width = 455;
             // 
-            // labelFC
-            // 
-            this.labelFC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFC.ForeColor = System.Drawing.Color.Gray;
-            this.labelFC.Location = new System.Drawing.Point(247, 442);
-            this.labelFC.Name = "labelFC";
-            this.labelFC.Size = new System.Drawing.Size(120, 17);
-            this.labelFC.TabIndex = 19;
-            this.labelFC.Text = "labelFC";
-            this.labelFC.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // AudioToText
+            // AudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
-            this.Controls.Add(this.labelFC);
             this.Controls.Add(this.groupBoxInputFiles);
-            this.Controls.Add(this.buttonBatchMode);
             this.Controls.Add(this.checkBoxUsePostProcessing);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.linkLabelVoskWebSite);
@@ -331,14 +265,14 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(575, 250);
-            this.Name = "AudioToText";
+            this.Name = "AudioToTextSelectedLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Audio to text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.Load += new System.EventHandler(this.AudioToText_Load);
-            this.Shown += new System.EventHandler(this.AudioToText_Shown);
+            this.Shown += new System.EventHandler(this.AudioToTextSelectedLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
             this.groupBoxModels.ResumeLayout(false);
             this.groupBoxModels.PerformLayout();
@@ -365,13 +299,8 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox checkBoxUsePostProcessing;
         private System.Windows.Forms.Button buttonDownload;
-        private System.Windows.Forms.Button buttonBatchMode;
         private System.Windows.Forms.GroupBox groupBoxInputFiles;
         private System.Windows.Forms.ListView listViewInputFiles;
         private System.Windows.Forms.ColumnHeader columnHeaderFileName;
-        private System.Windows.Forms.Button buttonClear;
-        private System.Windows.Forms.Button buttonRemoveFile;
-        private System.Windows.Forms.Button buttonAddFile;
-        private System.Windows.Forms.Label labelFC;
     }
 }

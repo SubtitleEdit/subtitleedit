@@ -1,8 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,9 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using Vosk;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 {
     public sealed partial class AudioToText : Form
     {

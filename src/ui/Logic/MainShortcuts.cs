@@ -166,6 +166,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainInsertAfter { get; set; }
         public Keys MainInsertBefore { get; set; }
         public Keys MainTextBoxAutoBreak { get; set; }
+        public Keys MainTextBoxRecord { get; set; }
         public Keys MainTextBoxUnbreak { get; set; }
         public Keys MainTextBoxUnbreakNoSpace { get; set; }
         public Keys MainTextBoxAssaIntellisense { get; set; }
@@ -433,6 +434,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
             MainTextBoxBreakAtCursorPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition);
             MainTextBoxBreakAtCursorPositionAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
+            MainTextBoxRecord = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxRecord);
             MainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             MainTextBoxUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreakNoSpace);
             MainTextBoxAssaIntellisense = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAssaIntellisense);

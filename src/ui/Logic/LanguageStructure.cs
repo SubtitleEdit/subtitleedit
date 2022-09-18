@@ -2747,6 +2747,7 @@
             public string MainTextBoxAutoBreak { get; set; }
             public string MainTextBoxAutoBreakFromPos { get; set; }
             public string MainTextBoxAutoBreakFromPosAndGoToNext { get; set; }
+            public string MainTextBoxDictate { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainTextBoxUnbreakNoSpace { get; set; }
             public string MainTextBoxAssaIntellisense { get; set; }
