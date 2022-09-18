@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = RegexUtils.ReplaceNewLineSafe(r, p.Text, findHelper.ReplaceText);
                 if (before != p.Text)
                 {
-                    replaceCount += RegexUtils.CountNewLineSafe(r, p.Text);
+                    replaceCount += RegexUtils.CountNewLineSafe(r, before);
                 }
             }
 
