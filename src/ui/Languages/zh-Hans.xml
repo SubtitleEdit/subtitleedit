@@ -2680,7 +2680,7 @@ Command line: {1} {2}
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>{1} 栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckReport>栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
     <ReportPrompt>完整报告请看这里: {0}</ReportPrompt>
     <OpenReportInFolder>在文件夹中打开报告</OpenReportInFolder>
     <FoundXIssues>Netflix 品质检查找到 {0} 个问题</FoundXIssues>
