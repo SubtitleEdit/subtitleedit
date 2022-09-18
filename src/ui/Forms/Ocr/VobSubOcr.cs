@@ -7978,6 +7978,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _subtitle.Paragraphs.Add(p);
             }
 
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
