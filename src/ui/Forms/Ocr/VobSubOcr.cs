@@ -9494,7 +9494,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             saveFileDialog1.Title = "Save images in folder";
             saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Dummy";
-            saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
+            saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|JPG image|*.jpg|GIF image|*.gif|TIFF image|*.tiff";
             saveFileDialog1.FilterIndex = 0;
 
             DialogResult result = saveFileDialog1.ShowDialog(this);
@@ -9518,10 +9518,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else if (saveFileDialog1.FilterIndex == 3)
                 {
+                    ext = ".jpg";
+                    imageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                }
+                else if (saveFileDialog1.FilterIndex == 4)
+                {
                     ext = ".gif";
                     imageFormat = System.Drawing.Imaging.ImageFormat.Gif;
                 }
-                else if (saveFileDialog1.FilterIndex == 4)
+                else if (saveFileDialog1.FilterIndex == 5)
                 {
                     ext = ".tiff";
                     imageFormat = System.Drawing.Imaging.ImageFormat.Tiff;
