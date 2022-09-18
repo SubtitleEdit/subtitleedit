@@ -2466,6 +2466,7 @@ $HorzAlign          =   Center
         public string MainTextBoxAutoBreak { get; set; }
         public string MainTextBoxBreakAtPosition { get; set; }
         public string MainTextBoxBreakAtPositionAndGoToNext { get; set; }
+        public string MainTextBoxRecord { get; set; }
         public string MainTextBoxUnbreak { get; set; }
         public string MainTextBoxUnbreakNoSpace { get; set; }
         public string MainTextBoxAssaIntellisense { get; set; }
@@ -9265,12 +9266,6 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainAdjustSetStartAndEndOfPrevious");
-                if (subNode != null)
-                {
-                    shortcuts.MainAdjustSetStartAndEndOfPrevious = subNode.InnerText;
-                }
-
                 subNode = node.SelectSingleNode("MainAdjustSetStartAndEndOfPreviousAndGoToNext");
                 if (subNode != null)
                 {
@@ -9467,6 +9462,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.MainTextBoxBreakAtPositionAndGoToNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTextBoxRecord");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxRecord = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainTextBoxUnbreak");
@@ -11039,6 +11040,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainTextBoxBreakAtPosition", shortcuts.MainTextBoxBreakAtPosition);
             textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             textWriter.WriteElementString("MainTextBoxUnbreak", shortcuts.MainTextBoxUnbreak);
+            textWriter.WriteElementString("MainTextBoxRecord", shortcuts.MainTextBoxRecord);
             textWriter.WriteElementString("MainTextBoxUnbrekNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
             textWriter.WriteElementString("MainTextBoxAssaIntellisense", shortcuts.MainTextBoxAssaIntellisense);
             textWriter.WriteElementString("MainTextBoxAssaRemoveTag", shortcuts.MainTextBoxAssaRemoveTag);

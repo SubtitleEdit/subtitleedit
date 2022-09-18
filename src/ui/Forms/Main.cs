@@ -42,6 +42,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.SpeechRecognition;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -10694,6 +10695,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 AutoBreakAtFirstSpaceFromPos(textBoxListViewText, true);
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainTextBoxRecord)
+            {
+                e.SuppressKeyPress = true;
+                using (var form = new Dictate()) 
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
             }
 
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
