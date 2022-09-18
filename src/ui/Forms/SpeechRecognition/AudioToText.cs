@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
             _voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
-            FillModels(string.Empty);
+            FillModels(comboBoxModels, string.Empty);
 
             textBoxLog.Visible = false;
             textBoxLog.Dock = DockStyle.Fill;
@@ -86,11 +86,12 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             labelFC.Text = string.Empty;
         }
 
-        private void FillModels(string lastDownloadedModel)
+        public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
         {
+            var voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
             var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.VoskModel : lastDownloadedModel;
             comboBoxModels.Items.Clear();
-            foreach (var directory in Directory.GetDirectories(_voskFolder))
+            foreach (var directory in Directory.GetDirectories(voskFolder))
             {
                 var name = Path.GetFileName(directory);
                 if (!File.Exists(Path.Combine(directory, "final.mdl")) && !File.Exists(Path.Combine(directory, "am", "final.mdl")))
@@ -338,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             return list;
         }
 
-        private static List<ResultText> ParseJsonToResult(string result)
+        public static List<ResultText> ParseJsonToResult(string result)
         {
             var list = new List<ResultText>();
             var jsonParser = new SeJsonParser();
@@ -597,7 +598,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             using (var form = new AudioToTextModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                FillModels(form.LastDownloadedModel);
+                FillModels(comboBoxModels, form.LastDownloadedModel);
             }
         }
 

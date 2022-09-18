@@ -202,6 +202,9 @@ namespace Nikse.SubtitleEdit.Forms
         private ListBox _intellisenceList;
         private ListBox _intellisenceListOriginal;
         private bool _updateSelectedCountStatusBar;
+        private Dictate _dictateForm;
+        private object _dictateTextBox;
+        private bool _hasCurrentVosk;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -10699,12 +10702,55 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.MainTextBoxRecord)
             {
                 e.SuppressKeyPress = true;
-                using (var form = new Dictate()) 
+
+                if (_dictateTextBox != null && _dictateForm != null)
                 {
-                    if (form.ShowDialog(this) != DialogResult.OK)
+                    return; // already recording
+                }
+
+                if (!RequireFfmpegOk())
+                {
+                    return;
+                }
+
+                var voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
+                if (Configuration.IsRunningOnWindows && !HasCurrentVosk(voskFolder))
+                {
+                    if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "libvosk"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return;
                     }
+
+                    using (var form = new DownloadVosk())
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                if (_subtitle?.GetParagraphOrDefault(_subtitleListViewIndex) == null || !(sender is TextBox || sender is AdvancedTextBox))
+                {
+                    return;
+                }
+
+                if (_dictateForm == null || string.IsNullOrEmpty(Configuration.Settings.Tools.VoskModel))
+                {
+                    _dictateForm?.Dispose();
+                    _dictateForm = new Dictate();
+                    if (_dictateForm.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    _dictateTextBox = null;
+                }
+                else
+                {
+                    _dictateTextBox = sender;
+                    _dictateForm.Record();
+                    ShowStatus("Recording...");
                 }
             }
 
@@ -12945,6 +12991,8 @@ namespace Nikse.SubtitleEdit.Forms
                     // ignore
                 }
             }
+
+            _dictateForm?.Dispose();
         }
 
         private void SaveListViewWidths()
@@ -17281,7 +17329,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SetPlayRateAndPlay(200, false);
                     }
-                    else 
+                    else
                     {
                         SetPlayRateAndPlay(100, false);
                     }
@@ -29830,6 +29878,28 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _mainAdjustStartDownEndUpAndGoToNextParagraph = null;
             }
+            else if (_dictateTextBox != null && _dictateForm != null)
+            {
+                Application.DoEvents();
+                Cursor = Cursors.WaitCursor;
+                ShowStatus(LanguageSettings.Current.AudioToText.Transcribing);
+                var text = _dictateForm.RecordingToText();
+                Cursor = Cursors.Default;
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    if (_dictateTextBox is TextBox tb)
+                    {
+                        tb.Paste(text);
+                    }
+                    else if (_dictateTextBox is AdvancedTextBox atb)
+                    {
+                        atb.SelectedText = text;
+                    }
+                }
+
+                ShowStatus(string.Empty);
+                _dictateTextBox = null;
+            }
         }
 
         private void ToolStripMenuItemSurroundWithMusicSymbolsClick(object sender, EventArgs e)
@@ -34306,7 +34376,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool HasCurrentVosk(string voskFolder)
         {
-            if (Configuration.IsRunningOnLinux)
+            if (Configuration.IsRunningOnLinux || _hasCurrentVosk)
             {
                 return true;
             }
@@ -34322,7 +34392,9 @@ namespace Nikse.SubtitleEdit.Forms
                 ? "1cc13d8e2ffd3ad7ca76941c99e8ad00567d0b8135878c3a80fb938054cf98bde1f692647e6d19df7526c98aa5ad975d72dba20bf1759baedba5c753a14480bb"
                 : "77479a934650b40968d54dcf71fce17237c59b62b6c64ad3d6b5433486b76b6202eb956e93597ba466c67aa0d553db7b2863e0aeb8856a6dd29a3aba3a14bf66";
             var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(voskDll));
-            return currentVoskDllSha512Hash == hash;
+
+            _hasCurrentVosk = currentVoskDllSha512Hash == hash;
+            return _hasCurrentVosk;
         }
 
         private void Main_MouseDown(object sender, MouseEventArgs e)
@@ -34359,7 +34431,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Cursor = Cursors.WaitCursor;
                 var timeCode = new TimeCode(mediaPlayer.CurrentPosition * 1000.0 + 1000).ToHHMMSS();
-                var colorMatrix =  "bt601:bt709"; // ffmpeg bug with assa color?
+                var colorMatrix = "bt601:bt709"; // ffmpeg bug with assa color?
                 var bmpFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, timeCode, colorMatrix);
                 using (var bmp = new Bitmap(bmpFileName))
                 {

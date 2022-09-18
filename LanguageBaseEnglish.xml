@@ -2561,6 +2561,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Break at first space from cursor position</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dictate</MainTextBoxDictate>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak without space (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Show ASSA tag helper</MainTextBoxAssaIntellisense>
