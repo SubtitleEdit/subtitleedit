@@ -9266,6 +9266,12 @@ $HorzAlign          =   Center
                     shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndEndOfPrevious");
+                if (subNode != null)
+                {
+                    shortcuts.MainAdjustSetStartAndEndOfPrevious = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartAndEndOfPreviousAndGoToNext");
                 if (subNode != null)
                 {
