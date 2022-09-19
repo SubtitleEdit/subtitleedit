@@ -216,12 +216,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "sam", "ali", "nije", "Nije", "samo", "ovo", "kako", "dobro", "Dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za", "misliš", "možeš", "možemo", "ništa", "znaš", "ćemo", "znam"
         };
+
         private static readonly string[] AutoDetectWordsCroatian =
         {
             "što", "ovdje", "gdje", "kamo", "tko", "prije", "uvijek", "vrijeme", "vidjeti", "netko", "vidio", "nitko", "bok", "lijepo", "oprosti", "htio", "mjesto", "oprostite", "čovjek", "dolje", "čovječe", "dvije", "dijete", "dio",
             "poslije", "događa", "vjerovati", "vjerojatno", "vjerujem", "točno", "razumijem", "vidjela", "cijeli", "svijet", "obitelj", "volio", "sretan", "dovraga", "svijetu", "htjela", "vidjeli", "negdje", "želio", "ponovno",
             "djevojka", "umrijeti", "čovjeka", "mjesta", "djeca", "osjećam", "uopće", "djecu", "naprijed", "obitelji", "doista", "mjestu", "lijepa", "također", "riječ", "tijelo"
         };
+
         private static readonly string[] AutoDetectWordsSerbian =
         {
             "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko", "video", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole", "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati",
@@ -231,7 +233,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsSerbianCyrillic =
         {
-            "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати", "Један", "Назад", "Молим"
+            "ће", "ћемо", "Хоћу", "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати", "Један", "Назад", "Молим"
+        };
+
+        private static readonly string[] AutoDetectWordsSerbianCyrillicOnly =
+        {
+            "дођавола", "Дођи", "пронађемо", "ће", "ћемо", "Хоћу", "чекић", "неће",
         };
 
         private static readonly string[] AutoDetectWordsIndonesian =
@@ -523,6 +530,18 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (ukrainianCount > count)
                 {
                     return "uk"; // Ukrainian
+                }
+
+                var serbianCount = GetCount(text, AutoDetectWordsSerbianCyrillic);
+                if (serbianCount > count)
+                {
+                    return "sr"; // Serbian
+                }
+
+                var serbianWordsOnlyCount = GetCount(text, AutoDetectWordsSerbianCyrillicOnly);
+                if (serbianWordsOnlyCount > 1)
+                {
+                    return "sr"; // Serbian
                 }
 
                 return "ru"; // Russian
