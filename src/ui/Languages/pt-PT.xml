@@ -2562,6 +2562,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxAutoBreak>Quebra de linha automática</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Quebrar no primeiro espaço a partir da posição do cursor</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Quebrar no primeiro espaço a partir da posição do cursor e ir para o próximo</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dictar (tecla para baixo=iniciar gravação, tecla para cima=terminar gravação)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Eliminar quebra de linha</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Eliminar quebra sem espaço em branco (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Mostrar ajuda da etiqueta ASSA</MainTextBoxAssaIntellisense>

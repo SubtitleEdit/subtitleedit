@@ -10484,7 +10484,10 @@ namespace Nikse.SubtitleEdit.Forms
                         tb.TextBoxFont,
                         new Size(tb.Width, 1000),
                         TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
-                    tb.ScrollBars = calculatedHeight > tb.Height ? RichTextBoxScrollBars.Vertical : RichTextBoxScrollBars.None;
+                    BeginInvoke(new Action(() =>
+                    {
+                        tb.ScrollBars = calculatedHeight > tb.Height ? RichTextBoxScrollBars.Vertical : RichTextBoxScrollBars.None;
+                    }));
                 }
             }
             catch
