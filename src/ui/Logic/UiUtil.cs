@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            int length = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Length;
+            var length = textBox.Text.CountCharacters(false);
             if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && length > Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 string newText;
