@@ -170,11 +170,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.KeyCode == Keys.Enter)
             {
+                if (e.Modifiers == Keys.Control)
+                {
+                    UseOnce = true;
+                }
+
                 DialogResult = DialogResult.OK;
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                DialogResult = DialogResult.Cancel;
             }
             else if (e.KeyCode == Keys.Escape)
             {
