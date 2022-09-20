@@ -79,6 +79,7 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelItalicOn2 = new System.Windows.Forms.Label();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
+            this.buttonOnce = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).BeginInit();
@@ -102,10 +103,10 @@
             this.buttonSkip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSkip.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonSkip.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSkip.Location = new System.Drawing.Point(410, 373);
+            this.buttonSkip.Location = new System.Drawing.Point(491, 373);
             this.buttonSkip.Name = "buttonSkip";
             this.buttonSkip.Size = new System.Drawing.Size(75, 23);
-            this.buttonSkip.TabIndex = 4;
+            this.buttonSkip.TabIndex = 5;
             this.buttonSkip.Text = "&Skip";
             this.buttonSkip.UseVisualStyleBackColor = true;
             this.buttonSkip.Click += new System.EventHandler(this.buttonSkip_Click);
@@ -118,7 +119,7 @@
             this.pictureBoxSubtitleImage.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(12, 35);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
-            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(554, 164);
+            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(635, 164);
             this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSubtitleImage.TabIndex = 12;
             this.pictureBoxSubtitleImage.TabStop = false;
@@ -177,10 +178,10 @@
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAbort.DialogResult = System.Windows.Forms.DialogResult.Abort;
             this.buttonAbort.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAbort.Location = new System.Drawing.Point(491, 373);
+            this.buttonAbort.Location = new System.Drawing.Point(572, 373);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(75, 23);
-            this.buttonAbort.TabIndex = 5;
+            this.buttonAbort.TabIndex = 6;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
             // 
@@ -201,7 +202,7 @@
             // 
             this.buttonExpandSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExpandSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExpandSelection.Location = new System.Drawing.Point(453, 4);
+            this.buttonExpandSelection.Location = new System.Drawing.Point(534, 4);
             this.buttonExpandSelection.Name = "buttonExpandSelection";
             this.buttonExpandSelection.Size = new System.Drawing.Size(112, 23);
             this.buttonExpandSelection.TabIndex = 20;
@@ -213,7 +214,7 @@
             // 
             this.buttonShrinkSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShrinkSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonShrinkSelection.Location = new System.Drawing.Point(335, 4);
+            this.buttonShrinkSelection.Location = new System.Drawing.Point(416, 4);
             this.buttonShrinkSelection.Name = "buttonShrinkSelection";
             this.buttonShrinkSelection.Size = new System.Drawing.Size(112, 23);
             this.buttonShrinkSelection.TabIndex = 21;
@@ -274,7 +275,7 @@
             this.labelItalicOn.AutoSize = true;
             this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
-            this.labelItalicOn.Location = new System.Drawing.Point(193, -1);
+            this.labelItalicOn.Location = new System.Drawing.Point(234, -1);
             this.labelItalicOn.Name = "labelItalicOn";
             this.labelItalicOn.Size = new System.Drawing.Size(101, 39);
             this.labelItalicOn.TabIndex = 26;
@@ -317,7 +318,7 @@
             this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.None;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(553, 49);
+            this.dataGridView1.Size = new System.Drawing.Size(634, 49);
             this.dataGridView1.TabIndex = 27;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -473,7 +474,6 @@
             // 
             // labelItalicOn2
             // 
-            this.labelItalicOn2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.labelItalicOn2.AutoSize = true;
             this.labelItalicOn2.Font = new System.Drawing.Font("Tahoma", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelItalicOn2.ForeColor = System.Drawing.Color.Red;
@@ -493,12 +493,25 @@
             this.labelSubtitleImage.TabIndex = 29;
             this.labelSubtitleImage.Text = "subtitle image";
             // 
+            // buttonOnce
+            // 
+            this.buttonOnce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOnce.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOnce.Location = new System.Drawing.Point(410, 373);
+            this.buttonOnce.Name = "buttonOnce";
+            this.buttonOnce.Size = new System.Drawing.Size(75, 23);
+            this.buttonOnce.TabIndex = 4;
+            this.buttonOnce.Text = "&Use once";
+            this.buttonOnce.UseVisualStyleBackColor = true;
+            this.buttonOnce.Click += new System.EventHandler(this.buttonOnce_Click);
+            // 
             // VobSubOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
-            this.ClientSize = new System.Drawing.Size(577, 404);
+            this.ClientSize = new System.Drawing.Size(658, 404);
+            this.Controls.Add(this.buttonOnce);
             this.Controls.Add(this.textBoxCharacters);
             this.Controls.Add(this.labelSubtitleImage);
             this.Controls.Add(this.labelItalicOn2);
@@ -577,5 +590,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.Label labelItalicOn2;
         private System.Windows.Forms.Label labelSubtitleImage;
+        private System.Windows.Forms.Button buttonOnce;
     }
 }

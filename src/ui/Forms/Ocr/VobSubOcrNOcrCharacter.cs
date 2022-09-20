@@ -56,6 +56,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool IsItalic => checkBoxItalic.Checked;
 
+        public bool UseOnce { get; private set; }
+
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showExpand, bool showShrink, string text)
         {
             listBoxLinesForeground.Items.Clear();
@@ -66,6 +68,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             radioButtonHot.Checked = true;
             ShrinkSelection = false;
             ExpandSelection = false;
+            UseOnce = false;
 
             textBoxCharacters.Text = text;
             NOcrChar = new NOcrChar { MarginTop = character.Top };
@@ -168,30 +171,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (listBoxLinesForeground.Items.Count == 0)
-            {
-                MessageBox.Show("No foreground lines!");
-                return;
-            }
-            if (listBoxlinesBackground.Items.Count == 0 && !_warningNoNotForegroundLinesShown)
-            {
-                MessageBox.Show("No not-foreground lines!");
-                _warningNoNotForegroundLinesShown = true;
-                return;
-            }
-            if (textBoxCharacters.Text.Length == 0)
-            {
-                MessageBox.Show("Text is empty!");
-                return;
-            }
-            if (!IsMatch())
-            {
-                MessageBox.Show("Lines does not match image!");
-                return;
-            }
-            NOcrChar.Text = textBoxCharacters.Text;
-            NOcrChar.Italic = checkBoxItalic.Checked;
-            DialogResult = DialogResult.OK;
+            HandleOKClicked(false);
         }
 
         private void pictureBoxCharacter_Paint(object sender, PaintEventArgs e)
@@ -1007,6 +987,40 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubOcrNOcrCharacter_Shown(object sender, EventArgs e)
         {
             textBoxCharacters.Focus();
+        }
+
+        private void buttonOnce_Click(object sender, EventArgs e)
+        {
+            HandleOKClicked(true);
+        }
+
+        private void HandleOKClicked(bool useOnce)
+        {
+            if (listBoxLinesForeground.Items.Count == 0)
+            {
+                MessageBox.Show("No foreground lines!");
+                return;
+            }
+            if (listBoxlinesBackground.Items.Count == 0 && !_warningNoNotForegroundLinesShown)
+            {
+                MessageBox.Show("No not-foreground lines!");
+                _warningNoNotForegroundLinesShown = true;
+                return;
+            }
+            if (textBoxCharacters.Text.Length == 0)
+            {
+                MessageBox.Show("Text is empty!");
+                return;
+            }
+            if (!IsMatch())
+            {
+                MessageBox.Show("Lines does not match image!");
+                return;
+            }
+            NOcrChar.Text = textBoxCharacters.Text;
+            NOcrChar.Italic = checkBoxItalic.Checked;
+            UseOnce = useOnce;
+            DialogResult = DialogResult.OK;
         }
     }
 }
