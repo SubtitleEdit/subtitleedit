@@ -3417,9 +3417,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else if (result == DialogResult.OK)
                     {
                         string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-                        string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, expandSelectionList);
-                        var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
-                        _lastAdditions.Add(addition);
+
+                        if (!_vobSubOcrCharacter.UseOnce)
+                        {
+                            string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, expandSelectionList);
+                            var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
+                            _lastAdditions.Add(addition);
+                        }
+
                         matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count, null));
                         expandSelectionList = new List<ImageSplitterItem>();
                     }
@@ -3429,16 +3434,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     else
                     {
-                        string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-
-                        if (text != string.Empty)
-                        {
-                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
-                        }
-                        else
-                        {
-                            matches.Add(new CompareMatch("*", false, 0, null));
-                        }
+                        matches.Add(new CompareMatch("*", false, 0, null));
                     }
 
                     _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
@@ -3482,9 +3478,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         else if (result == DialogResult.OK)
                         {
                             string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-                            string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
-                            var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
-                            _lastAdditions.Add(addition);
+
+                            if (!_vobSubOcrCharacter.UseOnce) 
+                            {
+                                string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
+                                var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
+                                _lastAdditions.Add(addition);
+                            }
+
                             matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null, item));
                             SetBinOcrLowercaseUppercase(item.NikseBitmap.Height, text);
                         }
@@ -3494,16 +3495,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         else
                         {
-                            string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-
-                            if (text != string.Empty)
-                            {
-                                matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
-                            }
-                            else
-                            {
-                                matches.Add(new CompareMatch("*", false, 0, null));
-                            }
+                            matches.Add(new CompareMatch("*", false, 0, null));
                         }
 
                         _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
@@ -3855,8 +3847,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 c.MarginTop = expandSelectionList.First().Top - expandSelectionList.Min(p => p.Top);
                             }
 
-                            _nOcrDb.Add(c);
-                            SaveNOcrWithCurrentLanguage();
+                            if (!_vobSubOcrNOcrCharacter.UseOnce)
+                            {
+                                _nOcrDb.Add(c);
+                                SaveNOcrWithCurrentLanguage();
+                            }
+
                             var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
                             matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, expandSelectionList.Count, null));
                             expandSelectionList = new List<ImageSplitterItem>();
@@ -3867,16 +3863,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         else
                         {
-                            var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
-
-                            if (text != string.Empty)
-                            {
-                                matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
-                            }
-                            else
-                            {
-                                matches.Add(new CompareMatch("*", false, 0, null));
-                            }
+                            matches.Add(new CompareMatch("*", false, 0, null));
                         }
 
                         _italicCheckedLast = _vobSubOcrNOcrCharacter.IsItalic;
@@ -3900,8 +3887,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                             else if (result == DialogResult.OK)
                             {
-                                _nOcrDb.Add(_vobSubOcrNOcrCharacter.NOcrChar);
-                                SaveNOcrWithCurrentLanguage();
+                                if (!_vobSubOcrNOcrCharacter.UseOnce) 
+                                {
+                                    _nOcrDb.Add(_vobSubOcrNOcrCharacter.NOcrChar);
+                                    SaveNOcrWithCurrentLanguage();
+                                }
+
                                 string text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
                                 matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null) { ImageSplitterItem = item });
                             }
@@ -3911,16 +3902,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                             else
                             {
-                                var text = _vobSubOcrNOcrCharacter.NOcrChar.Text;
-
-                                if (text != string.Empty)
-                                {
-                                    matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
-                                }
-                                else
-                                {
-                                    matches.Add(new CompareMatch("*", false, 0, null));
-                                }
+                                matches.Add(new CompareMatch("*", false, 0, null));
                             }
 
                             _italicCheckedLast = _vobSubOcrNOcrCharacter.IsItalic;
