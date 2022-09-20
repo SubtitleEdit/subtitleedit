@@ -566,5 +566,34 @@ namespace Nikse.SubtitleEdit.Forms
             listViewGetPlugins.EndUpdate();
             buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
         }
+
+        private void listViewInstalledPlugins_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var lv = (ListView)sender;
+
+            if (!(lv.ListViewItemSorter is ListViewSorter sorter))
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column,
+                    IsNumber = false,
+                    Descending = true,
+                };
+                lv.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsNumber = false;
+            }
+
+            lv.Sort();
+        }
     }
 }

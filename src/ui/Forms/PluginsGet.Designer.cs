@@ -128,6 +128,7 @@
             this.listViewGetPlugins.TabIndex = 15;
             this.listViewGetPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewGetPlugins.View = System.Windows.Forms.View.Details;
+            this.listViewGetPlugins.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewInstalledPlugins_ColumnClick);
             // 
             // columnHeaderName
             // 
@@ -217,6 +218,7 @@
             this.listViewInstalledPlugins.TabIndex = 28;
             this.listViewInstalledPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewInstalledPlugins.View = System.Windows.Forms.View.Details;
+            this.listViewInstalledPlugins.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewInstalledPlugins_ColumnClick);
             // 
             // columnHeaderInsName
             // 
