@@ -133,9 +133,6 @@
   <data name="tick" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="record" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\record.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="webvtt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\webvtt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
