@@ -10751,6 +10751,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    pictureBoxRecord.BringToFront();
+                    pictureBoxRecord.Visible = true;
                     _dictateTextBox = sender;
                     _dictateForm.Record();
                     ShowStatus("Recording...");
@@ -29883,6 +29885,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_dictateTextBox != null && _dictateForm != null)
             {
+                pictureBoxRecord.Visible = false;
                 Application.DoEvents();
                 Cursor = Cursors.WaitCursor;
                 ShowStatus(LanguageSettings.Current.AudioToText.Transcribing);
