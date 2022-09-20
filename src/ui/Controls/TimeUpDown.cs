@@ -338,5 +338,28 @@ namespace Nikse.SubtitleEdit.Controls
                 _dirty = true;
             }
         }
+
+        public void Theme()
+        {
+            var enabled = Enabled;
+            Enabled = true;
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                BackColor = DarkTheme.BackColor;
+                MaskedTextBox.BackColor = DarkTheme.BackColor;
+                numericUpDown1.BackColor = DarkTheme.BackColor;
+            }
+            else
+            {
+                BackColor = DefaultBackColor;
+                using (var tb = new TextBox())
+                {
+                    MaskedTextBox.BackColor = tb.BackColor;
+                    numericUpDown1.BackColor = tb.BackColor;
+                }
+            }
+
+            Enabled = enabled;
+        }
     }
 }
