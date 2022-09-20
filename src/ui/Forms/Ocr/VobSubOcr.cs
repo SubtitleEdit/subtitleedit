@@ -3479,7 +3479,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
 
-                            if (!_vobSubOcrCharacter.UseOnce) {
+                            if (!_vobSubOcrCharacter.UseOnce) 
+                            {
                                 string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
                                 var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
                                 _lastAdditions.Add(addition);
@@ -3886,7 +3887,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                             else if (result == DialogResult.OK)
                             {
-                                if (!_vobSubOcrNOcrCharacter.UseOnce) {
+                                if (!_vobSubOcrNOcrCharacter.UseOnce) 
+                                {
                                     _nOcrDb.Add(_vobSubOcrNOcrCharacter.NOcrChar);
                                     SaveNOcrWithCurrentLanguage();
                                 }
