@@ -3134,8 +3134,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var sorter = (ListViewSorter)listViewInputFiles.ListViewItemSorter;
-            if (sorter == null)
+            if (!(listViewInputFiles.ListViewItemSorter is ListViewSorter sorter))
             {
                 sorter = new ListViewSorter
                 {
