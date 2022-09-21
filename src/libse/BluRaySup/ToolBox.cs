@@ -16,6 +16,7 @@
  * NOTE: Converted to C# and modified by Nikse.dk@gmail.com
  */
 
+using System;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.BluRaySup
@@ -60,19 +61,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          * @param ms Time in milliseconds
          * @return Array containing hours, minutes, seconds and milliseconds (in this order)
          */
-        public static int[] MillisecondsToTime(double ms)
+        public static long[] MillisecondsToTime(double ms)
         {
-            int[] time = new int[4];
+            var time = new long[4];
             // time[0] = hours
-            time[0] = (int)(ms / (60 * 60 * 1000));
+            time[0] = (long)(ms / (60 * 60 * 1000));
             ms -= time[0] * 60 * 60 * 1000;
             // time[1] = minutes
-            time[1] = (int)(ms / (60 * 1000));
+            time[1] = (long)(ms / (60 * 1000));
             ms -= time[1] * 60 * 1000;
             // time[2] = seconds
-            time[2] = (int)(ms / 1000);
+            time[2] = (long)(ms / 1000);
             ms -= time[2] * 1000;
-            time[3] = (int)ms;
+            time[3] = (long)ms;
             return time;
         }
 
@@ -83,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>String in format hh:mm:ss:ms</returns>
         public static string PtsToTimeString(long pts)
         {
-            int[] time = MillisecondsToTime(pts / 90.0);
+            long[] time = MillisecondsToTime(pts / 90.0);
             return $@"{time[0]:D2}:{time[1]:D2}:{time[2]:D2}.{time[3]:D3}";
         }
 
@@ -93,8 +94,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="buffer">Byte array</param>
         /// <param name="index">Index to write to</param>
         /// <param name="val">Integer value of double word to write</param>
-        public static void SetDWord(byte[] buffer, int index, int val)
+        public static void SetDWord(byte[] buffer, int index, uint val)
         {
+            if (val > 4_294_967_295)
+            {
+                throw new ArgumentException("val");
+            }
+
             buffer[index] = (byte)(val >> 24);
             buffer[index + 1] = (byte)(val >> 16);
             buffer[index + 2] = (byte)(val >> 8);
