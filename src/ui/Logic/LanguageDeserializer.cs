@@ -8326,6 +8326,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcrCharacter/Skip":
                     language.VobSubOcrCharacter.Skip = reader.Value;
                     break;
+                case "VobSubOcrCharacter/UseOnce":
+                    language.VobSubOcrCharacter.UseOnce = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Nordic":
                     language.VobSubOcrCharacter.Nordic = reader.Value;
                     break;
