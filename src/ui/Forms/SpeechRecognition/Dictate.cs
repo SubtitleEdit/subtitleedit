@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         private WaveInEvent _waveSource;
         public string WaveFileName { get; set; }
         public static bool DataRecorded { get; set; }
+        public static bool RecordingOn { get; set; }
+        public static double RecordingVolumePercent { get; set; }
 
         public Dictate()
         {
@@ -44,10 +46,12 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             _waveFile = new WaveFileWriter(WaveFileName, _waveSource.WaveFormat);
             DataRecorded = false;
             _waveSource.StartRecording();
+            RecordingOn = true;
         }
 
         public string RecordingToText()
         {
+            RecordingOn = false;
             _waveSource.StopRecording();
             _waveSource.Dispose();
             _waveFile.Close();
@@ -120,6 +124,34 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         private static void WaveSourceDataAvailable(object sender, WaveInEventArgs e)
         {
             _waveFile.Write(e.Buffer, 0, e.BytesRecorded);
+
+            float max = 0;
+            for (var index = 0; index < e.BytesRecorded; index += 2)
+            {
+                var sample = (short)((e.Buffer[index + 1] << 8) | e.Buffer[index + 0]);
+                var sample32 = sample / 32768f;
+                if (sample32 < 0)
+                {
+                    sample32 = -sample32;
+                }
+
+                if (sample32 > max)
+                {
+                    max = sample32;
+                }
+            }
+
+            var pct = max * 100.0;
+            if (max > 100)
+            {
+                pct = 100.0;
+            }
+            else if (max < 0)
+            {
+                pct = 0;
+            }
+            RecordingVolumePercent = pct;
+
             DataRecorded = true;
         }
 
