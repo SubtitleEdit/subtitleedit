@@ -22446,6 +22446,11 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.Invalidate();
             }
 
+            if (_dictateForm != null && Dictate.RecordingOn)
+            {
+                pictureBoxRecord.Invalidate();
+            }
+
             ShowSubtitleTimer.Start();
         }
 
@@ -24457,6 +24462,22 @@ namespace Nikse.SubtitleEdit.Forms
             _timerSlow.Start();
 
             trackBarWaveformPosition.MouseWheel += TrackBarWaveformPosition_MouseWheel;
+
+            pictureBoxRecord.Paint += PictureBoxRecord_Paint;
+        }
+
+        private void PictureBoxRecord_Paint(object sender, PaintEventArgs e)
+        {
+            if (_dictateForm != null && Dictate.RecordingOn)
+            {
+                var pct = Dictate.RecordingVolumePercent;
+                var len = pictureBoxRecord.Height - (int)Math.Round(Dictate.RecordingVolumePercent * pictureBoxRecord.Height / 100.0);
+                using (var pen = new Pen(Color.DodgerBlue, 5))
+                {
+                    e.Graphics.DrawLine(pen, pictureBoxRecord.Width - 6, pictureBoxRecord.Height - 1, pictureBoxRecord.Width - 6, len);
+                    e.Graphics.DrawLine(pen, 4, pictureBoxRecord.Height - 1, 4, len);
+                }
+            }
         }
 
         private void TrackBarWaveformPosition_MouseWheel(object sender, MouseEventArgs e)
