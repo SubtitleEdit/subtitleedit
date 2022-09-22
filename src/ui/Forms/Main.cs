@@ -11933,10 +11933,16 @@ namespace Nikse.SubtitleEdit.Forms
                         next++;
                     }
 
-                    var arr = _subtitle.Paragraphs[index].Text.Trim().SplitToLines();
+                    var p = _subtitle.GetParagraphOrDefault(index);
+                    if (p == null)
+                    {
+                        return;
+                    }
+
+                    var arr = p.Text.Trim().SplitToLines();
                     if (arr.Count > 0)
                     {
-                        int mid = arr.Count / 2;
+                        var mid = arr.Count / 2;
                         for (var i = 0; i < arr.Count; i++)
                         {
                             var l = arr[i];
@@ -11951,7 +11957,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    durationMilliseconds += _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
+                    durationMilliseconds += p.Duration.TotalMilliseconds;
                 }
 
                 if (sb1.Length > 150 || sb2.Length > 150)
