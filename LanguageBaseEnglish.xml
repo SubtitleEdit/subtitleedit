@@ -2525,6 +2525,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MergeSelectedLinesAndUnbreakCjk>Merge selected lines and unbreak without space (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Merge selected lines bilingual</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Merge with prevous bilingual</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Merge with next bilingual</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Split selected line bilingual</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle translator mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>

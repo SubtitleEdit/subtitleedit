@@ -6928,6 +6928,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MergeSelectedLinesBilingual":
                     language.Settings.MergeSelectedLinesBilingual = reader.Value;
                     break;
+                case "Settings/MergeWithPreviousBilingual":
+                    language.Settings.MergeWithPreviousBilingual = reader.Value;
+                    break;
+                case "Settings/MergeWithNextBilingual":
+                    language.Settings.MergeWithNextBilingual = reader.Value;
+                    break;
                 case "Settings/SplitSelectedLineBilingual":
                     language.Settings.SplitSelectedLineBilingual = reader.Value;
                     break;
