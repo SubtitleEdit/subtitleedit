@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -150,7 +149,11 @@ namespace Nikse.SubtitleEdit.Controls
         public override string Text
         {
             get => string.Join(Environment.NewLine, base.Text.SplitToLines());
-            set => base.Text = string.Join("\n", value.SplitToLines());
+            set
+            {
+                var text = value ?? string.Empty;
+                base.Text = string.Join("\n", text.SplitToLines());
+            }
         }
 
         public new int SelectionStart
