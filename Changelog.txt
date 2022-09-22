@@ -19,6 +19,8 @@
    * Add ignore white space to compare - thx Leon
    * Enable "Audio to text" for Linux - thx edcol/coastal45
    * Add "Allow overlap" in "Change speed" - thx OmrSi
+   * Add bookmarks to spell check dialog - thx cyzs233/OmrSi 
+   * Add dictate shortcut for main text box - thx Xenos71
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -36,6 +38,8 @@
    * Audio to text: Auto select downloaded model after download
    * Allow for multiple X-TIMESTAMP-MAPs in WebVTT - thx doctorm
    * Use subtitle file name for blank video - thx OmrSi
+   * Add list view column sort to "File - Plugins"
+   * Add "Use once" button for binary image compare - thx Flitskikker
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
@@ -47,6 +51,9 @@
    * Fix "*" showing in titlebar after offsetting with no change - thx OmrSi
    * Fix issues with NQC shot change rules - thx OmrSi
    * Fix UI issue in copy-paste translate
+   * Fix merge lines for Greek - thx Xenos71
+   * Fix not showing vobsub from mp4 - thx Luc
+   * Fix writing bd sup hours > 6½ hours - thx Keith
 
 
 3.6.7 (13th August 2022)
