@@ -2175,6 +2175,8 @@ $HorzAlign          =   Center
         public string GeneralMergeSelectedLinesAndUnbreakCjk { get; set; }
         public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
         public string GeneralMergeSelectedLinesBilingual { get; set; }
+        public string GeneralMergeWithPreviousBilingual { get; set; }
+        public string GeneralMergeWithNextBilingual { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
@@ -7784,6 +7786,18 @@ $HorzAlign          =   Center
                     shortcuts.GeneralMergeSelectedLinesBilingual = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralMergeWithPreviousBilingual");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeWithPreviousBilingual = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("GeneralMergeWithNextBilingual");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralMergeWithNextBilingual = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeWithNext");
                 if (subNode != null)
                 {
@@ -10765,6 +10779,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreakCjk", shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
             textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
             textWriter.WriteElementString("GeneralMergeSelectedLinesBilingual", shortcuts.GeneralMergeSelectedLinesBilingual);
+            textWriter.WriteElementString("GeneralMergeWithPreviousBilingual", shortcuts.GeneralMergeWithPreviousBilingual);
+            textWriter.WriteElementString("GeneralMergeWithNextBilingual", shortcuts.GeneralMergeWithNextBilingual);
             textWriter.WriteElementString("GeneralMergeWithNext", shortcuts.GeneralMergeWithNext);
             textWriter.WriteElementString("GeneralMergeWithPrevious", shortcuts.GeneralMergeWithPrevious);
             textWriter.WriteElementString("GeneralMergeWithPreviousAndUnbreak", shortcuts.GeneralMergeWithPreviousAndUnbreak);

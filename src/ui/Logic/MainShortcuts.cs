@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralMergeSelectedLinesAndUnbreak { get; set; }
         public Keys MainGeneralMergeSelectedLinesAndUnbreakNoSpace { get; set; }
         public Keys MainGeneralMergeSelectedLinesBilingual { get; set; }
+        public Keys MainGeneralMergeWithPreviousBilingual { get; set; }
+        public Keys MainGeneralMergeWithNextBilingual { get; set; }
         public Keys MainGeneralMergeSelectedLinesOnlyFirstText { get; set; }
         public Keys MainGeneralToggleTranslationMode { get; set; }
         public Keys MainGeneralSwitchTranslationAndOriginal { get; set; }
@@ -247,6 +249,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralMergeSelectedLinesAndUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
             MainGeneralMergeSelectedLinesAndUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
             MainGeneralMergeSelectedLinesBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesBilingual);
+            MainGeneralMergeWithPreviousBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPreviousBilingual);
+            MainGeneralMergeWithNextBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNextBilingual);
             MainGeneralMergeSelectedLinesOnlyFirstText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
             MainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             MainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);

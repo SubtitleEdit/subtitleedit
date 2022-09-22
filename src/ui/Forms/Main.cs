@@ -11903,9 +11903,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MergeSelectedLinesBilingual()
+        private void MergeSelectedLinesBilingual(int[] selectedIndices)
         {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
+            if (_subtitle.Paragraphs.Count > 0 && selectedIndices.Length > 1)
             {
                 var sb1 = new StringBuilder();
                 var sb2 = new StringBuilder();
@@ -11914,7 +11914,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstIndex = 0;
                 double durationMilliseconds = 0;
                 int next = 0;
-                foreach (int index in SubtitleListview1.SelectedIndices)
+                foreach (var index in selectedIndices)
                 {
                     if (first)
                     {
@@ -11936,7 +11936,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var arr = _subtitle.Paragraphs[index].Text.Trim().SplitToLines();
                     if (arr.Count > 0)
                     {
-                        int mid = (int)(arr.Count / 2);
+                        int mid = arr.Count / 2;
                         for (var i = 0; i < arr.Count; i++)
                         {
                             var l = arr[i];
@@ -11963,10 +11963,10 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeMergeLines);
 
                 var currentParagraph = _subtitle.Paragraphs[firstIndex];
-                string text1 = sb1.ToString().TrimEnd();
-                string text2 = sb2.ToString().TrimEnd();
+                string text1 = sb1.ToString().Trim();
+                string text2 = sb2.ToString().Trim();
 
-                currentParagraph.Text = text1 + Environment.NewLine + text2;
+                currentParagraph.Text = (text1 + Environment.NewLine + text2).Trim();
 
                 //display time
                 currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
@@ -11985,7 +11985,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                    for (var i = deleteIndices.Count - 1; i >= 0; i--)
                     {
                         _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
                     }
@@ -16712,7 +16712,23 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                 {
                     e.SuppressKeyPress = true;
-                    MergeSelectedLinesBilingual();
+                    MergeSelectedLinesBilingual(SubtitleListview1.GetSelectedIndices());
+                }
+            }
+            else if (_shortcuts.MainGeneralMergeWithPreviousBilingual == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 1 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    MergeSelectedLinesBilingual(new int[] { SubtitleListview1.SelectedItems[0].Index - 1, SubtitleListview1.SelectedItems[0].Index });
+                }
+            }
+            else if (_shortcuts.MainGeneralMergeWithNextBilingual == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 1 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    MergeSelectedLinesBilingual(new int[] { SubtitleListview1.SelectedItems[0].Index, SubtitleListview1.SelectedItems[0].Index + 1 });
                 }
             }
             else if (_shortcuts.MainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
