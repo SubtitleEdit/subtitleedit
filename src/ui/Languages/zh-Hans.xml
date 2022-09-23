@@ -2480,7 +2480,7 @@ Command line: {1} {2}
     <PlayRateSlower>减慢播放速度</PlayRateSlower>
     <PlayRateFaster>加快播放速度</PlayRateFaster>
     <PlayRateToggle>播放速度切换 (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
-    <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
+    <VideoResetSpeedAndZoom>重置播放速度/波形缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
     <VideoAudioToText>视频/音频到文本（语音识别）</VideoAudioToText>
@@ -2513,6 +2513,8 @@ Command line: {1} {2}
     <MergeSelectedLinesAndUnbreakCjk>合并所选行，取消断行且不带空格（用于中日韩等语言）</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>合并所选行, 仅保留首个非空文本</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>合并双语字幕</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>与上一条的双语合并</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>与下一条的双语合并</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>拆分双语字幕</SplitSelectedLineBilingual>
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
@@ -2550,6 +2552,7 @@ Command line: {1} {2}
     <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>在指针后的第一个空格处换行</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>在指针后的第一个空格处换行，并转到下一行</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>听写（向下键=开始录音，向上键=结束录音）</MainTextBoxDictate>
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>显示ASSA标签助手</MainTextBoxAssaIntellisense>
@@ -3027,6 +3030,7 @@ Command line: {1} {2}
     <Italic>斜体(&amp;I)</Italic>
     <Abort>中止(&amp;A)</Abort>
     <Skip>跳过(&amp;S)</Skip>
+    <UseOnce>使用一次(&amp;O)</UseOnce>
     <Nordic>日耳曼</Nordic>
     <Spanish>西班牙</Spanish>
     <German>德国</German>
