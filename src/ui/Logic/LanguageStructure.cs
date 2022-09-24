@@ -100,6 +100,7 @@
             public string ExampleX { get; set; }
             public string Reset { get; set; }
             public string Warning { get; set; }
+            public string UseLargerFontForThisWindow { get; set; }
         }
 
         public class About

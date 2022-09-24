@@ -343,6 +343,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Warning":
                     language.General.Warning = reader.Value;
                     break;
+                case "General/UseLargerFontForThisWindow":
+                    language.General.UseLargerFontForThisWindow = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;

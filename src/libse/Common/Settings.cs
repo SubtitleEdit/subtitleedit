@@ -124,6 +124,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string MusicSymbolReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
         public bool SpellCheckAutoChangeNameCasing { get; set; }
+        public bool SpellCheckUseLargerFont { get; set; }
         public bool SpellCheckAutoChangeNamesUseSuggestions { get; set; }
         public bool CheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
@@ -4423,6 +4424,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.SpellCheckAutoChangeNameCasing = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("SpellCheckUseLargerFont");
+            if (subNode != null)
+            {
+                settings.Tools.SpellCheckUseLargerFont = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNamesUseSuggestions");
@@ -10059,6 +10066,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
                 textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
                 textWriter.WriteElementString("SpellCheckAutoChangeNameCasing", settings.Tools.SpellCheckAutoChangeNameCasing.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SpellCheckUseLargerFont", settings.Tools.SpellCheckUseLargerFont.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckAutoChangeNamesUseSuggestions", settings.Tools.SpellCheckAutoChangeNamesUseSuggestions.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));

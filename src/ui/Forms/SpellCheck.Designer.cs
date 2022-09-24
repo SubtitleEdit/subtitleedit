@@ -54,6 +54,10 @@
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.useLargerFontForThisWindowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -61,6 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
             this.panelBookmark.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonAddToDictionary
@@ -127,9 +132,11 @@
             this.toolStripSeparator1,
             this.deleteToolStripMenuItem,
             this.bookmarkCommentToolStripMenuItem,
-            this.openImagedBasedSourceFileToolStripMenuItem});
+            this.openImagedBasedSourceFileToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.useLargerFontForThisWindowToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(247, 142);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(247, 148);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
             // addXToNamesnoiseListToolStripMenuItem
@@ -461,6 +468,32 @@
             this.labelBookmark.TabIndex = 0;
             this.labelBookmark.Text = "labelBookmark";
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(243, 6);
+            // 
+            // useLargerFontForThisWindowToolStripMenuItem
+            // 
+            this.useLargerFontForThisWindowToolStripMenuItem.Name = "useLargerFontForThisWindowToolStripMenuItem";
+            this.useLargerFontForThisWindowToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.useLargerFontForThisWindowToolStripMenuItem.Text = "Use larger font for this window";
+            this.useLargerFontForThisWindowToolStripMenuItem.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useLargerFontForThisWindowToolStripMenuItem1});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(237, 48);
+            // 
+            // useLargerFontForThisWindowToolStripMenuItem1
+            // 
+            this.useLargerFontForThisWindowToolStripMenuItem1.Name = "useLargerFontForThisWindowToolStripMenuItem1";
+            this.useLargerFontForThisWindowToolStripMenuItem1.Size = new System.Drawing.Size(236, 22);
+            this.useLargerFontForThisWindowToolStripMenuItem1.Text = "Use larger font for this window";
+            this.useLargerFontForThisWindowToolStripMenuItem1.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -490,6 +523,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Kom";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SpellCheck_FormClosing);
+            this.Shown += new System.EventHandler(this.SpellCheck_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSpellCheck_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxWordNotFound.ResumeLayout(false);
@@ -502,6 +536,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
             this.panelBookmark.ResumeLayout(false);
             this.panelBookmark.PerformLayout();
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -547,5 +582,9 @@
         private System.Windows.Forms.Panel panelBookmark;
         private System.Windows.Forms.Label labelBookmark;
         private System.Windows.Forms.ToolStripMenuItem bookmarkCommentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem1;
     }
 }
