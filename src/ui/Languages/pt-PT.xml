@@ -274,8 +274,8 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <TitleAutoBreak>Auto-ajustar linhas seleccionadas</TitleAutoBreak>
     <TitleUnbreak>Remover quebras de linha das linhas seleccionadas</TitleUnbreak>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Dividir só linhas maiores que</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>Unir só linhas menores que</OnlyUnbreakLinesLongerThan>
+    <OnlyBreakLinesLongerThan>Dividir apenas linhas maiores que</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>Unir apenas linhas menores que</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
     <Title>Converter múltiplos ficheiros</Title>
@@ -379,8 +379,8 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
     <NormalCasing>Maiúsculas normais. Primeira letra de cada frase em maiúsculo.</NormalCasing>
     <FixNamesCasing>Corrigir nomes em maiúsculas (através de Dictionaries\names.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Corrigir só nomes em maiúsculas (através de Dictionaries\names.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Alterar só linhas em maiúsculo.</OnlyChangeAllUppercaseLines>
+    <FixOnlyNamesCasing>Corrigir apenas nomes em maiúsculas (através de Dictionaries\names.xml)</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>Alterar apenas linhas em maiúsculo.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TODAS MAIÚSCULAS</AllUppercase>
     <AllLowercase>todas minúsculas</AllLowercase>
   </ChangeCasing>
@@ -444,8 +444,8 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Overwrite>Substituir</Overwrite>
     <ShiftCellsDown>Deslocar células para baixo</ShiftCellsDown>
     <TimeCodesOnly>Apenas tempos</TimeCodesOnly>
-    <TextOnly>Só texto</TextOnly>
-    <OriginalTextOnly>Só texto original</OriginalTextOnly>
+    <TextOnly>Apenas texto</TextOnly>
+    <OriginalTextOnly>Apenas texto original</OriginalTextOnly>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Comparar legendas</Title>
@@ -456,11 +456,11 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <XNumberOfDifference>Número de diferenças: {0}</XNumberOfDifference>
     <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1:0.##}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1:0.##}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
-    <ShowOnlyDifferences>Mostrar só as diferenças</ShowOnlyDifferences>
+    <ShowOnlyDifferences>Mostrar apenas as diferenças</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorar quebra de linha</IgnoreLineBreaks>
     <IgnoreWhitespace>Ignorar espaço em branco</IgnoreWhitespace>
     <IgnoreFormatting>Ignorar formatação</IgnoreFormatting>
-    <OnlyLookForDifferencesInText>Procurar só as diferenças no texto</OnlyLookForDifferencesInText>
+    <OnlyLookForDifferencesInText>Procurar apenas as diferenças no texto</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Não é possível comparar legendas baseadas em imagens</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <ConvertColorsToDialog>
@@ -1508,7 +1508,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual do disco em {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Não é possível guardar {0}
 
-Ficheiro é só de leitura!</FileXIsReadOnly>
+O ficheiro é apenas de leitura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}
 A legenda não parece ter linhas legendadas - tente guardar novamente se estiver a trabalhar numa legenda válida!</UnableToSaveSubtitleX>
     <FormatXShouldUseUft8>A codificação UTF-8 deve ser utilizada ao guardar ficheiros {0}!</FormatXShouldUseUft8>
@@ -1629,7 +1629,7 @@ Continuar?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Legenda importada do ficheiro Matroska (.mkv)</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ficheiro '{0}' não aceite - ficheiro demasiado grande</DropFileXNotAccepted>
     <DropSubtitleFileXNotAccepted>Ficheiro '{0}' não aceite - ficheiro demasiado grande para um legenda</DropSubtitleFileXNotAccepted>
-    <DropOnlyOneFile>Só pode baixar um ficheiro</DropOnlyOneFile>
+    <DropOnlyOneFile>Apenas pode largar um ficheiro</DropOnlyOneFile>
     <OpenAnsiSubtitle>Abrir legenda...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Antes de alterar o formato</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Número de linhas com formato alterado: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1747,7 +1747,7 @@ Continuar mesmo assim?</PromptInsertSubtitleOverlap>
     <ErrorLoadJpg>Este ficheiro parece ser um ficheiro de imagem no formato JPG. O Subtitle Edit não pode abrir ficheiros JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
     <ErrorLoadTorrent>Este ficheiro parece ser um ficheiro BitTorrent - não é um ficheiro de legenda.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Lamentamos, mas este ficheiro só contém zeros no formato binário!
+    <ErrorLoadBinaryZeroes>Lamentamos, mas este ficheiro apenas contém zeros no formato binário!
 
 Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de segurança através do menu Ficheiro -&gt; Restaurar cópia de segurança automática...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Arrastar e largar uma pasta não é suportado aqui.</ErrorDirectoryDropNotAllowed>
@@ -1898,7 +1898,7 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <MaximumMillisecondsBetween>Máximo de milissegundos entre linhas</MaximumMillisecondsBetween>
     <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
     <MergedText>Texto combinado</MergedText>
-    <OnlyMergeContinuationLines>Só combinar as linhas continuadas</OnlyMergeContinuationLines>
+    <OnlyMergeContinuationLines>Apenas combinar as linhas continuadas</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
     <Title>Combinar linhas com os mesmos tempos</Title>
@@ -2041,8 +2041,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <QuestionMarks>'?' e '?'</QuestionMarks>
     <And>e</And>
     <RemoveTextBeforeColon>Remover texto antes de dois pontos (':')</RemoveTextBeforeColon>
-    <OnlyIfTextIsUppercase>Só se o texto estiver em MAIÚSCULO</OnlyIfTextIsUppercase>
-    <OnlyIfInSeparateLine>Só se estiver numa linha separada</OnlyIfInSeparateLine>
+    <OnlyIfTextIsUppercase>Apenas se o texto estiver em MAIÚSCULO</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>Apenas se estiver numa linha separada</OnlyIfInSeparateLine>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <RemoveTextIfContains>Remover texto se tiver:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Remover linha se tiver em MAIÚSCULA</RemoveTextIfAllUppercase>
@@ -2080,7 +2080,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Aplicar intervalo mínimo entre linhas</Title>
     <PreviewLinesModifiedX>Pré-visualizar - linhas modificadas: {0}</PreviewLinesModifiedX>
-    <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
+    <ShowOnlyModifiedLines>Mostrar apenas linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informação da taxa de fotogramas</FrameInfo>
     <Frames>Fotogramas</Frames>
@@ -2216,7 +2216,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
+    <VlcBrowseToLabel>Directoria do VLC (apenas é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Mostrar botão (Sem som)</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botão (Ecrã inteiro)</ShowFullscreenButton>
@@ -2524,8 +2524,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MergeSelectedLinesAndAutoBreak>Combinar as linhas seleccionadas e quebrar linha</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Combinar as linhas seleccionadas e remover quebra</MergeSelectedLinesAndUnbreak>
     <MergeSelectedLinesAndUnbreakCjk>Combinar as linhas seleccionadas e remover quebra sem espaço (CJK)</MergeSelectedLinesAndUnbreakCjk>
-    <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter só o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter apenas o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Combinar as linhas seleccionadas bilingue</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Combinar com bilingue anterior</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Combinar com bilingue seguinte</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Dividir linha seleccionada bilingue</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Alternar o modo de tradutor</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre o original e a tradução</SwitchOriginalAndTranslation>
@@ -2592,7 +2594,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Remover códigos de tempo</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Editar definições para fixar o estilo de continuação...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Definições da fixação do estilo de continuação</FixContinuationStyleSettings>
-    <UncheckInsertsAllCaps>Detectar e desmarcar linhas só em maiúscula (por exemplo: SEM ENTRADA)</UncheckInsertsAllCaps>
+    <UncheckInsertsAllCaps>Detectar e desmarcar linhas apenas em maiúscula (por exemplo: SEM ENTRADA)</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Detectar e desmarcar linhas em itálico, ou com símbolos musicais</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Detectar e desmarcar linhas, ou símbolos musicais, em minúsculas</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Ocultar pontuação improvavél de continuação de frases</HideContinuationCandidatesWithoutName>
@@ -2645,7 +2647,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ShowLater>Mostrar &amp;depois</ShowLater>
     <TotalAdjustmentX>Total de ajustes: {0}</TotalAdjustmentX>
     <AllLines>&amp;Todas as linhas</AllLines>
-    <SelectedLinesOnly>&amp;Só linhas seleccionadas</SelectedLinesOnly>
+    <SelectedLinesOnly>&amp;Apenas linhas seleccionadas</SelectedLinesOnly>
     <SelectedLinesAndForward>Linhas seleccionadas e subse&amp;quentes</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
@@ -2675,7 +2677,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Suggestions>Sugestões</Suggestions>
     <SpellCheckProgress>Verificação ortográfica [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editar todo o texto</EditWholeText>
-    <EditWordOnly>Só editar palavra</EditWordOnly>
+    <EditWordOnly>Apenas editar palavra</EditWordOnly>
     <AddXToNames>Adicionar '{0}' à lista de nomes</AddXToNames>
     <AddXToUserDictionary>Adicionar '{0}' ao dicionário do utilizador</AddXToUserDictionary>
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
@@ -2759,7 +2761,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <NothingFound>Nenhuma encontrada</NothingFound>
     <NumberOfLinesX>Número de linhas da legenda: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Número de caracteres como {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Número de caracteres só no texto: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <NumberOfCharactersInTextOnly>Número de caracteres apenas no texto: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalDuration>Duração total de todas as linhas: {0}</TotalDuration>
     <TotalCharsPerSecond>Total de caracteres/segundo: {0:0.0} segundos</TotalCharsPerSecond>
     <TotalWords>Total de palavras na legenda: {0}</TotalWords>
@@ -3044,6 +3046,7 @@ Manter as alterações?</KeepChangesMessage>
     <Italic>&amp;Itálico</Italic>
     <Abort>&amp;Cancelar</Abort>
     <Skip>&amp;Ignorar</Skip>
+    <UseOnce>&amp;Usar uma vez</UseOnce>
     <Nordic>Nórdico</Nordic>
     <Spanish>Espanhol</Spanish>
     <German>Alemão</German>
@@ -3087,7 +3090,7 @@ Manter as alterações?</KeepChangesMessage>
     <Generate>Gerar</Generate>
     <Remove>Remover</Remove>
     <BeforeWatermark>Antes da marca d'água</BeforeWatermark>
-    <ErrorUnicodeEncodingOnly>A marca d'água só funciona em ficheiros com codificação Unicode.</ErrorUnicodeEncodingOnly>
+    <ErrorUnicodeEncodingOnly>A marca d'água apenas funciona em ficheiros com codificação Unicode.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
     <AddWaveformAndSpectrogram>Adicionar forma de onda/espectrograma</AddWaveformAndSpectrogram>
@@ -3112,7 +3115,7 @@ Manter as alterações?</KeepChangesMessage>
     <PlaySelection>Reporduzir a selecção</PlaySelection>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar apenas forma de onda</ShowWaveformOnly>
-    <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
+    <ShowSpectrogramOnly>Mostrar apenas espectrograma</ShowSpectrogramOnly>
     <AddShotChange>Adicionar mudança de cena</AddShotChange>
     <RemoveShotChange>Remover mudança de cena</RemoveShotChange>
     <RemoveShotChangesFromSelection>Remover mudanças de cena da selecção</RemoveShotChangesFromSelection>
