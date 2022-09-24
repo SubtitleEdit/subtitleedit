@@ -96,6 +96,7 @@
     <ExampleX>예: {0}</ExampleX>
     <Reset>초기화</Reset>
     <Warning>경고</Warning>
+    <UseLargerFontForThisWindow>이 창에 더 큰 글꼴 사용</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -891,7 +892,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>API 키 없이 번역... (느리고 데이터가 제한됨)
 	
-	API 키를 사용하려면 "옵션 -&gt; 환경설정 -&gt; 도구"로 이동하여 Google 번역 API 키를 입력하십시오.</GoogleNoApiKeyWarning>
+	API 키를 사용하려면, "옵션 -&gt; 환경설정 -&gt; 도구"로 이동하여 Google 번역 API 키를 입력하십시오.</GoogleNoApiKeyWarning>
     <Service>서비스:</Service>
     <LineMergeHandling>줄 병합:</LineMergeHandling>
     <ProcessorMergeNext>최대 두 줄 병합</ProcessorMergeNext>
@@ -906,7 +907,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TranslateBlockGetFromClipboard>클립보드에서 번역된 텍스트 가져오기 (Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>원본 텍스트 클립보드 복사</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>클립보드에 원본 텍스트가 있습니다!</TranslateBlockClipboardError1>
-    <TranslateBlockClipboardError2>번역기로 이동하여 번역하고, 클립보드로 결과를 복사하고 이 단추를 다시 클릭합니다.</TranslateBlockClipboardError2>
+    <TranslateBlockClipboardError2>번역기로 이동하여 번역한 다음, 그 결과물을 클립보드에 복사하고 이 단추를 다시 클릭합니다.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
@@ -1285,7 +1286,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <AdjustAllTimes>싱크 조정 (빠르게/느리게)...</AdjustAllTimes>
         <VisualSync>시각 동기화...</VisualSync>
         <PointSync>지점 동기화...</PointSync>
-        <PointSyncViaOtherSubtitle>다른 자막으로 지점 동기화...</PointSyncViaOtherSubtitle>
+        <PointSyncViaOtherSubtitle>또 다른 자막으로 지점 동기화...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>번역</Title>
@@ -1699,7 +1700,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UserAndAction>사용자 | 동작</UserAndAction>
     <NetworkMode>네트워크 모드</NetworkMode>
     <XStartedSessionYAtZ>-＞[{0}]가 [{2}]에 {1} 세션을 시작함.</XStartedSessionYAtZ>
-    <OpenOtherSubtitle>다른 자막 열기</OpenOtherSubtitle>
+    <OpenOtherSubtitle>또 다른 자막 열기</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>대화 대시(-) 전환 전</BeforeToggleDialogDashes>
     <ExportPlainTextAs>일반 텍스트 파일로 내보내기</ExportPlainTextAs>
     <TextFiles>텍스트 파일</TextFiles>
@@ -2524,6 +2525,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MergeSelectedLinesAndUnbreakCjk>선택한 줄 병합하고 공백없이 줄바꿈 제거 (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>선택한 줄 병합, 첫번째 있는 텍스트만 유지</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>선택한 줄의 이중언어 병합</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>이전 이중언어와 병합</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>다음 이중언어와 병합</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>선택한 줄 이중언어로 분할</SplitSelectedLineBilingual>
     <ToggleTranslationMode>번역 모드 전환</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>원본과 번역본 바꾸기</SwitchOriginalAndTranslation>
@@ -2560,6 +2563,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>커서 위치에서 첫 번째 공간에 줄바꿈</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>커서 위치에서 첫 번째 공간에 줄바꿈하고 다음으로 이동</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>받아쓰기(키 다운=녹화 시작, 키 업=녹화 종료)</MainTextBoxDictate>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>공백없이 줄바꿈 제거 (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>ASSA 태그 도우미 표시</MainTextBoxAssaIntellisense>
@@ -2892,7 +2896,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>* 지점 동기화</Title>
-    <TitleViaOtherSubtitle>다른 자막을 통해 지점 동기화</TitleViaOtherSubtitle>
+    <TitleViaOtherSubtitle>또 다른 자막을 통해 지점 동기화</TitleViaOtherSubtitle>
     <SyncHelp>※ 동기화하려면 최소 2개의 동기화 지점이 필요합니다.</SyncHelp>
     <SetSyncPoint>동기화 지점 설정</SetSyncPoint>
     <RemoveSyncPoint>동기화 지점 삭제</RemoveSyncPoint>
@@ -2915,7 +2919,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>알 수 없는 자막 형식!</Title>
-    <Message>이 문제를 해결하려면 다음 이메일 주소로 자막 복사본을 보내 주십시오.
+    <Message>이 문제를 해결하려면, 다음 이메일 주소로 자막 복사본을 보내 주십시오.
 # 이메일 주소: mailto:niksedk@gmail.com</Message>
     <ImportAsPlainText>일반 텍스트로 가져오기...</ImportAsPlainText>
   </UnknownSubtitle>
@@ -3040,6 +3044,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Italic>기울임꼴(&amp;I)</Italic>
     <Abort>종료(&amp;A)</Abort>
     <Skip>무시(&amp;S)</Skip>
+    <UseOnce>한 번 사용(&amp;U}</UseOnce>
     <Nordic>북유럽어</Nordic>
     <Spanish>스페인어</Spanish>
     <German>독일어</German>
