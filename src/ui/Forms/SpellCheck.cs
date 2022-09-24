@@ -143,6 +143,11 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxParagraph.DetectUrls = false;
 
             LoadImageSub(_imageSubFileName);
+
+            if (Configuration.Settings.Tools.SpellCheckUseLargerFont)
+            {
+                useLargerFontForThisWindowToolStripMenuItem_Click(null, null);
+            }
         }
 
         private void LoadImageSub(string fileName)
@@ -1739,14 +1744,6 @@ namespace Nikse.SubtitleEdit.Forms
             Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(Font.FontFamily, Font.Size - 2, FontStyle.Regular) : new Font(Font.FontFamily, Font.Size + 2, FontStyle.Regular);
             useLargerFontForThisWindowToolStripMenuItem.Checked = !useLargerFontForThisWindowToolStripMenuItem.Checked;
             Configuration.Settings.Tools.SpellCheckUseLargerFont = useLargerFontForThisWindowToolStripMenuItem.Checked;
-        }
-
-        private void SpellCheck_Shown(object sender, EventArgs e)
-        {
-            if (Configuration.Settings.Tools.SpellCheckUseLargerFont)
-            {
-                useLargerFontForThisWindowToolStripMenuItem_Click(null, null);
-            }
         }
     }
 }
