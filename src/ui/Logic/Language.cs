@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Settings = "Settings",
                 FixRtl = "Fix RTL",
                 FixRtlAddUnicode = "Fix RTL via Unicode tags",
-                FixRtlRemoveUnicode = "Remove RTL unicode tags",
+                FixRtlRemoveUnicode = "Remove RTL Unicode tags",
                 FixRtlReverseStartEnd = "Reverse RTL start/end",
                 SplitLongLines = "Split long lines",
                 AutoBalance = "Auto balance lines",
@@ -551,7 +551,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NormalCasing = "Normal casing. Sentences begin with uppercase letter.",
                 FixNamesCasing = @"Fix names casing (via Dictionaries\names.xml)",
                 FixOnlyNamesCasing = @"Fix only names casing (via Dictionaries\names.xml)",
-                OnlyChangeAllUppercaseLines = "Only change all upper case lines.",
+                OnlyChangeAllUppercaseLines = "Only change all uppercase lines.",
                 AllUppercase = "ALL UPPERCASE",
                 AllLowercase = "all lowercase",
             };
@@ -652,7 +652,7 @@ namespace Nikse.SubtitleEdit.Logic
                 IgnoreWhitespace = "Ignore whitespace",
                 IgnoreFormatting = "Ignore formatting",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
-                CannotCompareWithImageBasedSubtitles = "Cannot compare with image based subtitles",
+                CannotCompareWithImageBasedSubtitles = "Cannot compare with image-based subtitles",
             };
 
             ConvertColorsToDialog = new LanguageStructure.ConvertColorsToDialog
@@ -687,7 +687,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FadeUpTime = "Fade up time",
                 FadeDownTime = "Fade down time",
                 ZPosition = "Z-position",
-                ZPositionHelp = "Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D",
+                ZPositionHelp = "Positive numbers move text away, negative numbers move text closer, if z-position is zero then it's 2D",
                 ChooseColor = "Choose color...",
                 Generate = "Generate",
                 GenerateNewIdOnSave = "Generate new ID on save",
@@ -758,7 +758,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OriginalEpisodeTitle = "Original episode title",
                 TranslatedProgramTitle = "Translated program title",
                 TranslatedEpisodeTitle = "Translated episode title",
-                TranslatorsName = "Translators name",
+                TranslatorsName = "Translator's name",
                 SubtitleListReferenceCode = "Subtitle list reference code",
                 CountryOfOrigin = "Country of origin",
                 TimeCodeStatus = "Time code status",
@@ -892,7 +892,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Forced = "Forced",
                 ChooseBackgroundColor = "Choose background color",
                 SaveImageAs = "Save image as...",
-                FcpUseFullPathUrl = "Use full image path url in FCP xml",
+                FcpUseFullPathUrl = "Use full image path URL in FCP xml",
             };
 
             ExportText = new LanguageStructure.ExportText
@@ -981,14 +981,14 @@ namespace Nikse.SubtitleEdit.Logic
                 RemoveLineBreaksAll = "Remove line breaks in short texts (all except dialogs)",
                 FixUppercaseIInsideLowercaseWords = "Fix uppercase 'i' inside lowercase words (OCR error)",
                 FixDoubleApostrophes = "Fix double apostrophe characters ('') to a single quote (\")",
-                AddPeriods = "Add period after lines where next line start with uppercase letter",
+                AddPeriods = "Add period after lines where next line starts with uppercase letter",
                 StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph",
                 StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph",
                 StartWithUppercaseLetterAfterColon = "Start with uppercase letter after colon/semicolon",
                 CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",
                 RemoveSpaceBetweenNumber = "Remove space between numbers",
                 FixDialogsOnOneLine = "Fix dialogs on one line",
-                RemoveDialogFirstInNonDialogs = "Remove start dash in first line for non dialogs",
+                RemoveDialogFirstInNonDialogs = "Remove start dash in first line for non-dialogs",
                 NormalizeStrings = "Normalize strings",
                 FixLowercaseIToUppercaseI = "Fix alone lowercase 'i' to 'I' (English)",
                 FixTurkishAnsi = "Fix Turkish ANSI (Icelandic) letters to Unicode",
@@ -1007,7 +1007,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixesFoundX = "Fixes found: {0}",
                 XFixesApplied = "Fixes applied: {0}",
                 NothingFixableBut = "Nothing could be fixed automatically. The subtitle contains errors - see log for details",
-                XFixedBut = "{0} issue(s) fixed but the subtitle still contain errors - see log for details",
+                XFixedBut = "{0} issue(s) fixed but the subtitle still contains errors - see log for details",
                 XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details",
                 FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph",
                 MergeShortLine = "Merge short line (single sentence)",
@@ -1129,7 +1129,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
                                        Environment.NewLine +
                                        "Go to \"Options -> Settings -> Tools\" to enter your key.",
-                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
+                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data). " + Environment.NewLine + "To use an API key, go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
                 Service = "Service:",
                 LineMergeHandling = "Line merge:",
                 ProcessorMergeNext = "Merge max two lines",
@@ -1144,7 +1144,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslateBlockGetFromClipboard = "Get translated text from clipboard" + Environment.NewLine + "(Ctrl + V)",
                 TranslateBlockCopySourceText = "Copy source text clipboard",
                 TranslateBlockClipboardError1 = "Clipboard contains source text!",
-                TranslateBlockClipboardError2 = "Go to translator and translate, the copy result to clipboard and click this button again.",
+                TranslateBlockClipboardError2 = "Go to translator and translate, then copy the results to the clipboard and click this button again.",
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
@@ -1575,7 +1575,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OcrReplacePairXAdded = "The OCR replace list pair '{0} -> {1}' was added to the OCR replace list",
                 OcrReplacePairXNotAdded = "The OCR replace list pair '{0} -> {1}' was NOT added to the OCR replace list",
                 XLinesSelected = "{0} lines selected",
-                UnicodeMusicSymbolsAnsiWarning = "Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?",
+                UnicodeMusicSymbolsAnsiWarning = "Subtitle contains Unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?",
                 NegativeTimeWarning = "Subtitle contains negative time codes. Continue with saving?",
                 BeforeMergeShortLines = "Before merge short lines",
                 BeforeSplitLongLines = "Before split long lines",
@@ -1660,8 +1660,8 @@ namespace Nikse.SubtitleEdit.Logic
                 NoSupportHereVobSub = "VobSub files are not supported here.",
                 NoSupportHereDivx = "DivX files are not supported here.",
                 NoChapters = "No chapters found in the video.",
-                VideoFromUrlRequirements = "Opening video from url requires mpv and youtube-dl.\r\n\r\nDownload and continue?",
-                Url = "Url",
+                VideoFromUrlRequirements = "Opening video from URL requires mpv and youtube-dl.\r\n\r\nDownload and continue?",
+                Url = "URL",
                 Errors = "Errors",
                 ShowVideoControls = "Show video controls",
                 HideVideoControls = "Hide video controls",
@@ -1797,7 +1797,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Video",
                         OpenVideo = "Open video file...",
-                        OpenVideoFromUrl = "Open video from url...",
+                        OpenVideoFromUrl = "Open video from URL...",
                         OpenDvd = "Open DVD...",
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
@@ -1836,7 +1836,7 @@ namespace Nikse.SubtitleEdit.Logic
                         AdjustAllTimes = "Adjust all times (show earlier/later)...",
                         VisualSync = "&Visual sync...",
                         PointSync = "Point sync...",
-                        PointSyncViaOtherSubtitle = "Point sync via other subtitle...",
+                        PointSyncViaOtherSubtitle = "Point sync via another subtitle...",
                     },
 
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu
@@ -2087,7 +2087,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Micrometers = "Micrometers",
                 Nanometers = "Nanometers",
                 Angstroms = "Angstroms",
-                MilesTerrestial = "Miles (terrestial)",
+                MilesTerrestial = "Miles (terrestrial)",
                 MilesNautical = "Miles (nautical)",
                 Yards = "Yards",
                 Feet = "Feet",
@@ -2402,7 +2402,7 @@ can edit in same subtitle file (collaboration)",
                 SearchDirection = "Search direction",
                 Forward = "Forward",
                 Back = "Back",
-                LengthInSeconds = "Silence must be at at least (seconds)",
+                LengthInSeconds = "Silence must be at least (seconds)",
                 MaxVolume = "Volume must be below",
             };
 
@@ -2641,8 +2641,8 @@ can edit in same subtitle file (collaboration)",
                 CpsLineLengthStyleCalcAll = "Count all characters",
                 CpsLineLengthStyleCalcNoSpaceCpsOnly = "Count all except space, cps only",
                 CpsLineLengthStyleCalcNoSpace = "Count all except space",
-                CpsLineLengthStyleCalcCjk = "CJK 1, latin 0.5",
-                CpsLineLengthStyleCalcCjkNoSpace = "CJK 1, latin 0.5, space 0",
+                CpsLineLengthStyleCalcCjk = "CJK 1, Latin 0.5",
+                CpsLineLengthStyleCalcCjkNoSpace = "CJK 1, Latin 0.5, space 0",
                 CpsLineLengthStyleCalcIgnoreArabicDiacritics = "Ignore Arabic diacritics",
                 CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace = "Ignore Arabic diacritics/space",
                 CpsLineLengthStyleCalcNoSpaceOrPunctuation = "No space or punctuation ()[]-:;,.!?",
@@ -2920,7 +2920,7 @@ can edit in same subtitle file (collaboration)",
                 MicrosoftTranslateTokenEndpoint = "Token endpoint",
                 FontNote = "Note: These font settings are for the Subtitle Edit UI only." + Environment.NewLine +
                            "Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like " + Environment.NewLine +
-                           "\"Advanced Sub Station Alpha\" or via export to image based formats.",
+                           "\"Advanced Sub Station Alpha\" or via export to image-based formats.",
                 RestoreDefaultSettings = "Restore default settings",
                 RestoreDefaultSettingsMsg = "All settings will be restored to default values" + Environment.NewLine +
                                             Environment.NewLine +
@@ -3040,7 +3040,7 @@ can edit in same subtitle file (collaboration)",
                 SpellCheckAborted = "Spell check aborted",
                 SpacesNotAllowed = "Spaces not allowed in single word!",
                 UndoX = "Undo: \"{0}\"",
-                OpenImageBasedSourceFile = "Open image based source file...",
+                OpenImageBasedSourceFile = "Open image-based source file...",
             };
 
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
@@ -3264,7 +3264,7 @@ can edit in same subtitle file (collaboration)",
             PointSync = new LanguageStructure.PointSync
             {
                 Title = "Point synchronization",
-                TitleViaOtherSubtitle = "Point sync via other subtitle",
+                TitleViaOtherSubtitle = "Point sync via another subtitle",
                 SyncHelp = "Set at least two sync points to make rough synchronization",
                 SetSyncPoint = "Set sync point",
                 RemoveSyncPoint = "Remove sync point",
@@ -3293,7 +3293,7 @@ can edit in same subtitle file (collaboration)",
             UnknownSubtitle = new LanguageStructure.UnknownSubtitle
             {
                 Title = "Unknown subtitle type",
-                Message = "If you want this fixed please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.",
+                Message = "If you want this fixed, please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.",
                 ImportAsPlainText = "Import as plain text...",
             };
 
@@ -3481,7 +3481,7 @@ Keep changes?",
                 Generate = "Generate",
                 Remove = "Remove",
                 BeforeWatermark = "Before Watermark",
-                ErrorUnicodeEncodingOnly = "Watermark only works with unicode file encoding.",
+                ErrorUnicodeEncodingOnly = "Watermark only works with Unicode file encoding.",
             };
 
             Waveform = new LanguageStructure.Waveform
