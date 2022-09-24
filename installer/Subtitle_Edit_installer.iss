@@ -793,6 +793,7 @@ function IsDotNetDetected(version: string; service: cardinal): boolean;
 //    'v4.7.1'        .NET Framework 4.7.1
 //    'v4.7.2'        .NET Framework 4.7.2
 //    'v4.8'          .NET Framework 4.8
+//    'v4.8.1'        .NET Framework 4.8.1
 //
 // service -- Specify any non-negative integer for the required service pack level:
 //    0               No service packs required
@@ -826,6 +827,7 @@ begin
           'v4.7.1': versionRelease := 461308; // 461310 before Win10 Fall Creators Update
           'v4.7.2': versionRelease := 461808; // 461814 before Win10 April 2018 Update
           'v4.8':   versionRelease := 528040; // 528049 before Win10 May 2019 Update
+          '4.8.1':  versionRelease := 533325; 
         end;
     end;
 
@@ -860,8 +862,8 @@ function InitializeSetup(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  // Returns True if .NET Framework version 4.7.2 is installed, or a compatible version such as 4.8
-  Result := IsDotNetDetected('v4.7.2', 0);
+  // Returns True if .NET Framework version 4.8 is installed, or a compatible version such as 4.8.1
+  Result := IsDotNetDetected('v4.8', 0);
   if not Result then
   begin
     if not WizardSilent() then
