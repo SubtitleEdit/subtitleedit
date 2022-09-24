@@ -379,7 +379,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NormalCasing>Normal casing. Sentences begin with uppercase letter.</NormalCasing>
     <FixNamesCasing>Fix names casing (via Dictionaries\names.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\names.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Only change all upper-case lines.</OnlyChangeAllUppercaseLines>
+    <OnlyChangeAllUppercaseLines>Only change all uppercase lines.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALL UPPERCASE</AllUppercase>
     <AllLowercase>all lowercase</AllLowercase>
   </ChangeCasing>
@@ -911,7 +911,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
 (Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>Copy source text clipboard</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Clipboard contains source text!</TranslateBlockClipboardError1>
-    <TranslateBlockClipboardError2>Go to translator and translate, then copy results to clipboard and click this button again.</TranslateBlockClipboardError2>
+    <TranslateBlockClipboardError2>Go to translator and translate, then copy the results to the clipboard and click this button again.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -2188,8 +2188,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ExistingFileName>Existing file name</ExistingFileName>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
-    <AutoBackupEveryFiveMinutes>Every 5th minutes</AutoBackupEveryFiveMinutes>
-    <AutoBackupEveryFifteenMinutes>Every 15th minutes</AutoBackupEveryFifteenMinutes>
+    <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Delete after</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 month</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 months</AutoBackupDeleteAfterThreeMonths>
@@ -2585,7 +2585,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MicrosoftTranslateTokenEndpoint>Token endpoint</MicrosoftTranslateTokenEndpoint>
     <FontNote>Note: These font settings are for the Subtitle Edit UI only.
 Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
-"Advanced Sub Station Alpha" or via export to image based formats.</FontNote>
+"Advanced Sub Station Alpha" or via export to image-based formats.</FontNote>
     <RestoreDefaultSettings>Restore default settings</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>All settings will be restored to default values
 
