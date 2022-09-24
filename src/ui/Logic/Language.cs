@@ -1607,7 +1607,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NetworkMode = "Networking mode",
                 UserAndAction = "User/action",
                 XStartedSessionYAtZ = "{0}: Started session {1} at {2}",
-                OpenOtherSubtitle = "Open other subtitle",
+                OpenOtherSubtitle = "Open another subtitle",
                 BeforeToggleDialogDashes = "Before toggle of dialog dashes",
                 TextFiles = "Text files",
                 ExportPlainTextAs = "Export plain text as",
