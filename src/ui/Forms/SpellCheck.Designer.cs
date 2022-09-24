@@ -28,6 +28,8 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bookmarkCommentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBoxSuggestions = new System.Windows.Forms.ListBox();
             this.labelFullText = new System.Windows.Forms.Label();
             this.textBoxWord = new System.Windows.Forms.TextBox();
@@ -54,8 +56,6 @@
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.useLargerFontForThisWindowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
@@ -178,6 +178,18 @@
             this.openImagedBasedSourceFileToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.openImagedBasedSourceFileToolStripMenuItem.Text = "Open imaged based source file...";
             this.openImagedBasedSourceFileToolStripMenuItem.Click += new System.EventHandler(this.openImagedBasedSourceFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(243, 6);
+            // 
+            // useLargerFontForThisWindowToolStripMenuItem
+            // 
+            this.useLargerFontForThisWindowToolStripMenuItem.Name = "useLargerFontForThisWindowToolStripMenuItem";
+            this.useLargerFontForThisWindowToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.useLargerFontForThisWindowToolStripMenuItem.Text = "Use larger font for this window";
+            this.useLargerFontForThisWindowToolStripMenuItem.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
             // listBoxSuggestions
             // 
@@ -468,24 +480,12 @@
             this.labelBookmark.TabIndex = 0;
             this.labelBookmark.Text = "labelBookmark";
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(243, 6);
-            // 
-            // useLargerFontForThisWindowToolStripMenuItem
-            // 
-            this.useLargerFontForThisWindowToolStripMenuItem.Name = "useLargerFontForThisWindowToolStripMenuItem";
-            this.useLargerFontForThisWindowToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
-            this.useLargerFontForThisWindowToolStripMenuItem.Text = "Use larger font for this window";
-            this.useLargerFontForThisWindowToolStripMenuItem.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
-            // 
             // contextMenuStrip2
             // 
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.useLargerFontForThisWindowToolStripMenuItem1});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(237, 48);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(237, 26);
             // 
             // useLargerFontForThisWindowToolStripMenuItem1
             // 
@@ -499,6 +499,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 427);
+            this.ContextMenuStrip = this.contextMenuStrip2;
             this.Controls.Add(this.panelBookmark);
             this.Controls.Add(this.pictureBoxBookmark);
             this.Controls.Add(this.buttonSpellCheckDownload);
