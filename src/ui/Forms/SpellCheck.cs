@@ -1743,6 +1743,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(Font.FontFamily, Font.Size - 2, FontStyle.Regular) : new Font(Font.FontFamily, Font.Size + 2, FontStyle.Regular);
             useLargerFontForThisWindowToolStripMenuItem.Checked = !useLargerFontForThisWindowToolStripMenuItem.Checked;
+            useLargerFontForThisWindowToolStripMenuItem1.Checked = useLargerFontForThisWindowToolStripMenuItem.Checked;
             Configuration.Settings.Tools.SpellCheckUseLargerFont = useLargerFontForThisWindowToolStripMenuItem.Checked;
         }
     }

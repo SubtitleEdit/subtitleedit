@@ -21,6 +21,7 @@
    * Add "Allow overlap" in "Change speed" - thx OmrSi
    * Add bookmarks to spell check dialog - thx cyzs233/OmrSi 
    * Add dictate shortcut for main text box - thx Xenos71
+   * Change spell check window font size via context menu - thx Marko G
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
