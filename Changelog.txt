@@ -55,6 +55,8 @@
    * Fix merge lines for Greek - thx Xenos71
    * Fix not showing vobsub from mp4 - thx Luc
    * Fix writing bd sup hours > 6½ hours - thx Keith
+   * Fix installer dot net version check - thx Christoph
+   * Fix a few typos - thx nkh0472
 
 
 3.6.7 (13th August 2022)
