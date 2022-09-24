@@ -96,6 +96,7 @@
     <ExampleX>Example: {0}</ExampleX>
     <Reset>Reset</Reset>
     <Warning>Warning</Warning>
+    <UseLargerFontForThisWindow>Use larger font for this window</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>

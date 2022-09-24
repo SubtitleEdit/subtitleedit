@@ -226,6 +226,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ExampleX = "Example: {0}",
                 Reset = "Reset",
                 Warning = "Warning",
+                UseLargerFontForThisWindow = "Use larger font for this window",
             };
 
             About = new LanguageStructure.About

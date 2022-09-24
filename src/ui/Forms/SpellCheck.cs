@@ -129,6 +129,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
             deleteToolStripMenuItem.Text = LanguageSettings.Current.General.DeleteCurrentLine;
+            useLargerFontForThisWindowToolStripMenuItem.Text = LanguageSettings.Current.General.UseLargerFontForThisWindow;
+            useLargerFontForThisWindowToolStripMenuItem1.Text = LanguageSettings.Current.General.UseLargerFontForThisWindow;
             bookmarkCommentToolStripMenuItem.Text = LanguageSettings.Current.Settings.ToggleBookmarksWithComment;
             bookmarkCommentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
 
@@ -1729,6 +1731,20 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 pictureBoxBookmark.Hide();
+            }
+        }
+
+        private void useLargerFontForThisWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(Font.FontFamily, Font.Size - 2, FontStyle.Regular) : new Font(Font.FontFamily, Font.Size + 2, FontStyle.Regular);
+            useLargerFontForThisWindowToolStripMenuItem.Checked = !useLargerFontForThisWindowToolStripMenuItem.Checked;
+        }
+
+        private void SpellCheck_Shown(object sender, EventArgs e)
+        {
+            if (Configuration.Settings.Tools.SpellCheckUseLargerFont)
+            {
+                useLargerFontForThisWindowToolStripMenuItem_Click(null, null);
             }
         }
     }
