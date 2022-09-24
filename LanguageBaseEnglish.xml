@@ -302,7 +302,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Settings>Settings</Settings>
     <FixRtl>Fix RTL</FixRtl>
     <FixRtlAddUnicode>Fix RTL via Unicode tags</FixRtlAddUnicode>
-    <FixRtlRemoveUnicode>Remove RTL unicode tags</FixRtlRemoveUnicode>
+    <FixRtlRemoveUnicode>Remove RTL Unicode tags</FixRtlRemoveUnicode>
     <FixRtlReverseStartEnd>Reverse RTL start/end</FixRtlReverseStartEnd>
     <SplitLongLines>Split long lines</SplitLongLines>
     <AutoBalance>Auto balance lines</AutoBalance>
@@ -379,7 +379,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NormalCasing>Normal casing. Sentences begin with uppercase letter.</NormalCasing>
     <FixNamesCasing>Fix names casing (via Dictionaries\names.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\names.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Only change all upper case lines.</OnlyChangeAllUppercaseLines>
+    <OnlyChangeAllUppercaseLines>Only change all upper-case lines.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALL UPPERCASE</AllUppercase>
     <AllLowercase>all lowercase</AllLowercase>
   </ChangeCasing>
@@ -460,7 +460,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <IgnoreWhitespace>Ignore whitespace</IgnoreWhitespace>
     <IgnoreFormatting>Ignore formatting</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
-    <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
+    <CannotCompareWithImageBasedSubtitles>Cannot compare with image-based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <ConvertColorsToDialog>
     <Title>Convert colors to dialog</Title>
@@ -491,7 +491,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FadeUpTime>Fade up time</FadeUpTime>
     <FadeDownTime>Fade down time</FadeDownTime>
     <ZPosition>Z-position</ZPosition>
-    <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
+    <ZPositionHelp>Positive numbers move text away, negative numbers move text closer, if z-position is zero then it's 2D</ZPositionHelp>
     <ChooseColor>Choose color...</ChooseColor>
     <Generate>Generate</Generate>
     <GenerateNewIdOnSave>Generate new ID on save</GenerateNewIdOnSave>
@@ -554,7 +554,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <OriginalEpisodeTitle>Original episode title</OriginalEpisodeTitle>
     <TranslatedProgramTitle>Translated program title</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>Translated episode title</TranslatedEpisodeTitle>
-    <TranslatorsName>Translators name</TranslatorsName>
+    <TranslatorsName>Translator's name</TranslatorsName>
     <SubtitleListReferenceCode>Subtitle list reference code</SubtitleListReferenceCode>
     <CountryOfOrigin>Country of origin</CountryOfOrigin>
     <TimeCodeStatus>Time code status</TimeCodeStatus>
@@ -677,7 +677,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Forced>Forced</Forced>
     <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
     <SaveImageAs>Save image as...</SaveImageAs>
-    <FcpUseFullPathUrl>Use full image path url in FCP xml</FcpUseFullPathUrl>
+    <FcpUseFullPathUrl>Use full image path URL in FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>
@@ -756,7 +756,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
     <FixUppercaseIInsideLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsideLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
-    <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
+    <AddPeriods>Add period after lines where next line starts with uppercase letter</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start with uppercase letter after paragraph</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Start with uppercase letter after period inside paragraph</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Start with uppercase letter after colon/semicolon</StartWithUppercaseLetterAfterColon>
@@ -765,7 +765,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Common OCR errors fixed (OcrReplaceList file used): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
-    <RemoveDialogFirstInNonDialogs>Remove start dash in first line for non dialogs</RemoveDialogFirstInNonDialogs>
+    <RemoveDialogFirstInNonDialogs>Remove start dash in first line for non-dialogs</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalize strings</NormalizeStrings>
     <FixTurkishAnsi>Fix Turkish ANSI (Icelandic) letters to Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
@@ -783,7 +783,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingFixableBut>Nothing could be fixed automatically. The subtitle contains errors - see log for details</NothingFixableBut>
-    <XFixedBut>{0} issue(s) fixed but the subtitle still contain errors - see log for details</XFixedBut>
+    <XFixedBut>{0} issue(s) fixed but the subtitle still contains errors - see log for details</XFixedBut>
     <XCouldBeFixedBut>{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details</XCouldBeFixedBut>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Merge short line (single sentence)</MergeShortLine>
@@ -895,7 +895,7 @@ Note: Do check free disk space.</WaveFileMalformed>
 
 Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>
     <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
-To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleNoApiKeyWarning>
+To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleNoApiKeyWarning>
     <Service>Service:</Service>
     <LineMergeHandling>Line merge:</LineMergeHandling>
     <ProcessorMergeNext>Merge max two lines</ProcessorMergeNext>
@@ -911,7 +911,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
 (Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>Copy source text clipboard</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Clipboard contains source text!</TranslateBlockClipboardError1>
-    <TranslateBlockClipboardError2>Go to translator and translate, the copy result to clipboard and click this button again.</TranslateBlockClipboardError2>
+    <TranslateBlockClipboardError2>Go to translator and translate, then copy results to clipboard and click this button again.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -1254,7 +1254,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
       <Video>
         <Title>Video</Title>
         <OpenVideo>Open video file...</OpenVideo>
-        <OpenVideoFromUrl>Open video from url...</OpenVideoFromUrl>
+        <OpenVideoFromUrl>Open video from URL...</OpenVideoFromUrl>
         <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
@@ -1289,7 +1289,7 @@ To use an API key go to "Options -&gt; Settings -&gt; Tools" to enter your Googl
         <AdjustAllTimes>Adjust all times (show earlier/later)...</AdjustAllTimes>
         <VisualSync>&amp;Visual sync...</VisualSync>
         <PointSync>Point sync...</PointSync>
-        <PointSyncViaOtherSubtitle>Point sync via other subtitle...</PointSyncViaOtherSubtitle>
+        <PointSyncViaOtherSubtitle>Point sync via another subtitle...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-translate</Title>
@@ -1669,7 +1669,7 @@ Continue?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lines selected</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Subtitle contains Unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Subtitle contains negative time codes. Continue with saving?</NegativeTimeWarning>
     <BeforeMergeShortLines>Before merge short lines</BeforeMergeShortLines>
     <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
@@ -1701,7 +1701,7 @@ Continue?</SubtitleAppendPrompt>
     <UserAndAction>User/action</UserAndAction>
     <NetworkMode>Networking mode</NetworkMode>
     <XStartedSessionYAtZ>{0}: Started session {1} at {2}</XStartedSessionYAtZ>
-    <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
+    <OpenOtherSubtitle>Open another subtitle</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Export plain text as</ExportPlainTextAs>
     <TextFiles>Text files</TextFiles>
@@ -1756,10 +1756,10 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
     <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
     <NoChapters>No chapters found in the video.</NoChapters>
-    <VideoFromUrlRequirements>Opening video from url requires mpv and youtube-dl.
+    <VideoFromUrlRequirements>Opening video from URL requires mpv and youtube-dl.
 
 Download and continue?</VideoFromUrlRequirements>
-    <Url>Url</Url>
+    <Url>URL</Url>
     <Errors>Errors</Errors>
     <ShowVideoControls>Show video controls</ShowVideoControls>
     <HideVideoControls>Hide video controls</HideVideoControls>
@@ -1800,7 +1800,7 @@ Download and continue?</VideoFromUrlRequirements>
     <Micrometers>Micrometers</Micrometers>
     <Nanometers>Nanometers</Nanometers>
     <Angstroms>Angstroms</Angstroms>
-    <MilesTerrestial>Miles (terrestial)</MilesTerrestial>
+    <MilesTerrestial>Miles (terrestrial)</MilesTerrestial>
     <MilesNautical>Miles (nautical)</MilesNautical>
     <Yards>Yards</Yards>
     <Feet>Feet</Feet>
@@ -2073,7 +2073,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SearchDirection>Search direction</SearchDirection>
     <Forward>Forward</Forward>
     <Back>Back</Back>
-    <LengthInSeconds>Silence must be at at least (seconds)</LengthInSeconds>
+    <LengthInSeconds>Silence must be at least (seconds)</LengthInSeconds>
     <MaxVolume>Volume must be below</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
@@ -2188,8 +2188,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ExistingFileName>Existing file name</ExistingFileName>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
-    <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
-    <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
+    <AutoBackupEveryFiveMinutes>Every 5th minutes</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>Every 15th minutes</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Delete after</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 month</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 months</AutoBackupDeleteAfterThreeMonths>
@@ -2318,8 +2318,8 @@ can edit in same subtitle file (collaboration)</Information>
     <CpsLineLengthStyleCalcAll>Count all characters</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Count all except space, cps only</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Count all except space</CpsLineLengthStyleCalcNoSpace>
-    <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
-    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, space 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignore Arabic diacritics</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignore Arabic diacritics/space</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>No space or punctuation ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
@@ -2692,7 +2692,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <SpacesNotAllowed>Spaces not allowed in single word!</SpacesNotAllowed>
     <UndoX>Undo: "{0}"</UndoX>
-    <OpenImageBasedSourceFile>Open image based source file...</OpenImageBasedSourceFile>
+    <OpenImageBasedSourceFile>Open image-based source file...</OpenImageBasedSourceFile>
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
@@ -2896,7 +2896,7 @@ Continue?</RestoreDefaultSettingsMsg>
   </SubStationAlphaStylesCategoriesManager>
   <PointSync>
     <Title>Point synchronization</Title>
-    <TitleViaOtherSubtitle>Point sync via other subtitle</TitleViaOtherSubtitle>
+    <TitleViaOtherSubtitle>Point sync via another subtitle</TitleViaOtherSubtitle>
     <SyncHelp>Set at least two sync points to make rough synchronization</SyncHelp>
     <SetSyncPoint>Set sync point</SetSyncPoint>
     <RemoveSyncPoint>Remove sync point</RemoveSyncPoint>
@@ -2919,7 +2919,7 @@ Continue?</RestoreDefaultSettingsMsg>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Unknown subtitle type</Title>
-    <Message>If you want this fixed please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
+    <Message>If you want this fixed, please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
     <ImportAsPlainText>Import as plain text...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
@@ -3089,7 +3089,7 @@ Keep changes?</KeepChangesMessage>
     <Generate>Generate</Generate>
     <Remove>Remove</Remove>
     <BeforeWatermark>Before Watermark</BeforeWatermark>
-    <ErrorUnicodeEncodingOnly>Watermark only works with unicode file encoding.</ErrorUnicodeEncodingOnly>
+    <ErrorUnicodeEncodingOnly>Watermark only works with Unicode file encoding.</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
     <AddWaveformAndSpectrogram>Add waveform/spectrogram</AddWaveformAndSpectrogram>
