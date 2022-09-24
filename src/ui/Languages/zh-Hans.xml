@@ -96,6 +96,7 @@
     <ExampleX>示例: {0}</ExampleX>
     <Reset>重置</Reset>
     <Warning>警告</Warning>
+    <UseLargerFontForThisWindow>在此窗口使用更大的字体</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
