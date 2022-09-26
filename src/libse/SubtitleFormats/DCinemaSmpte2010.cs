@@ -979,7 +979,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = "<i>" + text + "</i>";
                         }
                     }
-                    else if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Weight"] != null && node.ParentNode.Attributes["Italic"].InnerText.Equals("bold", StringComparison.OrdinalIgnoreCase) &&
+                    else if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Weight"] != null && node.ParentNode.Attributes["Weight"].InnerText.Equals("bold", StringComparison.OrdinalIgnoreCase) &&
                         !pText.ToString().Contains("<b>"))
                     {
                         if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6)
