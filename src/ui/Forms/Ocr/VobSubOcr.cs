@@ -973,9 +973,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void DoBatch()
         {
             _abort = false;
+            subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             FormVobSubOcr_Shown(null, null);
             checkBoxPromptForUnknownWords.Checked = false;
-
             int max = GetSubtitleCount();
             if (_ocrMethodIndex != _ocrMethodTesseract5 && _ocrMethodIndex != _ocrMethodTesseract302 && _ocrMethodIndex != _ocrMethodNocr)
             {
@@ -989,7 +989,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             System.Threading.Thread.Sleep(1000);
-            subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
             for (int i = 0; i < max; i++)
             {
@@ -1006,7 +1005,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     ProgressCallback?.Invoke($"{percent}%");
                 }
 
-                subtitleListView1.SelectIndexAndEnsureVisible(i);
                 string text;
                 if (_ocrMethodIndex == _ocrMethodNocr)
                 {
@@ -1063,6 +1061,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
+
+            _ocrThreadStop = true;
+            _abort = true;
+
+            for (int i = 0; i < 20; i++)
+            {
+                System.Threading.Thread.Sleep(25);
+                Application.DoEvents();
+            }
         }
 
         internal void InitializeBatch(Subtitle imageListSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon, string language, string ocrEngine)
@@ -2487,12 +2494,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 // can crash if user is clicking around...
             }
-        }
-
-        private static Point MakePointItalic(Point p, int height, int moveLeftPixels, double unItalicFactor)
-        {
-            //TODO: TEst+fix + move to NOcrChar
-            return new Point((int)Math.Round(p.X + (height - p.Y) * unItalicFactor - moveLeftPixels), p.Y);
         }
 
         private static NOcrChar NOcrFindBestMatchNew(ImageSplitterItem targetItem, NOcrDb nOcrDb, bool deepSeek, int maxWrongPixels)
@@ -4792,8 +4793,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var p = (NOcrThreadParameter)e.Argument;
             e.Result = p;
             var bmp = GetSubtitleBitmap(p.Index);
+            if (bmp == null)
+            {
+                Application.DoEvents();
+                bmp = GetSubtitleBitmap(p.Index);
+            }
+
             var parentBitmap = new NikseBitmap(bmp);
             bmp.Dispose();
+            
+
             var minLineHeight = GetMinLineHeight();
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
             p.ResultMatches = new List<CompareMatch>();
