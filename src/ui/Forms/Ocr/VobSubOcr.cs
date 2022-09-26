@@ -5211,8 +5211,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     else
                     {
-                        _abort = true;
+                        SetButtonsEnabledAfterOcrDone();
                         _mainOcrSelectedIndices = null;
+                        if (_tesseractThreadRunner != null && (_ocrMethodIndex == _ocrMethodTesseract5 || _ocrMethodIndex == _ocrMethodTesseract302))
+                        {
+                            for (var i = 0; i < 100; i++)
+                            {
+                                System.Threading.Thread.Sleep(25);
+                                _tesseractThreadRunner.CheckQueue();
+                                if (_tesseractThreadRunner.Count == 0)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        return;
                     }
                 }
                 else
