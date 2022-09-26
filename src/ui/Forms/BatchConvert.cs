@@ -1203,7 +1203,6 @@ namespace Nikse.SubtitleEdit.Forms
                                                         vobSubOcr.ProgressCallback = progress =>
                                                         {
                                                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
-                                                            listViewInputFiles.Refresh();
                                                         };
                                                         vobSubOcr.FileName = Path.GetFileName(fileName);
                                                         vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
@@ -1257,7 +1256,6 @@ namespace Nikse.SubtitleEdit.Forms
                                                             vobSubOcr.ProgressCallback = progress =>
                                                             {
                                                                 item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
-                                                                listViewInputFiles.Refresh();
                                                             };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                                             vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
@@ -1317,10 +1315,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                                 using (var vobSubOcr = new VobSubOcr())
                                 {
+                                    var lastProgress = string.Empty;
                                     vobSubOcr.ProgressCallback = progress =>
                                     {
-                                        item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
-                                        listViewInputFiles.Refresh();
+                                        if (progress != lastProgress)
+                                        {
+                                            item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
+                                            lastProgress = progress;
+                                        }
                                     };
                                     vobSubOcr.FileName = Path.GetFileName(fileName);
                                     vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, null, _ocrEngine);
@@ -1333,10 +1335,14 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
                             {
+                                var lastProgress = string.Empty;
                                 vobSubOcr.ProgressCallback = progress =>
                                 {
-                                    item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
-                                    listViewInputFiles.Refresh();
+                                    if (progress != lastProgress)
+                                    {
+                                        item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
+                                        lastProgress = progress;
+                                    }
                                 };
                                 vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, _ocrEngine);
                                 sub = vobSubOcr.SubtitleFromOcr;
@@ -1352,7 +1358,6 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 var percent = (int)Math.Round(position * 100.0 / total);
                                 item.SubItems[3].Text = $"Read: {percent}%";
-                                listViewInputFiles.Refresh();
                             });
 
                             var outputFolder = textBoxOutputFolder.Text;
@@ -1378,7 +1383,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     void ProgressCallback(string progress)
                                     {
                                         item.SubItems[3].Text = progress;
-                                        listViewInputFiles.Refresh();
                                     }
 
                                     if (BluRaySubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1406,7 +1410,6 @@ namespace Nikse.SubtitleEdit.Forms
                                             vobSubOcr.ProgressCallback = progress =>
                                             {
                                                 item.SubItems[3].Text = $"OCR: {progress}";
-                                                listViewInputFiles.Refresh();
                                             };
                                             var language = programMapTableParser.GetSubtitleLanguage(id);
                                             language = string.IsNullOrEmpty(language) ? null : language;
@@ -2673,6 +2676,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ConvertColorsToDialogRemoveColorTags = checkBoxConvertColorsToDialogRemoveColorTags.Checked;
             Configuration.Settings.Tools.ConvertColorsToDialogAddNewLines = checkBoxConvertColorsToDialogAddNewLines.Checked;
             Configuration.Settings.Tools.ConvertColorsToDialogReBreakLines = checkBoxConvertColorsToDialogReBreakLines.Checked;
+
+            Configuration.Settings.Tools.BatchConvertOcrEngine = _ocrEngine;
 
             UpdateRtlSettings();
         }

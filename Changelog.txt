@@ -35,7 +35,7 @@
    * Allow empty split for "split at video/cursor" - thx OmrSi
    * Improve fullscreen play video size with mpv - thx GrampaWildWilly
    * Can detect Tesseract 5 on Linux - thx shag00
-   * nOCR selected lines only (list view context menu)
+   * OCR selected lines only (list view context menu)
    * Audio to text: Auto select downloaded model after download
    * Allow for multiple X-TIMESTAMP-MAPs in WebVTT - thx doctorm
    * Use subtitle file name for blank video - thx OmrSi
