@@ -80,6 +80,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             ThreadPool.QueueUserWorkItem(DoOcr, job);
         }
 
+        public int Count => _jobQueue.Count;
+
         public void CheckQueue()
         {
             lock (QueueLock)
