@@ -988,7 +988,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
             }
 
-            System.Threading.Thread.Sleep(1000);
+            if (_ocrMethodIndex != _ocrMethodNocr)
+            {
+                System.Threading.Thread.Sleep(1000);
+            }
+
             textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
             for (int i = 0; i < max; i++)
             {
@@ -6355,7 +6359,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             _nOcrDb = new NOcrDb(fileName);
-            InitializeNOcrThreads(GetSubtitleCount());
+
+            _nOcrThreadResults = null;
+            _ocrThreadStop = true;
         }
 
         private void InitializeTesseract(string chosenLanguage = null)
