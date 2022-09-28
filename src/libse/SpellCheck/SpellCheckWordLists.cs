@@ -31,7 +31,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
         private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
         private readonly HashSet<string> _userWordList = new HashSet<string>();
-        private readonly HashSet<string> _seWordList = new HashSet<string>();
         private readonly HashSet<string> _userPhraseList = new HashSet<string>();
         private readonly string _dictionaryFolder;
         private HashSet<string> _skipAllList = new HashSet<string>();
@@ -245,6 +244,11 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             _userWordList.Remove(word);
             _userPhraseList.Remove(word);
             Utilities.RemoveFromUserDictionary(word, _languageName);
+        }
+
+        public HashSet<string> GetSeAndUserWords()
+        {
+            return _userWordList;
         }
 
         public void RemoveName(string word)
