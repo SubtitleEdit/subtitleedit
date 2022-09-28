@@ -403,11 +403,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            foreach (var word in _spellCheckWordLists?.GetSeAndUserWords())
+            if (_spellCheckWordLists?.GetSeAndUserWords() != null)
             {
-                if (word.EndsWith('.'))
+                foreach (var word in _spellCheckWordLists.GetSeAndUserWords())
                 {
-                    _abbreviationList.Add(word);
+                    if (word.EndsWith('.'))
+                    {
+                        _abbreviationList.Add(word);
+                    }
                 }
             }
         }
@@ -1443,7 +1446,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = !Configuration.Settings.Tools.CheckOneLetterWords; // hunspell allows too many single letter words
                     }
 
-                    if (!correct && _spellCheckWordLists.HasUserWord(word))
+                    if (!correct && _spellCheckWordLists != null && _spellCheckWordLists.HasUserWord(word))
                     {
                         correct = true;
                     }
@@ -1473,7 +1476,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var trimmed = word.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،', '؟', '»');
                         if (trimmed != word)
                         {
-                            if (_spellCheckWordLists.HasUserWord(trimmed))
+                            if (_spellCheckWordLists != null && _spellCheckWordLists.HasUserWord(trimmed))
                             {
                                 correct = true;
                             }
@@ -1509,7 +1512,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                         }
 
-                        if (!correct && _spellCheckWordLists.HasUserWord("-" + word))
+                        if (!correct && _spellCheckWordLists != null && _spellCheckWordLists.HasUserWord("-" + word))
                         {
                             correct = true;
                         }
@@ -1824,7 +1827,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     Abort = true;
                     break;
                 case OcrSpellCheck.Action.AddToUserDictionary:
-                    _spellCheckWordLists.AddUserWord(_spellCheck.Word.Trim().ToLowerInvariant());
+                    _spellCheckWordLists?.AddUserWord(_spellCheck.Word.Trim().ToLowerInvariant());
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
                     result.Line = line;
@@ -1959,11 +1962,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public bool IsWordOrWordsCorrect(string word)
         {
-            foreach (string s in word.Split(' '))
+            foreach (var s in word.Split(' '))
             {
                 if (!DoSpell(s) &&
                     !_nameList.Contains(s) &&
-                    !_spellCheckWordLists.HasUserWord(s) &&
+                    (_spellCheckWordLists == null || !_spellCheckWordLists.HasUserWord(s)) &&
                     !IsWordKnownOrNumber(s, word))
                 {
                     if (s.Length > 10 && s.Contains('/'))
@@ -2023,12 +2026,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return true;
             }
 
-            if (_spellCheckWordLists.HasUserWord(word.ToLowerInvariant()))
+            if (_spellCheckWordLists != null && _spellCheckWordLists.HasUserWord(word.ToLowerInvariant()))
             {
                 return true;
             }
 
-            if (_spellCheckWordLists.HasUserWord(word.Trim('\'').ToLowerInvariant()))
+            if (_spellCheckWordLists != null && _spellCheckWordLists.HasUserWord(word.Trim('\'').ToLowerInvariant()))
             {
                 return true;
             }
