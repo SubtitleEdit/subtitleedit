@@ -1084,30 +1084,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return userWordListXmlFileName;
         }
 
-        public static string LoadUserWordList(HashSet<string> userWordList, string languageName)
-        {
-            userWordList.Clear();
-            var userWordDictionary = new XmlDocument();
-            string userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
-            if (File.Exists(userWordListXmlFileName))
-            {
-                userWordDictionary.Load(userWordListXmlFileName);
-                var nodes = userWordDictionary.DocumentElement?.SelectNodes("word");
-                if (nodes != null)
-                {
-                    foreach (XmlNode node in nodes)
-                    {
-                        string s = node.InnerText.ToLowerInvariant();
-                        if (!userWordList.Contains(s))
-                        {
-                            userWordList.Add(s);
-                        }
-                    }
-                }
-            }
-            return userWordListXmlFileName;
-        }
-
         public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpperInvariant() + "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
         public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant() + "αβγδεζηθικλμνξοπρσςτυφχψωήάόέ";
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
