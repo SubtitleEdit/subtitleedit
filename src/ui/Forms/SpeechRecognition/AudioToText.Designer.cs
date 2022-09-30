@@ -291,6 +291,8 @@
             this.listViewInputFiles.TabIndex = 0;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
+            this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
+            this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
             // 
             // columnHeaderFileName
             // 
@@ -326,10 +328,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.textBoxLog);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(575, 250);
             this.Name = "AudioToText";
             this.ShowIcon = false;
@@ -339,6 +338,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.Load += new System.EventHandler(this.AudioToText_Load);
             this.Shown += new System.EventHandler(this.AudioToText_Shown);
+            this.ResizeEnd += new System.EventHandler(this.AudioToText_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
             this.groupBoxModels.ResumeLayout(false);
             this.groupBoxModels.PerformLayout();
