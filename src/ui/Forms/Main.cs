@@ -32807,6 +32807,11 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.PauseAndDisposePlayer();
             }
 
+            if (Configuration.Settings.General.VideoPlayer != "MPV")
+            {
+                Configuration.Settings.General.VideoPlayer = "MPV";
+            }
+
             ResetPlaySelection();
             UiUtil.InitializeVideoPlayerAndContainer(url, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
             mediaPlayer.Volume = 0;
