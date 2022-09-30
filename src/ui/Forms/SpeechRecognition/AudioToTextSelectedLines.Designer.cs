@@ -260,11 +260,8 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.textBoxLog);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(575, 250);
+            this.MinimumSize = new System.Drawing.Size(720, 450);
             this.Name = "AudioToTextSelectedLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -273,6 +270,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AudioToText_FormClosing);
             this.Load += new System.EventHandler(this.AudioToText_Load);
             this.Shown += new System.EventHandler(this.AudioToTextSelectedLines_Shown);
+            this.ResizeEnd += new System.EventHandler(this.AudioToTextSelectedLines_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AudioToText_KeyDown);
             this.groupBoxModels.ResumeLayout(false);
             this.groupBoxModels.PerformLayout();
