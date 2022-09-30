@@ -617,7 +617,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
                 foreach (var fileName in openFileDialog1.FileNames)
                 {
-                    listViewInputFiles.Items.Add(fileName);
+                    AddInputFile(fileName);
                 }
             }
         }
@@ -673,6 +673,53 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         private void AudioToText_Shown(object sender, EventArgs e)
         {
             buttonGenerate.Focus();
+        }
+
+        private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!buttonGenerate.Visible)
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+        }
+
+        private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
+            {
+                listViewInputFiles.BeginUpdate();
+                foreach (var fileName in fileNames.OrderBy(Path.GetFileName))
+                {
+                    if (File.Exists(fileName))
+                    {
+                        AddInputFile(fileName);
+                    }
+                }
+
+                listViewInputFiles.EndUpdate();
+            });
+        }
+
+        private void AddInputFile(string fileName)
+        {
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            if (Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext))
+            {
+                listViewInputFiles.Items.Add(fileName);
+            }
+        }
+
+        private void AudioToText_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.AutoSizeLastColumn();
         }
     }
 }
