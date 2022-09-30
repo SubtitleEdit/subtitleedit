@@ -45,6 +45,7 @@
    * Add drag-n-drop to "Audio-to-text" batch - thx ard-av
    * Do not halt on errors in "Audio to text" batch - thx javiavid
    * SE does not contain/install any "*_user.xml" dictionary files
+   * Add bold support to DCP format - thx felagund
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
