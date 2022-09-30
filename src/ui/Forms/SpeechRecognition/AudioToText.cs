@@ -175,6 +175,8 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         {
             groupBoxInputFiles.Enabled = false;
             _batchFileNumber = 0;
+            var errors = new StringBuilder();
+            var errorCount = 0;
             textBoxLog.AppendText("Batch mode" + Environment.NewLine);
             foreach (ListViewItem lvi in listViewInputFiles.Items)
             {
@@ -189,6 +191,13 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                 buttonBatchMode.Enabled = false;
                 comboBoxModels.Enabled = false;
                 var waveFileName = GenerateWavFile(videoFileName, _audioTrackNumber);
+                if (!File.Exists(waveFileName))
+                {
+                    errors.AppendLine("Unable to extract audio from: " + videoFileName);
+                    errorCount++;
+                    continue;
+                }
+
                 textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);
@@ -218,7 +227,14 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             labelTime.Text = string.Empty;
 
             TaskbarList.StartBlink(_parentForm, 10, 1, 2);
-            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count));
+            
+            if (errors.Length > 0)
+            {
+                MessageBox.Show($"{errorCount} error(s)!{Environment.NewLine}{errors}");
+            }
+
+            MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount));
+            
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
             buttonDownload.Enabled = true;
