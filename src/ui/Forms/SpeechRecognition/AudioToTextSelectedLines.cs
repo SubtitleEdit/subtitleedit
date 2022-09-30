@@ -373,5 +373,10 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         {
             buttonGenerate.Focus();
         }
+
+        private void AudioToTextSelectedLines_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewInputFiles.AutoSizeLastColumn();
+        }
     }
 }

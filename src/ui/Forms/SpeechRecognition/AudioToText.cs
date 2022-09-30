@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         private readonly Form _parentForm;
         private bool _useCenterChannelOnly;
         private Model _model;
+        private int _initialWidth = 725;
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -227,14 +228,14 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             labelTime.Text = string.Empty;
 
             TaskbarList.StartBlink(_parentForm, 10, 1, 2);
-            
+
             if (errors.Length > 0)
             {
                 MessageBox.Show($"{errorCount} error(s)!{Environment.NewLine}{errors}");
             }
 
             MessageBox.Show(string.Format(LanguageSettings.Current.AudioToText.XFilesSavedToVideoSourceFolder, listViewInputFiles.Items.Count - errorCount));
-            
+
             groupBoxInputFiles.Enabled = true;
             buttonGenerate.Enabled = true;
             buttonDownload.Enabled = true;
@@ -665,13 +666,23 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                 Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 450;
                 listViewInputFiles.Visible = true;
                 buttonBatchMode.Text = LanguageSettings.Current.Split.Basic;
+                MinimumSize = new Size(MinimumSize.Width, Height - 75);
+                FormBorderStyle = FormBorderStyle.Sizable;
+                MaximizeBox = true;
+                MinimizeBox = true;
             }
             else
             {
                 groupBoxInputFiles.Enabled = false;
-                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 70;
+                var h = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 70;
+                MinimumSize = new Size(MinimumSize.Width, h - 10);
+                Height = h;
+                Width = _initialWidth;
                 listViewInputFiles.Visible = false;
                 buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
+                FormBorderStyle = FormBorderStyle.FixedDialog;
+                MaximizeBox = false;
+                MinimizeBox = false;
             }
         }
 
@@ -689,6 +700,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         private void AudioToText_Shown(object sender, EventArgs e)
         {
             buttonGenerate.Focus();
+            _initialWidth = Width;
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
