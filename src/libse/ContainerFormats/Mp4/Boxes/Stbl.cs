@@ -39,12 +39,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint totalEntries = GetUInt(4);
-
+                    var totalEntries = GetUInt(4);
                     uint lastOffset = 0;
-                    for (int i = 0; i < totalEntries; i++)
+                    for (var i = 0; i < totalEntries; i++)
                     {
-                        uint offset = GetUInt(8 + i * 4);
+                        var offset = GetUInt(8 + i * 4);
                         if (lastOffset + 5 < offset)
                         {
                             ReadText(fs, offset, handlerType, i);
@@ -58,12 +57,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint totalEntries = GetUInt(4);
-
+                    var totalEntries = GetUInt(4);
                     ulong lastOffset = 0;
-                    for (int i = 0; i < totalEntries; i++)
+                    for (var i = 0; i < totalEntries; i++)
                     {
-                        ulong offset = GetUInt64(8 + i * 8);
+                        var offset = GetUInt64(8 + i * 8);
                         if (lastOffset + 8 < offset)
                         {
                             ReadText(fs, offset, handlerType, i);
@@ -77,14 +75,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint uniformSizeOfEachSample = GetUInt(4);
-                    uint numberOfSampleSizes = GetUInt(8);
+                    var uniformSizeOfEachSample = GetUInt(4);
+                    var numberOfSampleSizes = GetUInt(8);
                     StszSampleCount = numberOfSampleSizes;
-                    for (int i = 0; i < numberOfSampleSizes; i++)
+                    for (var i = 0; i < numberOfSampleSizes; i++)
                     {
                         if (12 + i * 4 + 4 < Buffer.Length)
                         {
-                            uint sampleSize = GetUInt(12 + i * 4);
+                            var sampleSize = GetUInt(12 + i * 4);
                             SampleSizes.Add(sampleSize);
                         }
                     }
@@ -96,22 +94,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint numberOfSampleTimes = GetUInt(4);
+                    var numberOfSampleTimes = GetUInt(4);
                     if (_mdia.IsClosedCaption)
                     {
-                        for (int i = 0; i < numberOfSampleTimes; i++)
+                        for (var i = 0; i < numberOfSampleTimes; i++)
                         {
-                            uint sampleCount = GetUInt(8 + i * 8);
-                            uint sampleDelta = GetUInt(12 + i * 8);
+                            var sampleCount = GetUInt(8 + i * 8);
+                            var sampleDelta = GetUInt(12 + i * 8);
                             Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < numberOfSampleTimes; i++)
+                        for (var i = 0; i < numberOfSampleTimes; i++)
                         {
-                            uint sampleCount = GetUInt(8 + i * 8);
-                            uint sampleDelta = GetUInt(12 + i * 8);
+                            var sampleCount = GetUInt(8 + i * 8);
+                            var sampleDelta = GetUInt(12 + i * 8);
                             Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
                         }
                     }
@@ -121,14 +119,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint numberOfSampleTimes = GetUInt(4);
+                    var numberOfSampleTimes = GetUInt(4);
                     for (int i = 0; i < numberOfSampleTimes; i++)
                     {
                         if (16 + i * 12 + 4 < Buffer.Length)
                         {
-                            uint firstChunk = GetUInt(8 + i * 12);
-                            uint samplesPerChunk = GetUInt(12 + i * 12);
-                            uint sampleDescriptionIndex = GetUInt(16 + i * 12);
+                            var firstChunk = GetUInt(8 + i * 12);
+                            var samplesPerChunk = GetUInt(12 + i * 12);
+                            var sampleDescriptionIndex = GetUInt(16 + i * 12);
                         }
                     }
                 }
@@ -147,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];
             fs.Read(data, 0, 2);
-            uint textSize = (uint)GetWord(data, 0);
+            var textSize = (uint)GetWord(data, 0);
 
             if (handlerType == "subp") // VobSub created with Mp4Box
             {
@@ -171,11 +169,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     fs.Read(data, 2, 2);
                     textSize = GetUInt(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
                 }
+
                 if (textSize > 0 && textSize < 500)
                 {
                     data = new byte[textSize];
                     fs.Read(data, 0, data.Length);
-                    string text = GetString(data, 0, (int)textSize).TrimEnd();
+                    var text = GetString(data, 0, (int)textSize).TrimEnd();
 
                     if (_mdia.IsClosedCaption)
                     {
@@ -194,8 +193,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 sb.Append(' ');
                             }
                         }
-                        string hex = sb.ToString();
-                        int errorCount = 0;
+
+                        var hex = sb.ToString();
+                        var errorCount = 0;
                         text = ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
                         if (text.StartsWith('n') && text.Length > 1)
                         {
@@ -217,6 +217,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             text = text.Remove(0, 1);
                         }
                     }
+
                     Texts.Add(text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine));
                 }
             }
@@ -237,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     allTimes.Add(totalTime);
                 }
             }
-
+            
             var index = 0;
             var textIndex = 0;
             while (index < allTimes.Count - 1)
@@ -266,8 +267,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 index++;
                 textIndex++;
             }
+
             return paragraphs;
         }
-
     }
 }
