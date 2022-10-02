@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             UiUtil.FixLargeFonts(this, buttonDownload);
 
             var selectedIndex = 0;
-            foreach (var downloadModel in DownloadModel.VoskModels.OrderBy(p => p.LanguageName))
+            foreach (var downloadModel in VoskModel.Models.OrderBy(p => p.LanguageName))
             {
                 comboBoxModels.Items.Add(downloadModel);
                 if (selectedIndex == 0 && downloadModel.TwoLetterLanguageCode == "en")
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                 return;
             }
 
-            var downloadModel = (DownloadModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
+            var downloadModel = (VoskModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
             var url = downloadModel.Url;
             try
             {

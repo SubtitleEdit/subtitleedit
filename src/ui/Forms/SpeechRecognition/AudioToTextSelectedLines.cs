@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
         internal static string GetLanguage(string text)
         {
-            var languageCodeList = DownloadModel.VoskModels.Select(p => p.TwoLetterLanguageCode);
+            var languageCodeList = VoskModel.Models.Select(p => p.TwoLetterLanguageCode);
             foreach (var languageCode in languageCodeList)
             {
                 if (text.Contains("model-" + languageCode) || text.Contains("model-small-" + languageCode) || text.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase))
