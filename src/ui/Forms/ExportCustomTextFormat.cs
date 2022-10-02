@@ -140,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{bookmark}", "{17}");
             s = s.Replace("{media-file-name}", "{18}");
             s = s.Replace("{media-file-name-full}", "{19}");
+            s = s.Replace("{media-file-name-with-ext}", "{20}");
             s = s.Replace("{tab}", "\t");
             return s;
         }
@@ -335,6 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("{title}", title);
             template = template.Replace("{media-file-name-full}", videoFileName);
             template = template.Replace("{media-file-name}", string.IsNullOrEmpty(videoFileName) ? videoFileName : Path.GetFileNameWithoutExtension(videoFileName));
+            template = template.Replace("{media-file-name-with-ext}", string.IsNullOrEmpty(videoFileName) ? videoFileName : Path.GetFileName(videoFileName));
             template = template.Replace("{#lines}", subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture));
             
             template = template.Replace("{tab}", "\t");
@@ -436,7 +438,9 @@ namespace Nikse.SubtitleEdit.Forms
                               gap,
                               p.Bookmark == string.Empty ? "*" : p.Bookmark,
                               string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileNameWithoutExtension(videoFileName),
-                              videoFileName)
+                              videoFileName,
+                              string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileName(videoFileName)
+                              )
                 ;
             s = PostCurly(s, replaceStart, replaceEnd);
             return s;
