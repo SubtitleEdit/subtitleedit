@@ -678,7 +678,6 @@
         private System.Windows.Forms.ToolStripMenuItem mediafilenameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mediafilenamefullToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mediafilenameToolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem mediafilenamefullToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mediafilenameToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mediafilenamefullToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
