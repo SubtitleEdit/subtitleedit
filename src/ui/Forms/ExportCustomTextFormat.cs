@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             var p1 = new Paragraph("Line 1a." + Environment.NewLine + "Line 1b.", 1000, 3500) { Actor = "Joe" };
             var start1 = GetTimeCode(p1.StartTime, comboBoxTimeCode.Text);
             var end1 = GetTimeCode(p1.EndTime, comboBoxTimeCode.Text);
-            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 4000, 3500) { Actor = "Smith" };
+            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 4000, 5500) { Actor = "Smith" };
             var start2 = GetTimeCode(p2.StartTime, comboBoxTimeCode.Text);
             var end2 = GetTimeCode(p2.EndTime, comboBoxTimeCode.Text);
             subtitle.Paragraphs.Add(p1);
