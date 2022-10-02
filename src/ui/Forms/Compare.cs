@@ -1316,9 +1316,9 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
                     sb.AppendLine("    <table>");
                     sb.AppendLine("    <tr>");
-                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle1.Text + "</th>");
+                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(labelSubtitle1.Text) + "</th>");
                     sb.AppendLine("      <th>&nbsp;</th>");
-                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle2.Text + "</th>");
+                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(labelSubtitle2.Text) + "</th>");
                     sb.AppendLine("    </tr>");
                     for (var i = 0; i < subtitleListView1.Items.Count; i++)
                     {
@@ -1354,6 +1354,11 @@ namespace Nikse.SubtitleEdit.Forms
                     File.WriteAllText(fileName, sb.ToString());
                 }
             }
+        }
+
+        private static string GetFileName(string fileName)
+        {
+            return string.IsNullOrEmpty(fileName) ? string.Empty : Path.GetFileName(fileName);
         }
 
         private static string GetHtmlText(Paragraph p, string text)
