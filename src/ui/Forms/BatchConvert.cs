@@ -2442,7 +2442,7 @@ namespace Nikse.SubtitleEdit.Forms
             var s = new Subtitle();
             s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
             s.Paragraphs.Add(new Paragraph("Test 777." + Environment.NewLine + "Test 888.", 0, 4000));
-            using (var properties = new ExportCustomText(s, null, "Test"))
+            using (var properties = new ExportCustomText(s, null, "Test", @"C:\Video\MyVido.mp4"))
             {
                 properties.InitializeForBatchConvert(_customTextTemplate);
                 if (properties.ShowDialog(this) == DialogResult.OK)
