@@ -32050,7 +32050,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemExportExportCustomTextFormat_Click(object sender, EventArgs e)
         {
-            using (var form = new ExportCustomText(GetSaveSubtitle(_subtitle), GetSaveSubtitle(_subtitleOriginal), _fileName))
+            using (var form = new ExportCustomText(GetSaveSubtitle(_subtitle), GetSaveSubtitle(_subtitleOriginal), _fileName, _videoFileName))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
