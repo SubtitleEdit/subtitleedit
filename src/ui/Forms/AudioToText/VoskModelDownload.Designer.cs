@@ -1,6 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
+﻿namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    sealed partial class WhisperModelDownload
+    sealed partial class VoskModelDownload
     {
         /// <summary>
         /// Required designer variable.

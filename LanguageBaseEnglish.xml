@@ -176,9 +176,13 @@ Note: Do check free disk space.</WaveFileMalformed>
   <AudioToText>
     <Title>Audio to text</Title>
     <Info>Generate text from audio via Vosk/Kaldi speech recognition</Info>
+    <WhisperInfo>Generate text from audio via Whisper speech recognition</WhisperInfo>
     <VoskWebsite>Vosk website</VoskWebsite>
+    <WhisperWebsite>Whisper website</WhisperWebsite>
     <Models>Models</Models>
+    <LanguagesAndModels>Languages and models</LanguagesAndModels>
     <ChooseModel>Choose model</ChooseModel>
+    <ChooseLanguage>Choose model</ChooseLanguage>
     <OpenModelsFolder>Open models folder</OpenModelsFolder>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>
@@ -186,6 +190,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XFilesSavedToVideoSourceFolder>{0} files saved to video source folder</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Use post-processing (line merge, fix casing, punctuation, and more)</UsePostProcessing>
     <BatchMode>Batch mode</BatchMode>
+    <KeepPartialTranscription>Keep partial transcription</KeepPartialTranscription>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>
@@ -1265,7 +1270,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in sub...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Audio to text...</VideoAudioToText>
+        <VideoAudioToTextX>Audio to text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Remove/export shot changes...</RemoveOrExportShotChanges>

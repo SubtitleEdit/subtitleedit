@@ -1,36 +1,35 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
+namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    public sealed partial class WhisperModelDownload : Form
+    public sealed partial class VoskModelDownload : Form
     {
         public bool AutoClose { get; internal set; }
         public string LastDownloadedModel { get; internal set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private WhisperModel _downloadModel;
 
-        public WhisperModelDownload()
+        public VoskModelDownload()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "Whisper models");
+            Text = string.Format(LanguageSettings.Current.Settings.DownloadX, "Vosk models");
             buttonDownload.Text = LanguageSettings.Current.GetDictionaries.Download;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonDownload);
 
             var selectedIndex = 0;
-            foreach (var downloadModel in WhisperModel.Models.OrderBy(p => p.Name))
+            foreach (var downloadModel in VoskModel.Models.OrderBy(p => p.LanguageName))
             {
                 comboBoxModels.Items.Add(downloadModel);
-                if (selectedIndex == 0 && downloadModel.Name == "English")
+                if (selectedIndex == 0 && downloadModel.TwoLetterLanguageCode == "en")
                 {
                     selectedIndex = comboBoxModels.Items.Count - 1;
                 }
@@ -57,8 +56,8 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                 return;
             }
 
-            _downloadModel = (WhisperModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
-            var url = _downloadModel.Url;
+            var downloadModel = (VoskModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
+            var url = downloadModel.Url;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -113,21 +112,32 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            var folder = WhisperModel.ModelFolder;
+            var folder = Path.Combine(Configuration.DataDirectory, "Vosk");
+
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            var fileName = Path.Combine(folder, _downloadModel.Name + ".pt");
-            using (var fileStream = File.Create(fileName))
+            using (var zip = ZipExtractor.Open(downloadStream))
             {
-                downloadStream.Seek(0, SeekOrigin.Begin);
-                downloadStream.CopyTo(fileStream);
+                var dir = zip.ReadCentralDir();
+                foreach (var entry in dir)
+                {
+                    if (LastDownloadedModel == null)
+                    {
+                        LastDownloadedModel = Path.GetDirectoryName(entry.FilenameInZip);
+                    }
+
+                    var path = Path.Combine(folder, entry.FilenameInZip);
+                    zip.ExtractFile(entry, path);
+                }
             }
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
+
+            
 
             if (AutoClose)
             {

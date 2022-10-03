@@ -1,6 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
+﻿namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    partial class Dictate
+    partial class VoskDictate
     {
         /// <summary>
         /// Required designer variable.
