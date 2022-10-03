@@ -1813,7 +1813,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in sub...",
-                        VideoAudioToText = "Audio to text...",
+                        VideoAudioToTextX = "Audio to text ({0})...",
                         ImportChaptersFromVideo = "Import chapters from video",
                         GenerateImportShotChanges = "Generate/import shot changes...",
                         RemoveOrExportShotChanges = "Remove/export shot changes...",

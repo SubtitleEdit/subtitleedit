@@ -207,23 +207,29 @@
     <Compile Include="Forms\AudioClipsGet.Designer.cs">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\WhisperModelDownload.cs">
+    <Compile Include="Forms\AudioToText\WhisperAudioToTextSelectedLines.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\WhisperModelDownload.Designer.cs">
+    <Compile Include="Forms\AudioToText\WhisperAudioToTextSelectedLines.Designer.cs">
+      <DependentUpon>WhisperAudioToTextSelectedLines.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AudioToText\WhisperModelDownload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToText\WhisperModelDownload.Designer.cs">
       <DependentUpon>WhisperModelDownload.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToTextSelectedLines.cs">
+    <Compile Include="Forms\AudioToText\VoskAudioToTextSelectedLines.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToTextSelectedLines.Designer.cs">
-      <DependentUpon>AudioToTextSelectedLines.cs</DependentUpon>
+    <Compile Include="Forms\AudioToText\VoskAudioToTextSelectedLines.Designer.cs">
+      <DependentUpon>VoskAudioToTextSelectedLines.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToText.cs">
+    <Compile Include="Forms\AudioToText\VoskAudioToText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToText.Designer.cs">
-      <DependentUpon>AudioToText.cs</DependentUpon>
+    <Compile Include="Forms\AudioToText\VoskAudioToText.Designer.cs">
+      <DependentUpon>VoskAudioToText.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BatchConvertMkvEnding.cs">
       <SubType>Form</SubType>
@@ -285,11 +291,11 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToTextModelDownload.cs">
+    <Compile Include="Forms\AudioToText\VoskModelDownload.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToTextModelDownload.Designer.cs">
-      <DependentUpon>AudioToTextModelDownload.cs</DependentUpon>
+    <Compile Include="Forms\AudioToText\VoskModelDownload.Designer.cs">
+      <DependentUpon>VoskModelDownload.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ConvertColorsToDialog.cs">
       <SubType>Form</SubType>
@@ -297,17 +303,17 @@
     <Compile Include="Forms\ConvertColorsToDialog.Designer.cs">
       <DependentUpon>ConvertColorsToDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToTextWhisper.cs">
+    <Compile Include="Forms\AudioToText\WhisperAudioToText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\AudioToTextWhisper.Designer.cs">
-      <DependentUpon>AudioToTextWhisper.cs</DependentUpon>
+    <Compile Include="Forms\AudioToText\WhisperAudioToText.Designer.cs">
+      <DependentUpon>WhisperAudioToText.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\Dictate.cs">
+    <Compile Include="Forms\AudioToText\VoskDictate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SpeechRecognition\Dictate.Designer.cs">
-      <DependentUpon>Dictate.cs</DependentUpon>
+    <Compile Include="Forms\AudioToText\VoskDictate.Designer.cs">
+      <DependentUpon>VoskDictate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DownloadVosk.cs">
       <SubType>Form</SubType>
@@ -1489,14 +1495,17 @@
     <EmbeddedResource Include="Forms\AudioClipsGet.resx">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SpeechRecognition\WhisperModelDownload.resx">
+    <EmbeddedResource Include="Forms\AudioToText\WhisperAudioToTextSelectedLines.resx">
+      <DependentUpon>WhisperAudioToTextSelectedLines.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToText\WhisperModelDownload.resx">
       <DependentUpon>WhisperModelDownload.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SpeechRecognition\AudioToTextSelectedLines.resx">
-      <DependentUpon>AudioToTextSelectedLines.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AudioToText\VoskAudioToTextSelectedLines.resx">
+      <DependentUpon>VoskAudioToTextSelectedLines.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SpeechRecognition\AudioToText.resx">
-      <DependentUpon>AudioToText.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AudioToText\VoskAudioToText.resx">
+      <DependentUpon>VoskAudioToText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertMkvEnding.resx">
       <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>
@@ -1528,17 +1537,17 @@
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SpeechRecognition\AudioToTextModelDownload.resx">
-      <DependentUpon>AudioToTextModelDownload.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AudioToText\VoskModelDownload.resx">
+      <DependentUpon>VoskModelDownload.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ConvertColorsToDialog.resx">
       <DependentUpon>ConvertColorsToDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SpeechRecognition\AudioToTextWhisper.resx">
-      <DependentUpon>AudioToTextWhisper.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AudioToText\WhisperAudioToText.resx">
+      <DependentUpon>WhisperAudioToText.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SpeechRecognition\Dictate.resx">
-      <DependentUpon>Dictate.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AudioToText\VoskDictate.resx">
+      <DependentUpon>VoskDictate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadVosk.resx">
       <DependentUpon>DownloadVosk.cs</DependentUpon>

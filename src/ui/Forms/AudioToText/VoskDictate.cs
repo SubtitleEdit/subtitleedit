@@ -1,17 +1,17 @@
-﻿using NAudio.Wave;
-using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using NAudio.Wave;
+using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic;
 using Vosk;
 
-namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
+namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    public partial class Dictate : Form
+    public partial class VoskDictate : Form
     {
         private static WaveFileWriter _waveFile;
         private static Model _model;
@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
         public static bool RecordingOn { get; set; }
         public static double RecordingVolumePercent { get; set; }
 
-        public Dictate()
+        public VoskDictate()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
-            AudioToText.FillModels(comboBoxModels, string.Empty);
+            VoskAudioToText.FillModels(comboBoxModels, string.Empty);
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
         }
 
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                     if (rec.AcceptWaveform(buffer, bytesRead))
                     {
                         var res = rec.Result();
-                        var results = AudioToText.ParseJsonToResult(res);
+                        var results = VoskAudioToText.ParseJsonToResult(res);
                         list.AddRange(results);
                     }
                     else
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             }
 
             var finalResult = rec.FinalResult();
-            var finalResults = AudioToText.ParseJsonToResult(finalResult);
+            var finalResults = VoskAudioToText.ParseJsonToResult(finalResult);
             list.AddRange(finalResults);
 
             try
@@ -175,10 +175,10 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
-            using (var form = new AudioToTextModelDownload { AutoClose = true })
+            using (var form = new VoskModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                AudioToText.FillModels(comboBoxModels, form.LastDownloadedModel);
+                VoskAudioToText.FillModels(comboBoxModels, form.LastDownloadedModel);
             }
         }
 

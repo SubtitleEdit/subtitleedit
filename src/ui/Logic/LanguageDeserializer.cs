@@ -475,14 +475,26 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/Info":
                     language.AudioToText.Info = reader.Value;
                     break;
+                case "AudioToText/WhisperInfo":
+                    language.AudioToText.WhisperInfo = reader.Value;
+                    break;
                 case "AudioToText/VoskWebsite":
                     language.AudioToText.VoskWebsite = reader.Value;
+                    break;
+                case "AudioToText/WhisperWebsite":
+                    language.AudioToText.WhisperWebsite = reader.Value;
                     break;
                 case "AudioToText/Models":
                     language.AudioToText.Models = reader.Value;
                     break;
+                case "AudioToText/LanguagesAndModels":
+                    language.AudioToText.LanguagesAndModels = reader.Value;
+                    break;
                 case "AudioToText/ChooseModel":
                     language.AudioToText.ChooseModel = reader.Value;
+                    break;
+                case "AudioToText/ChooseLanguage":
+                    language.AudioToText.ChooseLanguage = reader.Value;
                     break;
                 case "AudioToText/OpenModelsFolder":
                     language.AudioToText.OpenModelsFolder = reader.Value;
@@ -504,6 +516,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AudioToText/BatchMode":
                     language.AudioToText.BatchMode = reader.Value;
+                    break;
+                case "AudioToText/KeepPartialTranscription":
+                    language.AudioToText.KeepPartialTranscription = reader.Value;
                     break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
@@ -4207,8 +4222,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateVideoWithBurnedInSub":
                     language.Main.Menu.Video.GenerateVideoWithBurnedInSub = reader.Value;
                     break;
-                case "Main/Menu/Video/VideoAudioToText":
-                    language.Main.Menu.Video.VideoAudioToText = reader.Value;
+                case "Main/Menu/Video/VideoAudioToTextX":
+                    language.Main.Menu.Video.VideoAudioToTextX = reader.Value;
                     break;
                 case "Main/Menu/Video/ImportChaptersFromVideo":
                     language.Main.Menu.Video.ImportChaptersFromVideo = reader.Value;

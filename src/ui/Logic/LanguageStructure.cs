@@ -1659,7 +1659,7 @@
                     public string GenerateTextFromVideo { get; set; }
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
-                    public string VideoAudioToText { get; set; }
+                    public string VideoAudioToTextX { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportShotChanges { get; set; }
                     public string RemoveOrExportShotChanges { get; set; }

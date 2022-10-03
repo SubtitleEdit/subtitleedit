@@ -1,37 +1,40 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
+using Vosk;
 
-namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
+namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
-    public sealed partial class AudioToTextWhisper : Form
+    public sealed partial class VoskAudioToText : Form
     {
         private readonly string _videoFileName;
         private readonly int _audioTrackNumber;
+        private readonly string _voskFolder;
         private bool _cancel;
         private bool _batchMode;
         private int _batchFileNumber;
+        private long _startTicks;
+        private long _bytesWavTotal;
+        private long _bytesWavRead;
         private readonly List<string> _filesToDelete;
         private readonly Form _parentForm;
         private bool _useCenterChannelOnly;
+        private Model _model;
         private int _initialWidth = 725;
-        private readonly Regex _timeRegex = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
-        private List<ResultText> _resultList;
-        private string _languageCode;
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
-        public AudioToTextWhisper(string videoFileName, int audioTrackNumber, Form parentForm)
+        public VoskAudioToText(string videoFileName, int audioTrackNumber, Form parentForm)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -42,8 +45,8 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             _parentForm = parentForm;
 
             Text = LanguageSettings.Current.AudioToText.Title;
-            labelInfo.Text = LanguageSettings.Current.AudioToText.WhisperInfo;
-            groupBoxModels.Text = LanguageSettings.Current.AudioToText.LanguagesAndModels;
+            labelInfo.Text = LanguageSettings.Current.AudioToText.Info;
+            groupBoxModels.Text = LanguageSettings.Current.AudioToText.Models;
             labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
@@ -51,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
             groupBoxInputFiles.Text = LanguageSettings.Current.BatchConvert.Input;
-            linkLabeWhisperWebSite.Text = LanguageSettings.Current.AudioToText.WhisperWebsite;
+            linkLabelVoskWebSite.Text = LanguageSettings.Current.AudioToText.VoskWebsite;
 
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
@@ -60,19 +63,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
-
-            comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.ToArray<object>());
-            var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-            if (lang != null)
-            {
-                comboBoxLanguages.Text = lang.ToString();
-            }
-            else
-            {
-                comboBoxLanguages.Text = "English";
-            }
-
+            _voskFolder = VoskModel.ModelFolder;
             FillModels(comboBoxModels, string.Empty);
 
             textBoxLog.Visible = false;
@@ -97,20 +88,19 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
         {
-            var modelsFolder = WhisperModel.ModelFolder;
-            var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.WhisperModel : lastDownloadedModel;
+            var voskFolder = Path.Combine(Configuration.DataDirectory, "Vosk");
+            var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.VoskModel : lastDownloadedModel;
             comboBoxModels.Items.Clear();
-            foreach (var fileName in Directory.GetFiles(modelsFolder))
+            foreach (var directory in Directory.GetDirectories(voskFolder))
             {
-                var name = Path.GetFileNameWithoutExtension(fileName);
-                var model = WhisperModel.Models.FirstOrDefault(p => p.Name == name);
-                if (model == null)
+                var name = Path.GetFileName(directory);
+                if (!File.Exists(Path.Combine(directory, "final.mdl")) && !File.Exists(Path.Combine(directory, "am", "final.mdl")))
                 {
                     continue;
                 }
 
-                comboBoxModels.Items.Add(model);
-                if (model.Name == selectName)
+                comboBoxModels.Items.Add(name);
+                if (name == selectName)
                 {
                     comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
                 }
@@ -133,8 +123,6 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             _useCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly &&
                                     FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
-            _languageCode = GetLanguage(comboBoxLanguages.Text);
-
             if (_batchMode)
             {
                 if (listViewInputFiles.Items.Count == 0)
@@ -149,23 +137,23 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             }
 
             ShowProgressBar();
+            var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
             buttonGenerate.Enabled = false;
             buttonDownload.Enabled = false;
             buttonBatchMode.Enabled = false;
-            comboBoxLanguages.Enabled = false;
             comboBoxModels.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
             textBoxLog.AppendText("Wav file name: " + waveFileName);
             textBoxLog.AppendText(Environment.NewLine);
             progressBar1.Style = ProgressBarStyle.Blocks;
-            var transcript = TranscribeViaWhisper(waveFileName);
-            if (_cancel && (transcript == null || transcript.Count == 0 || MessageBox.Show(LanguageSettings.Current.AudioToText.KeepPartialTranscription, Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes))
+            var transcript = TranscribeViaVosk(waveFileName, modelFileName);
+            if (_cancel)
             {
                 DialogResult = DialogResult.Cancel;
                 return;
             }
 
-            var postProcessor = new AudioToTextPostProcessor(_languageCode)
+            var postProcessor = new AudioToTextPostProcessor(GetLanguage(comboBoxModels.Text))
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
@@ -197,11 +185,11 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                 listViewInputFiles.SelectedIndices.Clear();
                 lvi.Selected = true;
                 ShowProgressBar();
+                var modelFileName = Path.Combine(_voskFolder, comboBoxModels.Text);
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
                 comboBoxModels.Enabled = false;
-                comboBoxLanguages.Enabled = false;
                 var waveFileName = GenerateWavFile(videoFileName, _audioTrackNumber);
                 if (!File.Exists(waveFileName))
                 {
@@ -212,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
                 textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 progressBar1.Style = ProgressBarStyle.Blocks;
-                var transcript = TranscribeViaWhisper(waveFileName);
+                var transcript = TranscribeViaVosk(waveFileName, modelFileName);
                 if (_cancel)
                 {
                     TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
@@ -225,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
                     return;
                 }
 
-                var postProcessor = new AudioToTextPostProcessor(_languageCode)
+                var postProcessor = new AudioToTextPostProcessor(GetLanguage(comboBoxModels.Text))
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
@@ -269,20 +257,41 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             textBoxLog.AppendText("Subtitle written to : " + fileName + Environment.NewLine);
         }
 
-        internal static string GetLanguage(string name)
+        internal static string GetLanguage(string text)
         {
-            var language = WhisperLanguage.Languages.FirstOrDefault(l => l.Name == name);
-            return language != null ? language.Code : "en";
-        }
-
-        public List<ResultText> TranscribeViaWhisper(string waveFileName)
-        {
-            var model = comboBoxModels.Items[comboBoxModels.SelectedIndex] as WhisperModel;
-            if (model == null)
+            var languageCodeList = VoskModel.Models.Select(p => p.TwoLetterLanguageCode);
+            foreach (var languageCode in languageCodeList)
             {
-                return new List<ResultText>();
+                if (text.Contains("model-" + languageCode) || text.Contains("model-small-" + languageCode) || text.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    return languageCode;
+                }
+
+                if (languageCode == "jp" && (text.Contains("model-ja") || text.Contains("model-small-ja")))
+                {
+                    return languageCode;
+                }
             }
 
+            return "en";
+        }
+
+        public List<ResultText> TranscribeViaVosk(string waveFileName, string modelFileName)
+        {
+            labelProgress.Text = LanguageSettings.Current.AudioToText.LoadingVoskModel;
+            labelProgress.Refresh();
+            Application.DoEvents();
+            Directory.SetCurrentDirectory(_voskFolder);
+            Vosk.Vosk.SetLogLevel(0);
+            if (_model == null)
+            {
+                _model = new Model(modelFileName);
+            }
+
+            var rec = new VoskRecognizer(_model, 16000.0f);
+            rec.SetMaxAlternatives(0);
+            rec.SetWords(true);
+            var list = new List<ResultText>();
             labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
             if (_batchMode)
             {
@@ -295,75 +304,79 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
             labelProgress.Refresh();
             Application.DoEvents();
-            _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, OutputHandler);
-            ShowProgressBar();
-            progressBar1.Style = ProgressBarStyle.Marquee;
-            double seconds = 0;
-            buttonCancel.Visible = true;
-            try
+            var buffer = new byte[4096];
+            _bytesWavTotal = new FileInfo(waveFileName).Length;
+            _bytesWavRead = 0;
+            _startTicks = DateTime.UtcNow.Ticks;
+            timer1.Start();
+            using (var source = File.OpenRead(waveFileName))
             {
-                process.PriorityClass = ProcessPriorityClass.Normal;
-            }
-            catch
-            {
-                // ignored
-            }
-
-            _cancel = false;
-
-            labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
-            while (!process.HasExited)
-            {
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(100);
-
-                Refresh();
-                if (_cancel)
+                int bytesRead;
+                while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    process.Kill();
-                    progressBar1.Visible = false;
-                    buttonCancel.Visible = false;
-                    DialogResult = DialogResult.Cancel;
-                    return null;
-                }
-            }
-
-            Application.DoEvents();
-            System.Threading.Thread.Sleep(100);
-
-            return _resultList;
-        }
-
-        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            if (string.IsNullOrWhiteSpace(outLine.Data))
-            {
-                return;
-            }
-
-            foreach (var line in outLine.Data.SplitToLines())
-            {
-                if (_timeRegex.IsMatch(line))
-                {
-                    var start = line.Substring(1, 10);
-                    var end = line.Substring(14, 10);
-                    var text = line.Remove(0, 25).Trim();
-                    var rt = new ResultText
+                    _bytesWavRead += bytesRead;
+                    progressBar1.Value = (int)(_bytesWavRead * 100.0 / _bytesWavTotal);
+                    progressBar1.Refresh();
+                    Application.DoEvents();
+                    if (rec.AcceptWaveform(buffer, bytesRead))
                     {
-                        Start = GetSeconds(start),
-                        End = GetSeconds(end),
-                        Text = Utilities.AutoBreakLine(text, _languageCode),
-                    };
+                        var res = rec.Result();
+                        var results = ParseJsonToResult(res);
+                        list.AddRange(results);
+                    }
+                    else
+                    {
+                        var res = rec.PartialResult();
+                        textBoxLog.AppendText(res.RemoveChar('\r', '\n'));
+                    }
 
-                    _resultList.Add(rt);
+                    if (!_batchMode)
+                    {
+                        TaskbarList.SetProgressValue(_parentForm.Handle, Math.Max(1, progressBar1.Value), progressBar1.Maximum);
+                    }
+
+                    if (_cancel)
+                    {
+                        TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
+                        return null;
+                    }
+                }
+
+                if (!_batchMode)
+                {
+                    TaskbarList.StartBlink(_parentForm, 10, 1, 2);
                 }
             }
+
+            var finalResult = rec.FinalResult();
+            var finalResults = ParseJsonToResult(finalResult);
+            list.AddRange(finalResults);
+            timer1.Stop();
+            return list;
         }
 
-        private static decimal GetSeconds(string timeCode)
+        public static List<ResultText> ParseJsonToResult(string result)
         {
-            return (decimal)(TimeCode.ParseToMilliseconds(timeCode) / 1000.0);
+            var list = new List<ResultText>();
+            var jsonParser = new SeJsonParser();
+            var root = jsonParser.GetArrayElementsByName(result, "result");
+            foreach (var item in root)
+            {
+                var conf = jsonParser.GetFirstObject(item, "conf");
+                var start = jsonParser.GetFirstObject(item, "start");
+                var end = jsonParser.GetFirstObject(item, "end");
+                var word = jsonParser.GetFirstObject(item, "word");
+                if (!string.IsNullOrWhiteSpace(word) &&
+                    decimal.TryParse(conf, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var confidence) &&
+                    decimal.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds) &&
+                    decimal.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var endSeconds))
+                {
+                    var rt = new ResultText { Confidence = confidence, Text = word, Start = startSeconds, End = endSeconds };
+                    list.Add(rt);
+                }
+            }
+
+            return list;
         }
 
         private string GenerateWavFile(string videoFileName, int audioTrackNumber)
@@ -507,58 +520,14 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             }
         }
 
-        private Process GetWhisperProcess(string waveFileName, string model, string language, DataReceivedEventHandler dataReceivedHandler = null)
+        private void linkLabelVoskWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            //TODO: some check!
-            //if (!File.Exists(Configuration.Settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
-            //{
-            //    return null;
-            //}
-
-            // whisper --model tiny.en --language English --fp16 False a.wav
-            var parameters = $"--model {model} --language \"{language}\" --fp16 False \"{waveFileName}\"";
-            var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
-
-            textBoxLog.AppendText("Calling whisper with : whisper " + parameters + Environment.NewLine);
-
-
-            if (dataReceivedHandler != null)
-            {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.OutputDataReceived += dataReceivedHandler;
-                process.ErrorDataReceived += dataReceivedHandler;
-            }
-
-            process.Start();
-
-            if (dataReceivedHandler != null)
-            {
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-            }
-
-            return process;
-        }
-
-        private void linkLabelWhisperWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            UiUtil.OpenUrl("https://github.com/openai/whisper");
+            UiUtil.OpenUrl("https://alphacephei.com/vosk/models");
         }
 
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (comboBoxModels.SelectedItem is WhisperModel model)
-            {
-                Configuration.Settings.Tools.WhisperModel = model.Name;
-            }
-
-            if (comboBoxLanguages.SelectedItem is WhisperLanguage language)
-            {
-                Configuration.Settings.Tools.WhisperLanguageCode = language.Code;
-            }
-
+            Configuration.Settings.Tools.VoskModel = comboBoxModels.Text;
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
 
             foreach (var fileName in _filesToDelete)
@@ -607,21 +576,21 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
         private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenFolder(WhisperModel.ModelFolder);
+            UiUtil.OpenFolder(_voskFolder);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //if (_bytesWavRead <= 0 || _bytesWavTotal <= 0)
-            //{
-            //    return;
-            //}
+            if (_bytesWavRead <= 0 || _bytesWavTotal <= 0)
+            {
+                return;
+            }
 
-            //var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
-            //var msPerFrame = (float)durationMs / _bytesWavRead;
-            //var estimatedTotalMs = msPerFrame * _bytesWavTotal;
-            //var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
-            //labelTime.Text = estimatedLeft;
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+            var msPerFrame = (float)durationMs / _bytesWavRead;
+            var estimatedTotalMs = msPerFrame * _bytesWavTotal;
+            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            labelTime.Text = estimatedLeft;
         }
 
         public static string ToProgressTime(float estimatedTotalMs)
@@ -642,7 +611,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
         private void buttonDownload_Click(object sender, EventArgs e)
         {
-            using (var form = new WhisperModelDownload { AutoClose = true })
+            using (var form = new VoskModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
                 FillModels(comboBoxModels, form.LastDownloadedModel);
@@ -724,7 +693,7 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
         private void comboBoxModels_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            _model = null;
         }
 
         private void AudioToText_Shown(object sender, EventArgs e)

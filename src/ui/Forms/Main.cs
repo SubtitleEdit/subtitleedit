@@ -43,7 +43,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Forms.SpeechRecognition;
+using Nikse.SubtitleEdit.Forms.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
         private ListBox _intellisenceList;
         private ListBox _intellisenceListOriginal;
         private bool _updateSelectedCountStatusBar;
-        private Dictate _dictateForm;
+        private VoskDictate _dictateForm;
         private object _dictateTextBox;
         private bool _hasCurrentVosk;
 
@@ -1744,7 +1744,8 @@ namespace Nikse.SubtitleEdit.Forms
             openSecondSubtitleToolStripMenuItem.Text = _language.Menu.Video.OpenSecondSubtitle;
             generateBlankVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateBlankVideo;
             generateVideoWithHardcodedSubtitleToolStripMenuItem.Text = _language.Menu.Video.GenerateVideoWithBurnedInSub;
-            videoaudioToTextToolStripMenuItem.Text = _language.Menu.Video.VideoAudioToText;
+            videoaudioToTextToolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi");
+            audioToTextWhisperTolStripMenuItem.Text = string.Format(_language.Menu.Video.VideoAudioToTextX, "Whisper");
 
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
             toolStripMenuItemImportChapters.Text = _language.Menu.Video.ImportChaptersFromVideo;
@@ -8781,11 +8782,14 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSelectedLines.DropDownItems.Insert(0, audio);
                 var audioClip = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.ContextMenu.ExtractAudio);
                 UiUtil.FixFonts(audioClip);
-                var audioToText = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Video.VideoAudioToText);
-                UiUtil.FixFonts(audioToText);
+                var audioToTextWhisper = new ToolStripMenuItem(string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper"));
+                UiUtil.FixFonts(audioToTextWhisper);
+                var audioToTextVosk = new ToolStripMenuItem(string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi"));
+                UiUtil.FixFonts(audioToTextVosk);
                 audio.DropDownItems.Insert(0, audioClip);
+                audio.DropDownItems.Insert(0, audioToTextWhisper);
+                audio.DropDownItems.Insert(0, audioToTextVosk);
 
-                audio.DropDownItems.Insert(0, audioToText);
                 audioClip.Click += (senderNew, eNew) =>
                 {
                     if (!RequireFfmpegOk())
@@ -8797,7 +8801,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
                 };
 
-                audioToText.Click += (senderNew, eNew) =>
+                audioToTextWhisper.Click += (senderNew, eNew) =>
                 {
                     if (!RequireFfmpegOk())
                     {
@@ -8805,11 +8809,41 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var audioClips = GetAudioClips();
-                    using (var form = new AudioToTextSelectedLines(audioClips, this))
+                    using (var form = new WhisperAudioToTextSelectedLines(audioClips, this))
                     {
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
-                            MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Main.Menu.Video.VideoAudioToText));
+                            MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper")));
+                            SubtitleListview1.BeginUpdate();
+                            foreach (var ac in audioClips)
+                            {
+                                var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
+                                if (p != null)
+                                {
+                                    p.Text = ac.Paragraph.Text;
+                                    var idx = _subtitle.Paragraphs.IndexOf(p);
+                                    SubtitleListview1.SetText(idx, p.Text);
+                                }
+                            }
+                            SubtitleListview1.EndUpdate();
+                            RefreshSelectedParagraph();
+                        }
+                    }
+                };
+
+                audioToTextVosk.Click += (senderNew, eNew) =>
+                {
+                    if (!RequireFfmpegOk())
+                    {
+                        return;
+                    }
+
+                    var audioClips = GetAudioClips();
+                    using (var form = new VoskAudioToTextSelectedLines(audioClips, this))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi")));
                             SubtitleListview1.BeginUpdate();
                             foreach (var ac in audioClips)
                             {
@@ -10748,7 +10782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_dictateForm == null || string.IsNullOrEmpty(Configuration.Settings.Tools.VoskModel))
                 {
                     _dictateForm?.Dispose();
-                    _dictateForm = new Dictate();
+                    _dictateForm = new VoskDictate();
                     if (_dictateForm.ShowDialog(this) != DialogResult.OK)
                     {
                         return;
@@ -22473,7 +22507,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.Invalidate();
             }
 
-            if (_dictateForm != null && Dictate.RecordingOn)
+            if (_dictateForm != null && VoskDictate.RecordingOn)
             {
                 pictureBoxRecord.Invalidate();
             }
@@ -24495,10 +24529,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PictureBoxRecord_Paint(object sender, PaintEventArgs e)
         {
-            if (_dictateForm != null && Dictate.RecordingOn)
+            if (_dictateForm != null && VoskDictate.RecordingOn)
             {
-                var pct = Dictate.RecordingVolumePercent;
-                var len = pictureBoxRecord.Height - (int)Math.Round(Dictate.RecordingVolumePercent * pictureBoxRecord.Height / 100.0);
+                var pct = VoskDictate.RecordingVolumePercent;
+                var len = pictureBoxRecord.Height - (int)Math.Round(VoskDictate.RecordingVolumePercent * pictureBoxRecord.Height / 100.0);
                 using (var pen = new Pen(Color.DodgerBlue, 5))
                 {
                     e.Graphics.DrawLine(pen, pictureBoxRecord.Width - 6, pictureBoxRecord.Height - 1, pictureBoxRecord.Width - 6, len);
@@ -34406,7 +34440,7 @@ namespace Nikse.SubtitleEdit.Forms
                 CloseVideoToolStripMenuItemClick(sender, e);
             }
 
-            using (var form = new AudioToText(oldVideoFileName, _videoAudioTrackNumber, this))
+            using (var form = new VoskAudioToText(oldVideoFileName, _videoAudioTrackNumber, this))
             {
                 var result = form.ShowDialog(this);
 
@@ -34577,7 +34611,7 @@ namespace Nikse.SubtitleEdit.Forms
                 CloseVideoToolStripMenuItemClick(sender, e);
             }
 
-            using (var form = new AudioToTextWhisper(oldVideoFileName, _videoAudioTrackNumber, this))
+            using (var form = new WhisperAudioToText(oldVideoFileName, _videoAudioTrackNumber, this))
             {
                 var result = form.ShowDialog(this);
 
