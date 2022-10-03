@@ -644,7 +644,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             using (var form = new WhisperModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                FillModels(comboBoxModels, form.LastDownloadedModel);
+                FillModels(comboBoxModels, form.LastDownloadedModel.Name);
             }
         }
 
