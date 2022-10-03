@@ -1,4 +1,8 @@
-﻿namespace Nikse.SubtitleEdit.Core.AudioToText
+﻿using System.IO;
+using System;
+using Nikse.SubtitleEdit.Core.Common;
+
+namespace Nikse.SubtitleEdit.Core.AudioToText
 {
     public class VoskModel
     {
@@ -10,6 +14,8 @@
         {
             return LanguageName;
         }
+
+        public static string ModelFolder => Path.Combine(Configuration.DataDirectory, "Vosk");
 
         public static readonly VoskModel[] Models = new[]
         {

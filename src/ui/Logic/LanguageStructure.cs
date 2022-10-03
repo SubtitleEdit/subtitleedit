@@ -180,9 +180,13 @@
         {
             public string Title { get; set; }
             public string Info { get; set; }
+            public string WhisperInfo { get; set; }
             public string VoskWebsite { get; set; }
+            public string WhisperWebsite { get; set; }
             public string Models { get; set; }
+            public string LanguagesAndModels { get; set; }
             public string ChooseModel { get; set; }
+            public string ChooseLanguage { get; set; }
             public string OpenModelsFolder { get; set; }
             public string LoadingVoskModel { get; set; }
             public string Transcribing { get; set; }
@@ -190,6 +194,7 @@
             public string XFilesSavedToVideoSourceFolder { get; set; }
             public string UsePostProcessing { get; set; }
             public string BatchMode { get; set; }
+            public string KeepPartialTranscription { get; set; }
         }
 
         public class AssaAttachments

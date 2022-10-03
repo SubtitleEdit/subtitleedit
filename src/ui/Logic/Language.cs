@@ -324,9 +324,13 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Audio to text",
                 Info = "Generate text from audio via Vosk/Kaldi speech recognition",
+                WhisperInfo = "Generate text from audio via Whisper speech recognition",
                 VoskWebsite = "Vosk website",
+                WhisperWebsite = "Whisper website",
                 Models = "Models",
+                LanguagesAndModels = "Languages and models",
                 ChooseModel = "Choose model",
+                ChooseLanguage = "Choose model",
                 OpenModelsFolder = "Open models folder",
                 LoadingVoskModel = "Loading Vosk speech recognition model...",
                 Transcribing = "Transcribing audio to text...",
@@ -334,6 +338,7 @@ namespace Nikse.SubtitleEdit.Logic
                 UsePostProcessing = "Use post-processing (line merge, fix casing, punctuation, and more)",
                 BatchMode = "Batch mode",
                 XFilesSavedToVideoSourceFolder = "{0} files saved to video source folder",
+                KeepPartialTranscription = "Keep partial transcription",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments

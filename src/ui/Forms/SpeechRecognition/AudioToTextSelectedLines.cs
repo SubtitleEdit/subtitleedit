@@ -36,7 +36,6 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
 
             Text = LanguageSettings.Current.AudioToText.Title;
             labelInfo.Text = LanguageSettings.Current.AudioToText.Info;
-            labelInfo.Text = LanguageSettings.Current.AudioToText.Info;
             groupBoxModels.Text = LanguageSettings.Current.AudioToText.Models;
             labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
@@ -286,12 +285,12 @@ namespace Nikse.SubtitleEdit.Forms.SpeechRecognition
             {
                 if (textBoxLog.Visible)
                 {
-                    textBoxLog.Visible = true;
-                    textBoxLog.BringToFront();
+                    textBoxLog.Visible = false;
                 }
                 else
                 {
-                    textBoxLog.Visible = false;
+                    textBoxLog.Visible = true;
+                    textBoxLog.BringToFront();
                 }
 
                 e.SuppressKeyPress = true;
