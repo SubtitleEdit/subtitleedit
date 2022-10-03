@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             using (var form = new WhisperModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                VoskAudioToText.FillModels(comboBoxModels, form.LastDownloadedModel);
+                VoskAudioToText.FillModels(comboBoxModels, form.LastDownloadedModel.Name);
             }
         }
 

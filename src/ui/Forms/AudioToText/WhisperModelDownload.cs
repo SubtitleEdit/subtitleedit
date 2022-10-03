@@ -12,9 +12,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
     public sealed partial class WhisperModelDownload : Form
     {
         public bool AutoClose { get; internal set; }
-        public string LastDownloadedModel { get; internal set; }
+        public WhisperModel LastDownloadedModel { get; private set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private WhisperModel _downloadModel;
 
         public WhisperModelDownload()
         {
@@ -57,8 +56,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            _downloadModel = (WhisperModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
-            var url = _downloadModel.Url;
+            LastDownloadedModel = (WhisperModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
+            var url = LastDownloadedModel.Url;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -119,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Directory.CreateDirectory(folder);
             }
 
-            var fileName = Path.Combine(folder, _downloadModel.Name + ".pt");
+            var fileName = Path.Combine(folder, LastDownloadedModel.Name + ".pt");
             using (var fileStream = File.Create(fileName))
             {
                 downloadStream.Seek(0, SeekOrigin.Begin);
