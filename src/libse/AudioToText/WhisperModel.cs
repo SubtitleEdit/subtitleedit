@@ -1,4 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Core.AudioToText
+﻿using System;
+using System.IO;
+
+namespace Nikse.SubtitleEdit.Core.AudioToText
 {
     public class WhisperModel
     {
@@ -10,6 +13,8 @@
         {
             return $"{Name} ({Size})";
         }
+
+        public static string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper");
 
         // See https://github.com/openai/whisper/blob/main/whisper/__init__.py
         public static readonly WhisperModel[] Models = 

@@ -207,6 +207,12 @@
     <Compile Include="Forms\AudioClipsGet.Designer.cs">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SpeechRecognition\WhisperModelDownload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SpeechRecognition\WhisperModelDownload.Designer.cs">
+      <DependentUpon>WhisperModelDownload.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SpeechRecognition\AudioToTextSelectedLines.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -290,6 +296,12 @@
     </Compile>
     <Compile Include="Forms\ConvertColorsToDialog.Designer.cs">
       <DependentUpon>ConvertColorsToDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SpeechRecognition\AudioToTextWhisper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SpeechRecognition\AudioToTextWhisper.Designer.cs">
+      <DependentUpon>AudioToTextWhisper.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SpeechRecognition\Dictate.cs">
       <SubType>Form</SubType>
@@ -1477,6 +1489,9 @@
     <EmbeddedResource Include="Forms\AudioClipsGet.resx">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SpeechRecognition\WhisperModelDownload.resx">
+      <DependentUpon>WhisperModelDownload.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SpeechRecognition\AudioToTextSelectedLines.resx">
       <DependentUpon>AudioToTextSelectedLines.cs</DependentUpon>
     </EmbeddedResource>
@@ -1518,6 +1533,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ConvertColorsToDialog.resx">
       <DependentUpon>ConvertColorsToDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SpeechRecognition\AudioToTextWhisper.resx">
+      <DependentUpon>AudioToTextWhisper.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SpeechRecognition\Dictate.resx">
       <DependentUpon>Dictate.cs</DependentUpon>

@@ -410,6 +410,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
+        public string WhisperModel { get; set; }
+        public string WhisperLanguageCode { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
         public int AudioToTextLineMaxCharsCn { get; set; }
@@ -609,6 +611,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             VoskPostProcessing = true;
+            WhisperLanguageCode = "en";
             AudioToTextLineMaxChars = 86;
             AudioToTextLineMaxCharsJp = 32;
             AudioToTextLineMaxCharsCn = 36;
@@ -6114,6 +6117,18 @@ $HorzAlign          =   Center
                 settings.Tools.VoskModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperModel");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperModel = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("WhisperLanguageCode");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperLanguageCode = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AudioToTextLineMaxChars");
             if (subNode != null)
             {
@@ -10346,7 +10361,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
-                textWriter.WriteElementString("VoskModel", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
+                textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
+                textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
 

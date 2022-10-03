@@ -228,5 +228,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var lookupResult = List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode.ToLowerInvariant());
             return lookupResult == null ? string.Empty : lookupResult.TwoLetterCode;
         }
+
+        public static string GetTwoLetterCodeFromEnglishName(string englishName)
+        {
+            var lookupResult = List.FirstOrDefault(p => p.EnglishName.ToLowerInvariant() == englishName.ToLowerInvariant());
+            return lookupResult == null ? string.Empty : lookupResult.TwoLetterCode;
+        }
     }
 }
