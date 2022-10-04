@@ -8787,7 +8787,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var audioToTextVosk = new ToolStripMenuItem(string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi"));
                 UiUtil.FixFonts(audioToTextVosk);
                 audio.DropDownItems.Insert(0, audioClip);
-                audio.DropDownItems.Insert(0, audioToTextWhisper);
+
+                if (!WhisperHelper.IsWhisperInstalled())
+                {
+                    audio.DropDownItems.Insert(0, audioToTextWhisper);
+                }
+                
                 audio.DropDownItems.Insert(0, audioToTextVosk);
 
                 audioClip.Click += (senderNew, eNew) =>
@@ -34600,7 +34605,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!WhisperHelper.IsWhisperInstalled())
             {
-                MessageBox.Show("Whisper not found");
+                if (MessageBox.Show("Whisper not found." + Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Go to the Whisper website?",
+                                    "Subtitle Edit",
+                                    MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                {
+                    UiUtil.OpenUrl("https://github.com/openai/whisper");
+                }
+
                 return;
             }
 
