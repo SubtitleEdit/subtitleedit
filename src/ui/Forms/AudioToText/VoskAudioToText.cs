@@ -740,8 +740,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void AddInputFile(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            if (Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext))
+            if ((Utilities.AudioFileExtensions.Contains(ext) || Utilities.VideoFileExtensions.Contains(ext)) && File.Exists(fileName))
             {
                 listViewInputFiles.Items.Add(fileName);
             }
@@ -750,6 +755,34 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void AudioToText_ResizeEnd(object sender, EventArgs e)
         {
             listViewInputFiles.AutoSizeLastColumn();
+        }
+
+        private void listViewInputFiles_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
+            {
+                e.SuppressKeyPress = true;
+                var files = new List<string>();
+                if (Clipboard.ContainsFileDropList())
+                {
+                    foreach (var fileName in Clipboard.GetFileDropList())
+                    {
+                        files.Add(fileName);
+                    }
+                }
+                else if (Clipboard.ContainsText())
+                {
+                    foreach (var fileName in Clipboard.GetText().SplitToLines())
+                    {
+                        files.Add(fileName);
+                    }
+                }
+
+                foreach (var file in files)
+                {
+                    AddInputFile(file);
+                }
+            }
         }
     }
 }
