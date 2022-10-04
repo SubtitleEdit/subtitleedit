@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -21,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private readonly Regex _timeRegex = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
         private List<ResultText> _resultList;
         private string _languageCode;
+        private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -96,9 +98,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
             progressBar1.Visible = true;
-            progressBar1.BringToFront();
             progressBar1.Refresh();
             progressBar1.Top = labelProgress.Bottom + 3;
+            if (!textBoxLog.Visible)
+            {
+                progressBar1.BringToFront();
+            }
         }
 
         private void GenerateBatch()
@@ -112,7 +117,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
-            textBoxLog.AppendText("Batch mode" + Environment.NewLine);
+            _outputText.Add("Batch mode");
+            timer1.Start();
             foreach (ListViewItem lvi in listViewInputFiles.Items)
             {
                 _batchFileNumber++;
@@ -126,7 +132,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 comboBoxLanguages.Enabled = false;
                 var waveFileName = videoFileName;
 
-                textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
+                _outputText.Add(string.Empty);
+                _outputText.Add("Wav file name: " + waveFileName);
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaWhisper(waveFileName);
                 if (_cancel)
@@ -142,9 +149,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
             }
 
+            timer1.Stop();
             progressBar1.Value = 100;
             labelTime.Text = string.Empty;
             PostFix(postProcessor);
+
             DialogResult = DialogResult.OK;
         }
 
@@ -183,13 +192,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Application.DoEvents();
                 System.Threading.Thread.Sleep(100);
 
-                Refresh();
+                Invalidate();
                 if (_cancel)
                 {
                     process.Kill();
                     progressBar1.Visible = false;
                     buttonCancel.Visible = false;
-                    DialogResult = DialogResult.Cancel;
+
+                    if (!textBoxLog.Visible)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        progressBar1.Hide();
+                    }
+
                     return null;
                 }
             }
@@ -206,6 +221,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 return;
             }
+
+            _outputText.Add(outLine.Data.Trim() + Environment.NewLine);
 
             foreach (var line in outLine.Data.SplitToLines())
             {
@@ -316,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var parameters = $"--model {model} --language \"{language}\" --fp16 False \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
-            textBoxLog.AppendText("Calling whisper with : whisper " + parameters + Environment.NewLine);
+            _outputText.Add("Calling whisper with : whisper " + parameters);
 
 
             if (dataReceivedHandler != null)
@@ -369,6 +386,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
                 else
                 {
+                    UpdateLog();
                     textBoxLog.Visible = true;
                     textBoxLog.BringToFront();
                 }
@@ -387,6 +405,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
+        private void UpdateLog()
+        {
+            if (_outputText.IsEmpty)
+            {
+                return;
+            }
+
+            textBoxLog.AppendText(string.Join(Environment.NewLine, _outputText) + Environment.NewLine);
+            _outputText = new ConcurrentBag<string>();
+        }
+
         private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             UiUtil.OpenFolder(WhisperModel.ModelFolder);
@@ -394,6 +423,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            UpdateLog();
         }
 
         public static string ToProgressTime(float estimatedTotalMs)

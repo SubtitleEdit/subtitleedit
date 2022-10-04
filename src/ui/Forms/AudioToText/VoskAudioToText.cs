@@ -166,9 +166,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
             progressBar1.Visible = true;
-            progressBar1.BringToFront();
             progressBar1.Refresh();
             progressBar1.Top = labelProgress.Bottom + 3;
+            if (!textBoxLog.Visible)
+            {
+                progressBar1.BringToFront();
+            }
         }
 
         private void GenerateBatch()
@@ -423,7 +426,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     labelProgress.Text = string.Format(LanguageSettings.Current.AddWaveform.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
                 }
 
-                Refresh();
+                Invalidate();
                 if (_cancel)
                 {
                     process.Kill();

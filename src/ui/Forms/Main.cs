@@ -8788,7 +8788,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UiUtil.FixFonts(audioToTextVosk);
                 audio.DropDownItems.Insert(0, audioClip);
 
-                if (!WhisperHelper.IsWhisperInstalled())
+                if (WhisperHelper.IsWhisperInstalled())
                 {
                     audio.DropDownItems.Insert(0, audioToTextWhisper);
                 }
