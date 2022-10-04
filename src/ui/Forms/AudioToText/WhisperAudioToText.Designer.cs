@@ -198,7 +198,6 @@
             this.comboBoxModels.Name = "comboBoxModels";
             this.comboBoxModels.Size = new System.Drawing.Size(240, 21);
             this.comboBoxModels.TabIndex = 1;
-            this.comboBoxModels.SelectedIndexChanged += new System.EventHandler(this.comboBoxModels_SelectedIndexChanged);
             // 
             // linkLabeWhisperWebSite
             // 
