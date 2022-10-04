@@ -3381,5 +3381,9 @@
 		<RegEx find="\. lf\b" replaceWith=". If" />
 		<RegEx find="(\p{Ll})('II)([ \r\n])" replaceWith="$1'll$3" />
 		<RegEx find="(\p{Ll}')(\|\|)([ \n\r])" replaceWith="$1ll$3" />
+		<RegEx find="(1 )(st\b)" replaceWith="1$2" />
+		<RegEx find="(2 )(nd\b)" replaceWith="2$2" />
+		<RegEx find="(3 )(rd\b)" replaceWith="3$2" />
+		<RegEx find="([456789])( th\b)" replaceWith="$1th" />
 	</RegularExpressions>
 </OCRFixReplaceList>
