@@ -36,6 +36,8 @@
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxModels = new System.Windows.Forms.GroupBox();
+            this.labelChooseLanguage = new System.Windows.Forms.Label();
+            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
             this.buttonDownload = new System.Windows.Forms.Button();
             this.linkLabelOpenModelsFolder = new System.Windows.Forms.LinkLabel();
             this.labelModel = new System.Windows.Forms.Label();
@@ -47,8 +49,6 @@
             this.groupBoxInputFiles = new System.Windows.Forms.GroupBox();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.labelChooseLanguage = new System.Windows.Forms.Label();
-            this.comboBoxLanguages = new System.Windows.Forms.ComboBox();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.SuspendLayout();
@@ -135,6 +135,24 @@
             this.groupBoxModels.TabIndex = 1;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Models";
+            // 
+            // labelChooseLanguage
+            // 
+            this.labelChooseLanguage.AutoSize = true;
+            this.labelChooseLanguage.Location = new System.Drawing.Point(3, 37);
+            this.labelChooseLanguage.Name = "labelChooseLanguage";
+            this.labelChooseLanguage.Size = new System.Drawing.Size(90, 13);
+            this.labelChooseLanguage.TabIndex = 6;
+            this.labelChooseLanguage.Text = "Choose language";
+            // 
+            // comboBoxLanguages
+            // 
+            this.comboBoxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguages.FormattingEnabled = true;
+            this.comboBoxLanguages.Location = new System.Drawing.Point(6, 53);
+            this.comboBoxLanguages.Name = "comboBoxLanguages";
+            this.comboBoxLanguages.Size = new System.Drawing.Size(194, 21);
+            this.comboBoxLanguages.TabIndex = 7;
             // 
             // buttonDownload
             // 
@@ -246,24 +264,6 @@
             // 
             this.columnHeaderFileName.Text = "File name";
             this.columnHeaderFileName.Width = 455;
-            // 
-            // labelChooseLanguage
-            // 
-            this.labelChooseLanguage.AutoSize = true;
-            this.labelChooseLanguage.Location = new System.Drawing.Point(3, 37);
-            this.labelChooseLanguage.Name = "labelChooseLanguage";
-            this.labelChooseLanguage.Size = new System.Drawing.Size(90, 13);
-            this.labelChooseLanguage.TabIndex = 6;
-            this.labelChooseLanguage.Text = "Choose language";
-            // 
-            // comboBoxLanguages
-            // 
-            this.comboBoxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxLanguages.FormattingEnabled = true;
-            this.comboBoxLanguages.Location = new System.Drawing.Point(6, 53);
-            this.comboBoxLanguages.Name = "comboBoxLanguages";
-            this.comboBoxLanguages.Size = new System.Drawing.Size(194, 21);
-            this.comboBoxLanguages.TabIndex = 7;
             // 
             // WhisperAudioToTextSelectedLines
             // 

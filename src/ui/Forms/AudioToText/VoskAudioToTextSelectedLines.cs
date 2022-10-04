@@ -84,9 +84,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
             progressBar1.Visible = true;
-            progressBar1.BringToFront();
             progressBar1.Refresh();
             progressBar1.Top = labelProgress.Bottom + 3;
+            if (!textBoxLog.Visible)
+            {
+                progressBar1.BringToFront();
+            }
         }
 
         private void GenerateBatch()
@@ -116,7 +119,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 if (_cancel)
                 {
                     TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
-                    DialogResult = DialogResult.Cancel;
+                    if (!textBoxLog.Visible)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        progressBar1.Hide();
+                    }
+
                     return;
                 }
 
