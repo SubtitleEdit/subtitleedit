@@ -323,15 +323,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private Process GetWhisperProcess(string waveFileName, string model, string language, DataReceivedEventHandler dataReceivedHandler = null)
         {
-            //TODO: some check!
-            //if (!File.Exists(Configuration.Settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
-            //{
-            //    return null;
-            //}
-
             // whisper --model tiny.en --language English --fp16 False a.wav
-            var parameters = $"--model {model} --language \"{language}\" --fp16 False \"{waveFileName}\"";
+            var parameters = $"--model {model} --language \"{language}\" {Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+            process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Configuration.Settings.General.FFmpegLocation;
 
             _outputText.Add("Calling whisper with : whisper " + parameters);
 
