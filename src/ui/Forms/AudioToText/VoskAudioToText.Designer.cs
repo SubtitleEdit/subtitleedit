@@ -293,6 +293,7 @@
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
             this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
             this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
+            this.listViewInputFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewInputFiles_KeyDown);
             // 
             // columnHeaderFileName
             // 
@@ -310,7 +311,7 @@
             this.labelFC.Text = "labelFC";
             this.labelFC.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // AudioToText
+            // VoskAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -330,7 +331,7 @@
             this.Controls.Add(this.textBoxLog);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(575, 250);
-            this.Name = "AudioToText";
+            this.Name = "VoskAudioToText";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
