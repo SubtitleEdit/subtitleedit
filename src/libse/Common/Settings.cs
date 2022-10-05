@@ -2484,6 +2484,7 @@ $HorzAlign          =   Center
         public string MainMergeDialog { get; set; }
         public string MainMergeDialogWithNext { get; set; }
         public string MainMergeDialogWithPrevious { get; set; }
+        public string MainAutoBalanceSelectedLines { get; set; }
         public string MainToggleFocus { get; set; }
         public string MainToggleFocusWaveform { get; set; }
         public string MainToggleFocusWaveformTextBox { get; set; }
@@ -9574,6 +9575,12 @@ $HorzAlign          =   Center
                     shortcuts.MainMergeDialogWithPrevious = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAutoBalanceSelectedLines");
+                if (subNode != null)
+                {
+                    shortcuts.MainAutoBalanceSelectedLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToggleFocus");
                 if (subNode != null)
                 {
@@ -11105,6 +11112,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainMergeDialog", shortcuts.MainMergeDialog);
             textWriter.WriteElementString("MainMergeDialogWithNext", shortcuts.MainMergeDialogWithNext);
             textWriter.WriteElementString("MainMergeDialogWithPrevious", shortcuts.MainMergeDialogWithPrevious);
+            textWriter.WriteElementString("MainAutoBalanceSelectedLines", shortcuts.MainAutoBalanceSelectedLines);
             textWriter.WriteElementString("MainToggleFocus", shortcuts.MainToggleFocus);
             textWriter.WriteElementString("MainToggleFocusWaveform", shortcuts.MainToggleFocusWaveform);
             textWriter.WriteElementString("MainToggleFocusWaveformTextBox", shortcuts.MainToggleFocusWaveformTextBox);
