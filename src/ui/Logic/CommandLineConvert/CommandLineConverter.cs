@@ -1828,7 +1828,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 {
                                     mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
                                 }
-                                form.WriteFcpParagraph(sb, imagesSavedCount, mp, index, outputFileName);
+                                form.WriteFcpParagraph(sb, imagesSavedCount, mp, index, Path.GetFileNameWithoutExtension(Path.GetFileName(outputFileName)), outputFileName);
 
                                 if (index % 50 == 0)
                                 {

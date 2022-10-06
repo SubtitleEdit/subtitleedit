@@ -724,6 +724,7 @@
             public string SimpleRendering { get; set; }
             public string AntiAliasingWithTransparency { get; set; }
             public string Text3D { get; set; }
+            public string ImagePrefix { get; set; }
             public string SideBySide3D { get; set; }
             public string HalfTopBottom3D { get; set; }
             public string Depth { get; set; }

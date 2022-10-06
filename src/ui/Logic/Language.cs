@@ -852,6 +852,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SimpleRendering = "Simple rendering",
                 AntiAliasingWithTransparency = "Anti-aliasing with transparency",
                 Text3D = "3D",
+                ImagePrefix = "Image prefix",
                 SideBySide3D = "Half-side-by-side",
                 HalfTopBottom3D = "Half-Top/Bottom",
                 Depth = "Depth",
