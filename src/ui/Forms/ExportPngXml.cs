@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return 25;
                 }
 
-                string s = comboBoxFrameRate.SelectedItem.ToString();
+                var s = comboBoxFrameRate.SelectedItem.ToString();
                 s = s.Replace(",", ".").Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".").Trim();
                 if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
                 {
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            string text = p.P.Text;
+            var text = p.P.Text;
             if (format.GetType() == typeof(SubStationAlpha) && text.Length > 5)
             {
                 text = p.P.Text.Substring(0, 6);
@@ -318,8 +318,8 @@ namespace Nikse.SubtitleEdit.Forms
                 nbmp.ReplaceTransparentWith(param.FullFrameBackgroundColor);
                 using (var bmp = nbmp.GetBitmap())
                 {
-                    int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                    int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+                    var top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                    var left = (param.ScreenWidth - param.Bitmap.Width) / 2;
 
                     var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
                     {
@@ -556,6 +556,7 @@ namespace Nikse.SubtitleEdit.Forms
                 singleFile = true;
             }
             else if (_exportType == ExportFormats.Fcp)
+
             {
                 saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveFcpAs;
                 saveFileDialog1.DefaultExt = "*.xml";
@@ -940,21 +941,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void WriteFcpFile(int width, int height, StringBuilder sb, string fileName)
         {
-            string fileNameNoPath = Path.GetFileName(fileName);
-            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+            var fileNameNoPath = Path.GetFileName(fileName);
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
 
-            int duration = 0;
+            var duration = 0;
             if (_subtitle.Paragraphs.Count > 0)
             {
                 duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
             }
 
-            string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+            var s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                        "<!DOCTYPE xmeml[]>" + Environment.NewLine +
                        "<xmeml version=\"4\">" + Environment.NewLine +
-                       "  <sequence id=\"" + System.Security.SecurityElement.Escape(fileNameNoExt) + "\">" + Environment.NewLine +
+                       "  <sequence id=\"" + System.Security.SecurityElement.Escape(GetFcpPrefix()) + "\">" + Environment.NewLine +
                        "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
-                       "    <name>" + System.Security.SecurityElement.Escape(fileNameNoExt) + @"</name>
+                       "    <name>" + System.Security.SecurityElement.Escape(GetFcpPrefix()) + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -1547,7 +1548,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-                        imagesSavedCount = WriteFcpParagraph(sb, imagesSavedCount, param, i, saveFileDialog1.FileName);
+                        imagesSavedCount = WriteFcpParagraph(sb, imagesSavedCount, param, i, GetFcpPrefix(), saveFileDialog1.FileName);
 
                         param.Saved = true;
                     }
@@ -1798,20 +1799,32 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return imagesSavedCount;
         }
 
-        internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
+        private string GetFcpPrefix()
         {
-            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).RemoveChar(' ');
+            var prefix = textBoxImagePrefix.Text.Trim();
+            if (string.IsNullOrEmpty(prefix))
+            {
+                prefix = Guid.NewGuid().ToString();
+                textBoxImagePrefix.Text = prefix;
+            }
+
+            return prefix;
+        }
+
+        internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string imagePrefix, string fileName)
+        {
+            var numberString = string.Format(imagePrefix + "{0:0000}", i).RemoveChar(' ');
             var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant();
             var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
-            string fileNameNoPath = Path.GetFileName(fileNameShort);
-            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
-            string pathUrl = "file://localhost/" + targetImageFileName.Replace("\\", "/").Replace(" ", "%20");
+            var fileNameNoPath = Path.GetFileName(fileNameShort);
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+            var pathUrl = "file://localhost/" + targetImageFileName.Replace("\\", "/").Replace(" ", "%20");
             if (!checkBoxFcpFullPathUrl.Checked)
             {
                 pathUrl = fileNameShort;
             }
 
-            string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
+            var template = "          <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
 @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
             <duration>[DURATION]</duration>
             <rate>
@@ -1827,7 +1840,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
             <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
-                              "           <file id=\"" + fileNameNoExt + "\">" + @"
+                              "            <file id=\"" + fileNameNoExt + "\">" + @"
               <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
               <pathurl>" + pathUrl + @"</pathurl>
               <rate>
@@ -3967,6 +3980,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _fileName = fileName;
             _format = format;
             _formatName = _format != null ? _format.Name : string.Empty;
+
+            textBoxImagePrefix.Visible = false;
+            labelImagePrefix.Visible = false;
+
             if (_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
             {
                 CalculateHeights(subtitle);
@@ -3995,6 +4012,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else if (exportType == ExportFormats.Fcp)
             {
                 Text = "Final Cut Pro";
+                textBoxImagePrefix.Visible = true;
+                labelImagePrefix.Visible = true;
+                var imagePrefix = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(_videoFileName))
+                {
+                    imagePrefix = _videoFileName;
+                }
+                else if (!string.IsNullOrEmpty(subtitle?.FileName))
+                {
+                    imagePrefix = subtitle.FileName;
+                }
+
+                imagePrefix = Path.GetFileNameWithoutExtension(imagePrefix);
+                imagePrefix = Path.GetFileName(imagePrefix);
+
+                textBoxImagePrefix.Text = imagePrefix;
             }
             else if (exportType == ExportFormats.Dost)
             {
@@ -4146,12 +4179,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBox3D.SelectedIndex = 0;
 
             labelDepth.Text = LanguageSettings.Current.ExportPngXml.Depth;
-
             numericUpDownDepth3D.Left = labelDepth.Left + labelDepth.Width + 3;
 
             label3D.Text = LanguageSettings.Current.ExportPngXml.Text3D;
-
             comboBox3D.Left = label3D.Left + label3D.Width + 3;
+
+            labelImagePrefix.Text = LanguageSettings.Current.ExportPngXml.ImagePrefix;
+            textBoxImagePrefix.Left = labelImagePrefix.Left + labelImagePrefix.Width + 3;
+            textBoxImagePrefix.Width = comboBoxFrameRate.Right - textBoxImagePrefix.Left;
 
             buttonBorderColor.Text = LanguageSettings.Current.ExportPngXml.BorderColor;
             labelBorderWidth.Text = LanguageSettings.Current.ExportPngXml.BorderStyle;

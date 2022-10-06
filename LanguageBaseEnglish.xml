@@ -650,6 +650,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SimpleRendering>Simple rendering</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing with transparency</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Image prefix</ImagePrefix>
     <SideBySide3D>Half-side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>Depth</Depth>
@@ -2411,6 +2412,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <MergeDialogWithNext>Merge dialog with next (insert dashes)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Merge dialog with previous (insert dashes)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Auto balance selected lines</AutoBalanceSelectedLines>
     <GoToNext>Go to next line</GoToNext>
     <GoToNextPlayTranslate>Go to next line (and play in 'Translate mode')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Go to next line and set cursor at end</GoToNextCursorAtEnd>

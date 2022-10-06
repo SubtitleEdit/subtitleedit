@@ -1696,6 +1696,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/Text3D":
                     language.ExportPngXml.Text3D = reader.Value;
                     break;
+                case "ExportPngXml/ImagePrefix":
+                    language.ExportPngXml.ImagePrefix = reader.Value;
+                    break;
                 case "ExportPngXml/SideBySide3D":
                     language.ExportPngXml.SideBySide3D = reader.Value;
                     break;
@@ -6585,6 +6588,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/MergeDialogWithPrevious":
                     language.Settings.MergeDialogWithPrevious = reader.Value;
+                    break;
+                case "Settings/AutoBalanceSelectedLines":
+                    language.Settings.AutoBalanceSelectedLines = reader.Value;
                     break;
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
