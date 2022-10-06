@@ -9245,7 +9245,6 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemMergeLines.Visible = false;
                     visualSyncSelectedLinesToolStripMenuItem.Visible = false;
                     toolStripMenuItemUnbreakLines.Visible = false;
-                    toolStripMenuItemAutoBreakLines.Visible = false;
                     if (_subtitleOriginal != null && noNetWorkSession && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                     {
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
