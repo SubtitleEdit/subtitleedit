@@ -2065,7 +2065,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxFilter.SelectedIndex == 2)
             {
                 skip = true;
-                foreach (Paragraph p in sub.Paragraphs)
+                foreach (var p in sub.Paragraphs)
                 {
                     if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
                     {
@@ -2077,7 +2077,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxFilter.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(textBoxFilter.Text))
             {
                 skip = true;
-                foreach (Paragraph p in sub.Paragraphs)
+                foreach (var p in sub.Paragraphs)
                 {
                     if (p.Text != null && p.Text.Contains(textBoxFilter.Text, StringComparison.Ordinal))
                     {
@@ -2137,7 +2137,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p.FixRtl && mode == RemoveUnicode)
             {
-                for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
+                for (var i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
                     paragraph.Text = Utilities.RemoveUnicodeControlChars(paragraph.Text);
@@ -2156,7 +2156,7 @@ namespace Nikse.SubtitleEdit.Forms
                             l = LanguageAutoDetect.AutoDetectGoogleLanguage(p.Subtitle);
                         }
 
-                        for (int i = 0; i < 3; i++)
+                        for (var i = 0; i < 3; i++)
                         {
                             fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding.Encoding, l);
                             p.Subtitle = fixCommonErrors.FixedSubtitle;
@@ -2217,7 +2217,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (p.SetMinDisplayTimeBetweenSubtitles)
             {
                 double minimumMillisecondsBetweenLines = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                for (int i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
+                for (var i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
                 {
                     var current = p.Subtitle.GetParagraphOrDefault(i);
                     var next = p.Subtitle.GetParagraphOrDefault(i + 1);
@@ -2231,7 +2231,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (p.FixRtl && mode == ReverseStartEnd)
             {
-                for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
+                for (var i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
                     paragraph.Text = Utilities.ReverseStartAndEndingForRightToLeft(paragraph.Text);
@@ -2239,7 +2239,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (p.FixRtl && mode == AddUnicode) // fix with unicode char
             {
-                for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
+                for (var i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
                     paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
@@ -2550,7 +2550,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelError.Visible = false;
 
             var first = int.MaxValue;
-            for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
+            for (var i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 var idx = listViewInputFiles.SelectedIndices[i];
                 if (idx < first)
