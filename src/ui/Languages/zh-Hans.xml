@@ -649,6 +649,7 @@ Command line: {1} {2}
     <SimpleRendering>简单渲染</SimpleRendering>
     <AntiAliasingWithTransparency>带透明度抗锯齿</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>图像前缀</ImagePrefix>
     <SideBySide3D>左右型 3D 格式</SideBySide3D>
     <HalfTopBottom3D>上下型 3D 格式</HalfTopBottom3D>
     <Depth>深度</Depth>
@@ -2399,6 +2400,7 @@ Command line: {1} {2}
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <MergeDialogWithNext>与下一条合并对话 (插入破折号)</MergeDialogWithNext>
     <MergeDialogWithPrevious>与上一条合并对话 (插入破折号)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>自动平衡选中行</AutoBalanceSelectedLines>
     <GoToNext>转到下一行</GoToNext>
     <GoToNextPlayTranslate>转到下一行（并以“翻译模式”播放）</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>转到下一行并将光标置于末尾</GoToNextCursorAtEnd>
