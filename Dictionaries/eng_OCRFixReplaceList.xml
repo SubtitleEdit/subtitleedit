@@ -1312,20 +1312,20 @@
 		<Word from="let'sjust" to="let's just" />
 		<Word from="Let'sjust" to="Let's just" />
 		<Word from="Lf" to="If" />
-		<Word from="lf" to="If" />
+		<Word from="lf" to="if" />
 		<Word from="lfeelonelung" to="I feel one lung" />
-		<Word from="lfhe's" to="If he's" />
+		<Word from="lfhe's" to="if he's" />
 		<Word from="lfl" to="if I" />
-		<Word from="lfstill" to="If still" />
+		<Word from="lfstill" to="if still" />
 		<Word from="lfthafs" to="if that's" />
-		<Word from="lfthere" to="If there" />
+		<Word from="lfthere" to="if there" />
 		<Word from="lfthey" to="if they" />
 		<Word from="lfthis" to="if this" />
-		<Word from="lfwe" to="If we" />
+		<Word from="lfwe" to="if we" />
 		<Word from="lfwe're" to="if we're" />
-		<Word from="lfyou" to="If you" />
+		<Word from="lfyou" to="if you" />
 		<Word from="Lfyou" to="If you" />
-		<Word from="lfyou're" to="If you're" />
+		<Word from="lfyou're" to="if you're" />
 		<Word from="lget" to="I get" />
 		<Word from="lgive" to="I give" />
 		<Word from="lgot" to="I got" />
@@ -3346,6 +3346,7 @@
 		<Beginning from="Im sorry" to="I'm sorry" />
 		<Beginning from="lce " to="Ice " />
 		<Beginning from="lf " to="If " />
+		<Beginning from="lfhe's" to="If he's" />
 		<Beginning from="-lf " to="-If " />
 		<Beginning from="-lt " to="-It " />
 	</BeginLines>
