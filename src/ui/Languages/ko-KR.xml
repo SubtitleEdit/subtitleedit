@@ -172,9 +172,13 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   <AudioToText>
     <Title>오디오를 텍스트로</Title>
     <Info>Vosk/Kaldi 음성 인식을 통해 오디오에서 텍스트 생성</Info>
+    <WhisperInfo>Whisper 음성 인식을 통해 오디오에서 텍스트 생성</WhisperInfo>
     <VoskWebsite>Vosk 홈페이지</VoskWebsite>
+    <WhisperWebsite>Whisper 웹사이트</WhisperWebsite>
     <Models>모델</Models>
+    <LanguagesAndModels>언어 및 모델</LanguagesAndModels>
     <ChooseModel>모델 선택</ChooseModel>
+    <ChooseLanguage>언어 선택</ChooseLanguage>
     <OpenModelsFolder>모델 폴더 열기</OpenModelsFolder>
     <LoadingVoskModel>Vosk 음성 인식 모델을 로드하는 중...</LoadingVoskModel>
     <Transcribing>오디오를 텍스트로 변환하는 중...</Transcribing>
@@ -182,6 +186,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <XFilesSavedToVideoSourceFolder>{0} 파일을 비디오 소스 폴더에 저장함 </XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>post-processing 사용 (줄 병합, 케이싱 수정, 문장 부호 등)</UsePostProcessing>
     <BatchMode>일괄 모드</BatchMode>
+    <KeepPartialTranscription>일부 전사 유지</KeepPartialTranscription>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha 첨부파일</Title>
@@ -641,6 +646,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SimpleRendering>간단한 렌더링</SimpleRendering>
     <AntiAliasingWithTransparency>투명하게 앤티 앨리어싱</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>이미지 접두사</ImagePrefix>
     <SideBySide3D>좌/우</SideBySide3D>
     <HalfTopBottom3D>상/하</HalfTopBottom3D>
     <Depth>깊이</Depth>
@@ -1261,7 +1267,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>자막 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>오디오를 텍스트로...</VideoAudioToText>
+        <VideoAudioToTextX>오디오를 텍스트로 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportShotChanges>장면 전환 생성/가져오기...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>장면 전환 제거/내보내기...</RemoveOrExportShotChanges>
@@ -2405,6 +2411,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <MergeDialogWithNext>대화를 다음 대화와 병합 (대시 삽입)</MergeDialogWithNext>
     <MergeDialogWithPrevious>대화를 이전 대화와 병합 (대시 삽입)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>선택한 줄 자동 균형</AutoBalanceSelectedLines>
     <GoToNext>다음 줄로 이동</GoToNext>
     <GoToNextPlayTranslate>다음 줄로 이동 (그리고 '번역 모드'에서 재생)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>다음 줄로 이동하여 끝에 커서 설정</GoToNextCursorAtEnd>
