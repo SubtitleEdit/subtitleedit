@@ -95,6 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 orderedArray = _splits.Where(p => p.IsLineLengthOkay(_singleLineMaxLength)).OrderBy(p => p.DiffFromAveragePixelBottomHeavy());
                 best = orderedArray.FirstOrDefault() ?? best;
             }
+
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 

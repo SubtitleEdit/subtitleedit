@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
@@ -7,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
     {
         public static bool IsWhisperInstalled()
         {
-            if (Directory.Exists(WhisperModel.ModelFolder))
+            if (Directory.Exists(WhisperModel.ModelFolder) || Configuration.IsRunningOnLinux)
             {
                 return true;
             }
