@@ -515,7 +515,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             // whisper --model tiny.en --language English --fp16 False a.wav
             var parameters = $"--model {model} --language \"{language}\" --fp16 False \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
-            process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Configuration.Settings.General.FFmpegLocation;
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Configuration.Settings.General.FFmpegLocation;
+            }
 
             _outputText.Add("Calling whisper with : whisper " + parameters);
 
