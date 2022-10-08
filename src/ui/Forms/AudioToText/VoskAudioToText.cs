@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             textBoxLog.AppendText(Environment.NewLine);
             progressBar1.Style = ProgressBarStyle.Blocks;
             var transcript = TranscribeViaVosk(waveFileName, modelFileName);
-            if (_cancel)
+            if (_cancel && (transcript == null || transcript.Count == 0 || MessageBox.Show(LanguageSettings.Current.AudioToText.KeepPartialTranscription, Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes))
             {
                 DialogResult = DialogResult.Cancel;
                 return;
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     if (_cancel)
                     {
                         TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
-                        return null;
+                        break;
                     }
                 }
 
