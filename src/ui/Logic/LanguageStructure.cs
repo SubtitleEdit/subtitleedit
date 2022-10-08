@@ -183,6 +183,7 @@
             public string WhisperInfo { get; set; }
             public string VoskWebsite { get; set; }
             public string WhisperWebsite { get; set; }
+            public string WhisperNotFound { get; set; }
             public string Models { get; set; }
             public string LanguagesAndModels { get; set; }
             public string ChooseModel { get; set; }

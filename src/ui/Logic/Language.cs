@@ -327,6 +327,7 @@ namespace Nikse.SubtitleEdit.Logic
                 WhisperInfo = "Generate text from audio via Whisper speech recognition",
                 VoskWebsite = "Vosk website",
                 WhisperWebsite = "Whisper website",
+                WhisperNotFound = "Whisper not found.\r\n\r\nRead more info (web)?",
                 Models = "Models",
                 LanguagesAndModels = "Languages and models",
                 ChooseModel = "Choose model",
