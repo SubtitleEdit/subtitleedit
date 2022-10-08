@@ -22,6 +22,7 @@
    * Add bookmarks to spell check dialog - thx cyzs233/OmrSi 
    * Add dictate shortcut for main text box - thx Xenos71
    * Change spell check window font size via context menu - thx Marko G
+   * Add experimental "Audio to text via Whisper"
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -46,6 +47,7 @@
    * Do not halt on errors in "Audio to text" batch - thx javiavid
    * SE does not contain/install any "*_user.xml" dictionary files
    * Add bold support to DCP format - thx felagund
+   * A few fixes for eng_OCRFixReplaceList.xml - thx Ding-adong
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
