@@ -516,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var parameters = $"--model {model} --language \"{language}\" --fp16 False \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
-            if (Configuration.IsRunningOnWindows)
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
                 process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Configuration.Settings.General.FFmpegLocation;
             }
