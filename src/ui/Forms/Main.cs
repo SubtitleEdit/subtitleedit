@@ -34605,13 +34605,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!WhisperHelper.IsWhisperInstalled())
             {
-                if (MessageBox.Show("Whisper not found." + Environment.NewLine +
-                                    Environment.NewLine +
-                                    "Go to the Whisper website?",
+                if (MessageBox.Show(LanguageSettings.Current.AudioToText.WhisperNotFound,
                                     "Subtitle Edit",
                                     MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
-                    UiUtil.OpenUrl("https://github.com/openai/whisper");
+                    UiUtil.ShowHelp("#audio_to_text");
                 }
 
                 return;

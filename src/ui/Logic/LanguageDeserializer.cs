@@ -484,6 +484,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/WhisperWebsite":
                     language.AudioToText.WhisperWebsite = reader.Value;
                     break;
+                case "AudioToText/WhisperNotFound":
+                    language.AudioToText.WhisperNotFound = reader.Value;
+                    break;
                 case "AudioToText/Models":
                     language.AudioToText.Models = reader.Value;
                     break;

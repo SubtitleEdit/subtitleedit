@@ -179,6 +179,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <WhisperInfo>Generate text from audio via Whisper speech recognition</WhisperInfo>
     <VoskWebsite>Vosk website</VoskWebsite>
     <WhisperWebsite>Whisper website</WhisperWebsite>
+    <WhisperNotFound>Whisper not found.
+
+Read more info (web)?</WhisperNotFound>
     <Models>Models</Models>
     <LanguagesAndModels>Languages and models</LanguagesAndModels>
     <ChooseModel>Choose model</ChooseModel>
