@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -60,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             {
                 get
                 {
-                    string text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
+                    var text = string.Join(" ", SentenceParagraphs.ConvertAll(e => e.Text));
                     text = Regex.Replace(text, @"\s+", " "); //replace new lines and multiple spaces to a single space
                     return text.Trim();
                 }
@@ -72,23 +73,24 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
              */
             public void SetTranslation(string targetText)
             {
-                List<int> sourceChunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
+                var sourceChunksTextLength = SentenceParagraphs.ConvertAll(x => x.Text.Length);
                 var breakPositions = EvaluateBreakPositions(targetText, sourceChunksTextLength);
 
-                string[] targetChunks = StringSplitEngine.SplitAt(targetText, breakPositions);
+                var targetChunks = StringSplitEngine.SplitAt(targetText, breakPositions);
                 for (int i = 0; i < targetChunks.Length; i++)
                 {
                     SentenceParagraphs[i].Translation = targetChunks[i];
                 }
             }
 
-            private int[] EvaluateBreakPositions(string targetText, List<int> sourceChunksTextLength)
+            private static int[] EvaluateBreakPositions(string targetText, List<int> sourceChunksTextLength)
             {
                 if (sourceChunksTextLength.Count == 1) //only 1 source chunk, no breakup required
                 {
-                    return new int[0];
+                    return Array.Empty<int>();
                 }
-                List<AbstractStringSplitsChunkAssigner.RateResult> rateResults = new List<AbstractStringSplitsChunkAssigner.RateResult>();
+
+                var rateResults = new List<AbstractStringSplitsChunkAssigner.RateResult>();
                 foreach (var stringSplitsChunkAssigner in StringSplitsChunkAssigners)
                 {
                     var potentialBreakPositions = stringSplitsChunkAssigner.GetSplitPositions(sourceChunksTextLength, targetText);
@@ -105,10 +107,10 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             return "Sentence Merging";
         }
 
-        private IEnumerable<Sentence> ConcatSentences(List<Paragraph> paragraphs)
+        private static IEnumerable<Sentence> ConcatSentences(List<Paragraph> paragraphs)
         {
-            Sentence currentSentence = new Sentence();
-            int lastParagraphNumber = int.MinValue;
+            var currentSentence = new Sentence();
+            var lastParagraphNumber = int.MinValue;
 
             foreach (var paragraph in paragraphs)
             {
@@ -132,6 +134,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                         yield return currentSentence;
                         currentSentence = new Sentence();
                     }
+
                     currentSentence.SentenceParagraphs.Add(new SentenceParagraphRelation(sentenceChunk, paragraphWrapper));
                     if (SentenceDelimiterAfterChars.Contains(sentenceChunk[sentenceChunk.Length - 1]))
                     {
@@ -140,6 +143,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                     }
                 }
             }
+
             if (currentSentence.Text.Length > 0) //this check avoid a empty last Sentence (could happen when the last chunk ends with a delimiter)
             {
                 yield return currentSentence;
@@ -153,14 +157,14 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
         protected override Dictionary<int, string> GetTargetParagraphs(List<Sentence> sourceTranslationUnits, List<string> targetSentenceTexts)
         {
-            for (int i = 0; i < sourceTranslationUnits.Count; i++)
+            for (var i = 0; i < sourceTranslationUnits.Count; i++)
             {
                 var targetUnitText = targetSentenceTexts[i];
                 sourceTranslationUnits[i].SetTranslation(targetUnitText);
             }
 
-            Dictionary<int, string> targetParagraphs = new Dictionary<int, string>();
-            foreach (Sentence sourceSentence in sourceTranslationUnits)
+            var targetParagraphs = new Dictionary<int, string>();
+            foreach (var sourceSentence in sourceTranslationUnits)
             {
                 foreach (var sentenceParagraphRelation in sourceSentence.SentenceParagraphs)
                 {
