@@ -175,6 +175,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WhisperInfo>Whisper 음성 인식을 통해 오디오에서 텍스트 생성</WhisperInfo>
     <VoskWebsite>Vosk 홈페이지</VoskWebsite>
     <WhisperWebsite>Whisper 웹사이트</WhisperWebsite>
+    <WhisperNotFound>Whisper을 찾을 수 없음!
+
+더 많은 정보(웹)를 참조하시겠습니까?</WhisperNotFound>
     <Models>모델</Models>
     <LanguagesAndModels>언어 및 모델</LanguagesAndModels>
     <ChooseModel>모델 선택</ChooseModel>
