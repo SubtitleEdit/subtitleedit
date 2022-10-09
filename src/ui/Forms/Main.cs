@@ -1818,6 +1818,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonAssaDraw.ToolTipText = _language.Menu.ToolBar.AssaDraw;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
+            toolStripButtonSourceView.ToolTipText = LanguageSettings.Current.Settings.ToggleView;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
@@ -13444,6 +13445,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxSource.Visible = true;
                 splitContainerListViewAndText.Visible = false;
             }
+
+            toolStripButtonSourceView.Checked = InSourceView;
         }
 
         private void ListViewVisibleChanged(object sender, EventArgs e)
@@ -34648,6 +34651,18 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
+
+        private void toolStripButtonSourceView_Click(object sender, EventArgs e)
+        {
+            if (InListView)
+            {
+                SwitchView(SourceView);
+            }
+            else
+            {
+                SwitchView(ListView);
             }
         }
     }

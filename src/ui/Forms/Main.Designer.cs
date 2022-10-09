@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorToggle = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonSourceView = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToggleWaveform = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorSubtitleFormat = new System.Windows.Forms.ToolStripSeparator();
@@ -691,6 +692,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparatorHelp,
             this.toolStripButtonHelp,
             this.toolStripSeparatorToggle,
+            this.toolStripButtonSourceView,
             this.toolStripButtonToggleWaveform,
             this.toolStripButtonToggleVideo,
             this.toolStripSeparatorSubtitleFormat,
@@ -963,6 +965,18 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.toolStripSeparatorToggle.Name = "toolStripSeparatorToggle";
             this.toolStripSeparatorToggle.Size = new System.Drawing.Size(6, 40);
+            // 
+            // toolStripButtonSourceView
+            // 
+            this.toolStripButtonSourceView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSourceView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.toolStripButtonSourceView.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSourceView.Image")));
+            this.toolStripButtonSourceView.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonSourceView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSourceView.Name = "toolStripButtonSourceView";
+            this.toolStripButtonSourceView.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonSourceView.Text = "Toggle list/source view";
+            this.toolStripButtonSourceView.Click += new System.EventHandler(this.toolStripButtonSourceView_Click);
             // 
             // toolStripButtonToggleWaveform
             // 
@@ -4753,7 +4767,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.insertUnicodeCharactersToolStripMenuItem,
             this.insertUnicodeControlCharactersToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 634);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(274, 612);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripTextBoxListViewClosing);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
@@ -6161,5 +6175,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem convertColorsToDialogToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBoxRecord;
         private System.Windows.Forms.ToolStripMenuItem audioToTextWhisperTolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSourceView;
     }
 }
