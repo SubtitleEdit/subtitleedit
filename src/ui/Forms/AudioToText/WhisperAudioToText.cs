@@ -95,6 +95,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var modelsFolder = WhisperModel.ModelFolder;
             var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.WhisperModel : lastDownloadedModel;
             comboBoxModels.Items.Clear();
+
+            if (!Directory.Exists(modelsFolder))
+            {
+                Directory.CreateDirectory(modelsFolder);
+            }
+
             foreach (var fileName in Directory.GetFiles(modelsFolder))
             {
                 var name = Path.GetFileNameWithoutExtension(fileName);
@@ -633,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             using (var form = new WhisperModelDownload { AutoClose = true })
             {
                 form.ShowDialog(this);
-                FillModels(comboBoxModels, form.LastDownloadedModel.Name);
+                FillModels(comboBoxModels, form.LastDownloadedModel != null ? form.LastDownloadedModel.Name : string.Empty);
             }
         }
 
