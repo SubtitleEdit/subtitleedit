@@ -6314,15 +6314,87 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string OcrViaCloudVision(Bitmap bitmap, int listViewIndex)
         {
+            if (_ocrFixEngine == null)
+            {
+                comboBoxDictionaries_SelectedIndexChanged(null, null);
+            }
+
+            string line = string.Empty;
+
             var language = (comboBoxCloudVisionLanguage.SelectedItem as OcrLanguage).Code;
             var cloudVisionResult = _ocrService.PerformOcr(language, new List<Bitmap>() { bitmap });
 
             if (cloudVisionResult.Count > 0)
             {
-                return cloudVisionResult[0];
+                line = cloudVisionResult[0];
             }
 
-            return string.Empty;
+            if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
+            {
+                var lastLastLine = GetLastLastText(listViewIndex);
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, lastLastLine, null); // TODO: Add abbreviations list
+            }
+
+            if (checkBoxRightToLeft.Checked)
+            {
+                line = ReverseNumberStrings(line);
+            }
+
+            //OCR fix engine
+            string textWithOutFixes = line;
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
+            {
+                var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
+                if (checkBoxGuessUnknownWords.Checked)
+                {
+                    autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
+                }
+
+                if (checkBoxAutoFixCommonErrors.Checked)
+                {
+                    var lastLastLine = GetLastLastText(listViewIndex);
+                    line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, lastLastLine, true, autoGuessLevel);
+                }
+
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out var correctWords);
+
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null)
+                {
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, autoGuessLevel);
+                }
+
+                if (_ocrFixEngine.Abort)
+                {
+                    ButtonPauseClick(null, null);
+                    _ocrFixEngine.Abort = false;
+
+                    return string.Empty;
+                }
+
+                // Log used word guesses (via word replace list)
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
+                {
+                    listBoxLogSuggestions.Items.Add(guess);
+                }
+
+                _ocrFixEngine.AutoGuessesUsed.Clear();
+
+                // Log unknown words guess (found via spelling dictionaries)
+                LogUnknownWords();
+
+                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
+            }
+
+            if (textWithOutFixes.Trim() != line.Trim())
+            {
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
+            }
+
+            return line;
         }
 
         private void InitializeNOcrForBatch(string db)
@@ -8701,6 +8773,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void comboBoxNOcrLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
             _nOcrDb = null;
+
+            if (_ocrMethodIndex == _ocrMethodNocr)
+            {
+                if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
+                {
+                    Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
+                }
+            }
         }
 
         private void buttonSpellCheckDownload_Click(object sender, EventArgs e)

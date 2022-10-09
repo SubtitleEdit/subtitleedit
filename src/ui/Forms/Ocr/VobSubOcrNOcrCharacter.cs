@@ -171,7 +171,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            HandleOKClicked(false);
+            if (listBoxLinesForeground.Items.Count == 0)
+            {
+                MessageBox.Show("No foreground lines!");
+                return;
+            }
+            if (listBoxlinesBackground.Items.Count == 0 && !_warningNoNotForegroundLinesShown)
+            {
+                MessageBox.Show("No not-foreground lines!");
+                _warningNoNotForegroundLinesShown = true;
+                return;
+            }
+            if (textBoxCharacters.Text.Length == 0)
+            {
+                MessageBox.Show("Text is empty!");
+                return;
+            }
+            if (!IsMatch())
+            {
+                MessageBox.Show("Lines does not match image!");
+                return;
+            }
+            NOcrChar.Text = textBoxCharacters.Text;
+            NOcrChar.Italic = checkBoxItalic.Checked;
+            UseOnce = false;
+            DialogResult = DialogResult.OK;
         }
 
         private void pictureBoxCharacter_Paint(object sender, PaintEventArgs e)
@@ -870,7 +894,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                buttonOK_Click(null, null);
+
+                if (e.Modifiers == Keys.Control)
+                {
+                    buttonOnce_Click(null, null);
+                } 
+                else
+                {
+                    buttonOK_Click(null, null);
+                }
             }
         }
 
@@ -991,35 +1023,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonOnce_Click(object sender, EventArgs e)
         {
-            HandleOKClicked(true);
-        }
-
-        private void HandleOKClicked(bool useOnce)
-        {
-            if (listBoxLinesForeground.Items.Count == 0)
-            {
-                MessageBox.Show("No foreground lines!");
-                return;
-            }
-            if (listBoxlinesBackground.Items.Count == 0 && !_warningNoNotForegroundLinesShown)
-            {
-                MessageBox.Show("No not-foreground lines!");
-                _warningNoNotForegroundLinesShown = true;
-                return;
-            }
-            if (textBoxCharacters.Text.Length == 0)
-            {
-                MessageBox.Show("Text is empty!");
-                return;
-            }
-            if (!IsMatch())
-            {
-                MessageBox.Show("Lines does not match image!");
-                return;
-            }
             NOcrChar.Text = textBoxCharacters.Text;
             NOcrChar.Italic = checkBoxItalic.Checked;
-            UseOnce = useOnce;
+            UseOnce = true;
             DialogResult = DialogResult.OK;
         }
     }
