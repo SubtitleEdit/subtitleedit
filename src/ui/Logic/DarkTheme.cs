@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 var useImmersiveDarkMode = enabled ? 1 : 0;
-                return NativeMethods.DwmSetWindowAttribute(handle, (int)attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
+                return NativeMethods.DwmSetWindowAttribute(handle, attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
             }
 
             return false;

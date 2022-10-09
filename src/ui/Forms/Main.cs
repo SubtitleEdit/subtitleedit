@@ -5564,7 +5564,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                System.Diagnostics.Debug.WriteLine(exception.Message + Environment.NewLine + exception.StackTrace);
+                Debug.WriteLine(exception.Message + Environment.NewLine + exception.StackTrace);
             }
 
             UpdateRecentFilesUI();
@@ -5825,6 +5825,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             Configuration.Settings.Tools.ListViewUnfocusedSelectedColor = listViewDarkThemeUnfocusedBackColor;
                         }
+
+                        DarkTheme.SetDarkTheme(textBoxSource);
                     }
 
                     Configuration.Settings.General.SubtitleBackgroundColor = darkThemeBackColor;
