@@ -870,6 +870,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
+
+                if (e.Modifiers == Keys.Control)
+                {
+                    UseOnce = true;
+                }
+
                 buttonOK_Click(null, null);
             }
         }
