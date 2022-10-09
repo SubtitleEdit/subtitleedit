@@ -96,6 +96,7 @@
     <ExampleX>Eksempel: {0}</ExampleX>
     <Reset>Nulstil</Reset>
     <Warning>Advarsel</Warning>
+    <UseLargerFontForThisWindow>Brug stor skrifttype til dette vindue</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -170,9 +171,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <AudioToText>
     <Title>Lyd til tekst</Title>
     <Info>Generer tekst fra lyd via Vosk/Kaldi talegenkendelse</Info>
+    <WhisperInfo>Generer tekst fra lyd via Whisper-talegenkendelse</WhisperInfo>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
+    <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
+    <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
     <Models>Modeller</Models>
+    <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
     <ChooseModel>Vælg model</ChooseModel>
+    <ChooseLanguage>Vælg model</ChooseLanguage>
     <OpenModelsFolder>Åbn mappen modeller</OpenModelsFolder>
     <LoadingVoskModel>Indlæser Vosk talegenkendelsesmodel...</LoadingVoskModel>
     <Transcribing>Transskriberer lyd til tekst...</Transcribing>
@@ -180,6 +186,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XFilesSavedToVideoSourceFolder>{0} filer gemt i videokildemappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
     <BatchMode>Batch-tilstand</BatchMode>
+    <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -640,6 +647,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SimpleRendering>Simpel rendering</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing med gennemsigtighed</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Billedpræfiks</ImagePrefix>
     <SideBySide3D>Half-Side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>Dybde</Depth>
@@ -1259,7 +1267,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Video/lyd til tekst...</VideoAudioToText>
+        <VideoAudioToTextX>Lyd til tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
@@ -2397,6 +2405,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <MergeDialogWithNext>Flet dialog med næste (indsæt bindestreger)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Flet dialog med forrige (indsæt bindestreger)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Autobalancer valgte linjer</AutoBalanceSelectedLines>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToNextPlayTranslate>Gå til næste linje (og spil i 'Oversæt tilstand')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gå til næste linje, og indstil markøren i slutningen</GoToNextCursorAtEnd>
@@ -2517,6 +2526,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MergeSelectedLinesAndUnbreakCjk>Flet valgte linjer og fjern linjeskift uden mellemrum (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Flet valgte linjer, beholde første ikke-tomme tekst</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Flet valgte linjer tosproget</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Flet sammen med tidligere (tosproget)</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Flet sammen med næste (tosproget)</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Split valgte linie tosproget</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
@@ -2554,6 +2565,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Bryd ved første mellemrum fra markørposition</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Bryd i første mellemrum fra markørposition og gå til næste</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dikter (tast ned=start optagelse, tast op=afslut optagelse)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak uden plads (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Vis ASSA-tag-hjælper</MainTextBoxAssaIntellisense>
@@ -3032,6 +3044,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Italic>&amp;Kursiv</Italic>
     <Abort>&amp;Afbryd</Abort>
     <Skip>&amp;Skip</Skip>
+    <UseOnce>&amp;Benyt én gang</UseOnce>
     <Nordic>Nordic</Nordic>
     <Spanish>Spansk</Spanish>
     <German>Tysk</German>
