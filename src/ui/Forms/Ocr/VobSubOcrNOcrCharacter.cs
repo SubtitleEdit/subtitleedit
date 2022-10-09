@@ -897,10 +897,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (e.Modifiers == Keys.Control)
                 {
-                    UseOnce = true;
+                    buttonOnce_Click(null, null);
+                } 
+                else
+                {
+                    buttonOK_Click(null, null);
                 }
-
-                buttonOK_Click(null, null);
             }
         }
 
