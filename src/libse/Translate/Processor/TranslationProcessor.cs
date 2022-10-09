@@ -89,15 +89,16 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                     return targetParagraphs.Values.ToList();
                 }
             }
+
             return targetParagraphs.Values.ToList();
         }
 
         public abstract List<string> GetSupportedLanguages();
 
-        private IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<TTranslationBaseUnit> translationUnits, ITranslationService translationService)
+        private static IEnumerable<TranslationChunk> BuildTranslationChunks(IEnumerable<TTranslationBaseUnit> translationUnits, ITranslationService translationService)
         {
-            int maxTextSize = translationService.GetMaxTextSize();
-            int maximumRequestArrayLength = translationService.GetMaximumRequestArraySize();
+            var maxTextSize = translationService.GetMaxTextSize();
+            var maximumRequestArrayLength = translationService.GetMaximumRequestArraySize();
             var currentChunk = new TranslationChunk();
 
             foreach (var translationUnit in translationUnits)
@@ -110,6 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
                 }
                 currentChunk.TranslationUnits.Add(translationUnit);
             }
+
             if (currentChunk.ArrayLength > 0)
             {
                 yield return currentChunk;
