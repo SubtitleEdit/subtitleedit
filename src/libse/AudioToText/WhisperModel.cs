@@ -16,6 +16,20 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper");
 
+        public static void CreateModelFolder()
+        {
+            var cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+            if (!Directory.Exists(cacheFolder))
+            {
+                Directory.CreateDirectory(cacheFolder);
+            }
+
+            if (!Directory.Exists(ModelFolder))
+            {
+                Directory.CreateDirectory(ModelFolder);
+            }
+        }
+
         // See https://github.com/openai/whisper/blob/main/whisper/__init__.py
         public static readonly WhisperModel[] Models =
         {

@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (!Directory.Exists(modelsFolder))
             {
-                Directory.CreateDirectory(modelsFolder);
+                WhisperModel.CreateModelFolder();
             }
 
             foreach (var fileName in Directory.GetFiles(modelsFolder))
