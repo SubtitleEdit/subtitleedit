@@ -23,6 +23,7 @@
    * Add dictate shortcut for main text box - thx Xenos71
    * Change spell check window font size via context menu - thx Marko G
    * Add experimental "Audio to text via Whisper"
+   * Add toolbar icon for source view toggle - thx Leon
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
