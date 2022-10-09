@@ -8773,6 +8773,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void comboBoxNOcrLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
             _nOcrDb = null;
+
+            if (_ocrMethodIndex == _ocrMethodNocr)
+            {
+                if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
+                {
+                    Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
+                }
+            }
         }
 
         private void buttonSpellCheckDownload_Click(object sender, EventArgs e)
