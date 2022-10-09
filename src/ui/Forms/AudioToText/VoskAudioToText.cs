@@ -762,25 +762,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
                 e.SuppressKeyPress = true;
-                var files = new List<string>();
                 if (Clipboard.ContainsFileDropList())
                 {
                     foreach (var fileName in Clipboard.GetFileDropList())
                     {
-                        files.Add(fileName);
+                        AddInputFile(fileName);
                     }
                 }
                 else if (Clipboard.ContainsText())
                 {
                     foreach (var fileName in Clipboard.GetText().SplitToLines())
                     {
-                        files.Add(fileName);
+                        AddInputFile(fileName);
                     }
-                }
-
-                foreach (var file in files)
-                {
-                    AddInputFile(file);
                 }
             }
         }
