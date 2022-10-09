@@ -175,9 +175,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <AudioToText>
     <Title>Ήχος σε κείμενο</Title>
     <Info>Δημιουργία κειμένου από ήχο μέσω αναγνώριση ομιλίας Vosk/Kaldi</Info>
+    <WhisperInfo>Δημιουργία κειμένου από ήχο μέσω αναγνώριση ομιλίας Whisper</WhisperInfo>
     <VoskWebsite>Ιστοσελίδα Vosk</VoskWebsite>
+    <WhisperWebsite>Ιστοσελίδα Whisper</WhisperWebsite>
+    <WhisperNotFound>Το Whsiper δεν βρέθηκε.
+Ανάγνωση περισσότερων πληροφοριών στο διαδίκτυο;</WhisperNotFound>
     <Models>Μοντέλα</Models>
+    <LanguagesAndModels>Γλώσσες και μοντέλα</LanguagesAndModels>
     <ChooseModel>Επιλογή μοντέλου</ChooseModel>
+    <ChooseLanguage>Επιλογή μοντέλου</ChooseLanguage>
     <OpenModelsFolder>Άνοιγμα φακέλου μοντέλων</OpenModelsFolder>
     <LoadingVoskModel>Φόρτωση μοντέλου αναγνώριση ομιλίας Vosk…</LoadingVoskModel>
     <Transcribing>Μετατροπή ήχου σε κείμενο…</Transcribing>
@@ -185,6 +191,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFilesSavedToVideoSourceFolder>Αποθηκεύτηκαν {0} αρχεία στον φάκελο του βίντεο</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών - κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
     <BatchMode>Ομαδική λειτουργία</BatchMode>
+    <KeepPartialTranscription>Κράτημα μερικής μετατροπής</KeepPartialTranscription>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
@@ -645,6 +652,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SimpleRendering>Απλή απεικόνιση</SimpleRendering>
     <AntiAliasingWithTransparency>Διαφανής εξομάλυνση</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Πρόθημα εικόνας</ImagePrefix>
     <SideBySide3D>Κάθετος διαχωρισμός</SideBySide3D>
     <HalfTopBottom3D>Οριζόντιος διαχωρισμός</HalfTopBottom3D>
     <Depth>Βάθος</Depth>
@@ -1261,7 +1269,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <GenerateTextFromVideo>Δημιουργία κειμένου από βίντεο…</GenerateTextFromVideo>
         <GenerateBlankVideo>Δημιουργία κενού αρχείου βίντεο…</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους…</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Ήχος σε κείμενο…</VideoAudioToText>
+        <VideoAudioToTextX>Ήχος σε κείμενο ({0})…</VideoAudioToTextX>
         <ImportChaptersFromVideo>Εισαγωγή κεφαλαίων από βίντεο</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Δημιουργία/εισαγωγή αλλαγών λήψης…</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Αφαίρεση/εξαγωγή αλλαγών λήψης…</RemoveOrExportShotChanges>
@@ -2401,6 +2409,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <MergeDialogWithNext>Συγχώνευση διαλόγου με επόμενο (εισαγωγή παυλών)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Συγχώνευση διαλόγου με προηγούμενο (εισαγωγή παυλών)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Αυτόματη ισορροπία επιλεγμένων γραμμών</AutoBalanceSelectedLines>
     <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>
     <GoToNextPlayTranslate>Μετάβαση σε επόμενη γραμμή (και αναπαραγωγή σε λειτουργία μετάφρασης)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Μετάβαση σε επόμενη γραμμή και ορισμός δείκτη στη λήξη</GoToNextCursorAtEnd>
