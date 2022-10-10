@@ -1476,6 +1476,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\AssSetBackground.resx">
       <DependentUpon>AssSetBackground.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\SetPosition.resx">
       <DependentUpon>SetPosition.cs</DependentUpon>

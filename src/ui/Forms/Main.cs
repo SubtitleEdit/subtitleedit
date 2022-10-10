@@ -34536,7 +34536,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Cursor = Cursors.WaitCursor;
                 var timeCode = new TimeCode(mediaPlayer.CurrentPosition * 1000.0 + 1000).ToHHMMSS();
-                var colorMatrix = "bt601:bt709"; // ffmpeg bug with assa color?
+                var colorMatrix = string.Empty; //TODO: whaaat? "bt601:bt709"; // ffmpeg bug with assa color?
                 var bmpFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, timeCode, colorMatrix);
                 using (var bmp = new Bitmap(bmpFileName))
                 {

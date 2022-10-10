@@ -57,7 +57,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private long _totalFrames;
         private FileSystemWatcher _drawingFileWatcher;
         private readonly Subtitle _wholeSubtitle;
-        private static bool _bt601Bt709On = true;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double videoPositionSeconds)
         {
@@ -225,12 +224,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 _boxStyleName = $"SE-box-bg{_random.Next(1234)}";
                 tryCount++;
-            }
-
-            noneToolStripMenuItem.Checked = true;
-            if (_bt601Bt709On)
-            {
-                bt601bt709ToolStripMenuItem_Click(null, null);
             }
         }
 
@@ -1427,10 +1420,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 var timeCode = new TimeCode(_mpv.CurrentPosition * 1000.0 + 1000).ToHHMMSS();
 
                 var colorMatrix = string.Empty;
-                if (bt601bt709ToolStripMenuItem.Checked)
-                {
-                    colorMatrix = "bt601:bt709";
-                }
+                //    colorMatrix = "bt601:bt709";
 
                 var bmpFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, timeCode, colorMatrix);
                 using (var bmp = new Bitmap(bmpFileName))
@@ -1466,20 +1456,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 Cursor = Cursors.Default;
             }
-        }
-
-        private void bt601bt709ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            bt601bt709ToolStripMenuItem.Checked = true;
-            noneToolStripMenuItem.Checked = false;
-            _bt601Bt709On = true;
-        }
-
-        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            noneToolStripMenuItem.Checked = true;
-            bt601bt709ToolStripMenuItem.Checked = false;
-            _bt601Bt709On = false;
         }
     }
 }
