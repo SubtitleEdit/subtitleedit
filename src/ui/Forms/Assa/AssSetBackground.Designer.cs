@@ -101,10 +101,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.numericUpDownBubbleHeight = new System.Windows.Forms.NumericUpDown();
             this.timerFileChange = new System.Windows.Forms.Timer(this.components);
             this.buttonPickColor = new System.Windows.Forms.Button();
-            this.contextMenuStripColorPicker = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.colorConvertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bt601bt709ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxDrawing.SuspendLayout();
@@ -132,7 +128,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelBubbles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleStep)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleHeight)).BeginInit();
-            this.contextMenuStripColorPicker.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxPreview
@@ -1033,7 +1028,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             // 
             // buttonPickColor
             // 
-            this.buttonPickColor.ContextMenuStrip = this.contextMenuStripColorPicker;
             this.buttonPickColor.Image = global::Nikse.SubtitleEdit.Properties.Resources.color_picker_small2;
             this.buttonPickColor.Location = new System.Drawing.Point(15, 167);
             this.buttonPickColor.Name = "buttonPickColor";
@@ -1041,36 +1035,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.buttonPickColor.TabIndex = 32;
             this.buttonPickColor.UseVisualStyleBackColor = true;
             this.buttonPickColor.Click += new System.EventHandler(this.ColorPickerClick);
-            // 
-            // contextMenuStripColorPicker
-            // 
-            this.contextMenuStripColorPicker.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.colorConvertToolStripMenuItem});
-            this.contextMenuStripColorPicker.Name = "contextMenuStripColorPicker";
-            this.contextMenuStripColorPicker.Size = new System.Drawing.Size(181, 48);
-            // 
-            // colorConvertToolStripMenuItem
-            // 
-            this.colorConvertToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.noneToolStripMenuItem,
-            this.bt601bt709ToolStripMenuItem});
-            this.colorConvertToolStripMenuItem.Name = "colorConvertToolStripMenuItem";
-            this.colorConvertToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.colorConvertToolStripMenuItem.Text = "Color convert";
-            // 
-            // noneToolStripMenuItem
-            // 
-            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
-            this.noneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.noneToolStripMenuItem.Text = "None";
-            this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
-            // 
-            // bt601bt709ToolStripMenuItem
-            // 
-            this.bt601bt709ToolStripMenuItem.Name = "bt601bt709ToolStripMenuItem";
-            this.bt601bt709ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.bt601bt709ToolStripMenuItem.Text = "bt601:bt709";
-            this.bt601bt709ToolStripMenuItem.Click += new System.EventHandler(this.bt601bt709ToolStripMenuItem_Click);
             // 
             // AssSetBackground
             // 
@@ -1143,7 +1107,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             this.panelBubbles.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleStep)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBubbleHeight)).EndInit();
-            this.contextMenuStripColorPicker.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1221,9 +1184,5 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private System.Windows.Forms.Label labelBubbleStep;
         private System.Windows.Forms.NumericUpDown numericUpDownBubbleHeight;
         private System.Windows.Forms.Button buttonPickColor;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripColorPicker;
-        private System.Windows.Forms.ToolStripMenuItem colorConvertToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bt601bt709ToolStripMenuItem;
     }
 }
