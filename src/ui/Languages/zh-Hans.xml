@@ -178,6 +178,9 @@ Command line: {1} {2}
     <WhisperInfo>通过 Whisper 语音识别从音频生成文本</WhisperInfo>
     <VoskWebsite>Vosk 网站</VoskWebsite>
     <WhisperWebsite>Whisper 网站</WhisperWebsite>
+    <WhisperNotFound>未找到 Whisper。
+
+在线查看更多信息？</WhisperNotFound>
     <Models>模型</Models>
     <LanguagesAndModels>语言和模型</LanguagesAndModels>
     <ChooseModel>选择模型</ChooseModel>
