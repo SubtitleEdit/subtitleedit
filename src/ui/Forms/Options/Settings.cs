@@ -2155,13 +2155,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 _pluginShortcuts = Configuration.Settings.Shortcuts.PluginShortcuts.Select(p => new PluginShortcut { Name = p.Name, Shortcut = p.Shortcut }).ToList();
             }
 
-            if (!Directory.Exists(Configuration.PluginsDirectory))
+            if (!Directory.Exists(Configuration.PluginsDirectory.TrimEnd(Path.DirectorySeparatorChar)))
             {
                 return;
             }
 
             var pluginsNode = new ShortcutNode(LanguageSettings.Current.PluginsGet.Title);
-            foreach (var pluginFileName in Directory.GetFiles(Configuration.PluginsDirectory, "*.DLL"))
+            foreach (var pluginFileName in Configuration.GetPlugins())
             {
                 Main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)

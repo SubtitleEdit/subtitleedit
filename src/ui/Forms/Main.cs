@@ -25078,8 +25078,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 assembly = Assembly.Load(File.ReadAllBytes(pluginFileName));
             }
-            catch
+            catch (Exception exception)
             {
+                SeLogger.Error(exception);
+
+                try
+                {
+                    assembly = Assembly.Load(pluginFileName);
+                }
+                catch (Exception e)
+                {
+                    SeLogger.Error(e);
+                }
+
                 return null;
             }
 
@@ -25148,7 +25159,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadPlugins()
         {
-            var path = Configuration.PluginsDirectory;
+            var path = Configuration.PluginsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(path))
             {
                 return;
@@ -25170,7 +25181,7 @@ namespace Nikse.SubtitleEdit.Forms
             var spellCheckMenuItems = new List<ToolStripMenuItem>();
             var assaToolMenuItems = new List<ToolStripMenuItem>();
 
-            foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL"))
+            foreach (var pluginFileName in Configuration.GetPlugins())
             {
                 try
                 {

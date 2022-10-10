@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string TesseractDirectory = DataDirectory + "Tesseract520" + Path.DirectorySeparatorChar;
         public static readonly string Tesseract302Directory = DataDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
-        public static readonly string PluginsDirectory = DataDirectory + "Plugins" + Path.DirectorySeparatorChar;
+        public static readonly string PluginsDirectory = DataDirectory + "Plugins";
         public static readonly string IconsDirectory = DataDirectory + "Icons" + Path.DirectorySeparatorChar;
         public static readonly string OcrDirectory = DataDirectory + "Ocr" + Path.DirectorySeparatorChar;
         public static readonly string SettingsFileName = DataDirectory + "Settings.xml";
@@ -35,6 +35,25 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
 
         public static readonly string DefaultLinuxFontName = "DejaVu Serif";
+
+        public static List<string> GetPlugins()
+        {
+            var plugins = new List<string>();
+            if (!Directory.Exists(PluginsDirectory))
+            {
+                return plugins;
+            }
+
+            foreach (var pluginFileName in Directory.GetFiles(PluginsDirectory, "*.*"))
+            {
+                if (pluginFileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                {
+                    plugins.Add(pluginFileName);
+                }
+            }
+
+            return plugins;
+        }
 
         private Configuration()
         {
@@ -137,23 +156,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
             if (IsRunningOnLinux || IsRunningOnMac)
-            {
-                if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
-                {
-                    try
-                    {
-                        var path = Path.Combine(Directory.CreateDirectory(Path.Combine(BaseDirectory, "Dictionaries")).FullName, "not-a-word-list");
-                        File.Create(path).Close();
-                        File.Delete(path);
-                        return BaseDirectory; // user installation
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
-                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
+            { 
+                return BaseDirectory;
             }
 
             var installerPath = GetInstallerPath();
