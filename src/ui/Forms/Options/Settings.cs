@@ -132,6 +132,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxReplace.Checked = gs.ShowToolbarReplace;
             checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
             checkBoxTBRemoveTextForHi.Checked = gs.ShowToolbarRemoveTextForHi;
+            checkBoxTBToggleSourceView.Checked = gs.ShowToolbarToggleSourceView;
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxTBBurnIn.Checked = gs.ShowToolbarBurnIn;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
@@ -363,6 +364,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBBurnIn.Text = language.BurnIn;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
+            labelToggleSourceView.Text = language.ToggleView;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
             checkBoxToolbarNew.Text = LanguageSettings.Current.General.Visible;
@@ -1731,7 +1733,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help)
+                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -1742,6 +1744,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxReplace.Image = (Image)replace.Clone();
             pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
             pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
+            pictureBoxToggleSourceView.Image = (Image)toggleSourceView.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxTBBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
@@ -1761,6 +1764,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ShowToolbarReplace = checkBoxReplace.Checked;
             gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
             gs.ShowToolbarRemoveTextForHi = checkBoxTBRemoveTextForHi.Checked;
+            gs.ShowToolbarToggleSourceView = checkBoxTBToggleSourceView.Checked;
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
             gs.ShowToolbarBurnIn = checkBoxTBBurnIn.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
@@ -3349,6 +3353,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     ProfileUiValueChanged(sender, e);
                 }
             }
+        }
+
+        private void checkBoxTBRemoveTextForHi_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

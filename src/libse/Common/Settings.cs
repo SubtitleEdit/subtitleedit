@@ -1213,6 +1213,7 @@ $HorzAlign          =   Center
         public bool ShowToolbarReplace { get; set; }
         public bool ShowToolbarFixCommonErrors { get; set; }
         public bool ShowToolbarRemoveTextForHi { get; set; }
+        public bool ShowToolbarToggleSourceView { get; set; }
         public bool ShowToolbarVisualSync { get; set; }
         public bool ShowToolbarBurnIn { get; set; }
         public bool ShowToolbarSpellCheck { get; set; }
@@ -1434,6 +1435,7 @@ $HorzAlign          =   Center
             ShowToolbarNetflixGlyphCheck = true;
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
+            ShowToolbarToggleSourceView = true;
 
             ShowVideoPlayer = true;
             ShowAudioVisualizer = true;
@@ -3160,6 +3162,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowToolbarVisualSync = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarToggleSourceView");
+            if (subNode != null)
+            {
+                settings.General.ShowToolbarToggleSourceView = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowToolbarBurnIn");
@@ -9874,6 +9882,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowToolbarReplace", settings.General.ShowToolbarReplace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarFixCommonErrors", settings.General.ShowToolbarFixCommonErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarRemoveTextForHi", settings.General.ShowToolbarRemoveTextForHi.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowToolbarToggleSourceView", settings.General.ShowToolbarToggleSourceView.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarBurnIn", settings.General.ShowToolbarBurnIn.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString(CultureInfo.InvariantCulture));
