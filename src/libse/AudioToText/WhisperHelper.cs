@@ -40,5 +40,40 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             return false;
         }
+
+        public static string GetWhisperFolder()
+        {
+            if (!Configuration.IsRunningOnWindows)
+            {
+                return null;
+            }
+
+            var pythonFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                "AppData",
+                "Local",
+                "Programs",
+                "Python");
+
+            if (!Directory.Exists(pythonFolder))
+            {
+                return null;
+            }
+
+            foreach (var dir in Directory.GetDirectories(pythonFolder))
+            {
+                var dirName = Path.GetFileName(dir);
+                if (dirName != null && dirName.StartsWith("Python3"))
+                {
+                    var whisperFullPath = Path.Combine(dir, "Scripts", "whisper.exe");
+                    if (File.Exists(whisperFullPath))
+                    {
+                        return Path.Combine(dir, "Scripts");
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 }
