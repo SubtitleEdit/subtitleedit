@@ -180,6 +180,9 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <WhisperInfo>Gerar texto a partir de áudio via reconhecimento de voz Whisper</WhisperInfo>
     <VoskWebsite>Website do Vosk</VoskWebsite>
     <WhisperWebsite>Website do Whisper</WhisperWebsite>
+    <WhisperNotFound>Whisper não encontrado.
+
+Mais informação (web)?</WhisperNotFound>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas e modelos</LanguagesAndModels>
     <ChooseModel>Escolher modelo</ChooseModel>
@@ -312,7 +315,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <FixRtlRemoveUnicode>Remover etiquetas Unicode RTL</FixRtlRemoveUnicode>
     <FixRtlReverseStartEnd>Inverter RTL início/fim</FixRtlReverseStartEnd>
     <SplitLongLines>Dividir linhas longas</SplitLongLines>
-    <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
+    <AutoBalance>Ajustar automaticamente as linhas</AutoBalance>
     <ScanFolder>Examinar pasta...</ScanFolder>
     <Recursive>Incluir sub-pastas</Recursive>
     <BridgeGaps>Unir intervalos</BridgeGaps>
@@ -328,7 +331,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <MkvLanguageCodeContains>Código linguístico Matroska (.mkv) contém...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Erros frequentes corrigidos: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Múltiplas substituições: {0}</MultipleReplaceErrorX>
-    <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
+    <AutoBalanceErrorX>Ajuste automático: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Tempos de compensação</OffsetTimeCodes>
     <TransportStreamSettings>Definições de Transport Stream</TransportStreamSettings>
     <TransportStreamOverrideXPosition>Substituir a posição original X</TransportStreamOverrideXPosition>
@@ -651,6 +654,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <SimpleRendering>Processamento simples</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing com transparência</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Prefixo da imagem</ImagePrefix>
     <SideBySide3D>Lado-a-lado parcial</SideBySide3D>
     <HalfTopBottom3D>Superior/inferior parcial</HalfTopBottom3D>
     <Depth>Profundidade</Depth>
@@ -2412,6 +2416,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MergeDialog>Combinar os diálogos (inserir travessões)</MergeDialog>
     <MergeDialogWithNext>Combinar os diálogos com a seguinte (inserir travessões)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Combinar os diálogos com a anterior (inserir travessões)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToNextPlayTranslate>Ir para a linha seguinte (e reproduzir no 'Modo de tradução')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Ir para a linha seguinte e pôr o cursor no fim</GoToNextCursorAtEnd>
