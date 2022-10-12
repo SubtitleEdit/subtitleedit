@@ -896,14 +896,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static int GetMaxLineLength(string text)
         {
-            int maxLength = 0;
-            foreach (string line in HtmlUtil.RemoveHtmlTags(text, true).SplitToLines())
+            var maxLength = 0;
+            foreach (var line in HtmlUtil.RemoveHtmlTags(text, true).SplitToLines())
             {
                 if (line.Length > maxLength)
                 {
                     maxLength = line.Length;
                 }
             }
+
             return maxLength;
         }
 
