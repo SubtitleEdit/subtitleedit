@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
@@ -113,6 +114,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
+
+        private const string ProfileExtension = ".export-profile";
 
         public string GetOutputFileName()
         {
@@ -4171,6 +4174,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             checkBoxFcpFullPathUrl.Visible = exportType == ExportFormats.Fcp;
             checkBoxFcpFullPathUrl.Checked = Configuration.Settings.Tools.ExportFcpFullPathUrl;
 
+            profilesToolStripMenuItem.Text = LanguageSettings.Current.Settings.Profiles;
+            exportToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
+            importToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
 
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(LanguageSettings.Current.General.None);
@@ -5193,7 +5199,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBox3D_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool enable = comboBox3D.SelectedIndex > 0;
+            var enable = comboBox3D.SelectedIndex > 0;
             labelDepth.Enabled = enable;
             numericUpDownDepth3D.Enabled = enable;
             subtitleListView1_SelectedIndexChanged(null, null);
@@ -5212,7 +5218,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
             }
 
-            int selectedIndex = subtitleListView1.SelectedItems[0].Index;
+            var selectedIndex = subtitleListView1.SelectedItems[0].Index;
 
             saveFileDialog1.Title = LanguageSettings.Current.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
@@ -5313,13 +5319,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             try
             {
                 var fontName = comboBoxSubtitleFont.SelectedItem.ToString();
-                int columnIndexText = 4;
+                var columnIndexText = 4;
                 if (subtitleListView1.CheckBoxes)
                 {
                     columnIndexText++;
                 }
 
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
 
                     subtitleListView1.Items[i].SubItems[columnIndexText].Font = new Font(fontName, Font.Size);
@@ -5373,7 +5379,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 subtitleListView1.BeginUpdate();
-                foreach (int i in indexes)
+                foreach (var i in indexes)
                 {
                     if (tag == BoxMultiLineText)
                     {
@@ -5391,7 +5397,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else
                     {
-                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
+                        var indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
                         if (_subtitle.Paragraphs[i].Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                         {
                             _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
@@ -5429,15 +5435,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
-                bool isSsa = _format.Name == SubStationAlpha.NameOfFormat ||
-                             _format.Name == AdvancedSubStationAlpha.NameOfFormat;
+                var isSsa = _format.Name == SubStationAlpha.NameOfFormat ||
+                            _format.Name == AdvancedSubStationAlpha.NameOfFormat;
 
                 foreach (ListViewItem item in subtitleListView1.SelectedItems)
                 {
-                    Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                    var p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        int indexOfEndBracket = p.Text.IndexOf('}');
+                        var indexOfEndBracket = p.Text.IndexOf('}');
                         if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                         {
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
@@ -5504,20 +5510,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
             }
 
-            int bottomIndex = subtitleListView1.TopItem.Index + (Height - 25) / 16;
-            int itemsBeforeAfterCount = (bottomIndex - subtitleListView1.TopItem.Index) / 2 - 1;
+            var bottomIndex = subtitleListView1.TopItem.Index + (Height - 25) / 16;
+            var itemsBeforeAfterCount = (bottomIndex - subtitleListView1.TopItem.Index) / 2 - 1;
             if (itemsBeforeAfterCount < 0)
             {
                 itemsBeforeAfterCount = 1;
             }
 
-            int beforeIndex = index - itemsBeforeAfterCount;
+            var beforeIndex = index - itemsBeforeAfterCount;
             if (beforeIndex < 0)
             {
                 beforeIndex = 0;
             }
 
-            int afterIndex = index + itemsBeforeAfterCount;
+            var afterIndex = index + itemsBeforeAfterCount;
             if (afterIndex >= subtitleListView1.Items.Count)
             {
                 afterIndex = subtitleListView1.Items.Count - 1;
@@ -5592,7 +5598,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1.BeginUpdate();
             subtitleListView1.Items.Clear();
-            foreach (Paragraph paragraph in subtitle.Paragraphs)
+            foreach (var paragraph in subtitle.Paragraphs)
             {
                 SubtitleListView1Add(paragraph);
             }
@@ -5601,12 +5607,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SubtitleListView1AutoSizeAllColumns()
         {
-            int columnIndexNumber = 0;
-            int columnIndexStart = 1;
-            int columnIndexEnd = 2;
-            int columnIndexDuration = 3;
-            int columnIndexText = 4;
-            int columnIndexStyle = 5;
+            var columnIndexNumber = 0;
+            var columnIndexStart = 1;
+            var columnIndexEnd = 2;
+            var columnIndexDuration = 3;
+            var columnIndexText = 4;
+            var columnIndexStyle = 5;
 
             if (subtitleListView1.CheckBoxes)
             {
@@ -5650,11 +5656,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Core.Common.Settings settings)
         {
-            int columnIndexNumber = 0;
-            int columnIndexStart = 1;
-            int columnIndexEnd = 2;
-            int columnIndexDuration = 3;
-            int columnIndexText = 4;
+            var columnIndexNumber = 0;
+            var columnIndexStart = 1;
+            var columnIndexEnd = 2;
+            var columnIndexDuration = 3;
+            var columnIndexText = 4;
 
             if (subtitleListView1.CheckBoxes)
             {
@@ -5676,7 +5682,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SubtitleListView1SetText(int index, string text)
         {
-            int columnIndexText = 4;
+            var columnIndexText = 4;
 
             if (subtitleListView1.CheckBoxes)
             {
@@ -5876,7 +5882,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxBottomMargin.Items.Clear();
             if (comboBoxBottomMarginUnit.SelectedIndex == 0)
             {
-                for (int i = 0; i <= 95; i++)
+                for (var i = 0; i <= 95; i++)
                 {
                     comboBoxBottomMargin.Items.Add(i);
                 }
@@ -5889,7 +5895,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                for (int i = 0; i <= 1000; i++)
+                for (var i = 0; i <= 1000; i++)
                 {
                     comboBoxBottomMargin.Items.Add(i);
                 }
@@ -5913,7 +5919,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxLeftRightMargin.Items.Clear();
             if (comboBoxLeftRightMarginUnit.SelectedIndex == 0)
             {
-                for (int i = 0; i < 95; i++)
+                for (var i = 0; i < 95; i++)
                 {
                     comboBoxLeftRightMargin.Items.Add(i);
                 }
@@ -5925,7 +5931,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                for (int i = 0; i <= 1000; i++)
+                for (var i = 0; i <= 1000; i++)
                 {
                     comboBoxLeftRightMargin.Items.Add(i);
                 }
@@ -5949,7 +5955,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         public static Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
-            Bitmap newImage = new Bitmap(width, height);
+            var newImage = new Bitmap(width, height);
             using (var g = Graphics.FromImage(newImage))
             {
                 g.SmoothingMode = SmoothingMode.HighQuality;
@@ -5978,7 +5984,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             adjustMilliseconds /= TimeCode.BaseUnit;
             subtitleListView1.BeginUpdate();
-            int startFrom = 0;
+            var startFrom = 0;
             if (selection == SelectionChoice.SelectionAndForward)
             {
                 if (subtitleListView1.SelectedItems.Count > 0)
@@ -5990,7 +5996,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     startFrom = _subtitle.Paragraphs.Count;
                 }
             }
-            for (int i = startFrom; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = startFrom; i < _subtitle.Paragraphs.Count; i++)
             {
                 switch (selection)
                 {
@@ -6013,7 +6019,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ShowTimeInListView(int index)
         {
-            int startIndex = 1;
+            var startIndex = 1;
             if (subtitleListView1.CheckBoxes)
             {
                 startIndex++;
@@ -6025,7 +6031,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void contextMenuStripListView_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bool showImageExportMenuItems = _vobSubOcr != null;
+            var showImageExportMenuItems = _vobSubOcr != null;
             toolStripSeparatorAdjust.Visible = showImageExportMenuItems;
             adjustTimeCodesToolStripMenuItem.Visible = showImageExportMenuItems;
             adjustDisplayTimeToolStripMenuItem.Visible = showImageExportMenuItems;
@@ -6059,12 +6065,94 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
             }
+
             subtitleListView1.BeginUpdate();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 ShowTimeInListView(i);
             }
             subtitleListView1.EndUpdate();
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "Export profile|*" + ProfileExtension })
+            {
+                if (saveDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var exportImageSub = new ExportImageSub
+                {
+                    FontFamily = comboBoxSubtitleFont.Text,
+                    FontSize = comboBoxSubtitleFontSize.Text,
+                    VideoResolution = comboBoxResolution.Text,
+                    HAlign = comboBoxHAlign.Text,
+                    BottomMarginUnit = comboBoxBottomMarginUnit.Text,
+                    BottomMarginValue = comboBoxBottomMargin.Text,
+                    LeftRightMarginUnit = comboBoxLeftRightMarginUnit.Text,
+                    LeftRightMargin = comboBoxLeftRightMargin.Text,
+                    FontColor = Settings.ToHtml(panelColor.BackColor),
+                    FontBold = checkBoxBold.Checked.ToString(),
+                    SimpleRendering = checkBoxSimpleRender.Checked.ToString(),
+                    Type3D = comboBox3D.Text,
+                    Depth3D = numericUpDownDepth3D.Value.ToString(CultureInfo.InvariantCulture),
+                    BorderColor = Settings.ToHtml(panelBorderColor.BackColor),
+                    BorderStyle = comboBoxBorderWidth.Text,
+                    ImageFormat = comboBoxImageFormat.Text,
+                    FrameRate = FrameRate.ToString(CultureInfo.InvariantCulture),
+                    ShadowColor = Settings.ToHtml(panelShadowColor.BackColor),
+                    ShadowWidth = comboBoxShadowWidth.Text,
+                    ShadowAlpha = numericUpDownShadowTransparency.Value.ToString(CultureInfo.InvariantCulture),
+                    LineHeight = numericUpDownLineSpacing.Value.ToString(CultureInfo.InvariantCulture),
+                };
+
+                exportImageSub.Save(saveDialog.FileName);
+            }
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var openDialog = new OpenFileDialog { FileName = string.Empty, Filter = "Export profile|*" + ProfileExtension })
+            {
+                if (openDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var exportImageSub = new ExportImageSub();
+                if (exportImageSub.Load(openDialog.FileName) && exportImageSub.Load(openDialog.FileName))
+                {
+                    comboBoxSubtitleFont.Text = exportImageSub.FontFamily;
+                    comboBoxSubtitleFontSize.Text = exportImageSub.FontSize;
+                    comboBoxResolution.Text = exportImageSub.VideoResolution;
+                    comboBoxHAlign.Text = exportImageSub.HAlign;
+                    comboBoxBottomMarginUnit.Text = exportImageSub.BottomMarginUnit;
+                    comboBoxBottomMargin.Text = exportImageSub.BottomMarginValue;
+                    comboBoxLeftRightMarginUnit.Text = exportImageSub.LeftRightMarginUnit;
+                    comboBoxLeftRightMargin.Text = exportImageSub.LeftRightMargin;
+                    panelColor.BackColor = Settings.FromHtml(exportImageSub.FontColor);
+                    checkBoxBold.Checked = Convert.ToBoolean(exportImageSub.FontBold, CultureInfo.InvariantCulture);
+                    checkBoxSimpleRender.Checked = Convert.ToBoolean(exportImageSub.SimpleRendering, CultureInfo.InvariantCulture);
+                    comboBox3D.Text = exportImageSub.Type3D;
+                    numericUpDownDepth3D.Value = decimal.Parse(exportImageSub.Depth3D, CultureInfo.InvariantCulture);
+                    panelBorderColor.BackColor = Settings.FromHtml(exportImageSub.BorderColor);
+                    comboBoxBorderWidth.Text = exportImageSub.BorderStyle;
+                    comboBoxImageFormat.Text = exportImageSub.ImageFormat;
+                    comboBoxFrameRate.Text = exportImageSub.FrameRate;
+                    panelShadowColor.BackColor = Settings.FromHtml(exportImageSub.ShadowColor);
+                    comboBoxShadowWidth.Text = exportImageSub.ShadowWidth;
+                    numericUpDownShadowTransparency.Value = decimal.Parse(exportImageSub.ShadowAlpha, CultureInfo.InvariantCulture);
+                    numericUpDownLineSpacing.Value = decimal.Parse(exportImageSub.LineHeight, CultureInfo.InvariantCulture);
+
+                    _subtitleColor = panelColor.BackColor;
+                    _subtitleFontName = comboBoxSubtitleFont.Text;
+                    _subtitleFontSize = float.Parse(exportImageSub.FontSize, CultureInfo.InvariantCulture);
+                    _subtitleFontBold = checkBoxBold.Checked;
+                    _borderColor = panelBorderColor.BackColor;
+                }
+            }
         }
     }
 }

@@ -107,6 +107,10 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.profilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -115,6 +119,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
+            this.contextMenuStripProfile.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -1076,11 +1081,42 @@
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // contextMenuStripProfile
+            // 
+            this.contextMenuStripProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.profilesToolStripMenuItem});
+            this.contextMenuStripProfile.Name = "contextMenuStripProfile";
+            this.contextMenuStripProfile.Size = new System.Drawing.Size(181, 48);
+            // 
+            // profilesToolStripMenuItem
+            // 
+            this.profilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem,
+            this.exportToolStripMenuItem});
+            this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Text = "Profiles";
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export...";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import...";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 632);
+            this.ContextMenuStrip = this.contextMenuStripProfile;
             this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.groupBoxExportImage);
             this.Controls.Add(this.groupBoxImageSettings);
@@ -1110,6 +1146,7 @@
             this.groupBoxExportImage.ResumeLayout(false);
             this.groupBoxExportImage.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
+            this.contextMenuStripProfile.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1194,5 +1231,9 @@
         private System.Windows.Forms.CheckBox checkBoxFcpFullPathUrl;
         private System.Windows.Forms.Label labelImagePrefix;
         private System.Windows.Forms.TextBox textBoxImagePrefix;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripProfile;
+        private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
     }
 }

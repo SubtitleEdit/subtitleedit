@@ -1436,7 +1436,6 @@ $HorzAlign          =   Center
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
             ShowToolbarToggleSourceView = true;
-
             ShowVideoPlayer = true;
             ShowAudioVisualizer = true;
             ShowWaveform = true;
@@ -10745,12 +10744,12 @@ $HorzAlign          =   Center
             }
         }
 
-        private static string ToHtml(Color c)
+        public static string ToHtml(Color c)
         {
             return Utilities.ColorToHexWithTransparency(c);
         }
 
-        private static Color FromHtml(string hex)
+        public static Color FromHtml(string hex)
         {
             var s = hex.Trim().TrimStart('#');
 
