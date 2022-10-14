@@ -22,6 +22,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             if (!Directory.Exists(pythonFolder))
             {
+                pythonFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            }
+
+            if (!Directory.Exists(pythonFolder))
+            {
                 return false;
             }
 
@@ -36,6 +41,27 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         return true;
                     }
                 }
+            }
+
+            try
+            {
+                pythonFolder = "C:\\";
+                foreach (var dir in Directory.GetDirectories(pythonFolder))
+                {
+                    var dirName = Path.GetFileName(dir);
+                    if (dirName != null && dirName.StartsWith("Python3"))
+                    {
+                        var whisperFolder = Path.Combine(dir, "Lib", "site-packages", "whisper");
+                        if (Directory.Exists(whisperFolder))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch 
+            {
+                return false;
             }
 
             return false;
