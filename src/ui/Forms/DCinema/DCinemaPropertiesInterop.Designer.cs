@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panelFontEffectColor = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.numericUpDownReelNumber = new System.Windows.Forms.NumericUpDown();
@@ -65,7 +67,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
+            this.contextMenuStripProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.profilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
@@ -74,6 +79,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            this.contextMenuStripProfile.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelFontEffectColor
@@ -106,6 +112,16 @@
             this.groupBox1.Size = new System.Drawing.Size(660, 505);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
+            // 
+            // checkBoxGenerateIdAuto
+            // 
+            this.checkBoxGenerateIdAuto.AutoSize = true;
+            this.checkBoxGenerateIdAuto.Location = new System.Drawing.Point(139, 57);
+            this.checkBoxGenerateIdAuto.Name = "checkBoxGenerateIdAuto";
+            this.checkBoxGenerateIdAuto.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxGenerateIdAuto.TabIndex = 33;
+            this.checkBoxGenerateIdAuto.Text = "Generate new ID on save";
+            this.checkBoxGenerateIdAuto.UseVisualStyleBackColor = true;
             // 
             // comboBoxLanguage
             // 
@@ -498,15 +514,35 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // checkBoxGenerateIdAuto
+            // contextMenuStripProfile
             // 
-            this.checkBoxGenerateIdAuto.AutoSize = true;
-            this.checkBoxGenerateIdAuto.Location = new System.Drawing.Point(139, 57);
-            this.checkBoxGenerateIdAuto.Name = "checkBoxGenerateIdAuto";
-            this.checkBoxGenerateIdAuto.Size = new System.Drawing.Size(148, 17);
-            this.checkBoxGenerateIdAuto.TabIndex = 33;
-            this.checkBoxGenerateIdAuto.Text = "Generate new ID on save";
-            this.checkBoxGenerateIdAuto.UseVisualStyleBackColor = true;
+            this.contextMenuStripProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.profilesToolStripMenuItem});
+            this.contextMenuStripProfile.Name = "contextMenuStripProfile";
+            this.contextMenuStripProfile.Size = new System.Drawing.Size(181, 48);
+            // 
+            // profilesToolStripMenuItem
+            // 
+            this.profilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem,
+            this.exportToolStripMenuItem});
+            this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Text = "Profiles";
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import...";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export...";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // DCinemaPropertiesInterop
             // 
@@ -535,6 +571,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            this.contextMenuStripProfile.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -579,5 +616,9 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.CheckBox checkBoxGenerateIdAuto;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripProfile;
+        private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }
