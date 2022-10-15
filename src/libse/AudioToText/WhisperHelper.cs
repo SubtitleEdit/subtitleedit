@@ -81,22 +81,41 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 "Programs",
                 "Python");
 
-            if (!Directory.Exists(pythonFolder))
+            if (Directory.Exists(pythonFolder))
             {
-                return null;
-            }
-
-            foreach (var dir in Directory.GetDirectories(pythonFolder))
-            {
-                var dirName = Path.GetFileName(dir);
-                if (dirName != null && dirName.StartsWith("Python3"))
+                foreach (var dir in Directory.GetDirectories(pythonFolder))
                 {
-                    var whisperFullPath = Path.Combine(dir, "Scripts", "whisper.exe");
-                    if (File.Exists(whisperFullPath))
+                    var dirName = Path.GetFileName(dir);
+                    if (dirName != null && dirName.StartsWith("Python3"))
                     {
-                        return Path.Combine(dir, "Scripts");
+                        var whisperFullPath = Path.Combine(dir, "Scripts", "whisper.exe");
+                        if (File.Exists(whisperFullPath))
+                        {
+                            return Path.Combine(dir, "Scripts");
+                        }
                     }
                 }
+            }
+
+            try
+            {
+                pythonFolder = "C:\\";
+                foreach (var dir in Directory.GetDirectories(pythonFolder))
+                {
+                    var dirName = Path.GetFileName(dir);
+                    if (dirName != null && dirName.StartsWith("Python3"))
+                    {
+                        var whisperFullPath = Path.Combine(dir, "Scripts", "whisper.exe");
+                        if (File.Exists(whisperFullPath))
+                        {
+                            return Path.Combine(dir, "Scripts");
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return null;
             }
 
             return null;
