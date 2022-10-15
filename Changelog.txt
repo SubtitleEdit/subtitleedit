@@ -50,6 +50,7 @@
    * Add bold support to DCP format - thx felagund
    * A few fixes for eng_OCRFixReplaceList.xml - thx Ding-adong
    * Most plugins should now work on Linux
+   * Add import/export of binary export settings
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
@@ -66,6 +67,7 @@
    * Fix writing bd sup hours > 6½ hours - thx Keith
    * Fix installer dot net version check - thx Christoph
    * Fix a few typos - thx nkh0472
+   * Fix for mp4 with vtt subtitles - thx LucretiaAudrey
 
 
 3.6.7 (13th August 2022)
