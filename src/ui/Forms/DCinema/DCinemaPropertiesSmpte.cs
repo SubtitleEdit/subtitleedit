@@ -4,11 +4,14 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.DCinema
 {
     public sealed partial class DCinemaPropertiesSmpte : PositionAndSizeForm
     {
+        private const string ProfileExtension = ".DCinema-interop-profile";
+
         public DCinemaPropertiesSmpte()
         {
             UiUtil.PreInitialize(this);
@@ -37,7 +40,12 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             buttonGenerateID.Text = l.GenerateId;
             buttonGenFontUri.Text = l.Generate;
 
-            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            profilesToolStripMenuItem.Text = LanguageSettings.Current.Settings.Profiles;
+            exportToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
+            importToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
+            ContextMenuStrip = contextMenuStripProfile;
+
+            foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
                 comboBoxLanguage.Items.Add(x.TwoLetterISOLanguageName);
             }
@@ -201,6 +209,90 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var openDialog = new OpenFileDialog { FileName = string.Empty, Filter = "Export profile|*" + ProfileExtension })
+            {
+                if (openDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var importer = new DcPropertiesSmpte();
+                if (importer.Load(openDialog.FileName) && importer.Load(openDialog.FileName))
+                {
+                    checkBoxGenerateIdAuto.Checked = Convert.ToBoolean(importer.GenerateIdAuto, CultureInfo.InvariantCulture);
+                    if (decimal.TryParse(importer.ReelNumber, NumberStyles.Any, CultureInfo.InvariantCulture, out var reelNumber))
+                    {
+                        numericUpDownReelNumber.Value = (int)reelNumber;
+                    }
+
+                    comboBoxLanguage.Text = importer.Language;
+
+                    textBoxEditRate.Text = importer.EditRate;
+                    comboBoxTimeCodeRate.Text = importer.TimeCodeRate;
+                    timeUpDownStartTime.TimeCode = new TimeCode(double.Parse(importer.StartTime));
+                    textBoxFontID.Text = importer.FontId;
+                    textBoxFontUri.Text = importer.FontUri;
+                    panelFontColor.BackColor = Settings.FromHtml(importer.FontColor);
+                    comboBoxFontEffect.Text = importer.Effect;
+                    panelFontEffectColor.BackColor = Settings.FromHtml(importer.EffectColor);
+
+                    if (decimal.TryParse(importer.FontSize, NumberStyles.Any, CultureInfo.InvariantCulture, out var fontSize))
+                    {
+                        numericUpDownFontSize.Value = fontSize;
+                    }
+
+                    if (decimal.TryParse(importer.TopBottomMargin, NumberStyles.Any, CultureInfo.InvariantCulture, out var margin))
+                    {
+                        numericUpDownTopBottomMargin.Value = margin;
+                    }
+
+                    if (decimal.TryParse(importer.FadeUpTime, NumberStyles.Any, CultureInfo.InvariantCulture, out var fadeUp))
+                    {
+                        numericUpDownFadeUp.Value = fadeUp;
+                    }
+
+                    if (decimal.TryParse(importer.FadeDownTime, NumberStyles.Any, CultureInfo.InvariantCulture, out var fadeDown))
+                    {
+                        numericUpDownFadeDown.Value = fadeDown;
+                    }
+                }
+            }
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var saveDialog = new SaveFileDialog { FileName = string.Empty, Filter = "Export profile|*" + ProfileExtension })
+            {
+                if (saveDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var exporter = new DcPropertiesSmpte
+                {
+                    GenerateIdAuto = checkBoxGenerateIdAuto.Checked.ToString(CultureInfo.InvariantCulture),
+                    ReelNumber = numericUpDownReelNumber.Value.ToString(CultureInfo.InvariantCulture),
+                    Language = comboBoxLanguage.Text,
+                    EditRate = textBoxEditRate.Text,
+                    TimeCodeRate = comboBoxTimeCodeRate.Text,
+                    StartTime = timeUpDownStartTime.TimeCode.TotalMilliseconds.ToString(CultureInfo.InvariantCulture),
+                    FontId = textBoxFontID.Text,
+                    FontUri = textBoxFontUri.Text,
+                    FontColor = Settings.ToHtml(panelFontColor.BackColor),
+                    Effect = comboBoxFontEffect.Text,
+                    EffectColor = Settings.ToHtml(panelFontEffectColor.BackColor),
+                    FontSize = numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture),
+                    TopBottomMargin = numericUpDownTopBottomMargin.Value.ToString(CultureInfo.InvariantCulture),
+                    FadeUpTime = numericUpDownFadeUp.Value.ToString(CultureInfo.InvariantCulture),
+                    FadeDownTime = numericUpDownFadeDown.Value.ToString(CultureInfo.InvariantCulture),
+                };
+
+                exporter.Save(saveDialog.FileName);
+            }
         }
     }
 }

@@ -30,8 +30,10 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeRate = new System.Windows.Forms.ComboBox();
@@ -77,7 +79,10 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
+            this.contextMenuStripProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.profilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
@@ -85,6 +90,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            this.contextMenuStripProfile.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -118,23 +124,34 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
+            // checkBoxGenerateIdAuto
+            // 
+            this.checkBoxGenerateIdAuto.AutoSize = true;
+            this.checkBoxGenerateIdAuto.Location = new System.Drawing.Point(181, 56);
+            this.checkBoxGenerateIdAuto.Name = "checkBoxGenerateIdAuto";
+            this.checkBoxGenerateIdAuto.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxGenerateIdAuto.TabIndex = 40;
+            this.checkBoxGenerateIdAuto.Text = "Generate new ID on save";
+            this.checkBoxGenerateIdAuto.UseVisualStyleBackColor = true;
+            // 
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(181, 248);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownStartTime.TabIndex = 8;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode3;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelStartTime
@@ -599,15 +616,35 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click_1);
             // 
-            // checkBoxGenerateIdAuto
+            // contextMenuStripProfile
             // 
-            this.checkBoxGenerateIdAuto.AutoSize = true;
-            this.checkBoxGenerateIdAuto.Location = new System.Drawing.Point(181, 56);
-            this.checkBoxGenerateIdAuto.Name = "checkBoxGenerateIdAuto";
-            this.checkBoxGenerateIdAuto.Size = new System.Drawing.Size(148, 17);
-            this.checkBoxGenerateIdAuto.TabIndex = 40;
-            this.checkBoxGenerateIdAuto.Text = "Generate new ID on save";
-            this.checkBoxGenerateIdAuto.UseVisualStyleBackColor = true;
+            this.contextMenuStripProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.profilesToolStripMenuItem});
+            this.contextMenuStripProfile.Name = "contextMenuStripProfile";
+            this.contextMenuStripProfile.Size = new System.Drawing.Size(181, 48);
+            // 
+            // profilesToolStripMenuItem
+            // 
+            this.profilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem,
+            this.exportToolStripMenuItem});
+            this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Text = "Profiles";
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import...";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export...";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // DCinemaPropertiesSmpte
             // 
@@ -635,6 +672,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            this.contextMenuStripProfile.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -688,5 +726,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelFadeUpMs;
         private System.Windows.Forms.CheckBox checkBoxGenerateIdAuto;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripProfile;
+        private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
     }
 }
