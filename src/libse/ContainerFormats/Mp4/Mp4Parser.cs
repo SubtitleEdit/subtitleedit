@@ -132,10 +132,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         private void ParseMp4(Stream fs)
         {
-            int count = 0;
+            var count = 0;
             Position = 0;
             fs.Seek(0, SeekOrigin.Begin);
-            bool moreBytes = true;
+            var moreBytes = true;
             var timeTotalMs = 0d;
             while (moreBytes)
             {
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 }
 
                 count++;
-                if (count > 1000)
+                if (count > 3000)
                 {
                     break;
                 }
@@ -249,11 +249,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     if (Name == "mdat")
                     {
                         var before = fs.Position;
-                        var readLength = ((long)Position) - before;
-                        if (readLength > 10)
+                        var readLength = (int)((long)Position - before);
+                        if (readLength > 10 && readLength < 1_000_000)
                         {
                             var buffer = new byte[readLength];
-                            fs.Read(buffer, 0, (int)readLength);
+                            fs.Read(buffer, 0, readLength);
                             list.Add(Encoding.UTF8.GetString(buffer));
                         }
                     }
