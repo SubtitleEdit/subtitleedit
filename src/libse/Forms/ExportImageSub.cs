@@ -29,6 +29,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public string ShadowAlpha { get; set; }
         public string LineHeight { get; set; }
         public string ImagePrefix { get; set; }
+        public string UseFullFrame { get; set; }
+        public string FullFrameBackColor { get; set; }
 
         public bool Save(string fileName)
         {
@@ -80,6 +82,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             sb.AppendLine("  \"shadowAlpha\": \"" + Json.EncodeJsonText(ShadowAlpha) + "\",");
             sb.AppendLine("  \"lineHeight\": \"" + Json.EncodeJsonText(LineHeight) + "\"");
             sb.AppendLine("  \"imagePrefix\": \"" + Json.EncodeJsonText(ImagePrefix) + "\"");
+            sb.AppendLine("  \"useFullFrame\": \"" + Json.EncodeJsonText(UseFullFrame) + "\"");
+            sb.AppendLine("  \"fullFrameBackColor\": \"" + Json.EncodeJsonText(FullFrameBackColor) + "\"");
             sb.AppendLine("}");
             return sb.ToString();
         }
@@ -117,6 +121,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 ShadowAlpha = jp.GetFirstObject(json, "shadowAlpha");
                 LineHeight = jp.GetFirstObject(json, "lineHeight");
                 ImagePrefix = jp.GetFirstObject(json, "imagePrefix");
+                UseFullFrame = jp.GetFirstObject(json, "useFullFrame");
+                FullFrameBackColor = jp.GetFirstObject(json, "fullFrameBackColor");
             }
             catch
             {
