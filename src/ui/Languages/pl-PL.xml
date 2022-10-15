@@ -96,6 +96,7 @@
     <ExampleX>Przykład: {0}</ExampleX>
     <Reset>Resetuj</Reset>
     <Warning>Ostrzeżenie</Warning>
+    <UseLargerFontForThisWindow>Użyj większej czcionki w tym oknie</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>O programie Subtitle Edit</Title>
@@ -174,10 +175,17 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio na tekst</Title>
-    <Info>Generowanie tekstu z audio za pomocą rozpoznawania mowy Vosk/Kaldi</Info>
+    <Info>Generowanie tekstu z audio za pomocą funkcji rozpoznawania mowy Vosk/Kaldi</Info>
+    <WhisperInfo>Generowanie tekstu z audio za pomocą funkcji rozpoznawania mowy Whisper</WhisperInfo>
     <VoskWebsite>Strona internetowa Vosk</VoskWebsite>
+    <WhisperWebsite>Strona internetowa Whisper</WhisperWebsite>
+    <WhisperNotFound>Nie znaleziono aplikacji Whisper.
+
+Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <Models>Modele</Models>
+    <LanguagesAndModels>Języki i modele</LanguagesAndModels>
     <ChooseModel>Wybierz model</ChooseModel>
+    <ChooseLanguage>Wybierz model</ChooseLanguage>
     <OpenModelsFolder>Otwórz folder modeli</OpenModelsFolder>
     <LoadingVoskModel>Wczytuję model rozpoznawania mowy Vosk...</LoadingVoskModel>
     <Transcribing>Transkrypcja audio na tekst...</Transcribing>
@@ -185,6 +193,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <XFilesSavedToVideoSourceFolder>Zapisano {0} plik(i)ów w folderze źródłowym wideo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Użyj przetwarzania końcowego (łączenie linii, poprawianie wielkości liter, interpunkcja i inne)</UsePostProcessing>
     <BatchMode>Tryb wsadowy</BatchMode>
+    <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -234,6 +243,12 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <ChangeResolutionDrawing>Zmiana rozdzielczości dla rysowania</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Rozdzielczość źródłowa i docelowa jest taka sama - nic do zrobienia.</SourceAndTargetEqual>
   </AssaResolutionChanger>
+  <ImageColorPicker>
+    <Title>Selektor kolorów obrazu</Title>
+    <CopyColorHex>Skopiuj do schowka jako kolor HEX {0}</CopyColorHex>
+    <CopyColorAssa>Skopiuj do schowka jako kolor ASSA {0}</CopyColorAssa>
+    <CopyColorRgb>Skopiuj do schowka jako kolor RGB {0}</CopyColorRgb>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Generowanie tła nieprzezroczystego pola</Title>
     <Padding>Pokrywanie</Padding>
@@ -249,6 +264,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <MarginY>Margines Y</MarginY>
     <OnlyDrawing>Tylko rysowanie</OnlyDrawing>
     <DrawingFile>Plik rysunkowy</DrawingFile>
+    <ColorPickerSetLastColor>Ostatnim kolorem selektora kolorów jest: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Ustaw pozycję</SetPosition>
@@ -284,6 +300,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <RemoveFormatting>Usuń tagi formatowania</RemoveFormatting>
     <RemoveStyleActor>Usuń styl/aktora</RemoveStyleActor>
     <RemoveTextForHI>Usuń tekst dla osób niedosłyszących</RemoveTextForHI>
+    <ConvertColorsToDialog>Konwertuj kolory na dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Nadpisz oryginalne pliki (nowe rozszerzenie w przypadku zmiany formatu)</OverwriteOriginalFiles>
     <RedoCasing>Ponów zmianę pisowni</RedoCasing>
     <Convert>Konwertuj</Convert>
@@ -397,6 +414,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <Custom>Niestandardowo</Custom>
     <ToDropFrame>Do upuszczonej klatki</ToDropFrame>
     <FromDropFrame>Od upuszczonej klatki</FromDropFrame>
+    <AllowOverlap>Zezwalaj na nakładanie się</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Sprawdź aktualizacje</Title>
@@ -448,10 +466,17 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Liczba różnic: {0} ({1:0.##}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaż tylko różnice</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoruj ​​łamanie linii</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignoruj białe znaki</IgnoreWhitespace>
     <IgnoreFormatting>Ignoruj ​​formatowanie</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Szukaj tylko różnic w tekście</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Nie można porównać z napisami opartymi na obrazach</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Konwersja kolorów do dialogów</Title>
+    <RemoveColorTags>Usuń tagi kolorów</RemoveColorTags>
+    <AddNewLines>Umieść każdy myślnik w nowej linii</AddNewLines>
+    <ReBreakLines>Ponowne przełamanie linii</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>Właściwości D-Cinema (interop)</Title>
     <TitleSmpte>Właściwości D-Cinema (SMPTE)</TitleSmpte>
@@ -475,7 +500,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <FadeUpTime>Czas pojawiania</FadeUpTime>
     <FadeDownTime>Czas zanikania</FadeDownTime>
     <ZPosition>Pozycja Z</ZPosition>
-    <ZPositionHelp>Liczby dodatnie odsuwają tekst, liczby ujemne przesuwają tekst bliżej, jeśli pozycja z wynosi zero, to jest to 2D</ZPositionHelp>
+    <ZPositionHelp>Liczby dodatnie odsuwają tekst, liczby ujemne przybliżają tekst, jeśli pozycja Z wynosi zero, to jest to 2D</ZPositionHelp>
     <ChooseColor>Wybierz kolor...</ChooseColor>
     <Generate>Wygeneruj</Generate>
     <GenerateNewIdOnSave>Przy zapisie wygeneruj nowy ID</GenerateNewIdOnSave>
@@ -628,6 +653,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <SimpleRendering>Proste renderowanie</SimpleRendering>
     <AntiAliasingWithTransparency>Antyaliasing z przezroczystością</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Prefiks obrazu</ImagePrefix>
     <SideBySide3D>Połowa-Side-by-Side</SideBySide3D>
     <HalfTopBottom3D>Połowa-Top/Bottom</HalfTopBottom3D>
     <Depth>Głębia</Depth>
@@ -749,7 +775,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Poprawiono typowe błędy OCR (używając listy zamienników OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Usuń spację między liczbami</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Popraw dialogi znajdujące się w jednej linii</FixDialogsOnOneLine>
-    <RemoveDialogFirstInNonDialogs>Usuń myślnik początkowy w pierwszej linii dla nie dialogów</RemoveDialogFirstInNonDialogs>
+    <RemoveDialogFirstInNonDialogs>Usuń myślnik początkowy w pierwszej linii dla nie-dialogów</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizuj ciągi</NormalizeStrings>
     <FixTurkishAnsi>Popraw tureckie litery ANSI (Icelandic) na Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Popraw duńską literę 'i'</FixDanishLetterI>
@@ -895,7 +921,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
 (Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>Kopiuj źródłowy tekst ze schowka</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Schowek zawiera tekst źródłowy!</TranslateBlockClipboardError1>
-    <TranslateBlockClipboardError2>Przejdź do tłumacza i przetłumacz, skopiuj wynik do schowka i kliknij ponownie ten przycisk.</TranslateBlockClipboardError2>
+    <TranslateBlockClipboardError2>Przejdź do translatora i przetłumacz, a następnie skopiuj wyniki do schowka i kliknij ten przycisk ponownie.</TranslateBlockClipboardError2>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tłumaczenie Google vs Tłumaczenie Microsoft</Title>
@@ -1202,6 +1228,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <FixCommonErrors>&amp;Popraw najczęstsze błędy...</FixCommonErrors>
         <StartNumberingFrom>Zmień numerację...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Usuń tekst dla osób niedosłyszących...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Konwertuj kolory do dialogów...</ConvertColorsToDialog>
         <ChangeCasing>Zmień pisownię...</ChangeCasing>
         <ChangeFrameRate>Zmień liczbę klatek na sekundę...</ChangeFrameRate>
         <ChangeSpeedInPercent>Zmień szybkość (procentowo)...</ChangeSpeedInPercent>
@@ -1247,7 +1274,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <GenerateTextFromVideo>Wygeneruj tekst z wideo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Audio na tekst...</VideoAudioToText>
+        <VideoAudioToTextX>Audio na tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generuj/importuj zmiany kadru...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Usuń/eksportuj zmiany kadru...</RemoveOrExportShotChanges>
@@ -1338,7 +1365,6 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <SplitLineAtCursorAndWaveformPosition>Podziel linię w pozycji kursora/wideo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automatyczny czas trwania (bieżąca linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
-        <Insert>Wstaw</Insert>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
         <InsertBefore>Wstaw przed</InsertBefore>
         <InsertAfter>Wstaw po</InsertAfter>
@@ -1354,6 +1380,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <ColumnTextUp>Tekst w górę</ColumnTextUp>
         <ColumnTextDown>Tekst w dół</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Skopiuj tekst z oryginału do bieżącego</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR wybranych linii</OcrSelectedLines>
         <Split>Podziel</Split>
         <MergeSelectedLines>Połącz wybrane linie</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Połącz wybrane linie jako dialog</MergeSelectedLinesAsDialog>
@@ -1392,6 +1419,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <GenerateProgressBar>Wygeneruj pasek postępu...</GenerateProgressBar>
         <AssaResolutionChanger>Zmień rozdzielczość skryptu ASSA...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Wygeneruj tło nieprzezroczystego pola...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Selektor kolorów obrazu...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Popraw najczęstsze błędy w wybranych liniach...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Zmień pisownię dla wybranych linii...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Zapisz wybrane linie jako...</SaveSelectedLines>
@@ -1741,12 +1769,15 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <VideoFromUrlRequirements>Otwarcie wideo z adresu URL wymaga mpv i youtube-dl.
 
 Pobrać i kontynuować?</VideoFromUrlRequirements>
-    <Url>Url</Url>
+    <Url>URL</Url>
     <Errors>Błędy</Errors>
     <ShowVideoControls>Pokaż elementy sterujące wideo</ShowVideoControls>
     <HideVideoControls>Ukryj elementy sterujące wideo</HideVideoControls>
     <GeneratingWaveformInBackground>Generowanie wykresu falowego w tle...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Zapisano automatyczną kopię zapasową</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Korzystanie tylko z przedniego centralnego kanału audio</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Przed konwersją kolorów do dialogów</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Przekonwertowane kolory na dialog</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -1881,6 +1912,7 @@ Pobrać i kontynuować?</VideoFromUrlRequirements>
   <MergeTextWithSameTimeCodes>
     <Title>Połącz linie z takimi samymi kodami czasowymi</Title>
     <MaxDifferenceMilliseconds>Maksymalna różnica milisekund</MaxDifferenceMilliseconds>
+    <MakeDialog>Utwórz dialog</MakeDialog>
     <ReBreakLines>Ponownie przełam linie</ReBreakLines>
     <NumberOfMergesX>Liczba połączonych: {0}</NumberOfMergesX>
     <MergedText>Połączony tekst</MergedText>
@@ -2230,6 +2262,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <SpectrogramOneColorGradient>Wypełnienie gradientem w jednym kolorze</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasyczny</SpectrogramClassic>
     <WaveformUseFFmpeg>Użyj FFmpeg do wyodrębnienia wykresu falowego</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Użyj tylko przedniego kanału centralnego (dla 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Pobierz {0}</DownloadX>
     <WaveformFFmpegPath>Ścieżka do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Przejdź do FFmpeg</WaveformBrowseToFFmpeg>
@@ -2261,6 +2294,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ProxyUserName>Użytkownik</ProxyUserName>
     <ProxyPassword>Hasło</ProxyPassword>
     <ProxyDomain>Domena</ProxyDomain>
+    <ProxyAuthType>Typ autoryzacji</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Użyj domyślnych danych uwierzytelniających</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Ustawienia sesji sieciowej</NetworkSessionSettings>
     <NetworkSessionNewSound>Odtwórz plik dźwiękowy, gdy nadejdzie nowa wiadomość</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Odtwórz X sekund i wróć, gdzie X to</PlayXSecondsAndBack>
@@ -2293,8 +2328,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <CpsLineLengthStyleCalcAll>Policz wszystkie znaki</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Policz wszystko oprócz spacji, tylko ZNS</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>Policz wszystko oprócz spacji</CpsLineLengthStyleCalcNoSpace>
-    <CpsLineLengthStyleCalcCjk>CJK 1, latin 0.5</CpsLineLengthStyleCalcCjk>
-    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, latin 0.5, spacja 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, Latin 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, Latin 0.5, spacja 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>Ignoruj arabskie znaki diakrytyczne</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>Ignoruj arabskie znaki diakrytyczne/spacje</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>Brak spacji i znaków interpunkcji ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
@@ -2380,6 +2415,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MergeDialog>Połącz dialogi (wstaw myślniki)</MergeDialog>
     <MergeDialogWithNext>Połącz dialog z następnym (wstaw myślniki)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Połącz dialog z poprzednim (wstaw myślniki)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Automatyczne równoważenie wybranych linii</AutoBalanceSelectedLines>
     <GoToNext>Przejdź do następnej linii</GoToNext>
     <GoToNextPlayTranslate>Przejdź do następnej linii (i odtwarzaj w "Trybie tłumacza")</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Przejdź do następnej linii i ustaw kursor na końcu</GoToNextCursorAtEnd>
@@ -2453,6 +2489,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <GoToStartCurrent>Ustaw pozycję wideo na początek bieżącego napisu</GoToStartCurrent>
     <ToggleStartEndCurrent>Przełącz pozycję wideo między początkiem/końcem bieżącego napisu</ToggleStartEndCurrent>
     <PlaySelectedLines>Odtwarzaj wybrane linie</PlaySelectedLines>
+    <LoopSelectedLines>Zapętlaj wybrane linie</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Przejdź do poprzedniej linii napisów (z pozycji wideo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Przejdź do następnej linii napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Przejdź do poprzedniego rozdziału</WaveformGoToPrevChapter>
@@ -2461,8 +2498,11 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <TogglePlayPause>Przełącz odtwarzaj/pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Pełny ekran</Fullscreen>
+    <Play150Speed>Odtwarzaj wideo z szybkością 1,5x</Play150Speed>
+    <Play200Speed>Odtwarzaj wideo z szybkością 2,0x</Play200Speed>
     <PlayRateSlower>Odtwarzaj wolniej</PlayRateSlower>
     <PlayRateFaster>Odtwarzaj szybciej</PlayRateFaster>
+    <PlayRateToggle>Przełączanie szybkości odtwarzania (0,5x, 1x, 1,5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Przełącz elementy sterujące wideo</MainToggleVideoControls>
     <VideoToggleContrast>Przełącz kontrast (tylko mpv)</VideoToggleContrast>
@@ -2496,6 +2536,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MergeSelectedLinesAndUnbreakCjk>Połącz wybrane linie i usuń łamanie linii bez spacji (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Połącz wybrane linie, zachowaj tylko pierwszy nie pusty tekst</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Połącz wybrane linie dwujęzyczne</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Połącz z poprzednią dwujęzyczną</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Połącz z następną dwujęzyczną</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Podziel wybraną linię dwujęzycznie</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Przełącz tryb tłumacza</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Przełącz oryginał i tłumaczenie</SwitchOriginalAndTranslation>
@@ -2532,6 +2574,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Przełam na pierwszej spacji od pozycji kursora</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Przełam na pierwszej spacji od pozycji kursora i przejdź do następnej</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dyktafon (klawisz w dół=rozpoczęcie nagrywania, klawisz w górę=zakończenie nagrywania)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Cofnij łamanie tekstu bez spacji (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Pokaż pomocnika tagów ASSA</MainTextBoxAssaIntellisense>
@@ -2929,6 +2972,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <OcrViaImageCompare>Porównanie obrazu binarnego</OcrViaImageCompare>
     <OcrViaModi>Microsoft Office Document Imaging (MODI). Wymaga pakietu Microsoft Office.</OcrViaModi>
     <OcrViaNOCR>OCR za pomocą nOCR</OcrViaNOCR>
+    <OcrViaCloudVision>OCR za pomocą Cloud Vision API</OcrViaCloudVision>
     <TesseractEngineMode>Tryb silnika</TesseractEngineMode>
     <TesseractEngineModeLegacy>Tylko oryginalny Tesseract (może wykryć kursywę)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Tylko sieci neuronowe LSTM</TesseractEngineModeNeural>
@@ -2941,7 +2985,6 @@ Zachować te zmiany?</KeepChangesMessage>
     <New>Nowy</New>
     <Edit>Edytuj</Edit>
     <StartOcr>Start OCR</StartOcr>
-    <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR od napisu o nr:</StartOcrFrom>
     <LoadingVobSubImages>Wczytywanie obrazów VobSub...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Wczytywanie bazy danych porównywania obrazów...</LoadingImageCompareDatabase>
@@ -2999,6 +3042,9 @@ Zachować te zmiany?</KeepChangesMessage>
     <StartTraining>Rozpocznij trening</StartTraining>
     <NowTraining>Teraz uczę się czcionki '{1}'. Całkowita liczba nauczonych znaków: {0:#,###,##0}, znanych {2:#,###,##0}</NowTraining>
     <ImagesWithTimeCodesInFileName>Obrazy z kodami czasowymi w nazwie pliku...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
+    <ApiKey>Klucz API</ApiKey>
+    <SendOriginalImages>Wyślij oryginalne obrazy</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Ręcznie obraz do tekstu</Title>
@@ -3010,6 +3056,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <Italic>&amp;Kursywa</Italic>
     <Abort>&amp;Przerwij</Abort>
     <Skip>&amp;Pomiń</Skip>
+    <UseOnce>&amp;Użyj raz</UseOnce>
     <Nordic>Nordycki</Nordic>
     <Spanish>Hiszpański</Spanish>
     <German>Niemiecki</German>
