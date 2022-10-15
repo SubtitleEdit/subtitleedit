@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxGenerateIdAuto = new System.Windows.Forms.CheckBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -144,14 +144,14 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownStartTime.TabIndex = 8;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode3;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelStartTime
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.textBoxEditRate.Name = "textBoxEditRate";
             this.textBoxEditRate.Size = new System.Drawing.Size(112, 20);
             this.textBoxEditRate.TabIndex = 6;
-            this.textBoxEditRate.Text = "1 24";
+            this.textBoxEditRate.Text = "24 1";
             // 
             // labelEditRate
             // 
@@ -621,7 +621,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.contextMenuStripProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.profilesToolStripMenuItem});
             this.contextMenuStripProfile.Name = "contextMenuStripProfile";
-            this.contextMenuStripProfile.Size = new System.Drawing.Size(181, 48);
+            this.contextMenuStripProfile.Size = new System.Drawing.Size(114, 26);
             // 
             // profilesToolStripMenuItem
             // 
@@ -629,20 +629,20 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem});
             this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
-            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.profilesToolStripMenuItem.Text = "Profiles";
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.importToolStripMenuItem.Text = "Import...";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.exportToolStripMenuItem.Text = "Export...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
