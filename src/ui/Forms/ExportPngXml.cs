@@ -6106,6 +6106,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     ShadowWidth = comboBoxShadowWidth.Text,
                     ShadowAlpha = numericUpDownShadowTransparency.Value.ToString(CultureInfo.InvariantCulture),
                     LineHeight = numericUpDownLineSpacing.Value.ToString(CultureInfo.InvariantCulture),
+                    UseFullFrame = checkBoxFullFrameImage.Checked.ToString(CultureInfo.InvariantCulture),
+                    FullFrameBackColor = Settings.ToHtml(panelFullFrameBackground.BackColor),
                 };
 
                 exportImageSub.Save(saveDialog.FileName);
@@ -6151,6 +6153,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     _subtitleFontSize = float.Parse(exportImageSub.FontSize, CultureInfo.InvariantCulture);
                     _subtitleFontBold = checkBoxBold.Checked;
                     _borderColor = panelBorderColor.BackColor;
+
+                    if (checkBoxFullFrameImage.Visible && !string.IsNullOrEmpty(exportImageSub.UseFullFrame))
+                    {
+                        checkBoxBold.Checked = Convert.ToBoolean(exportImageSub.UseFullFrame, CultureInfo.InvariantCulture);
+                        panelFullFrameBackground.BackColor = Settings.FromHtml(exportImageSub.FullFrameBackColor);
+                    }
                 }
             }
         }
