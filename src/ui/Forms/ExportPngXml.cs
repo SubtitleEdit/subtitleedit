@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _videoFileName;
         private readonly Dictionary<string, int> _lineHeights;
         private static int _boxBorderSize = 8;
+        private int _lastIndex;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -870,14 +871,8 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_exportType == ExportFormats.DCinemaSmpte2014)
                 {
                     var doc = new XmlDocument();
-                    string title = "unknown";
-                    if (!string.IsNullOrEmpty(_fileName))
-                    {
-                        title = Path.GetFileNameWithoutExtension(_fileName);
-                    }
-
-                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-                    string xml =
+                    var guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    var xml =
                         "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
                         "  <dcst:Id>urn:uuid:" + guid + "</dcst:Id>" + Environment.NewLine +
                         "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
@@ -896,7 +891,7 @@ namespace Nikse.SubtitleEdit.Forms
 
 
                     doc.LoadXml(xml);
-                    string fName = saveFileDialog1.FileName;
+                    var fName = saveFileDialog1.FileName;
                     if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                     {
                         fName += ".xml";
@@ -914,7 +909,7 @@ namespace Nikse.SubtitleEdit.Forms
                         title = "( no title )";
                     }
 
-                    string header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
+                    var header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
                     File.WriteAllText(saveFileDialog1.FileName, header + sb);
                     var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
                     MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
@@ -944,9 +939,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void WriteFcpFile(int width, int height, StringBuilder sb, string fileName)
         {
-            var fileNameNoPath = Path.GetFileName(fileName);
-            var fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
-
             var duration = 0;
             if (_subtitle.Paragraphs.Count > 0)
             {
@@ -1077,7 +1069,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void WriteBdnXmlFile(int imagesSavedCount, StringBuilder sb, string fileName)
         {
             GetResolution(out var resW, out var resH);
-            string videoFormat = "1080p";
+            var videoFormat = "1080p";
             if (resW == 1920 && resH == 1080)
             {
                 videoFormat = "1080p";
@@ -1096,8 +1088,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var doc = new XmlDocument();
-            Paragraph first = _subtitle.Paragraphs[0];
-            Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
+            var first = _subtitle.Paragraphs[0];
+            var last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
             doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                         "<BDN Version=\"0.93\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"BD-03-006-0093b BDN File Format.xsd\">" + Environment.NewLine +
                         "<Description>" + Environment.NewLine +
@@ -1117,13 +1109,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void WriteDostFile(string fileName, string body)
         {
-            string header = @"$FORMAT=480
+            var header = @"$FORMAT=480
 $VERSION=1.2
 $ULEAD=TRUE
 $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                                 "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
-            string dropValue = "30000";
+            var dropValue = "30000";
             if (comboBoxFrameRate.SelectedIndex == -1)
             {
                 var numberAsString = comboBoxFrameRate.Text.Trim().RemoveChar('.').RemoveChar(',').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
@@ -1188,10 +1180,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void FixStartEndWithSameTimeCode()
         {
-            for (int i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
+            for (var i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                Paragraph next = _subtitle.Paragraphs[i + 1];
+                var p = _subtitle.Paragraphs[i];
+                var next = _subtitle.Paragraphs[i + 1];
                 if (Math.Abs(p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.1)
                 {
                     p.EndTime.TotalMilliseconds--;
@@ -1263,7 +1255,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
             }
 
-            string text = comboBoxResolution.Text.Trim();
+            var text = comboBoxResolution.Text.Trim();
 
             if (_exportType == ExportFormats.Fcp)
             {
@@ -1344,7 +1336,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             text = text.TrimStart('(').TrimEnd(')').Trim();
-            string[] arr = text.Split('x');
+            var arr = text.Split('x');
             width = int.Parse(arr[0]);
             height = int.Parse(arr[1]);
         }
@@ -4758,6 +4750,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _previewTimer.Stop();
             UpdateLineSpacing();
             _previewTimer.Start();
+
+            if (subtitleListView1.SelectedItems.Count > 0)
+            {
+                _lastIndex = subtitleListView1.SelectedItems[0].Index;
+            }
         }
 
         internal int GetBottomMarginInPixels(Paragraph p)
@@ -5749,14 +5746,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     using (var g = Graphics.FromImage(bmp))
                     {
-                        var p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
+                        var index = _lastIndex;
+                        var p = _subtitle.Paragraphs[index];
                         FillPreviewBackground(bmp, g, p);
 
                         var nBmp = new NikseBitmap(pictureBox1.Image as Bitmap);
                         nBmp.CropSidesAndBottom(100, Color.Transparent, true);
                         using (var textBmp = nBmp.GetBitmap())
                         {
-                            var bp = MakeMakeBitmapParameter(subtitleListView1.SelectedItems[0].Index, width, height);
+                            var bp = MakeMakeBitmapParameter(index, width, height);
                             var alignment = GetAlignmentFromParagraph(bp, _format, _subtitle);
                             if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
                             {
@@ -5770,7 +5768,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
                             }
 
-                            int x = (bmp.Width - textBmp.Width) / 2;
+                            var x = (bmp.Width - textBmp.Width) / 2;
                             if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
                             {
                                 x = GetBottomMarginInPixels(p);
@@ -5780,7 +5778,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 x = bmp.Width - textBmp.Width - GetBottomMarginInPixels(p);
                             }
 
-                            int y = bmp.Height - textBmp.Height - GetBottomMarginInPixels(p);
+                            var y = bmp.Height - textBmp.Height - GetBottomMarginInPixels(p);
                             if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
                             {
                                 x = GetBottomMarginInPixels(p);
@@ -5803,21 +5801,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                     }
 
-                    var showPrev = false;
-                    var showNext = false;
-                    var idx = -1;
+                    bool showPrev;
+                    bool showNext;
+                    var idx = _lastIndex;
                     using (var form = new ExportPngXmlPreview(bmp))
                     {
                         Cursor = Cursors.Default;
-                        if (subtitleListView1.SelectedItems.Count > 0)
-                        {
-                            idx = subtitleListView1.SelectedItems[0].Index;
-                            form.AllowNext = idx < _subtitle.Paragraphs.Count - 1;
-                            form.AllowPrevious = idx > 0;
-                            form.ShowDialog(this);
-                            showPrev = form.PreviousPressed;
-                            showNext = form.NextPressed;
-                        }
+                        form.AllowNext = idx < _subtitle.Paragraphs.Count - 1;
+                        form.AllowPrevious = idx > 0;
+                        form.ShowDialog(this);
+                        showPrev = form.PreviousPressed;
+                        showNext = form.NextPressed;
                     }
 
                     if (showPrev || showNext)
