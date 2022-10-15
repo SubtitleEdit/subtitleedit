@@ -412,6 +412,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string VoskModel { get; set; }
         public string WhisperModel { get; set; }
         public string WhisperLanguageCode { get; set; }
+        public string WhisperLocation { get; set; }
         public string WhisperExtraSettings { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
@@ -6133,6 +6134,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperLocation");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperLocation = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WhisperExtraSettings");
             if (subNode != null)
             {
@@ -10385,6 +10392,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
+                textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
                 textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
                 textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
