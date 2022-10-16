@@ -8,11 +8,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     /// </summary>
     public class Mdat : Box
     {
-        public List<string> Payloads { get; set; }
+        public List<Vttc.VttData> Vtts { get; set; }
 
         public Mdat(Stream fs, ulong maximumLength)
         {
-            Payloads = new List<string>();
+            Vtts = new List<Vttc.VttData>();
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
@@ -23,11 +23,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 if (Name == "vttc")
                 {
                     var vttc = new Vttc(fs, Position);
-                    Payloads.AddRange(vttc.Payload);
+                    Vtts.Add(vttc.Data);
                 }
                 else if (Name == "vtte")
                 {
-                    Payloads.Add(null);
+                    var data = new Vttc.VttData();
+                    Vtts.Add(data);
+                    data.Payload = null;
+                    data.PayloadSize = (int)Size;
                 }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
