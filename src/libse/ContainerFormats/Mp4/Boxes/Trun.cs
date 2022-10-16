@@ -75,9 +75,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     return;
                 }
 
-                // skip "sample_size" if present
+                // read "sample_size" if present
                 if ((flags & 0x000200) > 0)
                 {
+                    sample.Size = GetUInt(pos);
                     pos += 4;
                 }
                 if (pos > Buffer.Length - 4)

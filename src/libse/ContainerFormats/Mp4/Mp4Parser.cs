@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
@@ -156,30 +158,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 else if (Name == "mdat" && Moof != null && Moof?.Traf?.Trun?.Samples?.Count > 0)
                 {
                     var mdat = new Mdat(fs, Position);
-                    if (mdat.Payloads.Count > 0)
+                    if (mdat.Vtts != null && mdat.Vtts.Any(p => !string.IsNullOrEmpty(p.Payload)))
                     {
-                        if (Moof.Traf?.Trun?.Samples.Count > 0 && Moof?.Traf?.Trun?.Samples.Count >= mdat.Payloads.Count)
+                        if (Moof.Traf?.Trun?.Samples.Count > 0)
                         {
                             if (VttcSubtitle == null)
                             {
                                 VttcSubtitle = new Subtitle();
                             }
 
-                            var timeScale = (double)(Moov?.Mvhd?.TimeScale ?? 1000.0);
-                            var sampleIdx = 0;
-                            foreach (var payload in mdat.Payloads)
+                            if (Moof.Traf.Trun.Samples.All(p => p.Size != null))
                             {
-                                var presentation = Moof.Traf.Trun.Samples[sampleIdx];
-                                if (presentation.Duration.HasValue)
-                                {
-                                    var before = timeTotalMs;
-                                    timeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
-                                    sampleIdx++;
-                                    if (payload != null)
-                                    {
-                                        VttcSubtitle.Paragraphs.Add(new Paragraph(payload, before, timeTotalMs));
-                                    }
-                                }
+                                ReadVttWithSize(mdat, Moof.Traf.Trun.Samples, ref timeTotalMs);
+                            }
+                            else
+                            {
+                                ReadVttWithoutSize(mdat.Vtts, Moof.Traf.Trun.Samples, ref timeTotalMs);
                             }
                         }
 
@@ -207,6 +201,85 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             {
                 var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(VttcSubtitle, false, 250);
                 VttcSubtitle = merged;
+            }
+        }
+
+        private void ReadVttWithSize(Mdat mdat, List<TimeSegment> trunSamples, ref double timeTotalMs)
+        {
+            var payloadIndex = 0;
+            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+            foreach (var timeSegment in trunSamples)
+            {
+                var before = timeTotalMs;
+                if (timeSegment.Duration.HasValue)
+                {
+                    timeTotalMs += timeSegment.Duration.Value / timeScale * 1000.0;
+                }
+
+                var timeSegmentSize = timeSegment.Size;
+                if (payloadIndex < mdat.Vtts.Count && timeSegmentSize > 8)
+                {
+                    var payloadSize = mdat.Vtts[payloadIndex].PayloadSize;
+                    var payload = mdat.Vtts[payloadIndex].Payload;
+                    var style = mdat.Vtts[payloadIndex].Style;
+
+                    if (timeSegment.Duration.HasValue && payload != null)
+                    {
+                        AddVttParagraph(timeTotalMs, payload, before, style);
+                    }
+
+                    while (payloadIndex + 1 < mdat.Vtts.Count && timeSegmentSize >= payloadSize + mdat.Vtts[payloadIndex + 1].PayloadSize)
+                    {
+                        payloadIndex++;
+                        payload = mdat.Vtts[payloadIndex].Payload;
+                        style = mdat.Vtts[payloadIndex].Style;
+
+                        if (timeSegment.Duration.HasValue && payload != null)
+                        {
+                            AddVttParagraph(timeTotalMs, payload, before, style);
+                        }
+
+                        payloadSize += mdat.Vtts[payloadIndex].PayloadSize; // add 8
+                    }
+                }
+
+                payloadIndex++;
+            }
+        }
+
+        private void AddVttParagraph(double timeTotalMs, string payload, double before, string style)
+        {
+            var p = new Paragraph(payload, before, timeTotalMs);
+            var positionInfo = WebVTT.GetPositionInfo(style);
+            if (!string.IsNullOrEmpty(positionInfo))
+            {
+                p.Text = positionInfo + p.Text;
+                p.Extra = style;
+                VttcSubtitle.Header = "WEBVTT";
+            }
+            VttcSubtitle.Paragraphs.Add(p);
+        }
+
+        private void ReadVttWithoutSize(List<Vttc.VttData> vtts, List<TimeSegment> trunSamples, ref double timeTotalMs)
+        {
+            if (trunSamples.Count > 0 && trunSamples.Count >= vtts.Count)
+            {
+                var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+                var sampleIdx = 0;
+                foreach (var vtt in vtts)
+                {
+                    var presentation = Moof.Traf.Trun.Samples[sampleIdx];
+                    if (presentation.Duration.HasValue)
+                    {
+                        var before = timeTotalMs;
+                        timeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
+                        sampleIdx++;
+                        if (vtt.Payload != null)
+                        {
+                            VttcSubtitle.Paragraphs.Add(new Paragraph(vtt.Payload, before, timeTotalMs));
+                        }
+                    }
+                }
             }
         }
 
