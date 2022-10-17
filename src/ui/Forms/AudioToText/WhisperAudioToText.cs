@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelInfo.Text = LanguageSettings.Current.AudioToText.WhisperInfo;
             groupBoxModels.Text = LanguageSettings.Current.AudioToText.LanguagesAndModels;
             labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
+            labelChooseLanguage.Text = LanguageSettings.Current.AudioToText.ChooseLanguage;
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
