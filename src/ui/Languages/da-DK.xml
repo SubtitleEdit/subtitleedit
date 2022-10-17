@@ -178,7 +178,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Models>Modeller</Models>
     <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
     <ChooseModel>Vælg model</ChooseModel>
-    <ChooseLanguage>Vælg model</ChooseLanguage>
+    <ChooseLanguage>Vælg sprog</ChooseLanguage>
     <OpenModelsFolder>Åbn mappen modeller</OpenModelsFolder>
     <LoadingVoskModel>Indlæser Vosk talegenkendelsesmodel...</LoadingVoskModel>
     <Transcribing>Transskriberer lyd til tekst...</Transcribing>

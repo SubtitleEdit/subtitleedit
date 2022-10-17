@@ -185,7 +185,7 @@ Read more info (web)?</WhisperNotFound>
     <Models>Models</Models>
     <LanguagesAndModels>Languages and models</LanguagesAndModels>
     <ChooseModel>Choose model</ChooseModel>
-    <ChooseLanguage>Choose model</ChooseLanguage>
+    <ChooseLanguage>Choose language</ChooseLanguage>
     <OpenModelsFolder>Open models folder</OpenModelsFolder>
     <LoadingVoskModel>Loading Vosk speech recognition model...</LoadingVoskModel>
     <Transcribing>Transcribing audio to text...</Transcribing>

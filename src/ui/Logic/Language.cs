@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Models = "Models",
                 LanguagesAndModels = "Languages and models",
                 ChooseModel = "Choose model",
-                ChooseLanguage = "Choose model",
+                ChooseLanguage = "Choose language",
                 OpenModelsFolder = "Open models folder",
                 LoadingVoskModel = "Loading Vosk speech recognition model...",
                 Transcribing = "Transcribing audio to text...",
