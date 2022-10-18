@@ -184,7 +184,7 @@ Command line: {1} {2}
     <Models>模型</Models>
     <LanguagesAndModels>语言和模型</LanguagesAndModels>
     <ChooseModel>选择模型</ChooseModel>
-    <ChooseLanguage>选择模型</ChooseLanguage>
+    <ChooseLanguage>选择语言</ChooseLanguage>
     <OpenModelsFolder>打开模型文件夹</OpenModelsFolder>
     <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
     <Transcribing>将音频转录为文本...</Transcribing>
