@@ -183,7 +183,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Models>Μοντέλα</Models>
     <LanguagesAndModels>Γλώσσες και μοντέλα</LanguagesAndModels>
     <ChooseModel>Επιλογή μοντέλου</ChooseModel>
-    <ChooseLanguage>Επιλογή μοντέλου</ChooseLanguage>
+    <ChooseLanguage>Επιλογή γλώσσας</ChooseLanguage>
     <OpenModelsFolder>Άνοιγμα φακέλου μοντέλων</OpenModelsFolder>
     <LoadingVoskModel>Φόρτωση μοντέλου αναγνώριση ομιλίας Vosk…</LoadingVoskModel>
     <Transcribing>Μετατροπή ήχου σε κείμενο…</Transcribing>
