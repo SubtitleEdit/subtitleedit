@@ -69,6 +69,7 @@
    * Fix installer dot net version check - thx Christoph
    * Fix a few typos - thx nkh0472
    * Fix for mp4 with vtt subtitles - thx LucretiaAudrey
+   * Fix rounding error when writing ASSA - thx tormento 
 
 
 3.6.7 (13th August 2022)
