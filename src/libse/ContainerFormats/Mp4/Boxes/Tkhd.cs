@@ -15,13 +15,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public Tkhd(Stream fs)
         {
             Buffer = new byte[84];
-            int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+            var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
             {
                 return;
             }
 
-            int version = Buffer[0];
+            var version = Buffer[0];
             if (version == 1)
             {
                 int addToIndex64Bit = 0;
