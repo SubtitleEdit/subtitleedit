@@ -239,6 +239,15 @@ namespace Nikse.SubtitleEdit.Controls
 
             PictureBoxFastForwardMouseEnter(null, null);
             PictureBoxFastForwardOverMouseLeave(null, null);
+
+            _labelTimeCode.Click += LabelTimeCodeClick;
+        }
+
+        private bool _showDuration = true;
+        private void LabelTimeCodeClick(object sender, EventArgs e)
+        {
+            _showDuration = !_showDuration;
+            RefreshProgressBar();
         }
 
         private void ShowAllControls()
@@ -1027,7 +1036,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (string.IsNullOrEmpty(_labelTimeCode.Text))
             {
                 var span = TimeCode.FromSeconds(1);
-                _labelTimeCode.Text = $"{span.ToDisplayString()} / {span.ToDisplayString()}{(SmpteMode ? " SMPTE" : string.Empty)}";
+                _labelTimeCode.Text = GetDisplayTimeCode(_videoPlayer?.CurrentPosition ?? 0);
                 _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
                 if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
                 {
@@ -1659,8 +1668,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                int max = _pictureBoxProgressbarBackground.Width - 9;
-                double percent = (VideoPlayer.CurrentPosition * 100.0) / VideoPlayer.Duration;
+                var max = _pictureBoxProgressbarBackground.Width - 9;
+                var percent = (VideoPlayer.CurrentPosition * 100.0) / VideoPlayer.Duration;
                 _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
 
                 if (Convert.ToInt64(Duration) == 0)
@@ -1674,27 +1683,62 @@ namespace Nikse.SubtitleEdit.Controls
                     pos = 0;
                 }
 
-                var dur = TimeCode.FromSeconds(Duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                if (SmpteMode)
-                {
-                    var span = TimeCode.FromSeconds(pos + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()} SMPTE";
-                }
-                else
-                {
-                    var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()}";
-                }
-
-                if (UsingFrontCenterAudioChannelOnly)
-                {
-                    _labelTimeCode.Text += " FC";
-                }
+                _labelTimeCode.Text = GetDisplayTimeCode(pos);
 
                 ResizeTimeCode();
 
                 RefreshPlayPauseButtons();
             }
+        }
+
+        private string GetDisplayTimeCode(double positionInSeconds)
+        {
+            string displayTimeCode;
+            var dur = TimeCode.FromSeconds(Duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+            if (SmpteMode)
+            {
+                if (_showDuration || Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
+                {
+                    var span = TimeCode.FromSeconds(positionInSeconds + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                    displayTimeCode = $"{span.ToDisplayString()} / {dur.ToDisplayString()} SMPTE";
+                }
+                else
+                {
+                    var pos = positionInSeconds + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit;
+                    var seconds = (pos - dur.TotalSeconds) * -1;
+                    if (seconds < 0)
+                    {
+                        seconds = 0;
+                    }
+
+                    displayTimeCode = $"-{TimeCode.FromSeconds(seconds).ToDisplayString()} SMPTE";
+                }
+            }
+            else
+            {
+                if (_showDuration || Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
+                {
+                    var span = TimeCode.FromSeconds(positionInSeconds + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                    displayTimeCode = $"{span.ToDisplayString()} / {dur.ToDisplayString()}";
+                }
+                else
+                {
+                    var seconds = (positionInSeconds - Duration) * -1;
+                    if (seconds < 0)
+                    {
+                        seconds = 0;
+                    }
+
+                    displayTimeCode = $"-{TimeCode.FromSeconds(seconds).ToDisplayString()}";
+                }
+            }
+
+            if (UsingFrontCenterAudioChannelOnly)
+            {
+                displayTimeCode += " FC";
+            }
+
+            return displayTimeCode;
         }
 
         private void SetVolumeBarPosition(int mouseX)
