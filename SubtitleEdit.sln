@@ -32,6 +32,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "src\libse\LibSE.cs
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "winget", "winget", "{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28}"
+	ProjectSection(SolutionItems) = preProject
+		winget\Nikse.SubtitleEdit.installer.yaml = winget\Nikse.SubtitleEdit.installer.yaml
+		winget\Nikse.SubtitleEdit.locale.en-US.yaml = winget\Nikse.SubtitleEdit.locale.en-US.yaml
+		winget\Nikse.SubtitleEdit.yaml = winget\Nikse.SubtitleEdit.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +71,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E12BDE22-B6A4-4AB6-AF96-F3C0F89C15EC}

@@ -18,6 +18,7 @@ namespace UpdateAssemblyInfo
         private static readonly Regex AssemblyInfoFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.226")]
         private static readonly Regex TemplateFileCopyrightRegex; // e.g.: [assembly: AssemblyCopyright("Copyright 2001-2019, Nikse")]
         private static readonly Regex AssemblyInfoFileRevisionGuidRegex; // e.g.: [assembly: AssemblyDescription("0e82e5769c9b235383991082c0a0bba96d20c69d")]
+
         static Program()
         {
             var options = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant;
@@ -92,7 +93,7 @@ namespace UpdateAssemblyInfo
 
             public int CompareTo(VersionInfo vi)
             {
-                int cmp = 1;
+                var cmp = 1;
                 if (!ReferenceEquals(vi, null))
                 {
                     cmp = Major.CompareTo(vi.Major);
@@ -105,6 +106,7 @@ namespace UpdateAssemblyInfo
                         cmp = Maintenance.CompareTo(vi.Maintenance);
                     }
                 }
+
                 return cmp;
             }
 
@@ -309,6 +311,7 @@ namespace UpdateAssemblyInfo
             Console.Write(WorkInProgress);
         }
 
+        //debug: "..\..\ui\Properties\AssemblyInfo.cs.template" "..\..\src\libse\Properties\AssemblyInfo.cs.template"
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
@@ -359,6 +362,8 @@ namespace UpdateAssemblyInfo
                         var tmx14FileName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(libSeTemplateFileName)) ?? throw new InvalidOperationException(), "SubtitleFormats", "Tmx14.cs");
                         UpdateTmx14ToolVersion(tmx14FileName, newVersion, oldVersion);
                     }
+
+                    UpdateWinGet(newVersion);
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
                     UpdateAssemblyInfo(seTemplateFileName, newVersion, updateTemplateFile);
                 }
@@ -376,6 +381,47 @@ namespace UpdateAssemblyInfo
 
                 return 2;
             }
+        }
+
+        private static void UpdateWinGet(VersionInfo newVersion)
+        {
+            var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+            var dir = Path.Combine(workingDirectory, "winget");
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "winget");
+            }
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "..", "winget");
+            }
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "..", "..", "winget");
+            }
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "..", "..", "..", "winget");
+            }
+
+            if (!Directory.Exists(dir))
+            {
+                return;
+            }
+
+            var installer = Path.Combine(dir, "Nikse.SubtitleEdit.installer.yaml");
+            //PackageVersion: 3.6.7.0
+            //ReleaseDate: 2022-08-13
+            //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
+            //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+            //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
+            //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+
+            var locale = Path.Combine(dir, "Nikse.SubtitleEdit.locale.en-US.yaml");
+            // PackageVersion: 3.6.7.0
+
+            var main = Path.Combine(dir, "Nikse.SubtitleEdit.yaml");
+            // PackageVersion: 3.6.7.0
         }
 
         private static string GetGitPath()
