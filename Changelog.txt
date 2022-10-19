@@ -50,7 +50,8 @@
    * Add bold support to DCP format - thx felagund
    * A few fixes for eng_OCRFixReplaceList.xml - thx Ding-adong
    * Most plugins should now work on Linux
-   * Add import/export of binary export settings
+   * Add import/export of binary export profile
+   * Mp4 import: Support sample size + default size/dur - thx LucretiaAudrey
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
