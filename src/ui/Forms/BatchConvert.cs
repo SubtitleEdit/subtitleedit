@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -696,15 +697,18 @@ namespace Nikse.SubtitleEdit.Forms
                 var mkvSrt = new List<string>();
                 var mkvSsa = new List<string>();
                 var mkvAss = new List<string>();
-                int mkvCount = 0;
+                var mkvCount = 0;
                 var isTs = false;
+                var isMp4 = false;
+                var mp4Files = new List<string>();
 
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
                 if (fi.Length < ConvertMaxFileSize)
                 {
                     if (!FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName) &&
-                        !((ext == ".mkv" || ext == ".mks") && FileUtil.IsMatroskaFile(fileName)))
+                        !((ext == ".mkv" || ext == ".mks") && FileUtil.IsMatroskaFile(fileName)) &&
+                        ext != ".mp4" && ext != ".mv4" && ext != ".m4s")
                     {
                         format = sub.LoadSubtitle(fileName, out _, null);
 
@@ -785,6 +789,29 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems.Add(LanguageSettings.Current.UnknownSubtitle.Title);
                         }
                     }
+                    else if (ext == ".mp4" || ext == ".m4v" || ext == ".m4s")
+                    {
+                        isMp4 = true;
+                        var mp4Parser = new MP4Parser(fileName);
+                        var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
+                        if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
+                        {
+                            mp4Files.Add("MP4/WebVTT");
+                        }
+
+                        foreach (var track in mp4SubtitleTracks)
+                        {
+                            if (track.Mdia.IsTextSubtitle || track.Mdia.IsClosedCaption)
+                            {
+                                mp4Files.Add($"MP4/#{mp4SubtitleTracks.IndexOf(track)} {track.Mdia.HandlerType} - {track.Mdia.HandlerName}");
+                            }
+                        }
+
+                        if (mp4Files.Count <= 0)
+                        {
+                            item.SubItems.Add(LanguageSettings.Current.UnknownSubtitle.Title);
+                        }
+                    }
                     else if ((ext == ".ts" || ext == ".m2ts" || ext == ".mts" || ext == ".mpg" || ext == ".mpeg") &&
                              (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                     {
@@ -808,7 +835,7 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewInputFiles.Items.Add(item);
                     }
 
-                    bool mkvLangCodeFilterActive = comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0;
+                    var mkvLangCodeFilterActive = comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0;
                     var mkvSubFormats = new Dictionary<string, List<string>>
                     {
                         { "PGS", mkvPgs },
@@ -833,6 +860,17 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems.Add("-");
                             listViewInputFiles.Items.Add(item);
                         }
+                    }
+                }
+                else if (isMp4 && mp4Files.Count > 0)
+                {
+                    foreach (var name in mp4Files)
+                    {
+                        item = new ListViewItem(fileName);
+                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                        item.SubItems.Add(name);
+                        item.SubItems.Add("-");
+                        listViewInputFiles.Items.Add(item);
                     }
                 }
                 else if (isTs)
@@ -1063,11 +1101,11 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInputFiles.EndUpdate();
             var mkvFileNames = new List<string>();
             Refresh();
-            int index = 0;
+            var index = 0;
             while (index < listViewInputFiles.Items.Count && !_abort)
             {
                 ListViewItem item = listViewInputFiles.Items[index];
-                string fileName = item.Text;
+                var fileName = item.Text;
                 try
                 {
                     var binaryParagraphs = new List<IBinaryParagraph>();
@@ -1143,9 +1181,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
-                    bool isVobSub = false;
-                    bool isMatroska = false;
-                    bool isTs = false;
+                    var isVobSub = false;
+                    var isMatroska = false;
+                    var isTs = false;
+                    var isMp4 = false;
                     if (fromFormat == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
@@ -1169,7 +1208,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isTs = true;
                     }
-                    if (fromFormat == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs)
+                    else if (fromFormat == null &&
+                             (fileName.EndsWith(".mp4") || fileName.EndsWith(".m4v") || fileName.EndsWith(".m4s")))
+                    {
+                        isMp4 = true;
+                    }
+
+                    if (fromFormat == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs && !isMp4)
                     {
                         _errors++;
                         IncrementAndShowProgress();
@@ -1489,6 +1534,42 @@ namespace Nikse.SubtitleEdit.Forms
                                 item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
                             }
                         }
+                        else if (isMp4)
+                        {
+                            var mp4Found = false;
+                            var trackId = item.SubItems[2].Text;
+                            var mp4Parser = new MP4Parser(fileName);
+                            var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
+                            if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0 && trackId == "MP4/WebVTT")
+                            {
+                                sub = mp4Parser.VttcSubtitle;
+                                mp4Found = true;
+                            }
+                            else
+                            {
+                                foreach (var track in mp4SubtitleTracks)
+                                {
+                                    if (track.Mdia.IsTextSubtitle || track.Mdia.IsClosedCaption)
+                                    {
+                                        if (trackId == $"MP4/#{mp4SubtitleTracks.IndexOf(track)} {track.Mdia.HandlerType} - {track.Mdia.HandlerName}")
+                                        {
+                                            sub.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
+                                            mp4Found = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (!mp4Found)
+                            {
+                                _errors++;
+                                index++;
+                                item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.NotConverted;
+                                IncrementAndShowProgress();
+                                continue;
+                            }
+                        }
 
                         if (ComboBoxSubtitleFormatText == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
                         {
@@ -1505,7 +1586,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        bool skip = CheckSkipFilter(fileName, fromFormat, sub);
+                        var skip = CheckSkipFilter(fileName, fromFormat, sub);
                         if (skip)
                         {
                             item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.FilterSkipped;
@@ -1559,6 +1640,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 index++;
             }
+
             while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
             {
                 try
@@ -2775,6 +2857,7 @@ namespace Nikse.SubtitleEdit.Forms
             ".tiff",
             ".gif",
             ".bmp",
+            ".ico",
             ".clpi",
             ".mpls",
             ".wav",
@@ -2799,12 +2882,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ScanFiles(IEnumerable<string> fileNames)
         {
-            foreach (string fileName in fileNames)
+            foreach (var fileName in fileNames)
             {
                 labelStatus.Text = fileName;
                 try
                 {
-                    string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                    var ext = Path.GetExtension(fileName).ToLowerInvariant();
                     if (!SearchExtBlackList.Contains(ext))
                     {
                         labelStatus.Refresh();
