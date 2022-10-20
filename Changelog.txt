@@ -24,6 +24,7 @@
    * Change spell check window font size via context menu - thx Marko G
    * Add experimental "Audio to text via Whisper"
    * Add toolbar icon for source view toggle - thx Leon
+   * SE can now be installed via "winget install Nikse.SubtitleEdit"
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
@@ -52,6 +53,7 @@
    * Most plugins should now work on Linux
    * Add import/export of binary export profile
    * Mp4 import: Support sample size + default size/dur - thx LucretiaAudrey
+   * Add mp4 support in "Batch convert" - thx DrReddP
 * FIXED:
    * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
