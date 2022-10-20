@@ -22025,7 +22025,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // all good - correct resolution
                 }
-                else if (oldPlayResX == null || oldPlayResY == null)
+                else if (oldPlayResX == null || oldPlayResY == null || _subtitle.Paragraphs.Count == 0)
                 {
                     SetAssaResolution(_subtitle);
                     var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);

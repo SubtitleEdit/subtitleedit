@@ -132,6 +132,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             buttonGetResolutionFromCurrentVideo.Enabled = !string.IsNullOrEmpty(videoFileName);
+
+            labelCurrentVideoResolution.Text = string.Empty;
+            if (_currentVideoInfo != null &&
+                (numericUpDownVideoWidth.Value != _currentVideoInfo.Width || numericUpDownVideoHeight.Value != _currentVideoInfo.Height))
+            {
+                labelCurrentVideoResolution.Text = $"{_currentVideoInfo.Width}x{_currentVideoInfo.Height}";
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -268,6 +275,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             numericUpDownVideoWidth.Value = _currentVideoInfo.Width;
             numericUpDownVideoHeight.Value = _currentVideoInfo.Height;
+            labelCurrentVideoResolution.Text = string.Empty;
         }
     }
 }
