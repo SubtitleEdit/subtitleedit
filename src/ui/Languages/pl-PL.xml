@@ -185,7 +185,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <Models>Modele</Models>
     <LanguagesAndModels>Języki i modele</LanguagesAndModels>
     <ChooseModel>Wybierz model</ChooseModel>
-    <ChooseLanguage>Wybierz model</ChooseLanguage>
+    <ChooseLanguage>Wybierz język</ChooseLanguage>
     <OpenModelsFolder>Otwórz folder modeli</OpenModelsFolder>
     <LoadingVoskModel>Wczytuję model rozpoznawania mowy Vosk...</LoadingVoskModel>
     <Transcribing>Transkrypcja audio na tekst...</Transcribing>
