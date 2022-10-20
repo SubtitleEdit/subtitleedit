@@ -384,8 +384,13 @@ namespace UpdateAssemblyInfo
             }
         }
 
-        private static void UpdateWinGet(VersionInfo newVersion)
+        private static void UpdateWinGet(VersionInfo version)
         {
+            if (version.Build != 0)
+            {
+                return;
+            }
+
             var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
             var dir = Path.Combine(workingDirectory, "winget");
             if (!Directory.Exists(dir))
@@ -411,22 +416,22 @@ namespace UpdateAssemblyInfo
             }
 
             var installer = Path.Combine(dir, "Nikse.SubtitleEdit.installer.yaml");
-            var txt = File.ReadAllText(installer);
-            txt = SetVariable(txt, "PackageVersion", newVersion.NormalVersion); //PackageVersion: 3.6.7.0
-            txt = SetVariable(txt, "ReleaseDate", DateTime.Now.ToString("yyyy-MM-dd")); //ReleaseDate: 2022-08-13
-            txt = SetVariable(txt, "InstallerUrl", $"https://github.com/SubtitleEdit/subtitleedit/releases/download/{newVersion.ShortVersion}/SubtitleEdit-{newVersion.ShortVersion}-Setup.exe"); //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
-            txt = SetVariable(txt, "InstallerSha256", $"TODO: Add"); //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
-            File.WriteAllText(installer, txt.TrimEnd()+ Environment.NewLine + Environment.NewLine);
+            var yaml = File.ReadAllText(installer);
+            yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); //PackageVersion: 3.6.7.0
+            yaml = SetVariable(yaml, "ReleaseDate", DateTime.Now.ToString("yyyy-MM-dd")); //ReleaseDate: 2022-08-13
+            yaml = SetVariable(yaml, "InstallerUrl", $"https://github.com/SubtitleEdit/subtitleedit/releases/download/{version.ShortVersion}/SubtitleEdit-{version.ShortVersion}-Setup.exe"); //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
+            yaml = SetVariable(yaml, "InstallerSha256", $"TODO: Add"); //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+            File.WriteAllText(installer, yaml.TrimEnd()+ Environment.NewLine + Environment.NewLine);
 
             var locale = Path.Combine(dir, "Nikse.SubtitleEdit.locale.en-US.yaml");
-            txt = File.ReadAllText(locale);
-            txt = SetVariable(txt, "PackageVersion", newVersion.NormalVersion); // PackageVersion: 3.6.7.0
-            File.WriteAllText(locale, txt.TrimEnd() + Environment.NewLine + Environment.NewLine);
+            yaml = File.ReadAllText(locale);
+            yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); // PackageVersion: 3.6.7.0
+            File.WriteAllText(locale, yaml.TrimEnd() + Environment.NewLine + Environment.NewLine);
 
             var main = Path.Combine(dir, "Nikse.SubtitleEdit.yaml");
-            txt = File.ReadAllText(main);
-            txt = SetVariable(txt, "PackageVersion", newVersion.NormalVersion); // PackageVersion: 3.6.7.0
-            File.WriteAllText(main, txt.TrimEnd() + Environment.NewLine + Environment.NewLine);
+            yaml = File.ReadAllText(main);
+            yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); // PackageVersion: 3.6.7.0
+            File.WriteAllText(main, yaml.TrimEnd() + Environment.NewLine + Environment.NewLine);
         }
 
         private static string SetVariable(string txt, string targetVariable, string targetValue)
