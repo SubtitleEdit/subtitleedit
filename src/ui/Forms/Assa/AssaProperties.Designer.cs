@@ -59,6 +59,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelCurrentVideoResolution = new System.Windows.Forms.Label();
             this.groupBoxScript.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxResolution.SuspendLayout();
@@ -88,7 +89,7 @@
             this.groupBoxScript.Controls.Add(this.labelTitle);
             this.groupBoxScript.Location = new System.Drawing.Point(12, 12);
             this.groupBoxScript.Name = "groupBoxScript";
-            this.groupBoxScript.Size = new System.Drawing.Size(471, 233);
+            this.groupBoxScript.Size = new System.Drawing.Size(493, 233);
             this.groupBoxScript.TabIndex = 0;
             this.groupBoxScript.TabStop = false;
             this.groupBoxScript.Text = "Script";
@@ -229,9 +230,9 @@
             this.groupBoxOptions.Controls.Add(this.checkBoxScaleBorderAndShadow);
             this.groupBoxOptions.Controls.Add(this.comboBoxWrapStyle);
             this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
-            this.groupBoxOptions.Location = new System.Drawing.Point(12, 314);
+            this.groupBoxOptions.Location = new System.Drawing.Point(12, 327);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(471, 87);
+            this.groupBoxOptions.Size = new System.Drawing.Size(493, 87);
             this.groupBoxOptions.TabIndex = 2;
             this.groupBoxOptions.TabStop = false;
             this.groupBoxOptions.Text = "Options";
@@ -273,6 +274,7 @@
             // 
             this.groupBoxResolution.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxResolution.Controls.Add(this.labelCurrentVideoResolution);
             this.groupBoxResolution.Controls.Add(this.labelVideoResolution);
             this.groupBoxResolution.Controls.Add(this.numericUpDownVideoHeight);
             this.groupBoxResolution.Controls.Add(this.buttonGetResolutionFromVideo);
@@ -281,7 +283,7 @@
             this.groupBoxResolution.Controls.Add(this.numericUpDownVideoWidth);
             this.groupBoxResolution.Location = new System.Drawing.Point(12, 251);
             this.groupBoxResolution.Name = "groupBoxResolution";
-            this.groupBoxResolution.Size = new System.Drawing.Size(471, 57);
+            this.groupBoxResolution.Size = new System.Drawing.Size(493, 70);
             this.groupBoxResolution.TabIndex = 1;
             this.groupBoxResolution.TabStop = false;
             this.groupBoxResolution.Text = "Resolution";
@@ -297,7 +299,7 @@
             // 
             // numericUpDownVideoHeight
             // 
-            this.numericUpDownVideoHeight.Location = new System.Drawing.Point(260, 19);
+            this.numericUpDownVideoHeight.Location = new System.Drawing.Point(277, 19);
             this.numericUpDownVideoHeight.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -309,7 +311,7 @@
             // 
             // buttonGetResolutionFromVideo
             // 
-            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(311, 19);
+            this.buttonGetResolutionFromVideo.Location = new System.Drawing.Point(330, 19);
             this.buttonGetResolutionFromVideo.Name = "buttonGetResolutionFromVideo";
             this.buttonGetResolutionFromVideo.Size = new System.Drawing.Size(27, 23);
             this.buttonGetResolutionFromVideo.TabIndex = 4;
@@ -319,7 +321,7 @@
             // 
             // buttonGetResolutionFromCurrentVideo
             // 
-            this.buttonGetResolutionFromCurrentVideo.Location = new System.Drawing.Point(342, 19);
+            this.buttonGetResolutionFromCurrentVideo.Location = new System.Drawing.Point(363, 19);
             this.buttonGetResolutionFromCurrentVideo.Name = "buttonGetResolutionFromCurrentVideo";
             this.buttonGetResolutionFromCurrentVideo.Size = new System.Drawing.Size(124, 23);
             this.buttonGetResolutionFromCurrentVideo.TabIndex = 5;
@@ -330,7 +332,7 @@
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(242, 22);
+            this.labelX.Location = new System.Drawing.Point(257, 21);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(14, 13);
             this.labelX.TabIndex = 2;
@@ -345,13 +347,13 @@
             0,
             0});
             this.numericUpDownVideoWidth.Name = "numericUpDownVideoWidth";
-            this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDownVideoWidth.Size = new System.Drawing.Size(60, 20);
             this.numericUpDownVideoWidth.TabIndex = 1;
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(327, 407);
+            this.buttonOK.Location = new System.Drawing.Point(349, 420);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
@@ -363,7 +365,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(409, 407);
+            this.buttonCancel.Location = new System.Drawing.Point(431, 420);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -375,11 +377,21 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelCurrentVideoResolution
+            // 
+            this.labelCurrentVideoResolution.ForeColor = System.Drawing.Color.Red;
+            this.labelCurrentVideoResolution.Location = new System.Drawing.Point(405, 45);
+            this.labelCurrentVideoResolution.Name = "labelCurrentVideoResolution";
+            this.labelCurrentVideoResolution.Size = new System.Drawing.Size(82, 13);
+            this.labelCurrentVideoResolution.TabIndex = 6;
+            this.labelCurrentVideoResolution.Text = "X*Y";
+            this.labelCurrentVideoResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // AssaProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(498, 440);
+            this.ClientSize = new System.Drawing.Size(520, 453);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxResolution);
@@ -439,5 +451,6 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label labelCurrentVideoResolution;
     }
 }
