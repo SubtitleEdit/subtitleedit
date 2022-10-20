@@ -44,6 +44,7 @@ namespace UpdateAssemblyInfo
             public string RevisionGuid { get; }
 
             public string FullVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
+            public string NormalVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D}", Major, Minor, Maintenance, Build).TrimEnd();
             public string ShortVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
             public string MajorMinor => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}", Major, Minor);
 
@@ -410,18 +411,43 @@ namespace UpdateAssemblyInfo
             }
 
             var installer = Path.Combine(dir, "Nikse.SubtitleEdit.installer.yaml");
-            //PackageVersion: 3.6.7.0
-            //ReleaseDate: 2022-08-13
-            //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
-            //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
-            //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
-            //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+            var txt = File.ReadAllText(installer);
+            txt = SetVariable(txt, "PackageVersion", newVersion.NormalVersion); //PackageVersion: 3.6.7.0
+            txt = SetVariable(txt, "ReleaseDate", DateTime.Now.ToString("yyyy-MM-dd")); //ReleaseDate: 2022-08-13
+            txt = SetVariable(txt, "InstallerUrl", $"https://github.com/SubtitleEdit/subtitleedit/releases/download/{newVersion.ShortVersion}/SubtitleEdit-{newVersion.ShortVersion}-Setup.exe"); //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
+            txt = SetVariable(txt, "InstallerSha256", $"TODO: Add"); //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+            File.WriteAllText(installer, txt.TrimEnd()+ Environment.NewLine + Environment.NewLine);
 
             var locale = Path.Combine(dir, "Nikse.SubtitleEdit.locale.en-US.yaml");
-            // PackageVersion: 3.6.7.0
+            txt = File.ReadAllText(locale);
+            txt = SetVariable(txt, "PackageVersion", newVersion.NormalVersion); // PackageVersion: 3.6.7.0
+            File.WriteAllText(locale, txt.TrimEnd() + Environment.NewLine + Environment.NewLine);
 
             var main = Path.Combine(dir, "Nikse.SubtitleEdit.yaml");
-            // PackageVersion: 3.6.7.0
+            txt = File.ReadAllText(main);
+            txt = SetVariable(txt, "PackageVersion", newVersion.NormalVersion); // PackageVersion: 3.6.7.0
+            File.WriteAllText(main, txt.TrimEnd() + Environment.NewLine + Environment.NewLine);
+        }
+
+        private static string SetVariable(string txt, string targetVariable, string targetValue)
+        {
+            var sb = new StringBuilder();
+            foreach (var line in txt.Split('\n'))
+            {
+                var s = line.Trim();
+                var searchStr = $"{targetVariable}:";
+                if (s.StartsWith(searchStr, StringComparison.OrdinalIgnoreCase))
+                {
+                    var start = line.Substring(0, line.IndexOf(searchStr, StringComparison.OrdinalIgnoreCase) + searchStr.Length);
+                    sb.AppendLine($"{start} {targetValue}");
+                }
+                else
+                {
+                    sb.AppendLine(s);
+                }
+            }
+
+            return sb.ToString();
         }
 
         private static string GetGitPath()
