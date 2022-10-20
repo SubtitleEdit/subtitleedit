@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public Moov Moov { get; private set; }
         internal Moof Moof { get; private set; }
         public Subtitle VttcSubtitle { get; private set; }
+        public string VttcLanguage { get; private set; }
 
         public List<Trak> GetSubtitleTracks()
         {
@@ -169,6 +170,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         if (VttcSubtitle == null)
                         {
                             VttcSubtitle = new Subtitle();
+
+                            if (Moov?.Tracks.FirstOrDefault()?.Mdia?.Mdhd != null)
+                            {
+                                var track = Moov.Tracks.FirstOrDefault();
+                                VttcLanguage = track.Mdia.Mdhd.Iso639ThreeLetterCode;
+                                if (string.IsNullOrEmpty(VttcLanguage))
+                                {
+                                    VttcLanguage = track.Mdia.Mdhd.LanguageString;
+                                }
+                            }
                         }
 
                         if (Moof.Traf.Trun.Samples.All(p => p.Size != null))
