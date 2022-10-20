@@ -796,14 +796,14 @@ namespace Nikse.SubtitleEdit.Forms
                         var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
                         if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
                         {
-                            mp4Files.Add("MP4/WebVTT");
+                            mp4Files.Add("MP4/WebVTT - " + mp4Parser.VttcLanguage);
                         }
 
                         foreach (var track in mp4SubtitleTracks)
                         {
                             if (track.Mdia.IsTextSubtitle || track.Mdia.IsClosedCaption)
                             {
-                                mp4Files.Add($"MP4/#{mp4SubtitleTracks.IndexOf(track)} {track.Mdia.HandlerType} - {track.Mdia.HandlerName}");
+                                mp4Files.Add($"MP4/#{mp4SubtitleTracks.IndexOf(track)} {track.Mdia.HandlerType} - {track.Mdia.Mdhd.Iso639ThreeLetterCode ?? track.Mdia.Mdhd.LanguageString}");
                             }
                         }
 
@@ -924,6 +924,52 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return string.IsNullOrEmpty(languageCode) ? string.Empty : languageCode.TrimEnd('.') + ".";
+        }
+
+        private string GetMp4Language(string trackId)
+        {
+            if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "0")
+            {
+                return string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(trackId))
+            {
+                return string.Empty;
+            }
+
+            if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "2")
+            {
+                if (trackId.EndsWith("English", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "en.";
+                }
+
+                if (trackId.Length == 3)
+                {
+                    var code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(trackId);
+                    if (string.IsNullOrEmpty(code))
+                    {
+                        return string.Empty;
+                    }
+
+                    return code + ".";
+                }
+
+                return string.Empty;
+            }
+
+            if (trackId.EndsWith("English", StringComparison.OrdinalIgnoreCase))
+            {
+                return "eng.";
+            }
+
+            if (trackId.Length == 3)
+            {
+                return trackId.ToLowerInvariant() + ".";
+            }
+
+            return string.Empty;
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
@@ -1540,10 +1586,11 @@ namespace Nikse.SubtitleEdit.Forms
                             var trackId = item.SubItems[2].Text;
                             var mp4Parser = new MP4Parser(fileName);
                             var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
-                            if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0 && trackId == "MP4/WebVTT")
+                            if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0 && trackId == "MP4/WebVTT - " + mp4Parser.VttcLanguage)
                             {
                                 sub = mp4Parser.VttcSubtitle;
                                 mp4Found = true;
+                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMp4Language(mp4Parser.VttcLanguage) + "mp4";
                             }
                             else
                             {
@@ -1551,10 +1598,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     if (track.Mdia.IsTextSubtitle || track.Mdia.IsClosedCaption)
                                     {
-                                        if (trackId == $"MP4/#{mp4SubtitleTracks.IndexOf(track)} {track.Mdia.HandlerType} - {track.Mdia.HandlerName}")
+                                        var language = track.Mdia.Mdhd.Iso639ThreeLetterCode ?? track.Mdia.Mdhd.LanguageString;
+                                        if (trackId == $"MP4/#{mp4SubtitleTracks.IndexOf(track)} {track.Mdia.HandlerType} - {language}")
                                         {
                                             sub.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
                                             mp4Found = true;
+                                            fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMp4Language(language) + "mp4";
                                             break;
                                         }
                                     }
