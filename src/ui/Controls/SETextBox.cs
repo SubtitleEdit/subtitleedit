@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return _uiTextBox.Font;
                 }
 
-                return base.Font;
+                return Font;
             }
             set
             {
@@ -406,16 +406,6 @@ namespace Nikse.SubtitleEdit.Controls
                     _uiTextBox.ContextMenuStrip = value;
                 }
             }
-        }
-
-        public int GetCharIndexFromPosition(Point pt)
-        {
-            if (_simpleTextBox != null)
-            {
-                return _simpleTextBox.GetCharIndexFromPosition(pt);
-            }
-
-            return _uiTextBox?.GetCharIndexFromPosition(pt) ?? 0;
         }
 
         public void SelectAll()
