@@ -998,7 +998,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
                 labelStatus.Text = LanguageSettings.Current.General.PleaseWait;
                 listViewInputFiles.BeginUpdate();
-                foreach (string fileName in fileNames)
+                foreach (var fileName in fileNames)
                 {
                     if (FileUtil.IsDirectory(fileName))
                     {
