@@ -4,8 +4,6 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -66,25 +64,29 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
                 else if (Name == "co64") // 64-bit
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
-                    int version = Buffer[0];
-                    var totalEntries = GetUInt(4);
-                    ulong lastOffset = 0;
-                    for (var i = 0; i < totalEntries; i++)
+                    if (handlerType != "vide" && handlerType != "soun")
                     {
-                        var offset = GetUInt64(8 + i * 8);
-                        if (lastOffset + 8 < offset)
-                        {
-                            var text = ReadText(fs, offset, handlerType, i);
-                            Texts.Add(text);
-                        }
-                        else
-                        {
-                            Texts.Add(new ChunkText { Size = 2, Text = null });
-                        }
 
-                        lastOffset = offset;
+                        Buffer = new byte[Size - 4];
+                        fs.Read(Buffer, 0, Buffer.Length);
+                        int version = Buffer[0];
+                        var totalEntries = GetUInt(4);
+                        ulong lastOffset = 0;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = GetUInt64(8 + i * 8);
+                            if (lastOffset + 8 < offset)
+                            {
+                                var text = ReadText(fs, offset, handlerType, i);
+                                Texts.Add(text);
+                            }
+                            else
+                            {
+                                Texts.Add(new ChunkText { Size = 2, Text = null });
+                            }
+
+                            lastOffset = offset;
+                        }
                     }
                 }
                 else if (Name == "stsz") // sample sizes
@@ -144,16 +146,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
         private ChunkText ReadText(Stream fs, ulong offset, string handlerType, int index)
         {
-            if (handlerType == "vide")
-            {
-                return null;
-            }
-
-            if (handlerType == "soun")
-            {
-                return null;
-            }
-
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];
             fs.Read(data, 0, 2);
@@ -236,165 +228,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             return new ChunkText { Size = 2, Text = null };
-        }
-
-        public class ExpandedSample
-        {
-            public uint SampleDelta { get; set; }
-            public uint SampleSize { get; set; }
-
-            public static List<ExpandedSample> From(List<SampleTimeInfo> stss, List<uint> stsz)
-            {
-                var result = new List<ExpandedSample>();
-                for (var index = 0; index < stss.Count; index++)
-                {
-                    var timeToSample = stss[index];
-
-                    for (var i = 0; i < timeToSample.SampleCount; i++)
-                    {
-                        result.Add(new ExpandedSample
-                        {
-                            SampleDelta = timeToSample.SampleDelta,
-                            SampleSize = index < stsz.Count ? stsz[index] : 0,
-                        });
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        public List<Paragraph> GetParagraphsNew()
-        {
-            var paragraphs = new List<Paragraph>();
-            var timeSamples = ExpandedSample.From(Ssts, SampleSizes);
-            double totalTime = 0;
-            var textIndex = 0;
-            for (var index = 0; index < timeSamples.Count; index++)
-            {
-                var timeSample = timeSamples[index];
-                var before = totalTime;
-                totalTime += timeSample.SampleDelta / (double)TimeScale;
-                if (textIndex < Texts.Count)
-                {
-                    var text = Texts[textIndex];
-                    //if (text.Text == "In the tunnel.")
-                    //{
-
-                    //}
-
-                    if (timeSample.SampleSize <= 2)
-                    {
-                        if (text.Size <= 2 && string.IsNullOrEmpty(text.Text))
-                        {
-                            textIndex++;
-                        }
-                    }
-                    else
-                    {
-                        if (text.Size > 2 && !string.IsNullOrEmpty(text.Text))
-                        {
-                            paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
-                        }
-
-                        textIndex++;
-                    }
-                }
-            }
-
-            return paragraphs;
-        }
-
-        public List<Paragraph> GetParagraphs2()
-        {
-            // expand time codes
-            var ssts = new List<SampleTimeInfo>();
-            foreach (var timeInfo in Ssts)
-            {
-                for (var i = 0; i < timeInfo.SampleCount; i++)
-                {
-                    ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = timeInfo.SampleDelta });
-                }
-            }
-            Ssts = ssts;
-
-            var paragraphs = new List<Paragraph>();
-            var textIndex = 0;
-            double totalTime = 0;
-            uint samplesPerChunk = 1;
-            var index = 0;
-
-            var firstText = Texts.FirstOrDefault();
-            var firstSampleSize = SampleSizes.FirstOrDefault();
-            if (firstText != null && firstSampleSize != null && firstText.Size > firstSampleSize && firstSampleSize == 2 && !string.IsNullOrEmpty(firstText.Text))
-            {
-                var timeInfo = Ssts[index];
-                totalTime += timeInfo.SampleDelta / (double)TimeScale;
-                index++;
-            }
-
-            while (index < Ssts.Count)
-            {
-                var timeInfo = Ssts[index];
-
-                var samplesPerChunkHit = Stsc.FirstOrDefault(p => p.FirstChunk == index + 1);
-                if (samplesPerChunkHit != null)
-                {
-                    samplesPerChunk = samplesPerChunkHit.SamplesPerChunk;
-                    if (samplesPerChunk == 0)
-                    {
-                        SeLogger.Error("MP4 has unexpected samples per chunk with zero");
-                        samplesPerChunk = 1;
-                    }
-                }
-
-                var before = totalTime;
-                totalTime += timeInfo.SampleDelta / (double)TimeScale;
-
-                var newSamplesPerChunk = samplesPerChunk;
-                for (var i = 1; i < samplesPerChunk; i++) // extra
-                {
-                    index++;
-
-                    samplesPerChunkHit = Stsc.FirstOrDefault(p => p.FirstChunk == index + 1);
-                    if (samplesPerChunkHit != null)
-                    {
-                        newSamplesPerChunk = samplesPerChunkHit.SamplesPerChunk;
-                        if (samplesPerChunk == 0)
-                        {
-                            SeLogger.Error("MP4 has unexpected samples per chunk with zero");
-                            newSamplesPerChunk = 1;
-                        }
-                    }
-
-                    if (index < Ssts.Count)
-                    {
-                        timeInfo = Ssts[index];
-                        totalTime += timeInfo.SampleDelta / (double)TimeScale;
-                    }
-                }
-                samplesPerChunk = newSamplesPerChunk;
-
-                if (textIndex < Texts.Count)
-                {
-                    var text = Texts[textIndex];
-
-                    if (text.Text != null && text.Text.Contains("How are we today", StringComparison.OrdinalIgnoreCase))
-                    {
-                    }
-
-                    if (!string.IsNullOrEmpty(text.Text))
-                    {
-                        paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
-                    }
-
-                    textIndex++;
-                }
-
-                index++;
-            }
-
-            return paragraphs;
         }
 
         public List<Paragraph> GetParagraphs()
