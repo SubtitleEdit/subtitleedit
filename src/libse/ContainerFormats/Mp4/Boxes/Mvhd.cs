@@ -15,11 +15,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public Mvhd(Stream fs)
         {
             Buffer = new byte[20];
-            int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
+            var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
             {
                 return;
             }
+
             int version = Buffer[0];
             if (version == 0)
             {
