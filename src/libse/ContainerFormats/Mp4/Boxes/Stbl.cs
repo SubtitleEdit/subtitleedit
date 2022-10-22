@@ -400,38 +400,42 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<Paragraph> GetParagraphs()
         {
             var paragraphs = new List<Paragraph>();
-            double totalTime = 0;
-            var allTimes = new List<double>();
 
             // expand time codes
+            var ssts = new List<SampleTimeInfo>();
             foreach (var timeInfo in Ssts)
             {
                 for (var i = 0; i < timeInfo.SampleCount; i++)
                 {
-                    totalTime += timeInfo.SampleDelta / (double)TimeScale;
-                    allTimes.Add(totalTime);
+                    ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = timeInfo.SampleDelta });
                 }
             }
+            Ssts = ssts;
 
             var index = 0;
             var textIndex = 0;
-            while (index < allTimes.Count - 1)
+            double totalTime = 0;
+            if (SampleSizes[0] == 2 && !string.IsNullOrEmpty(Texts[0].Text))
             {
-                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
+                totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+                index++;
+            }
+
+            while (index < Ssts.Count)
+            {
+                var before = totalTime;
+                totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+
+                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
                 {
                     index++;
-                }
-
-                var timeStart = allTimes[index];
-                var timeEnd = timeStart + 2;
-                if (index + 1 < allTimes.Count)
-                {
-                    timeEnd = allTimes[index + 1];
+                    before = totalTime;
+                    totalTime += Ssts[index].SampleDelta / (double)TimeScale;
                 }
 
                 if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
                 {
-                    paragraphs.Add(new Paragraph(string.Empty, timeStart * 1000.0, timeEnd * 1000.0));
+                    paragraphs.Add(new Paragraph(string.Empty, before * 1000.0, totalTime * 1000.0));
                 }
                 else if (Texts.Count > textIndex)
                 {
@@ -445,7 +449,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                     if (!string.IsNullOrEmpty(text.Text))
                     {
-                        paragraphs.Add(new Paragraph(text.Text, timeStart * 1000.0, timeEnd * 1000.0));
+                        paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
                     }
                 }
 
@@ -453,12 +457,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 textIndex++;
             }
 
-            if (index < allTimes.Count && textIndex < Texts.Count && index > 0)
+            if (index <= Ssts.Count && textIndex < Texts.Count && index > 0)
             {
                 var text = Texts[textIndex];
                 if (!string.IsNullOrEmpty(text.Text))
                 {
-                    paragraphs.Add(new Paragraph(text.Text, allTimes[index - 1] * 1000.0, allTimes[index] * 1000.0));
+                    var before = totalTime - Ssts[index - 1].SampleDelta / (double)TimeScale;
+                    paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
                 }
             }
 
