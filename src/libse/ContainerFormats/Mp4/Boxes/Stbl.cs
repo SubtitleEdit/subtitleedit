@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     var text = Texts[textIndex];
 
-                    if (text.Size <= 2 && text.Text == null && textIndex +1 < Texts.Count)
+                    if (text.Size <= 2 && text.Text == null && textIndex + 1 < Texts.Count)
                     {
                         textIndex++;
                         text = Texts[textIndex];
@@ -451,6 +451,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 index++;
                 textIndex++;
+            }
+
+            if (index < allTimes.Count && textIndex < Texts.Count && index > 0)
+            {
+                var text = Texts[textIndex];
+                if (!string.IsNullOrEmpty(text.Text))
+                {
+                    paragraphs.Add(new Paragraph(text.Text, allTimes[index - 1] * 1000.0, allTimes[index] * 1000.0));
+                }
             }
 
             return paragraphs;
