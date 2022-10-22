@@ -4,19 +4,22 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     public class Stbl : Box
     {
-        public List<string> Texts;
         public List<SubPicture> SubPictures;
         public ulong StszSampleCount;
         public ulong TimeScale { get; set; }
         private readonly Mdia _mdia;
         public List<uint> SampleSizes;
         public List<SampleTimeInfo> Ssts { get; set; }
+        public List<SampleToChunkMap> Stsc { get; set; }
+        public List<ChunkText> Texts;
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
@@ -24,8 +27,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             _mdia = mdia;
             Position = (ulong)fs.Position;
             Ssts = new List<SampleTimeInfo>();
+            Stsc = new List<SampleToChunkMap>();
             SampleSizes = new List<uint>();
-            Texts = new List<string>();
+            Texts = new List<ChunkText>();
             SubPictures = new List<SubPicture>();
             while (fs.Position < (long)maximumLength)
             {
@@ -36,20 +40,28 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "stco") // 32-bit - chunk offset
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
-                    int version = Buffer[0];
-                    var totalEntries = GetUInt(4);
-                    uint lastOffset = 0;
-                    for (var i = 0; i < totalEntries; i++)
+                    if (handlerType != "vide" && handlerType != "soun")
                     {
-                        var offset = GetUInt(8 + i * 4);
-                        if (lastOffset + 5 < offset)
+                        Buffer = new byte[Size - 4];
+                        fs.Read(Buffer, 0, Buffer.Length);
+                        int version = Buffer[0];
+                        var totalEntries = GetUInt(4);
+                        uint lastOffset = 0;
+                        for (var i = 0; i < totalEntries; i++)
                         {
-                            ReadText(fs, offset, handlerType, i);
-                        }
+                            var offset = GetUInt(8 + i * 4);
+                            if (lastOffset + 5 < offset)
+                            {
+                                var text = ReadText(fs, offset, handlerType, i);
+                                Texts.Add(text);
+                            }
+                            else
+                            {
+                                Texts.Add(new ChunkText { Size = 2, Text = string.Empty });
+                            }
 
-                        lastOffset = offset;
+                            lastOffset = offset;
+                        }
                     }
                 }
                 else if (Name == "co64") // 64-bit
@@ -64,7 +76,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         var offset = GetUInt64(8 + i * 8);
                         if (lastOffset + 8 < offset)
                         {
-                            ReadText(fs, offset, handlerType, i);
+                            var text = ReadText(fs, offset, handlerType, i);
+                            Texts.Add(text);
+                        }
+                        else
+                        {
+                            Texts.Add(new ChunkText { Size = 2, Text = string.Empty });
                         }
 
                         lastOffset = offset;
@@ -95,24 +112,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     var numberOfSampleTimes = GetUInt(4);
-                    if (_mdia.IsClosedCaption)
+                    for (var i = 0; i < numberOfSampleTimes; i++)
                     {
-                        for (var i = 0; i < numberOfSampleTimes; i++)
-                        {
-                            var sampleCount = GetUInt(8 + i * 8);
-                            var sampleDelta = GetUInt(12 + i * 8);
-                            Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
-                        }
+                        var sampleCount = GetUInt(8 + i * 8);
+                        var sampleDelta = GetUInt(12 + i * 8);
+                        Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
                     }
-                    else
-                    {
-                        for (var i = 0; i < numberOfSampleTimes; i++)
-                        {
-                            var sampleCount = GetUInt(8 + i * 8);
-                            var sampleDelta = GetUInt(12 + i * 8);
-                            Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
-                        }
-                    }
+
                 }
                 else if (Name == "stsc") // sample table sample to chunk map
                 {
@@ -127,6 +133,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             var firstChunk = GetUInt(8 + i * 12);
                             var samplesPerChunk = GetUInt(12 + i * 12);
                             var sampleDescriptionIndex = GetUInt(16 + i * 12);
+                            Stsc.Add(new SampleToChunkMap { FirstChunk = firstChunk, SamplesPerChunk = samplesPerChunk, SampleDescriptionIndex = sampleDescriptionIndex });
                         }
                     }
                 }
@@ -135,11 +142,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
         }
 
-        private void ReadText(Stream fs, ulong offset, string handlerType, int index)
+        private ChunkText ReadText(Stream fs, ulong offset, string handlerType, int index)
         {
             if (handlerType == "vide")
             {
-                return;
+                return null;
+            }
+
+            if (handlerType == "soun")
+            {
+                return null;
             }
 
             fs.Seek((long)offset, SeekOrigin.Begin);
@@ -161,7 +173,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             {
                 if (handlerType == "text" && index + 1 < SampleSizes.Count && SampleSizes[index + 1] <= 2)
                 {
-                    return;
+                    return new ChunkText { Size = 2, Text = string.Empty };
                 }
 
                 if (textSize == 0)
@@ -179,9 +191,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     if (_mdia.IsClosedCaption)
                     {
                         var sb = new StringBuilder();
-                        for (int j = 8; j < data.Length - 3; j++)
+                        for (var j = 8; j < data.Length - 3; j++)
                         {
-                            string h = data[j].ToString("X2").ToLowerInvariant();
+                            var h = data[j].ToString("X2").ToLowerInvariant();
                             if (h.Length < 2)
                             {
                                 h = "0" + h;
@@ -218,57 +230,213 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                     }
 
-                    Texts.Add(text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine));
+                    text = text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine);
+                    return new ChunkText { Size = textSize, Text = text };
                 }
+            }
+
+            return new ChunkText { Size = 2, Text = null };
+        }
+
+        public class ExpandedSample
+        {
+            public uint SampleDelta { get; set; }
+            public uint SampleSize { get; set; }
+
+            public static List<ExpandedSample> From(List<SampleTimeInfo> stss, List<uint> stsz)
+            {
+                var result = new List<ExpandedSample>();
+                for (var index = 0; index < stss.Count; index++)
+                {
+                    var timeToSample = stss[index];
+
+                    for (var i = 0; i < timeToSample.SampleCount; i++)
+                    {
+                        result.Add(new ExpandedSample
+                        {
+                            SampleDelta = timeToSample.SampleDelta,
+                            SampleSize = index < stsz.Count ? stsz[index] : 0,
+                        });
+                    }
+                }
+
+                return result;
             }
         }
 
         public List<Paragraph> GetParagraphs()
         {
             var paragraphs = new List<Paragraph>();
+            var timeSamples = ExpandedSample.From(Ssts, SampleSizes);
             double totalTime = 0;
-            var allTimes = new List<double>();
+            var textIndex = 0;
+            for (var index = 0; index < timeSamples.Count; index++)
+            {
+                var timeSample = timeSamples[index];
+                var before = totalTime;
+                totalTime += timeSample.SampleDelta / (double)TimeScale;
+                if (textIndex < Texts.Count)
+                {
+                    var text = Texts[textIndex];
+                    if (timeSample.SampleSize <= 2)
+                    {
+                        if (text.Size <= 2 && string.IsNullOrEmpty(text.Text))
+                        {
+                            textIndex++;
+                        }
+                    }
+                    else
+                    {
+                        if (text.Size > 2 && !string.IsNullOrEmpty(text.Text))
+                        {
+                            paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
+                        }
+                        textIndex++;
+                    }
+                }
+            }
 
+            return paragraphs;
+        }
+
+        public List<Paragraph> GetParagraphs2()
+        {
             // expand time codes
+            var ssts = new List<SampleTimeInfo>();
             foreach (var timeInfo in Ssts)
             {
                 for (var i = 0; i < timeInfo.SampleCount; i++)
                 {
-                    totalTime += timeInfo.SampleDelta / (double)TimeScale;
-                    allTimes.Add(totalTime);
+                    ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = timeInfo.SampleDelta });
                 }
             }
-            
-            var index = 0;
+            Ssts = ssts;
+
+            var paragraphs = new List<Paragraph>();
             var textIndex = 0;
-            while (index < allTimes.Count - 1)
+            double totalTime = 0;
+            uint samplesPerChunk = 1;
+            var index = 0;
+
+            var firstText = Texts.FirstOrDefault();
+            var firstSampleSize = SampleSizes.FirstOrDefault();
+            if (firstText != null && firstSampleSize != null && firstText.Size > firstSampleSize && firstSampleSize == 2 && !string.IsNullOrEmpty(firstText.Text))
             {
-                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
+                var timeInfo = Ssts[index];
+                totalTime += timeInfo.SampleDelta / (double)TimeScale;
+                index++;
+            }
+
+            while (index < Ssts.Count)
+            {
+                var timeInfo = Ssts[index];
+
+                var samplesPerChunkHit = Stsc.FirstOrDefault(p => p.FirstChunk == index + 1);
+                if (samplesPerChunkHit != null)
+                {
+                    samplesPerChunk = samplesPerChunkHit.SamplesPerChunk;
+                    if (samplesPerChunk == 0)
+                    {
+                        SeLogger.Error("MP4 has unexpected samples per chunk with zero");
+                        samplesPerChunk = 1;
+                    }
+                }
+
+                var before = totalTime;
+                totalTime += timeInfo.SampleDelta / (double)TimeScale;
+
+                var newSamplesPerChunk = samplesPerChunk;
+                for (var i = 1; i < samplesPerChunk; i++) // extra
                 {
                     index++;
-                }
 
-                var timeStart = allTimes[index];
-                var timeEnd = timeStart + 2;
-                if (index + 1 < allTimes.Count)
-                {
-                    timeEnd = allTimes[index + 1];
-                }
+                    samplesPerChunkHit = Stsc.FirstOrDefault(p => p.FirstChunk == index + 1);
+                    if (samplesPerChunkHit != null)
+                    {
+                        newSamplesPerChunk = samplesPerChunkHit.SamplesPerChunk;
+                        if (samplesPerChunk == 0)
+                        {
+                            SeLogger.Error("MP4 has unexpected samples per chunk with zero");
+                            newSamplesPerChunk = 1;
+                        }
+                    }
 
-                if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
-                {
-                    paragraphs.Add(new Paragraph(string.Empty, timeStart * 1000.0, timeEnd * 1000.0));
+                    if (index < Ssts.Count)
+                    {
+                        timeInfo = Ssts[index];
+                        totalTime += timeInfo.SampleDelta / (double)TimeScale;
+                    }
                 }
-                else if (Texts.Count > textIndex)
+                samplesPerChunk = newSamplesPerChunk;
+
+                if (textIndex < Texts.Count)
                 {
-                    paragraphs.Add(new Paragraph(Texts[textIndex], timeStart * 1000.0, timeEnd * 1000.0));
+                    var text = Texts[textIndex];
+
+                    if (text.Text != null && text.Text.Contains("How are we today", StringComparison.OrdinalIgnoreCase))
+                    {
+                    }
+
+                    if (!string.IsNullOrEmpty(text.Text))
+                    {
+                        paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
+                    }
+
+                    textIndex++;
                 }
 
                 index++;
-                textIndex++;
             }
 
             return paragraphs;
+
+            //var paragraphs = new List<Paragraph>();
+            //double totalTime = 0;
+            //var allTimes = new List<double>();
+
+            //// expand time codes
+            //foreach (var timeInfo in Ssts)
+            //{
+            //    for (var i = 0; i < timeInfo.SampleCount; i++)
+            //    {
+            //        totalTime += timeInfo.SampleDelta / (double)TimeScale;
+            //        allTimes.Add(totalTime);
+            //    }
+            //}
+
+            //var index = 0;
+            //var textIndex = 0;
+            //while (index < allTimes.Count - 1)
+            //{
+            //    if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
+            //    {
+            //        index++;
+            //    }
+
+            //    var timeStart = allTimes[index];
+            //    var timeEnd = timeStart + 2;
+            //    if (index + 1 < allTimes.Count)
+            //    {
+            //        timeEnd = allTimes[index + 1];
+            //    }
+
+            //    if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
+            //    {
+            //        paragraphs.Add(new Paragraph(string.Empty, timeStart * 1000.0, timeEnd * 1000.0));
+            //    }
+            //    else if (Texts.Count > textIndex)
+            //    {
+            //        var text = Texts[textIndex].Text;
+            //        if (text == null)
+            //            text = string.Empty;
+            //        paragraphs.Add(new Paragraph(text, timeStart * 1000.0, timeEnd * 1000.0));
+            //    }
+
+            //    index++;
+            //    textIndex++;
+            //}
+
+            //return paragraphs;
         }
     }
 }
