@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             }
                             else
                             {
-                                Texts.Add(new ChunkText { Size = 2, Text = string.Empty });
+                                Texts.Add(new ChunkText { Size = 2, Text = null });
                             }
 
                             lastOffset = offset;
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                         else
                         {
-                            Texts.Add(new ChunkText { Size = 2, Text = string.Empty });
+                            Texts.Add(new ChunkText { Size = 2, Text = null });
                         }
 
                         lastOffset = offset;
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
         }
 
-        public List<Paragraph> GetParagraphs()
+        public List<Paragraph> GetParagraphsNew()
         {
             var paragraphs = new List<Paragraph>();
             var timeSamples = ExpandedSample.From(Ssts, SampleSizes);
@@ -278,6 +278,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 if (textIndex < Texts.Count)
                 {
                     var text = Texts[textIndex];
+                    //if (text.Text == "In the tunnel.")
+                    //{
+
+                    //}
+
                     if (timeSample.SampleSize <= 2)
                     {
                         if (text.Size <= 2 && string.IsNullOrEmpty(text.Text))
@@ -291,6 +296,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         {
                             paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
                         }
+
                         textIndex++;
                     }
                 }
@@ -389,54 +395,65 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             return paragraphs;
+        }
 
-            //var paragraphs = new List<Paragraph>();
-            //double totalTime = 0;
-            //var allTimes = new List<double>();
+        public List<Paragraph> GetParagraphs()
+        {
+            var paragraphs = new List<Paragraph>();
+            double totalTime = 0;
+            var allTimes = new List<double>();
 
-            //// expand time codes
-            //foreach (var timeInfo in Ssts)
-            //{
-            //    for (var i = 0; i < timeInfo.SampleCount; i++)
-            //    {
-            //        totalTime += timeInfo.SampleDelta / (double)TimeScale;
-            //        allTimes.Add(totalTime);
-            //    }
-            //}
+            // expand time codes
+            foreach (var timeInfo in Ssts)
+            {
+                for (var i = 0; i < timeInfo.SampleCount; i++)
+                {
+                    totalTime += timeInfo.SampleDelta / (double)TimeScale;
+                    allTimes.Add(totalTime);
+                }
+            }
 
-            //var index = 0;
-            //var textIndex = 0;
-            //while (index < allTimes.Count - 1)
-            //{
-            //    if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
-            //    {
-            //        index++;
-            //    }
+            var index = 0;
+            var textIndex = 0;
+            while (index < allTimes.Count - 1)
+            {
+                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
+                {
+                    index++;
+                }
 
-            //    var timeStart = allTimes[index];
-            //    var timeEnd = timeStart + 2;
-            //    if (index + 1 < allTimes.Count)
-            //    {
-            //        timeEnd = allTimes[index + 1];
-            //    }
+                var timeStart = allTimes[index];
+                var timeEnd = timeStart + 2;
+                if (index + 1 < allTimes.Count)
+                {
+                    timeEnd = allTimes[index + 1];
+                }
 
-            //    if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
-            //    {
-            //        paragraphs.Add(new Paragraph(string.Empty, timeStart * 1000.0, timeEnd * 1000.0));
-            //    }
-            //    else if (Texts.Count > textIndex)
-            //    {
-            //        var text = Texts[textIndex].Text;
-            //        if (text == null)
-            //            text = string.Empty;
-            //        paragraphs.Add(new Paragraph(text, timeStart * 1000.0, timeEnd * 1000.0));
-            //    }
+                if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
+                {
+                    paragraphs.Add(new Paragraph(string.Empty, timeStart * 1000.0, timeEnd * 1000.0));
+                }
+                else if (Texts.Count > textIndex)
+                {
+                    var text = Texts[textIndex];
 
-            //    index++;
-            //    textIndex++;
-            //}
+                    if (text.Size <= 2 && text.Text == null && textIndex +1 < Texts.Count)
+                    {
+                        textIndex++;
+                        text = Texts[textIndex];
+                    }
 
-            //return paragraphs;
+                    if (!string.IsNullOrEmpty(text.Text))
+                    {
+                        paragraphs.Add(new Paragraph(text.Text, timeStart * 1000.0, timeEnd * 1000.0));
+                    }
+                }
+
+                index++;
+                textIndex++;
+            }
+
+            return paragraphs;
         }
     }
 }
