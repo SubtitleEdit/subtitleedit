@@ -44,21 +44,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         fs.Read(Buffer, 0, Buffer.Length);
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
-                        uint lastOffset = 0;
+
+                        var offSets = new List<uint>();
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = GetUInt(8 + i * 4);
-                            if (lastOffset + 5 < offset)
-                            {
-                                var text = ReadText(fs, offset, handlerType, i);
-                                Texts.Add(text);
-                            }
-                            else
-                            {
-                                Texts.Add(new ChunkText { Size = 2, Text = null });
-                            }
+                            offSets.Add(offset);
+                        }
 
-                            lastOffset = offset;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = offSets[i];
+                            var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
+
+                            var text = ReadText(fs, offset, nextOffset, handlerType, i);
+                            Texts.Add(text);
                         }
                     }
                 }
@@ -66,26 +66,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     if (handlerType != "vide" && handlerType != "soun")
                     {
-
                         Buffer = new byte[Size - 4];
                         fs.Read(Buffer, 0, Buffer.Length);
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
-                        ulong lastOffset = 0;
+
+                        var offSets = new List<ulong>();
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = GetUInt64(8 + i * 8);
-                            if (lastOffset + 8 < offset)
-                            {
-                                var text = ReadText(fs, offset, handlerType, i);
-                                Texts.Add(text);
-                            }
-                            else
-                            {
-                                Texts.Add(new ChunkText { Size = 2, Text = null });
-                            }
+                            offSets.Add(offset);
+                        }
 
-                            lastOffset = offset;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = offSets[i];
+                            var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
+
+                            var text = ReadText(fs, offset, nextOffset, handlerType, i);
+                            Texts.Add(text);
                         }
                     }
                 }
@@ -144,12 +143,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
         }
 
-        private ChunkText ReadText(Stream fs, ulong offset, string handlerType, int index)
+        private ChunkText ReadText(Stream fs, ulong offset, ulong nextOffset, string handlerType, int index)
         {
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];
             fs.Read(data, 0, 2);
             var textSize = (uint)GetWord(data, 0);
+
+            var maxSize = nextOffset - offset;
+            if (maxSize <= 2)
+            {
+                return new ChunkText { Size = 2 };
+            }
 
             if (handlerType == "subp") // VobSub created with Mp4Box
             {
@@ -170,11 +175,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (textSize == 0)
                 {
-                    fs.Read(data, 2, 2);
-                    textSize = GetUInt(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
+                    fs.Read(data, 0, 2);
+                    textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
                 }
 
-                if (textSize > 0 && textSize < 500)
+                if (textSize > 0 && textSize < 500 && textSize <= maxSize)
                 {
                     data = new byte[textSize];
                     fs.Read(data, 0, data.Length);
@@ -223,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     }
 
                     text = text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine);
-                    return new ChunkText { Size = textSize, Text = text };
+                    return new ChunkText { Size = textSize + 2, Text = text };
                 }
             }
 
@@ -248,10 +253,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var index = 0;
             var textIndex = 0;
             double totalTime = 0;
-            if (SampleSizes[0] == 2 && !string.IsNullOrEmpty(Texts[0].Text))
+
+            if (SampleSizes.Count > 2 && SampleSizes[0] == 2 && SampleSizes[1] == 2 &&
+                Texts.Count > 2 && string.IsNullOrEmpty(Texts[0].Text) && !string.IsNullOrEmpty(Texts[1].Text))
             {
-                totalTime += Ssts[index].SampleDelta / (double)TimeScale;
                 index++;
+                totalTime += Ssts[0].SampleDelta / (double)TimeScale;
             }
 
             while (index < Ssts.Count)
@@ -259,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 var before = totalTime;
                 totalTime += Ssts[index].SampleDelta / (double)TimeScale;
 
-                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
+                if (index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
                 {
                     index++;
                     before = totalTime;
@@ -274,7 +281,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     var text = Texts[textIndex];
 
-                    if (text.Size <= 2 && text.Text == null && textIndex + 1 < Texts.Count)
+                    if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
                     {
                         textIndex++;
                         text = Texts[textIndex];
