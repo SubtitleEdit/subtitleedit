@@ -129,6 +129,21 @@ IF DEFINED INNOSETUP IF EXIST "%INNOSETUP%" (
 )
 
 
+
+
+SET "WinGetFix=src\UpdateAssemblyInfo\bin\debug\UpdateAssemblyInfo.exe"
+IF NOT EXIST "%WinGetFix%" (
+  ECHO Compile UpdateAssemblyInfo!
+)
+"%WinGetFix%" "winget" 
+ECHO.
+
+pause
+
+
+
+
+
 :EndSuccessful
 TITLE %BUILDTYPE%ing Subtitle Edit finished!
 GOTO END

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -317,6 +318,14 @@ namespace UpdateAssemblyInfo
         {
             var myName = Environment.GetCommandLineArgs()[0];
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
+
+            if (args.Length == 1 && Environment.GetCommandLineArgs()[1] == "winget")
+            {
+                GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
+                UpdateWinGet(latestRepositoryVersion);
+                return 0;
+            }
+
             if (args.Length != 2)
             {
                 Console.WriteLine("Usage: " + myName + " <se-assmbly-template> <libse-assmbly-template>");
@@ -329,11 +338,10 @@ namespace UpdateAssemblyInfo
             {
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
                 var libSeTemplateFileName = Environment.GetCommandLineArgs()[2];
-                VersionInfo newVersion;
-
                 GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 var currentVersion = GetCurrentVersion(seTemplateFileName);
                 var updateTemplateFile = false;
+                VersionInfo newVersion;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)
                 {
                     // version sequence has been bumped for new release: must update template file too
@@ -364,7 +372,6 @@ namespace UpdateAssemblyInfo
                         UpdateTmx14ToolVersion(tmx14FileName, newVersion, oldVersion);
                     }
 
-                    UpdateWinGet(newVersion);
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
                     UpdateAssemblyInfo(seTemplateFileName, newVersion, updateTemplateFile);
                 }
@@ -415,12 +422,14 @@ namespace UpdateAssemblyInfo
                 return;
             }
 
+            var sha256Hash = ComputeSha256HashForInstaller(version);
+
             var installer = Path.Combine(dir, "Nikse.SubtitleEdit.installer.yaml");
             var yaml = File.ReadAllText(installer);
             yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); //PackageVersion: 3.6.7.0
             yaml = SetVariable(yaml, "ReleaseDate", DateTime.Now.ToString("yyyy-MM-dd")); //ReleaseDate: 2022-08-13
             yaml = SetVariable(yaml, "InstallerUrl", $"https://github.com/SubtitleEdit/subtitleedit/releases/download/{version.ShortVersion}/SubtitleEdit-{version.ShortVersion}-Setup.exe"); //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
-            yaml = SetVariable(yaml, "InstallerSha256", $"TODO: Add"); //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+            yaml = SetVariable(yaml, "InstallerSha256", sha256Hash); //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
             File.WriteAllText(installer, yaml.TrimEnd()+ Environment.NewLine + Environment.NewLine);
 
             var locale = Path.Combine(dir, "Nikse.SubtitleEdit.locale.en-US.yaml");
@@ -432,6 +441,34 @@ namespace UpdateAssemblyInfo
             yaml = File.ReadAllText(main);
             yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); // PackageVersion: 3.6.7.0
             File.WriteAllText(main, yaml.TrimEnd() + Environment.NewLine + Environment.NewLine);
+
+            Console.WriteLine("Winget updated.");
+        }
+
+        static string ComputeSha256HashForInstaller(VersionInfo version)
+        {
+            var exe = $"SubtitleEdit-{version.ShortVersion}-Setup.exe";
+            if (!File.Exists(exe))
+            {
+                exe = @"C:\git\subtitleedit\" + exe;
+            }
+
+            if (!File.Exists(exe))
+            {
+                return "TODO: fix sha 256 hash";
+            }
+
+            using (var sha256Hash = SHA256.Create())
+            {
+                var bytes = sha256Hash.ComputeHash(File.ReadAllBytes(exe));
+                var builder = new StringBuilder();
+                for (var i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("X2"));
+                }
+
+                return builder.ToString();
+            }
         }
 
         private static string SetVariable(string txt, string targetVariable, string targetValue)
