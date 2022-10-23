@@ -11,9 +11,38 @@ namespace Test.Logic.Mp4
     public class Mp4Test
     {
         [TestMethod]
-        public void Mp4Test1()
+        public void Mp4TestFile1()
         {
-            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MP4_SRT.mp4");
+            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MP4.mp4");
+            var parser = new MP4Parser(fileName);
+
+            var tracks = parser.GetSubtitleTracks();
+            var paragraphs = tracks[0].Mdia.Minf.Stbl.GetParagraphs();
+
+            //1
+            //00:00:11,080-- > 00:00:13,399
+            //(Alan) 'Chapter one. Sorrow.
+
+            //808
+            //00:43:14,200-- > 00:43:16,080
+            //(♪ Theme music)
+
+            Assert.IsTrue(tracks.Count == 1);
+            Assert.IsTrue(paragraphs.Count == 808);
+
+            Assert.IsTrue(Math.Abs(paragraphs[0].StartTime.TotalMilliseconds - 11080) < 0.5);
+            Assert.IsTrue(Math.Abs(paragraphs[0].EndTime.TotalMilliseconds - 13399) < 0.5);
+            Assert.IsTrue(paragraphs[0].Text == "(Alan) 'Chapter one. Sorrow.");
+
+            Assert.IsTrue(Math.Abs(paragraphs[807].StartTime.TotalMilliseconds - 2594200) < 0.5);
+            Assert.IsTrue(Math.Abs(paragraphs[807].EndTime.TotalMilliseconds - 2596080) < 0.5);
+            Assert.IsTrue(paragraphs[807].Text == "(♪ Theme music)");
+        }
+
+        [TestMethod]
+        public void Mp4TestFile2()
+        {
+            var fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MP4_SRT.mp4");
             var parser = new MP4Parser(fileName);
 
             var tracks = parser.GetSubtitleTracks();
@@ -41,9 +70,9 @@ namespace Test.Logic.Mp4
 
         private static byte[] StringToByteArray(string hex)
         {
-            int numberChars = hex.Length;
-            byte[] bytes = new byte[numberChars / 2];
-            for (int i = 0; i < numberChars; i += 2)
+            var numberChars = hex.Length;
+            var bytes = new byte[numberChars / 2];
+            for (var i = 0; i < numberChars; i += 2)
             {
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             }
