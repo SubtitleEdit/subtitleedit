@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var targetFormat = arguments[3].Trim().RemoveChar(' ').ToLowerInvariant();
 
                 // name shortcuts
-                if (targetFormat == "ass")
+                if (targetFormat == "ass" || targetFormat == "assa")
                 {
                     targetFormat = AdvancedSubStationAlpha.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetFormat = BatchConvert.BluRaySubtitle;
                 }
-                else if (targetFormat == "ebu")
+                else if (targetFormat == "ebu" || targetFormat == "ebustl")
                 {
                     targetFormat = Ebu.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
@@ -1206,7 +1206,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 preExt = string.Empty;
             }
 
-            double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
+            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             try
             {
                 var success = true;
@@ -1254,7 +1254,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     }
                 }
 
-                bool targetFormatFound = false;
+                var targetFormatFound = false;
                 string outputFileName;
 
                 if (binaryParagraphs != null && binaryParagraphs.Count > 0 && !HasImageTarget(targetFormat))
@@ -1321,6 +1321,17 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             }
                             else
                             {
+                                if (sf.Name == AdvancedSubStationAlpha.NameOfFormat && resolution?.X > 0 && resolution?.Y > 0)
+                                {
+                                    if (string.IsNullOrEmpty(sub.Header))
+                                    {
+                                        sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                                    }
+
+                                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + resolution.Value.X.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + resolution.Value.Y.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                                }
+
                                 FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                             }
                         }
@@ -1364,6 +1375,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         break;
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     var ebu = new Ebu();
@@ -1869,6 +1881,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
                     }
                 }
+
                 if (!targetFormatFound)
                 {
                     _stdOutWriter?.WriteLine($"{count}: {fileName} - target format '{targetFormat}' not found!");
