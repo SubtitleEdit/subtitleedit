@@ -2894,8 +2894,6 @@ namespace Nikse.SubtitleEdit.Forms
             // toolStripMenuItemMergeLines
             // 
             this.toolStripMenuItemMergeLines.Name = "toolStripMenuItemMergeLines";
-            this.toolStripMenuItemMergeLines.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.M)));
             this.toolStripMenuItemMergeLines.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemMergeLines.Text = "Merge selected lines";
             this.toolStripMenuItemMergeLines.Click += new System.EventHandler(this.ToolStripMenuItemMergeLinesClick);
