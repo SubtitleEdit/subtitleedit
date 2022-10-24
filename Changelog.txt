@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.8 (xth October 2022) BETA
+3.6.8 (24th October 2022)
 * NEW:
    * Option to use only "front center" audio channel - thx shanedk
    * Add support for OCR via Google's Cloud Vision API - thx Flitskikker 

@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -46,8 +45,8 @@ namespace Nikse.SubtitleEdit.Controls
         //[DllImport("user32.dll")]
         //public static extern bool GetCaretPos(out System.Drawing.Point lpPoint);
 
-        private bool? KeyDownAtTop;
-        private bool? KeyDownAtBottom;
+        //private bool? KeyDownAtTop;
+        //private bool? KeyDownAtBottom;
         private void SETextBox_KeyDown(object sender, KeyEventArgs e)
         {
             //var p = new Point();
