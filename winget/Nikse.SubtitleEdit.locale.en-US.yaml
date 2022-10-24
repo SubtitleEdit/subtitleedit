@@ -1,7 +1,8 @@
+# Created using wingetcreate 1.1.2.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 3.6.7.0
+PackageVersion: 3.6.8.0
 PackageLocale: en-US
 Publisher: Nikse
 PublisherUrl: https://www.nikse.dk/
