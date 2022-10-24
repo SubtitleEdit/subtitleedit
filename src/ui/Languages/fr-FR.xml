@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.8</Version>
     <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/09/03</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -107,8 +107,7 @@ Visitez www.nikse.dk pour obtenir la dernière version.
 Les suggestions sont plus que bienvenues.
 
 Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions.com pour le français.
-.<!-- Ce point a été ajouté ce 31/08/22, pour mieux cadrer le texte -->
-</AboutText1>
+.<!-- Ce point a été ajouté ce 31/08/22, pour mieux cadrer le texte --></AboutText1>
   </About>
   <AddToNames>
     <Title>Ajouter à la liste de noms</Title>
@@ -2595,7 +2594,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <AddSpace>Ajouter un espacement</AddSpace>
     <RemoveComma>Retirer la virgule</RemoveComma>
     <Prefix>Préfixe :</Prefix>
-    <DifferentStyleGap>Style différent si les écarts sont > que :</DifferentStyleGap>
+    <DifferentStyleGap>Style différent si les écarts sont &gt; que :</DifferentStyleGap>
     <Preview>Aperçu</Preview>
     <PreviewPause>(pause)</PreviewPause>
     <CustomContinuationStyleNote>NB: Le style de continuation personnalisé est partagé par tous les profils.</CustomContinuationStyleNote>
@@ -2939,8 +2938,8 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <OcrViaImageCompare>Par comparaison binaire d'image</OcrViaImageCompare>
     <OcrViaModi>Par Microsoft Office Document Imaging (MODI)</OcrViaModi>
     <OcrViaNOCR>Par nOCR</OcrViaNOCR>
-     <OcrViaCloudVision>OCR via l'API Google Cloud Vision</OcrViaCloudVision>
-   <TesseractEngineMode>Moteur</TesseractEngineMode>
+    <OcrViaCloudVision>OCR via l'API Google Cloud Vision</OcrViaCloudVision>
+    <TesseractEngineMode>Moteur</TesseractEngineMode>
     <TesseractEngineModeLegacy>Rien que Tesseract original (détecte l'italique)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Rien que réseaux neuronaux LSTM</TesseractEngineModeNeural>
     <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
