@@ -476,9 +476,9 @@ namespace UpdateAssemblyInfo
             var sb = new StringBuilder();
             foreach (var line in txt.Split('\n'))
             {
-                var s = line.Trim();
+                var s = line.Trim('\r');
                 var searchStr = $"{targetVariable}:";
-                if (s.StartsWith(searchStr, StringComparison.OrdinalIgnoreCase))
+                if (s.StartsWith(searchStr.TrimStart(), StringComparison.OrdinalIgnoreCase))
                 {
                     var start = line.Substring(0, line.IndexOf(searchStr, StringComparison.OrdinalIgnoreCase) + searchStr.Length);
                     sb.AppendLine($"{start} {targetValue}");
