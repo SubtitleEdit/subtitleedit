@@ -257,6 +257,79 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private bool IsAllMethodsLoaded()
         {
+            if (_libvlc_new == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_new");
+            }
+            if (_libvlc_release == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_release");
+            }
+            if (_libvlc_media_new_path == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_new_path");
+            }
+            if (_libvlc_media_player_new_from_media == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_new_from_media");
+            }
+            if (_libvlc_media_release == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_release");
+            }
+            if (_libvlc_video_get_size == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_video_get_size");
+            }
+            if (_libvlc_audio_get_volume == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_audio_get_volume");
+            }
+            if (_libvlc_audio_set_volume == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_audio_set_volume");
+            }
+            if (_libvlc_media_player_play == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_play");
+            }
+            if (_libvlc_media_player_stop == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_stop");
+            }
+            if (_libvlc_media_player_is_playing == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_is_playing");
+            }
+            if (_libvlc_media_player_get_time == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_time");
+            }
+            if (_libvlc_media_player_set_time == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_set_time");
+            }
+            if (_libvlc_media_player_get_state == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_state");
+            }
+            if (_libvlc_media_player_get_length == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_length");
+            }
+            if (_libvlc_media_player_release == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_release");
+            }
+            if (_libvlc_media_player_get_rate == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_rate");
+            }
+            if (_libvlc_media_player_set_rate == null)
+            {
+                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_set_rate");
+            }
+
             return _libvlc_new != null &&
                    _libvlc_release != null &&
                    _libvlc_media_new_path != null &&
@@ -353,7 +426,28 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double Duration => _libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
+        public override double Duration
+        {
+            get
+            {
+                if (_libvlc_media_player_get_length == null)
+                {
+                    return 0;
+                }
+
+                try
+                {
+                    return _libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
+                }
+                catch (Exception e)
+                {
+                    SeLogger.Error(e, "Failed to get duration");
+                    return 0;
+                }
+
+
+            }
+        }
 
         public override double CurrentPosition
         {
@@ -363,7 +457,21 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     return _pausePosition < 0 ? 0 : _pausePosition.Value;
                 }
-                return _libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
+
+                if (_libvlc_media_player_get_time == null)
+                {
+                    return 0;
+                }
+
+                try
+                {
+                    return _libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
+                }
+                catch (Exception e)
+                {
+                    SeLogger.Error(e, "Failed to get position");
+                    return 0;
+                }
             }
             set
             {
@@ -372,7 +480,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _pausePosition = value;
                 }
 
-                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit + 0.5));
+                if (_libvlc_media_player_set_time != null)
+                {
+                    try
+                    {
+                        _libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit + 0.5));
+                    }
+                    catch (Exception e)
+                    {
+                        SeLogger.Error(e, "Failed to set position");
+                    }
+                }
             }
         }
 

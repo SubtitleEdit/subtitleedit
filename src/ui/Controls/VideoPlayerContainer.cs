@@ -1036,7 +1036,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (string.IsNullOrEmpty(_labelTimeCode.Text))
             {
                 var span = TimeCode.FromSeconds(1);
-                _labelTimeCode.Text = GetDisplayTimeCode(_videoPlayer?.CurrentPosition ?? 0);
+                _labelTimeCode.Text = GetDisplayTimeCode(0, 0);
                 _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
                 if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
                 {
@@ -1672,6 +1672,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var percent = (VideoPlayer.CurrentPosition * 100.0) / VideoPlayer.Duration;
                 _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
 
+                var duration = Duration;
                 if (Convert.ToInt64(Duration) == 0)
                 {
                     return;
@@ -1683,18 +1684,17 @@ namespace Nikse.SubtitleEdit.Controls
                     pos = 0;
                 }
 
-                _labelTimeCode.Text = GetDisplayTimeCode(pos);
-
                 ResizeTimeCode();
+                _labelTimeCode.Text = GetDisplayTimeCode(pos, duration);
 
                 RefreshPlayPauseButtons();
             }
         }
 
-        private string GetDisplayTimeCode(double positionInSeconds)
+        private string GetDisplayTimeCode(double positionInSeconds, double duration)
         {
             string displayTimeCode;
-            var dur = TimeCode.FromSeconds(Duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+            var dur = TimeCode.FromSeconds(duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
             if (SmpteMode)
             {
                 if (_showDuration || Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
