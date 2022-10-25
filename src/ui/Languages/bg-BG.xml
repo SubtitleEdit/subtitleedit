@@ -96,6 +96,7 @@
     <ExampleX>Пример: {0}</ExampleX>
     <Reset>Нулиране</Reset>
     <Warning>Внимание</Warning>
+    <UseLargerFontForThisWindow>Използвайте по-голям шрифт за този прозорец</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>Относно Subtitle Edit</Title>
@@ -172,16 +173,22 @@ https://github.com/SubtitleEdit/subtitleedit
   <AudioToText>
     <Title>Аудио/Видео към текст</Title>
     <Info>Генерирай текст от аудио чрез Vosk/Kaldi разпознаване на реч</Info>
+    <WhisperInfo>Генерирайте текст от аудио чрез разпознаване на говор Whisper</WhisperInfo>
     <VoskWebsite>Уебсайт на Vosk</VoskWebsite>
+    <WhisperWebsite>Уебсайт Whisper</WhisperWebsite>
+    <WhisperNotFound>Не е намерен Whisper. Прочетете повече информация (уеб)?</WhisperNotFound>
     <Models>Модели</Models>
+    <LanguagesAndModels>Езици и модели</LanguagesAndModels>
     <ChooseModel>Избери модел</ChooseModel>
+    <ChooseLanguage>Избери език</ChooseLanguage>
     <OpenModelsFolder>Отвори папката с модели</OpenModelsFolder>
     <LoadingVoskModel>Моделът за разпознаване на реч Vosk се зарежда...</LoadingVoskModel>
     <Transcribing>Предаване запис на аудио към текс...</Transcribing>
     <TranscribingXOfY>Предаване запис на аудио към текстов файл {0} от {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видеоизточника</XFilesSavedToVideoSourceFolder>
-    <UsePostProcessing>Използвай последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
+    <UsePostProcessing>Използвайте последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
     <BatchMode>Пакетен режим</BatchMode>
+    <KeepPartialTranscription>Запазване на частична транскрипция</KeepPartialTranscription>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA</Title>
@@ -641,6 +648,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SimpleRendering>Проста обработка</SimpleRendering>
     <AntiAliasingWithTransparency>Изглаждане с прозрачност</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Префикс на изображението</ImagePrefix>
     <SideBySide3D>Едно до друго-хоризонт.</SideBySide3D>
     <HalfTopBottom3D>Едно над друго-вертик.</HalfTopBottom3D>
     <Depth>Дълбочина</Depth>
@@ -1262,7 +1270,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateTextFromVideo>Генериране на текст от видео...</GenerateTextFromVideo>
         <GenerateBlankVideo>Генериране на празно видео...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео със записани субтитри...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Видео/аудио към текст...</VideoAudioToText>
+        <VideoAudioToTextX>Аудио към текст ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Импорт на глави от видео</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Създаване/импортиране на промените в сцената...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Премахване/експортиране на промените в сцената...</RemoveOrExportShotChanges>
@@ -2406,6 +2414,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeDialog>Диалог за обединяване (вмъкване на тирета)</MergeDialog>
     <MergeDialogWithNext>Обединяване на диалога със следващия (вмъкване на тирета)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Обединяване на диалога с предишния (вмъкване на тирета)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Автоматичен баланс на избраните редове</AutoBalanceSelectedLines>
     <GoToNext>Преминаване на следващия ред</GoToNext>
     <GoToNextPlayTranslate>Преминаване на следващия ред (и възпроизв. в „режим на превод“)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Преминаване на следващия ред и задаване на курсора в края</GoToNextCursorAtEnd>
@@ -2526,6 +2535,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeSelectedLinesAndUnbreakCjk>Обединяване на избраните редове и прекъсване без интервал (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Обединяване на избраните редове, запазване само на първия не празен текст</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Обединяване на избраните двуезични редове</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Обединяване с предишния двуезичен</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Обединяване със следващия двуезичен</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Разделяне на избрания двуезичен ред</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Превключване режима на превода Вкл/Изкл</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Превключване на оригинален и преведен</SwitchOriginalAndTranslation>
@@ -2563,6 +2574,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Прекъсване първо място от позицията на курсора</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Прекъсване първо място от позицията на курсора и преминаване към следващото</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Диктуване (клавиш надолу=начало на запис, клавиш нагоре=край на записа)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Без прекъсване на текста</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Прекъсване без пространство (CJK) /Chinese, Japanese &amp; Korean символи/</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Показване на помощника за ASSA тагове</MainTextBoxAssaIntellisense>
@@ -3043,6 +3055,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Italic>Наклонен</Italic>
     <Abort>Прекрати</Abort>
     <Skip>Пропусни</Skip>
+    <UseOnce>Използвайте веднъж</UseOnce>
     <Nordic>Скандинавски</Nordic>
     <Spanish>Испански</Spanish>
     <German>Немски</German>
