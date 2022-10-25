@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -60,21 +61,22 @@ $ColorIndex4    = 3
 //Subtitles";
 
             var lastVerticalAlign = "$VertAlign = Bottom";
-            var lastHorizontalcalAlign = "$HorzAlign = Center";
+            var lastHorizontalAlign = "$HorzAlign = Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
+                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalAlign);
                 sb.AppendLine($"{EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{EncodeText(p.Text)}");
             }
+
             return sb.ToString();
         }
 
         private static string EncodeText(string input)
         {
             var text = HtmlUtil.FixUpperTags(input);
-            bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
+            var allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
             text = text.Replace("<b>", Bold);
             text = text.Replace("</b>", Bold);
             text = text.Replace("<i>", Italic);
@@ -93,7 +95,7 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            int frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
+            var frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
         }
 
@@ -104,7 +106,7 @@ $ColorIndex4    = 3
             subtitle.Paragraphs.Clear();
 
             // Copy reference of static compiled regex (RegexTimeCodes1).
-            Regex timeCodeRegex = RegexTimeCodes1;
+            var timeCodeRegex = RegexTimeCodes1;
             if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
             {
                 timeCodeRegex = RegexTimeCodes2;
@@ -112,18 +114,18 @@ $ColorIndex4    = 3
 
             var verticalAlign = "$VertAlign=Bottom";
             var horizontalAlign = "$HorzAlign=Center";
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (line.IndexOf(':') == 2 && timeCodeRegex.IsMatch(line))
                 {
-                    string start = line.Substring(0, 11);
-                    string end = line.Substring(12, 11);
+                    var start = line.Substring(0, 11);
+                    var end = line.Substring(12, 11);
 
                     try
                     {
                         var text = DecodeText(line.Substring(24));
                         text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + text;
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
+                        var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
@@ -139,23 +141,33 @@ $ColorIndex4    = 3
                 {
                     horizontalAlign = line.RemoveChar(' ', '\t');
                 }
+                else if (line.TrimStart().StartsWith("//$SMPTEFormat"))
+                {
+                    var arr = line.Split('=');
+                    if (arr.Length == 2 && double.TryParse(arr[1].Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr) &&
+                        fr > 20 && fr < 300)
+                    {
+                        Configuration.Settings.General.CurrentFrameRate = fr;
+                    }
+                }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }
             }
+
             subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string time)
         {
             //00:01:54:19
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
+            var hour = time.Substring(0, 2);
+            var minutes = time.Substring(3, 2);
+            var seconds = time.Substring(6, 2);
+            var frames = time.Substring(9, 2);
 
-            int milliseconds = FramesToMillisecondsMax999(int.Parse(frames));
+            var milliseconds = FramesToMillisecondsMax999(int.Parse(frames));
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
@@ -209,6 +221,7 @@ $ColorIndex4    = 3
                     idx = text.IndexOf(spruceTag, idx + htmlTag.Length, StringComparison.Ordinal);
                 }
             }
+
             return text;
         }
     }
