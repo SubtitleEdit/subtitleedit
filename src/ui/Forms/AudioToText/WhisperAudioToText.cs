@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
             labelChooseLanguage.Text = LanguageSettings.Current.AudioToText.ChooseLanguage;
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
+            checkBoxTranslateToEnglish.Text = LanguageSettings.Current.AudioToText.TranslateToEnglish;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -305,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, OutputHandler);
+            var process = GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, checkBoxTranslateToEnglish.Checked, OutputHandler);
             _outputText.Add("Calling whisper with : whisper " + process.StartInfo.Arguments);
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -518,10 +519,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        public static Process GetWhisperProcess(string waveFileName, string model, string language, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GetWhisperProcess(string waveFileName, string model, string language, bool translate, DataReceivedEventHandler dataReceivedHandler = null)
         {
             // whisper --model tiny.en --language English --fp16 False a.wav
-            var parameters = $"--model {model} --language \"{language}\" {Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
+
+            var translateToEnglish = translate ? "--task translate " : string.Empty;
+            if (language.ToLowerInvariant() == "english" || language.ToLowerInvariant() == "en")
+            {
+                translateToEnglish = string.Empty;
+            }
+
+            var parameters = $"--model {model} --language \"{language}\" {translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -800,6 +808,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     }
                 }
             }
+        }
+
+        private void comboBoxLanguages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
         }
     }
 }

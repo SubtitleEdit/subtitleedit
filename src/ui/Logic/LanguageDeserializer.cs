@@ -523,6 +523,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/KeepPartialTranscription":
                     language.AudioToText.KeepPartialTranscription = reader.Value;
                     break;
+                case "AudioToText/TranslateToEnglish":
+                    language.AudioToText.TranslateToEnglish = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;

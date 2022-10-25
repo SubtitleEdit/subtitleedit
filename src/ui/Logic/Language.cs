@@ -340,6 +340,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BatchMode = "Batch mode",
                 XFilesSavedToVideoSourceFolder = "{0} files saved to video source folder",
                 KeepPartialTranscription = "Keep partial transcription",
+                TranslateToEnglish = "Translate to English",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments

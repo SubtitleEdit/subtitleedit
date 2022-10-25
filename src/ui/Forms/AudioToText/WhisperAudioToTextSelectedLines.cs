@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelModel.Text = LanguageSettings.Current.AudioToText.ChooseModel;
             labelChooseLanguage.Text = LanguageSettings.Current.AudioToText.ChooseLanguage;
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
+            checkBoxTranslateToEnglish.Text = LanguageSettings.Current.AudioToText.TranslateToEnglish;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
@@ -172,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, OutputHandler);
+            var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, checkBoxTranslateToEnglish.Checked, OutputHandler);
             _outputText.Add("Calling whisper with : whisper " + process.StartInfo.Arguments);
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -437,6 +438,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void AudioToTextSelectedLines_ResizeEnd(object sender, EventArgs e)
         {
             listViewInputFiles.AutoSizeLastColumn();
+        }
+
+        private void comboBoxLanguages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
         }
     }
 }
