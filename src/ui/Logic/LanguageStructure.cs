@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Logic
+﻿using System.Drawing;
+
+namespace Nikse.SubtitleEdit.Logic
 {
     // The language classes are built for easy xml-serialization (makes save/load code simple)
     public static class LanguageStructure
@@ -196,6 +198,7 @@
             public string UsePostProcessing { get; set; }
             public string BatchMode { get; set; }
             public string KeepPartialTranscription { get; set; }
+            public string TranslateToEnglish { get; set; }
         }
 
         public class AssaAttachments

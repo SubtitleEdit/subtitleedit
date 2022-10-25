@@ -54,6 +54,7 @@
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelFC = new System.Windows.Forms.Label();
+            this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.SuspendLayout();
@@ -134,9 +135,9 @@
             this.groupBoxModels.Controls.Add(this.linkLabelOpenModelsFolder);
             this.groupBoxModels.Controls.Add(this.labelModel);
             this.groupBoxModels.Controls.Add(this.comboBoxModels);
-            this.groupBoxModels.Location = new System.Drawing.Point(15, 66);
+            this.groupBoxModels.Location = new System.Drawing.Point(15, 59);
             this.groupBoxModels.Name = "groupBoxModels";
-            this.groupBoxModels.Size = new System.Drawing.Size(682, 82);
+            this.groupBoxModels.Size = new System.Drawing.Size(682, 83);
             this.groupBoxModels.TabIndex = 3;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Language and models";
@@ -158,6 +159,7 @@
             this.comboBoxLanguages.Name = "comboBoxLanguages";
             this.comboBoxLanguages.Size = new System.Drawing.Size(240, 21);
             this.comboBoxLanguages.TabIndex = 5;
+            this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguages_SelectedIndexChanged);
             // 
             // buttonDownload
             // 
@@ -228,7 +230,7 @@
             // checkBoxUsePostProcessing
             // 
             this.checkBoxUsePostProcessing.AutoSize = true;
-            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 162);
+            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 177);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
             this.checkBoxUsePostProcessing.TabIndex = 4;
@@ -332,11 +334,22 @@
             this.labelFC.Text = "labelFC";
             this.labelFC.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // checkBoxTranslateToEnglish
+            // 
+            this.checkBoxTranslateToEnglish.AutoSize = true;
+            this.checkBoxTranslateToEnglish.Location = new System.Drawing.Point(15, 153);
+            this.checkBoxTranslateToEnglish.Name = "checkBoxTranslateToEnglish";
+            this.checkBoxTranslateToEnglish.Size = new System.Drawing.Size(119, 17);
+            this.checkBoxTranslateToEnglish.TabIndex = 20;
+            this.checkBoxTranslateToEnglish.Text = "Translate to English";
+            this.checkBoxTranslateToEnglish.UseVisualStyleBackColor = true;
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
+            this.Controls.Add(this.checkBoxTranslateToEnglish);
             this.Controls.Add(this.labelFC);
             this.Controls.Add(this.groupBoxInputFiles);
             this.Controls.Add(this.buttonBatchMode);
@@ -397,5 +410,6 @@
         private System.Windows.Forms.Label labelFC;
         private System.Windows.Forms.Label labelChooseLanguage;
         private System.Windows.Forms.ComboBox comboBoxLanguages;
+        private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
     }
 }
