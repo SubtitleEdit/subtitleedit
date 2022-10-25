@@ -255,99 +255,41 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        private bool IsAllMethodsLoaded()
+        private bool AreAllMethodsLoaded()
         {
-            if (_libvlc_new == null)
+            var methods = new List<object>
             {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_new");
-            }
-            if (_libvlc_release == null)
+                _libvlc_new,
+                _libvlc_release,
+                _libvlc_media_new_path,
+                _libvlc_media_player_new_from_media,
+                _libvlc_media_release,
+                _libvlc_video_get_size,
+                _libvlc_audio_get_volume,
+                _libvlc_audio_set_volume,
+                _libvlc_media_player_play,
+                _libvlc_media_player_stop,
+                _libvlc_media_player_is_playing,
+                _libvlc_media_player_get_time,
+                _libvlc_media_player_set_time,
+                _libvlc_media_player_get_state,
+                _libvlc_media_player_get_length,
+                _libvlc_media_player_release,
+                _libvlc_media_player_get_rate,
+                _libvlc_media_player_set_rate,
+            };
+
+            var nullCount = 0;
+            foreach (var method in methods)
             {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_release");
-            }
-            if (_libvlc_media_new_path == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_new_path");
-            }
-            if (_libvlc_media_player_new_from_media == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_new_from_media");
-            }
-            if (_libvlc_media_release == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_release");
-            }
-            if (_libvlc_video_get_size == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_video_get_size");
-            }
-            if (_libvlc_audio_get_volume == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_audio_get_volume");
-            }
-            if (_libvlc_audio_set_volume == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_audio_set_volume");
-            }
-            if (_libvlc_media_player_play == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_play");
-            }
-            if (_libvlc_media_player_stop == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_stop");
-            }
-            if (_libvlc_media_player_is_playing == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_is_playing");
-            }
-            if (_libvlc_media_player_get_time == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_time");
-            }
-            if (_libvlc_media_player_set_time == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_set_time");
-            }
-            if (_libvlc_media_player_get_state == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_state");
-            }
-            if (_libvlc_media_player_get_length == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_length");
-            }
-            if (_libvlc_media_player_release == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_release");
-            }
-            if (_libvlc_media_player_get_rate == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_get_rate");
-            }
-            if (_libvlc_media_player_set_rate == null)
-            {
-                SeLogger.Error("Not all required methods was found in libvlc: _libvlc_media_player_set_rate");
+                if (method == null)
+                {
+                    SeLogger.Error($"Required method was found in libvlc: {nameof(method)}");
+                    nullCount++;
+                }
             }
 
-            return _libvlc_new != null &&
-                   _libvlc_release != null &&
-                   _libvlc_media_new_path != null &&
-                   _libvlc_media_player_new_from_media != null &&
-                   _libvlc_media_release != null &&
-                   _libvlc_video_get_size != null &&
-                   _libvlc_audio_get_volume != null &&
-                   _libvlc_audio_set_volume != null &&
-                   _libvlc_media_player_play != null &&
-                   _libvlc_media_player_stop != null &&
-                   _libvlc_media_player_is_playing != null &&
-                   _libvlc_media_player_get_time != null &&
-                   _libvlc_media_player_set_time != null &&
-                   _libvlc_media_player_get_state != null &&
-                   _libvlc_media_player_get_length != null &&
-                   _libvlc_media_player_release != null &&
-                   _libvlc_media_player_get_rate != null &&
-                   _libvlc_media_player_set_rate != null;
+            return nullCount == 0;
         }
 
         public static bool IsInstalled
@@ -364,7 +306,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     using (var vlc = new LibVlcDynamic())
                     {
                         vlc.Initialize(null, null, null, null);
-                        var allMethodsLoaded = vlc.IsAllMethodsLoaded();
+                        var allMethodsLoaded = vlc.AreAllMethodsLoaded();
                         if (!allMethodsLoaded)
                         {
                             SeLogger.Error("Not all required methods was found in libvlc");
