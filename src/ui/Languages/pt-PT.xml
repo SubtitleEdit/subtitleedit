@@ -182,7 +182,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <WhisperWebsite>Website do Whisper</WhisperWebsite>
     <WhisperNotFound>Whisper não encontrado.
 
-Mais informação (web)?</WhisperNotFound>
+Mais informação online?</WhisperNotFound>
     <Models>Modelos</Models>
     <LanguagesAndModels>Idiomas e modelos</LanguagesAndModels>
     <ChooseModel>Escolher modelo</ChooseModel>
@@ -195,6 +195,7 @@ Mais informação (web)?</WhisperNotFound>
     <UsePostProcessing>Usar pós-processamento (combinar linhas, corrigir maiúsculas/minúsculas, pontuação e mais)</UsePostProcessing>
     <BatchMode>Modo múltiplos ficheiros</BatchMode>
     <KeepPartialTranscription>Manter transcrição parcial</KeepPartialTranscription>
+    <TranslateToEnglish>Traduzir para Inglês</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
@@ -2320,7 +2321,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ContinuationStyleNoneLeadingTrailingEllipsis>Nenhum, reticências para pausas</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Pontos (apenas para continuação)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Pontos</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Reticências (apenas para continuação)</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingEllipsis>Reticências (apenas para continuação)</ContinuationStyleOnlyTrailingEllipsis>
     <ContinuationStyleLeadingTrailingEllipsis>Reticências</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Travessão</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Travessão, mas pontos para pausas</ContinuationStyleLeadingTrailingDashDots>
