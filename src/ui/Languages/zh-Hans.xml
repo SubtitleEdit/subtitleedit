@@ -193,6 +193,7 @@ Command line: {1} {2}
     <UsePostProcessing>使用后处理（行合并、修复大小写、标点符号等）</UsePostProcessing>
     <BatchMode>批处理模式</BatchMode>
     <KeepPartialTranscription>保留部分转录</KeepPartialTranscription>
+    <TranslateToEnglish>翻译为英语</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
