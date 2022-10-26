@@ -176,6 +176,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
             TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true);
+
+            if (transcript == null || transcript.Count == 0)
+            {
+                UpdateLog();
+                SeLogger.Error(textBoxLog.Text);
+            }
+            
             DialogResult = DialogResult.OK;
         }
 
@@ -534,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
-                process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Configuration.Settings.General.FFmpegLocation;
+                process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation);
             }
 
             var whisperFolder = WhisperHelper.GetWhisperFolder();
