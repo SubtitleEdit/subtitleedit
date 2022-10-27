@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.8</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.09.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.10.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -96,6 +96,7 @@
     <ExampleX>Esempio: {0}</ExampleX>
     <Reset>Ripristina</Reset>
     <Warning>Avviso</Warning>
+    <UseLargerFontForThisWindow>Per questa finestra usa una font più grande </UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>Informazioni</Title>
@@ -175,9 +176,16 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
   <AudioToText>
     <Title>Audio/video a testo</Title>
     <Info>Genera testo dall'audio tramite il riconoscimento vocale Vosk/Kaldi</Info>
+    <WhisperInfo>Genera testo dall'audio tramite il riconoscimento vocale Whisper</WhisperInfo>
     <VoskWebsite>Sito web Vosk</VoskWebsite>
+    <WhisperWebsite>Sito web Whisper</WhisperWebsite>
+    <WhisperNotFound>Whisper non trovato.
+
+Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <Models>Modelli</Models>
+    <LanguagesAndModels>Lingue e modelli</LanguagesAndModels>
     <ChooseModel>Scegli modello</ChooseModel>
+    <ChooseLanguage>Scegli lingua</ChooseLanguage>
     <OpenModelsFolder>Apri cartella modelli</OpenModelsFolder>
     <LoadingVoskModel>Caricamento modello riconoscimento vocale Vosk...</LoadingVoskModel>
     <Transcribing>Conversione dell'audio in testo...</Transcribing>
@@ -185,6 +193,8 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <XFilesSavedToVideoSourceFolder>{0} file salvati nella cartella sorgente video</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usa la post-elaborazione (unione di righe, correzione di maiuscole e minuscole, punteggiatura e altro)</UsePostProcessing>
     <BatchMode>Modo batch</BatchMode>
+    <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
+    <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -291,6 +301,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <RemoveFormatting>Rimuovi etichetta formato</RemoveFormatting>
     <RemoveStyleActor>Rimuovi linee con stile/attore</RemoveStyleActor>
     <RemoveTextForHI>Elimina testo per NU</RemoveTextForHI>
+    <ConvertColorsToDialog>Converti i colori in dialogo</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Sovrascrivi i file originali (nuova estensione se il formato è diverso)</OverwriteOriginalFiles>
     <RedoCasing>Annulla maiuscole/minuscole</RedoCasing>
     <Convert>Converti</Convert>
@@ -461,6 +472,12 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Impossibile confrontare sottotitoli basati su immagini</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Converti i colori in dialogo</Title>
+    <RemoveColorTags>Rimuovi i tag colore</RemoveColorTags>
+    <AddNewLines>Metti ogni trattino in una nuova linea</AddNewLines>
+    <ReBreakLines>Ri-rompi le righe</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>Proprietà D-Cinema (interop)</Title>
     <TitleSmpte>Proprietà D-Cinema (SMPTE)</TitleSmpte>
@@ -637,6 +654,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <SimpleRendering>Rendering semplice</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing con trasparenza</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Prefisso immagine</ImagePrefix>
     <SideBySide3D>Centro-affiancato</SideBySide3D>
     <HalfTopBottom3D>Centro-alto/basso</HalfTopBottom3D>
     <Depth>Profondità</Depth>
@@ -832,7 +850,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <CheckeredImage>Immagine a scacchi</CheckeredImage>
     <SolidColor>Tinta unita</SolidColor>
     <DurationInMinutes>Durata in minuti</DurationInMinutes>
-    <FileExtension>Estensione file</FileExtension>
+    <Background>Sfondo</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Genera video con sottotitoli incorporati</Title>
@@ -1211,6 +1229,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <FixCommonErrors>&amp;Correggi errori comuni...</FixCommonErrors>
         <StartNumberingFrom>Inizia numerazione da...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Elimina testo per non udenti...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Converti i colori in dialogo...</ConvertColorsToDialog>
         <ChangeCasing>Cambia MAIUSCOLE/minuscole...</ChangeCasing>
         <ChangeFrameRate>Cambia frequenza fotogramma...</ChangeFrameRate>
         <ChangeSpeedInPercent>Cambia velocità in percentuale...</ChangeSpeedInPercent>
@@ -1758,6 +1777,8 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <GeneratingWaveformInBackground>Genera forme d'onda in background...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Backup automatico salvato</AutoBackupSaved>
     <UsingOnlyFrontCenterChannel>Usando solo il canale audio centrale anteriore</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Prima di convertire i colori in dialog</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Colori convertiti in dialogo</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
@@ -2395,6 +2416,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MergeDialog>Unisci dialoghi (inserisci trattini)</MergeDialog>
     <MergeDialogWithNext>Unisci la finestra di dialogo con il successivo (inserisci trattini)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Unisci la finestra di dialogo con il precedente (inserisci trattini)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Bilanciamento automatico linee selezionate</AutoBalanceSelectedLines>
     <GoToNext>Vai alla riga successiva</GoToNext>
     <GoToNextPlayTranslate>Vai alla riga successiva (e riproduci in modalità di traduzione)</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Vai alla riga successiva e imposta il cursore alla fine</GoToNextCursorAtEnd>
@@ -2410,11 +2432,11 @@ stesso file di sottotitolo (collaborazione)</Information>
     <GoToNextSubtitleAndFocusWaveform>Vai alla riga successiva e metti a fuoco la forma d'onda</GoToNextSubtitleAndFocusWaveform>
     <ToggleFocus>Attiva/disattiva lo stato attivo tra la visualizzazione elenco e la casella di testo dei sottotitoli</ToggleFocus>
     <ToggleFocusWaveform>Attiva/disattiva lo stato attivo tra la visualizzazione elenco e la forma d'onda/spettrogramma</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>Cambia messa a fuoco tra casella di testo e forma d'onda/spettrogramma</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Attiva/disattiva trattini di dialogo</ToggleDialogDashes>
     <ToggleQuotes>Attiva/disattiva virgolette</ToggleQuotes>
     <ToggleHiTags>Cambia le etichette per problemi di udito</ToggleHiTags>
     <ToggleMusicSymbols>Attiva/Disattiva i simboli musicali</ToggleMusicSymbols>
-    <ToggleFocusWaveformTextBox>Alterna la messa a fuoco tra casella di testo e forma d'onda/spettrogramma</ToggleFocusWaveformTextBox>
     <Alignment>Allinea (righe selezionate)</Alignment>
     <AlignmentN1>Allinea in basso a sinistra - {\an1}</AlignmentN1>
     <AlignmentN2>Allinea in basso al centro - {\an2}</AlignmentN2>
@@ -2475,12 +2497,13 @@ stesso file di sottotitolo (collaborazione)</Information>
     <WaveformGoToNextChapter>Vai al capitolo successivo</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleziona il sottotitolo successivo (dalla posizione del video, mantieni la pos video)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Alterna riproduzione/pausa</TogglePlayPause>
-    <Play150Speed>Riproduci video a velocità 1.5x</Play150Speed>
-    <Play200Speed>Riproduci video a velocità 2.0x</Play200Speed>
     <Pause>Pausa</Pause>
     <Fullscreen>Schermo intero</Fullscreen>
+    <Play150Speed>Riproduci video a velocità 1.5x</Play150Speed>
+    <Play200Speed>Riproduci video a velocità 2.0x</Play200Speed>
     <PlayRateSlower>Velocità riproduzione più lenta</PlayRateSlower>
     <PlayRateFaster>Velocità riproduzione più veloce</PlayRateFaster>
+    <PlayRateToggle>Attiva/disattiva velocità riproduzione (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Ripristina velocità/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Attiva/disattiva i controlli video</MainToggleVideoControls>
     <VideoToggleContrast>Attiva/disattiva contrasto (solo mpv)</VideoToggleContrast>
@@ -2514,6 +2537,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MergeSelectedLinesAndUnbreakCjk>Unisci le righe selezionate e non spezzarle senza spazio (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Unisci righe selezionate, mantieni solo il primo testo non-vuoto</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Unisci le righe selezionate bilingue</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Unisci con il bilingue precedente</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Unisci con il bilingue successivo</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Dividi la riga selezionata bilingue</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Alterna modo di traduzione</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Cambia originale e traduzione</SwitchOriginalAndTranslation>
@@ -2550,6 +2575,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MainTextBoxAutoBreak>Interruzione automatica testo</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Interrompi al primo spazio dalla posizione del cursore</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Interrompi al primo spazio dalla posizione del cursore e vai al successivo</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dettatura (tasto giù=inizio registrazione, tasto su=fine registrazione)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Annulla interruzione testo</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Annulla interruzione senza spazio (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Visualizza l'helper tag ASSET</MainTextBoxAssaIntellisense>
@@ -3031,6 +3057,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <Italic>&amp;Corsivo</Italic>
     <Abort>&amp;Annulla</Abort>
     <Skip>&amp;Salta</Skip>
+    <UseOnce>&amp;Usa una volta</UseOnce>
     <Nordic>Nordico</Nordic>
     <Spanish>Spagnolo</Spanish>
     <German>Tedesco</German>
