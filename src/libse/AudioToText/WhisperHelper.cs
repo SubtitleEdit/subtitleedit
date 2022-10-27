@@ -39,8 +39,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                var pythonFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                var pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     "AppData",
                     "Local",
                     "Programs",
@@ -75,14 +74,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                var packagesFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    "AppData",
-                    "Local",
-                    "Packages");
-                if (Directory.Exists(packagesFolder))
+                var pyEnvFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".pyenv");
+                if (Directory.Exists(pyEnvFolder))
                 {
-                    var files = Directory.GetFiles(packagesFolder, "whisper.exe", SearchOption.AllDirectories);
+                    var files = Directory.GetFiles(pyEnvFolder, "whisper.exe", SearchOption.AllDirectories);
                     if (files.Length > 0)
                     {
                         return Path.GetDirectoryName(files[0]);
@@ -90,6 +85,30 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
 
                 pythonFolder = "C:\\";
+                foreach (var dir in Directory.GetDirectories(pythonFolder))
+                {
+                    var dirName = Path.GetFileName(dir);
+                    if (dirName != null && dirName.StartsWith("Python"))
+                    {
+                        var files = Directory.GetFiles(dir, "whisper.exe", SearchOption.AllDirectories);
+                        if (files.Length > 0)
+                        {
+                            return Path.GetDirectoryName(files[0]);
+                        }
+                    }
+                }
+
+                var appDataLocal = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "Local");
+                if (Directory.Exists(appDataLocal))
+                {
+                    var files = Directory.GetFiles(appDataLocal, "whisper.exe", SearchOption.AllDirectories);
+                    if (files.Length > 0)
+                    {
+                        return Path.GetDirectoryName(files[0]);
+                    }
+                }
+
+                pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData");
                 foreach (var dir in Directory.GetDirectories(pythonFolder))
                 {
                     var dirName = Path.GetFileName(dir);
