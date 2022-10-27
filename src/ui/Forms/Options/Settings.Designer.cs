@@ -301,6 +301,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.labelToggleSourceView = new System.Windows.Forms.Label();
+            this.pictureBoxToggleSourceView = new System.Windows.Forms.PictureBox();
+            this.checkBoxTBToggleSourceView = new System.Windows.Forms.CheckBox();
             this.labelTBBurnIn = new System.Windows.Forms.Label();
             this.pictureBoxTBBurnIn = new System.Windows.Forms.PictureBox();
             this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
@@ -408,9 +411,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.labelToggleSourceView = new System.Windows.Forms.Label();
-            this.pictureBoxToggleSourceView = new System.Windows.Forms.PictureBox();
-            this.checkBoxTBToggleSourceView = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -453,6 +453,7 @@
             this.panelToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
@@ -479,7 +480,6 @@
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.panelFileTypeAssociations.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -3833,6 +3833,33 @@
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
             // 
+            // labelToggleSourceView
+            // 
+            this.labelToggleSourceView.AutoSize = true;
+            this.labelToggleSourceView.Location = new System.Drawing.Point(11, 253);
+            this.labelToggleSourceView.Name = "labelToggleSourceView";
+            this.labelToggleSourceView.Size = new System.Drawing.Size(99, 13);
+            this.labelToggleSourceView.TabIndex = 48;
+            this.labelToggleSourceView.Text = "Toggle source view";
+            // 
+            // pictureBoxToggleSourceView
+            // 
+            this.pictureBoxToggleSourceView.Location = new System.Drawing.Point(24, 272);
+            this.pictureBoxToggleSourceView.Name = "pictureBoxToggleSourceView";
+            this.pictureBoxToggleSourceView.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxToggleSourceView.TabIndex = 47;
+            this.pictureBoxToggleSourceView.TabStop = false;
+            // 
+            // checkBoxTBToggleSourceView
+            // 
+            this.checkBoxTBToggleSourceView.AutoSize = true;
+            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(27, 312);
+            this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
+            this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxTBToggleSourceView.TabIndex = 46;
+            this.checkBoxTBToggleSourceView.Text = "Visible";
+            this.checkBoxTBToggleSourceView.UseVisualStyleBackColor = true;
+            // 
             // labelTBBurnIn
             // 
             this.labelTBBurnIn.AutoSize = true;
@@ -4565,7 +4592,7 @@
             this.groupBoxDarkTheme.Controls.Add(this.buttonDarkThemeColor);
             this.groupBoxDarkTheme.Location = new System.Drawing.Point(5, 307);
             this.groupBoxDarkTheme.Name = "groupBoxDarkTheme";
-            this.groupBoxDarkTheme.Size = new System.Drawing.Size(839, 125);
+            this.groupBoxDarkTheme.Size = new System.Drawing.Size(839, 114);
             this.groupBoxDarkTheme.TabIndex = 40;
             this.groupBoxDarkTheme.TabStop = false;
             this.groupBoxDarkTheme.Text = "Dark theme";
@@ -4632,7 +4659,7 @@
             // labelFontNote
             // 
             this.labelFontNote.AutoSize = true;
-            this.labelFontNote.Location = new System.Drawing.Point(10, 457);
+            this.labelFontNote.Location = new System.Drawing.Point(10, 433);
             this.labelFontNote.Name = "labelFontNote";
             this.labelFontNote.Size = new System.Drawing.Size(278, 13);
             this.labelFontNote.TabIndex = 41;
@@ -4906,44 +4933,17 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // labelToggleSourceView
-            // 
-            this.labelToggleSourceView.AutoSize = true;
-            this.labelToggleSourceView.Location = new System.Drawing.Point(11, 253);
-            this.labelToggleSourceView.Name = "labelToggleSourceView";
-            this.labelToggleSourceView.Size = new System.Drawing.Size(99, 13);
-            this.labelToggleSourceView.TabIndex = 48;
-            this.labelToggleSourceView.Text = "Toggle source view";
-            // 
-            // pictureBoxToggleSourceView
-            // 
-            this.pictureBoxToggleSourceView.Location = new System.Drawing.Point(24, 272);
-            this.pictureBoxToggleSourceView.Name = "pictureBoxToggleSourceView";
-            this.pictureBoxToggleSourceView.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxToggleSourceView.TabIndex = 47;
-            this.pictureBoxToggleSourceView.TabStop = false;
-            // 
-            // checkBoxTBToggleSourceView
-            // 
-            this.checkBoxTBToggleSourceView.AutoSize = true;
-            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(27, 312);
-            this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
-            this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxTBToggleSourceView.TabIndex = 46;
-            this.checkBoxTBToggleSourceView.Text = "Visible";
-            this.checkBoxTBToggleSourceView.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelShortcuts);
@@ -5029,6 +5029,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
@@ -5063,7 +5064,6 @@
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
             this.panelFileTypeAssociations.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
