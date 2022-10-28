@@ -744,7 +744,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // from start
-            var minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
+            var minLength = Math.Min(richTextBox1.Text.RemoveChar('\r').Length, richTextBox2.Text.RemoveChar('\r').Length);
             var startCharactersOk = 0;
             for (var i = 0; i < minLength; i++)
             {
