@@ -117,10 +117,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public static IntPtr AllocateUtf8IntPtrArrayWithSentinel(string[] arr, out IntPtr[] byteArrayPointers)
         {
-            int numberOfStrings = arr.Length + 1; // add extra element for extra null pointer last (sentinel)
+            var numberOfStrings = arr.Length + 1; // add extra element for extra null pointer last (sentinel)
             byteArrayPointers = new IntPtr[numberOfStrings];
             IntPtr rootPointer = Marshal.AllocCoTaskMem(IntPtr.Size * numberOfStrings);
-            for (int index = 0; index < arr.Length; index++)
+            for (var index = 0; index < arr.Length; index++)
             {
                 var bytes = GetUtf8Bytes(arr[index]);
                 IntPtr unmanagedPointer = Marshal.AllocHGlobal(bytes.Length);
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         return 0;
                     }
 
-                    int mpvFormatDouble = 5;
+                    var mpvFormatDouble = 5;
                     double d = 0;
                     _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("duration"), mpvFormatDouble, ref d);
                     return d;
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         return _pausePosition.Value;
                     }
 
-                    int mpvFormatDouble = 5;
+                    var mpvFormatDouble = 5;
                     double d = 0;
                     _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("time-pos"), mpvFormatDouble, ref d);
                     return d;
@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     return 0;
                 }
-                int mpvFormatDouble = 5;
+                var mpvFormatDouble = 5;
                 double d = 0;
                 _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("width"), mpvFormatDouble, ref d);
                 return (int)d;
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     return 0;
                 }
-                int mpvFormatDouble = 5;
+                var mpvFormatDouble = 5;
                 double d = 0;
                 _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("height"), mpvFormatDouble, ref d);
                 return (int)d;
@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     return 0;
                 }
-                int mpvFormatDouble = 5;
+                var mpvFormatDouble = 5;
                 double d = 0;
                 _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("estimated-frame-count"), mpvFormatDouble, ref d);
                 return (int)d;
@@ -391,7 +391,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     return 0;
                 }
-                int mpvFormatDouble = 5;
+                var mpvFormatDouble = 5;
                 double d = 0;
                 _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("container-fps"), mpvFormatDouble, ref d);
                 return d;
@@ -747,15 +747,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (ownerControl != null)
             {
-                int iterations = 25;
-                int returnCode = -1;
-                int mpvFormatInt64 = 4;
+                var iterations = 25;
+                var returnCode = -1;
+                var mpvFormatInt64 = 4;
                 if (ownerControl.IsDisposed)
                 {
                     return;
                 }
 
-                var windowId = (ulong)ownerControl.Handle.ToInt64();
+                var windowId = (ulong)ownerControl.Handle;
                 while (returnCode != 0 && iterations > 0)
                 {
                     Application.DoEvents();
@@ -766,6 +766,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         {
                             return;
                         }
+
                         returnCode = _mpvSetOption(_mpvHandle, GetUtf8Bytes("wid"), mpvFormatInt64, ref windowId);
                         if (returnCode != 0)
                         {
@@ -783,7 +784,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             _videoLoadedTimer.Stop();
             const int mpvEventFileLoaded = 8;
-            int l = 0;
+            var l = 0;
             while (l < 10000)
             {
                 Application.DoEvents();
