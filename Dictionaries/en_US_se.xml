@@ -1,4 +1,6 @@
 <words>
+  <word>'cause</word>
+  <word>'em</word>
   <word>00am</word>
   <word>00pm</word>
   <word>01am</word>
@@ -91,6 +93,7 @@
   <word>backsplash</word>
   <word>backsplashes</word>
   <word>badass</word>
+  <word>badasses</word>
   <word>barista</word>
   <word>barium</word>
   <word>batrachotoxin</word>
@@ -104,9 +107,11 @@
   <word>biotoxin</word>
   <word>bismuth</word>
   <word>blonde</word>
+  <word>bloodwork</word>
   <word>blowjobs</word>
   <word>bluejacked</word>
   <word>blushy</word>
+  <word>boatshed</word>
   <word>bogholes</word>
   <word>bohrium</word>
   <word>bona fide</word>
@@ -136,7 +141,6 @@
   <word>cardiothoracic</word>
   <word>catalogue</word>
   <word>catalogued</word>
-  <word>'cause</word>
   <word>centimetres</word>
   <word>cerium</word>
   <word>cesium</word>
@@ -158,6 +162,7 @@
   <word>collywobbles</word>
   <word>colonoscopy</word>
   <word>colours</word>
+  <word>comlink</word>
   <word>comminuted</word>
   <word>contractualism</word>
   <word>copain</word>
@@ -171,6 +176,7 @@
   <word>could've</word>
   <word>countertop</word>
   <word>craniotomy</word>
+  <word>crapshoot</word>
   <word>creatinine</word>
   <word>crossbone</word>
   <word>crosshair</word>
@@ -188,7 +194,6 @@
   <word>defendable</word>
   <word>defibrillating</word>
   <word>defibrillation</word>
-  <word>déjà vu</word>
   <word>dialogue</word>
   <word>dipshit</word>
   <word>dismemberments</word>
@@ -201,12 +206,13 @@
   <word>dreamt</word>
   <word>dubnium</word>
   <word>dumbass</word>
+  <word>dumbass</word>
   <word>dysesthesia</word>
   <word>dysprosium</word>
+  <word>déjà vu</word>
   <word>easy-peasy</word>
   <word>einsteinium</word>
   <word>electrocautery</word>
-  <word>'em</word>
   <word>emoji</word>
   <word>empanadas</word>
   <word>empyema</word>
@@ -224,6 +230,8 @@
   <word>evidentiary</word>
   <word>extradural</word>
   <word>eyeing</word>
+  <word>facedown</word>
+  <word>faceup</word>
   <word>faggot</word>
   <word>failsafe</word>
   <word>falafel</word>
@@ -242,6 +250,7 @@
   <word>fiancée</word>
   <word>fibrinolysis</word>
   <word>financials</word>
+  <word>flameout</word>
   <word>flatbread</word>
   <word>flavour</word>
   <word>flavours</word>
@@ -274,8 +283,11 @@
   <word>gold</word>
   <word>gracilis</word>
   <word>grandkids</word>
+  <word>grandpop</word>
+  <word>grandsire</word>
   <word>gravimetric</word>
   <word>greenlit</word>
+  <word>greensick</word>
   <word>guys'll</word>
   <word>hafnium</word>
   <word>hardwire</word>
@@ -371,9 +383,9 @@
   <word>maxillofacial</word>
   <word>meds</word>
   <word>meitnerium</word>
+  <word>men's</word>
   <word>mendelevium</word>
   <word>meningioma</word>
-  <word>men's</word>
   <word>mercury</word>
   <word>mesenteric</word>
   <word>mesentery</word>
@@ -466,6 +478,7 @@
   <word>pickleback</word>
   <word>platinum</word>
   <word>playbook</word>
+  <word>playwriting</word>
   <word>pledgets</word>
   <word>plesiosaur</word>
   <word>plexiform neurofibroma</word>
@@ -489,6 +502,7 @@
   <word>purée</word>
   <word>radium</word>
   <word>radon</word>
+  <word>ragdoll</word>
   <word>reacclimate</word>
   <word>reacclimating</word>
   <word>realise</word>
@@ -508,6 +522,7 @@
   <word>revascularization</word>
   <word>rhenium</word>
   <word>rhodium</word>
+  <word>rideshare</word>
   <word>ringtone</word>
   <word>roentgenium</word>
   <word>rollerblades</word>
@@ -529,16 +544,16 @@
   <word>selenium</word>
   <word>selfie</word>
   <word>selfies</word>
+  <word>sensei</word>
   <word>señor</word>
   <word>señora</word>
   <word>señorita</word>
-  <word>sensei</word>
   <word>sharpshoot</word>
-  <word>shitbox</word>
-  <word>shithead</word>
-  <word>shithead's</word>
-  <word>shithole</word>
   <word>shit'll</word>
+  <word>shitbox</word>
+  <word>shithead's</word>
+  <word>shithead</word>
+  <word>shithole</word>
   <word>should've</word>
   <word>show's</word>
   <word>silicon</word>
@@ -548,11 +563,15 @@
   <word>skeevy</word>
   <word>skosh</word>
   <word>slipspace</word>
+  <word>smartphone</word>
+  <word>smartphones</word>
   <word>snuck</word>
   <word>sociopathic</word>
   <word>sodium</word>
   <word>someplace</word>
   <word>something's</word>
+  <word>soulmate</word>
+  <word>soulmates</word>
   <word>spacedock</word>
   <word>spacefaring</word>
   <word>spell's</word>
@@ -564,6 +583,7 @@
   <word>spotteth</word>
   <word>squirrelly</word>
   <word>starship</word>
+  <word>startup</word>
   <word>stenosed</word>
   <word>stenosis</word>
   <word>stent</word>
@@ -574,8 +594,8 @@
   <word>sternotomy</word>
   <word>strontium</word>
   <word>subclavian</word>
-  <word>subdural</word>
   <word>subdural hematoma</word>
+  <word>subdural</word>
   <word>sudoku</word>
   <word>sulfur</word>
   <word>sulphur</word>
@@ -610,8 +630,8 @@
   <word>there'd</word>
   <word>there'll</word>
   <word>there're</word>
-  <word>this</word>
   <word>this'll</word>
+  <word>this</word>
   <word>thoracotomy</word>
   <word>thorium</word>
   <word>thrombectomy</word>
@@ -620,6 +640,7 @@
   <word>throuple</word>
   <word>thulium</word>
   <word>timeline</word>
+  <word>timelines</word>
   <word>tin</word>
   <word>titanium</word>
   <word>tittie</word>
@@ -632,9 +653,10 @@
   <word>transdural</word>
   <word>transectional</word>
   <word>transpedicular</word>
-  <word>travelled</word>
+  <word>traveled</word>
   <word>traveler</word>
   <word>traveling</word>
+  <word>travelled</word>
   <word>trickeration</word>
   <word>trifecta</word>
   <word>trigeminal</word>
@@ -656,12 +678,14 @@
   <word>vaccinologist</word>
   <word>vaginas</word>
   <word>vanadium</word>
+  <word>vanlife</word>
   <word>vascularity</word>
   <word>vegetations</word>
   <word>virginities</word>
   <word>voicemail</word>
   <word>voila</word>
   <word>walkthrough</word>
+  <word>waterboard</word>
   <word>weaponize</word>
   <word>weaponized</word>
   <word>weirding</word>
@@ -685,5 +709,4 @@
   <word>yukina</word>
   <word>zinc</word>
   <word>zirconium</word>
-  <word>traveled</word>
 </words>
