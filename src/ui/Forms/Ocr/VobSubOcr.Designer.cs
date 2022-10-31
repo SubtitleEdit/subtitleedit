@@ -2054,6 +2054,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Text = "Import/OCR VobSub (sub/idx) subtitle";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VobSubOcr_FormClosing);
             this.Shown += new System.EventHandler(this.FormVobSubOcr_Shown);
+            this.ResizeEnd += new System.EventHandler(this.VobSubOcr_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcr_KeyDown);
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
