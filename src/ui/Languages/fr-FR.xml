@@ -3,7 +3,7 @@
 		<General>
 		<Title>Subtitle Edit</Title>
 		<Version>3.6.8</Version>
-		<TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/10/26</TranslatedBy>
+		<TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/10/30</TranslatedBy>
 		<CultureName>fr-FR</CultureName>
 		<HelpFile />
 		<Ok>&amp;OK</Ok>
@@ -96,6 +96,7 @@
 		<ExampleX>Exemple : {0}</ExampleX>
 		<Reset>Réinitialiser</Reset>
 		<Warning>Attention</Warning>
+		<UseLargerFontForThisWindow>Agrandir la police de cette fenêtre</UseLargerFontForThisWindow>
 	</General>
 	<About>
 		<Title>A propos de Subtitle Edit</Title>
@@ -108,9 +109,7 @@
 			Les suggestions sont plus que bienvenues.
 
 			Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions.com pour le français.
-.<!-- Ce point a été ajouté (31/08/22), pour mieux cadrer l'affichage du texte -->
-<!-- Dummy line added to sync fr-FR and LanguageMaster xml files -->
-		</AboutText1>
+.<!-- Ce point a été ajouté (31/08/22), pour mieux cadrer l'affichage du texte --></AboutText1>
 	</About>
 	<AddToNames>
 		<Title>Ajouter à la liste de noms</Title>
@@ -183,9 +182,16 @@
 	<AudioToText>
 		<Title>Audio vers texte</Title>
 		<Info>Générer un texte depuis l'audio via la reconnaissance vocale "Vosk/Kaldi"</Info>
+		<WhisperInfo>Générer un texte depuis l'audio via la reconnaissance vocale "Whisper"</WhisperInfo>
 		<VoskWebsite>Site Vosk</VoskWebsite>
+		<WhisperWebsite>Site Whisper</WhisperWebsite>
+		<WhisperNotFound>Whisper introuvable.
+
+		Plus d'informations (Internet)?</WhisperNotFound>
 		<Models>Modèles</Models>
+		<LanguagesAndModels>Langues et modèles</LanguagesAndModels>
 		<ChooseModel>Choisir un modèle</ChooseModel>
+		<ChooseLanguage>Choisir la langue</ChooseLanguage>
 		<OpenModelsFolder>Ouvrir le dossier des modèles</OpenModelsFolder>
 		<LoadingVoskModel>Téléchargement du modèle de reconnaissance vocale Vosk...</LoadingVoskModel>
 		<Transcribing>Transcription de l’audio en texte...</Transcribing>
@@ -193,6 +199,8 @@
 		<XFilesSavedToVideoSourceFolder>{0} fichiers sauvés dans le dossier vidéo source</XFilesSavedToVideoSourceFolder>
 		<UsePostProcessing>Post-traitement (fusion de ligne, réparation casse, ponctuation, etc.)</UsePostProcessing>
 		<BatchMode>Mode en "lot(s)"</BatchMode>
+		<KeepPartialTranscription>Conserver la transcription partielle</KeepPartialTranscription>
+		<TranslateToEnglish>Traduire en anglais</TranslateToEnglish>
 	</AudioToText>
 	<AssaAttachments>
 		<Title>Annexes Advanced Sub Station Alpha</Title>
@@ -468,7 +476,7 @@
 		<IgnoreWhitespace>Ignorer l'espacement</IgnoreWhitespace>
 		<IgnoreFormatting>Ignorer le format</IgnoreFormatting>
 		<OnlyLookForDifferencesInText>Uniquement les différences de texte</OnlyLookForDifferencesInText>
-		<CannotCompareWithImageBasedSubtitles>Ne comparer pas les sous-titres avec l'image de base</CannotCompareWithImageBasedSubtitles>
+		<CannotCompareWithImageBasedSubtitles>Impossible de comparer avec les sous-titres basés sur l'image</CannotCompareWithImageBasedSubtitles>
 	</CompareSubtitles>
 	<ConvertColorsToDialog>
 			<Title>Convertir les couleurs en dialogue</Title>
@@ -562,7 +570,7 @@
 		<OriginalEpisodeTitle>Titre de l'épisode original</OriginalEpisodeTitle>
 		<TranslatedProgramTitle>Titre du programme traduit</TranslatedProgramTitle>
 		<TranslatedEpisodeTitle>Titre de l'épisode traduit</TranslatedEpisodeTitle>
-		<TranslatorsName>Nom des traducteurs</TranslatorsName>
+		<TranslatorsName>Nom du traducteur</TranslatorsName>
 		<SubtitleListReferenceCode>Code de référence liste sous-titres</SubtitleListReferenceCode>
 		<CountryOfOrigin>Pays d'origine</CountryOfOrigin>
 		<TimeCodeStatus>Etat horodatage</TimeCodeStatus>
@@ -652,8 +660,9 @@
 		<SimpleRendering>Rendu simple</SimpleRendering>
 		<AntiAliasingWithTransparency>Anticrénelage avec transparence</AntiAliasingWithTransparency>
 		<Text3D>3D</Text3D>
+		<ImagePrefix>Préfixe d'image</ImagePrefix>
 		<SideBySide3D>Demi côte à côte</SideBySide3D>
-		<HalfTopBottom3D>Demi haut-bas</HalfTopBottom3D>
+		<HalfTopBottom3D>Demi-haut/bas</HalfTopBottom3D>
 		<Depth>Profondeur</Depth>
 		<ExportAllLines>Exporter tout...</ExportAllLines>
 		<XImagesSavedInY>{0:#,##0}  images sauvegardées dans {1}</XImagesSavedInY>
@@ -793,7 +802,7 @@
 		<FixesFoundX>Corrections trouvées : {0}</FixesFoundX>
 		<XFixesApplied>Corrections effectuées : {0}</XFixesApplied>
 		<NothingFixableBut>Rien ne peut être corrigé automatiquement. Le sous-titre contient des erreurs détaillées dans le journal</NothingFixableBut>
-		<XFixedBut>{0} problèmes réparés mais le sous-titre contient toujours des erreurs détaillées dans le journal</XFixedBut>
+		<XFixedBut>{0} problèmes corrigés mais le sous-titre contient toujours des erreurs, détaillées dans le journal</XFixedBut>
 		<XCouldBeFixedBut>{0} problèmes pourraient être réparés mais le sous-titre contiendra toujours des erreurs détaillées dans le journal</XCouldBeFixedBut>
 		<FixFirstLetterToUppercaseAfterParagraph>Mettre la première lettre en majuscule après un paragraphe</FixFirstLetterToUppercaseAfterParagraph>
 		<MergeShortLine>Joindre la ligne courte (une seule phrase)</MergeShortLine>
@@ -1280,7 +1289,7 @@
 				<GenerateTextFromVideo>Générer texte depuis vidéo...</GenerateTextFromVideo>
 				<GenerateBlankVideo>Générer une vidéo vierge...</GenerateBlankVideo>
 				<GenerateVideoWithBurnedInSub>Générer une vidéo avec s/titres incrustés...</GenerateVideoWithBurnedInSub>
-				<VideoAudioToText>Audio vers texte...</VideoAudioToText>
+				<VideoAudioToTextX>Audio vers texte ({0})...</VideoAudioToTextX>
 				<ImportChaptersFromVideo>Importer des chapitres de la vidéo</ImportChaptersFromVideo>
 				<GenerateImportShotChanges>Générer / Importer les changements de scènes...</GenerateImportShotChanges>
 				<RemoveOrExportShotChanges>Supprimer/exporter les changements de plans...</RemoveOrExportShotChanges>
@@ -1522,7 +1531,7 @@
 		<FileOnDiskModified>Fichier sur disque modifié</FileOnDiskModified>
 		<OverwriteModifiedFile>Ecraser le fichier {0} modifiée à {1} {2}{3} avec le fichier actuel chargé à {4} {5} ?</OverwriteModifiedFile>
 		<FileXIsReadOnly>
-			Impossible de sauvegarder le fichier {0}
+			Impossible de sauvegarder {0}
 
 			Le fichier est en lecture seule !
 		</FileXIsReadOnly>
@@ -2443,6 +2452,7 @@
 		<MergeDialog>Fusionner le dialogue (insérer des tirets)</MergeDialog>
 		<MergeDialogWithNext>Fusionner le dialogue au suivant (insérer des tirets)</MergeDialogWithNext>
 		<MergeDialogWithPrevious>Fusionner le dialogue au précédent (insérer des tirets)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Equilibrer automatiquement les lignes sélectionnées</AutoBalanceSelectedLines>
 		<GoToNext>Aller à la ligne suivante</GoToNext>
 		<GoToNextPlayTranslate>Aller à la ligne suivante (et lire en 'Mode Traduire')</GoToNextPlayTranslate>
 		<GoToNextCursorAtEnd>Aller à la ligne suivante et placer le curseur à la fin</GoToNextCursorAtEnd>
@@ -2523,13 +2533,14 @@
 		<WaveformGoToNextChapter>Aller au chapitre suivant</WaveformGoToNextChapter>
 		<WaveformSelectNextSubtitle>Sélectionner le sous-titre suivant la position vidéo (rester positionné)</WaveformSelectNextSubtitle>
 		<TogglePlayPause>Commuter lecture / pause</TogglePlayPause>
-		<Play150Speed>Lire la vidéo à V=1,5x</Play150Speed>
-		<Play200Speed>Lire la vidéo à V=2,0x</Play200Speed>
 		<Pause>Pause</Pause>
 		<Fullscreen>Plein écran</Fullscreen>
+		<Play150Speed>Lire la vidéo à V=1,5x</Play150Speed>
+		<Play200Speed>Lire la vidéo à V=2,0x</Play200Speed>
 		<PlayRateSlower>Ralentir la lecture</PlayRateSlower>
 		<PlayRateFaster>Accélérer la lecture</PlayRateFaster>
-		<VideoResetSpeedAndZoom>Rétablir vitesse / zoom</VideoResetSpeedAndZoom>
+		<PlayRateToggle>Commuter vitesse lecture (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
+		<VideoResetSpeedAndZoom>Rétablir vitesse / zoom audio</VideoResetSpeedAndZoom>
 		<MainToggleVideoControls>Activer/désactiver les contrôles vidéo</MainToggleVideoControls>
 		<VideoToggleContrast>Commuter contraste (mpv seul)</VideoToggleContrast>
 		<VideoAudioToText>Audio -&gt; texte (reconnaissance vocale)</VideoAudioToText>
@@ -2562,6 +2573,8 @@
 		<MergeSelectedLinesAndUnbreakCjk>Joindre les lignes sélectionnées et supprimer les sauts, sans espacement (CJK)</MergeSelectedLinesAndUnbreakCjk>
 		<MergeSelectedLinesOnlyFirstText>Joindre les lignes sélectionnées, ne garder que le premier texte non vide</MergeSelectedLinesOnlyFirstText>
 		<MergeSelectedLinesBilingual>Joindre les lignes sélectionnées bilingues</MergeSelectedLinesBilingual>
+		<MergeWithPreviousBilingual>Joindre à la bilingue précédente</MergeWithPreviousBilingual>
+		<MergeWithNextBilingual>Joindre à la bilingue suivante</MergeWithNextBilingual>
 		<SplitSelectedLineBilingual>Scinder les lignes sélectionnées bilingues</SplitSelectedLineBilingual>
 		<ToggleTranslationMode>Commuter le mode de traduction</ToggleTranslationMode>
 		<SwitchOriginalAndTranslation>Permuter original et traduction</SwitchOriginalAndTranslation>
@@ -2598,6 +2611,7 @@
 		<MainTextBoxAutoBreak>Saut de ligne automatique</MainTextBoxAutoBreak>
 		<MainTextBoxAutoBreakFromPos>Couper la ligne au premier espacement après le curseur</MainTextBoxAutoBreakFromPos>
 		<MainTextBoxAutoBreakFromPosAndGoToNext>Couper la ligne au premier espacement après le curseur et aller au suivant</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dicter (touche bas=enregistrer, touche haut=arrêter)</MainTextBoxDictate>
 		<MainTextBoxUnbreak>Joindre le texte</MainTextBoxUnbreak>
 		<MainTextBoxUnbreakNoSpace>Joindre sans espace (CJK)</MainTextBoxUnbreakNoSpace>
 		<MainTextBoxAssaIntellisense>Afficher l'assistant balise ASSA</MainTextBoxAssaIntellisense>
@@ -2730,7 +2744,7 @@
 		<SpellCheckAborted>Vérification d'orthographe interrompue</SpellCheckAborted>
 		<SpacesNotAllowed>Les espaces ne sont pas autorisés dans un mot !</SpacesNotAllowed>
 		<UndoX>Défaire : {0}</UndoX>
-		<OpenImageBasedSourceFile>Ouvrir un fichier source basé sur une image...</OpenImageBasedSourceFile>
+		<OpenImageBasedSourceFile>Ouvrir un fichier source basé sur image...</OpenImageBasedSourceFile>
 	</SpellCheck>
 	<NetflixQualityCheck>
 		<GlyphCheckReport>Caractère invalide {0} trouvé à la colonne {1}</GlyphCheckReport>
@@ -3085,7 +3099,8 @@
 		<Italic>Italique</Italic>
 		<Abort>Interrompre</Abort>
 		<Skip>Ignorer</Skip>
-		<Nordic>Nordique</Nordic>
+		<UseOnce>&amp;Usage unique</UseOnce>
+		<Nordic>Scandinave</Nordic>
 		<Spanish>Espagnol</Spanish>
 		<German>Allemand</German>
 		<AutoSubmitOnFirstChar>Soumission auto. au premier caractère</AutoSubmitOnFirstChar>
