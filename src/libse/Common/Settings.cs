@@ -1538,7 +1538,7 @@ $HorzAlign          =   Center
             DirectShowDoubleLoad = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             MpvVideoOutputWindows = string.Empty; // could also be e.g. "gpu" or "directshow"
-            MpvVideoOutputLinux = string.Empty; // could also be e.g. "x11";
+            MpvVideoOutputLinux = "x11"; // could also be e.g. "x11";
             MpvHandlesPreviewText = true;
             MpvPreviewTextPrimaryColor = Color.White;
             MpvPreviewTextOutlineWidth = 1;
