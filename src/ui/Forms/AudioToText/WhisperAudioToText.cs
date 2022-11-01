@@ -727,7 +727,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
                 FormBorderStyle = FormBorderStyle.FixedDialog;
                 MaximizeBox = false;
-                MinimizeBox = false;
+                MinimizeBox = true;
             }
         }
 
