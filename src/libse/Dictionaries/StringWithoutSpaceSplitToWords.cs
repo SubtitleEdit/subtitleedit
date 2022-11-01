@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -38,7 +39,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var s = input;
             var check = s;
             var spaces = new List<int>();
-            for (int i = 0; i < words.Length; i++)
+
+            if (words.Contains(input))
+            {
+                return input;
+            }
+
+            for (var i = 0; i < words.Length; i++)
             {
                 var w = words[i];
                 if (w.Length >= input.Length)
@@ -76,6 +83,33 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             return s.Trim();
+        }
+
+        public static string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
+        {
+            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
+            if (!File.Exists(fileName))
+            {
+                return Array.Empty<string>();
+            }
+
+            var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
+
+            if (threeLetterIsoLanguageName == "eng")
+            {
+                wordList.AddRange(new List<string>
+                {
+                    // Ignore list
+                    "Andor", "honour", "putain", "whoah", "eastside", "Starpath", "comlink"
+                });
+            }
+
+            if (nameList != null)
+            {
+                wordList.AddRange(nameList.GetNames().Where(p => p.Length > 4));
+            }
+
+            return wordList.OrderByDescending(p => p.Length).ToArray();
         }
     }
 }

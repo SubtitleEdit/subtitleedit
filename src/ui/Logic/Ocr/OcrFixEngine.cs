@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _nameListWithApostrophe = new HashSet<string>();
             var nameListWithPeriods = new List<string>();
             _abbreviationList = new HashSet<string>();
-            _wordSplitList = LoadWordSplitList(threeLetterIsoLanguageName, _nameListObj);
+            _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(threeLetterIsoLanguageName, _nameListObj);
 
             var isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
             foreach (var name in _nameList)
@@ -413,19 +413,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                 }
             }
-        }
-
-        private static string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
-        {
-            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
-            if (!File.Exists(fileName))
-            {
-                return Array.Empty<string>();
-            }
-
-            var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
-            wordList.AddRange(nameList.GetNames().Where(p => p.Length > 4));
-            return wordList.OrderByDescending(p => p.Length).ToArray();
         }
 
         public string SpellCheckDictionaryName

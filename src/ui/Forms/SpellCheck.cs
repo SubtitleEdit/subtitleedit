@@ -340,14 +340,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _wordSplitListLanguage = languageName;
             var threeLetterIsoLanguageName = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageName);
-            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
-            if (!File.Exists(fileName))
-            {
-                return Array.Empty<string>();
-            }
-
-            var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
-            return wordList.ToArray();
+            return StringWithoutSpaceSplitToWords.LoadWordSplitList(threeLetterIsoLanguageName, null);
         }
 
         private void FillSpellCheckDictionaries(string languageName)
