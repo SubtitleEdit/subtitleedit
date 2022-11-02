@@ -22881,6 +22881,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MainResize()
         {
+            if (_loading)
+            {
+                return;
+            }
+
             var tbText = textBoxListViewText;
             var tbOriginal = textBoxListViewTextOriginal;
             int firstLeft = 236;
@@ -23002,7 +23007,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelSingleLinePixels.Visible = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
             }
-
+            
             FixRightToLeftDependingOnLanguage();
         }
 
