@@ -3,7 +3,9 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -52,12 +54,24 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             offSets.Add(offset);
                         }
 
+                        // Try to figure out if we allow two tries to get text size...
+                        var nonPrintableTexts = 0;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = offSets[i];
+                            if (HasNonPrintableCharsInSecond(fs, offset, i))
+                            {
+                                nonPrintableTexts++;
+                            }
+                        }
+                        var allowSecondRead = !(nonPrintableTexts > 1);
+
+
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = offSets[i];
                             var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
-
-                            var text = ReadText(fs, offset, nextOffset, handlerType, i);
+                            var text = ReadText(fs, offset, nextOffset, handlerType, i, allowSecondRead);
                             Texts.Add(text);
                         }
                     }
@@ -78,12 +92,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             offSets.Add(offset);
                         }
 
+                        // Try to figure out if we allow two tries to get text size...
+                        var nonPrintableTexts = 0;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = offSets[i];
+                            if (HasNonPrintableCharsInSecond(fs, offset, i))
+                            {
+                                nonPrintableTexts++;
+                            }
+                        }
+                        var allowSecondRead = !(nonPrintableTexts > 1);
+
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = offSets[i];
                             var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
-
-                            var text = ReadText(fs, offset, nextOffset, handlerType, i);
+                            var text = ReadText(fs, offset, nextOffset, handlerType, i, allowSecondRead);
                             Texts.Add(text);
                         }
                     }
@@ -143,7 +168,45 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
         }
 
-        private ChunkText ReadText(Stream fs, ulong offset, ulong nextOffset, string handlerType, int index)
+        private static bool HasNonPrintableCharsInSecond(Stream fs, ulong offset, int index)
+        {
+            fs.Seek((long)offset, SeekOrigin.Begin);
+            var data = new byte[2];
+            fs.Read(data, 0, 2);
+            var textSize = (uint)GetWord(data, 0);
+            if (textSize != 0)
+            {
+                return false;
+            }
+
+            fs.Read(data, 0, 2);
+            textSize = (uint)GetWord(data, 0);
+            if (textSize > 0 && textSize < 500)
+            {
+                data = new byte[textSize];
+                fs.Read(data, 0, data.Length);
+                var s = GetString(data, 0, data.Length);
+                foreach (var ch in s)
+                {
+                    var nonRenderingCategories = new[] 
+                    {
+                        UnicodeCategory.Control,
+                        UnicodeCategory.OtherNotAssigned,
+                        UnicodeCategory.Surrogate,
+                    };
+
+                    var isPrintable = char.IsWhiteSpace(ch) || !nonRenderingCategories.Contains(char.GetUnicodeCategory(ch));
+                    if (!isPrintable)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private ChunkText ReadText(Stream fs, ulong offset, ulong nextOffset, string handlerType, int index, bool allowSecondRead)
         {
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];
@@ -173,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     return new ChunkText { Size = 2, Text = string.Empty };
                 }
 
-                if (textSize == 0)
+                if (textSize == 0 && allowSecondRead)
                 {
                     fs.Read(data, 0, 2);
                     textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
@@ -265,6 +328,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             {
                 var before = totalTime;
                 totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+
+                if (Ssts[index].SampleDelta == 0 && index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
+                {
+                    index++;
+                    before = totalTime;
+                    totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+
+                    if (textIndex < Texts.Count)
+                    {
+                        var text = Texts[textIndex];
+                        if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
+                        {
+                            textIndex++;
+                        }
+                    }
+                }
 
                 if (index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
                 {
