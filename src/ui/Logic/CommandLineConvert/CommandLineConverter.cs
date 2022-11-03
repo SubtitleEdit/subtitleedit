@@ -636,10 +636,20 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             done = true;
                         }
 
-                        if ((fileInfo.Extension == ".mp4" || fileInfo.Extension == ".m4v" || fileInfo.Extension == ".3gp") && fileInfo.Length > 10000)
+                        if ((fileInfo.Extension == ".mp4" || fileInfo.Extension == ".m4v" || fileInfo.Extension == ".m4s" || fileInfo.Extension == ".3gp") && fileInfo.Length > 10000)
                         {
                             var mp4Parser = new MP4Parser(fileName);
                             var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
+
+                            if (mp4Parser.VttcSubtitle != null && mp4Parser.VttcSubtitle.Paragraphs.Count > 0)
+                            {
+                                var preExt = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(mp4Parser.VttcSubtitle);
+                                if (BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, string.Empty, count, ref converted, ref errors, formats, fileName, mp4Parser.VttcSubtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, null, preExt))
+                                {
+                                    done = true;
+                                }
+                            }
+
                             foreach (var track in mp4SubtitleTracks)
                             {
                                 if (trackNumbers.Count == 0 || trackNumbers.Contains(track.Tkhd.TrackId))
