@@ -381,6 +381,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
             checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
+            checkBoxTBToggleSourceView.Text = LanguageSettings.Current.General.Visible;
 
             // Toolbar icons first row
             labelTBOpen.Left = Math.Max(labelTBNew.Right, checkBoxToolbarNew.Right) + 18;
