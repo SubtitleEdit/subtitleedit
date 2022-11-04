@@ -1550,6 +1550,18 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 var isImageBased = IsImageBased(format);
                                 BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs, form, width, height, isImageBased, binarySubtitleFile, cancellationToken);
                             }
+
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                try
+                                {
+                                    File.Delete(outputFileName); 
+                                }
+                                catch 
+                                {
+                                    // ignore
+                                }
+                            }
                         }
                         _stdOutWriter?.WriteLine(" done.");
                     }
