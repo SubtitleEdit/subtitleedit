@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
@@ -10,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class BdSupSaver
     {
-        public static void SaveBdSup(string fileName, Subtitle sub, IList<IBinaryParagraph> binaryParagraphs, ExportPngXml form, int width, int height, bool isImageBased, FileStream binarySubtitleFile)
+        public static void SaveBdSup(string fileName, Subtitle sub, IList<IBinaryParagraph> binaryParagraphs, ExportPngXml form, int width, int height, bool isImageBased, FileStream binarySubtitleFile, CancellationToken cancellationToken)
         {
             var queue = new Queue<Task<ExportPngXml.MakeBitmapParameter>>();
             var disposeList = new List<Task>();
@@ -22,8 +23,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var task = GenerateImage(fileName, sub, binaryParagraphs, isImageBased, mp, index);
                 queue.Enqueue(task);
 
-                if (index % 20 == 0)
+                if (index % 10 == 0)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     System.Windows.Forms.Application.DoEvents();
                 }
             }
