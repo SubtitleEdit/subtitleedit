@@ -16,6 +16,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
 
@@ -1209,7 +1211,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors,
                                               List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
-                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null)
+                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(preExt))
             {
@@ -1546,7 +1548,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                             {
                                 var isImageBased = IsImageBased(format);
-                                BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs, form, width, height, isImageBased, binarySubtitleFile);
+                                BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs, form, width, height, isImageBased, binarySubtitleFile, cancellationToken);
                             }
                         }
                         _stdOutWriter?.WriteLine(" done.");

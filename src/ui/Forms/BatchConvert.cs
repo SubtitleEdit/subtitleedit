@@ -19,6 +19,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -94,6 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<SubtitleFormat> _allFormats;
         private bool _searching;
         private bool _abort;
+        private CancellationTokenSource _cancellationTokenSource;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
         public static string BluRaySubtitle => "Blu-ray sup";
         public static string VobSubSubtitle => "VobSub";
@@ -114,6 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Icon = (Icon)icon.Clone();
 
+            _cancellationTokenSource = new CancellationTokenSource();
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
             labelError.Visible = false;
@@ -1090,6 +1093,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (buttonConvert.Text == LanguageSettings.Current.General.Cancel)
             {
                 _abort = true;
+                _cancellationTokenSource.Cancel(false);
+                buttonConvert.Enabled = false;
                 return;
             }
 
@@ -2448,7 +2453,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dir = Path.GetDirectoryName(p.FileName);
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, string.Empty, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback);
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, string.Empty, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, _cancellationTokenSource.Token);
                     if (success)
                     {
                         p.Item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
@@ -2869,6 +2874,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (enabled)
             {
                 buttonConvert.Text = LanguageSettings.Current.BatchConvert.Convert;
+                Application.DoEvents();
+                SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () => buttonConvert.Enabled = true);
             }
             else
             {
