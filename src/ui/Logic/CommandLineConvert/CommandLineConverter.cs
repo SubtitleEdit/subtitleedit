@@ -768,7 +768,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                             if (format != null && IsImageBased(format))
                             {
-                                var tFormat = GetTargetformat(targetFormat, formats);
+                                var tFormat = GetTargetFormat(targetFormat, formats);
                                 if (!IsImageBased(tFormat) && tFormat != null)
                                 {
                                     _stdOutWriter.WriteLine($"Found image based subtitle format: {format.FriendlyName}");
@@ -832,7 +832,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return (count == converted && errors == 0) ? 0 : 1;
         }
 
-        private static SubtitleFormat GetTargetformat(string targetFormat, IEnumerable<SubtitleFormat> formats)
+        private static SubtitleFormat GetTargetFormat(string targetFormat, IEnumerable<SubtitleFormat> formats)
         {
             string targetFormatNoWhiteSpace = targetFormat.RemoveChar(' ');
             foreach (var sf in formats)
@@ -913,7 +913,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                 };
-                vobSubOcr.InitializeBatch(subtitle, Configuration.Settings.VobSubOcr, GetTargetformat(targetFormat, formats).Name == new Son().Name, language, ocrEngine);
+                vobSubOcr.InitializeBatch(subtitle, Configuration.Settings.VobSubOcr, GetTargetFormat(targetFormat, formats).Name == new Son().Name, language, ocrEngine);
                 _stdOutWriter?.WriteLine();
                 sub = vobSubOcr.SubtitleFromOcr;
                 _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
@@ -1555,12 +1555,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             {
                                 try
                                 {
-                                    File.Delete(outputFileName); 
+                                    File.Delete(outputFileName);
                                 }
                                 catch 
                                 {
                                     // ignore
                                 }
+
+                                return false;
                             }
                         }
                         _stdOutWriter?.WriteLine(" done.");
