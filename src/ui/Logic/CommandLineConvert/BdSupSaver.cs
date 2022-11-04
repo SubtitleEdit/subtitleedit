@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var task = GenerateImage(fileName, sub, binaryParagraphs, isImageBased, mp, index);
                 queue.Enqueue(task);
 
-                if (index % 50 == 0)
+                if (index % 20 == 0)
                 {
                     System.Windows.Forms.Application.DoEvents();
                 }
