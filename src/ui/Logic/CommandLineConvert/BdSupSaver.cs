@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             var queue = new Queue<Task<ExportPngXml.MakeBitmapParameter>>();
             for (var index = 0; index < sub.Paragraphs.Count; index++)
             {
-                CheckQueue(binarySubtitleFile, queue);
+                CheckQueue(binarySubtitleFile, queue, 3);
 
                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                 var task = GenerateImage(fileName, sub, binaryParagraphs, isImageBased, mp, index);
@@ -27,24 +27,22 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
             }
 
-            CheckQueue(binarySubtitleFile, queue);
+            CheckQueue(binarySubtitleFile, queue, 0);
         }
 
-        private static void CheckQueue(FileStream binarySubtitleFile, Queue<Task<ExportPngXml.MakeBitmapParameter>> queue)
+        private static void CheckQueue(Stream binarySubtitleFile, Queue<Task<ExportPngXml.MakeBitmapParameter>> queue, int max)
         {
-            if (queue.Count <= 0)
+            while (queue.Count > max)
             {
-                return;
-            }
+                var t = queue.Dequeue();
+                t.Wait();
 
-            var t = queue.Dequeue();
-            t.Wait();
-
-            binarySubtitleFile.Write(t.Result.Buffer, 0, t.Result.Buffer.Length);
-            if (t.Result.Bitmap != null)
-            {
-                t.Result.Bitmap.Dispose();
-                t.Result.Bitmap = null;
+                binarySubtitleFile.Write(t.Result.Buffer, 0, t.Result.Buffer.Length);
+                if (t.Result.Bitmap != null)
+                {
+                    t.Result.Bitmap.Dispose();
+                    t.Result.Bitmap = null;
+                }
             }
         }
 
