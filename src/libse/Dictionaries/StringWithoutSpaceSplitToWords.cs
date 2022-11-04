@@ -100,8 +100,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 wordList.AddRange(new List<string>
                 {
                     // Ignore list
-                    "Andor", "honour", "putain", "whoah", "eastside", "Starpath", "comlink", "Taamet",
-                    "Atwater", "Lakeview"
+                    "Andor", "honour", "honours", "putain", "whoah", "eastside", "Starpath", "comlink", "Taamet",
+                    "Atwater", "Lakeview", "Glassman", "Starfleet"
                 });
             }
 
