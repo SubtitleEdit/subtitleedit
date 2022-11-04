@@ -1,5 +1,25 @@
 ﻿Subtitle Edit Changelog
 
+3.6.9 (xth November 2022) BETA
+* NEW:
+   * Support mp4 webvtt in cmd line convert
+   * Add Whisper translate to English option - thx David 
+   * Add some support for frame rate in Spruce format
+   * Allow minimize for audio-to-text
+   * Set x11 as default mpv vo on Linux
+* IMPROVED:
+   * Update French translation - the Peirre
+   * Update Italian translation - thx bovirus
+   * Update Chinese translation - thx nkh0472
+   * Update Bulgarian translation - thx Калин
+* FIXED:
+   * Fix VLC video player not working
+   * Fix for mp4 subtitle timestamps - thx DrReddP
+   * Fix crash trying to locate Whisper
+   * Fix setting path to ffmpeg when using Whisper
+   * Fix resize on OCR window on Linux - thx Mangoes
+
+
 3.6.8 (24th October 2022)
 * NEW:
    * Option to use only "front center" audio channel - thx shanedk
