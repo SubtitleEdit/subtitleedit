@@ -187,6 +187,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
     <BatchMode>Batch-tilstand</BatchMode>
     <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
+    <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
