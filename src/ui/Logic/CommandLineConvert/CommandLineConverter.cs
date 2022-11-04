@@ -1526,8 +1526,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         using (var form = new ExportPngXml())
                         {
                             form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
-                            int width = 1920;
-                            int height = 1080;
+                            var width = 1920;
+                            var height = 1080;
                             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                             {
                                 var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
@@ -1546,41 +1546,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                             {
                                 var isImageBased = IsImageBased(format);
-                                for (int index = 0; index < sub.Paragraphs.Count; index++)
-                                {
-                                    var mp = form.MakeMakeBitmapParameter(index, width, height);
-                                    mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                    if (binaryParagraphs != null && binaryParagraphs.Count > 0)
-                                    {
-                                        if (index < binaryParagraphs.Count)
-                                        {
-                                            mp.Bitmap = binaryParagraphs[index].GetBitmap();
-                                            mp.Forced = binaryParagraphs[index].IsForced;
-                                        }
-                                    }
-                                    else if (isImageBased)
-                                    {
-                                        using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
-                                        {
-                                            mp.Bitmap = (Bitmap)Image.FromStream(ms);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
-                                    }
-                                    ExportPngXml.MakeBluRaySupImage(mp);
-                                    binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
-                                    if (mp.Bitmap != null)
-                                    {
-                                        mp.Bitmap.Dispose();
-                                        mp.Bitmap = null;
-                                    }
-                                    if (index % 50 == 0)
-                                    {
-                                        System.Windows.Forms.Application.DoEvents();
-                                    }
-                                }
+                                BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs, form, width, height, isImageBased, binarySubtitleFile);
                             }
                         }
                         _stdOutWriter?.WriteLine(" done.");
