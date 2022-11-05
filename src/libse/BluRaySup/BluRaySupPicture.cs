@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             bm.SetTransparentTo(Color.FromArgb(0, 0, 0, 0));
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
-            for (int i = 0; i < colorPalette.Count; i++)
+            for (var i = 0; i < colorPalette.Count; i++)
             {
                 pal.SetColor(i, colorPalette[i]);
             }
