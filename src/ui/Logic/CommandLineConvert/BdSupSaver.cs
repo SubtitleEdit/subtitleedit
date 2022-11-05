@@ -14,16 +14,15 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         public static void SaveBdSup(string fileName, Subtitle sub, IList<IBinaryParagraph> binaryParagraphs, ExportPngXml form, int width, int height, bool isImageBased, FileStream binarySubtitleFile, CancellationToken cancellationToken)
         {
             var queue = new Queue<Task<ExportPngXml.MakeBitmapParameter>>();
-            var disposeList = new List<Task>();
             for (var index = 0; index < sub.Paragraphs.Count; index++)
             {
-                CheckQueue(binarySubtitleFile, queue, disposeList,2);
+                CheckQueue(binarySubtitleFile, queue, 2);
 
                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                 var task = GenerateImage(fileName, sub, binaryParagraphs, isImageBased, mp, index);
                 queue.Enqueue(task);
 
-                if (index % 10 == 0)
+                if (index % 25 == 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -34,11 +33,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
             }
 
-            CheckQueue(binarySubtitleFile, queue, disposeList,0);
-            Task.WaitAll(disposeList.ToArray());
+            CheckQueue(binarySubtitleFile, queue, 0);
         }
 
-        private static void CheckQueue(Stream binarySubtitleFile, Queue<Task<ExportPngXml.MakeBitmapParameter>> queue, List<Task> disposeList, int max)
+        private static void CheckQueue(Stream binarySubtitleFile, Queue<Task<ExportPngXml.MakeBitmapParameter>> queue, int max)
         {
             while (queue.Count > max)
             {
@@ -46,9 +44,6 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 t.Wait();
 
                 binarySubtitleFile.Write(t.Result.Buffer, 0, t.Result.Buffer.Length);
-
-                var task = DisposeImage(t.Result);
-                disposeList.Add(task);
             }
         }
 
@@ -76,18 +71,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
 
             ExportPngXml.MakeBluRaySupImage(mp);
-            return Task.FromResult(mp);
-        }
 
-        private static Task DisposeImage(ExportPngXml.MakeBitmapParameter mp)
-        {
             if (mp.Bitmap != null)
             {
                 mp.Bitmap.Dispose();
                 mp.Bitmap = null;
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(mp);
         }
     }
 }

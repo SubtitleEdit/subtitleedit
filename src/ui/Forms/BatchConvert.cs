@@ -1090,6 +1090,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelError.Visible = false;
             Refresh();
 
+            //  var sw = Stopwatch.StartNew();
+
             if (buttonConvert.Text == LanguageSettings.Current.General.Cancel)
             {
                 _abort = true;
@@ -1098,6 +1100,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _cancellationTokenSource = new CancellationTokenSource();
             if (listViewInputFiles.Items.Count == 0)
             {
                 MessageBox.Show(LanguageSettings.Current.BatchConvert.NothingToConvert);
@@ -1652,7 +1655,6 @@ namespace Nikse.SubtitleEdit.Forms
                             while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
                             {
                                 Application.DoEvents();
-                                System.Threading.Thread.Sleep(100);
                             }
 
                             var parameter = new ThreadDoWorkParameter(
@@ -1705,7 +1707,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // ignored
                 }
-                System.Threading.Thread.Sleep(100);
+                Thread.Sleep(10);
             }
 
             // dispose workers
@@ -1719,6 +1721,8 @@ namespace Nikse.SubtitleEdit.Forms
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
+
+            //SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
         }
 
         private Subtitle ApplyFixesStep1(Subtitle sub, List<BluRaySupParser.PcsData> bluRaySubtitles)
