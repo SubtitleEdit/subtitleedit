@@ -1090,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelError.Visible = false;
             Refresh();
 
-            //  var sw = Stopwatch.StartNew();
+              var sw = System.Diagnostics.Stopwatch.StartNew();
 
             if (buttonConvert.Text == LanguageSettings.Current.General.Cancel)
             {
@@ -1722,7 +1722,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetControlState(true);
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
 
-            //SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
+            SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
         }
 
         private Subtitle ApplyFixesStep1(Subtitle sub, List<BluRaySupParser.PcsData> bluRaySubtitles)

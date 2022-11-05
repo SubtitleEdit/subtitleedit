@@ -3031,7 +3031,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else
                 {
                     baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K)Ź,Ç", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
-                    PaddingDictionary.Add(paddingKey, baseLinePadding);
+                    try
+                    {
+                        PaddingDictionary.Add(paddingKey, baseLinePadding);
+                    }
+                    catch 
+                    {
+                        // ignore
+                    }
                 }
 
                 // align lines with "gjpqy,ýęçÇ/()[]" a bit lower
