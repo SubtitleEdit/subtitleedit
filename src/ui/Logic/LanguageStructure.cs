@@ -2363,6 +2363,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string ApplyAssaOverrideTags { get; set; }
             public string SetAssaPosition { get; set; }
             public string SetAssaResolution { get; set; }
+            public string SetAssaBgBox { get; set; }
             public string TakeAutoBackup { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string SaveAsFileNameFrom { get; set; }

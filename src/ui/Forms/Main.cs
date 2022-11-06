@@ -24995,6 +24995,7 @@ namespace Nikse.SubtitleEdit.Forms
             setPositionToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaPosition);
             colorPickerToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralColorPicker);
             toolStripMenuItemAutoBreakLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAutoBalanceSelectedLines);
+            generateBackgroundBoxToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaBgBox);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             audioVisualizer.Move100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsLeft);
@@ -34350,6 +34351,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateBackgroundBoxToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (GetCurrentSubtitleFormat().Name != AdvancedSubStationAlpha.NameOfFormat)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(_videoFileName))
             {
                 MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
