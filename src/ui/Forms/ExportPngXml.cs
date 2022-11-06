@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -2970,7 +2971,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return bmp;
         }
 
-        private static readonly Dictionary<string, int> PaddingDictionary = new Dictionary<string, int>();
+        private static readonly ConcurrentDictionary<string, int> PaddingDictionary = new ConcurrentDictionary<string, int>();
         private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter) // for UI
         {
             var text = parameter.P.Text;
@@ -3031,14 +3032,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else
                 {
                     baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yj[K)Ź,Ç", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
-                    try
-                    {
-                        PaddingDictionary.Add(paddingKey, baseLinePadding);
-                    }
-                    catch 
-                    {
-                        // ignore
-                    }
+                    PaddingDictionary.TryAdd(paddingKey, baseLinePadding);
                 }
 
                 // align lines with "gjpqy,ýęçÇ/()[]" a bit lower

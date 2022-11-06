@@ -24,7 +24,6 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             Application.DoEvents();
             Parallel.For(0, sub.Paragraphs.Count, po, i =>
             {
-                Application.DoEvents();
                 var mp = MakeMakeBitmapParameter(sub, i, generalBitmapParameter, language, format, width, height);
                 pms[i] = GenerateImage(fileName, sub, binaryParagraphs, isImageBased, mp, i);
             });
@@ -37,9 +36,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             foreach (var x in pms)
             {
-                Application.DoEvents();
                 binarySubtitleFile.Write(x.Buffer, 0, x.Buffer.Length);
             }
+
+            Application.DoEvents();
         }
 
         private static MakeBitmapParameter MakeMakeBitmapParameter(Subtitle subtitle, int index, MakeBitmapParameter bp, string language, SubtitleFormat format, int width, int height)
