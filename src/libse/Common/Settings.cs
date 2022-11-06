@@ -2223,6 +2223,7 @@ $HorzAlign          =   Center
         public string GeneralApplyAssaOverrideTags { get; set; }
         public string GeneralSetAssaPosition { get; set; }
         public string GeneralSetAssaResolution { get; set; }
+        public string GeneralSetAssaBgBox { get; set; }
         public string GeneralColorPicker { get; set; }
         public string GeneralTakeAutoBackup { get; set; }
         public string GeneralHelp { get; set; }
@@ -9079,6 +9080,12 @@ $HorzAlign          =   Center
                     shortcuts.GeneralSetAssaResolution = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralSetAssaBgBox");
+                if (subNode != null)
+                {
+                    shortcuts.GeneralSetAssaBgBox = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralColorPicker");
                 if (subNode != null)
                 {
@@ -11043,6 +11050,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("GeneralApplyAssaOverrideTags", shortcuts.GeneralApplyAssaOverrideTags);
             textWriter.WriteElementString("GeneralSetAssaPosition", shortcuts.GeneralSetAssaPosition);
             textWriter.WriteElementString("GeneralSetAssaResolution", shortcuts.GeneralSetAssaResolution);
+            textWriter.WriteElementString("GeneralSetAssaBgBox", shortcuts.GeneralSetAssaBgBox);
             textWriter.WriteElementString("GeneralColorPicker", shortcuts.GeneralColorPicker);
             textWriter.WriteElementString("GeneralTakeAutoBackup", shortcuts.GeneralTakeAutoBackup);
             textWriter.WriteElementString("MainListViewRemoveTimeCodes", shortcuts.MainListViewRemoveTimeCodes);
