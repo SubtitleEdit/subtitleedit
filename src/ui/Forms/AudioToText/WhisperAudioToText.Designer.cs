@@ -55,6 +55,7 @@
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelFC = new System.Windows.Forms.Label();
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
+            this.labelCpp = new System.Windows.Forms.Label();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.SuspendLayout();
@@ -109,7 +110,7 @@
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.Location = new System.Drawing.Point(529, 9);
+            this.textBoxLog.Location = new System.Drawing.Point(465, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -344,11 +345,23 @@
             this.checkBoxTranslateToEnglish.Text = "Translate to English";
             this.checkBoxTranslateToEnglish.UseVisualStyleBackColor = true;
             // 
+            // labelCpp
+            // 
+            this.labelCpp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCpp.AutoSize = true;
+            this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.labelCpp.Location = new System.Drawing.Point(669, 9);
+            this.labelCpp.Name = "labelCpp";
+            this.labelCpp.Size = new System.Drawing.Size(28, 13);
+            this.labelCpp.TabIndex = 21;
+            this.labelCpp.Text = "CPP";
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
+            this.Controls.Add(this.labelCpp);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
             this.Controls.Add(this.labelFC);
             this.Controls.Add(this.groupBoxInputFiles);
@@ -411,5 +424,6 @@
         private System.Windows.Forms.Label labelChooseLanguage;
         private System.Windows.Forms.ComboBox comboBoxLanguages;
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
+        private System.Windows.Forms.Label labelCpp;
     }
 }

@@ -26,7 +26,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private readonly Form _parentForm;
         private bool _useCenterChannelOnly;
         private int _initialWidth = 725;
-        private readonly Regex _timeRegex = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
+        private readonly Regex _timeRegexShort = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
+        private readonly Regex _timeRegexLong = new Regex(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
         private List<ResultText> _resultList;
         private string _languageCode;
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
@@ -90,23 +91,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             listViewInputFiles.Visible = false;
             labelFC.Text = string.Empty;
+            labelCpp.Visible = Configuration.Settings.Tools.UseWhisperCpp;
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
         {
-            var modelsFolder = WhisperModel.ModelFolder;
+            var whisperModel = WhisperHelper.GetWhisperModel();
+            var modelsFolder = whisperModel.ModelFolder;
             var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.WhisperModel : lastDownloadedModel;
             comboBoxModels.Items.Clear();
 
             if (!Directory.Exists(modelsFolder))
             {
-                WhisperModel.CreateModelFolder();
+                whisperModel.CreateModelFolder();
             }
 
             foreach (var fileName in Directory.GetFiles(modelsFolder))
             {
                 var name = Path.GetFileNameWithoutExtension(fileName);
-                var model = WhisperModel.Models.FirstOrDefault(p => p.Name == name);
+                var model = whisperModel.Models.FirstOrDefault(p => p.Name == name);
                 if (model == null)
                 {
                     continue;
@@ -182,7 +185,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 UpdateLog();
                 SeLogger.Error(textBoxLog.Text);
             }
-            
+            else
+            {
+                SeLogger.Error(textBoxLog.Text); //TODO: remove
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -314,7 +321,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Application.DoEvents();
             _resultList = new List<ResultText>();
             var process = GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, checkBoxTranslateToEnglish.Checked, OutputHandler);
-            _outputText.Add("Calling whisper with : whisper " + process.StartInfo.Arguments);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
             buttonCancel.Visible = true;
@@ -346,8 +354,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            Application.DoEvents();
-            System.Threading.Thread.Sleep(100);
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}");
+
+            for (var i = 0; i < 10; i++)
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(50);
+            }
 
             return _resultList;
         }
@@ -363,11 +376,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             foreach (var line in outLine.Data.SplitToLines())
             {
-                if (_timeRegex.IsMatch(line))
+                if (_timeRegexShort.IsMatch(line))
                 {
                     var start = line.Substring(1, 10);
                     var end = line.Substring(14, 10);
                     var text = line.Remove(0, 25).Trim();
+                    var rt = new ResultText
+                    {
+                        Start = GetSeconds(start),
+                        End = GetSeconds(end),
+                        Text = Utilities.AutoBreakLine(text, _languageCode),
+                    };
+
+                    _resultList.Add(rt);
+                }
+                else if (_timeRegexLong.IsMatch(line))
+                {
+                    var start = line.Substring(1, 12);
+                    var end = line.Substring(18, 12);
+                    var text = line.Remove(0, 31).Trim();
                     var rt = new ResultText
                     {
                         Start = GetSeconds(start),
@@ -533,16 +560,21 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var translateToEnglish = translate ? "--task translate " : string.Empty;
             if (language.ToLowerInvariant() == "english" || language.ToLowerInvariant() == "en")
             {
+                language = "en";
                 translateToEnglish = string.Empty;
             }
 
-            var parameters = $"--model {model} --language \"{language}\" {translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
-            var process = new Process { StartInfo = new ProcessStartInfo("whisper", parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
+            var w = WhisperHelper.GetWhisperPathAndFileName();
+            var m = WhisperHelper.GetWhisperModelForCmdLine(model);
+            var parameters = $"--language \"{language}\" --model \"{m}\" {translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
+            var process = new Process { StartInfo = new ProcessStartInfo(w, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
                 process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation);
             }
+
+            process.StartInfo.WorkingDirectory = Path.Combine(Configuration.DataDirectory, "Whisper");
 
             var whisperFolder = WhisperHelper.GetWhisperFolder();
             if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -572,7 +604,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void linkLabelWhisperWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl("https://github.com/openai/whisper");
+            UiUtil.OpenUrl(WhisperHelper.GetWebSiteUrl());
         }
 
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
@@ -636,7 +668,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenFolder(WhisperModel.ModelFolder);
+            UiUtil.OpenFolder(WhisperHelper.GetWhisperModel().ModelFolder);
         }
 
         private void UpdateLog()

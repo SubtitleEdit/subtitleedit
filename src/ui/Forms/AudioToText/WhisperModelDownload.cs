@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             UiUtil.FixLargeFonts(this, buttonDownload);
 
             var selectedIndex = 0;
-            foreach (var downloadModel in WhisperModel.Models.OrderBy(p => p.Name))
+            foreach (var downloadModel in WhisperHelper.GetWhisperModel().Models.OrderBy(p => p.Name))
             {
                 comboBoxModels.Items.Add(downloadModel);
                 if (selectedIndex == 0 && downloadModel.Name == "English")
@@ -112,13 +112,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
-            var folder = WhisperModel.ModelFolder;
+            var folder = WhisperHelper.GetWhisperModel().ModelFolder;
             if (!Directory.Exists(folder))
             {
-                Directory.CreateDirectory(folder);
+                WhisperHelper.GetWhisperModel().CreateModelFolder();
             }
 
-            var fileName = Path.Combine(folder, LastDownloadedModel.Name + ".pt");
+            var fileName = Path.Combine(folder, LastDownloadedModel.Name + WhisperHelper.ModelExtension());
             using (var fileStream = File.Create(fileName))
             {
                 downloadStream.Seek(0, SeekOrigin.Begin);
