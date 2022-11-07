@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assa\TagHelperRemoveTagTest.cs" />
     <Compile Include="Assa\ResamplerTest.cs" />
+    <Compile Include="Assa\AssaTimeCodes.cs" />
     <Compile Include="Dictionaries\StringWithoutSpaceSplitToWordsTest.cs" />
     <Compile Include="LanguageFiles\LanguageFileTest.cs" />
     <Compile Include="Logic\ConvertColorsToDialogTest.cs" />
