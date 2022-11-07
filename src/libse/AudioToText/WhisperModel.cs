@@ -1,27 +1,18 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
-    public class WhisperModel
+    public class WhisperCppModel : IWhisperModel
     {
-        public string Url { get; set; }
-        public string Size { get; set; }
-        public string Name { get; set; }
+        public string ModelFolder => Path.Combine(Configuration.DataDirectory, "Whisper", "Models");
 
-        public override string ToString()
+        public void CreateModelFolder()
         {
-            return $"{Name} ({Size})";
-        }
-
-        public static string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper");
-
-        public static void CreateModelFolder()
-        {
-            var cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
-            if (!Directory.Exists(cacheFolder))
+            var whisperFolder = Path.Combine(Configuration.DataDirectory, "Whisper");
+            if (!Directory.Exists(whisperFolder))
             {
-                Directory.CreateDirectory(cacheFolder);
+                Directory.CreateDirectory(whisperFolder);
             }
 
             if (!Directory.Exists(ModelFolder))
@@ -30,62 +21,61 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
         }
 
-        // See https://github.com/openai/whisper/blob/main/whisper/__init__.py
-        public static readonly WhisperModel[] Models =
+        public WhisperModel[] Models  => new[] 
         {
             new WhisperModel
             {
                 Name = "tiny.en",
                 Size = "74 MB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/d3dd57d32accea0b295c96e26691aa14d8822fac7d9d27d5dc00b4ca2826dd03/tiny.en.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.en.bin",
             },
             new WhisperModel
             {
                 Name = "tiny",
                 Size = "74 MB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/65147644a518d12f04e32d6f3b26facc3f8dd46e5390956a9424a650c0ce22b9/tiny.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.bin",
             },
             new WhisperModel
             {
                 Name = "base.en",
                 Size = "142 MB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/25a8566e1d0c1e2231d1c762132cd20e0f96a85d16145c3a00adf5d1ac670ead/base.en.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-base.en.bin",
             },
             new WhisperModel
             {
                 Name = "base",
                 Size = "142 MB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-base.bin",
             },
             new WhisperModel
             {
                 Name = "small.en",
                 Size = "472 MB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/d7440d1dc186f76616474e0ff0b3b6b879abc9d1a4926b7adfa41db2d497ab4f/medium.en.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-small.en.bin",
             },
             new WhisperModel
             {
                 Name = "small",
                 Size = "472 MB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-small.bin",
             },
             new WhisperModel
             {
                 Name = "medium.en",
-                Size = "1.5 GB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/345ae4da62f9b3d59415adc60127b97c714f32e89e936602e85993674d08dcb1/medium.pt",
+                Size = "1.4 GB",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-medium.en.bin",
             },
             new WhisperModel
             {
                 Name = "medium",
                 Size = "1.5 GB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/d7440d1dc186f76616474e0ff0b3b6b879abc9d1a4926b7adfa41db2d497ab4f/medium.en.pt",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-medium.bin",
             },
             new WhisperModel
             {
                 Name = "large",
-                Size = "2.1 GB",
-                Url = "https://openaipublic.azureedge.net/main/whisper/models/e4b87e7e0bf463eb8e6956e646f1e277e901512310def2c24bf0e11bd3c28e9a/large.pt",
+                Size = "3.1 GB",
+                Url = "https://ggml.ggerganov.com/ggml-model-whisper-large.bin",
             },
         };
     }

@@ -410,6 +410,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
+        public bool UseWhisperCpp { get; set; }
         public string WhisperModel { get; set; }
         public string WhisperLanguageCode { get; set; }
         public string WhisperLocation { get; set; }
@@ -613,7 +614,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             VoskPostProcessing = true;
-            WhisperExtraSettings = "--fp16 False";
+            UseWhisperCpp = false;
+            WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             AudioToTextLineMaxChars = 86;
             AudioToTextLineMaxCharsJp = 32;
@@ -6129,6 +6131,12 @@ $HorzAlign          =   Center
                 settings.Tools.VoskModel = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("UseWhisperCpp");
+            if (subNode != null)
+            {
+                settings.Tools.UseWhisperCpp = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WhisperModel");
             if (subNode != null)
             {
@@ -10398,6 +10406,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
+                textWriter.WriteElementString("UseWhisperCpp", settings.Tools.UseWhisperCpp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);

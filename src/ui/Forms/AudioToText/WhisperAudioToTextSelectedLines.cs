@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             listViewInputFiles.Visible = true;
             _audioClips = audioClips;
             progressBar1.Maximum = 100;
+            labelCpp.Visible = Configuration.Settings.Tools.UseWhisperCpp;
             foreach (var audioClip in audioClips)
             {
                 listViewInputFiles.Items.Add(audioClip.AudioFileName);
@@ -174,7 +175,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Application.DoEvents();
             _resultList = new List<ResultText>();
             var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, checkBoxTranslateToEnglish.Checked, OutputHandler);
-            _outputText.Add("Calling whisper with : whisper " + process.StartInfo.Arguments);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
             buttonCancel.Visible = true;
@@ -212,8 +214,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            Application.DoEvents();
-            System.Threading.Thread.Sleep(100);
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}");
+
+            for (var i = 0; i < 10; i++)
+            {
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(50);
+            }
 
             return _resultList;
         }
@@ -325,7 +332,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void linkLabelWhisperWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenUrl("https://github.com/openai/whisper");
+            UiUtil.OpenUrl(WhisperHelper.GetWebSiteUrl());
         }
 
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
@@ -385,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void linkLabelOpenModelFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            UiUtil.OpenFolder(WhisperModel.ModelFolder);
+            UiUtil.OpenFolder(WhisperHelper.GetWhisperModel().ModelFolder);
         }
 
         private void timer1_Tick(object sender, EventArgs e)

@@ -6,9 +6,24 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 {
     public static class WhisperHelper
     {
+        public static IWhisperModel GetWhisperModel()
+        {
+            return Configuration.Settings.Tools.UseWhisperCpp ? (IWhisperModel)new WhisperCppModel() : new WhisperModel();
+        }
+
+        public static string ModelExtension()
+        {
+            return Configuration.Settings.Tools.UseWhisperCpp ? ".bin" : ".pt";
+        }
+
+        public static string GetWebSiteUrl()
+        {
+            return Configuration.Settings.Tools.UseWhisperCpp ? "https://github.com/ggerganov/whisper.cpp" : "https://github.com/openai/whisper";
+        }
+
         public static bool IsWhisperInstalled()
         {
-            if (Directory.Exists(WhisperModel.ModelFolder) || Configuration.IsRunningOnLinux)
+            if (Directory.Exists(GetWhisperModel().ModelFolder) || Configuration.IsRunningOnLinux)
             {
                 return true;
             }
@@ -37,6 +52,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     {
                         return location;
                     }
+                }
+
+                if (Configuration.Settings.Tools.UseWhisperCpp)
+                {
+                    var path = Path.Combine(Configuration.DataDirectory, "Whisper");
+                    return Directory.Exists(path) ? path : null;
                 }
 
                 var pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
@@ -128,6 +149,26 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             return null;
+        }
+
+        public static string GetWhisperPathAndFileName()
+        {
+            if (Configuration.IsRunningOnWindows && Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                return Path.Combine(GetWhisperFolder(), "whisper.exe");
+            }
+
+            return "whisper";
+        }
+
+        public static string GetWhisperModelForCmdLine(string model)
+        {
+            if (Configuration.IsRunningOnWindows && Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
+            }
+
+            return model;
         }
     }
 }
