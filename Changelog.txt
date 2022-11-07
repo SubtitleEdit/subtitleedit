@@ -17,6 +17,7 @@
    * Add a few English words/names to dictionaries
 * FIXED:
    * Fix VLC video player not working
+   * Fix for ASSA timestamps (rounding output) - thx Jerome
    * Fix for mp4 subtitle timestamps - thx DrReddP
    * Fix crash trying to locate Whisper
    * Fix setting path to ffmpeg when using Whisper
