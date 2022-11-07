@@ -165,8 +165,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
             foreach (var p in subtitle.Paragraphs)
             {
-                var start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0, MidpointRounding.AwayFromZero));
-                var end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / 10.0, MidpointRounding.AwayFromZero));
+                var start = MakeTimeCode(timeCodeFormat, p.StartTime);
+                var end = MakeTimeCode(timeCodeFormat, p.EndTime);
                 var style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                 {
@@ -226,6 +226,19 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.AppendLine(subtitle.Footer);
             }
             return sb.ToString().Trim() + Environment.NewLine;
+        }
+
+        private static string MakeTimeCode(string timeCodeFormat, TimeCode timeCode)
+        {
+            var tc = new TimeCode(timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);
+            var fragment = (int)Math.Round(timeCode.Milliseconds / 10.0, MidpointRounding.AwayFromZero);
+            if (fragment >= 100)
+            {
+                tc = new TimeCode(tc.Hours, tc.Minutes, tc.Seconds + 1, 0);
+                fragment = 0;
+            }
+
+            return string.Format(timeCodeFormat, tc.Hours, tc.Minutes, tc.Seconds, fragment);
         }
 
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
