@@ -2181,6 +2181,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ApplyAssaOverrideTags>Apply ASSA override tags to selection</ApplyAssaOverrideTags>
     <SetAssaPosition>Set/get ASSA position</SetAssaPosition>
     <SetAssaResolution>Set ASSA resolution (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Set ASSA background box</SetAssaBgBox>
     <TakeAutoBackup>Take auto-backup now</TakeAutoBackup>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Save as..." uses file name from</SaveAsFileNameFrom>

@@ -5890,6 +5890,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/SetAssaResolution":
                     language.Settings.SetAssaResolution = reader.Value;
                     break;
+                case "Settings/SetAssaBgBox":
+                    language.Settings.SetAssaBgBox = reader.Value;
+                    break;
                 case "Settings/TakeAutoBackup":
                     language.Settings.TakeAutoBackup = reader.Value;
                     break;
