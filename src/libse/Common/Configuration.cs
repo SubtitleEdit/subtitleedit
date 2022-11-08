@@ -156,8 +156,24 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
             if (IsRunningOnLinux || IsRunningOnMac)
-            { 
-                return BaseDirectory;
+            {
+                if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
+                {
+                    try
+                    {
+                        var path = Path.Combine(Directory.CreateDirectory(Path.Combine(BaseDirectory, "Dictionaries")).FullName, "not-a-word-list");
+                        File.Create(path).Close();
+                        File.Delete(path);
+                        return BaseDirectory; // user installation
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
+
             }
 
             var installerPath = GetInstallerPath();
