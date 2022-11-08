@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.8</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.10.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 08.11.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2181,6 +2181,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ApplyAssaOverrideTags>Applica etichette sostituzione ASSA alla selezione</ApplyAssaOverrideTags>
     <SetAssaPosition>Imposta/ottieni posizione ASSA</SetAssaPosition>
     <SetAssaResolution>Imposta risoluzione ASSA(PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Imposta casella di sfondo ASSA</SetAssaBgBox>
     <TakeAutoBackup>Effettua ora backup automatico</TakeAutoBackup>
     <ShowLineBreaksAs>Nella vista elenco visualizza interruzioni di riga come</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Salva come..." usa il nome del file da</SaveAsFileNameFrom>
