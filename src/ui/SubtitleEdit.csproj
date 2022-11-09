@@ -207,6 +207,12 @@
     <Compile Include="Forms\AudioClipsGet.Designer.cs">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AudioToText\WhisperDownload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToText\WhisperDownload.Designer.cs">
+      <DependentUpon>WhisperDownload.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AudioToText\WhisperAudioToTextSelectedLines.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1496,6 +1502,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioClipsGet.resx">
       <DependentUpon>AudioClipsGet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToText\WhisperDownload.resx">
+      <DependentUpon>WhisperDownload.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText\WhisperAudioToTextSelectedLines.resx">
       <DependentUpon>WhisperAudioToTextSelectedLines.cs</DependentUpon>

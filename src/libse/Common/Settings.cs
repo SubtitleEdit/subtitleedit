@@ -614,7 +614,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             VoskPostProcessing = true;
-            UseWhisperCpp = false;
+            UseWhisperCpp = true;
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             AudioToTextLineMaxChars = 86;
