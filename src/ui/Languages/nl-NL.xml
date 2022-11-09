@@ -1857,8 +1857,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <AutoBackupEveryFifteenMinutes>Elke 15 minuten</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Wissen na</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 maand</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 maanden</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 maanden</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} maanden</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Naar updates zoeken</CheckForUpdates>
     <AutoSave>Automatisch opslaan</AutoSave>
     <AllowEditOfOriginalSubtitle>Bewerken van originele ondertitel toestaan</AllowEditOfOriginalSubtitle>

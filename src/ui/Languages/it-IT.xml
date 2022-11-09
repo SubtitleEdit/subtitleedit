@@ -2204,8 +2204,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <AutoBackupEveryFifteenMinutes>Ogni 15 minuti</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Elimina dopo</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mese</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 mesi</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 mesi</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} mesi</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verifica Nuovi Aggiornamenti</CheckForUpdates>
     <AutoSave>Salvataggio automatico</AutoSave>
     <AllowEditOfOriginalSubtitle>Abilita la modifica del sottotitolo originale</AllowEditOfOriginalSubtitle>

@@ -2121,8 +2121,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Eliminar después de</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mes</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} meses</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Buscar actualizaciones</CheckForUpdates>
     <AutoSave>Autoguardado</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir la edición del subtítulo original</AllowEditOfOriginalSubtitle>

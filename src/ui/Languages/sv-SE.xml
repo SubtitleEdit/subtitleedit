@@ -2202,8 +2202,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <AutoBackupEveryFifteenMinutes>Var 15:e minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Ta bort efter</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 månad</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 månader</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 månader</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} månader</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Sök efter uppdateringar</CheckForUpdates>
     <AutoSave>Spara automatiskt</AutoSave>
     <AllowEditOfOriginalSubtitle>Tillåt redigering av originalundertext</AllowEditOfOriginalSubtitle>

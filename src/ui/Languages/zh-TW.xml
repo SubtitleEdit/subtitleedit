@@ -2117,7 +2117,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <AutoBackupDeleteAfter>指定時間後刪除</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 個月</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 個月</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 個月</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} 個月</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>檢查有無更新</CheckForUpdates>
     <AutoSave>自動儲存</AutoSave>
     <AllowEditOfOriginalSubtitle>允許編輯原始字幕</AllowEditOfOriginalSubtitle>

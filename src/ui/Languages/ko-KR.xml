@@ -2201,8 +2201,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AutoBackupEveryFifteenMinutes>15 분마다</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>백업 보존 기간</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 개월</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 개월</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 개월</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} 개월</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>업데이트 확인</CheckForUpdates>
     <AutoSave>자동 저장</AutoSave>
     <AllowEditOfOriginalSubtitle>원본 자막의 편집을 허용</AllowEditOfOriginalSubtitle>

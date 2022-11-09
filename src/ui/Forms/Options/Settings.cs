@@ -576,9 +576,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
             comboBoxAutoBackup.Items[3] = language.AutoBackupEveryFifteenMinutes;
 
-            comboBoxAutoBackupDeleteAfter.Items[0] = language.AutoBackupDeleteAfterOneMonth;
-            comboBoxAutoBackupDeleteAfter.Items[1] = language.AutoBackupDeleteAfterThreeMonths;
-            comboBoxAutoBackupDeleteAfter.Items[2] = language.AutoBackupDeleteAfterSixMonths;
+            comboBoxAutoBackupDeleteAfter.Items.Clear();
+            comboBoxAutoBackupDeleteAfter.Items.Add(language.AutoBackupDeleteAfterOneMonth);
+            for (var i = 2; i <= 24; i++)
+            {
+                comboBoxAutoBackupDeleteAfter.Items.Add(string.Format(language.AutoBackupDeleteAfterXMonths, i));
+            }
 
             groupBoxVideoEngine.Text = language.VideoEngine;
             radioButtonVideoPlayerDirectShow.Text = language.DirectShow;
@@ -814,17 +817,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxAutoBackup.SelectedIndex = 0;
             }
 
-            if (gs.AutoBackupDeleteAfterMonths == 3)
+            var deleteAfterIdx = gs.AutoBackupDeleteAfterMonths - 1;
+            if (deleteAfterIdx >= comboBoxAutoBackupDeleteAfter.Items.Count - 1)
             {
-                comboBoxAutoBackupDeleteAfter.SelectedIndex = 1;
-            }
-            else if (gs.AutoBackupDeleteAfterMonths == 1)
-            {
-                comboBoxAutoBackupDeleteAfter.SelectedIndex = 0;
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = comboBoxAutoBackupDeleteAfter.Items.Count-1;
             }
             else
             {
-                comboBoxAutoBackupDeleteAfter.SelectedIndex = 2;
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = deleteAfterIdx;
             }
 
             checkBoxCheckForUpdates.Checked = gs.CheckForUpdates;
@@ -1837,18 +1837,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 gs.AutoBackupSeconds = 0;
             }
 
-            if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 2)
-            {
-                gs.AutoBackupDeleteAfterMonths = 6;
-            }
-            else if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 1)
-            {
-                gs.AutoBackupDeleteAfterMonths = 3;
-            }
-            else
-            {
-                gs.AutoBackupDeleteAfterMonths = 1;
-            }
+            gs.AutoBackupDeleteAfterMonths = comboBoxAutoBackupDeleteAfter.SelectedIndex+1;
 
             gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
             gs.AutoSave = checkBoxAutoSave.Checked;

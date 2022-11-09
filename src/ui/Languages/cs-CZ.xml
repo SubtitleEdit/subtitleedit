@@ -2090,8 +2090,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoBackupEveryFifteenMinutes>Každých 15 minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Odstranit každých</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 měsíc</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 měsíce</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 měsíců</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} měsíců</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Kontrolovat aktualizace</CheckForUpdates>
     <AutoSave>Automatické ukládání</AutoSave>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>

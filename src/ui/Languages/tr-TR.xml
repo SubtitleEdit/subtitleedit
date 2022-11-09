@@ -2026,8 +2026,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AutoBackupEveryFifteenMinutes>Her 15 dakikada bir...</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Sonra sil</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 Ay</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 Ay</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 Ay</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} Ay</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Güncellemeleri kontrol et</CheckForUpdates>
     <AutoSave>Otomatik kaydet</AutoSave>
     <AllowEditOfOriginalSubtitle>Orijinal altyazının düzenlenmesine izin ver</AllowEditOfOriginalSubtitle>

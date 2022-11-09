@@ -2144,8 +2144,7 @@
     <AutoBackupEveryFifteenMinutes>هر 15 دقیقه</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>حذف بعد از</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 ماه</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 ماه</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 ماه</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} ماه</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>بررسی برای به روز رسانی</CheckForUpdates>
     <AutoSave>ذخیره خودکار</AutoSave>
     <AllowEditOfOriginalSubtitle>اجازه ویرایش از نام اصلی</AllowEditOfOriginalSubtitle>

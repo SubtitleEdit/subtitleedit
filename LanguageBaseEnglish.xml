@@ -2204,8 +2204,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Delete after</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 month</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 months</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 months</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} months</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Check for updates</CheckForUpdates>
     <AutoSave>Auto save</AutoSave>
     <AllowEditOfOriginalSubtitle>Allow edit of original subtitle</AllowEditOfOriginalSubtitle>

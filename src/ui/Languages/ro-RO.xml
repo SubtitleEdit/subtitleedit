@@ -2035,8 +2035,7 @@ pot edita aceeași subtitrare (colaborare)</Information>
     <AutoBackupEveryFifteenMinutes>la fiecare 15 minute</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Ștergere după</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 lună</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 luni</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 luni</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} luni</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verifică actualizările</CheckForUpdates>
     <AutoSave>Auto salvează</AutoSave>
     <AllowEditOfOriginalSubtitle>Permite editarea subtitrării originale</AllowEditOfOriginalSubtitle>
