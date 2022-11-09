@@ -321,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Application.DoEvents();
             _resultList = new List<ResultText>();
             var process = GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, checkBoxTranslateToEnglish.Checked, OutputHandler);
-            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;

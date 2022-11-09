@@ -34424,6 +34424,37 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
+        private bool RequireWhisperCpp()
+        {
+            if (!Configuration.IsRunningOnWindows)
+            {
+                return true;
+            }
+
+            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "whisper.exe");
+            if (!File.Exists(fullPath))
+            {
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                using (var form = new WhisperDownload())
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK && File.Exists(fullPath))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private void videoaudioToTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(_videoFileName) &&
@@ -34629,6 +34660,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (!RequireFfmpegOk())
             {
                 return;
+            }
+
+            if (Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                if (!RequireWhisperCpp())
+                {
+                    return;
+                }
             }
 
             if (!WhisperHelper.IsWhisperInstalled())
