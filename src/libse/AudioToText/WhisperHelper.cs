@@ -119,16 +119,6 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                var appDataLocal = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "Local");
-                if (Directory.Exists(appDataLocal))
-                {
-                    var files = Directory.GetFiles(appDataLocal, "whisper.exe", SearchOption.AllDirectories);
-                    if (files.Length > 0)
-                    {
-                        return Path.GetDirectoryName(files[0]);
-                    }
-                }
-
                 pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData");
                 foreach (var dir in Directory.GetDirectories(pythonFolder))
                 {
