@@ -1766,8 +1766,7 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <AutoBackupEveryFifteenMinutes>Tiap 15 menit</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Hapus setelah</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 bulan</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 bulan</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 bulan</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} bulan</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Periksa pembaruan</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Izinkan edit subjudul asli</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Beritahukan saat menghapus baris</PromptDeleteLines>

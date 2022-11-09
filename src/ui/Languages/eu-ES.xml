@@ -2007,8 +2007,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <AutoBackupEveryFifteenMinutes>15 min behin</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Kendu:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 hilabete</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 hilabete</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 hilabete</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} hilabete</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Egiaztatu eguneraketak</CheckForUpdates>
     <AutoSave>Berez gorde</AutoSave>
     <AllowEditOfOriginalSubtitle>Ahalbidetu jatorrizko azpidatzia editatzea</AllowEditOfOriginalSubtitle>

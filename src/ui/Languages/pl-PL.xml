@@ -2202,8 +2202,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Usuwaj po</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 miesiąc</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 miesiące</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 miesięcy</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} miesięcy</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Sprawdź, czy są aktualizacje</CheckForUpdates>
     <AutoSave>Automatyczne zapisywanie</AutoSave>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję oryginalnych napisów</AllowEditOfOriginalSubtitle>

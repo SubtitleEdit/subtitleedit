@@ -2196,8 +2196,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBackupEveryFifteenMinutes>Κάθε 15 λεπτά</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Διαγραφή σε</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 μήνα</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 μήνες</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 μήνες</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} μήνες</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Έλεγχος ενημερώσεων</CheckForUpdates>
     <AutoSave>Αυτόματη αποθήκευση</AutoSave>
     <AllowEditOfOriginalSubtitle>Να επιτρέπεται η επεξεργασία αρχικού υποτίτλου</AllowEditOfOriginalSubtitle>

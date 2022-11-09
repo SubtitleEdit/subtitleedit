@@ -5959,11 +5959,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AutoBackupDeleteAfterOneMonth":
                     language.Settings.AutoBackupDeleteAfterOneMonth = reader.Value;
                     break;
-                case "Settings/AutoBackupDeleteAfterThreeMonths":
-                    language.Settings.AutoBackupDeleteAfterThreeMonths = reader.Value;
-                    break;
-                case "Settings/AutoBackupDeleteAfterSixMonths":
-                    language.Settings.AutoBackupDeleteAfterSixMonths = reader.Value;
+                case "Settings/AutoBackupDeleteXMonths":
+                    language.Settings.AutoBackupDeleteAfterXMonths = reader.Value;
                     break;
                 case "Settings/CheckForUpdates":
                     language.Settings.CheckForUpdates = reader.Value;

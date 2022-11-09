@@ -2231,8 +2231,7 @@
     <AutoBackupEveryFifteenMinutes>15 percenként</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Törlés ez után:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 hónap</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 hónap</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 hónap</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} hónap</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Frissítések ellenőrzése</CheckForUpdates>
     <AutoSave>Automatikus mentés</AutoSave>
     <AllowEditOfOriginalSubtitle>Eredeti felirat szerkesztésének engedélyezése</AllowEditOfOriginalSubtitle>

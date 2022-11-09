@@ -2193,8 +2193,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Slet efter</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>En måned</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 måneder</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 måneder</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} måneder</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
     <AutoSave>Automatisk gem</AutoSave>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>

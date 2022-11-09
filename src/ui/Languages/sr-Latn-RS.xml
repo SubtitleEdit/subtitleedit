@@ -1818,8 +1818,7 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <AutoBackupEveryFifteenMinutes>Svakih 15 minuta</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Obriši posle</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mesec</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 meseca</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 meseci</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} meseci</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Provera ažuriranja</CheckForUpdates>
     <AutoSave>Automatsko čuvanje</AutoSave>
     <AllowEditOfOriginalSubtitle>Dozvoli uređivanje originalnog prevoda</AllowEditOfOriginalSubtitle>

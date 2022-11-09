@@ -2136,8 +2136,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <AutoBackupEveryFifteenMinutes>Trong 15 phút</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Xóa sau</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 tháng</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 tháng</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 tháng</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} tháng</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Kiểm tra cập nhật</CheckForUpdates>
     <AutoSave>Tự động lưu</AutoSave>
     <AllowEditOfOriginalSubtitle>Cho phép chỉnh sửa phụ đề của ban</AllowEditOfOriginalSubtitle>

@@ -2160,8 +2160,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Excluir após</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1mês</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} meses</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verificar atualizações</CheckForUpdates>
     <AutoSave>Salvar automático</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>

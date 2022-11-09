@@ -1947,8 +1947,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBackupEveryFifteenMinutes>Cada quinze minuts</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Suprimeix després</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mes</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 mesos</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 mesos</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} mesos</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Comprova actualitzacions</CheckForUpdates>
     <AutoSave>Auto Desa</AutoSave>
     <AllowEditOfOriginalSubtitle>Permet edició subtítol original</AllowEditOfOriginalSubtitle>

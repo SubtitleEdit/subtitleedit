@@ -2202,8 +2202,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupEveryFifteenMinutes>Каждые 15 минут</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Удал. после:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месяца</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 месяцев</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} месяцев</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Проверка обновлений</CheckForUpdates>
     <AutoSave>Автосохранение</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>

@@ -1733,8 +1733,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoBackupEveryFifteenMinutes>svakih 15 minuta</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Obriši nakon</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mjesec</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 mjeseca</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 mjeseci</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} mjeseci</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Provjera ažuriranja</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>&amp;Dozvoli uređivanje izvornog podnaslova</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pitaj za brisanje linija</PromptDeleteLines>

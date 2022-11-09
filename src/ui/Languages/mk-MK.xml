@@ -1869,8 +1869,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBackupEveryFifteenMinutes>на 15 минути</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Избриши по</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месец</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 месеци</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 месеци</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} месеци</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Провери за нова верзија</CheckForUpdates>
     <AutoSave>Автоматско зачувување</AutoSave>
     <AllowEditOfOriginalSubtitle>Дозволи уредување на изворен титл</AllowEditOfOriginalSubtitle>

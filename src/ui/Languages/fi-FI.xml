@@ -2154,8 +2154,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AutoBackupEveryFifteenMinutes>15 minuutin välein</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Poista kun kulunut</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>kuukausi</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>kaksi kuukautta</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>puoli vuotta</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} kuukautta</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Tarkista päivitykset</CheckForUpdates>
     <AutoSave>Automaattitallennus</AutoSave>
     <AllowEditOfOriginalSubtitle>Salli alkuperäisen tekstityksen muokkaaminen</AllowEditOfOriginalSubtitle>

@@ -2204,8 +2204,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoBackupEveryFifteenMinutes>A cada 15.º minuto</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Eliminar após</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mês</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} meses</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
     <AutoSave>Guardar automaticamente</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
