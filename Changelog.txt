@@ -15,6 +15,7 @@
    * Update Bulgarian translation - thx Калин
    * Optimize bd sup saving in batch/cmd-line convert
    * Add a few English words/names to dictionaries
+   * Add more settings for "Delete auto-backup after" - thx pahtashow 
 * FIXED:
    * Fix VLC video player not working
    * Fix for ASSA timestamps (rounding output) - thx Jerome
