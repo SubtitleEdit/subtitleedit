@@ -34678,8 +34678,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     UiUtil.ShowHelp("#audio_to_text");
                 }
-
-                return;
             }
 
             var oldVideoFileName = _videoFileName;
