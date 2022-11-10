@@ -1046,11 +1046,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     text = "..." + text.Remove(0, 5);
                 }
-
-                if (text.StartsWith("... ", StringComparison.Ordinal))
-                {
-                    text = text.Remove(3, 1);
-                }
             }
 
             text = pre + text;
