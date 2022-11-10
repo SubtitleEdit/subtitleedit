@@ -80,58 +80,6 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                     }
                 }
-
-                //var programFilesFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-                //foreach (var dir in Directory.GetDirectories(programFilesFolder))
-                //{
-                //    var dirName = Path.GetFileName(dir);
-                //    if (dirName != null && dirName.StartsWith("Python"))
-                //    {
-                //        var files = Directory.GetFiles(dir, "whisper.exe", SearchOption.AllDirectories);
-                //        if (files.Length > 0)
-                //        {
-                //            return Path.GetDirectoryName(files[0]);
-                //        }
-                //    }
-                //}
-
-                //var pyEnvFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".pyenv");
-                //if (Directory.Exists(pyEnvFolder))
-                //{
-                //    var files = Directory.GetFiles(pyEnvFolder, "whisper.exe", SearchOption.AllDirectories);
-                //    if (files.Length > 0)
-                //    {
-                //        return Path.GetDirectoryName(files[0]);
-                //    }
-                //}
-
-                //pythonFolder = "C:\\";
-                //foreach (var dir in Directory.GetDirectories(pythonFolder))
-                //{
-                //    var dirName = Path.GetFileName(dir);
-                //    if (dirName != null && dirName.StartsWith("Python"))
-                //    {
-                //        var files = Directory.GetFiles(dir, "whisper.exe", SearchOption.AllDirectories);
-                //        if (files.Length > 0)
-                //        {
-                //            return Path.GetDirectoryName(files[0]);
-                //        }
-                //    }
-                //}
-
-                //pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData");
-                //foreach (var dir in Directory.GetDirectories(pythonFolder))
-                //{
-                //    var dirName = Path.GetFileName(dir);
-                //    if (dirName != null && dirName.StartsWith("Python"))
-                //    {
-                //        var files = Directory.GetFiles(dir, "whisper.exe", SearchOption.AllDirectories);
-                //        if (files.Length > 0)
-                //        {
-                //            return Path.GetDirectoryName(files[0]);
-                //        }
-                //    }
-                //}
             }
             catch
             {
@@ -143,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperPathAndFileName()
         {
-            if (Configuration.IsRunningOnWindows && Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.IsRunningOnWindows || Configuration.Settings.Tools.UseWhisperCpp)
             {
                 return Path.Combine(GetWhisperFolder(), "whisper.exe");
             }
