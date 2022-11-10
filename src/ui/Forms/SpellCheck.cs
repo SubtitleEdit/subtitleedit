@@ -773,16 +773,6 @@ namespace Nikse.SubtitleEdit.Forms
                         _currentIndex++;
                         _currentParagraph = _subtitle.Paragraphs[_currentIndex];
 
-                        panelBookmark.Hide();
-                        if (_currentParagraph.Bookmark != null)
-                        {
-                            pictureBoxBookmark.Show();
-                        }
-                        else
-                        {
-                            pictureBoxBookmark.Hide();
-                        }
-
                         SetWords(_currentParagraph.Text);
                         _wordsIndex = 0;
                         if (_words.Count == 0)
@@ -801,6 +791,16 @@ namespace Nikse.SubtitleEdit.Forms
                         DialogResult = DialogResult.OK;
                         return;
                     }
+                }
+
+                panelBookmark.Hide();
+                if (_currentParagraph.Bookmark != null)
+                {
+                    pictureBoxBookmark.Show();
+                }
+                else
+                {
+                    pictureBoxBookmark.Hide();
                 }
 
                 int minLength = 2;
