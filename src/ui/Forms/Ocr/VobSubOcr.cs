@@ -3803,7 +3803,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (string.IsNullOrEmpty(line))
             {
                 matches = new List<CompareMatch>();
-                var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, GetMinLineHeight(), _autoLineHeight);
+                var listTemp = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, GetMinLineHeight(), _autoLineHeight);
+                var list = new List<ImageSplitterItem>();
+                foreach (var imageSplitterItem in listTemp)
+                {
+                    if (imageSplitterItem.NikseBitmap != null && imageSplitterItem.NikseBitmap.Width == 1 && imageSplitterItem.NikseBitmap.Height == 1)
+                    {
+                        continue;
+                    }
+                    
+                    list.Add(imageSplitterItem);
+                }
                 UpdateLineHeights(list);
 
                 int index = 0;
