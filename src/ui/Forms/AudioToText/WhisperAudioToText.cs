@@ -187,7 +187,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
             else
             {
-                SeLogger.Error(textBoxLog.Text); //TODO: remove
+                //TODO: remove at some point
+                UpdateLog();
+                SeLogger.Error(textBoxLog.Text); 
             }
 
             DialogResult = DialogResult.OK;
