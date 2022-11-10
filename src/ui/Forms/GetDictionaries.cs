@@ -163,6 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
             _downloadLink = item.DownloadLink;
+            SelectedEnglishName = item.EnglishName;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
