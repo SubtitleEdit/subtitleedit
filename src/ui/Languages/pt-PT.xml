@@ -252,11 +252,11 @@ Mais informação online?</WhisperNotFound>
     <CopyColorRgb>Copiar para a área de transferência como cor RGB {0}</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
-    <Title>Gerar caixa de fundo</Title>
+    <Title>Gerar quadro de fundo</Title>
     <Padding>Preenchimento</Padding>
     <FillWidth>Largura de preenchimento</FillWidth>
     <Drawing>Desenho</Drawing>
-    <BoxColor>Cor da caixa</BoxColor>
+    <BoxColor>Cor do quadro</BoxColor>
     <Radius>Raio</Radius>
     <Step>Fase</Step>
     <Spikes>Picos</Spikes>
@@ -583,7 +583,7 @@ Mais informação online?</WhisperNotFound>
     <MarginBottom>Margem inferior (para linhas alinhadas em baixo)</MarginBottom>
     <NewLineRows>Número de novas linhas adicionadas</NewLineRows>
     <Teletext>Teletexto</Teletext>
-    <UseBox>Usar caixa à volta do texto</UseBox>
+    <UseBox>Usar quadro à volta do texto</UseBox>
     <DoubleHeight>Usar o dobro da altura para o texto</DoubleHeight>
     <Errors>Erros</Errors>
     <ErrorsX>Erros: {0}</ErrorsX>
@@ -592,7 +592,7 @@ Mais informação online?</WhisperNotFound>
     <TextLeftJustifiedText>Alinhado à esquerda</TextLeftJustifiedText>
     <TextCenteredText>Centralizado</TextCenteredText>
     <TextRightJustifiedText>Alinhado à direita</TextRightJustifiedText>
-    <UseBoxForOneNewLine>Marcar 'Usar a caixa à volta do texto' apenas numa linha nova</UseBoxForOneNewLine>
+    <UseBoxForOneNewLine>Marcar 'Usar o quadro à volta do texto' apenas numa linha nova</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
@@ -684,8 +684,8 @@ Mais informação online?</WhisperNotFound>
     <SomeLinesWereTooLongX>Linhas demasiado longas:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Espaço entre linha</LineHeight>
-    <BoxSingleLine>Caixa - linha única</BoxSingleLine>
-    <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
+    <BoxSingleLine>Quadro - linha única</BoxSingleLine>
+    <BoxMultiLine>Quadro - todas as linhas</BoxMultiLine>
     <Forced>Forçada</Forced>
     <ChooseBackgroundColor>Escolher cor do fundo</ChooseBackgroundColor>
     <SaveImageAs>Guardar imagem como...</SaveImageAs>
@@ -1399,7 +1399,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <RemoveFormattingFontName>Remover tipo de letra</RemoveFormattingFontName>
         <RemoveFormattingAlignment>Remover alinhamento</RemoveFormattingAlignment>
         <Underline>Sublinhado</Underline>
-        <Box>Caixa</Box>
+        <Box>Quadro</Box>
         <Color>Cor...</Color>
         <FontName>Tipo de letra...</FontName>
         <Superscript>Superscript</Superscript>
@@ -1420,7 +1420,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <SetPosition>Definir posição...</SetPosition>
         <GenerateProgressBar>Gerar barra de progressão...</GenerateProgressBar>
         <AssaResolutionChanger>Alterar a resolução do script ASSA...</AssaResolutionChanger>
-        <AssaGenerateBackgroundBox>Gerar caixa de fundo...</AssaGenerateBackgroundBox>
+        <AssaGenerateBackgroundBox>Gerar quadro de fundo...</AssaGenerateBackgroundBox>
         <ImageColorPicker>Selector de cores de imagem...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas...</ChangeCasingForSelectedLines>
@@ -1469,7 +1469,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <AutoContinueInXSeconds>Auto continuar em {0} segundos</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Escrever automático parado</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Inserir linha nesta posição</InsertNewSubtitleAtVideoPosition>
-      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserir nova linha na posição do vídeo (sem enfoque da caixa de texto)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserir nova linha na posição do vídeo (sem enfoque do quadro de texto)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Reproduzir antes do &amp;texto</PlayFromJustBeforeText>
       <PlayFromBeginning>Reproduzir do início</PlayFromBeginning>
@@ -2182,6 +2182,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ApplyAssaOverrideTags>Aplicar etiquetas de substituição ASSA à selecção</ApplyAssaOverrideTags>
     <SetAssaPosition>Definir/obter posição ASSA</SetAssaPosition>
     <SetAssaResolution>Definir resolução ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Definir quadro de fundo ASSA</SetAssaBgBox>
     <TakeAutoBackup>Efectuar agora a cópia de segurança automática</TakeAutoBackup>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Guardar como..." usa o nome do ficheiro de:</SaveAsFileNameFrom>
@@ -2272,7 +2273,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ChooseColor>Escolher cor</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>
-    <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
+    <SsaOpaqueBox>Quadro opaco</SsaOpaqueBox>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nomes ignorados (diferencia maiús/minús)</NamesIgnoreLists>
@@ -2353,9 +2354,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Tecla</Key>
-    <ListViewAndTextBox>Exibição de lista e caixa de texto</ListViewAndTextBox>
+    <ListViewAndTextBox>Exibição de lista e quadro de texto</ListViewAndTextBox>
     <ListView>Exibição de lista</ListView>
-    <TextBox>Caixa de texto</TextBox>
+    <TextBox>Quadro de texto</TextBox>
     <UseSyntaxColoring>Usar coloração sintáctica</UseSyntaxColoring>
     <HtmlColor>Cor Html</HtmlColor>
     <AssaColor>Cor ASSA</AssaColor>
@@ -2430,9 +2431,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToNextSubtitleAndPlay>Ir para a linha seguinte e reproduzir</GoToNextSubtitleAndPlay>
     <GoToPreviousSubtitleAndFocusWaveform>Ir para a linha anterior e enfocar a forma de onda</GoToPreviousSubtitleAndFocusWaveform>
     <GoToNextSubtitleAndFocusWaveform>Ir para a linha seguinte e enfocar a forma de onda</GoToNextSubtitleAndFocusWaveform>
-    <ToggleFocus>Alternar o enfoque entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
+    <ToggleFocus>Alternar o enfoque entre o quadro de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleFocusWaveform>Alternar o enfoque entre a lista e forma de onda/espectrograma</ToggleFocusWaveform>
-    <ToggleFocusWaveformTextBox>Alternar o enfoque entre a caixa de texto e forma de onda/espectrograma</ToggleFocusWaveformTextBox>
+    <ToggleFocusWaveformTextBox>Alternar o enfoque entre o quadro de texto e forma de onda/espectrograma</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleQuotes>Alternar aspas</ToggleQuotes>
     <ToggleHiTags>Alternar etiquetas de Deficientes Auditivos</ToggleHiTags>
@@ -2542,7 +2543,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SplitSelectedLineBilingual>Dividir linha seleccionada bilingue</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Alternar o modo de tradutor</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre o original e a tradução</SwitchOriginalAndTranslation>
-    <SwitchOriginalAndTranslationTextBoxes>Mudar entre as caixas de texto/colunas de lista do original e da tradução</SwitchOriginalAndTranslationTextBoxes>
+    <SwitchOriginalAndTranslationTextBoxes>Mudar entre os quadros de texto/colunas de lista do original e da tradução</SwitchOriginalAndTranslationTextBoxes>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
     <MergeWithNext>Combinar com a próxima</MergeWithNext>
     <MergeWithPreviousAndUnbreak>Combinar com a anterior e eliminar quebra de linha</MergeWithPreviousAndUnbreak>
@@ -2619,7 +2620,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <BDOpensIn>BD sup/bdn-xml abre em</BDOpensIn>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Editar</BDOpensInEdit>
-    <ShortcutsAllowSingleLetterOrNumberInTextBox>Atalhos: Permitir uma única letra/número na caixa de texto</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>Atalhos: Permitir uma única letra/número no quadro de texto</ShortcutsAllowSingleLetterOrNumberInTextBox>
     <UpdateFileTypeAssociations>Actualizar associações de tipo de ficheiro</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Associações de tipo de ficheiro actualizadas</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Editar estilo de continuação personalizado</CustomContinuationStyle>
@@ -2860,7 +2861,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Vertical>Vertical</Vertical>
     <Border>Contorno</Border>
     <PlusShadow>+ Sombra</PlusShadow>
-    <OpaqueBox>Caixa opaca</OpaqueBox>
+    <OpaqueBox>Quadro opaco</OpaqueBox>
     <Import>Importar...</Import>
     <Export>Exportar...</Export>
     <Copy>Copiar</Copy>
@@ -2888,8 +2889,8 @@ Continuar?</RestoreDefaultSettingsMsg>
     <ScaleY>EscalaY</ScaleY>
     <Spacing>Espaçamento</Spacing>
     <Angle>Ângulo</Angle>
-    <BoxPerLine>Caixa por linha (usar cor de contorno)</BoxPerLine>
-    <BoxMultiLine>Uma caixa (usar cor de sombra)</BoxMultiLine>
+    <BoxPerLine>Quadro por linha (usar cor de contorno)</BoxPerLine>
+    <BoxMultiLine>Um quadro (usar cor de sombra)</BoxMultiLine>
     <DuplicateStyleNames>Nomes de estilo duplicados: {0}</DuplicateStyleNames>
   </SubStationAlphaStyles>
   <SubStationAlphaStylesCategoriesManager>
@@ -3113,7 +3114,7 @@ Manter as alterações?</KeepChangesMessage>
     <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adicionar texto da área de tranferência aqui</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Definir a actual como nova selecção</SetParagraphAsSelection>
-    <FocusTextBox>Destacar a caixa de texto</FocusTextBox>
+    <FocusTextBox>Destacar o quadro de texto</FocusTextBox>
     <GoToPrevious>Ir para linha anterior</GoToPrevious>
     <GoToNext>Ir para linha seguinte</GoToNext>
     <DeleteParagraph>Eliminar texto</DeleteParagraph>
