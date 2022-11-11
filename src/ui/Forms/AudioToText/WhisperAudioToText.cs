@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private List<ResultText> _resultList;
         private string _languageCode;
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
+        private long _startTicks;
+        private double _endSeconds;
+        private VideoInfo _videoInfo;
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -92,6 +95,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             listViewInputFiles.Visible = false;
             labelFC.Text = string.Empty;
             labelCpp.Visible = Configuration.Settings.Tools.UseWhisperCpp;
+            labelElapsed.Text = string.Empty;
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
@@ -325,6 +329,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
+            _startTicks = DateTime.UtcNow.Ticks;
+            _videoInfo = UiUtil.GetVideoInfo(_videoFileName);
+            timer1.Start();
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
             buttonCancel.Visible = true;
@@ -443,6 +450,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         Text = Utilities.AutoBreakLine(text, _languageCode),
                     };
 
+                    _endSeconds = (double)rt.End;
+
                     _resultList.Add(rt);
                 }
                 else if (_timeRegexLong.IsMatch(line))
@@ -456,6 +465,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         End = GetSeconds(end),
                         Text = Utilities.AutoBreakLine(text, _languageCode),
                     };
+
+                    _endSeconds = (double)rt.End;
 
                     _resultList.Add(rt);
                 }
@@ -754,6 +765,43 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateLog();
+
+            var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+
+            labelElapsed.Text = new TimeCode(durationMs).ToShortDisplayString();
+            if (_endSeconds <= 0)
+            {
+                return;
+            }
+
+            if (progressBar1.Style != ProgressBarStyle.Blocks)
+            {
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                progressBar1.Maximum = 100;
+            }
+
+            var msPerFrame = durationMs / (_endSeconds * 1000.0);
+            var estimatedTotalMs = msPerFrame * _videoInfo.TotalMilliseconds;
+            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+
+            progressBar1.Value = (int)Math.Round(_endSeconds * 100.0 / _videoInfo.TotalSeconds, MidpointRounding.AwayFromZero);
+            labelTime.Text = estimatedLeft;
+        }
+
+        public static string ToProgressTime(double estimatedTotalMs)
+        {
+            var timeCode = new TimeCode(estimatedTotalMs);
+            if (timeCode.TotalSeconds < 60)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
+            }
+
+            if (timeCode.TotalSeconds / 60 > 5)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
+            }
+
+            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)

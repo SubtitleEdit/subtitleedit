@@ -56,6 +56,7 @@
             this.labelFC = new System.Windows.Forms.Label();
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
             this.labelCpp = new System.Windows.Forms.Label();
+            this.labelElapsed = new System.Windows.Forms.Label();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.SuspendLayout();
@@ -225,7 +226,6 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // checkBoxUsePostProcessing
@@ -356,11 +356,22 @@
             this.labelCpp.TabIndex = 21;
             this.labelCpp.Text = "CPP";
             // 
+            // labelElapsed
+            // 
+            this.labelElapsed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelElapsed.Location = new System.Drawing.Point(215, 409);
+            this.labelElapsed.Name = "labelElapsed";
+            this.labelElapsed.Size = new System.Drawing.Size(152, 13);
+            this.labelElapsed.TabIndex = 22;
+            this.labelElapsed.Text = "labelElapsed";
+            this.labelElapsed.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 464);
+            this.Controls.Add(this.labelElapsed);
             this.Controls.Add(this.labelCpp);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
             this.Controls.Add(this.labelFC);
@@ -425,5 +436,6 @@
         private System.Windows.Forms.ComboBox comboBoxLanguages;
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
         private System.Windows.Forms.Label labelCpp;
+        private System.Windows.Forms.Label labelElapsed;
     }
 }
