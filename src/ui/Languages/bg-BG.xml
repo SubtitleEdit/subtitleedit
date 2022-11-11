@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.8</Version>
-    <TranslatedBy>Последен превод на български: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 07.11.2022: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -189,6 +189,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <UsePostProcessing>Използвайте последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
     <BatchMode>Пакетен режим</BatchMode>
     <KeepPartialTranscription>Запазване на частична транскрипция</KeepPartialTranscription>
+    <TranslateToEnglish>Превод на английски</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA</Title>
@@ -2176,8 +2177,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveBlankLinesWhenOpening>Премахване на празните редове при отваряне на субтитри</RemoveBlankLinesWhenOpening>
     <RemoveBlankLines>Премахване на празни редове</RemoveBlankLines>
     <ApplyAssaOverrideTags>Прилагане на ASSA предефиниране на таговете за избор</ApplyAssaOverrideTags>
-    <SetAssaPosition>Задаване/получаване ASSA позиция</SetAssaPosition>
+    <SetAssaPosition>Задаване/получаване на ASSA позиция</SetAssaPosition>
     <SetAssaResolution>Задаване резолюция на ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Задаване фоново поле на ASSA</SetAssaBgBox>
     <TakeAutoBackup>Направи автоматично архивиране сега</TakeAutoBackup>
     <ShowLineBreaksAs>Показване прекъсвания на ред в «Изглед на списъка», като</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Запазване като..." използване името на файла от:</SaveAsFileNameFrom>
@@ -2200,7 +2202,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupEveryFifteenMinutes>Всеки 15 минути</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Изтр. след:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месец</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterXMonths>{0} месеца</AutoBackupDeleteAfterXMonths>
+    <AutoBackupDeleteAfterThreeMonths>3 месеца</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 месеца</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Проверка за обновяване</CheckForUpdates>
     <AutoSave>Авт. запазване</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешаване редактиране на оригиналните субтитри</AllowEditOfOriginalSubtitle>
