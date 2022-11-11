@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
-            TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true);
+            TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
 
             if (transcript == null || transcript.Count == 0)
             {
@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 //TODO: remove at some point
                 UpdateLog();
-                SeLogger.Error(textBoxLog.Text); 
+                SeLogger.Error(textBoxLog.Text);
             }
 
             DialogResult = DialogResult.OK;
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true);
+                TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -322,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, comboBoxLanguages.Text, checkBoxTranslateToEnglish.Checked, OutputHandler);
+            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
             ShowProgressBar();
@@ -364,7 +364,60 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 System.Threading.Thread.Sleep(50);
             }
 
+            if (GetResultFromSrt(waveFileName, out var resultTexts))
+            {
+                return resultTexts;
+            }
+
             return _resultList;
+        }
+
+        public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts)
+        {
+            var srtFileName = waveFileName + ".srt";
+            var vttFileName = Path.Combine(WhisperHelper.GetWhisperFolder(), Path.GetFileName(waveFileName) + ".vtt");
+            if (!File.Exists(srtFileName) && !File.Exists(vttFileName))
+            {
+                resultTexts = new List<ResultText>();
+                return false;
+            }
+
+            var sub = new Subtitle();
+            if (File.Exists(srtFileName))
+            {
+                new SubRip().LoadSubtitle(sub, FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8), srtFileName);
+            }
+            else
+            {
+                new WebVTT().LoadSubtitle(sub, FileUtil.ReadAllLinesShared(vttFileName, Encoding.UTF8), srtFileName);
+            }
+
+            for (var i = 0; i < sub.Paragraphs.Count - 1; i++)
+            {
+                var p = sub.Paragraphs[i];
+                var next = sub.Paragraphs[i + 1];
+                if (!next.Text.StartsWith(" ") && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                {
+                    p.Text += next.Text;
+                    next.Text = string.Empty;
+                }
+            }
+
+            sub.RemoveEmptyLines();
+
+            var results = new List<ResultText>();
+            foreach (var p in sub.Paragraphs)
+            {
+                results.Add(new ResultText
+                {
+                    Start = (int)Math.Round(p.StartTime.TotalSeconds, MidpointRounding.AwayFromZero),
+                    End = (int)Math.Round(p.EndTime.TotalSeconds, MidpointRounding.AwayFromZero),
+                    Text = p.Text
+                });
+            }
+
+            resultTexts = results;
+            return true;
         }
 
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -566,9 +619,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
+            if (Configuration.Settings.Tools.UseWhisperCpp && string.IsNullOrEmpty(translateToEnglish))
+            {
+                translateToEnglish = "--max-len 1 ";
+            }
+
+            var outputSrt = string.Empty;
+            if (Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                outputSrt = "--output-srt ";
+            }
+
             var w = WhisperHelper.GetWhisperPathAndFileName();
             var m = WhisperHelper.GetWhisperModelForCmdLine(model);
-            var parameters = $"--language \"{language}\" --model \"{m}\" {translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
+            var parameters = $"--language \"{language}\" --model \"{m}\" {outputSrt}{translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo(w, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -576,9 +640,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + Path.GetDirectoryName(Configuration.Settings.General.FFmpegLocation);
             }
 
-            process.StartInfo.WorkingDirectory = Path.Combine(Configuration.DataDirectory, "Whisper");
-
             var whisperFolder = WhisperHelper.GetWhisperFolder();
+            if (!string.IsNullOrEmpty(whisperFolder))
+            {
+                process.StartInfo.WorkingDirectory = whisperFolder;
+            }
+
             if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
                 process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + whisperFolder;

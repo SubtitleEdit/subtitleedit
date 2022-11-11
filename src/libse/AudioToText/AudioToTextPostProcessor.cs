@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
@@ -33,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
         }
 
-        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration)
+        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             _resultTexts = resultTexts;
             var subtitle = new Subtitle();
@@ -50,10 +51,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
             }
 
-            return Generate(subtitle, usePostProcessing, true, true, true, true);
+            return Generate(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
         }
 
-        public Subtitle Generate(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration)
+        public Subtitle Generate(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             if (usePostProcessing)
             {
@@ -75,6 +76,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 if (fixShortDuration)
                 {
                     subtitle = FixShortDuration(subtitle);
+                }
+
+                if (splitLines && !new[] { "jp", "cn" }.Contains(TwoLetterLanguageCode))
+                {
+                    subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
             }
 
