@@ -8796,7 +8796,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     audio.DropDownItems.Insert(0, audioToTextWhisper);
                 }
-                
+
                 audio.DropDownItems.Insert(0, audioToTextVosk);
 
                 audioClip.Click += (senderNew, eNew) =>
@@ -22236,11 +22236,11 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Pause();
         }
 
-        private void TryToFindAndOpenVideoFile(string fileNameNoExtension)
+        private bool TryToFindAndOpenVideoFile(string fileNameNoExtension)
         {
             if (string.IsNullOrEmpty(fileNameNoExtension))
             {
-                return;
+                return false;
             }
 
             string movieFileName = null;
@@ -22268,15 +22268,24 @@ namespace Nikse.SubtitleEdit.Forms
             if (movieFileName != null)
             {
                 OpenVideo(movieFileName);
+                return true;
             }
             else
             {
                 var index = fileNameNoExtension.LastIndexOf('.');
-                if (index > 0)
+                if (index > 0 && TryToFindAndOpenVideoFile(fileNameNoExtension.Remove(index)))
                 {
-                    TryToFindAndOpenVideoFile(fileNameNoExtension.Remove(index));
+                    return true;
+                }
+
+                index = fileNameNoExtension.LastIndexOf('_');
+                if (index > 0 && TryToFindAndOpenVideoFile(fileNameNoExtension.Remove(index)))
+                {
+                    return true;
                 }
             }
+
+            return false;
         }
 
         internal void GoBackSeconds(double seconds)
@@ -23007,7 +23016,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelSingleLinePixels.Visible = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
             }
-            
+
             FixRightToLeftDependingOnLanguage();
         }
 
