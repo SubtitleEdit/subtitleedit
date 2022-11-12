@@ -2169,6 +2169,7 @@ Command line: {1} {2}
     <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
     <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
     <SetAssaResolution>设置ASSA分辨率(PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>设置ASSA背景框</SetAssaBgBox>
     <TakeAutoBackup>立即生成自动备份</TakeAutoBackup>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
