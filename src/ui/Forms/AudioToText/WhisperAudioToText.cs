@@ -636,7 +636,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (Configuration.Settings.Tools.UseWhisperCpp && string.IsNullOrEmpty(translateToEnglish))
             {
-                translateToEnglish = "--max-len 1 ";
+                translateToEnglish = $"--max-len {Configuration.Settings.Tools.WhisperMaxSegmentCharacters} ";
             }
 
             var outputSrt = string.Empty;
