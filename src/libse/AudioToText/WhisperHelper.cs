@@ -33,6 +33,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperFolder()
         {
+            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                var path = Path.Combine(Configuration.DataDirectory, "Whisper");
+                return Directory.Exists(path) ? path : null;
+            }
+
             if (!Configuration.IsRunningOnWindows)
             {
                 return null;
@@ -91,9 +97,34 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperPathAndFileName()
         {
-            if (Configuration.IsRunningOnWindows || Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.IsRunningOnWindows)
             {
-                return Path.Combine(GetWhisperFolder(), "whisper.exe");
+                var f = Path.Combine(GetWhisperFolder(), "whisper.exe");
+                if (File.Exists(f))
+                {
+                    return f;
+                }
+
+                f = Path.Combine(GetWhisperFolder(), "main.exe");
+                if (File.Exists(f))
+                {
+                    return f;
+                }
+            }
+
+            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                var f = Path.Combine(GetWhisperFolder(), "whisper");
+                if (File.Exists(f))
+                {
+                    return f;
+                }
+
+                f = Path.Combine(GetWhisperFolder(), "main");
+                if (File.Exists(f))
+                {
+                    return f;
+                }
             }
 
             return "whisper";
