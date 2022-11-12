@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : {process.StartInfo.FileName} {process.StartInfo.Arguments}");
             _startTicks = DateTime.UtcNow.Ticks;
-            _videoInfo = UiUtil.GetVideoInfo(_videoFileName);
+            _videoInfo = UiUtil.GetVideoInfo(waveFileName);
             timer1.Start();
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -772,7 +772,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
 
             labelElapsed.Text = new TimeCode(durationMs).ToShortDisplayString();
-            if (_endSeconds <= 0)
+            if (_endSeconds <= 0 || _videoInfo == null)
             {
                 return;
             }
@@ -782,6 +782,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 progressBar1.Maximum = 100;
             }
+
+            _videoInfo.TotalSeconds = Math.Max(_endSeconds, _videoInfo.TotalSeconds);
 
             var msPerFrame = durationMs / (_endSeconds * 1000.0);
             var estimatedTotalMs = msPerFrame * _videoInfo.TotalMilliseconds;
