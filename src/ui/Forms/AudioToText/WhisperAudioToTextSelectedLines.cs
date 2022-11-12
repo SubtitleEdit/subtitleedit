@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}");
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}{Environment.NewLine}");
 
             for (var i = 0; i < 10; i++)
             {
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 System.Threading.Thread.Sleep(50);
             }
 
-            if (WhisperAudioToText.GetResultFromSrt(waveFileName, out var resultTexts))
+            if (WhisperAudioToText.GetResultFromSrt(waveFileName, out var resultTexts, _outputText))
             {
                 return resultTexts;
             }
