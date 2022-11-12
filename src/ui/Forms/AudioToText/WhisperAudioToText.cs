@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _resultList = new List<ResultText>();
             var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : {process.StartInfo.FileName} {process.StartInfo.Arguments}");
             _startTicks = DateTime.UtcNow.Ticks;
             _videoInfo = UiUtil.GetVideoInfo(_videoFileName);
             timer1.Start();
@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}");
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}{Environment.NewLine}");
 
             for (var i = 0; i < 10; i++)
             {
@@ -371,15 +371,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 System.Threading.Thread.Sleep(50);
             }
 
-            if (GetResultFromSrt(waveFileName, out var resultTexts))
+            if (GetResultFromSrt(waveFileName, out var resultTexts, _outputText))
             {
                 return resultTexts;
             }
 
+            _outputText?.Add("Loading result from STDOUT" + Environment.NewLine);
             return _resultList;
         }
 
-        public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts)
+        public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText)
         {
             var srtFileName = waveFileName + ".srt";
             var vttFileName = Path.Combine(WhisperHelper.GetWhisperFolder(), Path.GetFileName(waveFileName) + ".vtt");
@@ -393,10 +394,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (File.Exists(srtFileName))
             {
                 new SubRip().LoadSubtitle(sub, FileUtil.ReadAllLinesShared(srtFileName, Encoding.UTF8), srtFileName);
+                outputText?.Add($"Loading result from {srtFileName}{Environment.NewLine}");
             }
             else
             {
                 new WebVTT().LoadSubtitle(sub, FileUtil.ReadAllLinesShared(vttFileName, Encoding.UTF8), srtFileName);
+                outputText?.Add($"Loading result from {vttFileName}{Environment.NewLine}");
             }
 
             for (var i = 0; i < sub.Paragraphs.Count - 1; i++)
