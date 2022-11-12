@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperModelForCmdLine(string model)
         {
-            if (Configuration.IsRunningOnWindows && Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.Settings.Tools.UseWhisperCpp)
             {
                 return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
             }
