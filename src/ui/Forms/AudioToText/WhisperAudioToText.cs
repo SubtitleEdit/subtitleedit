@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
 
             comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.ToArray<object>());
+            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
             var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
             comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
 
@@ -144,6 +144,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                     FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
             _languageCode = GetLanguage(comboBoxLanguages.Text);
+            ShowProgressBar();
 
             if (_batchMode)
             {
@@ -160,7 +161,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
-            ShowProgressBar();
             buttonGenerate.Enabled = false;
             buttonDownload.Enabled = false;
             buttonBatchMode.Enabled = false;
@@ -225,7 +225,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var videoFileName = lvi.Text;
                 listViewInputFiles.SelectedIndices.Clear();
                 lvi.Selected = true;
-                ShowProgressBar();
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 buttonBatchMode.Enabled = false;
@@ -332,8 +331,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _startTicks = DateTime.UtcNow.Ticks;
             _videoInfo = UiUtil.GetVideoInfo(waveFileName);
             timer1.Start();
-            ShowProgressBar();
-            progressBar1.Style = ProgressBarStyle.Marquee;
+            if (!_batchMode)
+            {
+                ShowProgressBar();
+                progressBar1.Style = ProgressBarStyle.Marquee;
+            }
+
             buttonCancel.Visible = true;
             try
             {
@@ -487,8 +490,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _filesToDelete.Add(outWaveFile);
             var process = GetFfmpegProcess(videoFileName, audioTrackNumber, outWaveFile);
             process.Start();
-            ShowProgressBar();
-            progressBar1.Style = ProgressBarStyle.Marquee;
             double seconds = 0;
             buttonCancel.Visible = true;
             try
@@ -768,6 +769,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void timer1_Tick(object sender, EventArgs e)
         {
             UpdateLog();
+
+            if (_batchMode)
+            {
+                var pct = _batchFileNumber * 100.0 / listViewInputFiles.Items.Count;
+                progressBar1.Value = Math.Min(100, (int)Math.Round(pct));
+                return;
+            }
 
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
 
