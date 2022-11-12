@@ -643,6 +643,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (Configuration.Settings.Tools.UseWhisperCpp)
             {
                 outputSrt = "--output-srt ";
+
+                if (Configuration.Settings.Tools.WhisperExtraSettings != null &&
+                    Configuration.Settings.Tools.WhisperExtraSettings.Contains("--fp16"))
+                {
+                    Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
+                }
             }
 
             var w = WhisperHelper.GetWhisperPathAndFileName();
