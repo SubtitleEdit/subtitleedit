@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
 
             comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.ToArray<object>());
+            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p=>p.Name).ToArray<object>());
             var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
             if (lang != null)
             {

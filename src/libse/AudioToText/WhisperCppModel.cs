@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -87,6 +88,6 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "2.1 GB",
                 Url = "https://openaipublic.azureedge.net/main/whisper/models/e4b87e7e0bf463eb8e6956e646f1e277e901512310def2c24bf0e11bd3c28e9a/large.pt",
             },
-        };
+        }.OrderBy(p=>p.Name).ToArray();
     }
 }
