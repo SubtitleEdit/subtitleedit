@@ -128,6 +128,8 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{number-1:", "{5:");
             s = s.Replace("{duration}", "{6}");
             s = s.Replace("{actor}", "{7}");
+            s = s.Replace("{actor-colon-space}", "{21}");
+            s = s.Replace("{actor-upper-brackets-space}", "{22}");
             s = s.Replace("{text-line-1}", "{8}");
             s = s.Replace("{text-line-2}", "{9}");
             s = s.Replace("{cps-comma}", "{10}");
@@ -426,6 +428,8 @@ namespace Nikse.SubtitleEdit.Forms
             var s = template;
             var replaceStart = GetReplaceChar(s);
             var replaceEnd = GetReplaceChar(s + replaceStart);
+            var actorColonSpace = string.IsNullOrEmpty(actor) ? string.Empty : $"{actor}: ";
+            var actorUppercaseBracketsSpace = string.IsNullOrEmpty(actor) ? string.Empty : $"[{actor.ToUpperInvariant()}] ";
             s = PreBeginCurly(s, replaceStart);
             s = PreEndCurly(s, replaceEnd);
             s = string.Format(s, start, end, text, originalText, number + 1, number, d, actor, line1, line2,
@@ -439,7 +443,9 @@ namespace Nikse.SubtitleEdit.Forms
                               p.Bookmark == string.Empty ? "*" : p.Bookmark,
                               string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileNameWithoutExtension(videoFileName),
                               videoFileName,
-                              string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileName(videoFileName)
+                              string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileName(videoFileName),
+                              actorColonSpace,
+                              actorUppercaseBracketsSpace
                               )
                 ;
             s = PostCurly(s, replaceStart, replaceEnd);
