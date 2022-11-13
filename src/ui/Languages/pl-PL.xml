@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.8</Version>
-    <TranslatedBy>Tłumaczenie: Adam Malich (mailto:pp_fanpack@pm.me)</TranslatedBy>
+    <TranslatedBy>Tłumaczenie: Adam Malich (mailto:adam_malich@windowslive.com)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -194,6 +194,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <UsePostProcessing>Użyj przetwarzania końcowego (łączenie linii, poprawianie wielkości liter, interpunkcja i inne)</UsePostProcessing>
     <BatchMode>Tryb wsadowy</BatchMode>
     <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
+    <TranslateToEnglish>Przetłumacz na angielski</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -1162,20 +1163,20 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
         <CloseOriginal>Zamknij oryginalne napisy</CloseOriginal>
         <OpenContainingFolder>Otwórz folder z zawartością</OpenContainingFolder>
-        <Compare>&amp;Porównywaj...</Compare>
+        <Compare>&amp;Porównaj...</Compare>
         <Statistics>S&amp;tatystyki...</Statistics>
         <Plugins>&amp;Wtyczki...</Plugins>
-        <ImportSubtitleFromVideoFile>Importuj napisy z pliku wideo</ImportSubtitleFromVideoFile>
-        <ImportOcrFromDvd>Importuj napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Importuj napisy VobSub (sub/idx) do OCR...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importuj plik napisów Blu-ray (.sup) do OCR...</ImportBluRaySupFile>
-        <ImportBluRaySupFileEdit>Importuj plik napisów Blu-ray (.sup) do edycji...</ImportBluRaySupFileEdit>
-        <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznie wybranym kodowaniem...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Importuj zwykły tekst...</ImportText>
-        <ImportImages>Importuj obrazy...</ImportImages>
-        <ImportTimecodes>Importuj kody czasowe...</ImportTimecodes>
-        <Import>Import</Import>
-        <Export>Eksportuj jako...</Export>
+        <ImportSubtitleFromVideoFile>Napisy z pliku wideo...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>Napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Napisy VobSub (sub/idx) do OCR...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Plik napisów Blu-ray (.sup) do OCR...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>Plik napisów Blu-ray (.sup) do edycji...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>Napisy z ręcznie wybranym kodowaniem...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Zwykły tekst...</ImportText>
+        <ImportImages>Obrazy...</ImportImages>
+        <ImportTimecodes>Kody czasowe...</ImportTimecodes>
+        <Import>Importuj</Import>
+        <Export>Eksportuj</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
@@ -1191,7 +1192,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
-        <ExportCustomTextFormat>Eksportuj niestandardowy format tekstu...</ExportCustomTextFormat>
+        <ExportCustomTextFormat>Niestandardowy format tekstowy...</ExportCustomTextFormat>
         <Exit>Za&amp;kończ</Exit>
       </File>
       <Edit>
@@ -2180,6 +2181,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ApplyAssaOverrideTags>Zastosuj do zaznaczenia tagi zastępowania ASSA</ApplyAssaOverrideTags>
     <SetAssaPosition>Ustaw/Uzyskaj pozycję ASSA</SetAssaPosition>
     <SetAssaResolution>Ustaw rozdzielczość ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Ustaw tło nieprzezroczystego pola ASSA</SetAssaBgBox>
     <TakeAutoBackup>Wykonaj teraz automatyczną kopię zapasową</TakeAutoBackup>
     <ShowLineBreaksAs>Pokaż łamanie linii w "Widoku listy" jako</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Zapisz jako..." użyje nazwy pliku z</SaveAsFileNameFrom>
@@ -2202,7 +2204,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Usuwaj po</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 miesiąc</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterXMonths>{0} miesięcy</AutoBackupDeleteAfterXMonths>
+    <AutoBackupDeleteAfterXMonths>{0} miesiące(y)</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Sprawdź, czy są aktualizacje</CheckForUpdates>
     <AutoSave>Automatyczne zapisywanie</AutoSave>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję oryginalnych napisów</AllowEditOfOriginalSubtitle>
@@ -2497,11 +2499,11 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <TogglePlayPause>Przełącz odtwarzaj/pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Pełny ekran</Fullscreen>
-    <Play150Speed>Odtwarzaj wideo z szybkością 1,5x</Play150Speed>
-    <Play200Speed>Odtwarzaj wideo z szybkością 2,0x</Play200Speed>
+    <Play150Speed>Odtwarzaj wideo z szybkością 1.5x</Play150Speed>
+    <Play200Speed>Odtwarzaj wideo z szybkością 2.0x</Play200Speed>
     <PlayRateSlower>Odtwarzaj wolniej</PlayRateSlower>
     <PlayRateFaster>Odtwarzaj szybciej</PlayRateFaster>
-    <PlayRateToggle>Przełączanie szybkości odtwarzania (0,5x, 1x, 1,5x, 2x)</PlayRateToggle>
+    <PlayRateToggle>Przełączanie szybkości odtwarzania (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Przełącz elementy sterujące wideo</MainToggleVideoControls>
     <VideoToggleContrast>Przełącz kontrast (tylko mpv)</VideoToggleContrast>
