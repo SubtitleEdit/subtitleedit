@@ -8820,6 +8820,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var audioClips = GetAudioClips();
                     using (var form = new WhisperAudioToTextSelectedLines(audioClips, this))
                     {
+                        CheckWhisperCpp();
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper")));
@@ -34689,6 +34690,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            CheckWhisperCpp();
+
             var oldVideoFileName = _videoFileName;
             var isVlc = mediaPlayer.VideoPlayer is LibVlcDynamic;
             if (isVlc)
@@ -34722,6 +34725,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
+        }
+
+        private static void CheckWhisperCpp()
+        {
+            if (!Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                return;
+            }
+
+            if (Configuration.IsRunningOnLinux && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
+            {
+                SeLogger.Error("UseWhisperCpp changed to 'False' as 'Whisper/whisper' or '/Whisper/main' was not found!");
+                Configuration.Settings.Tools.UseWhisperCpp = false;
+            }
+
+            if (Configuration.IsRunningOnWindows && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
+            {
+                SeLogger.Error("UseWhisperCpp changed to 'False' as 'Whisper/whisper.exe' or '/Whisper/main.exe' was not found!");
+                Configuration.Settings.Tools.UseWhisperCpp = false;
             }
         }
 
