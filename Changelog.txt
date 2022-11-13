@@ -13,9 +13,13 @@
    * Update Italian translation - thx bovirus
    * Update Chinese translation - thx nkh0472
    * Update Bulgarian translation - thx Калин
+   * Update Korean translation - thx domddol
+   * Update Polish translation - thx admas
    * Optimize bd sup saving in batch/cmd-line convert
    * Add a few English words/names to dictionaries
    * Add more settings for "Delete auto-backup after" - thx pahtashow 
+   * Add more options for actor in custom text export - thx Francois
+   * Improve video auto load (allow eg. "_nl") - thx Hilde
 * FIXED:
    * Fix VLC video player not working
    * Fix for ASSA timestamps (rounding output) - thx Jerome
@@ -23,6 +27,7 @@
    * Fix crash trying to locate Whisper
    * Fix setting path to ffmpeg when using Whisper
    * Fix OCR window resize on Linux - thx Mangoes
+   * Fix bookmark showing on first spell check line - thx OmrSi
 
 
 3.6.8 (24th October 2022)
