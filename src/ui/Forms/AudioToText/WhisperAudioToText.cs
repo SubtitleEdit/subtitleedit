@@ -98,16 +98,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelCpp.Visible = Configuration.Settings.Tools.UseWhisperCpp;
             labelElapsed.Text = string.Empty;
 
-            if (Configuration.Settings.Tools.UseWhisperCpp)
-            {
-                speedupToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperExtraSettings == speedupToolStripMenuItem.Text;
-                ContextMenuStrip = contextMenuStripWhisperAdvanced;{}
+            //if (Configuration.Settings.Tools.UseWhisperCpp)
+            //{
+            //    speedupToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperExtraSettings == speedupToolStripMenuItem.Text;
+            //    ContextMenuStrip = contextMenuStripWhisperAdvanced;{}
 
-                if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
-                {
-                    noneToolStripMenuItem_Click(null, null);
-                }
-            }
+            //    if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
+            //    {
+            //        noneToolStripMenuItem_Click(null, null);
+            //    }
+            //}
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
