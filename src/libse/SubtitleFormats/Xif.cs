@@ -106,16 +106,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             globalFileInfoNode.Attributes["NumberOfCaptions"].InnerText = subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture);
 
             var fileBodyNode = xml.DocumentElement.SelectSingleNode("FileBody");
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 XmlNode content = xml.CreateElement("ContentBlock");
                 content.InnerXml = paragraphTemplate;
-                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeIn").InnerText = p.StartTime.ToHHMMSSFF();
-                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeOut").InnerText = p.EndTime.ToHHMMSSFF();
+                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText = p.StartTime.ToHHMMSSFF();
+                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText = p.EndTime.ToHHMMSSFF();
 
                 var paragraphNode = content.SelectSingleNode("ContentBlock/ThreadedObject/Content/SubtitleText/Paragraph");
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();
-                for (int i = 1; i < lines.Count + 1; i++)
+                for (var i = 1; i < lines.Count + 1; i++)
                 {
                     var rowNode = xml.CreateElement("Row");
 
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     paragraphNode.AppendChild(rowNode);
                 }
-                for (int index = 0; index < lines.Count; index++)
+                for (var index = 0; index < lines.Count; index++)
                 {
                     var line = lines[index];
 
