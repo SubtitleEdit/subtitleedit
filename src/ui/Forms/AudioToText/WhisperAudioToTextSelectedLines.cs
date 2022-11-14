@@ -52,16 +52,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
 
             comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p=>p.Name).ToArray<object>());
+            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
             var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-            if (lang != null)
-            {
-                comboBoxLanguages.Text = lang.ToString();
-            }
-            else
-            {
-                comboBoxLanguages.Text = "English";
-            }
+            comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
 
             WhisperAudioToText.FillModels(comboBoxModels, string.Empty);
 
@@ -146,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
-                TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
+                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, false);
 
                 SaveToAudioClip(_batchFileNumber - 1);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -175,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Application.DoEvents();
             _resultList = new List<ResultText>();
             var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
-            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
             ShowProgressBar();
             progressBar1.Style = ProgressBarStyle.Marquee;

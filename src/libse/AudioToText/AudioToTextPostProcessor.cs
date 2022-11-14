@@ -10,6 +10,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 {
     public class AudioToTextPostProcessor
     {
+        public enum Engine
+        {
+            Vosk,
+            Whisper,
+        }
+
         private List<ResultText> _resultTexts;
 
         /// <summary>
@@ -34,13 +40,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
         }
 
-        public Subtitle Generate(List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        public Subtitle Generate(Engine engine, List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             _resultTexts = resultTexts;
             var subtitle = new Subtitle();
             foreach (var resultText in _resultTexts)
             {
-                if (usePostProcessing && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.End - resultText.Start > 1)
+                if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.End - resultText.Start > 1)
                 {
                     continue;
                 }
@@ -107,6 +113,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     !paragraph.Text.EndsWith('.') &&
                     !paragraph.Text.EndsWith('!') &&
                     !paragraph.Text.EndsWith('?') &&
+                    !paragraph.Text.EndsWith(',') &&
                     !paragraph.Text.EndsWith(':'))
                 {
                     if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThanAlways)
@@ -127,11 +134,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
             }
 
-            if (subtitle.Paragraphs.Count > 0 &&
-                !subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.EndsWith('.') &&
-                !subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.EndsWith('!') &&
-                !subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.EndsWith('?') &&
-                !subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.EndsWith(':'))
+            var last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
+            if (last != null &&
+                !last.Text.EndsWith('.') &&
+                !last.Text.EndsWith('!') &&
+                !last.Text.EndsWith('?') &&
+                !last.Text.EndsWith(',') &&
+                !last.Text.EndsWith(':'))
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }
