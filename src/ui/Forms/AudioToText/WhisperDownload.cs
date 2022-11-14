@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     public sealed partial class WhisperDownload : Form
     {
-        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/whisper/whisper.cpp-2022-11-09.zip";
+        public const string DownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/whisper/whisper.cpp-2022-11-14.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public WhisperDownload()

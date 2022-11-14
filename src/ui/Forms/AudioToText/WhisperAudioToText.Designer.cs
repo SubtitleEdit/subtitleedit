@@ -57,8 +57,12 @@
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
             this.labelCpp = new System.Windows.Forms.Label();
             this.labelElapsed = new System.Windows.Forms.Label();
+            this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.speedupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
+            this.contextMenuStripWhisperAdvanced.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -366,6 +370,28 @@
             this.labelElapsed.Text = "labelElapsed";
             this.labelElapsed.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // contextMenuStripWhisperAdvanced
+            // 
+            this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.noneToolStripMenuItem,
+            this.speedupToolStripMenuItem});
+            this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(181, 70);
+            // 
+            // speedupToolStripMenuItem
+            // 
+            this.speedupToolStripMenuItem.Name = "speedupToolStripMenuItem";
+            this.speedupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.speedupToolStripMenuItem.Text = "--speed-up";
+            this.speedupToolStripMenuItem.Click += new System.EventHandler(this.speedupToolStripMenuItem_Click);
+            // 
+            // noneToolStripMenuItem
+            // 
+            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
+            this.noneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.noneToolStripMenuItem.Text = "(none)";
+            this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -402,6 +428,7 @@
             this.groupBoxModels.ResumeLayout(false);
             this.groupBoxModels.PerformLayout();
             this.groupBoxInputFiles.ResumeLayout(false);
+            this.contextMenuStripWhisperAdvanced.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -437,5 +464,8 @@
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
         private System.Windows.Forms.Label labelCpp;
         private System.Windows.Forms.Label labelElapsed;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripWhisperAdvanced;
+        private System.Windows.Forms.ToolStripMenuItem speedupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
     }
 }

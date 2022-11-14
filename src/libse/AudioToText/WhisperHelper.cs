@@ -99,28 +99,28 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             if (Configuration.IsRunningOnWindows)
             {
-                var f = Path.Combine(GetWhisperFolder(), "whisper.exe");
-                if (File.Exists(f))
-                {
-                    return f;
-                }
 
-                f = Path.Combine(GetWhisperFolder(), "main.exe");
-                if (File.Exists(f))
+                if (Configuration.Settings.Tools.UseWhisperCpp)
                 {
-                    return f;
+                    var f = Path.Combine(GetWhisperFolder(), "main.exe");
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
+                }
+                else
+                {
+                    var f = Path.Combine(GetWhisperFolder(), "whisper.exe");
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
                 }
             }
 
             if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.UseWhisperCpp)
             {
-                var f = Path.Combine(GetWhisperFolder(), "whisper");
-                if (File.Exists(f))
-                {
-                    return f;
-                }
-
-                f = Path.Combine(GetWhisperFolder(), "main");
+                var f = Path.Combine(GetWhisperFolder(), "main");
                 if (File.Exists(f))
                 {
                     return f;
