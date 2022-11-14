@@ -28,6 +28,7 @@
    * Fix setting path to ffmpeg when using Whisper
    * Fix OCR window resize on Linux - thx Mangoes
    * Fix bookmark showing on first spell check line - thx OmrSi
+   * Fix format XIF writing - thx Per
 
 
 3.6.8 (24th October 2022)
