@@ -97,6 +97,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelFC.Text = string.Empty;
             labelCpp.Visible = Configuration.Settings.Tools.UseWhisperCpp;
             labelElapsed.Text = string.Empty;
+
+            if (Configuration.Settings.Tools.UseWhisperCpp)
+            {
+                speedupToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperExtraSettings == speedupToolStripMenuItem.Text;
+                ContextMenuStrip = contextMenuStripWhisperAdvanced;{}
+
+                if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
+                {
+                    noneToolStripMenuItem_Click(null, null);
+                }
+            }
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
@@ -1005,6 +1016,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void comboBoxLanguages_SelectedIndexChanged(object sender, EventArgs e)
         {
             checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
+        }
+
+        private void speedupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            noneToolStripMenuItem.Checked = false;
+            speedupToolStripMenuItem.Checked = true;
+            Configuration.Settings.Tools.WhisperExtraSettings = speedupToolStripMenuItem.Text;
+        }
+
+        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            noneToolStripMenuItem.Checked = true;
+            speedupToolStripMenuItem.Checked = false;
+            Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
         }
     }
 }

@@ -34441,7 +34441,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return true;
             }
 
-            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "whisper.exe");
+            var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "main.exe");
             if (!File.Exists(fullPath))
             {
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
