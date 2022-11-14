@@ -635,9 +635,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
-            if (Configuration.Settings.Tools.UseWhisperCpp && string.IsNullOrEmpty(translateToEnglish))
+            if (Configuration.Settings.Tools.UseWhisperCpp && string.IsNullOrEmpty(translateToEnglish) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len"))
             {
-                translateToEnglish = $"--max-len {Configuration.Settings.Tools.WhisperMaxSegmentCharacters} ";
+                var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
+                if (language == "jp")
+                {
+                    maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
+                }
+
+                if (language == "cn")
+                {
+                    maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
+                }
+                translateToEnglish = $"--max-len {maxChars} ";
             }
 
             var outputSrt = string.Empty;
