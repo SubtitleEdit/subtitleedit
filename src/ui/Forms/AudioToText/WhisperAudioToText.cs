@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
         private long _startTicks;
         private double _endSeconds;
+        private double _lastEstimatedTotalMs = -1;
         private VideoInfo _videoInfo;
 
         public Subtitle TranscribedSubtitle { get; private set; }
@@ -182,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
-            TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
 
             if (transcript == null || transcript.Count == 0)
             {
@@ -258,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Generate(transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -801,6 +802,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             var msPerFrame = durationMs / (_endSeconds * 1000.0);
             var estimatedTotalMs = msPerFrame * _videoInfo.TotalMilliseconds;
+            if (_lastEstimatedTotalMs >= 0 && estimatedTotalMs > _lastEstimatedTotalMs)
+            {
+                estimatedTotalMs = _lastEstimatedTotalMs;
+            }
+
+            _lastEstimatedTotalMs = estimatedTotalMs;
             var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
 
             progressBar1.Value = (int)Math.Round(_endSeconds * 100.0 / _videoInfo.TotalSeconds, MidpointRounding.AwayFromZero);
