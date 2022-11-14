@@ -68,8 +68,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonAddToNames.Text = LanguageSettings.Current.SpellCheck.AddToNamesAndIgnoreList;
             buttonChangeAllWholeText.Text = LanguageSettings.Current.SpellCheck.ChangeAll;
             buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
+            useLargerFontForThisWindowToolStripMenuItem.Text = LanguageSettings.Current.General.UseLargerFontForThisWindow;
             UiUtil.FixLargeFonts(this, buttonAddToNames);
             richTextBoxParagraph.DetectUrls = false;
+
+            if (Configuration.Settings.Tools.SpellCheckUseLargerFont)
+            {
+                useLargerFontForThisWindowToolStripMenuItem_Click(null, null);
+            }
+
+            ContextMenuStrip = contextMenuStripForm;
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)
@@ -95,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             richTextBoxParagraph.Text = line;
             textBoxWholeText.Text = line;
             listBoxSuggestions.Items.Clear();
-            foreach (string suggestion in suggestions)
+            foreach (var suggestion in suggestions)
             {
                 listBoxSuggestions.Items.Add(suggestion);
             }
@@ -111,48 +119,50 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private static void HighLightWord(RichTextBox richTextBoxParagraph, string word)
         {
-            if (word != null && richTextBoxParagraph.Text.Contains(word))
+            if (word == null || !richTextBoxParagraph.Text.Contains(word))
             {
-                const string expectedWordBoundaryChars = " <>-\"”„“«»[]'‘`´¶()♪¿¡.…—!?,:;/\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0";
-                for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
+                return;
+            }
+
+            const string expectedWordBoundaryChars = " <>-\"”„“«»[]'‘`´¶()♪¿¡.…—!?,:;/\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00A0";
+            for (var i = 0; i < richTextBoxParagraph.Text.Length; i++)
+            {
+                if (richTextBoxParagraph.Text.Substring(i).StartsWith(word, StringComparison.Ordinal))
                 {
-                    if (richTextBoxParagraph.Text.Substring(i).StartsWith(word, StringComparison.Ordinal))
+                    var startOk = i == 0;
+                    if (!startOk)
                     {
-                        bool startOk = i == 0;
-                        if (!startOk)
+                        startOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i - 1]);
+                    }
+
+                    if (startOk)
+                    {
+                        var endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
+                        if (!endOk)
                         {
-                            startOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i - 1]);
+                            endOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i + word.Length]);
                         }
 
-                        if (startOk)
+                        if (endOk)
                         {
-                            bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
-                            if (!endOk)
+                            richTextBoxParagraph.SelectionStart = i + 1;
+                            richTextBoxParagraph.SelectionLength = word.Length;
+                            while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
                             {
-                                endOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i + word.Length]);
-                            }
-
-                            if (endOk)
-                            {
-                                richTextBoxParagraph.SelectionStart = i + 1;
+                                richTextBoxParagraph.SelectionStart--;
                                 richTextBoxParagraph.SelectionLength = word.Length;
-                                while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
-                                {
-                                    richTextBoxParagraph.SelectionStart--;
-                                    richTextBoxParagraph.SelectionLength = word.Length;
-                                }
-                                if (richTextBoxParagraph.SelectedText == word)
-                                {
-                                    richTextBoxParagraph.SelectionColor = Color.Red;
-                                }
+                            }
+                            if (richTextBoxParagraph.SelectedText == word)
+                            {
+                                richTextBoxParagraph.SelectionColor = Color.Red;
                             }
                         }
                     }
                 }
-
-                richTextBoxParagraph.SelectionLength = 0;
-                richTextBoxParagraph.SelectionStart = 0;
             }
+
+            richTextBoxParagraph.SelectionLength = 0;
+            richTextBoxParagraph.SelectionStart = 0;
         }
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)
@@ -349,13 +359,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bool showAddItems = false;
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
-                string word = richTextBoxParagraph.SelectedText.Trim();
+                var word = richTextBoxParagraph.SelectedText.Trim();
                 addXToNamesnoiseListToolStripMenuItem.Text = string.Format(LanguageSettings.Current.SpellCheck.AddXToNames, word);
                 addXToUserDictionaryToolStripMenuItem.Text = string.Format(LanguageSettings.Current.SpellCheck.AddXToUserDictionary, word);
                 showAddItems = true;
             }
             addXToNamesnoiseListToolStripMenuItem.Visible = showAddItems;
             addXToUserDictionaryToolStripMenuItem.Visible = showAddItems;
+
+            e.Cancel = !addXToNamesnoiseListToolStripMenuItem.Visible ||
+                       !addXToUserDictionaryToolStripMenuItem.Visible;
         }
 
         private void OcrSpellCheck_Shown(object sender, EventArgs e)
@@ -377,6 +390,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void OcrSpellCheck_FormClosing(object sender, FormClosingEventArgs e)
         {
             TaskbarList.StopBlink(_blinkForm);
+        }
+
+        private void useLargerFontForThisWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxWholeText.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(textBoxWholeText.Font.FontFamily, textBoxWholeText.Font.Size - 2, FontStyle.Regular) : new Font(textBoxWholeText.Font.FontFamily, textBoxWholeText.Font.Size + 2, FontStyle.Regular);
+            textBoxWord.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(textBoxWord.Font.FontFamily, textBoxWord.Font.Size - 2, FontStyle.Regular) : new Font(textBoxWord.Font.FontFamily, textBoxWord.Font.Size + 2, FontStyle.Regular);
+            richTextBoxParagraph.Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(textBoxWholeText.Font.FontFamily, richTextBoxParagraph.Font.Size - 2, FontStyle.Regular) : new Font(textBoxWholeText.Font.FontFamily, richTextBoxParagraph.Font.Size + 2, FontStyle.Regular);
+            Font = useLargerFontForThisWindowToolStripMenuItem.Checked ? new Font(Font.FontFamily, Font.Size - 2, FontStyle.Regular) : new Font(Font.FontFamily, Font.Size + 2, FontStyle.Regular);
+            useLargerFontForThisWindowToolStripMenuItem.Checked = !useLargerFontForThisWindowToolStripMenuItem.Checked;
+            Configuration.Settings.Tools.SpellCheckUseLargerFont = useLargerFontForThisWindowToolStripMenuItem.Checked;
         }
     }
 }
