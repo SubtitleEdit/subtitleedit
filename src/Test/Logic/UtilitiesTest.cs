@@ -455,6 +455,14 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void FixInvalidItalicTagsMissingEndStartWithColon()
+        {
+            var s1 = "ADULT MARK: <i>New friends";
+            var s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual("ADULT MARK: <i>New friends</i>", s2);
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";
