@@ -5046,6 +5046,11 @@ namespace Nikse.SubtitleEdit.Forms
                     SetEncoding(Encoding.Unicode);
                     currentEncoding = Encoding.Unicode;
                 }
+                else if (formatType == typeof(Xif))
+                {
+                    SetEncoding(Encoding.Unicode);
+                    currentEncoding = Encoding.Unicode;
+                }
 
                 if (Configuration.Settings.General.ShowFormatRequiresUtf8Warning && !currentEncoding.Equals(Encoding.UTF8) &&
                     (formatType == typeof(DCinemaInterop) || formatType == typeof(DCinemaSmpte2007) ||
