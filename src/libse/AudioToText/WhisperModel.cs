@@ -26,56 +26,65 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "tiny.en",
-                Size = "74 MB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.en.bin",
+                Size = "78 MB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.en.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin",
             },
             new WhisperModel
             {
                 Name = "tiny",
-                Size = "74 MB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.bin",
+                Size = "78 MB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin",
             },
             new WhisperModel
             {
                 Name = "base.en",
-                Size = "142 MB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-base.en.bin",
+                Size = "148 MB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-base.en.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin",
             },
             new WhisperModel
             {
                 Name = "base",
-                Size = "142 MB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-base.bin",
+                Size = "148 MB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-base.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
             },
             new WhisperModel
             {
                 Name = "small.en",
-                Size = "472 MB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-small.en.bin",
+                Size = "488 MB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-small.en.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin",
             },
             new WhisperModel
             {
                 Name = "small",
-                Size = "472 MB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-small.bin",
+                Size = "488 MB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-small.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-small.bin",
             },
             new WhisperModel
             {
                 Name = "medium.en",
-                Size = "1.4 GB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-medium.en.bin",
+                Size = "1.5 GB",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-medium.en.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-medium.en.bin",
             },
             new WhisperModel
             {
                 Name = "medium",
                 Size = "1.5 GB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-medium.bin",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-medium.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-medium.bin",
             },
             new WhisperModel
             {
                 Name = "large",
                 Size = "3.1 GB",
-                Url = "https://ggml.ggerganov.com/ggml-model-whisper-large.bin",
+                UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-large.bin",
+                UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-large.bin",
             },
         };
     }

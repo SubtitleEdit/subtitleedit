@@ -34409,7 +34409,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnWindows)
             {
                 var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
-                if (Configuration.IsRunningOnWindows && string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
+                if (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
                 {
                     Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
                 }

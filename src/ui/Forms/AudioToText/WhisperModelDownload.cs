@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public bool AutoClose { get; internal set; }
         public WhisperModel LastDownloadedModel { get; private set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private bool _error = false;
 
         public WhisperModelDownload()
         {
@@ -57,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             LastDownloadedModel = (WhisperModel)comboBoxModels.Items[comboBoxModels.SelectedIndex];
-            var url = LastDownloadedModel.Url;
+            var url = _error ? LastDownloadedModel.UrlSecondary : LastDownloadedModel.UrlPrimary;
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -95,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 Cursor = Cursors.Default;
                 MessageBox.Show($"Unable to download {url}!" + Environment.NewLine + Environment.NewLine +
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
-                DialogResult = DialogResult.Cancel;
+                _error = true;
             }
         }
 
