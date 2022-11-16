@@ -20,6 +20,7 @@
    * Add more settings for "Delete auto-backup after" - thx pahtashow 
    * Add more options for actor in custom text export - thx Francois
    * Improve video auto load (allow eg. "_nl") - thx Hilde
+   * Improve fix italic tags - thx uckthis
 * FIXED:
    * Fix VLC video player not working
    * Fix for ASSA timestamps (rounding output) - thx Jerome
