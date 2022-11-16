@@ -442,6 +442,24 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             resultTexts = results;
+
+            try
+            {
+                if (!File.Exists(srtFileName))
+                {
+                    File.Delete(srtFileName);
+                }
+
+                if (!File.Exists(vttFileName))
+                {
+                    File.Delete(vttFileName);
+                }
+            }
+            catch 
+            {
+                // ignore
+            }
+
             return true;
         }
 

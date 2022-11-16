@@ -314,6 +314,12 @@ Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};              
 Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NAudio.Core.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NAudio.WinMM.dll;                DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Hardware.Common.dll;   DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Hardware.CrossPlatform.Cpuid.dll; DestDir: {app};                         Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Interop.CrossPlatform.Cpuid.dll; DestDir: {app};                          Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Interop.Shared.dll;    DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Hardware.Specification.Cpuid.dll; DestDir: {app};                              Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Logging.dll;                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Microsoft.Win32.Registry.dll;    DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -356,6 +362,13 @@ Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsU
 Type: files;      Name: {app}\System.Net.Http.Primitives.dll;         Check: IsUpgrade()
 Type: files;      Name: {app}\NAudio.Core.dll;                        Check: IsUpgrade()
 Type: files;      Name: {app}\NAudio.WinMM.dll;                       Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.dll;                          Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Hardware.Common.dll;          Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Hardware.CrossPlatform.Cpuid.dll; Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Interop.CrossPlatform.Cpuid.dll; Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Interop.Shared.dll;           Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Hardware.Specification.Cpuid.dll;  Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Logging.dll;                       Check: IsUpgrade()
 Type: files;      Name: {app}\Microsoft.Win32.Registry.dll;           Check: IsUpgrade()
 
 
