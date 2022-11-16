@@ -1319,7 +1319,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine("    <title>Subtitle Edit compare</title>");
                 sb.AppendLine("  </head>");
                 sb.AppendLine("  <style>");
-                sb.AppendLine("    td { font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu }");
+                sb.AppendLine("    td { font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu; padding: 8px; }");
                 sb.AppendLine("  </style>");
                 sb.AppendLine("  <body>");
                 sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
@@ -1366,7 +1366,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string GetFileName(string fileName)
         {
-            return string.IsNullOrEmpty(fileName) ? string.Empty : Path.GetFileName(fileName);
+            try
+            {
+                return string.IsNullOrEmpty(fileName) ? string.Empty : Path.GetFileName(fileName);
+            }
+            catch
+            {
+                return fileName;
+            }
         }
 
         private static string GetHtmlText(Paragraph p, string text)
