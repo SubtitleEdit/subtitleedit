@@ -3,10 +3,8 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -21,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<SampleTimeInfo> Ssts { get; set; }
         public List<SampleToChunkMap> Stsc { get; set; }
         public List<ChunkText> Texts;
+        public List<Paragraph> Paragraphs;
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
@@ -48,36 +47,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
-                        var offSets = new List<uint>();
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = GetUInt(8 + i * 4);
-                            offSets.Add(offset);
-                        }
-
-                        // Try to figure out if we allow two tries to get text size...
-                        var nonPrintableTexts = 0;
-                        for (var i = 0; i < totalEntries; i++)
-                        {
-                            var offset = offSets[i];
-                            if (HasNonPrintableCharsInSecond(fs, offset, i))
-                            {
-                                nonPrintableTexts++;
-                            }
-                        }
-                        var allowSecondRead = !(nonPrintableTexts > 1);
-
-                        for (var i = 0; i < totalEntries; i++)
-                        {
-                            var offset = offSets[i];
-                            var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
-                            var text = ReadText(fs, offset, nextOffset, handlerType, i, allowSecondRead);
-                            text.Offset = offset;
-                            fs.Seek((long)offset, SeekOrigin.Begin);
-                            text.Buffer = new byte[500];
-                            fs.Read(text.Buffer, 0, text.Buffer.Length);
-
-                            Texts.Add(text);
+                            Texts.Add(new ChunkText { Offset = offset });
                         }
                     }
                 }
@@ -90,37 +63,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
-                        var offSets = new List<ulong>();
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = GetUInt64(8 + i * 8);
-                            offSets.Add(offset);
-                        }
-
-                        // Try to figure out if we allow two tries to get text size...
-                        var nonPrintableTexts = 0;
-                        for (var i = 0; i < totalEntries; i++)
-                        {
-                            var offset = offSets[i];
-                            if (HasNonPrintableCharsInSecond(fs, offset, i))
-                            {
-                                nonPrintableTexts++;
-                            }
-                        }
-                        var allowSecondRead = !(nonPrintableTexts > 1);
-                        allowSecondRead = false;
-
-                        for (var i = 0; i < totalEntries; i++)
-                        {
-                            var offset = offSets[i];
-                            var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
-                            var text = ReadText(fs, offset, nextOffset, handlerType, i, allowSecondRead);
-                            text.Offset = offset;
-                            fs.Seek((long)offset, SeekOrigin.Begin);
-                            text.Buffer = new byte[500];
-                            fs.Read(text.Buffer, 0, text.Buffer.Length);
-
-                            Texts.Add(text);
+                            Texts.Add(new ChunkText { Offset = offset });
                         }
                     }
                 }
@@ -153,9 +99,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     {
                         var sampleCount = GetUInt(8 + i * 8);
                         var sampleDelta = GetUInt(12 + i * 8);
-                        Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
+                        for (var j = 0; j < sampleCount; j++)
+                        {
+                            Ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = sampleDelta });
+                        }
                     }
-
                 }
                 else if (Name == "stsc") // sample table sample to chunk map
                 {
@@ -163,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     var numberOfSampleTimes = GetUInt(4);
-                    for (int i = 0; i < numberOfSampleTimes; i++)
+                    for (var i = 0; i < numberOfSampleTimes; i++)
                     {
                         if (16 + i * 12 + 4 < Buffer.Length)
                         {
@@ -177,226 +125,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
+
+            if (handlerType != "vide" && handlerType != "soun")
+            {
+                Paragraphs = GetParagraphs(fs, handlerType == "subp");
+            }
         }
 
-        private static bool HasNonPrintableCharsInSecond(Stream fs, ulong offset, int index)
-        {
-            fs.Seek((long)offset, SeekOrigin.Begin);
-            var data = new byte[2];
-            fs.Read(data, 0, 2);
-            var textSize = (uint)GetWord(data, 0);
-            if (textSize != 0)
-            {
-                return false;
-            }
-
-            fs.Read(data, 0, 2);
-            textSize = (uint)GetWord(data, 0);
-            if (textSize > 0 && textSize < 500)
-            {
-                data = new byte[textSize];
-                fs.Read(data, 0, data.Length);
-                var s = GetString(data, 0, data.Length);
-                foreach (var ch in s)
-                {
-                    var nonRenderingCategories = new[]
-                    {
-                        UnicodeCategory.Control,
-                        UnicodeCategory.OtherNotAssigned,
-                        UnicodeCategory.Surrogate,
-                    };
-
-                    var isPrintable = char.IsWhiteSpace(ch) || !nonRenderingCategories.Contains(char.GetUnicodeCategory(ch));
-                    if (!isPrintable)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private ChunkText ReadText(Stream fs, ulong offset, ulong nextOffset, string handlerType, int index, bool allowSecondRead)
-        {
-            fs.Seek((long)offset, SeekOrigin.Begin);
-            var data = new byte[4];
-            fs.Read(data, 0, 2);
-            var textSize = (uint)GetWord(data, 0);
-
-            var maxSize = nextOffset - offset;
-            if (maxSize <= 2)
-            {
-                return new ChunkText { Size = 2 };
-            }
-
-            if (handlerType == "subp") // VobSub created with Mp4Box
-            {
-                if (textSize > 100)
-                {
-                    fs.Seek((long)offset, SeekOrigin.Begin);
-                    data = new byte[textSize + 2];
-                    fs.Read(data, 0, data.Length);
-                    SubPictures.Add(new SubPicture(data)); // TODO: Where is palette?
-                }
-            }
-            else
-            {
-                //if (handlerType == "text" && index + 1 < SampleSizes.Count && SampleSizes[index + 1] <= 2)
-                //{
-                //    return new ChunkText { Size = 2, Text = string.Empty };
-                //}
-
-                if (textSize == 0 && allowSecondRead)
-                {
-                    fs.Read(data, 0, 2);
-                    textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
-                }
-
-                if (textSize > 0 && textSize < 500 && textSize <= maxSize)
-                {
-                    data = new byte[textSize];
-                    fs.Read(data, 0, data.Length);
-                    var text = GetString(data, 0, (int)textSize).TrimEnd();
-
-                    if (_mdia.IsClosedCaption)
-                    {
-                        var sb = new StringBuilder();
-                        for (var j = 8; j < data.Length - 3; j++)
-                        {
-                            var h = data[j].ToString("X2").ToLowerInvariant();
-                            if (h.Length < 2)
-                            {
-                                h = "0" + h;
-                            }
-
-                            sb.Append(h);
-                            if (j % 2 == 1)
-                            {
-                                sb.Append(' ');
-                            }
-                        }
-
-                        var hex = sb.ToString();
-                        var errorCount = 0;
-                        text = ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
-                        if (text.StartsWith('n') && text.Length > 1)
-                        {
-                            text = "<i>" + text.Substring(1) + "</i>";
-                        }
-
-                        if (text.StartsWith("-n", StringComparison.Ordinal))
-                        {
-                            text = text.Remove(0, 2);
-                        }
-
-                        if (text.StartsWith("-N", StringComparison.Ordinal))
-                        {
-                            text = text.Remove(0, 2);
-                        }
-
-                        if (text.StartsWith('-') && !text.Contains(Environment.NewLine + "-"))
-                        {
-                            text = text.Remove(0, 1);
-                        }
-                    }
-
-                    text = text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine);
-                    return new ChunkText { Size = textSize + 2, Text = text };
-                }
-            }
-
-            return new ChunkText { Size = 2, Text = null };
-        }
-
-        public List<Paragraph> GetParagraphs2()
+        private List<Paragraph> GetParagraphs(Stream fs, bool subtitlePicture)
         {
             var paragraphs = new List<Paragraph>();
-
-            // expand time codes - TODO: move to read code
-            var ssts = new List<SampleTimeInfo>();
-            int sampleCount = 1;
-            foreach (var timeInfo in Ssts)
-            {
-
-                for (var i = 0; i < timeInfo.SampleCount; i++)
-                {
-                    ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = timeInfo.SampleDelta });
-                }
-            }
-            Ssts = ssts;
-
-            double totalTime = 0;
-            var index = 0;
-            var chunkIndex = 0;
-            var max = Math.Min(ssts.Count, SampleSizes.Count);
-            uint samplesPerChunk = 1;
-            while (index < max)
-            {
-                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == index);
-                if (newSamplesPerChunk != null)
-                {
-                    samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
-                }
-
-                if (chunkIndex >= Texts.Count || samplesPerChunk == 0)
-                {
-                    break;
-                }
-
-                var chunk = Texts[chunkIndex];
-                var p = new Paragraph();
-                for (var i=0; i<samplesPerChunk; i++)
-                {
-                    var sampleSize = SampleSizes[index];
-                    var sampleTime = ssts[index];
-                    totalTime += sampleTime.SampleDelta / (double)TimeScale;
-                    if (sampleSize > 2 && p.StartTime.TotalMilliseconds > 0)
-                    {
-                        p.StartTime.TotalMilliseconds = totalTime;
-                    }
-
-                    p.EndTime.TotalMilliseconds = totalTime;
-
-                    index++;
-                }
-
-                if (!string.IsNullOrEmpty(p.Text))
-                {
-                    paragraphs.Add(p);
-                }
-
-                chunkIndex++;
-            }
-
-            return paragraphs;
-        }
-
-        public List<Paragraph> GetParagraphs()
-        {
-            var paragraphs = new List<Paragraph>();
-
-            // expand time codes
-            var ssts = new List<SampleTimeInfo>();
-            foreach (var timeInfo in Ssts)
-            {
-                for (var i = 0; i < timeInfo.SampleCount; i++)
-                {
-                    ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = timeInfo.SampleDelta });
-                }
-            }
-            Ssts = ssts;
-
-
-            
-            uint count1 = 0;
             uint samplesPerChunk = 1;
             var max = Texts.Count;
             var index = 0;
             double totalTime = 0;
             for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
             {
-                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == chunkIndex+1);
+                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == chunkIndex + 1);
                 if (newSamplesPerChunk != null)
                 {
                     samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
@@ -406,24 +151,57 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 var p = new Paragraph();
                 for (var i = 0; i < samplesPerChunk; i++)
                 {
+                    if (index >= SampleSizes.Count)
+                    {
+                        return paragraphs;
+                    }
+
                     var sampleSize = SampleSizes[index];
-                    var sampleTime = ssts[index];
+                    var sampleTime = Ssts[index];
                     var before = totalTime;
                     totalTime += sampleTime.SampleDelta / (double)TimeScale;
+
                     if (sampleSize > 2)
                     {
                         p.StartTime.TotalSeconds = before;
-                        var textSize = (uint)GetWord(chunk.Buffer, 0);
-                        var add = 0;
-                        if (textSize == 0) // && sampleSize == 2)
+
+                        fs.Seek((long)chunk.Offset, SeekOrigin.Begin);
+                        var buffer = new byte[2];
+                        fs.Read(buffer, 0, buffer.Length);
+                        var textSize = (uint)GetWord(buffer, 0);
+                        if (textSize == 0) 
                         {
-                            textSize = (uint)GetWord(chunk.Buffer, 2);
-                            add = 2;
+                            //TODO: only if samples per chunk > 2 ?
+                            fs.Read(buffer, 0, buffer.Length);
+                            textSize = (uint)GetWord(buffer, 0);
                         }
 
                         if (textSize > 0)
                         {
-                            p.Text = GetString(chunk.Buffer, 2 + add, (int)textSize).TrimEnd();
+                            if (subtitlePicture) // VobSub created with Mp4Box
+                            {
+                                if (textSize > 100)
+                                {
+                                    buffer = new byte[textSize+2];
+                                    fs.Seek((long)chunk.Offset, SeekOrigin.Begin);
+                                    fs.Read(buffer, 0, buffer.Length);
+                                    SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
+                                    paragraphs.Add(p);
+                                }
+                            }
+                            else
+                            {
+                                buffer = new byte[textSize];
+                                fs.Read(buffer, 0, buffer.Length);
+                                p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
+
+                                if (_mdia.IsClosedCaption)
+                                {
+                                    p.Text = MakeSceneristText(buffer);
+                                }
+
+                                chunk.Text = p.Text;
+                            }
                         }
                     }
 
@@ -436,97 +214,55 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     paragraphs.Add(p);
                 }
-
-                count1 += samplesPerChunk;
             }
-
-            var totalCount = count1;
-
-
-
-
-
-
-
-
-
-
-
-
-            //var index = 0;
-            //var textIndex = 0;
-            //double totalTime = 0;
-
-            //if (SampleSizes.Count > 2 && SampleSizes[0] == 2 && SampleSizes[1] == 2 &&
-            //    Texts.Count > 2 && string.IsNullOrEmpty(Texts[0].Text) && !string.IsNullOrEmpty(Texts[1].Text))
-            //{
-            //    index++;
-            //    totalTime += Ssts[0].SampleDelta / (double)TimeScale;
-            //}
-
-            //while (index < Ssts.Count)
-            //{
-            //    var before = totalTime;
-            //    totalTime += Ssts[index].SampleDelta / (double)TimeScale;
-
-            //    if (Ssts[index].SampleDelta == 0 && index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
-            //    {
-            //        index++;
-            //        before = totalTime;
-            //        totalTime += Ssts[index].SampleDelta / (double)TimeScale;
-
-            //        if (textIndex < Texts.Count)
-            //        {
-            //            var text = Texts[textIndex];
-            //            if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
-            //            {
-            //                textIndex++;
-            //            }
-            //        }
-            //    }
-
-            //    if (index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
-            //    {
-            //        index++;
-            //        before = totalTime;
-            //        totalTime += Ssts[index].SampleDelta / (double)TimeScale;
-            //    }
-
-            //    if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
-            //    {
-            //        paragraphs.Add(new Paragraph(string.Empty, before * 1000.0, totalTime * 1000.0));
-            //    }
-            //    else if (Texts.Count > textIndex)
-            //    {
-            //        var text = Texts[textIndex];
-
-            //        if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
-            //        {
-            //            textIndex++;
-            //            text = Texts[textIndex];
-            //        }
-
-            //        if (!string.IsNullOrEmpty(text.Text))
-            //        {
-            //            paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
-            //        }
-            //    }
-
-            //    index++;
-            //    textIndex++;
-            //}
-
-            //if (index <= Ssts.Count && textIndex < Texts.Count && index > 0)
-            //{
-            //    var text = Texts[textIndex];
-            //    if (!string.IsNullOrEmpty(text.Text))
-            //    {
-            //        var before = totalTime - Ssts[index - 1].SampleDelta / (double)TimeScale;
-            //        paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
-            //    }
-            //}
 
             return paragraphs;
         }
+
+        private static string MakeSceneristText(byte[] buffer)
+        {
+            var sb = new StringBuilder();
+            for (var j = 8; j < buffer.Length - 3; j++)
+            {
+                var h = buffer[j].ToString("X2").ToLowerInvariant();
+                if (h.Length < 2)
+                {
+                    h = "0" + h;
+                }
+
+                sb.Append(h);
+                if (j % 2 == 1)
+                {
+                    sb.Append(' ');
+                }
+            }
+
+            var hex = sb.ToString();
+            var errorCount = 0;
+            var text = ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
+            if (text.StartsWith('n') && text.Length > 1)
+            {
+                text = "<i>" + text.Substring(1) + "</i>";
+            }
+
+            if (text.StartsWith("-n", StringComparison.Ordinal))
+            {
+                text = text.Remove(0, 2);
+            }
+
+            if (text.StartsWith("-N", StringComparison.Ordinal))
+            {
+                text = text.Remove(0, 2);
+            }
+
+            if (text.StartsWith('-') && !text.Contains(Environment.NewLine + "-"))
+            {
+                text = text.Remove(0, 1);
+            }
+
+            return text;
+        }
+
+        public List<Paragraph> GetParagraphs() => Paragraphs;
     }
 }
