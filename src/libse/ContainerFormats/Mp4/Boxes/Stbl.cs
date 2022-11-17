@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -66,12 +67,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         }
                         var allowSecondRead = !(nonPrintableTexts > 1);
 
-
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = offSets[i];
                             var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
                             var text = ReadText(fs, offset, nextOffset, handlerType, i, allowSecondRead);
+                            text.Offset = offset;
+                            fs.Seek((long)offset, SeekOrigin.Begin);
+                            text.Buffer = new byte[500];
+                            fs.Read(text.Buffer, 0, text.Buffer.Length);
+
                             Texts.Add(text);
                         }
                     }
@@ -103,12 +108,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             }
                         }
                         var allowSecondRead = !(nonPrintableTexts > 1);
+                        allowSecondRead = false;
 
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = offSets[i];
                             var nextOffset = i + 1 < totalEntries ? offSets[i + 1] : offset + 500;
                             var text = ReadText(fs, offset, nextOffset, handlerType, i, allowSecondRead);
+                            text.Offset = offset;
+                            fs.Seek((long)offset, SeekOrigin.Begin);
+                            text.Buffer = new byte[500];
+                            fs.Read(text.Buffer, 0, text.Buffer.Length);
+
                             Texts.Add(text);
                         }
                     }
@@ -188,7 +199,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 var s = GetString(data, 0, data.Length);
                 foreach (var ch in s)
                 {
-                    var nonRenderingCategories = new[] 
+                    var nonRenderingCategories = new[]
                     {
                         UnicodeCategory.Control,
                         UnicodeCategory.OtherNotAssigned,
@@ -231,10 +242,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
             else
             {
-                if (handlerType == "text" && index + 1 < SampleSizes.Count && SampleSizes[index + 1] <= 2)
-                {
-                    return new ChunkText { Size = 2, Text = string.Empty };
-                }
+                //if (handlerType == "text" && index + 1 < SampleSizes.Count && SampleSizes[index + 1] <= 2)
+                //{
+                //    return new ChunkText { Size = 2, Text = string.Empty };
+                //}
 
                 if (textSize == 0 && allowSecondRead)
                 {
@@ -298,6 +309,69 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             return new ChunkText { Size = 2, Text = null };
         }
 
+        public List<Paragraph> GetParagraphs2()
+        {
+            var paragraphs = new List<Paragraph>();
+
+            // expand time codes - TODO: move to read code
+            var ssts = new List<SampleTimeInfo>();
+            int sampleCount = 1;
+            foreach (var timeInfo in Ssts)
+            {
+
+                for (var i = 0; i < timeInfo.SampleCount; i++)
+                {
+                    ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = timeInfo.SampleDelta });
+                }
+            }
+            Ssts = ssts;
+
+            double totalTime = 0;
+            var index = 0;
+            var chunkIndex = 0;
+            var max = Math.Min(ssts.Count, SampleSizes.Count);
+            uint samplesPerChunk = 1;
+            while (index < max)
+            {
+                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == index);
+                if (newSamplesPerChunk != null)
+                {
+                    samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
+                }
+
+                if (chunkIndex >= Texts.Count || samplesPerChunk == 0)
+                {
+                    break;
+                }
+
+                var chunk = Texts[chunkIndex];
+                var p = new Paragraph();
+                for (var i=0; i<samplesPerChunk; i++)
+                {
+                    var sampleSize = SampleSizes[index];
+                    var sampleTime = ssts[index];
+                    totalTime += sampleTime.SampleDelta / (double)TimeScale;
+                    if (sampleSize > 2 && p.StartTime.TotalMilliseconds > 0)
+                    {
+                        p.StartTime.TotalMilliseconds = totalTime;
+                    }
+
+                    p.EndTime.TotalMilliseconds = totalTime;
+
+                    index++;
+                }
+
+                if (!string.IsNullOrEmpty(p.Text))
+                {
+                    paragraphs.Add(p);
+                }
+
+                chunkIndex++;
+            }
+
+            return paragraphs;
+        }
+
         public List<Paragraph> GetParagraphs()
         {
             var paragraphs = new List<Paragraph>();
@@ -313,78 +387,144 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
             Ssts = ssts;
 
+
+            
+            uint count1 = 0;
+            uint samplesPerChunk = 1;
+            var max = Texts.Count;
             var index = 0;
-            var textIndex = 0;
             double totalTime = 0;
-
-            if (SampleSizes.Count > 2 && SampleSizes[0] == 2 && SampleSizes[1] == 2 &&
-                Texts.Count > 2 && string.IsNullOrEmpty(Texts[0].Text) && !string.IsNullOrEmpty(Texts[1].Text))
+            for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
             {
-                index++;
-                totalTime += Ssts[0].SampleDelta / (double)TimeScale;
-            }
-
-            while (index < Ssts.Count)
-            {
-                var before = totalTime;
-                totalTime += Ssts[index].SampleDelta / (double)TimeScale;
-
-                if (Ssts[index].SampleDelta == 0 && index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
+                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == chunkIndex+1);
+                if (newSamplesPerChunk != null)
                 {
-                    index++;
-                    before = totalTime;
-                    totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+                    samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
+                }
 
-                    if (textIndex < Texts.Count)
+                var chunk = Texts[chunkIndex];
+                var p = new Paragraph();
+                for (var i = 0; i < samplesPerChunk; i++)
+                {
+                    var sampleSize = SampleSizes[index];
+                    var sampleTime = ssts[index];
+                    var before = totalTime;
+                    totalTime += sampleTime.SampleDelta / (double)TimeScale;
+                    if (sampleSize > 2)
                     {
-                        var text = Texts[textIndex];
-                        if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
+                        p.StartTime.TotalSeconds = before;
+                        var textSize = (uint)GetWord(chunk.Buffer, 0);
+                        var add = 0;
+                        if (textSize == 0) // && sampleSize == 2)
                         {
-                            textIndex++;
+                            textSize = (uint)GetWord(chunk.Buffer, 2);
+                            add = 2;
+                        }
+
+                        if (textSize > 0)
+                        {
+                            p.Text = GetString(chunk.Buffer, 2 + add, (int)textSize).TrimEnd();
                         }
                     }
-                }
 
-                if (index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
-                {
+                    p.EndTime.TotalSeconds = totalTime;
+
                     index++;
-                    before = totalTime;
-                    totalTime += Ssts[index].SampleDelta / (double)TimeScale;
                 }
 
-                if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
+                if (!string.IsNullOrEmpty(p.Text))
                 {
-                    paragraphs.Add(new Paragraph(string.Empty, before * 1000.0, totalTime * 1000.0));
-                }
-                else if (Texts.Count > textIndex)
-                {
-                    var text = Texts[textIndex];
-
-                    if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
-                    {
-                        textIndex++;
-                        text = Texts[textIndex];
-                    }
-
-                    if (!string.IsNullOrEmpty(text.Text))
-                    {
-                        paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
-                    }
+                    paragraphs.Add(p);
                 }
 
-                index++;
-                textIndex++;
+                count1 += samplesPerChunk;
             }
 
-            if (index <= Ssts.Count && textIndex < Texts.Count && index > 0)
-            {
-                var text = Texts[textIndex];
-                if (!string.IsNullOrEmpty(text.Text))
-                {
-                    var before = totalTime - Ssts[index - 1].SampleDelta / (double)TimeScale;
-                    paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
-                }
-            }
+            var totalCount = count1;
+
+
+
+
+
+
+
+
+
+
+
+
+            //var index = 0;
+            //var textIndex = 0;
+            //double totalTime = 0;
+
+            //if (SampleSizes.Count > 2 && SampleSizes[0] == 2 && SampleSizes[1] == 2 &&
+            //    Texts.Count > 2 && string.IsNullOrEmpty(Texts[0].Text) && !string.IsNullOrEmpty(Texts[1].Text))
+            //{
+            //    index++;
+            //    totalTime += Ssts[0].SampleDelta / (double)TimeScale;
+            //}
+
+            //while (index < Ssts.Count)
+            //{
+            //    var before = totalTime;
+            //    totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+
+            //    if (Ssts[index].SampleDelta == 0 && index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
+            //    {
+            //        index++;
+            //        before = totalTime;
+            //        totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+
+            //        if (textIndex < Texts.Count)
+            //        {
+            //            var text = Texts[textIndex];
+            //            if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
+            //            {
+            //                textIndex++;
+            //            }
+            //        }
+            //    }
+
+            //    if (index + 1 < SampleSizes.Count && SampleSizes[index] == 2)
+            //    {
+            //        index++;
+            //        before = totalTime;
+            //        totalTime += Ssts[index].SampleDelta / (double)TimeScale;
+            //    }
+
+            //    if (_mdia.IsVobSubSubtitle && SubPictures.Count > textIndex)
+            //    {
+            //        paragraphs.Add(new Paragraph(string.Empty, before * 1000.0, totalTime * 1000.0));
+            //    }
+            //    else if (Texts.Count > textIndex)
+            //    {
+            //        var text = Texts[textIndex];
+
+            //        if (text.Size <= 2 && string.IsNullOrEmpty(text.Text) && textIndex + 1 < Texts.Count)
+            //        {
+            //            textIndex++;
+            //            text = Texts[textIndex];
+            //        }
+
+            //        if (!string.IsNullOrEmpty(text.Text))
+            //        {
+            //            paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
+            //        }
+            //    }
+
+            //    index++;
+            //    textIndex++;
+            //}
+
+            //if (index <= Ssts.Count && textIndex < Texts.Count && index > 0)
+            //{
+            //    var text = Texts[textIndex];
+            //    if (!string.IsNullOrEmpty(text.Text))
+            //    {
+            //        var before = totalTime - Ssts[index - 1].SampleDelta / (double)TimeScale;
+            //        paragraphs.Add(new Paragraph(text.Text, before * 1000.0, totalTime * 1000.0));
+            //    }
+            //}
 
             return paragraphs;
         }
