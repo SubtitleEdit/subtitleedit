@@ -2,7 +2,7 @@
 {
     public class ChunkText
     {
-        public uint Size { get; set; }
         public string Text { get; set; }
+        public ulong Offset { get; set; }
     }
 }
