@@ -170,9 +170,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         var buffer = new byte[2];
                         fs.Read(buffer, 0, buffer.Length);
                         var textSize = (uint)GetWord(buffer, 0);
-                        if (textSize == 0)
+                        if (textSize == 0 && samplesPerChunk > 1)
                         {
-                            //TODO: only if samples per chunk > 2 ?
                             fs.Read(buffer, 0, buffer.Length);
                             textSize = (uint)GetWord(buffer, 0);
                         }
