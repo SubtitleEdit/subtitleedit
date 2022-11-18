@@ -628,6 +628,16 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void RemoveUnneededSpacesDutchAposS()
+        {
+            var s = Utilities.RemoveUnneededSpaces("Nou 's avonds?", "en");
+            Assert.AreEqual("Nou's avonds?", s);
+
+            s = Utilities.RemoveUnneededSpaces("Nou 's avonds?", "nl");
+            Assert.AreEqual("Nou 's avonds?", s);
+        }
+
+        [TestMethod]
         public void CountTagInTextStringOneLetterString()
         {
             int count = Utilities.CountTagInText("HHH", "H");
