@@ -21,15 +21,18 @@
    * Add more options for actor in custom text export - thx Francois
    * Improve video auto load (allow eg. "_nl") - thx Hilde
    * Improve fix italic tags - thx uckthis
+   * Whisper.cpp is default for Windows + in-program download
 * FIXED:
    * Fix VLC video player not working
    * Fix for ASSA timestamps (rounding output) - thx Jerome
-   * Fix for mp4 subtitle timestamps - thx DrReddP
+   * Fix for mp4 subtitle timestamps - thx DrReddP/Ding-adong
    * Fix crash trying to locate Whisper
    * Fix setting path to ffmpeg when using Whisper
    * Fix OCR window resize on Linux - thx Mangoes
    * Fix bookmark showing on first spell check line - thx OmrSi
    * Fix format XIF writing - thx Per
+   * Fix for WebVTT with line# hours - thx garion84
+   * Fix " 's" / Dutch in "Fix missing spaces"" - thx Jean-Pierre
 
 
 3.6.8 (24th October 2022)
