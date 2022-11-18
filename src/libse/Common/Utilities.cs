@@ -1980,12 +1980,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             const char operatingSystemCommand = '\u009D';
 
             var text = input.Trim();
-            int len = text.Length;
-            int count = 0;
-            char[] textChars = new char[len];
-            for (int i = 0; i < len; i++)
+            var len = text.Length;
+            var count = 0;
+            var textChars = new char[len];
+            for (var i = 0; i < len; i++)
             {
-                char ch = text[i];
+                var ch = text[i];
                 switch (ch)
                 {
                     // Ignore: \u200B, \uFEFF and \u009D.
@@ -2107,14 +2107,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 text = text.Replace(" ,", ",");
             }
 
-            while (text.Contains(" 's "))
+            if (language != "nl")
             {
-                text = text.Replace(" 's ", "'s ");
-            }
+                while (text.Contains(" 's "))
+                {
+                    text = text.Replace(" 's ", "'s ");
+                }
 
-            while (text.Contains(" 's" + Environment.NewLine))
-            {
-                text = text.Replace(" 's" + Environment.NewLine, "'s" + Environment.NewLine);
+                while (text.Contains(" 's" + Environment.NewLine))
+                {
+                    text = text.Replace(" 's" + Environment.NewLine, "'s" + Environment.NewLine);
+                }
             }
 
             if (text.EndsWith(" .", StringComparison.Ordinal))
