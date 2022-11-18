@@ -21,19 +21,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string timeCodeFormatNoHours = "{0:00}:{1:00}.{2:000}"; // h:mm:ss.cc
-            const string timeCodeFormatHours = "{0}:{1:00}:{2:00}.{3:000}"; // h:mm:ss.cc
+            const string timeCodeFormatNoHours = "{0:00}:{1:00}.{2:000}"; // mm:ss.cc
+            const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.cc
             const string paragraphWriteFormat = "{0} --> {1}{2}{5}{3}{4}{5}";
 
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT FILE");
             sb.AppendLine();
-            int count = 1;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            var count = 1;
+            foreach (var p in subtitle.Paragraphs)
             {
-                string start = string.Format(timeCodeFormatNoHours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
-                string end = string.Format(timeCodeFormatNoHours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
-                string positionInfo = WebVTT.GetPositionInfoFromAssTag(p);
+                var start = string.Format(timeCodeFormatNoHours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
+                var end = string.Format(timeCodeFormatNoHours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
+                var positionInfo = WebVTT.GetPositionInfoFromAssTag(p);
 
                 if (p.StartTime.Hours > 0 || p.EndTime.Hours > 0)
                 {
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
                 }
 
-                string style = string.Empty;
+                var style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT FILE")
                 {
                     style = p.Extra;
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             var positionInfo = string.Empty;
             var hadEmptyLine = false;
-            int numbers = 0;
+            var numbers = 0;
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
