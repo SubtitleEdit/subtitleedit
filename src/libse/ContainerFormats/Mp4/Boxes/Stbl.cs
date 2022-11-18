@@ -16,17 +16,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public ulong TimeScale { get; set; }
         private readonly Mdia _mdia;
         public List<uint> SampleSizes;
-        public List<SampleTimeInfo> Ssts { get; set; }
+        public List<uint> Ssts { get; set; }
         public List<SampleToChunkMap> Stsc { get; set; }
         public List<ChunkText> Texts;
         public List<Paragraph> Paragraphs;
+        public List<Paragraph> GetParagraphs() => Paragraphs;
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
             TimeScale = timeScale;
             _mdia = mdia;
             Position = (ulong)fs.Position;
-            Ssts = new List<SampleTimeInfo>();
+            Ssts = new List<uint>();
             Stsc = new List<SampleToChunkMap>();
             SampleSizes = new List<uint>();
             Texts = new List<ChunkText>();
@@ -101,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         var sampleDelta = GetUInt(12 + i * 8);
                         for (var j = 0; j < sampleCount; j++)
                         {
-                            Ssts.Add(new SampleTimeInfo { SampleCount = 1, SampleDelta = sampleDelta });
+                            Ssts.Add(sampleDelta);
                         }
                     }
                 }
@@ -151,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 var p = new Paragraph();
                 for (var i = 0; i < samplesPerChunk; i++)
                 {
-                    if (index >= SampleSizes.Count)
+                    if (index >= SampleSizes.Count || index >= Ssts.Count)
                     {
                         return paragraphs;
                     }
@@ -159,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     var sampleSize = SampleSizes[index];
                     var sampleTime = Ssts[index];
                     var before = totalTime;
-                    totalTime += sampleTime.SampleDelta / (double)TimeScale;
+                    totalTime += sampleTime / (double)TimeScale;
 
                     if (sampleSize > 2)
                     {
@@ -169,7 +170,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         var buffer = new byte[2];
                         fs.Read(buffer, 0, buffer.Length);
                         var textSize = (uint)GetWord(buffer, 0);
-                        if (textSize == 0) 
+                        if (textSize == 0)
                         {
                             //TODO: only if samples per chunk > 2 ?
                             fs.Read(buffer, 0, buffer.Length);
@@ -182,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             {
                                 if (textSize > 100)
                                 {
-                                    buffer = new byte[textSize+2];
+                                    buffer = new byte[textSize + 2];
                                     fs.Seek((long)chunk.Offset, SeekOrigin.Begin);
                                     fs.Read(buffer, 0, buffer.Length);
                                     SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
@@ -197,7 +198,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                                 if (_mdia.IsClosedCaption)
                                 {
-                                    p.Text = MakeSceneristText(buffer);
+                                    p.Text = MakeScenaristText(buffer);
                                 }
 
                                 chunk.Text = p.Text;
@@ -206,7 +207,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     }
 
                     p.EndTime.TotalSeconds = totalTime;
-
                     index++;
                 }
 
@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             return paragraphs;
         }
 
-        private static string MakeSceneristText(byte[] buffer)
+        private static string MakeScenaristText(byte[] buffer)
         {
             var sb = new StringBuilder();
             for (var j = 8; j < buffer.Length - 3; j++)
@@ -262,7 +262,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             return text;
         }
-
-        public List<Paragraph> GetParagraphs() => Paragraphs;
     }
 }
