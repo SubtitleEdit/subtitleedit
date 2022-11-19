@@ -51,8 +51,14 @@
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
             this.labelCpp = new System.Windows.Forms.Label();
+            this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.whisperPhpOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
+            this.contextMenuStripWhisperAdvanced.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -289,6 +295,42 @@
             this.labelCpp.TabIndex = 22;
             this.labelCpp.Text = "CPP";
             // 
+            // contextMenuStripWhisperAdvanced
+            // 
+            this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.whisperPhpOriginalToolStripMenuItem,
+            this.whisperCppCToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.removeTemporaryFilesToolStripMenuItem});
+            this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(200, 98);
+            // 
+            // whisperPhpOriginalToolStripMenuItem
+            // 
+            this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
+            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper php (original)";
+            this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
+            // 
+            // whisperCppCToolStripMenuItem
+            // 
+            this.whisperCppCToolStripMenuItem.Name = "whisperCppCToolStripMenuItem";
+            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
+            this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            // 
+            // removeTemporaryFilesToolStripMenuItem
+            // 
+            this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
+            this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
+            // 
             // WhisperAudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,6 +364,7 @@
             this.groupBoxModels.ResumeLayout(false);
             this.groupBoxModels.PerformLayout();
             this.groupBoxInputFiles.ResumeLayout(false);
+            this.contextMenuStripWhisperAdvanced.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -351,5 +394,10 @@
         private System.Windows.Forms.ComboBox comboBoxLanguages;
         private System.Windows.Forms.CheckBox checkBoxTranslateToEnglish;
         private System.Windows.Forms.Label labelCpp;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripWhisperAdvanced;
+        private System.Windows.Forms.ToolStripMenuItem whisperPhpOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem whisperCppCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
     }
 }

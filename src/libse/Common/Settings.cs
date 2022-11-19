@@ -410,7 +410,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
-        public bool UseWhisperCpp { get; set; }
+        public bool WhisperUseCpp { get; set; }
+        public bool WhisperDeleteTempFiles { get; set; }
         public string WhisperModel { get; set; }
         public string WhisperLanguageCode { get; set; }
         public string WhisperLocation { get; set; }
@@ -614,7 +615,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             GenVideoFontSizePercentOfHeight = 0.078f;
             GenVideoNonAssaBox = true;
             VoskPostProcessing = true;
-            UseWhisperCpp = Configuration.IsRunningOnWindows;
+            WhisperUseCpp = Configuration.IsRunningOnWindows;
+            WhisperDeleteTempFiles = true;
             WhisperExtraSettings = "";
             WhisperLanguageCode = "en";
             AudioToTextLineMaxChars = 86;
@@ -6131,10 +6133,16 @@ $HorzAlign          =   Center
                 settings.Tools.VoskModel = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("UseWhisperCpp");
+            subNode = node.SelectSingleNode("WhisperUseCpp");
             if (subNode != null)
             {
-                settings.Tools.UseWhisperCpp = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.WhisperUseCpp = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("WhisperDeleteTempFiles");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperDeleteTempFiles = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("WhisperModel");
@@ -10406,7 +10414,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
-                textWriter.WriteElementString("UseWhisperCpp", settings.Tools.UseWhisperCpp.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperUseCpp", settings.Tools.WhisperUseCpp.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WhisperDeleteTempFiles", settings.Tools.WhisperDeleteTempFiles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);

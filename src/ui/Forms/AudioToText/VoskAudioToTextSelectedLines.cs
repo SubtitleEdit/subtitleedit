@@ -114,7 +114,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 buttonDownload.Enabled = false;
                 comboBoxModels.Enabled = false;
                 var waveFileName = videoFileName;
-                textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);
                 if (_cancel)
                 {

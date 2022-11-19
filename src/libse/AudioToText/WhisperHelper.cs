@@ -8,17 +8,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
     {
         public static IWhisperModel GetWhisperModel()
         {
-            return Configuration.Settings.Tools.UseWhisperCpp ? (IWhisperModel)new WhisperCppModel() : new WhisperModel();
+            return Configuration.Settings.Tools.WhisperUseCpp ? (IWhisperModel)new WhisperCppModel() : new WhisperModel();
         }
 
         public static string ModelExtension()
         {
-            return Configuration.Settings.Tools.UseWhisperCpp ? ".bin" : ".pt";
+            return Configuration.Settings.Tools.WhisperUseCpp ? ".bin" : ".pt";
         }
 
         public static string GetWebSiteUrl()
         {
-            return Configuration.Settings.Tools.UseWhisperCpp ? "https://github.com/ggerganov/whisper.cpp" : "https://github.com/openai/whisper";
+            return Configuration.Settings.Tools.WhisperUseCpp ? "https://github.com/ggerganov/whisper.cpp" : "https://github.com/openai/whisper";
         }
 
         public static bool IsWhisperInstalled()
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperFolder()
         {
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperUseCpp)
             {
                 var path = Path.Combine(Configuration.DataDirectory, "Whisper");
                 return Directory.Exists(path) ? path : null;
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
-                if (Configuration.Settings.Tools.UseWhisperCpp)
+                if (Configuration.Settings.Tools.WhisperUseCpp)
                 {
                     var path = Path.Combine(Configuration.DataDirectory, "Whisper");
                     return Directory.Exists(path) ? path : null;
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             if (Configuration.IsRunningOnWindows)
             {
 
-                if (Configuration.Settings.Tools.UseWhisperCpp)
+                if (Configuration.Settings.Tools.WhisperUseCpp)
                 {
                     var f = Path.Combine(GetWhisperFolder(), "main.exe");
                     if (File.Exists(f))
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
             }
 
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperUseCpp)
             {
                 var f = Path.Combine(GetWhisperFolder(), "main");
                 if (File.Exists(f))
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperModelForCmdLine(string model)
         {
-            if (Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.Settings.Tools.WhisperUseCpp)
             {
                 return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
             }
