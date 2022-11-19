@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public bool IsInNamesMultiWordList(string input, string word)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(word))
             {
                 return false;
             }
@@ -281,16 +281,20 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 return true;
             }
-            foreach (string multiWordName in _namesMultiList)
+
+            foreach (var multiWordName in _namesMultiList)
             {
-                if (text.FastIndexOf(multiWordName) >= 0)
+                if (text.FastIndexOf(multiWordName) < 0)
                 {
-                    if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
-                    {
-                        return true;
-                    }
+                    continue;
+                }
+
+                if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
+                {
+                    return true;
                 }
             }
+
             return false;
         }
 
