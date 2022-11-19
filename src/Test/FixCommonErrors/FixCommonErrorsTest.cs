@@ -1692,6 +1692,17 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixSingleLineDash5NoChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "- Tallie, start your" + Environment.NewLine + "approach. - Copy that.");
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Tallie, start your" + Environment.NewLine + "approach. - Copy that.");
+            }
+        }
+
         #endregion FixHyphens (remove dash)
 
         #region Ellipses start
