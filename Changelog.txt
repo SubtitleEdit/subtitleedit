@@ -6,7 +6,7 @@
    * Add Whisper translate to English option - thx David 
    * Add some support for frame rate in Spruce format
    * Allow minimize for audio-to-text windows
-   * Set x11 as default mpv vo on Linux
+   * Set x11 as default mpv vo (video output) on Linux
    * Add shortcut for ASSA bacground box - thx Fuad
 * IMPROVED:
    * Update French translation - the Peirre

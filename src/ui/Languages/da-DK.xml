@@ -2171,6 +2171,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ApplyAssaOverrideTags>Anvend ASSA override tags til valgte linjer</ApplyAssaOverrideTags>
     <SetAssaPosition>Indstil/hent ASSA position</SetAssaPosition>
     <SetAssaResolution>Indstil ASSA -opløsning (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Indstil ASSA baggrundsboks</SetAssaBgBox>
     <TakeAutoBackup>Tag automatisk backup nu</TakeAutoBackup>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>

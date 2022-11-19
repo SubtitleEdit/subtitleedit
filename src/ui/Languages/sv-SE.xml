@@ -2180,6 +2180,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <ApplyAssaOverrideTags>Tillämpa ASSA åsidosättande taggar på urval</ApplyAssaOverrideTags>
     <SetAssaPosition>Ställ in/få ASSA-position</SetAssaPosition>
     <SetAssaResolution>Ställ in ASSA-upplösning (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Ställ in ASSA bakgrundslåda</SetAssaBgBox>
     <TakeAutoBackup>Ta automatisk säkerhetskopiering nu</TakeAutoBackup>
     <ShowLineBreaksAs>Visa radbrytningar i listvy som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Spara som..." använder filnamn från</SaveAsFileNameFrom>
