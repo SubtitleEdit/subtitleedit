@@ -58,8 +58,10 @@
             this.labelCpp = new System.Windows.Forms.Label();
             this.labelElapsed = new System.Windows.Forms.Label();
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.speedupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whisperPhpOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -373,24 +375,38 @@
             // contextMenuStripWhisperAdvanced
             // 
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.noneToolStripMenuItem,
-            this.speedupToolStripMenuItem});
+            this.whisperPhpOriginalToolStripMenuItem,
+            this.whisperCppCToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(200, 98);
             // 
-            // speedupToolStripMenuItem
+            // whisperPhpOriginalToolStripMenuItem
             // 
-            this.speedupToolStripMenuItem.Name = "speedupToolStripMenuItem";
-            this.speedupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.speedupToolStripMenuItem.Text = "--speed-up";
-            this.speedupToolStripMenuItem.Click += new System.EventHandler(this.speedupToolStripMenuItem_Click);
+            this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
+            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper php (original)";
+            this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
             // 
-            // noneToolStripMenuItem
+            // whisperCppCToolStripMenuItem
             // 
-            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
-            this.noneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.noneToolStripMenuItem.Text = "(none)";
-            this.noneToolStripMenuItem.Click += new System.EventHandler(this.noneToolStripMenuItem_Click);
+            this.whisperCppCToolStripMenuItem.Name = "whisperCppCToolStripMenuItem";
+            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
+            this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            // 
+            // removeTemporaryFilesToolStripMenuItem
+            // 
+            this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
+            this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
             // WhisperAudioToText
             // 
@@ -465,7 +481,9 @@
         private System.Windows.Forms.Label labelCpp;
         private System.Windows.Forms.Label labelElapsed;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWhisperAdvanced;
-        private System.Windows.Forms.ToolStripMenuItem speedupToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem whisperPhpOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem whisperCppCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
     }
 }

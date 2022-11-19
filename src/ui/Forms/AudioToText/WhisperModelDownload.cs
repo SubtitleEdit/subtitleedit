@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             buttonDownload.Enabled = true;
-            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "Vosk model");
+            labelPleaseWait.Text = string.Format(LanguageSettings.Current.SettingsFfmpeg.XDownloadOk, "Whisper model");
         }
     }
 }

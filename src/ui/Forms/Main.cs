@@ -34677,7 +34677,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.Settings.Tools.WhisperUseCpp)
             {
                 if (!RequireWhisperCpp())
                 {
@@ -34735,7 +34735,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void CheckWhisperCpp()
         {
-            if (!Configuration.Settings.Tools.UseWhisperCpp)
+            if (!Configuration.Settings.Tools.WhisperUseCpp)
             {
                 return;
             }
@@ -34743,13 +34743,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
             {
                 SeLogger.Error("UseWhisperCpp changed to 'False' as 'Whisper/whisper' or '/Whisper/main' was not found!");
-                Configuration.Settings.Tools.UseWhisperCpp = false;
+                Configuration.Settings.Tools.WhisperUseCpp = false;
             }
 
             if (Configuration.IsRunningOnWindows && WhisperHelper.GetWhisperPathAndFileName() == "whisper")
             {
                 SeLogger.Error("UseWhisperCpp changed to 'False' as 'Whisper/whisper.exe' or '/Whisper/main.exe' was not found!");
-                Configuration.Settings.Tools.UseWhisperCpp = false;
+                Configuration.Settings.Tools.WhisperUseCpp = false;
             }
         }
 

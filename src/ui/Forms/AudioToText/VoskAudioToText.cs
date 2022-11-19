@@ -143,7 +143,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonBatchMode.Enabled = false;
             comboBoxModels.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
-            textBoxLog.AppendText("Wav file name: " + waveFileName);
             textBoxLog.AppendText(Environment.NewLine);
             progressBar1.Style = ProgressBarStyle.Blocks;
             var transcript = TranscribeViaVosk(waveFileName, modelFileName);
@@ -201,7 +200,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     continue;
                 }
 
-                textBoxLog.AppendText("Wav file name: " + waveFileName + Environment.NewLine);
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaVosk(waveFileName, modelFileName);
                 if (_cancel)

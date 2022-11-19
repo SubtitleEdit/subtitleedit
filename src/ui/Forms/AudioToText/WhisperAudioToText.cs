@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private bool _cancel;
         private bool _batchMode;
         private int _batchFileNumber;
-        private readonly List<string> _filesToDelete;
+        private List<string> _filesToDelete;
         private readonly Form _parentForm;
         private bool _useCenterChannelOnly;
         private int _initialWidth = 725;
@@ -70,17 +70,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
 
-            comboBoxLanguages.Items.Clear();
-            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
-            var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
-            comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
-
-            FillModels(comboBoxModels, string.Empty);
-
-            textBoxLog.Visible = false;
-            textBoxLog.Dock = DockStyle.Fill;
-            labelProgress.Text = string.Empty;
-            labelTime.Text = string.Empty;
             _filesToDelete = new List<string>();
 
             if (string.IsNullOrEmpty(videoFileName))
@@ -93,21 +82,32 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 listViewInputFiles.Items.Add(videoFileName);
             }
 
+            textBoxLog.Visible = false;
+            textBoxLog.Dock = DockStyle.Fill;
+            labelProgress.Text = string.Empty;
+            labelTime.Text = string.Empty;
             listViewInputFiles.Visible = false;
-            labelFC.Text = string.Empty;
-            labelCpp.Visible = Configuration.Settings.Tools.UseWhisperCpp;
             labelElapsed.Text = string.Empty;
 
-            //if (Configuration.Settings.Tools.UseWhisperCpp)
-            //{
-            //    speedupToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperExtraSettings == speedupToolStripMenuItem.Text;
-            //    ContextMenuStrip = contextMenuStripWhisperAdvanced;{}
+            Init();
+        }
 
-            //    if (string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperExtraSettings))
-            //    {
-            //        noneToolStripMenuItem_Click(null, null);
-            //    }
-            //}
+        private void Init()
+        {
+            comboBoxLanguages.Items.Clear();
+            comboBoxLanguages.Items.AddRange(WhisperLanguage.Languages.OrderBy(p => p.Name).ToArray<object>());
+            var lang = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
+            comboBoxLanguages.Text = lang != null ? lang.ToString() : "English";
+
+            FillModels(comboBoxModels, string.Empty);
+
+            labelFC.Text = string.Empty;
+            labelCpp.Visible = Configuration.Settings.Tools.WhisperUseCpp;
+
+            whisperCppCToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperUseCpp;
+            whisperPhpOriginalToolStripMenuItem.Checked = !Configuration.Settings.Tools.WhisperUseCpp;
+            removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
+            ContextMenuStrip = contextMenuStripWhisperAdvanced;
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
@@ -179,7 +179,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             comboBoxLanguages.Enabled = false;
             comboBoxModels.Enabled = false;
             var waveFileName = GenerateWavFile(_videoFileName, _audioTrackNumber);
-            _outputText.Add("Wav file name: " + waveFileName);
             progressBar1.Style = ProgressBarStyle.Blocks;
             timer1.Start();
             var transcript = TranscribeViaWhisper(waveFileName);
@@ -251,7 +250,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
 
                 _outputText.Add(string.Empty);
-                _outputText.Add("Wav file name: " + waveFileName);
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaWhisper(waveFileName);
                 if (_cancel)
@@ -339,7 +337,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _resultList = new List<ResultText>();
             var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} with : {process.StartInfo.FileName} {process.StartInfo.Arguments}");
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.WhisperUseCpp ? "-CPP" : string.Empty)} with : {process.StartInfo.FileName} {process.StartInfo.Arguments}");
             _startTicks = DateTime.UtcNow.Ticks;
             _videoInfo = UiUtil.GetVideoInfo(waveFileName);
             timer1.Start();
@@ -378,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.UseWhisperCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}{Environment.NewLine}");
+            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.WhisperUseCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}{Environment.NewLine}");
 
             for (var i = 0; i < 10; i++)
             {
@@ -386,7 +384,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 System.Threading.Thread.Sleep(50);
             }
 
-            if (GetResultFromSrt(waveFileName, out var resultTexts, _outputText))
+            if (GetResultFromSrt(waveFileName, out var resultTexts, _outputText, _filesToDelete))
             {
                 return resultTexts;
             }
@@ -395,7 +393,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             return _resultList;
         }
 
-        public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText)
+        public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText, List<string> filesToDelete)
         {
             var srtFileName = waveFileName + ".srt";
             var vttFileName = Path.Combine(WhisperHelper.GetWhisperFolder(), Path.GetFileName(waveFileName) + ".vtt");
@@ -443,21 +441,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             resultTexts = results;
 
-            try
+            if (File.Exists(srtFileName))
             {
-                if (!File.Exists(srtFileName))
-                {
-                    File.Delete(srtFileName);
-                }
-
-                if (!File.Exists(vttFileName))
-                {
-                    File.Delete(vttFileName);
-                }
+                filesToDelete?.Add(srtFileName);
             }
-            catch 
+
+            if (File.Exists(vttFileName))
             {
-                // ignore
+                filesToDelete?.Add(vttFileName);
             }
 
             return true;
@@ -664,7 +655,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
-            if (Configuration.Settings.Tools.UseWhisperCpp && string.IsNullOrEmpty(translateToEnglish) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len"))
+            if (Configuration.Settings.Tools.WhisperUseCpp && string.IsNullOrEmpty(translateToEnglish) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len"))
             {
                 var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
                 if (language == "jp")
@@ -680,7 +671,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var outputSrt = string.Empty;
-            if (Configuration.Settings.Tools.UseWhisperCpp)
+            if (Configuration.Settings.Tools.WhisperUseCpp)
             {
                 outputSrt = "--output-srt ";
 
@@ -751,7 +742,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
 
-            foreach (var fileName in _filesToDelete)
+            DeleteTemporaryFiles(_filesToDelete);
+        }
+
+        public static void DeleteTemporaryFiles(List<string> filesToDelete)
+        {
+            if (!Configuration.Settings.Tools.WhisperDeleteTempFiles)
+            {
+                return;
+            }
+
+            foreach (var fileName in filesToDelete)
             {
                 try
                 {
@@ -1036,18 +1037,22 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
         }
 
-        private void speedupToolStripMenuItem_Click(object sender, EventArgs e)
+        private void whisperPhpOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            noneToolStripMenuItem.Checked = false;
-            speedupToolStripMenuItem.Checked = true;
-            Configuration.Settings.Tools.WhisperExtraSettings = speedupToolStripMenuItem.Text;
+            Configuration.Settings.Tools.WhisperUseCpp = false;
+            Init();
         }
 
-        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        private void whisperCppCToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            noneToolStripMenuItem.Checked = true;
-            speedupToolStripMenuItem.Checked = false;
-            Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
+            Configuration.Settings.Tools.WhisperUseCpp = true;
+            Init();
+        }
+
+        private void removeTemporaryFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
+            removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
         }
     }
 }

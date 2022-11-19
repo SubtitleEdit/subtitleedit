@@ -15,6 +15,7 @@
    * Update Bulgarian translation - thx Калин
    * Update Korean translation - thx domddol
    * Update Polish translation - thx admas
+   * Update Greek translation - thx PMitsakis
    * Optimize bd sup saving in batch/cmd-line convert
    * Add a few English words/names to dictionaries
    * Add more settings for "Delete auto-backup after" - thx pahtashow 
