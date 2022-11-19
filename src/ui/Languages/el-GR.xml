@@ -192,6 +192,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών - κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
     <BatchMode>Ομαδική λειτουργία</BatchMode>
     <KeepPartialTranscription>Κράτημα μερικής μετατροπής</KeepPartialTranscription>
+    <TranslateToEnglish>Μετάφραση στα Αγγλικά</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Προσαρτήσεις Advanced Sub Station Alpha</Title>
@@ -248,7 +249,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyColorRgb>Αντιγραφή στο πρόχειρο ως χρώμα RGB {0}</CopyColorRgb>
   </ImageColorPicker>
   <AssaSetBackgroundBox>
-    <Title>Αλλαγή ανάλυσης κειμένου ASSA</Title>
+    <Title>Δημιουργία πλαισίου</Title>
     <Padding>Κενό</Padding>
     <FillWidth>Γέμισμα πλάτους</FillWidth>
     <Drawing>Σχέδιο</Drawing>
@@ -801,7 +802,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Διόρθωση ετικέτας πλάγιας γραφής</FixInvalidItalicTag>
     <FixShortDisplayTime>Διόρθωση σύντομου χρόνου</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Διόρθωση επικαλυπτόμενου χρόνου</FixOverlappingDisplayTime>
-    <FixShortGap>Διόρθωση μικρών κενών</FixShortGap>
+    <FixShortGap>Διόρθωση ελάχιστου κενoύ</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Δεν με ενδιαφέρει.&lt;i&gt; -&gt; &lt;i&gt;Δεν με ενδιαφέρει.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Εσύ , εκεί. -&gt; Εσύ, εκεί.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Εσύ!. -&gt; Εσύ!</RemoveUnneededPeriodsExample>
@@ -847,7 +848,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckeredImage>Καρό εικόνα</CheckeredImage>
     <SolidColor>Συμπαγές χρώμα</SolidColor>
     <DurationInMinutes>Διάρκεια σε λεπτά</DurationInMinutes>
-    <Background>Υπόβαθρο</Background>
+    <Background>Φόντο</Background>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Δημιουργία βίντεο με ενσωματωμένους υπότιτλους</Title>
@@ -1156,7 +1157,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenOriginal>Άνοιγμα αρχικού υποτίτλου (λειτουργία μετάφρασης)…</OpenOriginal>
         <SaveOriginal>Αποθήκευση αρχικού υποτίτλου</SaveOriginal>
         <CloseOriginal>Κλείσιμο αρχικού υποτίτλου</CloseOriginal>
-        <OpenContainingFolder>Άνοιγμα περιέχοντα φακέλου</OpenContainingFolder>
+        <OpenContainingFolder>Άνοιγμα φακέλου περιεχομένων</OpenContainingFolder>
         <Compare>&amp;Σύγκριση…</Compare>
         <Statistics>Στατιστι&amp;κά…</Statistics>
         <Plugins>Πρόσθετα…</Plugins>
@@ -2174,6 +2175,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyAssaOverrideTags>Εφαρμογή ετικετών παράκαμψης ASSA σε επιλεγμένα</ApplyAssaOverrideTags>
     <SetAssaPosition>Ορισμός/λήψη θέσης ASSA</SetAssaPosition>
     <SetAssaResolution>Ορισμός ανάλυσης ASSA (διαστάσεις αναπαραγωγής Χ και Υ)</SetAssaResolution>
+    <SetAssaBgBox>Ορισμός υπόβαθρου πλαισίου ASSA</SetAssaBgBox>
     <TakeAutoBackup>Άνοιγμα αντίγραφου ασφαλείας</TakeAutoBackup>
     <ShowLineBreaksAs>Εμφάνιση αλλαγής γραμμής σε προβολή λίστας ως</ShowLineBreaksAs>
     <SaveAsFileNameFrom>Η "Αποθήκευση ως…" έχει το όνομα από</SaveAsFileNameFrom>
