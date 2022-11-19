@@ -23,6 +23,7 @@
    * Improve video auto load (allow eg. "_nl") - thx Hilde
    * Improve fix italic tags - thx uckthis
    * Whisper.cpp is default for Windows + in-program download
+   * Improve ELR format support - thx Alex
 * FIXED:
    * Fix VLC video player not working
    * Fix for ASSA timestamps (rounding output) - thx Jerome
