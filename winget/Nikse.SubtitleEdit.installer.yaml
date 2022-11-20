@@ -31,11 +31,11 @@ FileExtensions:
 ReleaseDate: 2022-11-20
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.8/SubtitleEdit-3.6.8-Setup.exe
-  InstallerSha256: 1271549F5C359DAD26A71BAD6E1B929A9ACA0AF7EFE47A4AFEE7408B1FBD6D45
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.9/SubtitleEdit-3.6.9-Setup.exe
+  InstallerSha256: 6E7A8A23A645C41BDF7D67B00A8CC390D2F77644F8A401A08DD9FCFC7F966552
 - Architecture: x86
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.8/SubtitleEdit-3.6.8-Setup.exe
-  InstallerSha256: 1271549F5C359DAD26A71BAD6E1B929A9ACA0AF7EFE47A4AFEE7408B1FBD6D45
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.9/SubtitleEdit-3.6.9-Setup.exe
+  InstallerSha256: 6E7A8A23A645C41BDF7D67B00A8CC390D2F77644F8A401A08DD9FCFC7F966552
 ManifestType: installer
 ManifestVersion: 1.2.0
 
