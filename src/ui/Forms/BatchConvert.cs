@@ -1890,7 +1890,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AssaChangeResolution(Subtitle sub)
         {
-            if (sub.OriginalFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
+            if (sub.OriginalFormat == null || sub.OriginalFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
             {
                 return;
             }
