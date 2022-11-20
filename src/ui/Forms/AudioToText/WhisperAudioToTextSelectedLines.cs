@@ -444,6 +444,31 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void whisperPhpOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.WhisperUseCpp = false;
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var path = WhisperHelper.GetWhisperFolder();
+                if (string.IsNullOrEmpty(path))
+                {
+                    using (var openFileDialog1 = new OpenFileDialog())
+                    {
+                        openFileDialog1.Title = "Locate whisper.exe (php version)";
+                        openFileDialog1.FileName = string.Empty;
+                        openFileDialog1.Filter = "whisper.exe|whisper.exe";
+                        openFileDialog1.FileName = string.Empty;
+
+                        if (openFileDialog1.ShowDialog() != DialogResult.OK || !openFileDialog1.FileName.EndsWith("whisper.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Configuration.Settings.Tools.WhisperUseCpp = true;
+                        }
+                        else
+                        {
+                            Configuration.Settings.Tools.WhisperLocation = openFileDialog1.FileName;
+                        }
+                    }
+                }
+            }
+
             Init();
         }
 
