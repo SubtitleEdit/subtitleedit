@@ -41,7 +41,7 @@ namespace UpdateAssemblyInfo
             private int Major { get; }
             private int Minor { get; }
             private int Maintenance { get; }
-            public int Build { get; }
+            public int Build { get; set; }
             public string RevisionGuid { get; }
 
             public string FullVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
@@ -478,7 +478,7 @@ namespace UpdateAssemblyInfo
             {
                 var s = line.Trim('\r');
                 var searchStr = $"{targetVariable}:";
-                if (s.StartsWith(searchStr.TrimStart(), StringComparison.OrdinalIgnoreCase))
+                if (s.TrimStart().StartsWith(searchStr.TrimStart(), StringComparison.OrdinalIgnoreCase))
                 {
                     var start = line.Substring(0, line.IndexOf(searchStr, StringComparison.OrdinalIgnoreCase) + searchStr.Length);
                     sb.AppendLine($"{start} {targetValue}");
