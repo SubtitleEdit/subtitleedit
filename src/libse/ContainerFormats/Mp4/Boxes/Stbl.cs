@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<uint> SampleSizes;
         public List<uint> Ssts { get; set; }
         public List<SampleToChunkMap> Stsc { get; set; }
-        public List<ChunkText> Texts;
+        public List<ulong> ChunkOffsets;
         public List<Paragraph> Paragraphs;
         public List<Paragraph> GetParagraphs() => Paragraphs;
 
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             Ssts = new List<uint>();
             Stsc = new List<SampleToChunkMap>();
             SampleSizes = new List<uint>();
-            Texts = new List<ChunkText>();
+            ChunkOffsets = new List<ulong>();
             SubPictures = new List<SubPicture>();
             while (fs.Position < (long)maximumLength)
             {
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = GetUInt(8 + i * 4);
-                            Texts.Add(new ChunkText { Offset = offset });
+                            ChunkOffsets.Add(offset);
                         }
                     }
                 }
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         for (var i = 0; i < totalEntries; i++)
                         {
                             var offset = GetUInt64(8 + i * 8);
-                            Texts.Add(new ChunkText { Offset = offset });
+                            ChunkOffsets.Add(offset);
                         }
                     }
                 }
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         {
             var paragraphs = new List<Paragraph>();
             uint samplesPerChunk = 1;
-            var max = Texts.Count;
+            var max = ChunkOffsets.Count;
             var index = 0;
             double totalTime = 0;
             for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
                 }
 
-                var chunk = Texts[chunkIndex];
+                var chunkOffset = ChunkOffsets[chunkIndex];
                 var p = new Paragraph();
                 for (var i = 0; i < samplesPerChunk; i++)
                 {
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     {
                         p.StartTime.TotalSeconds = before;
 
-                        fs.Seek((long)chunk.Offset, SeekOrigin.Begin);
+                        fs.Seek((long)chunkOffset, SeekOrigin.Begin);
                         var buffer = new byte[2];
                         fs.Read(buffer, 0, buffer.Length);
                         var textSize = (uint)GetWord(buffer, 0);
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 if (textSize > 100)
                                 {
                                     buffer = new byte[textSize + 2];
-                                    fs.Seek((long)chunk.Offset, SeekOrigin.Begin);
+                                    fs.Seek((long)chunkOffset, SeekOrigin.Begin);
                                     fs.Read(buffer, 0, buffer.Length);
                                     SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
                                     paragraphs.Add(p);
@@ -199,8 +199,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 {
                                     p.Text = MakeScenaristText(buffer);
                                 }
-
-                                chunk.Text = p.Text;
                             }
                         }
                     }
