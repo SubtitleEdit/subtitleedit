@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.9 (xth November 2022) BETA
+3.6.9 (20th November 2022)
 * NEW:
    * Support mp4 webvtt in cmd line convert
    * Add Whisper translate to English option - thx David 
