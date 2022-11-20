@@ -455,7 +455,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         openFileDialog1.Title = "Locate whisper.exe (php version)";
                         openFileDialog1.FileName = string.Empty;
                         openFileDialog1.Filter = "whisper.exe|whisper.exe";
-                        openFileDialog1.FileName = string.Empty;
 
                         if (openFileDialog1.ShowDialog() != DialogResult.OK || !openFileDialog1.FileName.EndsWith("whisper.exe", StringComparison.OrdinalIgnoreCase))
                         {
