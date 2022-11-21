@@ -66,7 +66,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (downloadStream.Length == 0)
             {
-                throw new Exception("No content downloaded - missing file or no internet connection!");
+                throw new Exception("No content downloaded - missing file or no internet connection!" + Environment.NewLine  + 
+                                    $"For more info see: {Path.Combine(Configuration.DataDirectory, "error_log.txt")}");
             }
 
             var dictionaryFolder = Configuration.TesseractDirectory;
@@ -92,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var th in tr.Files)
                 {
-                    string fn = Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar));
+                    var fn = Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar));
                     if (th.IsFolder)
                     {
                         Directory.CreateDirectory(Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar)));
