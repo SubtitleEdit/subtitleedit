@@ -1,5 +1,10 @@
 ﻿Subtitle Edit Changelog
 
+3.6.10 (21th November 2022)
+* FIXED:
+   * Fix missing dll file
+
+
 3.6.9 (20th November 2022)
 * NEW:
    * Support mp4 webvtt in cmd line convert
