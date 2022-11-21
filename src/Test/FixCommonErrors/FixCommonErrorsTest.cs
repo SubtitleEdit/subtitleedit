@@ -564,6 +564,17 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixMissingSpacesNotWhenHyphenBeforeQuote()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "There is a pre-\"do it\" conversation about price.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("There is a pre-\"do it\" conversation about price.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
         public void FixMissingSpacesBeforePeriod1()
         {
             using (var target = GetFixCommonErrorsLib())
