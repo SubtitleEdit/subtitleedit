@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.2.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 3.6.9.0
+PackageVersion: 3.6.10.0
 InstallerLocale: en-US
 MinimumOSVersion: 10.0.0.0
 InstallerType: inno
@@ -28,14 +28,14 @@ FileExtensions:
 - xml
 - mp4
 - mkv
-ReleaseDate: 2022-11-20
+ReleaseDate: 2022-11-21
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.9/SubtitleEdit-3.6.9-Setup.exe
-  InstallerSha256: 6E7A8A23A645C41BDF7D67B00A8CC390D2F77644F8A401A08DD9FCFC7F966552
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.10/SubtitleEdit-3.6.10-Setup.exe
+  InstallerSha256: D80C844E7867D31F2CC069CADE0AEB7E536B747625A86AB52FE26FA7D2BFAF1A
 - Architecture: x86
-  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.9/SubtitleEdit-3.6.9-Setup.exe
-  InstallerSha256: 6E7A8A23A645C41BDF7D67B00A8CC390D2F77644F8A401A08DD9FCFC7F966552
+  InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.10/SubtitleEdit-3.6.10-Setup.exe
+  InstallerSha256: D80C844E7867D31F2CC069CADE0AEB7E536B747625A86AB52FE26FA7D2BFAF1A
 ManifestType: installer
 ManifestVersion: 1.2.0
 
