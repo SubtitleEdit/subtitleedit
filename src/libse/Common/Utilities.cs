@@ -143,6 +143,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static void SetSecurityProtocol()
         {
+            ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
