@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             try
             {
+                Utilities.SetSecurityProtocol();
                 var httpClient = HttpClientHelper.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
                 {
