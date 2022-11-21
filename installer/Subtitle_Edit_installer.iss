@@ -315,6 +315,7 @@ Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};              
 Source: {#bindir}\NAudio.Core.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\NAudio.WinMM.dll;                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\cpuid.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\iTin.Core.Hardware.Common.dll;   DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\iTin.Core.Hardware.CrossPlatform.Cpuid.dll; DestDir: {app};                         Flags: ignoreversion; Components: main
 Source: {#bindir}\iTin.Core.Interop.CrossPlatform.Cpuid.dll; DestDir: {app};                          Flags: ignoreversion; Components: main
