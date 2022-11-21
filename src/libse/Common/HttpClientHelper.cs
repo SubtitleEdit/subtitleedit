@@ -49,24 +49,32 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static async Task DownloadAsync(this HttpClient client, string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)
         {
-            using (var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            try
             {
-                var contentLength = response.Content.Headers.ContentLength;
-
-                using (var downloadStream = await response.Content.ReadAsStreamAsync())
+                using (var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
-                    if (progress == null || !contentLength.HasValue)
-                    {
-                        await downloadStream.CopyToAsync(destination);
-                        return;
-                    }
+                    var contentLength = response.Content.Headers.ContentLength;
 
-                    // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
-                    var relativeProgress = new Progress<long>(totalBytes => progress.Report((float)totalBytes / contentLength.Value));
-                    // Use extension method to report progress while downloading
-                    await CopyToAsync(downloadStream, destination, 81920, relativeProgress, cancellationToken);
-                    progress.Report(1);
+                    using (var downloadStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        if (progress == null || !contentLength.HasValue)
+                        {
+                            await downloadStream.CopyToAsync(destination);
+                            return;
+                        }
+
+                        // Convert absolute progress (bytes downloaded) into relative progress (0% - 100%)
+                        var relativeProgress = new Progress<long>(totalBytes => progress.Report((float)totalBytes / contentLength.Value));
+                        // Use extension method to report progress while downloading
+                        await CopyToAsync(downloadStream, destination, 81920, relativeProgress, cancellationToken);
+                        progress.Report(1);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "DownloadAsync failed");
+                throw;
             }
         }
 
