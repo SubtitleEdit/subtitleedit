@@ -160,6 +160,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new NciTimedRollUpCaptions(),
                     new NetflixImsc11Japanese(),
                     new NetflixTimedText(),
+                    new NinsightXml(),
                     new OgmChapters(),
                     new OpenDvt(),
                     new Oresme(),
