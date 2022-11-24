@@ -132,6 +132,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool LiveSpellCheck { get; set; }
         public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
+        public bool OcrGoogleCloudVisionSeHandlesTextMerge { get; set; }
         public int OcrBinaryImageCompareRgbThreshold { get; set; }
         public int OcrTesseract4RgbThreshold { get; set; }
         public string OcrAddLetterRow1 { get; set; }
@@ -4491,6 +4492,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("OcrGoogleCloudVisionSeHandlesTextMerge");
+            if (subNode != null)
+            {
+                settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("OcrBinaryImageCompareRgbThreshold");
@@ -10142,6 +10149,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LiveSpellCheck", settings.Tools.LiveSpellCheck.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OcrGoogleCloudVisionSeHandlesTextMerge", settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OcrTesseract4RgbThreshold", settings.Tools.OcrTesseract4RgbThreshold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OcrAddLetterRow1", settings.Tools.OcrAddLetterRow1);

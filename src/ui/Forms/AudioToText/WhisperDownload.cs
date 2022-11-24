@@ -32,6 +32,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void WhisperDownload_Shown(object sender, EventArgs e)
         {
+            if ((IntPtr.Size * 8) == 32)
+            {
+                MessageBox.Show("No 32-bit whisper.cpp!");
+                return;
+            }
+
             var avx2 = CpuInfo.HasAvx2();
             labelAVX2.Visible = avx2;
             var downloadUrl = avx2 ? DownloadUrlAvx2 : DownloadUrlSse2;
