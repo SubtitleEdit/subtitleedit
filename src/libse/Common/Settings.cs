@@ -437,6 +437,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             SpellCheckAutoChangeNameCasing = false;
             SpellCheckAutoChangeNamesUseSuggestions = false;
             OcrFixUseHardcodedRules = true;
+            OcrGoogleCloudVisionSeHandlesTextMerge = true;
             OcrBinaryImageCompareRgbThreshold = 200;
             OcrTesseract4RgbThreshold = 200;
             OcrAddLetterRow1 = "♪;á;é;í;ó;ö;ő;ú;ü;ű;ç;ñ;å;¿";

@@ -3270,6 +3270,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string CloudVisionApi { get; set; }
             public string ApiKey { get; set; }
             public string SendOriginalImages { get; set; }
+            public string SeHandlesTextMerge { get; set; }
         }
 
         public class VobSubOcrCharacter

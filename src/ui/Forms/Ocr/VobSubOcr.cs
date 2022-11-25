@@ -592,9 +592,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelCloudVisionApiKey.Text = language.ApiKey;
             labelCloudVisionLanguage.Text = language.Language;
             checkBoxCloudVisionSendOriginalImages.Text = language.SendOriginalImages;
+            checkBoxSeHandlesTextMerge.Text = language.SeHandlesTextMerge;
 
             textBoxCloudVisionApiKey.Text = Configuration.Settings.VobSubOcr.CloudVisionApiKey;
             checkBoxCloudVisionSendOriginalImages.Checked = Configuration.Settings.VobSubOcr.CloudVisionSendOriginalImages;
+            checkBoxSeHandlesTextMerge.Checked = Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
             buttonGetTesseractDictionaries.Left = comboBoxTesseractLanguages.Left + comboBoxTesseractLanguages.Width + 5;
@@ -9757,6 +9759,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             // Toggle subtitle image refresh
             SubtitleListView1SelectedIndexChanged(sender, e);
+        }
+
+        private void checkBoxSeHandlesTextMerge_CheckedChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = checkBoxSeHandlesTextMerge.Checked;
         }
     }
 }

@@ -8335,6 +8335,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/SendOriginalImages":
                     language.VobSubOcr.SendOriginalImages = reader.Value;
                     break;
+                case "VobSubOcr/SeHandlesTextMerge":
+                    language.VobSubOcr.SeHandlesTextMerge = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;
