@@ -3424,6 +3424,7 @@ Keep changes?",
                 CloudVisionApi = "Google Cloud Vision API",
                 ApiKey = "API key",
                 SendOriginalImages = "Send original images",
+                SeHandlesTextMerge = "SE handles text merge",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

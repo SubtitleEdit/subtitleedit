@@ -3046,6 +3046,7 @@ Keep changes?</KeepChangesMessage>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API key</ApiKey>
     <SendOriginalImages>Send original images</SendOriginalImages>
+    <SeHandlesTextMerge>SE handles text merge</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Manual image to text</Title>
