@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     // Ignore list
                     "Andor", "honour", "honours", "putain", "whoah", "eastside", "Starpath", "comlink", "Taamet",
                     "Atwater", "Lakeview", "Glassman", "Starfleet", "Coulda", "Woulda", "percenters", 
-                    "starbase"
+                    "starbase", "damnit"
                 });
             }
 
