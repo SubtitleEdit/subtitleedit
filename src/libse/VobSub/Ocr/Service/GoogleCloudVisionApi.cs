@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
             return JsonToStringList(language, content);
         }
 
-        internal static List<string> JsonToStringList(string language, string content)
+        public static List<string> JsonToStringList(string language, string content)
         {
             if (Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge)
             {
