@@ -231,13 +231,13 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         {
             if (Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge)
             {
-                var annotations = GetAnnotations(content);
+                var annotations = GetAnnotations(content).ToList();
                 var lines = new List<List<Annotation>>();
                 Annotation last = null;
-                var lineThreshold = 9;
+                var lineThreshold = Math.Max(9, annotations.Average(p => p.Height) / 4.0);
                 var lineIndex = 0;
 
-                // split to lines
+                // Split to lines
                 foreach (var a in annotations.OrderBy(p => p.GetMediumY()))
                 {
                     if (last != null)
@@ -263,22 +263,23 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                     last = a;
                 }
 
-                // merge lines ordered by X
+                // Merge lines ordered by X
                 var sb = new StringBuilder();
+                var spaceThreshold = Math.Max(12, annotations.Average(p => p.Width) / 2.7);
                 foreach (var line in lines)
                 {
                     var sbLine = new StringBuilder();
-                    var spaceThreshold = 8;
                     last = null;
                     foreach (var l in line.OrderBy(p => p.Vertices.Min(p2 => p2.X)))
                     {
                         if (last != null)
                         {
                             var diff = l.Vertices.Min(p => p.X) - last.Vertices.Max(p => p.X);
-                            if (diff > spaceThreshold)
+                            if (diff > spaceThreshold || last.DetectedBreak == "SPACE" || last.DetectedBreak == "EOL_SURE_SPACE" || last.DetectedBreak == "LINE_BREAK")
                             {
                                 sbLine.Append(" ");
                             }
+
                             sbLine.Append(l.Text);
                         }
                         else
@@ -303,7 +304,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
                     }
                 }
 
-                return new List<string> { sb.ToString().Trim() };
+                var ocrResult = sb.ToString().Trim();
+                if (ocrResult.Length > 0)
+                {
+                    return new List<string> { ocrResult };
+                }
             }
 
 
@@ -354,31 +359,49 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         private static IEnumerable<Annotation> GetAnnotations(string content)
         {
             var jsonParser = new SeJsonParser();
-            var annotationsAsString = jsonParser.GetArrayElementsByName(content, "textAnnotations");
+            var fullTextAnnotation = jsonParser.GetFirstObject(content, "fullTextAnnotation");
+            var pages = jsonParser.GetArrayElementsByName(fullTextAnnotation, "pages");
             var annotations = new List<Annotation>();
-
-            for (var index = 1; index < annotationsAsString.Count; index++)
+            foreach (var page in pages)
             {
-                var annotation = annotationsAsString[index];
-                var description = jsonParser.GetFirstObject(annotation, "description");
-                var vertices = new List<Point>();
-                foreach (var point in jsonParser.GetArrayElementsByName(annotation, "vertices"))
+                var paragraphs = jsonParser.GetArrayElementsByName(page, "paragraphs");
+                foreach (var paragraph in paragraphs)
                 {
-                    var x = jsonParser.GetFirstObject(point, "x");
-                    var y = jsonParser.GetFirstObject(point, "y");
-                    if (int.TryParse(x, out var xNumber) && int.TryParse(y, out var yNumber))
+                    var words = jsonParser.GetArrayElementsByName(paragraph, "words");
+                    foreach (var word in words)
                     {
-                        vertices.Add(new Point(xNumber, yNumber));
-                    }
-                }
+                        var symbols = jsonParser.GetArrayElementsByName(word, "symbols");
+                        foreach (var symbol in symbols)
+                        {
+                            var text = jsonParser.GetFirstObject(symbol, "text");
+                            var detectedBreak = jsonParser.GetFirstObject(symbol, "detectedBreak");
+                            if (!string.IsNullOrEmpty(detectedBreak))
+                            {
+                                detectedBreak = jsonParser.GetFirstObject(detectedBreak, "type");
+                            }
 
-                if (!string.IsNullOrEmpty(description) && vertices.Count > 0)
-                {
-                    annotations.Add(new Annotation
-                    {
-                        Text = description,
-                        Vertices = vertices,
-                    });
+                            var vertices = new List<Point>();
+                            foreach (var point in jsonParser.GetArrayElementsByName(symbol, "vertices"))
+                            {
+                                var x = jsonParser.GetFirstObject(point, "x");
+                                var y = jsonParser.GetFirstObject(point, "y");
+                                if (int.TryParse(x, out var xNumber) && int.TryParse(y, out var yNumber))
+                                {
+                                    vertices.Add(new Point(xNumber, yNumber));
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(text) && vertices.Count > 0)
+                            {
+                                annotations.Add(new Annotation
+                                {
+                                    Text = text,
+                                    Vertices = vertices,
+                                    DetectedBreak = detectedBreak,
+                                });
+                            }
+                        }
+                    }
                 }
             }
 
@@ -389,14 +412,35 @@ namespace Nikse.SubtitleEdit.Core.VobSub.Ocr.Service
         {
             public string Text { get; set; }
             public List<Point> Vertices { get; set; }
+            public string DetectedBreak { get; set; }
+
+            public int Width
+            {
+                get
+                {
+                    var min = Vertices.Min(p => p.X);
+                    var max = Vertices.Max(p => p.X);
+                    return max - min;
+                }
+            }
+
+            public int Height
+            {
+                get
+                {
+                    var min = Vertices.Min(p => p.Y);
+                    var max = Vertices.Max(p => p.Y);
+                    return max - min;
+                }
+            }
 
             public double GetMediumY()
             {
                 const int addY = 5;
                 var lowChars = new[] { ",", "." };
                 var highChars = new[] { "'", "\"" };
+                var min = Vertices.Min(p => p.Y);
                 var max = Vertices.Max(p => p.Y);
-                var min = Vertices.Max(p => p.Y);
                 var medium = max + min / 2.0;
 
                 if (lowChars.Contains(Text))
