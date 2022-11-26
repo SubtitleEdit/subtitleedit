@@ -418,7 +418,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Name = "Default",
                 FontName = gs.VideoPlayerPreviewFontName,
-                FontSize = gs.VideoPlayerPreviewFontSize,
+                FontSize = gs.VideoPlayerPreviewFontSize * gs.MpvPreviewTextFontSizeFactor,
                 Bold = gs.VideoPlayerPreviewFontBold,
                 Primary = gs.MpvPreviewTextPrimaryColor,
                 OutlineWidth = gs.MpvPreviewTextOutlineWidth,

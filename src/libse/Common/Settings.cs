@@ -1374,6 +1374,7 @@ $HorzAlign          =   Center
         public bool MpvPreviewTextOpaqueBox { get; set; }
         public string MpvPreviewTextAlignment { get; set; }
         public int MpvPreviewTextMarginVertical { get; set; }
+        public decimal MpvPreviewTextFontSizeFactor { get; set; }
         public string MpcHcLocation { get; set; }
         public string MkvMergeLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
@@ -1552,6 +1553,7 @@ $HorzAlign          =   Center
             MpvPreviewTextOpaqueBox = false;
             MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
+            MpvPreviewTextFontSizeFactor = 1;
             FFmpegSceneThreshold = "0.4"; // threshold for generating shot changes - 0.2 is sensitive (more shot changes), 0.6 is less sensitive (fewer shot changes)
             UseTimeFormatHHMMSSFF = false;
             SplitBehavior = 1; // 0=take gap from left, 1=divide evenly, 2=take gap from right
@@ -4076,6 +4078,13 @@ $HorzAlign          =   Center
             {
                 settings.General.MpvPreviewTextMarginVertical = Convert.ToInt32(subNode.InnerText.Trim());
             }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextFontSizeFactor");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextFontSizeFactor = Convert.ToDecimal(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
             {
@@ -10068,6 +10077,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextAlignment", settings.General.MpvPreviewTextAlignment);
                 textWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextFontSizeFactor", settings.General.MpvPreviewTextFontSizeFactor.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("MkvMergeLocation", settings.General.MkvMergeLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
