@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public WhisperModel LastDownloadedModel { get; private set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
         private bool _error = false;
+        private string _downloadFileName;
 
         public WhisperModelDownload()
         {
@@ -73,8 +74,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     WhisperHelper.GetWhisperModel().CreateModelFolder();
                 }
 
-                var downloadFileName = Path.Combine(folder, LastDownloadedModel.Name);
-                using (var downloadStream = new FileStream(downloadFileName, FileMode.Create, FileAccess.Write))
+                _downloadFileName = Path.Combine(folder, LastDownloadedModel.Name + WhisperHelper.ModelExtension());
+                using (var downloadStream = new FileStream(_downloadFileName, FileMode.Create, FileAccess.Write))
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
                     {
@@ -91,6 +92,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     {
                         DialogResult = DialogResult.Cancel;
                         labelPleaseWait.Refresh();
+                        try
+                        {
+                            File.Delete(_downloadFileName);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
                         return;
                     }
 
