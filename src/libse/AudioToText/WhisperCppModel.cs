@@ -10,10 +10,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public string UrlSecondary { get; set; }
         public string Size { get; set; }
         public string Name { get; set; }
+        public bool AlreadyDownloaded { get; set; }
 
         public override string ToString()
         {
-            return $"{Name} ({Size})";
+            return $"{(AlreadyDownloaded ? "* " : string.Empty)}{Name} ({Size})";
         }
 
         public string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper");

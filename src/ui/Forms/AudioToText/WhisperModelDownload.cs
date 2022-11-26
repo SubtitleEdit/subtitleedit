@@ -30,6 +30,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var selectedIndex = 0;
             foreach (var downloadModel in WhisperHelper.GetWhisperModel().Models.OrderBy(p => p.Name))
             {
+                var fileName = MakeDownloadFileName(downloadModel);
+                downloadModel.AlreadyDownloaded = File.Exists(fileName);
+
                 comboBoxModels.Items.Add(downloadModel);
                 if (selectedIndex == 0 && downloadModel.Name == "English")
                 {
@@ -74,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     WhisperHelper.GetWhisperModel().CreateModelFolder();
                 }
 
-                _downloadFileName = Path.Combine(folder, LastDownloadedModel.Name + WhisperHelper.ModelExtension());
+                _downloadFileName = MakeDownloadFileName(LastDownloadedModel);
                 using (var downloadStream = new FileStream(_downloadFileName, FileMode.Create, FileAccess.Write))
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
@@ -115,6 +118,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                 exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
                 _error = true;
             }
+        }
+
+        private static string MakeDownloadFileName(WhisperModel model)
+        {
+            return Path.Combine(WhisperHelper.GetWhisperModel().ModelFolder, model.Name + WhisperHelper.ModelExtension());
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
