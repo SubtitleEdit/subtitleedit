@@ -48,7 +48,7 @@
             // buttonDownload
             // 
             this.buttonDownload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDownload.Location = new System.Drawing.Point(258, 29);
+            this.buttonDownload.Location = new System.Drawing.Point(292, 31);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(145, 23);
             this.buttonDownload.TabIndex = 1;
@@ -61,7 +61,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(328, 87);
+            this.buttonCancel.Location = new System.Drawing.Point(362, 87);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -75,7 +75,7 @@
             this.comboBoxModels.FormattingEnabled = true;
             this.comboBoxModels.Location = new System.Drawing.Point(15, 31);
             this.comboBoxModels.Name = "comboBoxModels";
-            this.comboBoxModels.Size = new System.Drawing.Size(237, 21);
+            this.comboBoxModels.Size = new System.Drawing.Size(271, 21);
             this.comboBoxModels.TabIndex = 0;
             // 
             // textBoxError
@@ -87,14 +87,14 @@
             this.textBoxError.Multiline = true;
             this.textBoxError.Name = "textBoxError";
             this.textBoxError.ReadOnly = true;
-            this.textBoxError.Size = new System.Drawing.Size(388, 12);
+            this.textBoxError.Size = new System.Drawing.Size(422, 12);
             this.textBoxError.TabIndex = 2;
             // 
-            // AudioToTextModelDownload
+            // WhisperModelDownload
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(415, 120);
+            this.ClientSize = new System.Drawing.Size(449, 120);
             this.Controls.Add(this.textBoxError);
             this.Controls.Add(this.comboBoxModels);
             this.Controls.Add(this.labelPleaseWait);
@@ -104,7 +104,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AudioToTextModelDownload";
+            this.Name = "WhisperModelDownload";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

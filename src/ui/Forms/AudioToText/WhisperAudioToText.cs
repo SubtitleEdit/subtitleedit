@@ -124,8 +124,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             foreach (var fileName in Directory.GetFiles(modelsFolder))
             {
-                var name = Path.GetFileNameWithoutExtension(fileName);
-                var model = whisperModel.Models.FirstOrDefault(p => p.Name == name);
+                var name = Path.GetFileName(fileName);
+                var model = whisperModel.Models.FirstOrDefault(p => p.Name + WhisperHelper.ModelExtension() == name);
                 if (model == null)
                 {
                     continue;
