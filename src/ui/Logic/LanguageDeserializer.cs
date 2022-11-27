@@ -517,6 +517,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/UsePostProcessing":
                     language.AudioToText.UsePostProcessing = reader.Value;
                     break;
+                case "AudioToText/AutoAdjustTimings":
+                    language.AudioToText.AutoAdjustTimings = reader.Value;
+                    break;
                 case "AudioToText/BatchMode":
                     language.AudioToText.BatchMode = reader.Value;
                     break;

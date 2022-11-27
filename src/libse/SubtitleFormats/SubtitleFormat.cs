@@ -236,6 +236,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new VocapiaSplit(),
                     new WebVTT(),
                     new WebVTTFileWithLineNumber(),
+                    new WhisperRaw(),
                     new Xif(),
                     new Xmp(),
                     new YouTubeAnnotations(),

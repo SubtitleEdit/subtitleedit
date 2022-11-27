@@ -62,6 +62,7 @@
             this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -72,10 +73,10 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(622, 427);
+            this.buttonCancel.Location = new System.Drawing.Point(622, 457);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 10;
+            this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -84,10 +85,10 @@
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(373, 427);
+            this.buttonGenerate.Location = new System.Drawing.Point(373, 457);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(125, 23);
-            this.buttonGenerate.TabIndex = 8;
+            this.buttonGenerate.TabIndex = 6;
             this.buttonGenerate.Text = "&Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
@@ -96,7 +97,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 427);
+            this.progressBar1.Location = new System.Drawing.Point(12, 457);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(355, 12);
             this.progressBar1.TabIndex = 7;
@@ -106,7 +107,7 @@
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 409);
+            this.labelProgress.Location = new System.Drawing.Point(12, 439);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 6;
@@ -121,7 +122,7 @@
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(168, 258);
+            this.textBoxLog.Size = new System.Drawing.Size(168, 288);
             this.textBoxLog.TabIndex = 0;
             // 
             // labelInfo
@@ -146,7 +147,7 @@
             this.groupBoxModels.Location = new System.Drawing.Point(15, 59);
             this.groupBoxModels.Name = "groupBoxModels";
             this.groupBoxModels.Size = new System.Drawing.Size(682, 83);
-            this.groupBoxModels.TabIndex = 3;
+            this.groupBoxModels.TabIndex = 1;
             this.groupBoxModels.TabStop = false;
             this.groupBoxModels.Text = "Language and models";
             // 
@@ -166,7 +167,7 @@
             this.comboBoxLanguages.Location = new System.Drawing.Point(6, 44);
             this.comboBoxLanguages.Name = "comboBoxLanguages";
             this.comboBoxLanguages.Size = new System.Drawing.Size(240, 21);
-            this.comboBoxLanguages.TabIndex = 5;
+            this.comboBoxLanguages.TabIndex = 0;
             this.comboBoxLanguages.SelectedIndexChanged += new System.EventHandler(this.comboBoxLanguages_SelectedIndexChanged);
             // 
             // buttonDownload
@@ -215,7 +216,7 @@
             this.linkLabeWhisperWebSite.Location = new System.Drawing.Point(12, 26);
             this.linkLabeWhisperWebSite.Name = "linkLabeWhisperWebSite";
             this.linkLabeWhisperWebSite.Size = new System.Drawing.Size(85, 13);
-            this.linkLabeWhisperWebSite.TabIndex = 2;
+            this.linkLabeWhisperWebSite.TabIndex = 0;
             this.linkLabeWhisperWebSite.TabStop = true;
             this.linkLabeWhisperWebSite.Text = "Whisper website";
             this.linkLabeWhisperWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWhisperWebsite_LinkClicked);
@@ -224,7 +225,7 @@
             // 
             this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTime.AutoSize = true;
-            this.labelTime.Location = new System.Drawing.Point(12, 442);
+            this.labelTime.Location = new System.Drawing.Point(12, 472);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(88, 13);
             this.labelTime.TabIndex = 6;
@@ -237,21 +238,22 @@
             // checkBoxUsePostProcessing
             // 
             this.checkBoxUsePostProcessing.AutoSize = true;
-            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 177);
+            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 185);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
             this.checkBoxUsePostProcessing.TabIndex = 4;
             this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
             this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
+            this.checkBoxUsePostProcessing.CheckedChanged += new System.EventHandler(this.checkBoxUsePostProcessing_CheckedChanged);
             // 
             // buttonBatchMode
             // 
             this.buttonBatchMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonBatchMode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonBatchMode.Location = new System.Drawing.Point(504, 427);
+            this.buttonBatchMode.Location = new System.Drawing.Point(504, 457);
             this.buttonBatchMode.Name = "buttonBatchMode";
             this.buttonBatchMode.Size = new System.Drawing.Size(112, 23);
-            this.buttonBatchMode.TabIndex = 9;
+            this.buttonBatchMode.TabIndex = 7;
             this.buttonBatchMode.Text = "Batch mode";
             this.buttonBatchMode.UseVisualStyleBackColor = true;
             this.buttonBatchMode.Click += new System.EventHandler(this.buttonBatchMode_Click);
@@ -265,9 +267,9 @@
             this.groupBoxInputFiles.Controls.Add(this.buttonRemoveFile);
             this.groupBoxInputFiles.Controls.Add(this.buttonAddFile);
             this.groupBoxInputFiles.Controls.Add(this.listViewInputFiles);
-            this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 200);
+            this.groupBoxInputFiles.Location = new System.Drawing.Point(15, 246);
             this.groupBoxInputFiles.Name = "groupBoxInputFiles";
-            this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 185);
+            this.groupBoxInputFiles.Size = new System.Drawing.Size(682, 169);
             this.groupBoxInputFiles.TabIndex = 5;
             this.groupBoxInputFiles.TabStop = false;
             this.groupBoxInputFiles.Text = "Input files";
@@ -317,7 +319,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 18);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(591, 150);
+            this.listViewInputFiles.Size = new System.Drawing.Size(591, 134);
             this.listViewInputFiles.TabIndex = 0;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -334,7 +336,7 @@
             // 
             this.labelFC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelFC.ForeColor = System.Drawing.Color.Gray;
-            this.labelFC.Location = new System.Drawing.Point(247, 442);
+            this.labelFC.Location = new System.Drawing.Point(247, 472);
             this.labelFC.Name = "labelFC";
             this.labelFC.Size = new System.Drawing.Size(120, 17);
             this.labelFC.TabIndex = 19;
@@ -347,7 +349,7 @@
             this.checkBoxTranslateToEnglish.Location = new System.Drawing.Point(15, 153);
             this.checkBoxTranslateToEnglish.Name = "checkBoxTranslateToEnglish";
             this.checkBoxTranslateToEnglish.Size = new System.Drawing.Size(119, 17);
-            this.checkBoxTranslateToEnglish.TabIndex = 20;
+            this.checkBoxTranslateToEnglish.TabIndex = 2;
             this.checkBoxTranslateToEnglish.Text = "Translate to English";
             this.checkBoxTranslateToEnglish.UseVisualStyleBackColor = true;
             // 
@@ -365,7 +367,7 @@
             // labelElapsed
             // 
             this.labelElapsed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelElapsed.Location = new System.Drawing.Point(215, 409);
+            this.labelElapsed.Location = new System.Drawing.Point(215, 439);
             this.labelElapsed.Name = "labelElapsed";
             this.labelElapsed.Size = new System.Drawing.Size(152, 13);
             this.labelElapsed.TabIndex = 22;
@@ -380,7 +382,7 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(200, 98);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(200, 76);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
@@ -408,11 +410,22 @@
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
+            // checkBoxAutoAdjustTimings
+            // 
+            this.checkBoxAutoAdjustTimings.AutoSize = true;
+            this.checkBoxAutoAdjustTimings.Location = new System.Drawing.Point(42, 208);
+            this.checkBoxAutoAdjustTimings.Name = "checkBoxAutoAdjustTimings";
+            this.checkBoxAutoAdjustTimings.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxAutoAdjustTimings.TabIndex = 3;
+            this.checkBoxAutoAdjustTimings.Text = "Auto adjust timings";
+            this.checkBoxAutoAdjustTimings.UseVisualStyleBackColor = true;
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(709, 464);
+            this.ClientSize = new System.Drawing.Size(709, 494);
+            this.Controls.Add(this.checkBoxAutoAdjustTimings);
             this.Controls.Add(this.labelElapsed);
             this.Controls.Add(this.labelCpp);
             this.Controls.Add(this.checkBoxTranslateToEnglish);
@@ -485,5 +498,6 @@
         private System.Windows.Forms.ToolStripMenuItem whisperCppCToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxAutoAdjustTimings;
     }
 }
