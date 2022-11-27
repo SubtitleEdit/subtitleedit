@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private bool _cancel;
         private bool _batchMode;
         private int _batchFileNumber;
-        private List<string> _filesToDelete;
+        private readonly List<string> _filesToDelete;
         private readonly Form _parentForm;
         private bool _useCenterChannelOnly;
         private int _initialWidth = 725;
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
         private long _startTicks;
         private double _endSeconds;
-        private double _lastEstimatedTotalMs = -1;
+        private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
 
         public Subtitle TranscribedSubtitle { get; private set; }
@@ -390,7 +390,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             _outputText?.Add("Loading result from STDOUT" + Environment.NewLine);
-            return _resultList;
+
+            return _resultList.OrderBy(p => p.Start).ToList();
         }
 
         public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText, List<string> filesToDelete)
@@ -667,7 +668,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
                 }
+
                 translateToEnglish = $"--max-len {maxChars} ";
+                translateToEnglish = string.Empty; //TODO: remove line when "--max-len" is working!
             }
 
             var outputSrt = string.Empty;
@@ -839,35 +842,21 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             _videoInfo.TotalSeconds = Math.Max(_endSeconds, _videoInfo.TotalSeconds);
-
             var msPerFrame = durationMs / (_endSeconds * 1000.0);
             var estimatedTotalMs = msPerFrame * _videoInfo.TotalMilliseconds;
-            if (_lastEstimatedTotalMs >= 0 && estimatedTotalMs > _lastEstimatedTotalMs)
+            var msEstimatedLeft = estimatedTotalMs - durationMs;
+            if (msEstimatedLeft > _lastEstimatedMs)
             {
-                estimatedTotalMs = _lastEstimatedTotalMs;
+                msEstimatedLeft = _lastEstimatedMs;
             }
-
-            _lastEstimatedTotalMs = estimatedTotalMs;
-            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            else
+            {
+                _lastEstimatedMs = msEstimatedLeft;
+            }
 
             progressBar1.Value = (int)Math.Round(_endSeconds * 100.0 / _videoInfo.TotalSeconds, MidpointRounding.AwayFromZero);
-            labelTime.Text = estimatedLeft;
-        }
-
-        public static string ToProgressTime(double estimatedTotalMs)
-        {
-            var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            if (timeCode.TotalSeconds / 60 > 5)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
-            }
-
-            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
+            labelTime.Text = ProgressHelper.ToProgressTime(msEstimatedLeft);
+            BringToFront();
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
