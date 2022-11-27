@@ -113,9 +113,9 @@ namespace Nikse.SubtitleEdit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap Help {
+        public static System.Drawing.Bitmap Help32 {
             get {
-                object obj = ResourceManager.GetObject("Help", resourceCulture);
+                object obj = ResourceManager.GetObject("Help32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
