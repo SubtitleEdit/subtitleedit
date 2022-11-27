@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             linkLabelOpenModelsFolder.Text = LanguageSettings.Current.AudioToText.OpenModelsFolder;
             checkBoxTranslateToEnglish.Text = LanguageSettings.Current.AudioToText.TranslateToEnglish;
             checkBoxUsePostProcessing.Text = LanguageSettings.Current.AudioToText.UsePostProcessing;
+            checkBoxAutoAdjustTimings.Text = LanguageSettings.Current.AudioToText.AutoAdjustTimings;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
@@ -69,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 
             checkBoxUsePostProcessing.Checked = Configuration.Settings.Tools.VoskPostProcessing;
+            checkBoxAutoAdjustTimings.Checked = Configuration.Settings.Tools.WhisperAutoAdjustTimings;
 
             _filesToDelete = new List<string>();
 
@@ -193,7 +195,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
             };
-            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+
+            WavePeakData wavePeaks = null;
+            if (checkBoxAutoAdjustTimings.Checked)
+            {
+                using (var waveFile = new WavePeakGenerator(waveFileName))
+                {
+                    var wavePeakFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+                    waveFile.GeneratePeaks(0, wavePeakFileName);
+                    wavePeaks = WavePeakData.FromDisk(wavePeakFileName);
+                    _filesToDelete.Add(wavePeakFileName);
+                }
+            }
+
+            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true, checkBoxAutoAdjustTimings.Checked, wavePeaks);
 
             if (transcript == null || transcript.Count == 0)
             {
@@ -264,11 +279,23 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
+                WavePeakData wavePeaks = null;
+                if (checkBoxAutoAdjustTimings.Checked)
+                {
+                    using (var waveFile = new WavePeakGenerator(waveFileName))
+                    {
+                        var wavePeakFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+                        waveFile.GeneratePeaks(0, wavePeakFileName);
+                        wavePeaks = WavePeakData.FromDisk(wavePeakFileName);
+                        _filesToDelete.Add(wavePeakFileName);
+                    }
+                }
+
                 var postProcessor = new AudioToTextPostProcessor(_languageCode)
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true, checkBoxAutoAdjustTimings.Checked, wavePeaks);
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -670,7 +697,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
 
                 translateToEnglish = $"--max-len {maxChars} ";
-                translateToEnglish = string.Empty; //TODO: remove line when "--max-len" is working!
+                //translateToEnglish = string.Empty; //TODO: remove line when "--max-len" is working!
             }
 
             var outputSrt = string.Empty;
@@ -744,6 +771,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
+            Configuration.Settings.Tools.WhisperAutoAdjustTimings = checkBoxAutoAdjustTimings.Checked;
 
             DeleteTemporaryFiles(_filesToDelete);
         }
@@ -912,7 +940,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (_batchMode)
             {
                 groupBoxInputFiles.Enabled = true;
-                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 450;
+                Height = checkBoxAutoAdjustTimings.Bottom + progressBar1.Height + buttonCancel.Height + 450;
                 listViewInputFiles.Visible = true;
                 buttonBatchMode.Text = LanguageSettings.Current.Split.Basic;
                 MinimumSize = new Size(MinimumSize.Width, Height - 75);
@@ -923,7 +951,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else
             {
                 groupBoxInputFiles.Enabled = false;
-                var h = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 70;
+                var h = checkBoxAutoAdjustTimings.Bottom + progressBar1.Height + buttonCancel.Height + 70;
                 MinimumSize = new Size(MinimumSize.Width, h - 10);
                 Height = h;
                 Width = _initialWidth;
@@ -1066,6 +1094,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
+        }
+
+        private void checkBoxUsePostProcessing_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxAutoAdjustTimings.Enabled = checkBoxUsePostProcessing.Checked;
         }
     }
 }

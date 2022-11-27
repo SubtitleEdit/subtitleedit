@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
         }
 
-        public Subtitle Generate(Engine engine, List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        public Subtitle Generate(Engine engine, List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines, bool autoAdjustTimings, WavePeakData wavePeaks)
         {
             _resultTexts = resultTexts;
             var subtitle = new Subtitle();
@@ -55,6 +55,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 {
                     subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
                 }
+            }
+
+            if (autoAdjustTimings && wavePeaks != null)
+            {
+                subtitle = WhisperTimingFixer.ShortenLongTexts(subtitle);
+                subtitle = WhisperTimingFixer.ShortenViaWavePeaks(subtitle, wavePeaks);
             }
 
             return Generate(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);

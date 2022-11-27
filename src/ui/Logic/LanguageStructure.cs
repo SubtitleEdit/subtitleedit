@@ -196,6 +196,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string TranscribingXOfY { get; set; }
             public string XFilesSavedToVideoSourceFolder { get; set; }
             public string UsePostProcessing { get; set; }
+            public string AutoAdjustTimings { get; set; }
             public string BatchMode { get; set; }
             public string KeepPartialTranscription { get; set; }
             public string TranslateToEnglish { get; set; }

@@ -18702,94 +18702,219 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var silenceLengthInSeconds = 0.08;
-            var lowPercent = audioVisualizer.FindLowPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.1);
-            var highPercent = audioVisualizer.FindHighPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.4);
-            var add = 5.0;
-            if (highPercent > 40)
-            {
-                add = 8;
-            }
-            else if (highPercent < 5)
-            {
-                add = highPercent - lowPercent - 0.3;
-            }
+            _subtitle = WhisperTimingFixer.ShortenViaWavePeaks(_subtitle, audioVisualizer.WavePeaks);
 
-            for (var startVolume = lowPercent + add; startVolume < 14; startVolume += 0.3)
+            SaveSubtitleListviewIndices();
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            RestoreSubtitleListviewIndices();
+            RefreshSelectedParagraph();
+            return;
+
+            var pctCheck = 10;
+
+            // Find nearest silence
+            var startPos = p.StartTime.TotalSeconds;
+            var lowPercentx = audioVisualizer.FindLowPercentage(startPos - 0.05, startPos + 0.05);
+            var highPercentx = audioVisualizer.FindHighPercentage(startPos - 0.05, startPos + 0.05);
+            var pctHere = lowPercentx + highPercentx / 2;
+            if (pctHere > pctCheck)
             {
-                var pos = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, p.StartTime.TotalSeconds);
-                var pos2 = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume + 0.3, silenceLengthInSeconds, p.StartTime.TotalSeconds);
-                if (pos >= 0 && pos > p.StartTime.TotalSeconds - 1)
+                var startPosBack = startPos ;
+                var startPosForward = startPosBack;
+                for (var ms = 50; ms < 250; ms += 50)
                 {
-                    if (pos2 > pos && pos2 >= 0 && pos2 > p.StartTime.TotalSeconds - 1)
+                    var lowPercentBack = audioVisualizer.FindLowPercentage(startPosBack - 0.05, startPosBack + 0.05);
+                    var highPercentBack = audioVisualizer.FindHighPercentage(startPosBack - 0.05, startPosBack + 0.05);
+                    var pct = lowPercentBack + highPercentBack / 2;
+                    if (pct < pctCheck)
                     {
-                        pos = pos2;
-                    }
-
-                    var newStartTimeMs = pos * TimeCode.BaseUnit;
-                    var prev = _subtitle.GetParagraphOrDefault(index - 1);
-                    if (prev != null && prev.EndTime.TotalMilliseconds + MinGapBetweenLines >= newStartTimeMs)
-                    {
-                        newStartTimeMs = prev.EndTime.TotalMilliseconds + MinGapBetweenLines;
-                        if (newStartTimeMs >= p.StartTime.TotalMilliseconds)
+                        startPosBack -= 0.025;
+                        var lowPercentBack2 = audioVisualizer.FindLowPercentage(startPosBack - 0.05, startPosBack + 0.05);
+                        var highPercentBack2 = audioVisualizer.FindHighPercentage(startPosBack - 0.05, startPosBack + 0.05);
+                        var pct2 = lowPercentBack2 + highPercentBack2 / 2;
+                        if (pct2 < pct)
                         {
-                            break; // cannot move start time
+                            p.StartTime.TotalSeconds = startPosBack + 0.05;
                         }
-                    }
-
-                    // check for shot changes
-                    if (audioVisualizer.ShotChanges != null)
-                    {
-                        var matchingShotChanges = audioVisualizer.ShotChanges
-                            .Where(sc => sc > p.StartTime.TotalSeconds - 0.3 && sc < p.StartTime.TotalSeconds + 0.2)
-                            .OrderBy(sc => Math.Abs(sc - p.StartTime.TotalSeconds));
-                        if (matchingShotChanges.Any())
+                        else
                         {
-                            newStartTimeMs = matchingShotChanges.First() * TimeCode.BaseUnit;
+                            p.StartTime.TotalSeconds = startPosBack + 0.025 + + 0.05;
                         }
+
+                        break;
                     }
 
-                    if (Math.Abs(p.StartTime.TotalMilliseconds - newStartTimeMs) < 10)
-                    {
-                        break; // diff too small
-                    }
+                    startPosBack -= 0.05;
 
-                    var newEndTimeMs = p.EndTime.TotalMilliseconds;
-                    if (newStartTimeMs > p.StartTime.TotalMilliseconds)
+
+
+                    var lowPercentForward = audioVisualizer.FindLowPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                    var highPercentForward = audioVisualizer.FindHighPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                    var pctF = lowPercentForward + highPercentForward / 2;
+                    if (pctF < pctCheck)
                     {
-                        var temp = new Paragraph(p);
-                        temp.StartTime.TotalMilliseconds = newStartTimeMs;
-                        if (temp.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ||
-                            Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        startPosForward -= 0.025;
+                        var lowPercentForward2 = audioVisualizer.FindLowPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                        var highPercentForward2 = audioVisualizer.FindHighPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                        var pct2 = lowPercentForward2 + highPercentForward2 / 2;
+                        if (pct2 < pctF)
                         {
-                            var next = _subtitle.GetParagraphOrDefault(index + 1);
-                            if (next == null ||
-                                next.StartTime.TotalMilliseconds > newStartTimeMs + p.Duration.TotalMilliseconds + MinGapBetweenLines)
-                            {
-                                newEndTimeMs = newStartTimeMs + p.Duration.TotalMilliseconds;
-                            }
+                            p.StartTime.TotalSeconds = startPosForward + 0.05;
                         }
-                    }
-
-                    MakeHistoryForUndo(string.Format(LanguageSettings.Current.Main.BeforeX, LanguageSettings.Current.Settings.WaveformGuessStart));
-
-                    if (IsOriginalEditable)
-                    {
-                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleOriginal.Paragraphs);
-                        if (original != null)
+                        else
                         {
-                            original.StartTime.TotalMilliseconds = newStartTimeMs;
-                            original.EndTime.TotalMilliseconds = newEndTimeMs;
+                            p.StartTime.TotalSeconds = startPosForward + 0.025 + +0.05;
                         }
+
+                        break;
                     }
 
-                    p.StartTime.TotalMilliseconds = newStartTimeMs;
-                    p.EndTime.TotalMilliseconds = newEndTimeMs;
-                    RefreshSelectedParagraph();
-                    SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
-                    break;
+                    startPosForward += 0.05;
                 }
             }
+
+
+            startPos = p.StartTime.TotalSeconds;
+            lowPercentx = audioVisualizer.FindLowPercentage(startPos - 0.05, startPos + 0.05);
+            highPercentx = audioVisualizer.FindHighPercentage(startPos - 0.05, startPos + 0.05);
+            pctHere = lowPercentx + highPercentx / 2;
+            if (pctHere < pctCheck)
+            {
+                var startPosForward = p.StartTime.TotalSeconds;
+                while (pctHere < pctCheck && startPos < p.EndTime.TotalSeconds - 1)
+                {
+                    var lowPercentForward = audioVisualizer.FindLowPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                    var highPercentForward = audioVisualizer.FindHighPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                    pctHere = lowPercentForward + highPercentForward / 2;
+
+                    p.StartTime.TotalSeconds = startPosForward;
+
+                    if (pctHere >= pctCheck)
+                    {
+                        startPosForward -= 0.025;
+                        var lowPercentForward2 = audioVisualizer.FindLowPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                        var highPercentForward2 = audioVisualizer.FindHighPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                        var pct2 = lowPercentForward2 + highPercentForward2 / 2;
+                        if (pct2 < pctHere)
+                        {
+                            p.StartTime.TotalSeconds -= 0.025;
+
+                            pctHere = pct2;
+                            startPosForward -= 0.025;
+                            lowPercentForward2 = audioVisualizer.FindLowPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                            highPercentForward2 = audioVisualizer.FindHighPercentage(startPosForward - 0.05, startPosForward + 0.05);
+                            pct2 = lowPercentForward2 + highPercentForward2 / 2;
+                            if (pct2 < pctHere)
+                            {
+                                p.StartTime.TotalSeconds -= 0.025;
+                            }
+                        }
+
+                        break;
+                    }
+
+                    startPosForward += 0.05;
+                }
+            }
+
+
+            RefreshSelectedParagraph();
+            SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+
+            //var p = _subtitle.GetParagraphOrDefault(index);
+            //if (p == null)
+            //{
+            //    return;
+            //}
+
+            //var silenceLengthInSeconds = 0.08;
+            //var lowPercent = audioVisualizer.FindLowPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.1);
+            //var highPercent = audioVisualizer.FindHighPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.4);
+            //var add = 5.0;
+            //if (highPercent > 40)
+            //{
+            //    add = 8;
+            //}
+            //else if (highPercent < 5)
+            //{
+            //    add = highPercent - lowPercent - 0.3;
+            //}
+
+            //for (var startVolume = lowPercent + add; startVolume < 14; startVolume += 0.3)
+            //{
+            //    var pos = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, p.StartTime.TotalSeconds);
+            //    var pos2 = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume + 0.3, silenceLengthInSeconds, p.StartTime.TotalSeconds);
+            //    if (pos >= 0 && pos > p.StartTime.TotalSeconds - 1)
+            //    {
+            //        if (pos2 > pos && pos2 >= 0 && pos2 > p.StartTime.TotalSeconds - 1)
+            //        {
+            //            pos = pos2;
+            //        }
+
+            //        var newStartTimeMs = pos * TimeCode.BaseUnit;
+            //        var prev = _subtitle.GetParagraphOrDefault(index - 1);
+            //        if (prev != null && prev.EndTime.TotalMilliseconds + MinGapBetweenLines >= newStartTimeMs)
+            //        {
+            //            newStartTimeMs = prev.EndTime.TotalMilliseconds + MinGapBetweenLines;
+            //            if (newStartTimeMs >= p.StartTime.TotalMilliseconds)
+            //            {
+            //                break; // cannot move start time
+            //            }
+            //        }
+
+            //        // check for shot changes
+            //        if (audioVisualizer.ShotChanges != null)
+            //        {
+            //            var matchingShotChanges = audioVisualizer.ShotChanges
+            //                .Where(sc => sc > p.StartTime.TotalSeconds - 0.3 && sc < p.StartTime.TotalSeconds + 0.2)
+            //                .OrderBy(sc => Math.Abs(sc - p.StartTime.TotalSeconds));
+            //            if (matchingShotChanges.Any())
+            //            {
+            //                newStartTimeMs = matchingShotChanges.First() * TimeCode.BaseUnit;
+            //            }
+            //        }
+
+            //        if (Math.Abs(p.StartTime.TotalMilliseconds - newStartTimeMs) < 10)
+            //        {
+            //            break; // diff too small
+            //        }
+
+            //        var newEndTimeMs = p.EndTime.TotalMilliseconds;
+            //        if (newStartTimeMs > p.StartTime.TotalMilliseconds)
+            //        {
+            //            var temp = new Paragraph(p);
+            //            temp.StartTime.TotalMilliseconds = newStartTimeMs;
+            //            if (temp.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ||
+            //                Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+            //            {
+            //                var next = _subtitle.GetParagraphOrDefault(index + 1);
+            //                if (next == null ||
+            //                    next.StartTime.TotalMilliseconds > newStartTimeMs + p.Duration.TotalMilliseconds + MinGapBetweenLines)
+            //                {
+            //                    newEndTimeMs = newStartTimeMs + p.Duration.TotalMilliseconds;
+            //                }
+            //            }
+            //        }
+
+            //        MakeHistoryForUndo(string.Format(LanguageSettings.Current.Main.BeforeX, LanguageSettings.Current.Settings.WaveformGuessStart));
+
+            //        if (IsOriginalEditable)
+            //        {
+            //            var original = Utilities.GetOriginalParagraph(index, p, _subtitleOriginal.Paragraphs);
+            //            if (original != null)
+            //            {
+            //                original.StartTime.TotalMilliseconds = newStartTimeMs;
+            //                original.EndTime.TotalMilliseconds = newEndTimeMs;
+            //            }
+            //        }
+
+            //        p.StartTime.TotalMilliseconds = newStartTimeMs;
+            //        p.EndTime.TotalMilliseconds = newEndTimeMs;
+            //        RefreshSelectedParagraph();
+            //        SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+            //        break;
+            //    }
+            //}
         }
 
         private void GoToBookmark()
