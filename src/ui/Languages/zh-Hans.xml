@@ -3031,6 +3031,7 @@ Command line: {1} {2}
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API 密钥</ApiKey>
     <SendOriginalImages>发送原始图像</SendOriginalImages>
+    <SeHandlesTextMerge>由 SE 处理文本合并</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
