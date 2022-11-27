@@ -2148,6 +2148,7 @@
     <None Include="Resources\ebu.png" />
     <None Include="Resources\color-picker-small2.png" />
     <None Include="Resources\rec32.png" />
+    <None Include="Resources\Help32.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
     <None Include="Hunspellx64.dll">
