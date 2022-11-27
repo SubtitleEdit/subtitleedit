@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = GenerateVideoWithHardSubs.ToProgressTime(estimatedTotalMs - durationMs);
+            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
             labelProgress.Text = estimatedLeft;
         }
 

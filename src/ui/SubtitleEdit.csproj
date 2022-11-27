@@ -1399,6 +1399,7 @@
     <Compile Include="Logic\LanguageStructure.cs" />
     <Compile Include="Logic\Networking\SeNetworkService.cs" />
     <Compile Include="Logic\PathHelper.cs" />
+    <Compile Include="Logic\ProgressHelper.cs" />
     <Compile Include="Logic\ReplaceAllHelper.cs" />
     <Compile Include="Logic\ShotChangesGenerator.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />

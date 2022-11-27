@@ -548,24 +548,8 @@ namespace Nikse.SubtitleEdit.Forms
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
             labelProgress.Text = estimatedLeft;
-        }
-
-        public static string ToProgressTime(float estimatedTotalMs)
-        {
-            var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            if (timeCode.TotalSeconds / 60 > 5)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
-            }
-
-            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
 
         private void numericUpDownWidth_ValueChanged(object sender, EventArgs e)

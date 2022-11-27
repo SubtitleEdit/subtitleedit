@@ -86,7 +86,8 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                 if (splitLines && !new[] { "jp", "cn" }.Contains(TwoLetterLanguageCode))
                 {
-                    subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
+                    var totalMaxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
+                    subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(subtitle, totalMaxChars, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
             }
 
