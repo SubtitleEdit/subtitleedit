@@ -1087,6 +1087,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XGeneratedWithBurnedInSubsInX = "\"{0}\" generated with burned-in subtitle in {1}.",
                 TimeRemainingMinutes = "Time remaining: {0} minutes",
                 TimeRemainingSeconds = "Time remaining: {0} seconds",
+                TimeRemainingAFewSeconds = "Time remaining: A few seconds",
                 TimeRemainingMinutesAndSeconds = "Time remaining: {0} minutes and {1} seconds",
                 TargetFileName = "Target file name: {0}",
                 TargetFileSize = "Target file size (requires 2 pass encoding)",

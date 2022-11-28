@@ -10,6 +10,11 @@ namespace Nikse.SubtitleEdit.Logic
             var timeCode = new TimeCode(estimatedTotalMs);
             if (timeCode.TotalSeconds < 60)
             {
+                if (timeCode.TotalSeconds < 3)
+                {
+                    return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingAFewSeconds);
+                }
+
                 return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
             }
 
