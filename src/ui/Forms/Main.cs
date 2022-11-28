@@ -34704,7 +34704,7 @@ namespace Nikse.SubtitleEdit.Forms
                 CloseVideoToolStripMenuItemClick(sender, e);
             }
 
-            using (var form = new WhisperAudioToText(oldVideoFileName, _videoAudioTrackNumber, this))
+            using (var form = new WhisperAudioToText(oldVideoFileName, _videoAudioTrackNumber, this, audioVisualizer?.WavePeaks))
             {
                 var result = form.ShowDialog(this);
 

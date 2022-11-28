@@ -16,8 +16,6 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             Whisper,
         }
 
-        private List<ResultText> _resultTexts;
-
         /// <summary>
         /// Set period if distance to next subtitle is more than this value in milliseconds.
         /// </summary>
@@ -27,7 +25,6 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public int ParagraphMaxChars { get; set; }
 
         public string TwoLetterLanguageCode { get; }
-
 
         public AudioToTextPostProcessor(string twoLetterLanguageCode)
         {
@@ -39,28 +36,25 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 ParagraphMaxChars = 86;
             }
         }
-
-        public Subtitle Generate(Engine engine, List<ResultText> resultTexts, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines, bool autoAdjustTimings, WavePeakData wavePeaks)
+        public Subtitle Generate(Engine engine, List<ResultText> input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
-            _resultTexts = resultTexts;
             var subtitle = new Subtitle();
-            foreach (var resultText in _resultTexts)
+            subtitle.Paragraphs.AddRange(input.Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+
+            return Generate(engine, subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
+        }
+
+        public Subtitle Generate(Engine engine, Subtitle input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        {
+            var subtitle = new Subtitle();
+            foreach (var resultText in input.Paragraphs)
             {
-                if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.End - resultText.Start > 1)
+                if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.EndTime.TotalSeconds - resultText.StartTime.TotalSeconds > 1)
                 {
                     continue;
                 }
 
-                if (!string.IsNullOrWhiteSpace(resultText.Text))
-                {
-                    subtitle.Paragraphs.Add(new Paragraph(resultText.Text, (double)resultText.Start * 1000.0, (double)resultText.End * 1000.0));
-                }
-            }
-
-            if (autoAdjustTimings && wavePeaks != null)
-            {
-                subtitle = WhisperTimingFixer.ShortenLongTexts(subtitle);
-                subtitle = WhisperTimingFixer.ShortenViaWavePeaks(subtitle, wavePeaks);
+                subtitle.Paragraphs.Add(resultText);
             }
 
             return Generate(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
