@@ -2275,6 +2275,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingSeconds":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/TimeRemainingAFewSeconds":
+                    language.GenerateVideoWithBurnedInSubs.TimeRemainingAFewSeconds = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/TimeRemainingMinutesAndSeconds":
                     language.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds = reader.Value;
                     break;

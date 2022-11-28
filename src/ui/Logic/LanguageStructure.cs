@@ -947,6 +947,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string XGeneratedWithBurnedInSubsInX { get; set; }
             public string TimeRemainingMinutes { get; set; }
             public string TimeRemainingSeconds { get; set; }
+            public string TimeRemainingAFewSeconds { get; set; }
             public string TimeRemainingMinutesAndSeconds { get; set; }
             public string TargetFileName { get; set; }
             public string TargetFileSize { get; set; }
