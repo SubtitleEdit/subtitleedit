@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 10.11.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 28.11.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -192,6 +192,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <TranscribingXOfY>Conversione dell'audio in testo - file {0} di {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} file salvati nella cartella sorgente video</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Usa la post-elaborazione (unione di righe, correzione di maiuscole e minuscole, punteggiatura e altro)</UsePostProcessing>
+    <AutoAdjustTimings>Regola automaticamente i tempi</AutoAdjustTimings>
     <BatchMode>Modo batch</BatchMode>
     <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
     <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
@@ -859,6 +860,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <XGeneratedWithBurnedInSubs>"{0}" generato con sottotitoli incorporati.</XGeneratedWithBurnedInSubs>
     <TimeRemainingMinutes>Tempo rimanente: {0} minuti</TimeRemainingMinutes>
     <TimeRemainingSeconds>Tempo rimanente: {0} secondi</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Tempo rimanente: pochi secondi</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Tempo rimanente: {0} minuti e {1} secondi</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Nome file destinazione: {0}</TargetFileName>
     <TargetFileSize>Dimensione file destinazione (richiede codifica in 2 passaggi)</TargetFileSize>
@@ -3046,6 +3048,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
     <ApiKey>Chiave API</ApiKey>
     <SendOriginalImages>Invia immagini originali</SendOriginalImages>
+    <SeHandlesTextMerge>SE gestisce l'unione del testo</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Immagine manuale in testo</Title>
