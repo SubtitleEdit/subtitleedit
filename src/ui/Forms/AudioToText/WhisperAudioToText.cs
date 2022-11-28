@@ -5,13 +5,16 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -35,10 +38,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private double _endSeconds;
         private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
+        private WavePeakData _wavePeaks;
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
-        public WhisperAudioToText(string videoFileName, int audioTrackNumber, Form parentForm)
+        public WhisperAudioToText(string videoFileName, int audioTrackNumber, Form parentForm, WavePeakData wavePeaks)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -47,6 +51,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _videoFileName = videoFileName;
             _audioTrackNumber = audioTrackNumber;
             _parentForm = parentForm;
+            _wavePeaks = wavePeaks;
 
             Text = LanguageSettings.Current.AudioToText.Title;
             labelInfo.Text = LanguageSettings.Current.AudioToText.WhisperInfo;
@@ -185,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             timer1.Start();
             var transcript = TranscribeViaWhisper(waveFileName);
             timer1.Stop();
-            if (_cancel && (transcript == null || transcript.Count == 0 || MessageBox.Show(LanguageSettings.Current.AudioToText.KeepPartialTranscription, Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes))
+            if (_cancel && (transcript == null || transcript.Paragraphs.Count == 0 || MessageBox.Show(LanguageSettings.Current.AudioToText.KeepPartialTranscription, Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes))
             {
                 DialogResult = DialogResult.Cancel;
                 return;
@@ -199,18 +204,18 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             WavePeakData wavePeaks = null;
             if (checkBoxAutoAdjustTimings.Checked)
             {
-                using (var waveFile = new WavePeakGenerator(waveFileName))
-                {
-                    var wavePeakFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
-                    waveFile.GeneratePeaks(0, wavePeakFileName);
-                    wavePeaks = WavePeakData.FromDisk(wavePeakFileName);
-                    _filesToDelete.Add(wavePeakFileName);
-                }
+                wavePeaks = _wavePeaks ?? MakeWavePeaks();
             }
 
-            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true, checkBoxAutoAdjustTimings.Checked, wavePeaks);
+            if (checkBoxAutoAdjustTimings.Checked && wavePeaks != null)
+            {
+                transcript = WhisperTimingFixer.ShortenLongTexts(transcript);
+                transcript = WhisperTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
+            }
 
-            if (transcript == null || transcript.Count == 0)
+            TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
+
+            if (transcript == null || transcript.Paragraphs.Count == 0)
             {
                 UpdateLog();
                 SeLogger.Error(textBoxLog.Text);
@@ -282,20 +287,20 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 WavePeakData wavePeaks = null;
                 if (checkBoxAutoAdjustTimings.Checked)
                 {
-                    using (var waveFile = new WavePeakGenerator(waveFileName))
-                    {
-                        var wavePeakFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
-                        waveFile.GeneratePeaks(0, wavePeakFileName);
-                        wavePeaks = WavePeakData.FromDisk(wavePeakFileName);
-                        _filesToDelete.Add(wavePeakFileName);
-                    }
+                    wavePeaks = _wavePeaks ?? MakeWavePeaks();
+                }
+
+                if (checkBoxAutoAdjustTimings.Checked && wavePeaks != null)
+                {
+                    transcript = WhisperTimingFixer.ShortenLongTexts(transcript);
+                    transcript = WhisperTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
                 }
 
                 var postProcessor = new AudioToTextPostProcessor(_languageCode)
                 {
                     ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
                 };
-                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true, checkBoxAutoAdjustTimings.Checked, wavePeaks);
+                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Whisper, transcript, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
 
                 SaveToSourceFolder(videoFileName);
                 TaskbarList.SetProgressValue(_parentForm.Handle, _batchFileNumber, listViewInputFiles.Items.Count);
@@ -320,6 +325,84 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             DialogResult = DialogResult.Cancel;
         }
 
+        private WavePeakData MakeWavePeaks()
+        {
+            if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
+            {
+                return null;
+            }
+
+            var targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+            try
+            {
+                var process = AddWaveform.GetCommandLineProcess(_videoFileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
+                process.Start();
+                while (!process.HasExited)
+                {
+                    Application.DoEvents();
+                }
+
+                // check for delay in matroska files
+                var delayInMilliseconds = 0;
+                var audioTrackNames = new List<string>();
+                var mkvAudioTrackNumbers = new Dictionary<int, int>();
+                if (_videoFileName.ToLowerInvariant().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        using (var matroska = new MatroskaFile(_videoFileName))
+                        {
+                            if (matroska.IsValid)
+                            {
+                                foreach (var track in matroska.GetTracks())
+                                {
+                                    if (track.IsAudio)
+                                    {
+                                        if (track.CodecId != null && track.Language != null)
+                                        {
+                                            audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                        }
+                                        else
+                                        {
+                                            audioTrackNames.Add("#" + track.TrackNumber);
+                                        }
+
+                                        mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
+                                    }
+                                }
+
+                                if (mkvAudioTrackNumbers.Count > 0)
+                                {
+                                    delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[0]);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        SeLogger.Error(exception, $"Error getting delay from mkv: {_videoFileName}");
+                    }
+                }
+
+                if (File.Exists(targetFile))
+                {
+                    using (var waveFile = new WavePeakGenerator(targetFile))
+                    {
+                        if (!string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
+                        {
+                            return waveFile.GeneratePeaks(delayInMilliseconds, WavePeakGenerator.GetPeakWaveFileName(_videoFileName));
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return null;
+        }
+
         private void SaveToSourceFolder(string videoFileName)
         {
             var format = SubtitleFormat.FromName(Configuration.Settings.General.DefaultSubtitleFormat, new SubRip());
@@ -341,12 +424,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             return language != null ? language.Code : "en";
         }
 
-        public List<ResultText> TranscribeViaWhisper(string waveFileName)
+        public Subtitle TranscribeViaWhisper(string waveFileName)
         {
             var model = comboBoxModels.Items[comboBoxModels.SelectedIndex] as WhisperModel;
             if (model == null)
             {
-                return new List<ResultText>();
+                return new Subtitle();
             }
 
             labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
@@ -413,12 +496,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (GetResultFromSrt(waveFileName, out var resultTexts, _outputText, _filesToDelete))
             {
-                return resultTexts;
+                var subtitle = new Subtitle();
+                subtitle.Paragraphs.AddRange(resultTexts.Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+                return subtitle;
             }
 
             _outputText?.Add("Loading result from STDOUT" + Environment.NewLine);
 
-            return _resultList.OrderBy(p => p.Start).ToList();
+            var sub = new Subtitle();
+            sub.Paragraphs.AddRange(resultTexts.OrderBy(p => p.Start).Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+            return sub;
         }
 
         public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText, List<string> filesToDelete)
@@ -697,7 +784,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
 
                 translateToEnglish = $"--max-len {maxChars} ";
-                //translateToEnglish = string.Empty; //TODO: remove line when "--max-len" is working!
+                translateToEnglish = string.Empty; //TODO: remove line when "--max-len" is working!
             }
 
             var outputSrt = string.Empty;
@@ -940,7 +1027,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (_batchMode)
             {
                 groupBoxInputFiles.Enabled = true;
-                Height = checkBoxAutoAdjustTimings.Bottom + progressBar1.Height + buttonCancel.Height + 450;
+                Height = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 450;
                 listViewInputFiles.Visible = true;
                 buttonBatchMode.Text = LanguageSettings.Current.Split.Basic;
                 MinimumSize = new Size(MinimumSize.Width, Height - 75);
@@ -951,7 +1038,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else
             {
                 groupBoxInputFiles.Enabled = false;
-                var h = checkBoxAutoAdjustTimings.Bottom + progressBar1.Height + buttonCancel.Height + 70;
+                var h = checkBoxUsePostProcessing.Bottom + progressBar1.Height + buttonCancel.Height + 70;
                 MinimumSize = new Size(MinimumSize.Width, h - 10);
                 Height = h;
                 Width = _initialWidth;
@@ -1094,11 +1181,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
-        }
-
-        private void checkBoxUsePostProcessing_CheckedChanged(object sender, EventArgs e)
-        {
-            checkBoxAutoAdjustTimings.Enabled = checkBoxUsePostProcessing.Checked;
         }
     }
 }

@@ -238,13 +238,12 @@
             // checkBoxUsePostProcessing
             // 
             this.checkBoxUsePostProcessing.AutoSize = true;
-            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 185);
+            this.checkBoxUsePostProcessing.Location = new System.Drawing.Point(15, 199);
             this.checkBoxUsePostProcessing.Name = "checkBoxUsePostProcessing";
             this.checkBoxUsePostProcessing.Size = new System.Drawing.Size(312, 17);
             this.checkBoxUsePostProcessing.TabIndex = 4;
             this.checkBoxUsePostProcessing.Text = "Use post-processing (line merge, fix casing, and punctuation)";
             this.checkBoxUsePostProcessing.UseVisualStyleBackColor = true;
-            this.checkBoxUsePostProcessing.CheckedChanged += new System.EventHandler(this.checkBoxUsePostProcessing_CheckedChanged);
             // 
             // buttonBatchMode
             // 
@@ -413,7 +412,7 @@
             // checkBoxAutoAdjustTimings
             // 
             this.checkBoxAutoAdjustTimings.AutoSize = true;
-            this.checkBoxAutoAdjustTimings.Location = new System.Drawing.Point(42, 208);
+            this.checkBoxAutoAdjustTimings.Location = new System.Drawing.Point(15, 176);
             this.checkBoxAutoAdjustTimings.Name = "checkBoxAutoAdjustTimings";
             this.checkBoxAutoAdjustTimings.Size = new System.Drawing.Size(114, 17);
             this.checkBoxAutoAdjustTimings.TabIndex = 3;
