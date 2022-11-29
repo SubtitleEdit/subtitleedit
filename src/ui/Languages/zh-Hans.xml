@@ -859,6 +859,7 @@ Command line: {1} {2}
     <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>剩余时间: 几秒钟</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
     <TargetFileName>目标文件名：{0}</TargetFileName>
     <TargetFileSize>目标文件大小（需要启用2次编码）</TargetFileSize>
