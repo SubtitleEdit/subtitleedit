@@ -15,17 +15,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             var min = Math.Max(0, SecondsToSampleIndex(startSeconds, wavePeaks.SampleRate));
             var max = Math.Min(wavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds, wavePeaks.SampleRate));
 
-            var minPeak = int.MaxValue;
             var maxPeak = int.MinValue;
             var count = 0;
+            var total = 0;
             for (var i = min; i < max; i++)
             {
                 var v = wavePeaks.Peaks[i].Abs;
                 count++;
-                if (v < minPeak)
-                {
-                    minPeak = v;
-                }
+                total += v;
                 if (v > maxPeak)
                 {
                     maxPeak = v;
@@ -37,9 +34,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return -1;
             }
 
-            var pctMin = minPeak * 100.0 / wavePeaks.HighestPeak;
+            var pctAvg = (total / (double)count) * 100.0 / wavePeaks.HighestPeak;
             var pctMax = maxPeak * 100.0 / wavePeaks.HighestPeak;
-            return (pctMin + pctMax) / 2.0;
+            return (pctAvg + pctMax + pctMax) / 3.0;
         }
 
         public static Subtitle ShortenViaWavePeaks(Subtitle subtitle, WavePeakData wavePeaks)
