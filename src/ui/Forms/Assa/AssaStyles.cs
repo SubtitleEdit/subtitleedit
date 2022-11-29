@@ -1898,14 +1898,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                             if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
                             {
                                 var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
-
+                                SsaStyle lastStyle = null;
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
                                     var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                    lastStyle = style;
                                     if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name) != null)
                                     {
-                                        int count = 2;
-                                        bool doRepeat = GetSsaStyleFile(style.Name + count) != null;
+                                        var count = 2;
+                                        var doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         while (doRepeat)
                                         {
                                             doRepeat = GetSsaStyleFile(style.Name + count) != null;
@@ -1929,12 +1930,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                     {
                                         _header = _header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
                                     }
+                                }
 
+                                if (lastStyle != null)
+                                {
                                     UpdateSelectedIndices(listViewStyles);
-                                    textBoxStyleName.Text = style.Name;
+                                    textBoxStyleName.Text = lastStyle.Name;
                                     textBoxStyleName.Focus();
                                     _doUpdate = true;
-                                    SetControlsFromStyle(style);
+                                    SetControlsFromStyle(lastStyle);
                                     listViewStyles_SelectedIndexChanged(null, null);
                                 }
 
@@ -2194,13 +2198,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         {
                             var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
 
+                            SsaStyle lastStyle = null;
                             foreach (var styleName in cs.SelectedStyleNames)
                             {
                                 var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                lastStyle = style;
                                 if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name) != null)
                                 {
-                                    int count = 2;
-                                    bool doRepeat = GetSsaStyleStorage(style.Name + count) != null;
+                                    var count = 2;
+                                    var doRepeat = GetSsaStyleStorage(style.Name + count) != null;
                                     while (doRepeat)
                                     {
                                         doRepeat = GetSsaStyleStorage(style.Name + count) != null;
@@ -2213,11 +2219,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                 _doUpdate = false;
                                 _currentCategory.Styles.Add(style);
                                 AddStyle(listViewStorage, style, _subtitle, _isSubStationAlpha);
+                            }
+
+                            if (lastStyle != null)
+                            {
                                 UpdateSelectedIndices(listViewStorage);
-                                textBoxStyleName.Text = style.Name;
+                                textBoxStyleName.Text = lastStyle.Name;
                                 textBoxStyleName.Focus();
                                 _doUpdate = true;
-                                SetControlsFromStyle(style);
+                                SetControlsFromStyle(lastStyle);
                                 listViewStorage_SelectedIndexChanged(null, null);
                             }
 
