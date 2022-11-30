@@ -21794,6 +21794,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (File.Exists(defaultLocation))
                 {
                     Configuration.Settings.General.FFmpegLocation = defaultLocation;
+                    return;
+                }
+
+                defaultLocation = Path.Combine(Configuration.DataDirectory, "ffmpeg.exe");
+                if (File.Exists(defaultLocation))
+                {
+                    Configuration.Settings.General.FFmpegLocation = defaultLocation;
                 }
             }
             catch
