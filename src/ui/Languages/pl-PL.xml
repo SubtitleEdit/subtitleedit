@@ -192,6 +192,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <TranscribingXOfY>Transkrypcja audio na tekst — plik {0} z {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>Zapisano {0} plik(i)ów w folderze źródłowym wideo</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Użyj przetwarzania końcowego (łączenie linii, poprawianie wielkości liter, interpunkcja i inne)</UsePostProcessing>
+    <AutoAdjustTimings>Automatycznie dostosuj czasy</AutoAdjustTimings>
     <BatchMode>Tryb wsadowy</BatchMode>
     <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
     <TranslateToEnglish>Przetłumacz na angielski</TranslateToEnglish>
@@ -859,6 +860,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <XGeneratedWithBurnedInSubsInX>Wygenerowano "{0}" z wtopionymi napisami w {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Pozostały czas: {0} minut</TimeRemainingMinutes>
     <TimeRemainingSeconds>Pozostały czas: {0} sekund</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Pozostały czas: kilka sekund</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Pozostały czas: {0} minut i {1} sekund</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Nazwa pliku docelowego: {0}</TargetFileName>
     <TargetFileSize>Docelowy rozmiar pliku (wymaga 2-przebiegowego kodowania)</TargetFileSize>
@@ -3046,6 +3048,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
     <ApiKey>Klucz API</ApiKey>
     <SendOriginalImages>Wyślij oryginalne obrazy</SendOriginalImages>
+    <SeHandlesTextMerge>Scalanie tekstu jest obsługiwane przez SE</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Ręcznie obraz do tekstu</Title>
