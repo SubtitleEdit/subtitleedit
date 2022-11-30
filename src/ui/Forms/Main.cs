@@ -5504,6 +5504,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSettings()
         {
+            FixFfmpegWrongPath();
+
             var oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
             var oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutputWindows;
             var oldUseCenterChannelOnly = Configuration.Settings.General.FFmpegUseCenterChannelOnly;
@@ -21779,6 +21781,27 @@ namespace Nikse.SubtitleEdit.Forms
             insertIntoSubtitle.Renumber();
         }
 
+        private void FixFfmpegWrongPath()
+        {
+            try
+            {
+                if (!Configuration.IsRunningOnWindows || (!string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation)))
+                {
+                    return;
+                }
+
+                var defaultLocation = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+                if (File.Exists(defaultLocation))
+                {
+                    Configuration.Settings.General.FFmpegLocation = defaultLocation;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void OpenVideo(string fileName)
         {
@@ -25906,6 +25929,8 @@ namespace Nikse.SubtitleEdit.Forms
                     AddEmptyWaveform();
                     return;
                 }
+
+                FixFfmpegWrongPath();
 
                 if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
                 {
@@ -34406,14 +34431,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool RequireFfmpegOk()
         {
-            if (Configuration.IsRunningOnWindows)
-            {
-                var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
-                if (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(ffmpegFullPath))
-                {
-                    Configuration.Settings.General.FFmpegLocation = ffmpegFullPath;
-                }
-            }
+            FixFfmpegWrongPath();
 
             if (Configuration.IsRunningOnWindows && (string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) || !File.Exists(Configuration.Settings.General.FFmpegLocation)))
             {
