@@ -171,8 +171,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>오디오를 텍스트로</Title>
-    <Info>Vosk/Kaldi 음성 인식을 통해 오디오에서 텍스트 생성</Info>
-    <WhisperInfo>Whisper 음성 인식을 통해 오디오에서 텍스트 생성</WhisperInfo>
+    <Info>Vosk/Kaldi 음성 인식을 통해 오디오로 텍스트 만들기</Info>
+    <WhisperInfo>Whisper 음성 인식을 통해 오디오로 텍스트 만들기</WhisperInfo>
     <VoskWebsite>Vosk 홈페이지</VoskWebsite>
     <WhisperWebsite>Whisper 웹사이트</WhisperWebsite>
     <WhisperNotFound>Whisper을 찾을 수 없음!
@@ -188,6 +188,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TranscribingXOfY>오디오를 텍스트로 변환 - {1}의 {0}파일...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} 파일을 비디오 소스 폴더에 저장함 </XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>post-processing 사용 (줄 병합, 케이싱 수정, 문장 부호 등)</UsePostProcessing>
+    <AutoAdjustTimings>타이밍 자동 조정</AutoAdjustTimings>
     <BatchMode>일괄 모드</BatchMode>
     <KeepPartialTranscription>일부 전사 유지</KeepPartialTranscription>
     <TranslateToEnglish>영어로 번역</TranslateToEnglish>
@@ -854,6 +855,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <XGeneratedWithBurnedInSubsInX>생성 완료! - "{0}" (경과시간: {1})</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>남은 시간: {0} 분</TimeRemainingMinutes>
     <TimeRemainingSeconds>남은 시간: {0} 초</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>남은 시간: 몇 초</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>남은 시간: {0} 분 {1} 초</TimeRemainingMinutesAndSeconds>
     <TargetFileName>대상 파일 이름: {0}</TargetFileName>
     <TargetFileSize>대상 파일 크기 (2pass 인코딩 필요)</TargetFileSize>
@@ -3044,6 +3046,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API 키</ApiKey>
     <SendOriginalImages>원본 이미지 보내기</SendOriginalImages>
+    <SeHandlesTextMerge>SE 텍스트 병합 처리</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - 이미지 자막을 텍스트로</Title>
