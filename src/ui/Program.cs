@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit
         {
             try
             {
-                return System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+                return $"{System.Reflection.Assembly.GetEntryAssembly().GetName().Version} - {Environment.OSVersion}";
             }
             catch
             {
