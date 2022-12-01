@@ -1,5 +1,29 @@
 ﻿Subtitle Edit Changelog
 
+
+3.6.11 (xth January 2023) BETA
+* NEW:
+   * Add some whisper post-processing
+   * Add line merge option for Google Cloud Vision OCR
+   * Add new subtitle format - thx Christophe
+* IMPROVED:
+   * Update Chinese translation - thx nkh0472
+   * Update Korean translation - thx domddol
+   * Update Italian translation - thx bovirus
+   * Update Polish translation - thx admas
+   * Update Portuguese translation - thx hugok79
+   * Update Finnish translation - thx Teijo S
+   * Update Hungarian translation - thx Zityi
+   * Update French translation - thx Pierre
+   * Better ffmpeg detection - thx SMSourov
+   * Avoid standby a few places - thx mpek
+   * Optimize ASSA style import
+* FIXED:
+   * Fix italic in DCinema interop - thx Andrey
+   * Fix Whisper model download - thx darnn
+   * Fix for "replace all" non reg-ex
+
+
 3.6.10 (21th November 2022)
 * FIXED:
    * Fix missing dll file
