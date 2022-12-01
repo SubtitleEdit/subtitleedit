@@ -199,6 +199,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 Application.DoEvents();
                 System.Threading.Thread.Sleep(100);
+                WindowsHelper.PreventStandBy();
 
                 Invalidate();
                 if (_cancel)

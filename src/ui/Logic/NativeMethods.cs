@@ -62,7 +62,17 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
         [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
-        internal extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+        internal static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+
+        [DllImport("kernel32.dll")]
+
+        internal static extern uint SetThreadExecutionState(uint esFlags);
+
+        internal const uint ES_CONTINUOUS = 0x80000000;
+
+        internal const uint ES_SYSTEM_REQUIRED = 0x00000001;
+
+
 
         #endregion Win32 API
 
