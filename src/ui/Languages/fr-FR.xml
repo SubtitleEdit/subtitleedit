@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/10/30</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/12/01</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -101,14 +101,14 @@
   <About>
     <Title>A propos de Subtitle Edit</Title>
     <AboutText1>
-			Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
-			Vous pouvez le distribuer, le modifier et l'utiliser librement.
-			Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
+Subtitle Edit est un logiciel gratuiciel distribué sous licence publique GNU.
+Vous pouvez le distribuer, le modifier et l'utiliser librement.
+Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
 
-			Visitez www.nikse.dk pour obtenir la dernière version.
-			Les suggestions sont plus que bienvenues.
+Visitez www.nikse.dk pour obtenir la dernière version.
+Les suggestions sont plus que bienvenues.
 
-			Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions.com pour le français.
+Courriel : mailto:nikse.dk@gmail.com et www.colok-traductions.com pour le français.
 .<!-- Ce point a été ajouté (31/08/22), pour mieux cadrer l'affichage du texte --></AboutText1>
   </About>
   <AddToNames>
@@ -128,28 +128,22 @@
     <SourceVideoFile>Fichier vidéo source :</SourceVideoFile>
     <GenerateWaveformData>Générer les données de l'onde</GenerateWaveformData>
     <PleaseWait>Ceci peut prendre quelques minutes - Patientez</PleaseWait>
-    <FfmpegNotFound>
-		Subtitle Edit nécessite FFmpeg pour extraire les données audio et générer l'onde sonore.
+    <FfmpegNotFound>Subtitle Edit nécessite FFmpeg pour extraire les données audio et générer l'onde sonore.
 
-			Télécharger et utiliser FFmpeg ??
-		</FfmpegNotFound>
+Télécharger et utiliser FFmpeg ??</FfmpegNotFound>
     <GeneratingPeakFile>Génération du fichier des crêtes...</GeneratingPeakFile>
     <GeneratingSpectrogram>Création du spectrogramme...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio : {0:0.0} secondes</ExtractingSeconds>
     <ExtractingMinutes>Extraction audio : {0}:{1:00} secondes</ExtractingMinutes>
-    <WaveFileNotFound>
-			Fichier de l'onde extraite introuvable !
-			L'extraction audio nécessite VLC Media Player 1.1.x ou supérieur ({0}-bit).
+    <WaveFileNotFound>Fichier de l'onde extraite introuvable !
+L'extraction audio nécessite VLC Media Player 1.1.x ou supérieur ({0}-bit).
 
-			Ligne de commande: {1} {2}
-		</WaveFileNotFound>
-    <WaveFileMalformed>
-			Extraction par {0} des données audio vers un fichier d'onde en échec !
+Ligne de commande: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>	Extraction par {0} des données audio vers un fichier d'onde en échec !
 
-			Ligne de commande: {1} {2}
+Ligne de commande : {1} {2}
 
-			Note: Vérifiez l'espace disque disponible.
-		</WaveFileMalformed>
+Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <LowDiskSpace>ESPACE DISQUE FAIBLE</LowDiskSpace>
     <FreeDiskSpace>{0} disponible</FreeDiskSpace>
     <NoAudioTracksFoundGenerateEmptyWaveform>Pistes audio introuvables !! Générer une onde sonore vide ??</NoAudioTracksFoundGenerateEmptyWaveform>
@@ -198,6 +192,7 @@
     <TranscribingXOfY>Transcription de l’audio en texte - fichier {0} de {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} fichiers sauvés dans le dossier vidéo source</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Post-traitement (fusion de ligne, réparation casse, ponctuation, etc.)</UsePostProcessing>
+    <AutoAdjustTimings>Auto adjust timings</AutoAdjustTimings>
     <BatchMode>Mode en "lot(s)"</BatchMode>
     <KeepPartialTranscription>Conserver la transcription partielle</KeepPartialTranscription>
     <TranslateToEnglish>Traduire en anglais</TranslateToEnglish>
@@ -686,10 +681,8 @@
     <SavePremiereEdlAs>Choisir nom fichier Premiere EDL</SavePremiereEdlAs>
     <SaveFcpAs>Choisir nom fichier xml Final Cut Pro</SaveFcpAs>
     <SaveDostAs>Choisir nom fichier dost DoStudio</SaveDostAs>
-    <SomeLinesWereTooLongX>
-			Certaines lignes sont trop longues :
-			{0}
-		</SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>Certaines lignes sont trop longues :
+{0}</SomeLinesWereTooLongX>
     <LineHeight>Hauteur de ligne</LineHeight>
     <BoxSingleLine>Boîte - ligne unique</BoxSingleLine>
     <BoxMultiLine>Boîte  - multi-lignes</BoxMultiLine>
@@ -867,6 +860,7 @@
     <XGeneratedWithBurnedInSubsInX>"{0}" généré avec un sous-titre incrusté dans {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Temps restant : {0} min.</TimeRemainingMinutes>
     <TimeRemainingSeconds>Temps restant : {0} sec.</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Temps restant : quelques secondes</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Temps restant : {0} min. et {1} sec.</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Nom fichier cible : {0}</TargetFileName>
     <TargetFileSize>Taille fichier cible (encodage en 2 passes requis)</TargetFileSize>
@@ -910,15 +904,11 @@
     <PleaseWait>Patienter... Cela peut prendre un certain temps</PleaseWait>
     <PoweredByGoogleTranslate>Réalisé avec Google Traduction</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Réalisé avec Microsoft Translator</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>
-		Désolé, vous devez recevoir de Microsoft une clé 'Texte de traducteur' des "Cognitive Services" pour utiliser la dernière version de Microsoft Translator.
-		
-		Allez à "Options -&gt; Paramètres -&gt; Outils" pour entrer votre clé.
-		</MsClientSecretNeeded>
-    <GoogleNoApiKeyWarning>
-		Tentative de traduction sans clé API... (lent et données limitées).
-		Pour utiliser une clé API, allez à "Options -&gt; Paramètres -&gt; Outils" et entrez votre clé API dans "Google Translate".
-		</GoogleNoApiKeyWarning>
+    <MsClientSecretNeeded>Désolé, vous devez recevoir de Microsoft une clé 'Texte de traducteur' des "Cognitive Services" pour utiliser la dernière version de Microsoft Translator.
+
+Allez à "Options -&gt; Paramètres -&gt; Outils" pour entrer votre clé.</MsClientSecretNeeded>
+    <GoogleNoApiKeyWarning>Tentative de traduction sans clé API... (lent et données limitées).
+Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" et entrez votre clé API "Google Translate".</GoogleNoApiKeyWarning>
     <Service>Service :</Service>
     <LineMergeHandling>Fusion de lignes :</LineMergeHandling>
     <ProcessorMergeNext>Fusionner 2 lignes maximum</ProcessorMergeNext>
@@ -930,10 +920,8 @@
     <AutoCopyLineSeparator>Séparateur de ligne</AutoCopyLineSeparator>
     <TranslateBlockXOfY>Traduire le bloc {0} de {1}</TranslateBlockXOfY>
     <TranslateBlockInfo>Allez au traducteur et collez le texte, Copiez le résultat dans le presse-papiers et cliquez sur le bouton ci-dessous</TranslateBlockInfo>
-    <TranslateBlockGetFromClipboard>
-			Prendre le texte traduit hors du presse-papiers
-			(Ctrl + V)
-			</TranslateBlockGetFromClipboard>
+    <TranslateBlockGetFromClipboard>Prendre le texte traduit hors du presse-papiers
+(Ctrl + V)</TranslateBlockGetFromClipboard>
     <TranslateBlockCopySourceText>Copier le presse-papiers du texte source</TranslateBlockCopySourceText>
     <TranslateBlockClipboardError1>Le presse-papiers contient le texte source !</TranslateBlockClipboardError1>
     <TranslateBlockClipboardError2>Allez au traducteur et traduisez. Copiez le résultat dans le presse-papiers et cliquez à nouveau sur ce bouton.</TranslateBlockClipboardError2>
@@ -1212,7 +1200,7 @@
       <Edit>
         <Title>Edition</Title>
         <Undo>Défaire</Undo>
-        <Redo>Rétablir</Redo>
+        <Redo>Réfaire</Redo>
         <ShowUndoHistory>Afficher l'historique (pour défaire)</ShowUndoHistory>
         <InsertUnicodeSymbol>Insérer un symbole Unicode</InsertUnicodeSymbol>
         <InsertUnicodeControlCharacters>Insérer un caractère de contrôle Unicode</InsertUnicodeControlCharacters>
@@ -1530,15 +1518,11 @@
     <SavedOriginalSubtitleX>Sous-titre original {0} sauvegardé</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fichier sur disque modifié</FileOnDiskModified>
     <OverwriteModifiedFile>Ecraser le fichier {0} modifiée à {1} {2}{3} avec le fichier actuel chargé à {4} {5} ?</OverwriteModifiedFile>
-    <FileXIsReadOnly>
-			Impossible de sauvegarder {0}
+    <FileXIsReadOnly>Impossible de sauvegarder {0}
 
-			Le fichier est en lecture seule !
-		</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>
-			Impossible de sauvegarder le fichier sous-titre {0}
-			Le sous-titre semble vide - réessayez de sauvegarder si vous êtes sûr qu'il est valide !
-			</UnableToSaveSubtitleX>
+Le fichier est en lecture seule !</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>Impossible de sauvegarder le fichier sous-titre {0}
+Le sous-titre semble vide - réessayez de sauvegarder si vous êtes sûr qu'il est valide !</UnableToSaveSubtitleX>
     <FormatXShouldUseUft8>L'encodage UTF-8 doit être utilisé en sauvant le fichier {0} !</FormatXShouldUseUft8>
     <BeforeNew>Avant nouveau</BeforeNew>
     <New>Nouveau</New>
@@ -1550,19 +1534,13 @@
     <OpenVideoFile>Ouvrir fichier vidéo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nouvelle fréquence d'image ({0}) a été utilisée pour calculer l'heure de début/fin</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nouvelle fréquence d'image ({0}) a été utilisé pour le calcul des numéros de frame de début/fin</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>
-			L'élément de recherche n'a pas été trouvé.
-			Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?
-		</FindContinue>
+    <FindContinue>L'élément cherché n'a pas été trouvé.
+Voulez-vous repartir du haut du document et relancer la recherche ?</FindContinue>
     <FindContinueTitle>Poursuivre recherche ?</FindContinueTitle>
-    <ReplaceContinueNotFound>
-			L'élément à remplacer n'a pas été trouvé.
-			Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?
-		</ReplaceContinueNotFound>
-    <ReplaceXContinue>
-			L'article cherché a été remplacé {0} fois.
-			Voulez-vous aller vers le haut du document et poursuivre la recherche ?
-		</ReplaceXContinue>
+    <ReplaceContinueNotFound>L'élément à remplacer n'a pas été trouvé.
+Voulez-vous repartir du haut du document, continuer la recherche et remplacer ?</ReplaceContinueNotFound>
+    <ReplaceXContinue>L'élémentde cherché a été remplacé {0} fois.
+Voulez-vous repartir du haut du document, continuer la recherche et remplacer ?	</ReplaceXContinue>
     <ReplaceContinueTitle>Continuer de « remplacer » ?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Recherche de '{0}' sur le numéro de ligne {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' trouvé à la ligne {1}</XFoundAtLineNumberY>
@@ -1592,11 +1570,9 @@
     <TextingForHearingImpairedRemovedOneLine>Messages pour malentendants enlevés : Une ligne</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Messages pour malentendants enlevés : {0} lignes</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Sous-titre découpé</SubtitleSplitted>
-    <SubtitleAppendPrompt>
-			Ceci concatènera un sous-titre existant à celui actuellement chargé, lequel devrait déjà être synchronisé avec le fichier vidéo.
+    <SubtitleAppendPrompt>Ceci concatènera un sous-titre existant à celui actuellement chargé, lequel devrait déjà être synchronisé avec le fichier vidéo.
 
-			Continuer ?
-		</SubtitleAppendPrompt>
+Continuer ?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Ajouter un sous-titre</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Sous-titre ouvert à compléter...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Synchronisation visuelle - ajouter deuxième partie de sous-titre</AppendViaVisualSyncTitle>
@@ -1770,11 +1746,9 @@
     <ParsingTransportStream>Analyse des flux de transport - patientez...</ParsingTransportStream>
     <XPercentCompleted>{0}% réalisé</XPercentCompleted>
     <NextX>Suivant : {0}</NextX>
-    <PromptInsertSubtitleOverlap>
-			Insérer le sous-titre à la position du son va créer un chevauchement !
+    <PromptInsertSubtitleOverlap>Insérer le sous-titre à la position du son va créer un chevauchement !
 
-			Continuer quand même ?
-		</PromptInsertSubtitleOverlap>
+Continuer quand même ?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>Le sous-titre contient des durée négative ligne(s) : {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Fixer la fréquence de lecture (vitesse) à {0}%</SetPlayRateX>
     <ErrorLoadIdx>Impossible de lire les fichiers .idx. Ils font partie de paires de fichiers idx/sub (également appelés VobSub) et Subtitle Edit peut ouvrir le fichier .sub.</ErrorLoadIdx>
@@ -1785,11 +1759,9 @@
     <ErrorLoadJpg>Ce fichier est un fichier image .jpg. Subtitle Edit ne peut pas ouvrir les fichiers JPEG.</ErrorLoadJpg>
     <ErrorLoadSrr>Ce fichier est un fichier .srr ReScene - pas un fichier de sous-titres.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ce fichier est un fichier BitTorrent - pas un fichier de sous-titres.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>
-			Ce fichier ne contient que des zéros binaires :
+    <ErrorLoadBinaryZeroes>Ce fichier ne contient que des zéros binaires :
 
-			Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sauvegarde via le menu Fichier -&gt; Restaurer une sauvegarde automatique...
-		</ErrorLoadBinaryZeroes>
+Si vous avez édité ce fichier avec Subtitle Edit, vous pourriez trouver une sauvegarde via le menu \"Fichier -&gt; Restaurer une sauvegarde automatique...\"</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Déposer un dossier n'est pas supporté ici</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Les contenus VobSub chiffrés ne sont pas supportés.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Les fichiers Blu-ray sup ne sont pas supportés ici.</NoSupportHereBluRaySup>
@@ -1797,11 +1769,9 @@
     <NoSupportHereVobSub>Les fichiers VobSub ne sont pas supportés ici.</NoSupportHereVobSub>
     <NoSupportHereDivx>Les fichiers DivX ne sont pas supportés ici.</NoSupportHereDivx>
     <NoChapters>Pas de chapitres trouvés dans cette vidéo.</NoChapters>
-    <VideoFromUrlRequirements>
-			Ouvrir une vidéo depuis l'URL nécessite 'mpv' et 'youtube-dl'
+    <VideoFromUrlRequirements>Ouvrir une vidéo depuis l'URL nécessite 'mpv' et 'youtube-dl'
 
-			Télécharger et continuer ??
-		</VideoFromUrlRequirements>
+Télécharger et continuer ??</VideoFromUrlRequirements>
     <Url>URL</Url>
     <Errors>Erreurs</Errors>
     <ShowVideoControls>Afficher les contôles vidéo</ShowVideoControls>
@@ -2014,10 +1984,8 @@
   </NetworkChat>
   <NetworkJoin>
     <Title>Rejoindre une session réseau</Title>
-    <Information>
-			Rejoignez la session en cours où plusieurs personnes
-			peuvent éditer le même fichier sous-titres (collaboration)
-		</Information>
+    <Information>Rejoindre une session en cours où plusieurs personnes
+peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <Join>Rejoindre</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -2027,10 +1995,8 @@
   <NetworkStart>
     <Title>Démarrer une session réseau</Title>
     <ConnectionTo>Connexion à {0}...</ConnectionTo>
-    <Information>
-			Démarrer une nouvelle session où plusieurs personnes
-			peuvent éditer le même fichier sous-titres (collaboration)
-		</Information>
+    <Information>Démarrer une nouvelle session où plusieurs personnes
+peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <Start>Démarrer</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -2099,13 +2065,13 @@
   <ReplaceDialog>
     <Title>Remplacer</Title>
     <FindWhat>Rechercher :</FindWhat>
-    <Normal>Normal</Normal>
-    <CaseSensitive>Respecter la casse</CaseSensitive>
-    <RegularExpression>Expression régulière</RegularExpression>
+    <Normal>&amp;Normal</Normal>
+    <CaseSensitive>Respecter la &amp;casse</CaseSensitive>
+    <RegularExpression>E&amp;xpression régulière</RegularExpression>
     <ReplaceWith>Remplacer par</ReplaceWith>
     <Find>Suivant</Find>
     <Replace>&amp;Remplacer</Replace>
-    <ReplaceAll>Tout remplacer</ReplaceAll>
+    <ReplaceAll>Tout rempl&amp;acer</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restaurer une sauvegarde automatique</Title>
@@ -2217,6 +2183,7 @@
     <ApplyAssaOverrideTags>Appliquer des balises de remplacement ASSA à la sélection</ApplyAssaOverrideTags>
     <SetAssaPosition>Définir/obtenir la position ASSA</SetAssaPosition>
     <SetAssaResolution>Définir résolution lecture (X/Y)ASSA</SetAssaResolution>
+    <SetAssaBgBox>Définir la boîte de fond ASSA</SetAssaBgBox>
     <TakeAutoBackup>Auto-sauvegarder maintenant</TakeAutoBackup>
     <ShowLineBreaksAs>Afficher les sauts de ligne en mode liste:</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Sauver sous..." utilise le nom de fichier :</SaveAsFileNameFrom>
@@ -2239,8 +2206,7 @@
     <AutoBackupEveryFifteenMinutes>Chaque 15 min.</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Effacer après</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mois</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 mois</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 mois</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} mois</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Mises à jour ??</CheckForUpdates>
     <AutoSave>Sauvegarde automatique</AutoSave>
     <AllowEditOfOriginalSubtitle>Autoriser la modification du sous-titre original</AllowEditOfOriginalSubtitle>
@@ -2291,7 +2257,7 @@
     <WaveformCursorColor>Curseur</WaveformCursorColor>
     <WaveformTextColor>Texte</WaveformTextColor>
     <WaveformTextFontSize>Taille de police</WaveformTextFontSize>
-    <WaveformAndSpectrogramsFolderEmpty>Effacer le contenu</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderEmpty>Effacer les dossiers 'Spectres' et 'Ondes'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Dossiers 'Ondes' et 'Spectres' audio : {0} fichiers ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogramme</Spectrogram>
     <GenerateSpectrogram>Générer le spectrogramme</GenerateSpectrogram>
@@ -2631,17 +2597,13 @@
     <HowToSignUp>Comment s'inscrire ?</HowToSignUp>
     <MicrosoftTranslateApiKey>Clé</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Point de fin jeton</MicrosoftTranslateTokenEndpoint>
-    <FontNote>
-			Remarque : Ces paramètres de police ne s'appliquent qu'à l'interface utilisateur de Subtitle Edit.
-			Celle d'un sous-titre est normalement réalisée dans le lecteur vidéo. Elle peut l'être aussi en utilisant un format de sous-titre intégrant
-			les infos de police, comme "Advanced Sub Station Alpha", ou via l'exportation vers des formats basés sur l'image.
-		</FontNote>
+    <FontNote>NB : Ces paramètres de police ne s'appliquent qu'à l'interface utilisateur de Subtitle Edit.
+Celle d'un sous-titre est normalement réalisée dans le lecteur vidéo. Elle peut l'être aussi en utilisant un format de sous-titre intégrant
+les infos de police, comme "Advanced Sub Station Alpha", ou via l'exportation vers des formats basés sur l'image.</FontNote>
     <RestoreDefaultSettings>Rétablir les défauts</RestoreDefaultSettings>
-    <RestoreDefaultSettingsMsg>
-			Tous les paramètres vont être restaurés à leur valeur par défaut
+    <RestoreDefaultSettingsMsg>Tous les paramètres vont être restaurés à leur valeur par défaut
 
-			Continuer ?
-		</RestoreDefaultSettingsMsg>
+Continuer ?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Retirer l'horodatage</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Paramétrer le style de continuation...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Configuration du style de continuation</FixContinuationStyleSettings>
@@ -2660,7 +2622,7 @@
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edition</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Raccourcis : Autoriser lettre/nombre isolé dans la boîte texte</ShortcutsAllowSingleLetterOrNumberInTextBox>
-    <UpdateFileTypeAssociations>Actualiser les associations de type de fichier</UpdateFileTypeAssociations>
+    <UpdateFileTypeAssociations>Actualiser les associations</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Associations de type de fichier actualisée</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Personnaliser le style de continuation</CustomContinuationStyle>
     <LoadStyle>Charger un style...</LoadStyle>
@@ -2985,11 +2947,9 @@
     <FindText>-&gt;Texte</FindText>
     <GoToSubPosition>-&gt;S-titre</GoToSubPosition>
     <KeepChangesTitle>Conserver les modifications ?</KeepChangesTitle>
-    <KeepChangesMessage>
-			Les sous-titres ont été modifiés dans 'Synchronisation
+    <KeepChangesMessage>Les sous-titres ont été modifiés dans 'Synchronisation
 
-			visuelle'. Les garder ?
-		</KeepChangesMessage>
+visuelle'. Les garder ?</KeepChangesMessage>
     <SynchronizationDone>Synchronisation terminée !</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>La scène de début doit venir avant la scène finale !</StartSceneMustComeBeforeEndScene>
     <Tip>&lt;ctrl+flèche gauche/droite&gt; pour avancer/reculer de 100 ms</Tip>
@@ -3085,9 +3045,10 @@
     <StartTraining>Démarrer l'initiation</StartTraining>
     <NowTraining>Initiation de la police '{1}'. Total carac. acquis : {0:#,###,##0}, {2:#,###,##0} connus</NowTraining>
     <ImagesWithTimeCodesInFileName>Images au nom de fichier horodaté...</ImagesWithTimeCodesInFileName>
-    <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
+    <CloudVisionApi>API de Google Cloud Vision</CloudVisionApi>
     <ApiKey>Clé d'API</ApiKey>
     <SendOriginalImages>Envoyer les images originales</SendOriginalImages>
+    <SeHandlesTextMerge>SE gère la fusion de textes</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversion manuelle d'image en texte</Title>
