@@ -1694,7 +1694,9 @@ namespace Nikse.SubtitleEdit.Forms
                     System.Diagnostics.Debug.WriteLine(exception);
                     IncrementAndShowProgress();
                 }
+
                 index++;
+                WindowsHelper.PreventStandBy();
             }
 
             while (worker1.IsBusy || worker2.IsBusy || worker3.IsBusy)
