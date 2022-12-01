@@ -395,6 +395,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (!process.HasExited)
             {
                 System.Threading.Thread.Sleep(100);
+                WindowsHelper.PreventStandBy();
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -419,6 +420,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (!process.HasExited)
             {
                 System.Threading.Thread.Sleep(100);
+                WindowsHelper.PreventStandBy();
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -500,6 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (!process.HasExited)
             {
                 Application.DoEvents();
+                WindowsHelper.PreventStandBy();
                 System.Threading.Thread.Sleep(100);
                 if (_abort)
                 {
@@ -965,6 +968,7 @@ namespace Nikse.SubtitleEdit.Forms
                 while (!process.HasExited)
                 {
                     System.Threading.Thread.Sleep(100);
+                    WindowsHelper.PreventStandBy();
                     Application.DoEvents();
                 }
 
