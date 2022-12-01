@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = true;
                                 i += 2;
                             }
-                            if (!isBold && line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
+                            else if (!isBold && line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
