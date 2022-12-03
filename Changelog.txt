@@ -1,11 +1,11 @@
 ﻿Subtitle Edit Changelog
 
-
 3.6.11 (xth January 2023) BETA
 * NEW:
    * Add some whisper post-processing
    * Add line merge option for Google Cloud Vision OCR
    * Add new subtitle format - thx Christophe
+   * Add new subtitle format - thx Chris
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Korean translation - thx domddol
@@ -18,6 +18,7 @@
    * Better ffmpeg detection - thx SMSourov
    * Avoid standby a few places - thx mpek
    * Optimize ASSA style import
+   * Improve line split a little - thx i990049
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
