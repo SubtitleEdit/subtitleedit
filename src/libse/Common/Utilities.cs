@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     s = s.Remove(six, tag.Length);
                     if (htmlTags.ContainsKey(six))
                     {
-                        htmlTags[six] = htmlTags[six] + tag;
+                        htmlTags[six] += tag;
                     }
                     else
                     {
