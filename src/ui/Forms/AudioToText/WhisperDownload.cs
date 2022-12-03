@@ -10,13 +10,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     public sealed partial class WhisperDownload : Form
     {
-        private const string DownloadUrlAvx2 = "https://github.com/SubtitleEdit/support-files/raw/master/whisper/whisper.cpp-AVX2-2022-11-16.zip";
-        private const string DownloadUrlSse2 = "https://github.com/SubtitleEdit/support-files/raw/master/whisper/whisper.cpp-SSE2-2022-11-16.zip";
+        private const string DownloadUrlAvx2 = "https://github.com/SubtitleEdit/support-files/raw/master/whisper/whisper.cpp-AVX2-2022-12-03.zip";
+        private const string DownloadUrlSse2 = "https://github.com/SubtitleEdit/support-files/raw/master/whisper/whisper.cpp-SSE2-2022-12-03.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private static readonly string[] Sha512Hashes =
         {
-            "ebbcb81782f5be763203d4e9b7a55b23d04997b0d0689c1af9638b0b5701db763569cb29d39593db84245e499876f930f64f4e758914fbfe39ad87a61cda8581", // AVX2
-            "83d216fa1c1874be141c41b5bbdb61df9c447b5182787d8ae3d73c3cb6cf21743b0c7bfa6c45076938ed9629134882898623ab4932c8fde2fdee4fd5718e4bf3", // SSE2
+            "3c8a360d1e097d229500f3ccdd66a6dc30600fd8ea1b46405ed2ec03bb0b1c26c72cac983440b5793d24d6983c3d76482a17673251dd89f0a894a54a6d42d169", // AVX2
+            "58834559f7930c8c3dff6e20963cb86a89ca0228752d35b2486f907e59435a9adc5f5fb13c644f66bedea9ce0368c193d9632366719d344abbd3c0eb547e7110", // SSE2
         };
 
         public WhisperDownload()
