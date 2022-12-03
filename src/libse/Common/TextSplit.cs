@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         private readonly List<TextSplitResult> _splits;
         private readonly List<TextSplitResult> _allSplits;
         private readonly int _singleLineMaxLength;
-        private const string EndLineChars = ".!?…؟。？";
-        private const string Commas = ",،，";
+        private const string EndLineChars = ".!?…؟。？！";
+        private const string Commas = ",،，、";
 
         public TextSplit(string text, int singleLineMaxLength, string language)
         {
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
                     }
                 }
-                else if ((language == "zh" || language == "ja") && "，。？".Contains(text[i]))
+                else if ((language == "zh" || language == "ja" || language == "ko") && "，。？".Contains(text[i]))
                 {
                     var l1 = text.Substring(0, i + 1).Trim();
                     var l2 = text.Substring(i + 1).Trim();

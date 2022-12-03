@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var text = input.Replace('\u00a0', ' '); // replace non-break-space (160 decimal) ascii char with normal space
             if (!(text.IndexOf(' ') >= 0 || text.IndexOf('\n') >= 0))
             {
-                if (new[] { "zh", "ja" }.Contains(language) == false)
+                if (new[] { "zh", "ja", "ko" }.Contains(language) == false)
                 {
                     return input;
                 }
