@@ -351,6 +351,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle104(),
                     new UnknownSubtitle105(),
                     new UnknownSubtitle106(),
+                    new UnknownSubtitle107(),
                 };
 
                 foreach (var pluginFileName in Configuration.GetPlugins())
