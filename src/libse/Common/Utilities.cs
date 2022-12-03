@@ -452,7 +452,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             var text = input.Replace('\u00a0', ' '); // replace non-break-space (160 decimal) ascii char with normal space
             if (!(text.IndexOf(' ') >= 0 || text.IndexOf('\n') >= 0))
             {
-                return input;
+                if (new[] { "zh", "jp" }.Contains(language) == false)
+                {
+                    return input;
+                }
             }
 
             // do not auto break dialogs or music symbol
@@ -507,7 +510,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            string s = RemoveLineBreaks(text);
+            var s = RemoveLineBreaks(text);
             if (s.CountCharacters(false) < mergeLinesShorterThan)
             {
                 var lastIndexOfDash = s.LastIndexOf(" -", StringComparison.Ordinal);
@@ -521,14 +524,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var htmlTags = new Dictionary<int, string>();
             var sb = new StringBuilder();
-            int six = 0;
+            var six = 0;
             while (six < s.Length)
             {
                 var letter = s[six];
-                bool tagFound = false;
+                var tagFound = false;
                 if (letter == '<')
                 {
-                    string tagString = s.Substring(six);
+                    var tagString = s.Substring(six);
                     tagFound = tagString.StartsWith("<font", StringComparison.OrdinalIgnoreCase)
                             || tagString.StartsWith("</font", StringComparison.OrdinalIgnoreCase)
                             || tagString.StartsWith("<u", StringComparison.OrdinalIgnoreCase)
@@ -540,7 +543,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (letter == '{' && s.Substring(six).StartsWith("{\\"))
                 {
-                    string tagString = s.Substring(six);
+                    var tagString = s.Substring(six);
                     var endIndexAssTag = tagString.IndexOf('}') + 1;
                     if (endIndexAssTag > 0)
                     {
@@ -559,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                int endIndex = -1;
+                var endIndex = -1;
                 if (tagFound)
                 {
                     endIndex = s.IndexOf('>', six + 1);
@@ -567,7 +570,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (tagFound && endIndex > 0)
                 {
-                    string tag = s.Substring(six, endIndex - six + 1);
+                    var tag = s.Substring(six, endIndex - six + 1);
                     s = s.Remove(six, tag.Length);
                     if (htmlTags.ContainsKey(six))
                     {
