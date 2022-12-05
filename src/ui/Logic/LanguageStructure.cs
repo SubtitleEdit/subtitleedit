@@ -2388,6 +2388,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
             public string AutoBackupDeleteAfter { get; set; }
+            public string TranslationAutoSuffix { get; set; }
             public string AutoBackupDeleteAfterOneMonth { get; set; }
             public string AutoBackupDeleteAfterXMonths { get; set; }
             public string CheckForUpdates { get; set; }

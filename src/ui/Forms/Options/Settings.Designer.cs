@@ -34,6 +34,9 @@
             this.listBoxSection = new System.Windows.Forms.ListBox();
             this.panelGeneral = new System.Windows.Forms.Panel();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.buttonTranslationAutoSuffix = new System.Windows.Forms.Button();
+            this.comboBoxTranslationAutoSuffix = new System.Windows.Forms.ComboBox();
+            this.labelTranslationAutoSuffix = new System.Windows.Forms.Label();
             this.labelSplitBehavior = new System.Windows.Forms.Label();
             this.comboBoxSplitBehavior = new System.Windows.Forms.ComboBox();
             this.checkBoxAutoSave = new System.Windows.Forms.CheckBox();
@@ -545,6 +548,9 @@
             this.groupBoxMiscellaneous.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMiscellaneous.Controls.Add(this.buttonTranslationAutoSuffix);
+            this.groupBoxMiscellaneous.Controls.Add(this.comboBoxTranslationAutoSuffix);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelTranslationAutoSuffix);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSplitBehavior);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSplitBehavior);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAutoSave);
@@ -586,6 +592,39 @@
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
             // 
+            // buttonTranslationAutoSuffix
+            // 
+            this.buttonTranslationAutoSuffix.Location = new System.Drawing.Point(692, 420);
+            this.buttonTranslationAutoSuffix.Name = "buttonTranslationAutoSuffix";
+            this.buttonTranslationAutoSuffix.Size = new System.Drawing.Size(28, 23);
+            this.buttonTranslationAutoSuffix.TabIndex = 66;
+            this.buttonTranslationAutoSuffix.Text = "...";
+            this.buttonTranslationAutoSuffix.UseVisualStyleBackColor = true;
+            this.buttonTranslationAutoSuffix.Click += new System.EventHandler(this.buttonTranslationAutoSuffix_Click);
+            // 
+            // comboBoxTranslationAutoSuffix
+            // 
+            this.comboBoxTranslationAutoSuffix.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTranslationAutoSuffix.FormattingEnabled = true;
+            this.comboBoxTranslationAutoSuffix.Items.AddRange(new object[] {
+            "None",
+            "Every minute",
+            "Every 5 minutes",
+            "Every 15 minutes"});
+            this.comboBoxTranslationAutoSuffix.Location = new System.Drawing.Point(562, 421);
+            this.comboBoxTranslationAutoSuffix.Name = "comboBoxTranslationAutoSuffix";
+            this.comboBoxTranslationAutoSuffix.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTranslationAutoSuffix.TabIndex = 33;
+            // 
+            // labelTranslationAutoSuffix
+            // 
+            this.labelTranslationAutoSuffix.AutoSize = true;
+            this.labelTranslationAutoSuffix.Location = new System.Drawing.Point(438, 424);
+            this.labelTranslationAutoSuffix.Name = "labelTranslationAutoSuffix";
+            this.labelTranslationAutoSuffix.Size = new System.Drawing.Size(115, 13);
+            this.labelTranslationAutoSuffix.TabIndex = 32;
+            this.labelTranslationAutoSuffix.Text = "Translation auto suffix";
+            // 
             // labelSplitBehavior
             // 
             this.labelSplitBehavior.AutoSize = true;
@@ -607,7 +646,7 @@
             // checkBoxAutoSave
             // 
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 453);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(443, 491);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
             this.checkBoxAutoSave.TabIndex = 30;
@@ -1065,7 +1104,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 421);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(709, 459);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 29;
@@ -1073,7 +1112,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 424);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(641, 462);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 28;
@@ -1082,7 +1121,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 453);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(524, 491);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 31;
@@ -1203,7 +1242,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 421);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(514, 459);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 27;
@@ -1211,7 +1250,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 424);
+            this.labelAutoBackup.Location = new System.Drawing.Point(440, 462);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 26;
@@ -3940,7 +3979,6 @@
             this.checkBoxTBRemoveTextForHi.TabIndex = 18;
             this.checkBoxTBRemoveTextForHi.Text = "Visible";
             this.checkBoxTBRemoveTextForHi.UseVisualStyleBackColor = true;
-            this.checkBoxTBRemoveTextForHi.CheckedChanged += new System.EventHandler(this.checkBoxTBRemoveTextForHi_CheckedChanged);
             // 
             // labelTBFixCommonErrors
             // 
@@ -4939,9 +4977,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelTools);
@@ -5453,5 +5491,8 @@
         private System.Windows.Forms.Label labelToggleSourceView;
         private System.Windows.Forms.PictureBox pictureBoxToggleSourceView;
         private System.Windows.Forms.CheckBox checkBoxTBToggleSourceView;
+        private System.Windows.Forms.Button buttonTranslationAutoSuffix;
+        private System.Windows.Forms.ComboBox comboBoxTranslationAutoSuffix;
+        private System.Windows.Forms.Label labelTranslationAutoSuffix;
     }
 }

@@ -360,6 +360,12 @@
     <Compile Include="Forms\Options\SettingsCustomContinuationStyle.Designer.cs">
       <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options\TranslationAutoSuffix.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options\TranslationAutoSuffix.Designer.cs">
+      <DependentUpon>TranslationAutoSuffix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Options\WordLists.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1592,6 +1598,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\SettingsCustomContinuationStyle.resx">
       <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options\TranslationAutoSuffix.resx">
+      <DependentUpon>TranslationAutoSuffix.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\WordLists.resx">
       <DependentUpon>WordLists.cs</DependentUpon>

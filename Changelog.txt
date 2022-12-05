@@ -19,6 +19,7 @@
    * Avoid standby a few places - thx mpek
    * Optimize ASSA style import
    * Improve line split a little - thx i990049
+   * Add a few English words/names to dictionaries
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
