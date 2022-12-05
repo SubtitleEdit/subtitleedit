@@ -531,6 +531,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelSaveAsFileNameFrom.Text = language.SaveAsFileNameFrom;
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
+            labelTranslationAutoSuffix.Text = language.TranslationAutoSuffix;
+            comboBoxTranslationAutoSuffix.Left = labelTranslationAutoSuffix.Right + 3;
+            buttonTranslationAutoSuffix.Left = comboBoxTranslationAutoSuffix.Right + 3;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
             labelAutoBackupDeleteAfter.Left = comboBoxAutoBackup.Left + comboBoxAutoBackup.Width + 5;
             comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 3;
@@ -793,6 +796,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxSaveAsFileNameFrom.Items.Add(language.VideoFileName);
             comboBoxSaveAsFileNameFrom.Items.Add(language.ExistingFileName);
 
+            comboBoxTranslationAutoSuffix.Items.Clear();
+            comboBoxTranslationAutoSuffix.Items.Add("");
+
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
             {
                 comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
@@ -820,7 +826,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var deleteAfterIdx = gs.AutoBackupDeleteAfterMonths - 1;
             if (deleteAfterIdx >= comboBoxAutoBackupDeleteAfter.Items.Count - 1)
             {
-                comboBoxAutoBackupDeleteAfter.SelectedIndex = comboBoxAutoBackupDeleteAfter.Items.Count-1;
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = comboBoxAutoBackupDeleteAfter.Items.Count - 1;
             }
             else
             {
@@ -841,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxAllowEditOfOriginalSubtitle.Checked = gs.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Checked = gs.PromptDeleteLines;
 
-            ToolsSettings toolsSettings = Configuration.Settings.Tools;
+            var toolsSettings = Configuration.Settings.Tools;
             if (toolsSettings.VerifyPlaySeconds - 2 >= 0 && toolsSettings.VerifyPlaySeconds - 2 < comboBoxToolsVerifySeconds.Items.Count)
             {
                 comboBoxToolsVerifySeconds.SelectedIndex = toolsSettings.VerifyPlaySeconds - 2;
@@ -1837,7 +1843,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 gs.AutoBackupSeconds = 0;
             }
 
-            gs.AutoBackupDeleteAfterMonths = comboBoxAutoBackupDeleteAfter.SelectedIndex+1;
+            gs.AutoBackupDeleteAfterMonths = comboBoxAutoBackupDeleteAfter.SelectedIndex + 1;
 
             gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
             gs.AutoSave = checkBoxAutoSave.Checked;
@@ -3346,9 +3352,27 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void checkBoxTBRemoveTextForHi_CheckedChanged(object sender, EventArgs e)
+        private void buttonTranslationAutoSuffix_Click(object sender, EventArgs e)
         {
+            var suffixes = new List<string>();
+            foreach (var item in comboBoxTranslationAutoSuffix.Items)
+            {
+                suffixes.Add(item.ToString());
+            }
 
+            using (var form = new TranslationAutoSuffix(suffixes))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    comboBoxTranslationAutoSuffix.Items.Clear();
+                    comboBoxTranslationAutoSuffix.BeginUpdate();
+                    foreach (var suffix in form.Suffixes)
+                    {
+                        comboBoxTranslationAutoSuffix.Items.Add(suffix);
+                    }
+                    comboBoxTranslationAutoSuffix.EndUpdate();
+                }
+            }
         }
     }
 }

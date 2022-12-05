@@ -1245,6 +1245,8 @@ $HorzAlign          =   Center
         public string DefaultEncoding { get; set; }
         public bool AutoConvertToUtf8 { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
+        public string TranslationAutoSuffixes { get; set; }
+        public string TranslationAutoSuffixDefault { get; set; }
         public string SystemSubtitleFontNameOverride { get; set; }
         public int SystemSubtitleFontSizeOverride { get; set; }
 
@@ -1471,6 +1473,8 @@ $HorzAlign          =   Center
             DefaultEncoding = TextEncoding.Utf8WithBom;
             AutoConvertToUtf8 = false;
             AutoGuessAnsiEncoding = true;
+            TranslationAutoSuffixes = ".translation;_translation;.en;_en";
+            TranslationAutoSuffixDefault = "<Auto>";
             ShowRecentFiles = true;
             RememberSelectedLine = true;
             StartLoadLastFile = true;
@@ -3297,6 +3301,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("TranslationAutoSuffixes");
+            if (subNode != null)
+            {
+                settings.General.TranslationAutoSuffixes = subNode.InnerText;
+            }
+            
+            subNode = node.SelectSingleNode("TranslationAutoSuffixDefault");
+            if (subNode != null)
+            {
+                settings.General.TranslationAutoSuffixDefault = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("SystemSubtitleFontNameOverride");
@@ -9948,6 +9964,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TranslationAutoSuffixes", settings.General.TranslationAutoSuffixes);
+                textWriter.WriteElementString("TranslationAutoSuffixDefault", settings.General.TranslationAutoSuffixDefault);
                 textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
