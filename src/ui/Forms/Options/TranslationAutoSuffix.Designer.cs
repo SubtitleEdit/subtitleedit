@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Options
 {
-    partial class TranslationAutoSuffix
+    sealed partial class TranslationAutoSuffix
     {
         /// <summary>
         /// Required designer variable.
@@ -126,6 +126,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TranslationAutoSuffix";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TranslationAutoSuffix_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
