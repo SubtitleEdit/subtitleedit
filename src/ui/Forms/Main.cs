@@ -4811,20 +4811,42 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
             }
 
+            var suffix = string.Empty;
+            if (_subtitleOriginal != null && !string.IsNullOrEmpty(Configuration.Settings.General.TranslationAutoSuffixDefault))
+            {
+                if (Configuration.Settings.General.TranslationAutoSuffixDefault.StartsWith('<'))
+                {
+                    var translationLangauge = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(_subtitle);
+                    if (!string.IsNullOrEmpty(translationLangauge))
+                    {
+                        suffix = "." + translationLangauge;
+                    }
+                    else
+                    {
+                        var originalLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
+                        suffix = "." + GenericTranslate.EvaluateDefaultTargetLanguageCode(originalLanguage);
+                    }
+                }
+                else
+                {
+                    suffix = Configuration.Settings.General.TranslationAutoSuffixDefault;
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(_fileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName) + suffix;
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
             {
                 if (_converted && !string.IsNullOrEmpty(_fileName) && !File.Exists(_fileName))
                 {
-                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName) + suffix;
                 }
                 else
                 {
-                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName) + suffix;
                 }
 
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);

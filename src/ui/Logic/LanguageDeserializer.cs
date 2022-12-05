@@ -5962,6 +5962,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AutoBackupDeleteAfter":
                     language.Settings.AutoBackupDeleteAfter = reader.Value;
                     break;
+                case "Settings/TranslationAutoSuffix":
+                    language.Settings.TranslationAutoSuffix = reader.Value;
+                    break;
                 case "Settings/AutoBackupDeleteAfterOneMonth":
                     language.Settings.AutoBackupDeleteAfterOneMonth = reader.Value;
                     break;
