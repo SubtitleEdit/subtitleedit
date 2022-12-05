@@ -797,7 +797,19 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxSaveAsFileNameFrom.Items.Add(language.ExistingFileName);
 
             comboBoxTranslationAutoSuffix.Items.Clear();
-            comboBoxTranslationAutoSuffix.Items.Add("");
+            comboBoxTranslationAutoSuffix.Items.Add("<" + LanguageSettings.Current.ImportText.Auto + ">");
+            foreach (var suffix in Configuration.Settings.General.TranslationAutoSuffixes.Split(';'))
+            {
+                comboBoxTranslationAutoSuffix.Items.Add(suffix);
+                if (suffix == Configuration.Settings.General.TranslationAutoSuffixDefault)
+                {
+                    comboBoxTranslationAutoSuffix.SelectedIndex = comboBoxTranslationAutoSuffix.Items.Count - 1;
+                }
+            }
+            if (comboBoxTranslationAutoSuffix.SelectedIndex < 0)
+            {
+                comboBoxTranslationAutoSuffix.SelectedIndex = 0;
+            }
 
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
             {
@@ -1818,6 +1830,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
 
             gs.Profiles = _rulesProfiles;
+
+            gs.TranslationAutoSuffixDefault = comboBoxTranslationAutoSuffix.Text;
+            var suffixes = new List<string>();
+            foreach (var suffix in comboBoxTranslationAutoSuffix.Items)
+            {
+                suffixes.Add(suffix.ToString());
+            }
+            gs.TranslationAutoSuffixes = string.Join(";", suffixes);
 
             gs.SaveAsUseFileNameFrom = comboBoxSaveAsFileNameFrom.SelectedIndex == 0 ? "video" : "file";
 

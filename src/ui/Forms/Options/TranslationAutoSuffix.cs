@@ -5,18 +5,28 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Options
 {
-    public partial class TranslationAutoSuffix : Form
+    public sealed partial class TranslationAutoSuffix : Form
     {
         public List<string> Suffixes { get; set; }
 
         public TranslationAutoSuffix(List<string> suffixes)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             foreach (var suffix in suffixes)
             {
                 listViewNames.Items.Add(suffix);
             }
+
+            Text = LanguageSettings.Current.Settings.TranslationAutoSuffix;
+
+            buttonRemoveNameEtc.Text = LanguageSettings.Current.DvdSubRip.Remove;
+            buttonAddNames.Text = LanguageSettings.Current.DvdSubRip.Add;
+
+            buttonOK.Text = LanguageSettings.Current.General.Ok;
+            buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
 
         private void buttonRemoveNameEtc_Click(object sender, System.EventArgs e)
@@ -58,11 +68,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void buttonAddNames_Click(object sender, System.EventArgs e)
         {
             var text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
-            if (text.Length == 0)
-            {
-                return;
-            }
-
             var illegalChars = new List<char>
             {
                 '#', '%', '&','{','}','\\','<','>','*','?','/','!','\'','"',':','@'
@@ -77,40 +82,40 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             var suffixes = GetSuffixes();
-            if (!suffixes.Contains(text))
-            {
-                suffixes.Add(text);
-                suffixes.Sort();
-                listViewNames.Items.Clear();
-                listViewNames.BeginUpdate();
-                foreach (var suffix in suffixes)
-                {
-                    listViewNames.Items.Add(suffix);
-                }
-                listViewNames.EndUpdate();
-
-                textBoxNameEtc.Text = string.Empty;
-                textBoxNameEtc.Focus();
-                for (int i = 0; i < listViewNames.Items.Count; i++)
-                {
-                    if (listViewNames.Items[i].ToString() == text)
-                    {
-                        listViewNames.Items[i].Selected = true;
-                        listViewNames.Items[i].Focused = true;
-                        var top = i - 5;
-                        if (top < 0)
-                        {
-                            top = 0;
-                        }
-
-                        listViewNames.EnsureVisible(top);
-                        break;
-                    }
-                }
-            }
-            else
+            if (suffixes.Contains(text))
             {
                 MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
+                return;
+            }
+
+            suffixes.Add(text);
+            suffixes.Sort();
+            listViewNames.Items.Clear();
+            listViewNames.BeginUpdate();
+            foreach (var suffix in suffixes)
+            {
+                listViewNames.Items.Add(suffix);
+            }
+
+            listViewNames.EndUpdate();
+
+            textBoxNameEtc.Text = string.Empty;
+            textBoxNameEtc.Focus();
+            for (var i = 0; i < listViewNames.Items.Count; i++)
+            {
+                if (listViewNames.Items[i].ToString() == text)
+                {
+                    listViewNames.Items[i].Selected = true;
+                    listViewNames.Items[i].Focused = true;
+                    var top = i - 5;
+                    if (top < 0)
+                    {
+                        top = 0;
+                    }
+
+                    listViewNames.EnsureVisible(top);
+                    break;
+                }
             }
         }
 
@@ -135,6 +140,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void buttonCancel_Click(object sender, System.EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void TranslationAutoSuffix_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }
