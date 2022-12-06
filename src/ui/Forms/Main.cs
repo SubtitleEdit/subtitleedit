@@ -4838,6 +4838,11 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName) + suffix;
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
+            else if (!string.IsNullOrWhiteSpace(_subtitleOriginalFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("file", StringComparison.OrdinalIgnoreCase))
+            {
+                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_subtitleOriginalFileName) + suffix;
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitleOriginalFileName);
+            }
             else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
             {
                 if (_converted && !string.IsNullOrEmpty(_fileName) && !File.Exists(_fileName))
