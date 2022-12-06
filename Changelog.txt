@@ -2,7 +2,8 @@
 
 3.6.11 (xth January 2023) BETA
 * NEW:
-   * Add some whisper post-processing
+   * Add auto-naming rule for Translation - thx Leon/OmrSi
+   * Add more whisper post-processing
    * Add line merge option for Google Cloud Vision OCR
    * Add new subtitle format - thx Christophe
    * Add new subtitle format - thx Chris
