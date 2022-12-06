@@ -2205,7 +2205,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Delete after</AutoBackupDeleteAfter>
-    <TranslationAutoSuffix>Translation auto suffix</TranslationAutoSuffix>
+    <TranslationAutoSuffix>Translation file name auto suffix</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 month</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} months</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Check for updates</CheckForUpdates>
