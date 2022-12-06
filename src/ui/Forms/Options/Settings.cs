@@ -800,6 +800,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxTranslationAutoSuffix.Items.Add("<" + LanguageSettings.Current.ImportText.Auto + ">");
             foreach (var suffix in Configuration.Settings.General.TranslationAutoSuffixes.Split(';'))
             {
+                if (suffix.StartsWith('<'))
+                {
+                    continue;
+                }
+
                 comboBoxTranslationAutoSuffix.Items.Add(suffix);
                 if (suffix == Configuration.Settings.General.TranslationAutoSuffixDefault)
                 {
