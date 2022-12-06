@@ -4812,7 +4812,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var suffix = string.Empty;
-            if (_subtitleOriginal != null && !string.IsNullOrEmpty(Configuration.Settings.General.TranslationAutoSuffixDefault))
+            if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible && !string.IsNullOrEmpty(Configuration.Settings.General.TranslationAutoSuffixDefault))
             {
                 if (Configuration.Settings.General.TranslationAutoSuffixDefault.StartsWith('<'))
                 {
@@ -4840,7 +4840,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (!string.IsNullOrWhiteSpace(_subtitleOriginalFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_subtitleOriginalFileName) + suffix;
+                var originalLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
+                var fileNameNoExt = Utilities.GetFileNameWithoutExtension(_subtitleOriginalFileName);
+                if (fileNameNoExt.EndsWith("." + originalLanguage, StringComparison.OrdinalIgnoreCase))
+                {
+                    fileNameNoExt = fileNameNoExt.Substring(0, fileNameNoExt.Length - ("." + originalLanguage).Length);
+                }
+
+                saveFileDialog1.FileName = fileNameNoExt + suffix;
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitleOriginalFileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
@@ -4865,6 +4872,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
+            }
+            else if (!string.IsNullOrWhiteSpace(_subtitleOriginalFileName))
+            {
+                var originalLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleOriginal);
+                var fileNameNoExt = Utilities.GetFileNameWithoutExtension(_subtitleOriginalFileName);
+                if (fileNameNoExt.EndsWith("." + originalLanguage, StringComparison.OrdinalIgnoreCase))
+                {
+                    fileNameNoExt = fileNameNoExt.Substring(0, fileNameNoExt.Length - ("." + originalLanguage).Length);
+                }
+
+                saveFileDialog1.FileName = fileNameNoExt + suffix;
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitleOriginalFileName);
             }
             else
             {
