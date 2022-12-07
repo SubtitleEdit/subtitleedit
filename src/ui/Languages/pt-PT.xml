@@ -1782,6 +1782,11 @@ Transferir e continuar?</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>Usando apenas o canal de áudio central frontal</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Antes de converter cores para diálogos</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Converter cores para diálogos</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Instalar reprodutor de vídeo</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>O SE não foi capaz de reproduzir o ficheiro de vídeo/áudio (ou o ficheiro de vídeo/áudio não é válido).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>O Subtitle Edit precisa de um reprodutor de vídeo.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>Para usar o reprodutor de vídeo recomendado "mpv" clique no botão abaixo.</UseRecommendMpv>
+    <DownloadAndUseMpv>Transferir e usar o "mpv" como reprodutor de vídeo</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -2641,16 +2646,16 @@ Continuar?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
-    <DownloadMpvFailed>Não é possível transferir o mpv - tente novamente mais tarde!</DownloadMpvFailed>
-    <DownloadMpvOk>O mpv lib foi transferido e está pronto para ser utilizado.</DownloadMpvOk>
+    <DownloadMpvFailed>Não foi possível transferir o mpv - tente novamente mais tarde!</DownloadMpvFailed>
+    <DownloadMpvOk>O mpv lib foi transferido e está pronto a ser utilizado.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <XDownloadFailed>Não é possível transferir o {0} - tente novamente mais tarde!</XDownloadFailed>
-    <XDownloadOk>O {0} foi transferido e está pronto para ser utilizado.</XDownloadOk>
+    <XDownloadFailed>Não foi possível transferir o {0} - tente novamente mais tarde!</XDownloadFailed>
+    <XDownloadOk>O {0} foi transferido e está pronto a ser utilizado.</XDownloadOk>
   </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Definir o deslocamento do vídeo</Title>
-    <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
+    <Description>Definir o deslocamento do vídeo (a legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
     <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>
     <KeepTimeCodes>Manter os tempos existentes (não adicionar compensação de vídeo)</KeepTimeCodes>
     <Reset>Redefinir</Reset>
