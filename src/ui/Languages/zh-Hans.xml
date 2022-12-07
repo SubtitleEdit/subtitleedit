@@ -2193,6 +2193,7 @@ Command line: {1} {2}
     <AutoBackupEveryFiveMinutes>每隔 5 分钟</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>每隔 15 分钟</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>超过此时间后删除</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>翻译文件名自动后缀</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1个月</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0}个月</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>检查更新</CheckForUpdates>
