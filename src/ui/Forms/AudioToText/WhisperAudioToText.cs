@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private double _endSeconds;
         private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
-        private WavePeakData _wavePeaks;
+        private readonly WavePeakData _wavePeaks;
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -503,7 +503,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _outputText?.Add("Loading result from STDOUT" + Environment.NewLine);
 
             var sub = new Subtitle();
-            sub.Paragraphs.AddRange(resultTexts.OrderBy(p => p.Start).Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+            sub.Paragraphs.AddRange(_resultList.OrderBy(p => p.Start).Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
             return sub;
         }
 
