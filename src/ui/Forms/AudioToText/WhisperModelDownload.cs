@@ -52,6 +52,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#audio_to_text");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
