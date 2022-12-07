@@ -1596,7 +1596,7 @@ Continuar?</SubtitleAppendPrompt>
     <RedoPerformed>Refazer aplicado</RedoPerformed>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
-    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>
+    <DoNotDisplayMessageAgain>Não mostrar esta mensagem novamente</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras correctas: {0}</NumberOfCorrectWords>
@@ -2201,11 +2201,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainListViewEditTextAndPause>Ir para o quadro de edição de texto e pausar na posição do vídeo</MainListViewEditTextAndPause>
     <VideoFileName>Nome do ficheiro de vídeo</VideoFileName>
     <ExistingFileName>Nome do ficheiro existente</ExistingFileName>
-    <AutoBackup>Cópia de segurança automática</AutoBackup>
+    <AutoBackup>Cópia automática</AutoBackup>
     <AutoBackupEveryMinute>A cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>A cada 5.º minuto</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>A cada 15.º minuto</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Eliminar após</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Sufixo automático do nome do ficheiro de tradução</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 mês</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} meses</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
