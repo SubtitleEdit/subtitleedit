@@ -1681,7 +1681,11 @@ namespace Nikse.SubtitleEdit.Logic
                 UsingOnlyFrontCenterChannel = "Using only front center audio channel",
                 BeforeConvertingColorsToDialog = "Before converting colors to dialog",
                 ConvertedColorsToDialog = "Converted colors to dialog",
-
+                PleaseInstallVideoPlayer = "Please install video player",
+                UnableToPlayMediaFile = "SE was unable to play the video/audio file (or file is not a valid video/audio file).",
+                SubtitleEditNeedsVideoPlayer = "Subtitle Edit needs a video player.",
+                UseRecommendMpv = "To use the recommended video player \"mpv\" click on the button below.",
+                DownloadAndUseMpv = "Download and use \"mpv\" as video player",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {

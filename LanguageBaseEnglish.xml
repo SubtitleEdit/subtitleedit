@@ -1781,6 +1781,11 @@ Download and continue?</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>Using only front center audio channel</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Before converting colors to dialog</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Converted colors to dialog</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Please install video player</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE was unable to play the video/audio file (or file is not a valid video/audio file).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit needs a video player.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>To use the recommended video player "mpv" click on the button below.</UseRecommendMpv>
+    <DownloadAndUseMpv>Download and use "mpv" as video player</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
