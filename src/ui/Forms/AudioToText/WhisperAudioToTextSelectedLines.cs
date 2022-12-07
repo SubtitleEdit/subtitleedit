@@ -367,6 +367,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 linkLabelWhisperWebsite_LinkClicked(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == UiUtil.HelpKeys)
+            {
+                UiUtil.ShowHelp("#audio_to_text");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void UpdateLog()
