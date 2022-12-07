@@ -1533,6 +1533,11 @@ namespace Nikse.SubtitleEdit.Logic
             public string UsingOnlyFrontCenterChannel { get; set; }
             public string BeforeConvertingColorsToDialog { get; set; }
             public string ConvertedColorsToDialog { get; set; }
+            public string PleaseInstallVideoPlayer { get; set; }
+            public string UnableToPlayMediaFile { get; set; }
+            public string SubtitleEditNeedsVideoPlayer { get; set; }
+            public string UseRecommendMpv { get; set; }
+            public string DownloadAndUseMpv { get; set; }
 
             public class MainMenu
             {

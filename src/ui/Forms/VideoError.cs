@@ -18,20 +18,22 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonCancel);
+
+            buttonMpvSettings.Text = LanguageSettings.Current.Main.DownloadAndUseMpv;
         }
 
         public void Initialize(string fileName)
         {
             Text += fileName;
             var sb = new StringBuilder();
-            sb.Append("SE was unable to play the video/audio file (or file is not a valid video/audio file).");
+            sb.Append(LanguageSettings.Current.Main.UnableToPlayMediaFile);
 
             var currentVideoPlayer = Configuration.Settings.General.VideoPlayer;
             if (string.IsNullOrEmpty(currentVideoPlayer))
             {
-                Text = "Please install video player";
+                Text = LanguageSettings.Current.Main.PleaseInstallVideoPlayer;
                 sb.Clear();
-                sb.Append("Subtitle Edit needs a video player.");
+                sb.Append(LanguageSettings.Current.Main.SubtitleEditNeedsVideoPlayer);
                 currentVideoPlayer = "DirectShow";
             }
 
@@ -49,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux)
             {
                 sb.AppendLine();
-                sb.AppendLine("Try installing latest version of libmpv and libvlc!");
+                sb.AppendLine("Try installing latest version of libmpv or libvlc!");
                 sb.Append("Read more about Subtitle Edit on Linux here: https://nikse.dk/SubtitleEdit/Help#linux");
             }
             else if (currentVideoPlayer == "MPV" && Configuration.IsRunningOnWindows)
@@ -69,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (currentVideoPlayer != "MPV")
             {
-                labelMpvInfo.Text = "To use the recommended video player \"mpv\" click on the button below.";
+                labelMpvInfo.Text = LanguageSettings.Current.Main.UseRecommendMpv;
                 if (isLibMpvInstalled)
                 {
                     buttonMpvSettings.Text = "Use \"mpv\" as video player";

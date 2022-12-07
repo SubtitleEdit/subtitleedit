@@ -3880,6 +3880,21 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ConvertedColorsToDialog":
                     language.Main.ConvertedColorsToDialog = reader.Value;
                     break;
+                case "Main/PleaseInstallVideoPlayer":
+                    language.Main.PleaseInstallVideoPlayer = reader.Value;
+                    break;
+                case "Main/UnableToPlayMediaFile":
+                    language.Main.UnableToPlayMediaFile = reader.Value;
+                    break;
+                case "Main/SubtitleEditNeedsVideoPlayer":
+                    language.Main.SubtitleEditNeedsVideoPlayer = reader.Value;
+                    break;
+                case "Main/UseRecommendMpv":
+                    language.Main.UseRecommendMpv = reader.Value;
+                    break;
+                case "Main/DownloadAndUseMpv":
+                    language.Main.DownloadAndUseMpv = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
