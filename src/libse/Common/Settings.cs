@@ -491,6 +491,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
             BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
+            BatchConvertMkvLanguageCodeStyle = "2";
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             ImportTextDurationAuto = true;
