@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.12.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 08.12.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1781,6 +1781,11 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>Usando solo il canale audio centrale anteriore</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Prima di convertire i colori in dialog</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Colori convertiti in dialogo</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Installa il lettore video</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>Subtitle Edit non ha potuto riprodurre il file video/audio (o il file non è un file video/audio valido).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit ha bisogno di un lettore video.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>Per usare il lettore video consigliato "mpv" fai clic sul pulsante qui sotto.</UseRecommendMpv>
+    <DownloadAndUseMpv>Scarica e sua "mpv" come lettore video</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
@@ -3049,7 +3054,7 @@ Vuoi mantenere le modifiche?</KeepChangesMessage>
     <CloudVisionApi>API Google Cloud Vision</CloudVisionApi>
     <ApiKey>Chiave API</ApiKey>
     <SendOriginalImages>Invia immagini originali</SendOriginalImages>
-    <SeHandlesTextMerge>SE gestisce l'unione del testo</SeHandlesTextMerge>
+    <SeHandlesTextMerge>Subtitle Edit gestisce l'unione del testo</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Immagine manuale in testo</Title>
