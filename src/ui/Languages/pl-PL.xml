@@ -1781,6 +1781,11 @@ Pobrać i kontynuować?</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>Korzystanie tylko z przedniego centralnego kanału audio</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Przed konwersją kolorów do dialogów</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Przekonwertowane kolory na dialog</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Zainstaluj odtwarzacz wideo</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE nie był w stanie odtworzyć pliku wideo/audio (lub plik nie jest prawidłowym plikiem wideo/audio).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit wymaga odtwarzacza wideo.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>Aby użyć zalecanego odtwarzacza wideo "mpv", kliknij przycisk poniżej.</UseRecommendMpv>
+    <DownloadAndUseMpv>Pobierz i używaj "mpv" jako odtwarzacza wideo</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -2205,6 +2210,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <AutoBackupEveryFiveMinutes>Co 5 minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Usuwaj po</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Sufiks w nazwie pliku tłumaczenia</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 miesiąc</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} miesiące(y)</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Sprawdź, czy są aktualizacje</CheckForUpdates>
