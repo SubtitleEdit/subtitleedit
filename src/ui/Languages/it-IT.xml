@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 28.11.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 07.12.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -2205,6 +2205,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <AutoBackupEveryFiveMinutes>Ogni 5 minuti</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Ogni 15 minuti</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Elimina dopo</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Suffisso automatico nome file traduzione</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 mese</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} mesi</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verifica Nuovi Aggiornamenti</CheckForUpdates>
