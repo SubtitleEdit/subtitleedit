@@ -407,6 +407,8 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.CurrentCulture));
                 toolStripComboBoxFrameRate.Items.Add(29.97.ToString(CultureInfo.CurrentCulture));
                 toolStripComboBoxFrameRate.Items.Add(30.ToString(CultureInfo.CurrentCulture));
+                toolStripComboBoxFrameRate.Items.Add(59.94.ToString(CultureInfo.CurrentCulture));
+                toolStripComboBoxFrameRate.Items.Add(60.ToString(CultureInfo.CurrentCulture));
                 toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
                 pictureBoxBookmark.Visible = false;
 
