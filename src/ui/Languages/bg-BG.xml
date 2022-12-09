@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Последен превод на български 07.11.2022: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 21.11.2022: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -187,6 +187,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TranscribingXOfY>Предаване запис на аудио към текстов файл {0} от {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видеоизточника</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Използвайте последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
+    <AutoAdjustTimings>Авт. регулиране на времената</AutoAdjustTimings>
     <BatchMode>Пакетен режим</BatchMode>
     <KeepPartialTranscription>Запазване на частична транскрипция</KeepPartialTranscription>
     <TranslateToEnglish>Превод на английски</TranslateToEnglish>
@@ -268,7 +269,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <StyleAlignmentX>Подравняване на стила: {0}</StyleAlignmentX>
     <CurrentMousePositionX>Позиция на мишката: {0}</CurrentMousePositionX>
     <CurrentTextPositionX>Текстова позиция: {0}</CurrentTextPositionX>
-    <SetPosInfo>Щракнете върху видеото, за да превключите задаване/преместване на позиция</SetPosInfo>
+    <SetPosInfo>Кликнете върху видеото, за да превключите задаване/преместване на позиция</SetPosInfo>
     <Clipboard>Клипборд</Clipboard>
     <ResolutionMissing>PlayResX/PlayResY не са зададени - задайте резолюцията сега?</ResolutionMissing>
     <RotateXAxis>Завъртане {0} по оста</RotateXAxis>
@@ -854,6 +855,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <XGeneratedWithBurnedInSubsInX>„{0}“, генериран с вписани субтитри в {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Оставащо време: {0} минути</TimeRemainingMinutes>
     <TimeRemainingSeconds>Оставащо време: {0} секунди</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Оставащо време: Няколко секунди</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Оставащо време: {0} минути и {1} секунди</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Име на целевия файл: {0}</TargetFileName>
     <TargetFileSize>Целевият размер на файла (изисква кодиране в 2 паса)</TargetFileSize>
@@ -874,7 +876,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Кой речник желаете?</Title>
     <DescriptionLine1>Проверката на правопис в Subtitle Edit е базирана на обработчика NHunspell,</DescriptionLine1>
     <DescriptionLine2> който използва проверката на правопис от речниците за LibreOffice.</DescriptionLine2>
-    <ChooseLanguageAndClickDownload>Изберете вашият език и щракнете «Изтегляне»</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Изберете вашият език и кликнете на «Изтегляне»</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Отваряне на папката с речници</OpenDictionariesFolder>
     <Download>Изтегляне</Download>
     <XDownloaded>{0} е изтеглен и инсталиран</XDownloaded>
@@ -1334,7 +1336,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <RemoveTextForHi>Премахване на текст за хора с увреден слух</RemoveTextForHi>
         <VisualSync>Визуална синхронизация</VisualSync>
         <SpellCheck>Проверка на правопис</SpellCheck>
-        <NetflixQualityCheck>Проверка на качеството Netflix</NetflixQualityCheck>
+        <NetflixQualityCheck>Проверка за качеството на Netflix</NetflixQualityCheck>
         <Settings>Настройки</Settings>
         <Help>Помощ</Help>
         <ShowHideWaveform>Покажи/скрий вълновата форма на звуковия сигнал</ShowHideWaveform>
@@ -1777,7 +1779,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <UsingOnlyFrontCenterChannel>Използване само на предния централен аудиоканал</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Преди да конвертирате цветовете в диалогов режим</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Конвертирани цветове в диалогов режим</ConvertedColorsToDialog>
-  </Main>
+    <PleaseInstallVideoPlayer>Моля, инсталирайте видео плейър</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE не можа да възпроизведе видео/аудио файла (или файлът не е валиден видео/аудио файл).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit се нуждае от видео плейър.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>За използване препоръчания видео плейър "mpv", кликнете върху бутона по-долу.</UseRecommendMpv>
+    <DownloadAndUseMpv>Изтегляне и използване на "mpv" като видео плейър</DownloadAndUseMpv>
+   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
     <TitleMp4>Избор на субтитри от файл MP4</TitleMp4>
@@ -2183,7 +2190,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TakeAutoBackup>Направи автоматично архивиране сега</TakeAutoBackup>
     <ShowLineBreaksAs>Показване прекъсвания на ред в «Изглед на списъка», като</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Запазване като..." използване името на файла от:</SaveAsFileNameFrom>
-    <MainListViewDoubleClickAction>Двойно щракване на ред в главния прозорец в «Изглед на списъка» ще:</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Двойно кликване на ред в главния прозорец в «Изглед на списъка» ще:</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Изберете колони за показване</MainListViewColumnsInfo>
     <MainListViewNothing>Нищо</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Преминаване до позицията на видеото и пауза</MainListViewVideoGoToPositionAndPause>
@@ -2201,9 +2208,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupEveryFiveMinutes>Всеки 5 минути</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Всеки 15 минути</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Изтр. след:</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Авт. суфикс на името на файла за превод</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 месец</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 месеца</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 месеца</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} месеца</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Проверка за обновяване</CheckForUpdates>
     <AutoSave>Авт. запазване</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешаване редактиране на оригиналните субтитри</AllowEditOfOriginalSubtitle>
@@ -2243,7 +2250,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformSetVideoPosMoveStartEnd>Задаване позицията на видеото при преместване в началото/края</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Задаване на фокуса върху курсора при кликване с мишката</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Задаване на фокуса върху списъка по курсора при кликване с мишката</WaveformListViewFocusMouseEnter>
-    <WaveformSingleClickSelect>Еднократно щракване за избиране на субтитри</WaveformSingleClickSelect>
+    <WaveformSingleClickSelect>Еднократно кликване за избиране на субтитри</WaveformSingleClickSelect>
     <WaveformSnapToShotChanges>Преминаване към промените на сцената (задръжте Shift за отмяна)</WaveformSnapToShotChanges>
     <WaveformAutoGen>Авт. генериране вълнова Wav форма на зв. сигнал при отваряне на видео</WaveformAutoGen>
     <WaveformBorderHitMs1>Граница на ограждащият маркер</WaveformBorderHitMs1>
@@ -3046,6 +3053,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CloudVisionApi>API за виждане в облака на Google</CloudVisionApi>
     <ApiKey>API ключ</ApiKey>
     <SendOriginalImages>Изпращане на оригинални изображения</SendOriginalImages>
+    <SeHandlesTextMerge>SE се справя с обединяването на текстове</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub – Ръчно изображение към текст</Title>
@@ -3106,8 +3114,8 @@ https://github.com/SubtitleEdit/subtitleedit
   </Watermark>
   <Waveform>
     <AddWaveformAndSpectrogram>Добавяне Wav вълнова форма/спектрограма</AddWaveformAndSpectrogram>
-    <ClickToAddWaveform>Щракнете тук за добавяне вълнова форма на звуковия сигнал (извличане *.Wav файл)</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Щракнете, за да добавите вълнова форма на зв. сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveform>Кликнете тук за добавяне вълнова форма на звуковия сигнал (извличане *.Wav файл)</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Кликнете, за да добавите вълнова форма на зв. сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунди</Seconds>
     <ZoomIn>Увеличаване</ZoomIn>
     <ZoomOut>Намаляване</ZoomOut>
