@@ -42,14 +42,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         public long StartTime { get; set; }
 
-        public long StartTimeForWrite => (long)(StartTime * 90.0);
+        public long StartTimeForWrite => (long)Math.Round(StartTime * 90.0, MidpointRounding.AwayFromZero);
 
         /// <summary>
         /// end time in milliseconds
         /// </summary>
         public long EndTime { get; set; }
 
-        public long EndTimeForWrite => (long)(EndTime * 90.0);
+        public long EndTimeForWrite => (long)Math.Round(EndTime * 90.0, MidpointRounding.AwayFromZero);
 
         /// <summary>
         /// if true, this is a forced subtitle
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         private static byte[] EncodeImage(NikseBitmap bm, List<Color> palette)
         {
             var lookup = new Dictionary<int, int>();
-            for (int i = 0; i < palette.Count; i++)
+            for (var i = 0; i < palette.Count; i++)
             {
                 var color = palette[i].ToArgb();
                 if (!lookup.ContainsKey(color))
@@ -110,15 +110,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             var bytes = new List<byte>();
-            for (int y = 0; y < bm.Height; y++)
+            for (var y = 0; y < bm.Height; y++)
             {
                 int x;
                 int len;
                 for (x = 0; x < bm.Width; x += len)
                 {
-                    Color c = bm.GetPixel(x, y);
+                    var c = bm.GetPixel(x, y);
                     byte color;
-                    if (lookup.TryGetValue(c.ToArgb(), out int intC))
+                    if (lookup.TryGetValue(c.ToArgb(), out var intC))
                     {
                         color = (byte)intC;
                     }
@@ -191,46 +191,48 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     bytes.Add(0);
                 }
             }
-            int size = bytes.Count;
-            var retval = new byte[size];
-            for (int i = 0; i < size; i++)
+            var size = bytes.Count;
+            var returnBytes = new byte[size];
+            for (var i = 0; i < size; i++)
             {
-                retval[i] = bytes[i];
+                returnBytes[i] = bytes[i];
             }
 
-            return retval;
+            return returnBytes;
         }
 
         private static byte FindBestMatch(Color color, List<Color> palette)
         {
-            int smallestDiff = 1000;
-            int smallestDiffIndex = -1;
-            int max = palette.Count;
-            for (int i = 0; i < max; i++)
+            var smallestDiff = 1000;
+            var smallestDiffIndex = -1;
+            var max = palette.Count;
+            for (var i = 0; i < max; i++)
             {
                 var c = palette[i];
-                int diff = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
+                var diff = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
                 if (diff < smallestDiff)
                 {
                     smallestDiff = diff;
                     smallestDiffIndex = i;
                 }
             }
+
             return (byte)smallestDiffIndex;
         }
 
         private static bool HasCloseColor(Color color, List<Color> palette, int maxDifference)
         {
             var max = palette.Count;
-            for (int i = 0; i < max; i++)
+            for (var i = 0; i < max; i++)
             {
                 var c = palette[i];
-                int difference = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
+                var difference = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
                 if (difference < maxDifference)
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -383,7 +385,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 pal.SetColor(i, colorPalette[i]);
             }
 
-            byte[] rleBuf = EncodeImage(bm, colorPalette);
+            var rleBuf = EncodeImage(bm, colorPalette);
 
             // for some obscure reason, a packet can be a maximum 0xfffc bytes
             // since 13 bytes are needed for the header("PG", PTS, DTS, ID, SIZE)
@@ -403,7 +405,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // a typical frame consists of 8 packets. It can be elongated by additional object frames
-            int palSize = colorPalette.Count;
+            var palSize = colorPalette.Count;
 
             var packetHeader = new byte[]
             {
@@ -462,7 +464,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 0x40                    // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
             };
 
-            int size = packetHeader.Length * (8 + numAddPackets);
+            var size = packetHeader.Length * (8 + numAddPackets);
             size += headerPcsStart.Length + headerPcsEnd.Length;
             size += 2 * headerWds.Length + headerOdsFirst.Length;
             size += numAddPackets * headerOdsNext.Length;
@@ -517,37 +519,37 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 pic.WindowYOffset = overridePosition.Value.Y;
             }
 
-            int yOfs = pic.WindowYOffset - Core.CropOfsY;
+            var yOfs = pic.WindowYOffset - Core.CropOfsY;
             if (yOfs < 0)
             {
                 yOfs = 0;
             }
             else
             {
-                int yMax = pic.Height - pic.WindowHeight - 2 * Core.CropOfsY;
+                var yMax = pic.Height - pic.WindowHeight - 2 * Core.CropOfsY;
                 if (yOfs > yMax)
                 {
                     yOfs = yMax;
                 }
             }
 
-            int h = pic.Height - 2 * Core.CropOfsY;
+            var h = pic.Height - 2 * Core.CropOfsY;
 
             var buf = new byte[size];
-            int index = 0;
+            var index = 0;
 
-            int fpsId = GetFpsId(fps);
+            var fpsId = GetFpsId(fps);
 
             /* time (in 90kHz resolution) needed to initialize (clear) the screen buffer
                 based on the composition pixel rate of 256e6 bit/s - always rounded up */
-            int frameInitTime = (pic.Width * pic.Height * 9 + 3199) / 3200; // better use default height here
+            var frameInitTime = (pic.Width * pic.Height * 9 + 3199) / 3200; // better use default height here
             /* time (in 90kHz resolution) needed to initialize (clear) the window area
                 based on the composition pixel rate of 256e6 bit/s - always rounded up
                 Note: no cropping etc. -> window size == image size */
-            int windowInitTime = (bm.Width * bm.Height * 9 + 3199) / 3200;
+            var windowInitTime = (bm.Width * bm.Height * 9 + 3199) / 3200;
             /* time (in 90kHz resolution) needed to decode the image
                 based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
-            int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
+            var imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
             // write PCS start - Presentation Composition Segment (also called the Control Segment)
             packetHeader[10] = 0x16; // ID
 
@@ -563,7 +565,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetDWord(packetHeader, 2, (uint)pts);                     // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                           // DTS
             ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);     // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
@@ -575,7 +577,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             headerPcsStart[14] = (byte)(pic.IsForced ? 0x40 : 0);
             ToolBox.SetWord(headerPcsStart, 15, pic.WindowXOffset);
             ToolBox.SetWord(headerPcsStart, 17, yOfs);
-            for (int i = 0; i < headerPcsStart.Length; i++)
+            for (var i = 0; i < headerPcsStart.Length; i++)
             {
                 buf[index++] = headerPcsStart[i];
             }
@@ -585,7 +587,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var timestamp = pts - windowInitTime;
             ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);            // PTS (keep DTS)
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);       // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
@@ -594,7 +596,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetWord(headerWds, 4, yOfs);
             ToolBox.SetWord(headerWds, 6, bm.Width);
             ToolBox.SetWord(headerWds, 8, bm.Height);
-            for (int i = 0; i < headerWds.Length; i++)
+            for (var i = 0; i < headerWds.Length; i++)
             {
                 buf[index++] = headerWds[i];
             }
@@ -604,14 +606,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetDWord(packetHeader, 2, dts);                        // PTS (=DTS of PCS/WDS)
             ToolBox.SetDWord(packetHeader, 6, 0);                      // DTS (0)
             ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);        // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
 
             buf[index++] = 0;
             buf[index++] = 0;
-            for (int i = 0; i < palSize; i++)
+            for (var i = 0; i < palSize; i++)
             {
                 buf[index++] = (byte)i;                                         // index
                 buf[index++] = pal.GetY()[i];                                   // Y
@@ -621,8 +623,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // write first OBJ
-            int bufSize = rleBuf.Length;
-            int rleIndex = 0;
+            var bufSize = rleBuf.Length;
+            var rleIndex = 0;
             if (bufSize > 0xffe4)
             {
                 bufSize = 0xffe4;
@@ -633,30 +635,30 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                    // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                                // DTS
             ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
 
-            int marker = (int)((numAddPackets == 0) ? 0xC0000000 : 0x80000000);
-            ToolBox.SetDWord(headerOdsFirst, 3, (uint) (marker | (rleBuf.Length + 4)));
+            var marker = (int)((numAddPackets == 0) ? 0xC0000000 : 0x80000000);
+            ToolBox.SetDWord(headerOdsFirst, 3, (uint)(marker | (rleBuf.Length + 4)));
             ToolBox.SetWord(headerOdsFirst, 7, bm.Width);
             ToolBox.SetWord(headerOdsFirst, 9, bm.Height);
-            for (int i = 0; i < headerOdsFirst.Length; i++)
+            for (var i = 0; i < headerOdsFirst.Length; i++)
             {
                 buf[index++] = headerOdsFirst[i];
             }
 
-            for (int i = 0; i < bufSize; i++)
+            for (var i = 0; i < bufSize; i++)
             {
                 buf[index++] = rleBuf[rleIndex++];
             }
 
             // write additional OBJ packets
             bufSize = rleBuf.Length - bufSize; // remaining bytes to write
-            for (int p = 0; p < numAddPackets; p++)
+            for (var p = 0; p < numAddPackets; p++)
             {
-                int psize = bufSize;
+                var psize = bufSize;
                 if (psize > 0xffeb)
                 {
                     psize = 0xffeb;
@@ -664,17 +666,17 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                 packetHeader[10] = 0x15;                                         // ID (keep DTS & PTS)
                 ToolBox.SetWord(packetHeader, 11, headerOdsNext.Length + psize); // size
-                for (int i = 0; i < packetHeader.Length; i++)
+                for (var i = 0; i < packetHeader.Length; i++)
                 {
                     buf[index++] = packetHeader[i];
                 }
 
-                for (int i = 0; i < headerOdsNext.Length; i++)
+                for (var i = 0; i < headerOdsNext.Length; i++)
                 {
                     buf[index++] = headerOdsNext[i];
                 }
 
-                for (int i = 0; i < psize; i++)
+                for (var i = 0; i < psize; i++)
                 {
                     buf[index++] = rleBuf[rleIndex++];
                 }
@@ -686,18 +688,18 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             packetHeader[10] = 0x80;                                             // ID
             ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0) (keep PTS of ODS)
             ToolBox.SetWord(packetHeader, 11, 0);                       // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
 
             // write PCS end
             packetHeader[10] = 0x16;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, (uint) pic.EndTimeForWrite);        // PTS
-            dts = (uint) (pic.EndTimeForWrite - 90);
+            ToolBox.SetDWord(packetHeader, 2, (uint)pic.EndTimeForWrite);        // PTS
+            dts = (uint)(pic.EndTimeForWrite - 90);
             ToolBox.SetDWord(packetHeader, 6, dts);                        // DTS
             ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);     // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
@@ -706,7 +708,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetWord(headerPcsEnd, 2, h);                                // cropped height
             ToolBox.SetByte(headerPcsEnd, 4, fpsId);
             ToolBox.SetWord(headerPcsEnd, 5, pic.CompositionNumber + 1);
-            for (int i = 0; i < headerPcsEnd.Length; i++)
+            for (var i = 0; i < headerPcsEnd.Length; i++)
             {
                 buf[index++] = headerPcsEnd[i];
             }
@@ -715,9 +717,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             packetHeader[10] = 0x17;                                                     // ID
             timestamp = pic.EndTimeForWrite - windowInitTime;
             ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                    // PTS
-            ToolBox.SetDWord(packetHeader, 6, (uint) (dts - windowInitTime));   // DTS
+            ToolBox.SetDWord(packetHeader, 6, (uint)(dts - windowInitTime));   // DTS
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
@@ -726,7 +728,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetWord(headerWds, 4, yOfs);
             ToolBox.SetWord(headerWds, 6, bm.Width);
             ToolBox.SetWord(headerWds, 8, bm.Height);
-            for (int i = 0; i < headerWds.Length; i++)
+            for (var i = 0; i < headerWds.Length; i++)
             {
                 buf[index++] = headerWds[i];
             }
@@ -736,7 +738,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             ToolBox.SetDWord(packetHeader, 2, dts);                        // PTS (DTS of end PCS)
             ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0)
             ToolBox.SetWord(packetHeader, 11, 0);                       // size
-            for (int i = 0; i < packetHeader.Length; i++)
+            for (var i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
             }
