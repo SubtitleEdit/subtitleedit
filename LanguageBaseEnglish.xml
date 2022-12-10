@@ -1164,6 +1164,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
         <CloseOriginal>Close original subtitle</CloseOriginal>
+        <CloseTranslation>Close translated subtitle</CloseTranslation>
         <OpenContainingFolder>Open containing folder</OpenContainingFolder>
         <Compare>&amp;Compare...</Compare>
         <Statistics>S&amp;tatistics...</Statistics>

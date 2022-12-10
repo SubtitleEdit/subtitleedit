@@ -1630,6 +1630,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveOriginalToolStripMenuItem.Text = _language.Menu.File.SaveOriginal;
             saveOriginalAstoolStripMenuItem.Text = _language.SaveOriginalSubtitleAs;
             removeOriginalToolStripMenuItem.Text = _language.Menu.File.CloseOriginal;
+            removeTranslationToolStripMenuItem.Text = _language.Menu.File.CloseTranslation;
 
             toolStripMenuItemOpenContainingFolder.Text = _language.Menu.File.OpenContainingFolder;
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
@@ -21685,6 +21686,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveOriginalToolStripMenuItem.Enabled = true;
                 saveOriginalAstoolStripMenuItem.Enabled = true;
                 removeOriginalToolStripMenuItem.Enabled = true;
+                removeTranslationToolStripMenuItem.Enabled = true;
 
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, VideoAudioTrackNumber, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 Configuration.Settings.Save();
@@ -21758,6 +21760,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveOriginalToolStripMenuItem.Enabled = true;
             saveOriginalAstoolStripMenuItem.Enabled = true;
             removeOriginalToolStripMenuItem.Enabled = true;
+            removeTranslationToolStripMenuItem.Enabled = true;
 
             SetAssaResolution(_subtitleOriginal);
             SetupOriginalEdit();
@@ -24029,6 +24032,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveOriginalToolStripMenuItem.Enabled = true;
                 saveOriginalAstoolStripMenuItem.Enabled = true;
                 removeOriginalToolStripMenuItem.Enabled = true;
+                removeTranslationToolStripMenuItem.Enabled = true;
             }
             else
             {
@@ -24037,10 +24041,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (subtitleLoaded && SubtitleListview1.IsOriginalTextColumnVisible && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
                     removeOriginalToolStripMenuItem.Enabled = true;
+                    removeTranslationToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
                     removeOriginalToolStripMenuItem.Enabled = false;
+                    removeTranslationToolStripMenuItem.Enabled = false;
                 }
             }
 
@@ -24984,6 +24990,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveAsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
             openOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenOriginal);
             removeOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCloseOriginal);
+            removeTranslationToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCloseTranslation);
             toolStripMenuItemOpenContainingFolder.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.OpenContainingFolder);
             toolStripMenuItemCompare.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCompare);
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
@@ -34835,6 +34842,24 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 SwitchView(ListView);
+            }
+        }
+
+        private void removeTranslationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ContinueNewOrExit())
+            {
+                _fileName = _subtitleOriginalFileName;
+                _subtitle = _subtitleOriginal;
+
+                _subtitleOriginalFileName = null;
+                _subtitleOriginal = new Subtitle();
+
+                var selectIndices = SubtitleListview1.GetSelectedIndices();
+                RemoveOriginal(true, true);
+                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
+                RefreshSelectedParagraph();
             }
         }
     }

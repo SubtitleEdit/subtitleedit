@@ -1555,6 +1555,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
                     public string CloseOriginal { get; set; }
+                    public string CloseTranslation { get; set; }
                     public string OpenContainingFolder { get; set; }
                     public string Compare { get; set; }
                     public string Statistics { get; set; }
