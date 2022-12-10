@@ -1160,6 +1160,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
         <CloseOriginal>원본 자막 닫기</CloseOriginal>
+        <CloseTranslation>번역된 자막 닫기</CloseTranslation>
         <OpenContainingFolder>현재 폴더 열기</OpenContainingFolder>
         <Compare>자막 비교(&amp;C)...</Compare>
         <Statistics>통계 자료(&amp;T)...</Statistics>
@@ -1780,6 +1781,11 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <UsingOnlyFrontCenterChannel>전면 중앙 오디오 채널만 사용</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>색상을 대화 상자로 변환하기 전</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>색상을 대화 상자로 변환 완료</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>비디오 플레이어를 설치하십시오.</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE가 비디오/오디오 파일을 재생할 수 없음 (또는, 유효한 비디오/오디오 파일이 아님)</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>SE는 비디오 플레이어가 필요합니다.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>추천 비디오 플레이어 "mpv"를 사용하려면 아래 버튼을 클릭하십시오.</UseRecommendMpv>
+    <DownloadAndUseMpv>"mpv"를 다운로드하여 비디오 플레이어로 사용</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -2204,6 +2210,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <AutoBackupEveryFiveMinutes>5 분마다</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 분마다</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>백업 보존 기간</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>번역 파일 이름 자동 접미사</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 개월</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} 개월</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>업데이트 확인</CheckForUpdates>
