@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
 	<WholeWords>
+         <Word from="tñere" to="there" />
+         <Word from="ri9ht" to="right" />
 		<Word from="$COff$" to="scoffs" />
 		<Word from="$ergei" to="Sergei" />
 		<Word from="$lighnly" to="Slightly" />
