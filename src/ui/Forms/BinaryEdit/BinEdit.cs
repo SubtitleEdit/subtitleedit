@@ -1801,8 +1801,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 var bmp = extra.Bitmap ?? GetBitmap(bd);
                                 var brSub = new BluRaySupPicture
                                 {
-                                    StartTime = (long)p.StartTime.TotalMilliseconds,
-                                    EndTime = (long)p.EndTime.TotalMilliseconds,
+                                    StartTime = (long)Math.Round(p.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                                    EndTime = (long)Math.Round(p.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                                     Width = (int)numericUpDownScreenWidth.Value,
                                     Height = (int)numericUpDownScreenHeight.Value,
                                     CompositionNumber = p.Number * 2,

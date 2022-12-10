@@ -310,12 +310,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var brSub = new BluRaySupPicture
             {
-                StartTime = (long)param.P.StartTime.TotalMilliseconds,
-                EndTime = (long)param.P.EndTime.TotalMilliseconds,
+                StartTime = (long)Math.Round(param.P.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                EndTime = (long)Math.Round(param.P.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 Width = param.ScreenWidth,
                 Height = param.ScreenHeight,
                 IsForced = param.Forced,
-                CompositionNumber = param.P.Number * 2
+                CompositionNumber = param.P.Number * 2,
             };
             if (param.FullFrame)
             {
