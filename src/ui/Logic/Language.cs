@@ -1703,6 +1703,7 @@ namespace Nikse.SubtitleEdit.Logic
                         OpenOriginal = "Open original subtitle (translator mode)...",
                         SaveOriginal = "Save original subtitle",
                         CloseOriginal = "Close original subtitle",
+                        CloseTranslation = "Close translated subtitle",
                         OpenContainingFolder = "Open containing folder",
                         Compare = "&Compare...",
                         Statistics = "S&tatistics...",

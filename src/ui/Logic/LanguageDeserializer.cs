@@ -3931,6 +3931,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/File/CloseOriginal":
                     language.Main.Menu.File.CloseOriginal = reader.Value;
                     break;
+                case "Main/Menu/File/CloseTranslation":
+                    language.Main.Menu.File.CloseTranslation = reader.Value;
+                    break;
                 case "Main/Menu/File/OpenContainingFolder":
                     language.Main.Menu.File.OpenContainingFolder = reader.Value;
                     break;
