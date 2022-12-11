@@ -54,6 +54,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     continue;
                 }
 
+                if (usePostProcessing && engine == Engine.Whisper)
+                {
+                    if (new[] { "(.", "(" }.Contains(resultText.Text))
+                    {
+                        continue;
+                    }
+
+                    if (resultText.Text.StartsWith('.') && resultText.Text.EndsWith(").", StringComparison.Ordinal))
+                    {
+                        resultText.Text = resultText.Text.TrimEnd('.');
+                    }
+                }
+
                 subtitle.Paragraphs.Add(resultText);
             }
 
