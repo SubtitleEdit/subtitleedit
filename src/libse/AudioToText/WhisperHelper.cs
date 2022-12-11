@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -138,6 +139,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
 
             return model;
+        }
+
+        public static string GetWhisperTranslateParameter()
+        {
+            return Configuration.Settings.Tools.WhisperUseCpp ? "--translate" : "--task translate ";
         }
     }
 }

@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             // whisper --model tiny.en --language English --fp16 False a.wav
 
-            var translateToEnglish = translate ? "--task translate " : string.Empty;
+            var translateToEnglish = translate ? WhisperHelper.GetWhisperTranslateParameter() : string.Empty;
             if (language.ToLowerInvariant() == "english" || language.ToLowerInvariant() == "en")
             {
                 language = "en";
