@@ -3,8 +3,8 @@
 3.6.11 (xth January 2023) BETA
 * NEW:
    * Add File - Close translated subtitle - thx zcraber/Leon 
-   * Add auto-naming rule for Translation - thx Leon/OmrSi
-   * Add more whisper post-processing
+   * Add auto-naming rule for translation - thx Leon/OmrSi
+   * Add more Whisper post-processing
    * Add line merge option for Google Cloud Vision OCR
    * Add new subtitle format - thx Christophe
    * Add new subtitle format - thx Chris
@@ -17,7 +17,7 @@
    * Update Finnish translation - thx Teijo S
    * Update Hungarian translation - thx Zityi
    * Update French translation - thx Pierre
-   * Update Bulgarian translation - thx Калин :)
+   * Update Bulgarian translation - thx Калин
    * Better ffmpeg detection - thx SMSourov
    * Avoid standby a few places - thx mpek
    * Optimize ASSA style import
