@@ -126,13 +126,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             };
             _outputText.Add("Batch mode");
             timer1.Start();
+            ShowProgressBar();
             foreach (ListViewItem lvi in listViewInputFiles.Items)
             {
+                var pct = _batchFileNumber * 100.0 / listViewInputFiles.Items.Count;
+                progressBar1.Value = (int)Math.Round(pct, MidpointRounding.AwayFromZero);
+                progressBar1.Refresh();
                 _batchFileNumber++;
                 var videoFileName = lvi.Text;
                 listViewInputFiles.SelectedIndices.Clear();
                 lvi.Selected = true;
-                ShowProgressBar();
                 buttonGenerate.Enabled = false;
                 buttonDownload.Enabled = false;
                 comboBoxModels.Enabled = false;
@@ -140,7 +143,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 var waveFileName = videoFileName;
 
                 _outputText.Add(string.Empty);
-                progressBar1.Style = ProgressBarStyle.Blocks;
                 var transcript = TranscribeViaWhisper(waveFileName);
                 if (_cancel)
                 {
@@ -171,17 +173,13 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return new List<ResultText>();
             }
 
-            labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
             labelProgress.Text = string.Format(LanguageSettings.Current.AudioToText.TranscribingXOfY, _batchFileNumber, listViewInputFiles.Items.Count);
-
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
             var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.WhisperUseCpp ? "-CPP" : string.Empty)} with : whisper {process.StartInfo.Arguments}");
-            ShowProgressBar();
-            progressBar1.Style = ProgressBarStyle.Marquee;
             buttonCancel.Visible = true;
             try
             {
@@ -194,7 +192,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             _cancel = false;
 
-            labelProgress.Text = LanguageSettings.Current.AudioToText.Transcribing;
             while (!process.HasExited)
             {
                 Application.DoEvents();
