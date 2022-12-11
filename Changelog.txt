@@ -23,6 +23,7 @@
    * Optimize ASSA style import
    * Improve line split a little - thx i990049
    * Add a few English words/names to dictionaries
+   * Remember font in burn-in - thx Nespula95
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
