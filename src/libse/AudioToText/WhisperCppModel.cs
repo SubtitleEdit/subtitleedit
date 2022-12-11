@@ -26,35 +26,35 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "tiny.en",
-                Size = "78 MB",
+                Size = "74 MB",
                 UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.en.bin",
                 UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin",
             },
             new WhisperModel
             {
                 Name = "tiny",
-                Size = "78 MB",
+                Size = "74 MB",
                 UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-tiny.bin",
                 UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin",
             },
             new WhisperModel
             {
                 Name = "base.en",
-                Size = "148 MB",
+                Size = "141 MB",
                 UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-base.en.bin",
                 UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin",
             },
             new WhisperModel
             {
                 Name = "base",
-                Size = "148 MB",
+                Size = "141 MB",
                 UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-base.bin",
                 UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
             },
             new WhisperModel
             {
                 Name = "small.en",
-                Size = "488 MB",
+                Size = "465 MB",
                 UrlSecondary = "https://ggml.ggerganov.com/ggml-model-whisper-small.en.bin",
                 UrlPrimary = "https://huggingface.co/datasets/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin",
             },
