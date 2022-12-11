@@ -50,18 +50,25 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static void Error(string message)
         {
-            var filePath = Path.Combine(Configuration.DataDirectory, "error_log.txt");
-            using (var writer = new StreamWriter(filePath, true, Encoding.UTF8))
+            try
             {
-                writer.WriteLine("-----------------------------------------------------------------------------");
-                writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
-                writer.WriteLine($"SE: {GetSeInfo()}");
-                if (!string.IsNullOrWhiteSpace(message))
+                var filePath = Path.Combine(Configuration.DataDirectory, "error_log.txt");
+                using (var writer = new StreamWriter(filePath, true, Encoding.UTF8))
                 {
-                    writer.WriteLine("Message: " + message);
-                }
+                    writer.WriteLine("-----------------------------------------------------------------------------");
+                    writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
+                    writer.WriteLine($"SE: {GetSeInfo()}");
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        writer.WriteLine("Message: " + message);
+                    }
 
-                writer.WriteLine();
+                    writer.WriteLine();
+                }
+            }
+            catch 
+            {
+                // ignore
             }
         }
 

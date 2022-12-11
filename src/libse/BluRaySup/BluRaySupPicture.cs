@@ -191,14 +191,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     bytes.Add(0);
                 }
             }
-            var size = bytes.Count;
-            var returnBytes = new byte[size];
-            for (var i = 0; i < size; i++)
-            {
-                returnBytes[i] = bytes[i];
-            }
 
-            return returnBytes;
+            return bytes.ToArray();
         }
 
         private static byte FindBestMatch(Color color, List<Color> palette)
@@ -649,10 +643,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 buf[index++] = headerOdsFirst[i];
             }
 
-            for (var i = 0; i < bufSize; i++)
-            {
-                buf[index++] = rleBuf[rleIndex++];
-            }
+            Buffer.BlockCopy(rleBuf, rleIndex, buf, index, bufSize);
+            index += bufSize;
+            rleIndex += bufSize;
 
             // write additional OBJ packets
             bufSize = rleBuf.Length - bufSize; // remaining bytes to write
