@@ -1159,6 +1159,7 @@ Command line: {1} {2}
         <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
         <SaveOriginal>保存原始字幕</SaveOriginal>
         <CloseOriginal>关闭原始字幕</CloseOriginal>
+        <CloseTranslation>关闭翻译字幕</CloseTranslation>
         <OpenContainingFolder>打开所在文件夹</OpenContainingFolder>
         <Compare>比较(&amp;C)...</Compare>
         <Statistics>统计(&amp;C)...</Statistics>
