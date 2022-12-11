@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 08.12.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 11.12.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1164,6 +1164,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <OpenOriginal>Apri sottotitolo originale (modo traduzione)...</OpenOriginal>
         <SaveOriginal>Salva sottotitolo originale</SaveOriginal>
         <CloseOriginal>Chiudi sottotitolo originale</CloseOriginal>
+        <CloseTranslation>Chiudi sottotitoli tradotti</CloseTranslation>
         <OpenContainingFolder>Apri cartella contenente</OpenContainingFolder>
         <Compare>Confronta...</Compare>
         <Statistics>Statistiche...</Statistics>
