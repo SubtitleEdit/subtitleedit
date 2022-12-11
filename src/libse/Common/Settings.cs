@@ -397,6 +397,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool AssaBgBoxDrawingOnly { get; set; }
 
 
+        public string GenVideoFontName { get; set; }
+        public int GenVideoFontSize { get; set; }
         public string GenVideoEncoding { get; set; }
         public string GenVideoPreset { get; set; }
         public string GenVideoCrf { get; set; }
@@ -6077,6 +6079,18 @@ $HorzAlign          =   Center
             }
 
 
+            subNode = node.SelectSingleNode("GenVideoFontName");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoFontName = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("GenVideoFontSize");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("GenVideoEncoding");
             if (subNode != null)
             {
@@ -10443,6 +10457,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AssaBgBoxDrawingFileWatch", settings.Tools.AssaBgBoxDrawingFileWatch.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawingOnly", settings.Tools.AssaBgBoxDrawingOnly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaBgBoxDrawing", settings.Tools.AssaBgBoxDrawing);
+                textWriter.WriteElementString("GenVideoFontName", settings.Tools.GenVideoFontName);
+                textWriter.WriteElementString("GenVideoFontSize", settings.Tools.GenVideoFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoEncoding", settings.Tools.GenVideoEncoding);
                 textWriter.WriteElementString("GenVideoPreset", settings.Tools.GenVideoPreset);
                 textWriter.WriteElementString("GenVideoCrf", settings.Tools.GenVideoCrf);

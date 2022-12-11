@@ -148,7 +148,11 @@ namespace Nikse.SubtitleEdit.Forms
                 labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             }
 
-            var initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
+            var initialFont = Configuration.Settings.Tools.GenVideoFontName;
+            if (string.IsNullOrEmpty(initialFont))
+            {
+                initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
+            }
             if (string.IsNullOrEmpty(initialFont))
             {
                 initialFont = UiUtil.GetDefaultFont().Name;
@@ -167,6 +171,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxSubtitleFont.SelectedIndex < 0 && comboBoxSubtitleFont.Items.Count > 0)
             {
                 comboBoxSubtitleFont.SelectedIndex = 0;
+            }
+
+            if (Configuration.Settings.Tools.GenVideoFontSize >= numericUpDownFontSize.Minimum &&
+                Configuration.Settings.Tools.GenVideoFontSize >= numericUpDownFontSize.Minimum)
+            {
+                numericUpDownFontSize.Value = Configuration.Settings.Tools.GenVideoFontSize;
             }
 
             checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
@@ -651,6 +661,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateVideoWithHardSubs_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Configuration.Settings.Tools.GenVideoFontName = comboBoxSubtitleFont.Text;
+            Configuration.Settings.Tools.GenVideoFontSize = (int)numericUpDownFontSize.Value;
             Configuration.Settings.Tools.GenVideoEncoding = comboBoxVideoEncoding.Text;
             Configuration.Settings.Tools.GenVideoPreset = comboBoxPreset.Text;
             Configuration.Settings.Tools.GenVideoCrf = comboBoxCrf.Text;
