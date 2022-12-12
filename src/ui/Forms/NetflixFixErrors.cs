@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Nikse.SubtitleEdit.Forms.FixCommonErrors;
 
@@ -134,14 +135,14 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLanguage.EndUpdate();
         }
 
-        private void RuleCheckedChanged(object sender, EventArgs e)
+        private async void RuleCheckedChanged(object sender, EventArgs e)
         {
             if (_loading)
             {
                 return;
             }
 
-            _netflixQualityController.RunChecks(_subtitle, GetAllSelectedChecks());
+            await Task.Run(() => _netflixQualityController.RunChecks(_subtitle, GetAllSelectedChecks())).ConfigureAwait(true);
             labelTotal.Text = string.Format(LanguageSettings.Current.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
             linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
             linkLabelOpenReportFolder.Text = LanguageSettings.Current.NetflixQualityCheck.OpenReportInFolder;
