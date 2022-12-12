@@ -24,6 +24,7 @@
    * Improve line split a little - thx i990049
    * Add a few English words/names to dictionaries
    * Remember font in burn-in - thx Nespula95
+   * Make formatting shortcuts in waveform work w multi-lines
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
@@ -69,7 +70,7 @@
    * Fix bookmark showing on first spell check line - thx OmrSi
    * Fix format XIF writing - thx Per
    * Fix for WebVTT with line# hours - thx garion84
-   * Fix " 's" / Dutch in "Fix missing spaces"" - thx Jean-Pierre
+   * Fix " 's" / Dutch in "Fix missing spaces" - thx Jean-Pierre
 
 
 3.6.8 (24th October 2022)
