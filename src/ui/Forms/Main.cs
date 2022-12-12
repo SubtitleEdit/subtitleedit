@@ -653,6 +653,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ListViewToggleTag(HtmlUtil.TagUnderline);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == boxToolStripMenuItem.ShortcutKeys)
+            {
+                ListViewToggleTag("box");
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == removeAllFormattingsToolStripMenuItem.ShortcutKeys)
             {
                 removeAllFormattingsToolStripMenuItem_Click(null, null);
