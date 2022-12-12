@@ -633,7 +633,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioVisualizer_KeyDown(object sender, KeyEventArgs e)
         {
-            if (SubtitleListview1.SelectedIndices.Count != 1 || e.Handled)
+            if (SubtitleListview1.SelectedIndices.Count < 1 || e.Handled)
             {
                 return;
             }
