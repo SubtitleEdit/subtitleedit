@@ -2255,7 +2255,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
                 text = dialogHelper.RemoveSpaces(text);
 
-                int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
+                var idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
                 if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     idx = text.IndexOf("- ", 5, StringComparison.Ordinal);
@@ -2263,19 +2263,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 while (idx > 0)
                 {
-                    if (idx > 0 && idx < text.Length - 2)
+                    if (idx < text.Length - 2)
                     {
-                        string before = string.Empty;
-                        int k = idx - 1;
+                        var before = string.Empty;
+                        var k = idx - 1;
                         while (k >= 0 && char.IsLetterOrDigit(text[k]))
                         {
                             before = text[k--] + before;
                         }
-                        string after = string.Empty;
+                        var after = string.Empty;
                         k = idx + 2;
                         while (k < text.Length && char.IsLetter(text[k]))
                         {
-                            after = after + text[k++];
+                            after += text[k++];
                         }
                         if (after.Length > 0 && after.Equals(before, StringComparison.OrdinalIgnoreCase))
                         {
@@ -2318,7 +2318,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
                         }
                     }
-                    if (idx + 1 < text.Length && idx != -1)
+                    if (idx + 1 < text.Length)
                     {
                         idx = text.IndexOf("- ", idx + 1, StringComparison.Ordinal);
                     }
