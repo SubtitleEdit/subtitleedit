@@ -149,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            toolStripMenuItemStorageMoveStylesToCategory.Text = l.MoveToCategory;
 
             labelScaleX.Text = l.ScaleX;
             labelScaleY.Text = l.ScaleY;
