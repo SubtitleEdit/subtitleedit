@@ -2292,6 +2292,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 (language != "da" ||
                                  !after.Equals("og", StringComparison.OrdinalIgnoreCase) &&
                                  !after.Equals("eller", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "nb" ||
+                                 !after.Equals("og", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("eller", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "sv" ||
+                                 !after.Equals("och", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("eller", StringComparison.OrdinalIgnoreCase)) &&
                                 (language != "de" ||
                                  !after.Equals("und", StringComparison.OrdinalIgnoreCase) &&
                                  !after.Equals("oder", StringComparison.OrdinalIgnoreCase)) &&
