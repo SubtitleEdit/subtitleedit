@@ -43,6 +43,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var text1 = encoding.GetString(bytes, index, 31);
                 var text2 = encoding.GetString(bytes, index + 31 + 2, 31);
                 var timeString = encoding.GetString(bytes, index + 64, 7);
+
+                if (text1.Contains('\u0000') || timeString.Contains('\u0000'))
+                {
+                    _errorCount++;
+                    if (_errorCount > 10)
+                    {
+                        return;
+                    }
+                }
+
                 if (int.TryParse(timeString, NumberStyles.None, CultureInfo.InvariantCulture, out var number))
                 {
                     var ms = number;
