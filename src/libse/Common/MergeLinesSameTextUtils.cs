@@ -29,6 +29,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
 
                     var next = subtitle.GetParagraphOrDefault(j);
+
+                    // short circuit as we know non of the paragraph following the next will have shorted start time / gaps
+                    double gaps = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                    if (gaps > maxMsBetween)
+                    {
+                        break;
+                    }
+
                     var incrementText = string.Empty;
                     if ((QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)))
                     {
