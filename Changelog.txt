@@ -23,12 +23,14 @@
    * Optimize ASSA style import
    * Improve line split a little - thx i990049
    * Add a few English words/names to dictionaries
-   * Remember font in burn-in - thx Nespula95
    * Make formatting shortcuts in waveform work w multi-lines
+   * Remember font in burn-in - thx Nespula95
+   * Remember "Merge lines with same text" settings - thx kamitsu2004
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
    * Fix for "replace all" non reg-ex
+   * Fix wrongful removal of "Unneeded Space" - thx Minherre
 
 
 3.6.10 (21th November 2022)
