@@ -34,18 +34,18 @@
             this.listViewFixes = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxIncludeIncrementing = new System.Windows.Forms.CheckBox();
             this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxLinesFound.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.SuspendLayout();
             // 
             // columnHeader4
@@ -94,6 +94,28 @@
             // 
             this.columnHeaderText.Text = "New text";
             this.columnHeaderText.Width = 500;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
             // 
             // buttonOK
             // 
@@ -185,28 +207,6 @@
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.toolStripMenuItemInverseSelection});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
-            // 
-            // toolStripMenuItemSelectAll
-            // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
-            // 
-            // toolStripMenuItemInverseSelection
-            // 
-            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
-            // 
             // MergeDoubleLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -227,12 +227,13 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Merge lines with same text";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeDoubleLines_KeyDown);
-            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergeDoubleLines_FormClosing);
             this.Shown += new System.EventHandler(this.MergeDoubleLines_Shown);
+            this.ResizeEnd += new System.EventHandler(this.MergeDoubleLines_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeDoubleLines_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
