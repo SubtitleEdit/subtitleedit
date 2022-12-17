@@ -348,6 +348,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int MergeTextWithSameTimeCodesMaxGap { get; set; }
         public bool MergeTextWithSameTimeCodesMakeDialog { get; set; }
         public bool MergeTextWithSameTimeCodesReBreakLines { get; set; }
+        public int MergeLinesWithSameTextMaxMs { get; set; }
+        public bool MergeLinesWithSameTextIncrement { get; set; }
         public bool ConvertColorsToDialogRemoveColorTags { get; set; }
         public bool ConvertColorsToDialogAddNewLines { get; set; }
         public bool ConvertColorsToDialogReBreakLines { get; set; }
@@ -567,6 +569,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             MergeShortLinesOnlyContinuous = true;
             MergeTextWithSameTimeCodesMaxGap = 250;
             MergeTextWithSameTimeCodesReBreakLines = false;
+            MergeLinesWithSameTextMaxMs = 250;
+            MergeLinesWithSameTextIncrement = true;
             MergeTextWithSameTimeCodesMakeDialog = false;
             ConvertColorsToDialogRemoveColorTags = true;
             ConvertColorsToDialogAddNewLines = true;
@@ -5807,6 +5811,18 @@ $HorzAlign          =   Center
                 settings.Tools.MergeTextWithSameTimeCodesReBreakLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("MergeLinesWithSameTextMaxMs");
+            if (subNode != null)
+            {
+                settings.Tools.MergeLinesWithSameTextMaxMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MergeLinesWithSameTextIncrement");
+            if (subNode != null)
+            {
+                settings.Tools.MergeLinesWithSameTextIncrement = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ConvertColorsToDialogRemoveColorTags");
             if (subNode != null)
             {
@@ -10412,6 +10428,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MergeTextWithSameTimeCodesMaxGap", settings.Tools.MergeTextWithSameTimeCodesMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeTextWithSameTimeCodesMakeDialog", settings.Tools.MergeTextWithSameTimeCodesMakeDialog.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeTextWithSameTimeCodesReBreakLines", settings.Tools.MergeTextWithSameTimeCodesReBreakLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeLinesWithSameTextMaxMs", settings.Tools.MergeLinesWithSameTextMaxMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeLinesWithSameTextIncrement", settings.Tools.MergeLinesWithSameTextIncrement.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConvertColorsToDialogRemoveColorTags", settings.Tools.ConvertColorsToDialogRemoveColorTags.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConvertColorsToDialogAddNewLines", settings.Tools.ConvertColorsToDialogAddNewLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConvertColorsToDialogReBreakLines", settings.Tools.ConvertColorsToDialogReBreakLines.ToString(CultureInfo.InvariantCulture));

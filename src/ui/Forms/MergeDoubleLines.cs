@@ -66,6 +66,14 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
             _subtitle = subtitle;
+
+            var m = Configuration.Settings.Tools.MergeLinesWithSameTextMaxMs;
+            if (m >= numericUpDownMaxMillisecondsBetweenLines.Minimum && m <= numericUpDownMaxMillisecondsBetweenLines.Maximum)
+            {
+                numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeLinesWithSameTextMaxMs;
+            }
+
+            checkBoxIncludeIncrementing.Checked = Configuration.Settings.Tools.MergeLinesWithSameTextIncrement;
         }
 
         private ListViewItem MakeListViewItem(Paragraph p, List<int> lineNumbers, string newText)
@@ -357,6 +365,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _fixItems[item.Index].Checked = !item.Checked;
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void MergeDoubleLines_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.MergeLinesWithSameTextMaxMs = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
+            Configuration.Settings.Tools.MergeLinesWithSameTextIncrement = checkBoxIncludeIncrementing.Checked;
         }
     }
 }
