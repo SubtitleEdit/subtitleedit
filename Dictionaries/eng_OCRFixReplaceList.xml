@@ -3379,7 +3379,8 @@
 		<RegEx find="\bI KEA\b" replaceWith="IKEA" />
 		<RegEx find="\b(A|a)m (l|1)\b" replaceWith="$1m I" />
 		<RegEx find="\b1 00K\b" replaceWith="100K" />
-		<RegEx find="\bl\b" replaceWith="I" />
+		<RegEx find="(\bl\b)(?!-)" replaceWith="I" />
+		<RegEx find="\bl-l-I\b" replaceWith="I-I-I" />
 		<RegEx find="\. lt\b" replaceWith=". It" />
 		<RegEx find="\. lf\b" replaceWith=". If" />
 		<RegEx find="(\p{Ll})('II)([ \r\n])" replaceWith="$1'll$3" />
