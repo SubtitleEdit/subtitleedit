@@ -1395,7 +1395,6 @@
 		<Word from="lsolation" to="Isolation" />
 		<Word from="Lst's" to="Let's" />
 		<Word from="lsuppose" to="I suppose" />
-		<Word from="Lt" to="It" />
 		<Word from="ltake" to="I take" />
 		<Word from="ltalian" to="Italian" />
 		<Word from="ltell" to="I tell" />
@@ -2881,6 +2880,7 @@
 		<LinePart from=" lf " to=" if " />
 		<LinePart from=". lf " to=". If " />
 		<LinePart from=" . " to=". " />
+		<LinePart from=". Lt " to=". It " />
 	</PartialLinesAlways>
 	<PartialLines>
 		<LinePart from=" /be " to=" I be " />
