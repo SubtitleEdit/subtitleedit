@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private void LoadSpellingDictionaries(string threeLetterIsoLanguageName, string hunspellName)
         {
-            string dictionaryFolder = Utilities.DictionaryFolder;
+            var dictionaryFolder = Utilities.DictionaryFolder;
             if (!Directory.Exists(dictionaryFolder))
             {
                 return;
@@ -207,51 +207,54 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             foreach (var culture in Iso639Dash2LanguageCode.List)
             {
-                if (culture.ThreeLetterCode == threeLetterIsoLanguageName)
+                if (culture.ThreeLetterCode != threeLetterIsoLanguageName)
                 {
-                    string dictionaryFileName = null;
-                    if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterCode, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
-                    {
-                        dictionaryFileName = Path.Combine(dictionaryFolder, hunspellName + ".dic");
-                        LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, dictionaryFileName, true);
-                        return;
-                    }
-                    foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
-                    {
-                        string name = Path.GetFileNameWithoutExtension(dic);
-                        if (!string.IsNullOrEmpty(name) && !name.StartsWith("hyph", StringComparison.Ordinal))
-                        {
-                            try
-                            {
-                                name = name.Replace('_', '-');
-                                if (name.Length > 5)
-                                {
-                                    name = name.Substring(0, 5);
-                                }
+                    continue;
+                }
 
-                                var ci = CultureInfo.GetCultureInfo(name);
-                                if (ci.GetThreeLetterIsoLanguageName() == threeLetterIsoLanguageName ||
-                                    ci.GetThreeLetterIsoLanguageName().Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    dictionaryFileName = dic;
-                                    break;
-                                }
-                            }
-                            catch (Exception exception)
-                            {
-                                System.Diagnostics.Debug.WriteLine(exception.Message);
-                            }
-                        }
-                    }
-
-                    if (dictionaryFileName == null)
-                    {
-                        return;
-                    }
-
+                string dictionaryFileName = null;
+                if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterCode, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
+                {
+                    dictionaryFileName = Path.Combine(dictionaryFolder, hunspellName + ".dic");
                     LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, dictionaryFileName, true);
                     return;
                 }
+
+                foreach (var dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
+                {
+                    var name = Path.GetFileNameWithoutExtension(dic);
+                    if (!string.IsNullOrEmpty(name) && !name.StartsWith("hyph", StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            name = name.Replace('_', '-');
+                            if (name.Length > 5)
+                            {
+                                name = name.Substring(0, 5);
+                            }
+
+                            var ci = CultureInfo.GetCultureInfo(name);
+                            if (ci.GetThreeLetterIsoLanguageName() == threeLetterIsoLanguageName ||
+                                ci.GetThreeLetterIsoLanguageName().Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                dictionaryFileName = dic;
+                                break;
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            System.Diagnostics.Debug.WriteLine(exception.Message);
+                        }
+                    }
+                }
+
+                if (dictionaryFileName == null)
+                {
+                    return;
+                }
+
+                LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, dictionaryFileName, true);
+                return;
             }
 
             string dicFileName = null;
@@ -484,10 +487,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace("<i>.</i>", ".");
                 text = text.TrimStart();
 
-                int len = text.Length;
-                for (int i = 0; i < len; i++)
+                var len = text.Length;
+                for (var i = 0; i < len; i++)
                 {
-                    char ch = text[i];
+                    var ch = text[i];
                     switch (ch)
                     {
                         case 'ﬁ':
@@ -695,7 +698,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            int start = text.IndexOf(tag, StringComparison.Ordinal);
+            var start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
@@ -709,7 +712,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                     if (start > 1)
                     {
-                        string beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
+                        var beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
                         endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
@@ -735,7 +738,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (start > 1)
                     {
-                        string beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
+                        var beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
                         endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
 
@@ -987,7 +990,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = "." + text;
             }
 
-            string pre = string.Empty;
+            var pre = string.Empty;
             if (text.StartsWith("- ", StringComparison.Ordinal))
             {
                 pre = "- ";
@@ -1262,7 +1265,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var match = RegexUppercaseI.Match(text);
                 while (match.Success)
                 {
-                    bool doFix = !(match.Index >= 1 && text.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal));
+                    var doFix = !(match.Index >= 1 && text.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal));
                     if (match.Index >= 2 && text.Substring(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
                     {
                         doFix = false;
@@ -1339,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return line;
             }
 
-            string tempLine = line;
+            var tempLine = line;
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
             var trimChars = p.ToArray();
             bool hasAllUpperWord = false;
@@ -1771,9 +1774,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static string GetWordWithDominatedCasing(string word)
         {
-            int lowercase = 0;
-            int uppercase = 0;
-            for (int i = 0; i < word.Length; i++)
+            var lowercase = 0;
+            var uppercase = 0;
+            for (var i = 0; i < word.Length; i++)
             {
                 var ch = word[i];
                 if (char.IsLower(ch))
@@ -1953,18 +1956,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (s.Length > 10 && s.Contains('/'))
                     {
-                        string[] ar = s.Split('/');
+                        var ar = s.Split('/');
                         if (ar.Length == 2)
                         {
                             if (ar[0].Length > 3 && ar[1].Length > 3)
                             {
-                                string a = ar[0];
+                                var a = ar[0];
                                 if (a == a.ToUpperInvariant())
                                 {
                                     a = a[0] + a.Substring(1).ToLowerInvariant();
                                 }
 
-                                string b = ar[0];
+                                var b = ar[0];
                                 if (b == b.ToUpperInvariant())
                                 {
                                     b = b[0] + b.Substring(1).ToLowerInvariant();
@@ -2044,22 +2047,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return 0;
             }
 
-            int minLength = 2;
+            var minLength = 2;
             if (Configuration.Settings.Tools.CheckOneLetterWords)
             {
                 minLength = 1;
             }
 
-            int wordsNotFound = 0;
+            var wordsNotFound = 0;
             var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split(" \r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
-                string word = words[i].Trim(SpellCheckWordLists.SplitChars.ToArray());
+                var word = words[i].Trim(SpellCheckWordLists.SplitChars.ToArray());
                 if (word.Length >= minLength)
                 {
                     if (!IsWordKnownOrNumber(word, line))
                     {
-                        bool correct = word.Length > 1 && _hunspell.Spell(word);
+                        var correct = word.Length > 1 && _hunspell.Spell(word);
                         if (!correct)
                         {
                             correct = word.Length > 2 && _hunspell.Spell(word.Trim('\''));
@@ -2085,6 +2088,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                 }
             }
+
             return wordsNotFound;
         }
 
@@ -2095,12 +2099,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 _hunspell.Dispose();
                 _hunspell = null;
             }
+
             if (_spellCheck != null)
             {
                 _spellCheck.Dispose();
                 _spellCheck = null;
             }
         }
-
     }
 }
