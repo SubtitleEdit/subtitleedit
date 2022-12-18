@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             Paragraph p = null;
             var lineNumbers = new List<int>();
             var listViewItems = new List<ListViewItem>();
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (removed.Contains(i - 1))
                 {
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                 mergedSubtitle.Paragraphs.Add(p);
 
-                for (int j = i; j < subtitle.Paragraphs.Count; j++)
+                for (var j = i; j < subtitle.Paragraphs.Count; j++)
                 {
                     if (removed.Contains(j))
                     {
@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int index = listViewFixes.SelectedIndices[0];
+            var index = listViewFixes.SelectedIndices[0];
             foreach (var number in _fixItems[index].LineNumbers)
             {
                 foreach (var p in _subtitle.Paragraphs)
@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateBackgroundColor()
         {
-            int colorIdx = 0;
+            var colorIdx = 0;
             var colors = new List<Color>
             {
                 Color.Green,
