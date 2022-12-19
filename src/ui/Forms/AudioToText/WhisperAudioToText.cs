@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
         private long _startTicks;
         private double _endSeconds;
+        private double _showProgressPct = -1;
         private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
         private readonly WavePeakData _wavePeaks;
@@ -424,6 +426,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         public Subtitle TranscribeViaWhisper(string waveFileName)
         {
+            _showProgressPct = -1;
             var model = comboBoxModels.Items[comboBoxModels.SelectedIndex] as WhisperModel;
             if (model == null)
             {
@@ -593,7 +596,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         Text = Utilities.AutoBreakLine(text, _languageCode),
                     };
 
-                    _endSeconds = (double)rt.End;
+                    if (_showProgressPct < 0)
+                    {
+                        _endSeconds = (double)rt.End;
+                    }
 
                     _resultList.Add(rt);
                 }
@@ -609,9 +615,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                         Text = Utilities.AutoBreakLine(text, _languageCode),
                     };
 
-                    _endSeconds = (double)rt.End;
+                    if (_showProgressPct < 0)
+                    {
+                        _endSeconds = (double)rt.End;
+                    }
 
                     _resultList.Add(rt);
+                }
+                else if (line.StartsWith("whisper_full: progress =", StringComparison.OrdinalIgnoreCase))
+                {
+                    var arr = line.Split('=');
+                    if (arr.Length == 2)
+                    {
+                        var pctString = arr[1].Trim().TrimEnd('%').TrimEnd();
+                        if (double.TryParse(pctString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var pct))
+                        {
+                            _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
+                            _showProgressPct = pct;
+                        }
+                    }
                 }
             }
         }
@@ -771,21 +793,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
-            if (Configuration.Settings.Tools.WhisperUseCpp && string.IsNullOrEmpty(translateToEnglish) && !Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len"))
+            if (Configuration.Settings.Tools.WhisperUseCpp)
             {
-                var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
-                if (language == "jp")
-                {
-                    maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
-                }
-
-                if (language == "cn")
-                {
-                    maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
-                }
-
-                translateToEnglish = $"--max-len {maxChars} ";
-                translateToEnglish = string.Empty; //TODO: remove line when "--max-len" is working!
+                translateToEnglish += "--print-progress ";
             }
 
             var outputSrt = string.Empty;
@@ -970,7 +980,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 _lastEstimatedMs = msEstimatedLeft;
             }
 
-            progressBar1.Value = (int)Math.Round(_endSeconds * 100.0 / _videoInfo.TotalSeconds, MidpointRounding.AwayFromZero);
+            if (_showProgressPct > 0)
+            {
+                progressBar1.Value =(int)Math.Round(_showProgressPct, MidpointRounding.AwayFromZero);
+            }
+            else
+            {
+                progressBar1.Value = (int)Math.Round(_endSeconds * 100.0 / _videoInfo.TotalSeconds, MidpointRounding.AwayFromZero);
+            }
+
             labelTime.Text = ProgressHelper.ToProgressTime(msEstimatedLeft);
             BringToFront();
         }
