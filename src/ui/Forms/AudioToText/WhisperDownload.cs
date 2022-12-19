@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public static bool IsOld(string fullPath)
         {
             var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(fullPath));
-            return !OldSha512Hashes.Contains(hash);
+            return OldSha512Hashes.Contains(hash);
         }
     }
 }
