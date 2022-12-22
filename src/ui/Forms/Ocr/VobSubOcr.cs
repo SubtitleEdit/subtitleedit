@@ -2216,7 +2216,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         /// <summary>
-        /// Get top position of sub + sub height
+        /// Get position of sub + sub size
         /// </summary>
         private void GetSubtitleTopAndHeight(int index, out int left, out int top, out int width, out int height)
         {
@@ -2302,22 +2302,36 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_dvbPesSubtitles != null)
             {
                 var item = _subtitle.Paragraphs[index];
-                //TODO
                 left = 0;
                 top = 0;
                 width = 0;
                 height = 0;
+
+                if (index < _dvbPesSubtitles.Count)
+                {
+                    var pes = _dvbPesSubtitles[index];
+                    var bmp = pes.GetImageFull();
+                    var nikseBitmap = new NikseBitmap(bmp);
+                    top = nikseBitmap.CropTopTransparent(0);
+                    left = nikseBitmap.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                    width = nikseBitmap.Width;
+                    height = nikseBitmap.Height;
+                    bmp.Dispose();
+                }
+
                 return;
             }
 
             if (_binaryParagraphWithPositions != null)
             {
                 var item = _binaryParagraphWithPositions[index];
-                //TODO
-                left = 0;
-                top = 0;
-                width = 0;
-                height = 0;
+                var pos = item.GetPosition();
+                left = pos.Left;
+                top = pos.Top;
+                var bmp = item.GetBitmap();
+                width = bmp.Width;
+                height = bmp.Height;
+                bmp.Dispose();
                 return;
             }
 
