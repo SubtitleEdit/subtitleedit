@@ -124,6 +124,98 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
+        public Position FindPosition(byte[] buffer, int index, ClutDefinitionSegment cds)
+        {
+            var pos = new Position(int.MaxValue, int.MaxValue);
+
+            if (ObjectCodingMethod == 0)
+            {
+                var twoToFourBitColorLookup = new List<int> { 0, 1, 2, 3 };
+                var twoToEightBitColorLookup = new List<int> { 0, 1, 2, 3 };
+                var fourToEightBitColorLookup = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+                var pixelCode = 0;
+                var runLength = 0;
+                var dataType = (int)buffer[index + 7];
+                var length = TopFieldDataBlockLength;
+
+                if (length + index + 7 > buffer.Length) // check if buffer is large enough
+                {
+                    return null;
+                }
+
+                index += 8;
+                var start = index;
+                var x = 0;
+                var y = 0;
+
+                // Pre-decoding to determine image size
+                var width = 0;
+                while (index < start + TopFieldDataBlockLength)
+                {
+                    index = CalculateSize(buffer, index, ref dataType, start, ref x, ref y, length, ref runLength, ref width);
+                }
+                if (width > 2000)
+                {
+                    width = 2000;
+                }
+
+                if (y > 500)
+                {
+                    y = 500;
+                }
+
+                var height = y + 1;
+                x = 0;
+                y = 0;
+                index = start;
+                while (index < start + TopFieldDataBlockLength && index < buffer.Length)
+                {
+                    index = ProcessDataTypeForPosition(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
+                    if (subPos.Left < pos.Left)
+                    {
+                        pos.Left = subPos.Left;
+                    }
+                    if (subPos.Top < pos.Top)
+                    {
+                        pos.Top = subPos.Top;
+                    }
+                }
+
+                x = 0;
+                y = 1;
+                if (BottomFieldDataBlockLength == 0)
+                {
+                    index = start;
+                }
+                else
+                {
+                    length = BottomFieldDataBlockLength;
+                    index = start + TopFieldDataBlockLength;
+                    start = index;
+                }
+                dataType = buffer[index - 1];
+                while (index < start + BottomFieldDataBlockLength - 1 && index < buffer.Length)
+                {
+                    index = ProcessDataTypeForPosition(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength, width, height, out Position subPos);
+                    if (subPos.Left < pos.Left)
+                    {
+                        pos.Left = subPos.Left;
+                    }
+                    if (subPos.Top < pos.Top)
+                    {
+                        pos.Top = subPos.Top;
+                    }
+                }
+            }
+            else if (ObjectCodingMethod == 1)
+            {
+                return null;
+            }
+
+            return new Position(pos.Left == int.MaxValue ? 0 : pos.Left, pos.Top == int.MaxValue ? 0 : pos.Top);
+        }
+
         private int ProcessDataType(byte[] buffer, int index, ClutDefinitionSegment cds, ref int dataType, int start,
                                     List<int> twoToFourBitColorLookup, List<int> fourToEightBitColorLookup, List<int> twoToEightBitColorLookup,
                                     ref int x, ref int y, int length, ref int pixelCode, ref int runLength)
@@ -184,6 +276,117 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         index++;
                     }
                 }
+            }
+            else if (dataType == EndOfObjectLineCode)
+            {
+                x = 0;
+                y += 2; // interlaced - skip one line
+            }
+
+            if (index < start + length && index < buffer.Length)
+            {
+                dataType = buffer[index];
+                index++;
+            }
+
+            return index;
+        }
+
+        private int ProcessDataTypeForPosition(byte[] buffer, int index, ClutDefinitionSegment cds, ref int dataType, int start,
+                                    List<int> twoToFourBitColorLookup, List<int> fourToEightBitColorLookup, List<int> twoToEightBitColorLookup,
+                                    ref int x, ref int y, int length, ref int pixelCode, ref int runLength, int width, int height, out Position pos)
+        {
+            pos = new Position(int.MaxValue, int.MaxValue);
+
+            if (dataType == PixelDecoding2Bit)
+            {
+                var bitIndex = 0;
+                while (index < start + length - 1 && index < buffer.Length && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
+                {
+                    var subPos = GetFirstPixelPosition(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y, width, height);
+                    if (subPos.Left < pos.Left)
+                    {
+                        pos.Left = subPos.Left;
+                    }
+                    if (subPos.Top < pos.Top)
+                    {
+                        pos.Top = subPos.Top;
+                    }
+                }
+            }
+            else if (dataType == PixelDecoding4Bit)
+            {
+                var startHalf = false;
+                while (index < start + length - 1 && index < buffer.Length && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
+                {
+                    var subPos = GetFirstPixelPosition(cds, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y, width, height);
+                    if (subPos.Left < pos.Left)
+                    {
+                        pos.Left = subPos.Left;
+                    }
+                    if (subPos.Top < pos.Top)
+                    {
+                        pos.Top = subPos.Top;
+                    }
+                }
+            }
+            else if (dataType == PixelDecoding8Bit)
+            {
+                while (index < start + length - 1 && index < buffer.Length && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
+                {
+                    var subPos = GetFirstPixelPosition(cds, pixelCode, runLength, ref x, ref y, width, height);
+                    if (subPos.Left < pos.Left)
+                    {
+                        pos.Left = subPos.Left;
+                    }
+                    if (subPos.Top < pos.Top)
+                    {
+                        pos.Top = subPos.Top;
+                    }
+                }
+            }
+            else if (dataType == MapTable2To4Bit)
+            {
+                //4 entry numbers of 4-bits each; entry number 0 first, entry number 3 last
+                twoToFourBitColorLookup[0] = buffer[index] >> 4;
+                twoToFourBitColorLookup[1] = buffer[index] & 0b00001111;
+                index++;
+                twoToFourBitColorLookup[2] = buffer[index] >> 4;
+                twoToFourBitColorLookup[3] = buffer[index] & 0b00001111;
+                index++;
+
+                pos.Left = x;
+                pos.Top = y;
+            }
+            else if (dataType == MapTable2To8Bit)
+            {
+                //4 entry numbers of 8-bits each; entry number 0 first, entry number 3 last
+                twoToEightBitColorLookup[0] = buffer[index];
+                index++;
+                twoToEightBitColorLookup[1] = buffer[index];
+                index++;
+                twoToEightBitColorLookup[2] = buffer[index];
+                index++;
+                twoToEightBitColorLookup[3] = buffer[index];
+                index++;
+
+                pos.Left = x;
+                pos.Top = y;
+            }
+            else if (dataType == MapTable4To8Bit)
+            {
+                // 16 entry numbers of 8-bits each
+                for (var k = 0; k < 16; k++)
+                {
+                    if (index < buffer.Length)
+                    {
+                        fourToEightBitColorLookup[k] = buffer[index];
+                        index++;
+                    }
+                }
+
+                pos.Left = x;
+                pos.Top = y;
             }
             else if (dataType == EndOfObjectLineCode)
             {
@@ -271,7 +474,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            for (int k = 0; k < runLength; k++)
+            for (var k = 0; k < runLength; k++)
             {
                 if (y < _fastImage.Height && x < _fastImage.Width)
                 {
@@ -280,6 +483,37 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 x++;
             }
+        }
+
+        private Position GetFirstPixelPosition(ClutDefinitionSegment cds, int pixelCode, int runLength, ref int x, ref int y, int width, int height)
+        {
+            var c = Color.Red;
+            if (cds != null)
+            {
+                foreach (var item in cds.Entries)
+                {
+                    if (item.ClutEntryId == pixelCode)
+                    {
+                        c = item.GetColor();
+                        break;
+                    }
+                }
+            }
+
+            for (var k = 0; k < runLength; k++)
+            {
+                if (y < height && x < width)
+                {
+                    if (c.A > 0)
+                    {
+                        return new Position(x, y);
+                    }
+                }
+
+                x++;
+            }
+
+            return new Position(int.MaxValue, int.MaxValue);
         }
 
         private static int Next8Bits(byte[] buffer, ref int index)
