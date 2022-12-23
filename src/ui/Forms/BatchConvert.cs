@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             public string FileName { get; set; }
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
-            public List<IBinaryParagraph> BinaryParagraphs { get; set; }
+            public List<IBinaryParagraphWithPosition> BinaryParagraphs { get; set; }
             public ThreadDoWorkParameter(
                 bool fixCommonErrors,
                 bool multipleReplace,
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName,
                 string toFormat,
                 SubtitleFormat sourceFormat,
-                List<IBinaryParagraph> binaryParagraphs)
+                List<IBinaryParagraphWithPosition> binaryParagraphs)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
         private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
-        private Dictionary<string, List<IBinaryParagraph>> _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraph>>();
+        private Dictionary<string, List<IBinaryParagraphWithPosition>> _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
         RemoveTextForHISettings _removeTextForHiSettings;
         private string _ocrEngine = "Tesseract";
 
@@ -1168,7 +1168,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fileName = item.Text;
                 try
                 {
-                    var binaryParagraphs = new List<IBinaryParagraph>();
+                    var binaryParagraphs = new List<IBinaryParagraphWithPosition>();
                     SubtitleFormat fromFormat = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
@@ -1407,7 +1407,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
 
                                                             //TODO: fix
-                                                            vobSubOcr.InitializeBatch(binaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
+                                                            vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList() , Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -1776,16 +1776,16 @@ namespace Nikse.SubtitleEdit.Forms
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
-            _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraph>>();
+            _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
 
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
         }
 
-        private List<IBinaryParagraph> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
+        public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
         {
             var sub = matroska.GetSubtitle(track.TrackNumber, null);
             var subtitleImages = new List<DvbSubPes>();
-            var subtitles = new List<IBinaryParagraph>();
+            var subtitles = new List<IBinaryParagraphWithPosition>();
             for (int index = 0; index < sub.Count; index++)
             {
                 try
@@ -1843,7 +1843,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (subtitleImages.Count == 0)
             {
-                return new List<IBinaryParagraph>();
+                return new List<IBinaryParagraphWithPosition>();
             }
 
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -2582,16 +2582,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 {
-                    var binaryParagraphs = new List<IBinaryParagraph>();
+                    var binaryParagraphs = new List<IBinaryParagraphWithPosition>();
                     if (p.FileName != null && !p.Subtitle.Paragraphs.Any(s => !string.IsNullOrEmpty(s.Text)) &&
                         p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
                         FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
                     {
-                        binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraph>().ToList();
+                        binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraphWithPosition>().ToList();
                     }
                     else if (p.FileName != null && _bdLookup.ContainsKey(p.FileName))
                     {
-                        binaryParagraphs = _bdLookup[p.FileName].Cast<IBinaryParagraph>().ToList();
+                        binaryParagraphs = _bdLookup[p.FileName].Cast<IBinaryParagraphWithPosition>().ToList();
                     }
                     else if (p.FileName != null && _binaryParagraphLookup.ContainsKey(p.FileName))
                     {

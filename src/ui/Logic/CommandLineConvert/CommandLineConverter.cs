@@ -183,9 +183,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 return Help(arguments);
             }
 
-            int count = 0;
-            int converted = 0;
-            int errors = 0;
+            var count = 0;
+            var converted = 0;
+            var errors = 0;
             var sw = System.Diagnostics.Stopwatch.StartNew();
             try
             {
@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     }
                 }
 
-                int pacCodePage = -1;
+                var pacCodePage = -1;
                 {
                     var pcp = GetArgument(unconsumedArguments, "pac-codepage:");
                     if (pcp.Length > 0)
@@ -415,9 +415,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                 var actions = GetArgumentActions(unconsumedArguments);
 
-                bool overwrite = GetArgument(unconsumedArguments, "overwrite").Length > 0;
-                bool forcedOnly = GetArgument(unconsumedArguments, "forcedonly").Length > 0;
-                bool teletextOnly = GetArgument(unconsumedArguments, "teletextonly").Length > 0;
+                var overwrite = GetArgument(unconsumedArguments, "overwrite").Length > 0;
+                var forcedOnly = GetArgument(unconsumedArguments, "forcedonly").Length > 0;
+                var teletextOnly = GetArgument(unconsumedArguments, "teletextonly").Length > 0;
 
                 var patterns = new List<string>();
 
@@ -494,7 +494,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     {
                         var sub = new Subtitle();
                         var format = default(SubtitleFormat);
-                        bool done = false;
+                        var done = false;
 
                         if (fileInfo.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || fileInfo.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase))
                         {
@@ -564,6 +564,44 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                                 };
                                                                 vobSubOcr.FileName = Path.GetFileName(fileName);
                                                                 vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang, ocrEngine);
+                                                                _stdOutWriter?.WriteLine();
+                                                                sub = vobSubOcr.SubtitleFromOcr;
+                                                            }
+                                                            BatchConvertSave(targetFormat, offset, deleteContains, targetEncoding, outputFolder, targetFileName, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, renumber: renumber, adjustDurationMs: adjustDurationMs);
+                                                        }
+                                                        if (!mkvFileNames.Add(newFileName))
+                                                        {
+                                                            newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                            mkvFileNames.Add(newFileName);
+                                                        }
+                                                    }
+                                                    done = true;
+                                                }
+                                                else if (track.CodecId.Contains("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    var binaryParagraphs = BatchConvert.LoadDvbFromMatroska(track, matroska, ref sub).ToList();
+                                                    if (binaryParagraphs.Count > 0)
+                                                    {
+                                                        var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                        if (string.Equals(targetFormat.RemoveChar(' '), BatchConvert.BluRaySubtitle.RemoveChar(' '), StringComparison.InvariantCultureIgnoreCase))
+                                                        {
+                                                            var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(newFileName) + Path.GetExtension(newFileName), ".sup", outputFolder, overwrite, targetFileName);
+                                                            converted++;
+                                                            _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                                                            BinaryParagraphsToBluRaySup.ConvertFromBinaryParagraphsToBluRaySup(outputFileName, binaryParagraphs, sub, resolution);
+                                                            _stdOutWriter?.WriteLine(" done.");
+                                                        }
+                                                        else
+                                                        {
+                                                            _stdOutWriter.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
+                                                            using (var vobSubOcr = new VobSubOcr())
+                                                            {
+                                                                vobSubOcr.ProgressCallback = progress =>
+                                                                {
+                                                                    _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
+                                                                };
+                                                                vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                                vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, lang, ocrEngine);
                                                                 _stdOutWriter?.WriteLine();
                                                                 sub = vobSubOcr.SubtitleFromOcr;
                                                             }
@@ -834,7 +872,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
         private static SubtitleFormat GetTargetFormat(string targetFormat, IEnumerable<SubtitleFormat> formats)
         {
-            string targetFormatNoWhiteSpace = targetFormat.RemoveChar(' ');
+            var targetFormatNoWhiteSpace = targetFormat.RemoveChar(' ');
             foreach (var sf in formats)
             {
                 if (sf.IsTextBased && sf.Name.RemoveChar(' ').Equals(targetFormatNoWhiteSpace, StringComparison.OrdinalIgnoreCase))
@@ -842,6 +880,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     return sf;
                 }
             }
+
             return null;
         }
 
@@ -1209,7 +1248,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         }
 
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors,
-                                              List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
+                                              List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraphWithPosition> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
                                               Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null, CancellationToken cancellationToken = default)
         {
@@ -1279,7 +1318,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
                     };
                     vobSubOcr.FileName = Path.GetFileName(fileName);
-                    vobSubOcr.InitializeBatch(binaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, null, ocrEngine);
+                    vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, null, ocrEngine);
                     _stdOutWriter?.WriteLine();
                     sub = vobSubOcr.SubtitleFromOcr;
                     _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
@@ -1553,7 +1592,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                         {
                             var isImageBased = IsImageBased(format);
-                            BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs, form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
+                            BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs.Cast<IBinaryParagraph>().ToList(), form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
                         }
 
                         if (cancellationToken.IsCancellationRequested)

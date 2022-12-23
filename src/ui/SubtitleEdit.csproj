@@ -1386,6 +1386,7 @@
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
     <Compile Include="Logic\CommandLineConvert\BdSupSaver.cs" />
+    <Compile Include="Logic\CommandLineConvert\BinaryParagraphsToBluRaySup.cs" />
     <Compile Include="Logic\CommandLineConvert\BluRaySupToBluRaySup.cs" />
     <Compile Include="Logic\CommandLineConvert\CommandLineConverter.cs">
       <SubType>Code</SubType>
