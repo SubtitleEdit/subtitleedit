@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
         private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
+        private Dictionary<string, List<IBinaryParagraph>> _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraph>>();
         RemoveTextForHISettings _removeTextForHiSettings;
         private string _ocrEngine = "Tesseract";
 
@@ -784,9 +785,14 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         mkvAss.Add(MakeMkvTrackInfoString(track));
                                     }
+                                    else if (track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        mkvAss.Add(MakeMkvTrackInfoString(track));
+                                    }
                                 }
                             }
                         }
+
                         if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count <= 0)
                         {
                             item.SubItems.Add(LanguageSettings.Current.UnknownSubtitle.Title);
@@ -1166,7 +1172,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleFormat fromFormat = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
-                    if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
+                    if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName) && !FileUtil.IsMatroskaFile(fileName))
                     {
                         fromFormat = sub.LoadSubtitle(fileName, out _, null);
 
@@ -1358,6 +1364,50 @@ namespace Nikse.SubtitleEdit.Forms
                                                             };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                                             vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
+                                                            sub = vobSubOcr.SubtitleFromOcr;
+                                                        }
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        else if (track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
+                                            {
+                                                binaryParagraphs = LoadDvbFromMatroska(track, matroska, ref sub);
+
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMkvLanguage(track.Language).Replace("undefined.", string.Empty) + "mkv";
+                                                if (mkvFileNames.Contains(fileName))
+                                                {
+                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + "mkv";
+                                                }
+                                                mkvFileNames.Add(fileName);
+
+                                                if ((toFormat == BdnXmlSubtitle || toFormat == BluRaySubtitle ||
+                                                     toFormat == VobSubSubtitle || toFormat == DostImageSubtitle) &&
+                                                    AllowImageToImage())
+                                                {
+                                                    if (!_binaryParagraphLookup.ContainsKey(fileName))
+                                                    {
+                                                        _binaryParagraphLookup.Add(fileName, binaryParagraphs);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (bluRaySubtitles.Count > 0)
+                                                    {
+                                                        item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr;
+                                                        using (var vobSubOcr = new VobSubOcr())
+                                                        {
+                                                            vobSubOcr.ProgressCallback = progress =>
+                                                            {
+                                                                item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Ocr + "  " + progress;
+                                                            };
+                                                            vobSubOcr.FileName = Path.GetFileName(fileName);
+
+                                                            //TODO: fix
+                                                            vobSubOcr.InitializeBatch(binaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -1650,7 +1700,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            sub = ApplyFixesStep1(sub, bluRaySubtitles);
+                            if (binaryParagraphs.Count == 0)
+                            {
+                                sub = ApplyFixesStep1(sub, bluRaySubtitles);
+                            }
 
                             while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
                             {
@@ -1723,8 +1776,95 @@ namespace Nikse.SubtitleEdit.Forms
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
+            _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraph>>();
 
             SeLogger.Error($"Batch convert took {sw.ElapsedMilliseconds}");
+        }
+
+        private List<IBinaryParagraph> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
+        {
+            var sub = matroska.GetSubtitle(track.TrackNumber, null);
+            var subtitleImages = new List<DvbSubPes>();
+            var subtitles = new List<IBinaryParagraph>();
+            for (int index = 0; index < sub.Count; index++)
+            {
+                try
+                {
+                    var msub = sub[index];
+                    DvbSubPes pes = null;
+                    var data = msub.GetData(track);
+                    if (data != null && data.Length > 9 && data[0] == 15 && data[1] >= SubtitleSegment.PageCompositionSegment && data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
+                    {
+                        var buffer = new byte[data.Length + 3];
+                        Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
+                        buffer[0] = 32;
+                        buffer[1] = 0;
+                        buffer[buffer.Length - 1] = 255;
+                        pes = new DvbSubPes(0, buffer);
+                    }
+                    else if (VobSubParser.IsMpeg2PackHeader(data))
+                    {
+                        pes = new DvbSubPes(data, Mpeg2Header.Length);
+                    }
+                    else if (VobSubParser.IsPrivateStream1(data, 0))
+                    {
+                        pes = new DvbSubPes(data, 0);
+                    }
+                    else if (data.Length > 9 && data[0] == 32 && data[1] == 0 && data[2] == 14 && data[3] == 16)
+                    {
+                        pes = new DvbSubPes(0, data);
+                    }
+
+                    if (pes == null && subtitle.Paragraphs.Count > 0)
+                    {
+                        var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                        if (last.Duration.TotalMilliseconds < 100)
+                        {
+                            last.EndTime.TotalMilliseconds = msub.Start;
+                            if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            {
+                                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
+                            }
+                        }
+                    }
+
+                    if (pes?.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
+                    {
+                        subtitleImages.Add(pes);
+                        subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
+                        subtitles.Add(new TransportStreamSubtitle { Pes = pes });
+                    }
+                }
+                catch
+                {
+                    // continue
+                }
+            }
+
+            if (subtitleImages.Count == 0)
+            {
+                return new List<IBinaryParagraph>();
+            }
+
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var p = subtitle.Paragraphs[index];
+                if (p.Duration.TotalMilliseconds < 200)
+                {
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
+                }
+
+                var next = subtitle.GetParagraphOrDefault(index + 1);
+                if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
+                {
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+
+                //subtitles[index].StartMilliseconds = (ulong)Math.Round(p.StartTime.TotalMilliseconds);
+                //subtitles[index].EndMilliseconds = (ulong)Math.Round(p.EndTime.TotalMilliseconds);
+            }
+
+            return subtitles;
         }
 
         private Subtitle ApplyFixesStep1(Subtitle sub, List<BluRaySupParser.PcsData> bluRaySubtitles)
@@ -2452,6 +2592,10 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (p.FileName != null && _bdLookup.ContainsKey(p.FileName))
                     {
                         binaryParagraphs = _bdLookup[p.FileName].Cast<IBinaryParagraph>().ToList();
+                    }
+                    else if (p.FileName != null && _binaryParagraphLookup.ContainsKey(p.FileName))
+                    {
+                        binaryParagraphs = _binaryParagraphLookup[p.FileName];
                     }
                     var dir = textBoxOutputFolder.Text;
                     var overwrite = checkBoxOverwrite.Checked;
