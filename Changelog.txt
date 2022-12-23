@@ -18,6 +18,7 @@
    * Update Hungarian translation - thx Zityi
    * Update French translation - thx Pierre
    * Update Bulgarian translation - thx Калин
+   * Improve DVB in mkv (fix batch/cmd convert + pos) - thx antoniu200
    * Better ffmpeg detection - thx SMSourov
    * Avoid standby a few places - thx mpek
    * Optimize ASSA style import
