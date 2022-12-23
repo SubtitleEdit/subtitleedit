@@ -3314,6 +3314,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var iconDir = Path.Combine(Configuration.BaseDirectory, "Icons");
             if (!Directory.Exists(iconDir))
             {
+                listViewFileTypeAssociations.Visible = false;
+                buttonUpdateFileTypeAssociations.Visible = false;
                 return;
             }
 
