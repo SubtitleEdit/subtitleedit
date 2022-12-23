@@ -3,10 +3,8 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core.Interfaces
 {
-    public interface IBinaryParagraphWithPosition
+    public interface IBinaryParagraphWithPosition : IBinaryParagraph
     {
-        bool IsForced { get; }
-        Bitmap GetBitmap();
         Size GetScreenSize();
         Position GetPosition();
         TimeCode StartTimeCode { get; }

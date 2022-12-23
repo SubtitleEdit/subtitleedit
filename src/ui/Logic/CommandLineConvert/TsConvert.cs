@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     else
                     {
                         var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
-                        var binaryParagraphs = new List<IBinaryParagraph>();
+                        var binaryParagraphs = new List<IBinaryParagraphWithPosition>();
                         var subtitle = new Subtitle();
                         foreach (var transportStreamSubtitle in tsParser.GetDvbSubtitles(id))
                         {
