@@ -2290,11 +2290,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var item = _dvbSubtitles[index];
                 var pos = item.GetPosition();
                 var bmp = item.GetBitmap();
-                var nbmp = new NikseBitmap(bmp);
-                top = pos.Top + nbmp.CropTopTransparent(0);
-                left = pos.Left + nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
-                width = nbmp.Width;
-                height = nbmp.Height;
+                top = pos.Top;
+                left = pos.Left;
+                width = bmp.Width;
+                height = bmp.Height;
                 bmp.Dispose();
                 return;
             }
@@ -2452,8 +2451,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_dvbSubtitles != null)
             {
-                width = 720;
-                height = 576;
+                var item = _dvbSubtitles[index];
+                var pos = item.GetScreenSize();
+                width = pos.Width;
+                height = pos.Height;
             }
 
             if (_vobSubMergedPackList != null && index < _vobSubMergedPackList.Count)
