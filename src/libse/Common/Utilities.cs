@@ -1963,8 +1963,28 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var match = RemoveSpaceBetweenNumbersRegex.Match(text);
                 while (match.Success)
                 {
-                    text = text.Remove(match.Index, 1);
-                    match = RemoveSpaceBetweenNumbersRegex.Match(text, match.Index);
+                    var skip = false;
+                    var next = text.Substring(match.Index);
+                    if (next.StartsWith(" 000") && next.Length > 4 && next[4] != '0')
+                    {
+                        // keep "35 000 dollars"
+                        skip = true;
+                        if (match.Index > 4)
+                        {
+                            var before = text.Substring(match.Index - 4, 4);
+                            if (int.TryParse(before.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out  var n) && n > 999)
+                            {
+                                skip = false;
+                            }
+                        }
+                    }
+
+                    if (!skip)
+                    {
+                        text = text.Remove(match.Index, 1);
+                    }
+
+                    match = RemoveSpaceBetweenNumbersRegex.Match(text, match.Index + 1);
                 }
             }
             return text;
