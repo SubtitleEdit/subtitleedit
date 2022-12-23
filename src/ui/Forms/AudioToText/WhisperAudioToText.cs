@@ -138,6 +138,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     continue;
                 }
 
+                var fileInfo = new FileInfo(fileName);
+                if (fileInfo.Length < 10_000_000)
+                {
+                    continue;
+                }
+
                 comboBoxModels.Items.Add(model);
                 if (model.Name == selectName)
                 {
