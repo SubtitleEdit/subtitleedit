@@ -32939,8 +32939,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-
-                Directory.SetCurrentDirectory(Configuration.DataDirectory);
             }
 
             using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, _language.Url, string.Empty, 500))
@@ -32984,6 +32982,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.VideoPlayer = "MPV";
             }
 
+            Directory.SetCurrentDirectory(Configuration.DataDirectory);
             ResetPlaySelection();
             UiUtil.InitializeVideoPlayerAndContainer(url, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
             mediaPlayer.Volume = 0;
