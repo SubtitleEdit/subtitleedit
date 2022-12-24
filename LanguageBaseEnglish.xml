@@ -2348,6 +2348,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Use word split list (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Avoid propercase</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Skip step one (choose fix rules)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Default format</DefaultFormat>

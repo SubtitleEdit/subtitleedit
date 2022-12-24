@@ -141,6 +141,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string OcrTrainMergedLetters { get; set; }
         public string OcrTrainSrtFile { get; set; }
         public bool OcrUseWordSplitList { get; set; }
+        public bool OcrUseWordSplitListAvoidPropercase { get; set; }
         public string BDOpenIn { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
@@ -450,6 +451,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             OcrTrainFonts = "Arial;Calibri;Corbel;Futura Std Book;Futura Bis;Helvetica Neue;Lucida Console;Tahoma;Trebuchet MS;Verdana";
             OcrTrainMergedLetters = "ff ft fi fj fy fl rf rt rv rw ry rt rz ryt tt TV tw yt yw wy wf ryt xy";
             OcrUseWordSplitList = true;
+            OcrUseWordSplitListAvoidPropercase = true;
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             GoogleTranslateNoKeyWarningShow = true;
@@ -4573,6 +4575,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.OcrUseWordSplitList = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("OcrUseWordSplitListAvoidPropercase");
+            if (subNode != null)
+            {
+                settings.Tools.OcrUseWordSplitListAvoidPropercase = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BDOpenIn");
@@ -10223,6 +10231,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OcrTrainMergedLetters", settings.Tools.OcrTrainMergedLetters);
                 textWriter.WriteElementString("OcrTrainSrtFile", settings.Tools.OcrTrainSrtFile);
                 textWriter.WriteElementString("OcrUseWordSplitList", settings.Tools.OcrUseWordSplitList.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OcrUseWordSplitListAvoidPropercase", settings.Tools.OcrUseWordSplitListAvoidPropercase.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BDOpenIn", settings.Tools.BDOpenIn);
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);

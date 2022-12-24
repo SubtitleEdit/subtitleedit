@@ -45,6 +45,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return input;
             }
 
+            if (Configuration.Settings.Tools.OcrUseWordSplitListAvoidPropercase && input.Length > 1 &&
+                input.StartsWith(input[0].ToString().ToUpperInvariant()) &&
+                input != input.ToLowerInvariant() && input != input.ToUpperInvariant() &&
+                input.Length < 12)
+            { 
+                //TODO: Improve... some better way to detect uncommon/special names
+                return input;
+            }
+
             for (var i = 0; i < words.Length; i++)
             {
                 var w = words[i];

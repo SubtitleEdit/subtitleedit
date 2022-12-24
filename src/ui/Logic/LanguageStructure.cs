@@ -2531,6 +2531,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
             public string UseWordSplitList { get; set; }
+            public string AvoidPropercase { get; set; }
             public string FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime { get; set; }
             public string FixCommonErrorsSkipStepOne { get; set; }
 
