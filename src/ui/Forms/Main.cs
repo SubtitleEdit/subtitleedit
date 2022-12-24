@@ -7283,7 +7283,7 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     }
 
-                    for (int i = 0; i < oldSubtitle.Paragraphs.Count; i++)
+                    for (var i = 0; i < oldSubtitle.Paragraphs.Count; i++)
                     {
                         if (oldSubtitle.Paragraphs[i].Bookmark != null)
                         {
@@ -7375,14 +7375,14 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var oldSubtitle = new Subtitle(_subtitle);
+
             if (string.IsNullOrWhiteSpace(textBoxSource.Text))
             {
                 _sourceViewChange = false;
                 MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
                 _subtitle.Paragraphs.Clear();
                 SubtitleListview1.Items.Clear();
-                //textBoxListViewText.Text = string.Empty;
-                //textBoxListViewText.Enabled = false;
                 EnableOrDisableEditControls();
                 return;
             }
@@ -7403,6 +7403,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
+            
+            for (var i = 0; i < oldSubtitle.Paragraphs.Count; i++)
+            {
+                if (oldSubtitle.Paragraphs[i].Bookmark != null)
+                {
+                    var newParagraph = _subtitle.GetFirstAlike(oldSubtitle.Paragraphs[i]);
+                    if (newParagraph != null)
+                    {
+                        newParagraph.Bookmark = oldSubtitle.Paragraphs[i].Bookmark;
+                    }
+                }
             }
 
             _subtitleListViewIndex = -1;
