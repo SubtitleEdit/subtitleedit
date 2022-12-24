@@ -23980,8 +23980,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void RunTranslateSearch(Action<string> act)
         {
-            var text = textBoxSearchWord.Text;
-            if (tabControlModes.SelectedTab != tabPageTranslate)
+            string text;
+            if (textBoxSearchWord.Focused)
+            {
+                text = textBoxSearchWord.Text;
+            }
+            else
             {
                 var tb = GetFocusedTextBox();
                 if (tb.SelectionLength == 0)
