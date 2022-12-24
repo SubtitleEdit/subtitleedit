@@ -31,6 +31,7 @@
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
    * Fix "play video from url" for installer version
+   * Keep bookmarks after source view edit - thx MMT
    * Fix for "replace all" non reg-ex
    * Fix wrongful removal of "Unneeded Space" - thx Minherre
 
