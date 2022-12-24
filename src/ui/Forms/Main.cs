@@ -32939,6 +32939,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
+                Directory.SetCurrentDirectory(Configuration.DataDirectory);
             }
 
             using (var form = new TextPrompt(LanguageSettings.Current.Main.OpenVideoFile, _language.Url, string.Empty, 500))
