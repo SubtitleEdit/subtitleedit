@@ -30,6 +30,7 @@
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
+   * Fix "play video from url" for installer version
    * Fix for "replace all" non reg-ex
    * Fix wrongful removal of "Unneeded Space" - thx Minherre
 
