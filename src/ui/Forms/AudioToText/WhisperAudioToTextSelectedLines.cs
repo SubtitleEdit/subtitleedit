@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 {
                     using (var openFileDialog1 = new OpenFileDialog())
                     {
-                        openFileDialog1.Title = "Locate whisper.exe (OpenAI php version)";
+                        openFileDialog1.Title = "Locate whisper.exe (OpenAI Python version)";
                         openFileDialog1.FileName = string.Empty;
                         openFileDialog1.Filter = "whisper.exe|whisper.exe";
 

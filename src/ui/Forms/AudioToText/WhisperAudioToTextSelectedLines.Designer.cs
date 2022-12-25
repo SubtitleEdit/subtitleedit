@@ -309,7 +309,7 @@
             // 
             this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
             this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper OpenAI (php)";
+            this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper OpenAI (Python)";
             this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
             // 
             // whisperCppCToolStripMenuItem
