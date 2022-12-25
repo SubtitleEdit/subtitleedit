@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             progressBar1.Visible = true;
             progressBar1.Refresh();
             progressBar1.Top = labelProgress.Bottom + 3;
+            labelElapsed.Top = progressBar1.Top - labelElapsed.Height - 3;
             if (!textBoxLog.Visible)
             {
                 progressBar1.BringToFront();
