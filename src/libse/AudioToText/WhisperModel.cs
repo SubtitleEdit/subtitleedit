@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 Name = "base",
                 Size = "142 MB",
+                UrlPrimary = "https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt",
                 UrlSecondary = "https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt",
             },
             new WhisperModel
@@ -79,14 +80,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             },
             new WhisperModel
             {
-                Name = "medium.en",
+                Name = "medium",
                 Size = "1.5 GB",
                 UrlPrimary = "https://openaipublic.azureedge.net/main/whisper/models/345ae4da62f9b3d59415adc60127b97c714f32e89e936602e85993674d08dcb1/medium.pt",
                 UrlSecondary = "https://openaipublic.azureedge.net/main/whisper/models/345ae4da62f9b3d59415adc60127b97c714f32e89e936602e85993674d08dcb1/medium.pt",
             },
             new WhisperModel
             {
-                Name = "medium",
+                Name = "medium.en",
                 Size = "1.5 GB",
                 UrlPrimary = "https://openaipublic.azureedge.net/main/whisper/models/d7440d1dc186f76616474e0ff0b3b6b879abc9d1a4926b7adfa41db2d497ab4f/medium.en.pt",
                 UrlSecondary = "https://openaipublic.azureedge.net/main/whisper/models/d7440d1dc186f76616474e0ff0b3b6b879abc9d1a4926b7adfa41db2d497ab4f/medium.en.pt",
