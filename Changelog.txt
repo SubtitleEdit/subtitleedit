@@ -27,6 +27,7 @@
    * Make formatting shortcuts in waveform work w multi-lines
    * Remember font in burn-in - thx Nespula95
    * Remember "Merge lines with same text" settings - thx kamitsu2004
+   * Update Whisper CPP to v1.0.4
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
@@ -34,6 +35,7 @@
    * Keep bookmarks after source view edit - thx MMT
    * Fix for "replace all" non reg-ex
    * Fix wrongful removal of "Unneeded Space" - thx Minherre
+   * Fix possible crash in Choosee Profile - thx darnn
 
 
 3.6.10 (21th November 2022)
