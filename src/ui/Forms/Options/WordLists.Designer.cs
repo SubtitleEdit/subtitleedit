@@ -136,7 +136,7 @@
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
             this.listBoxOcrFixList.DoubleClick += new System.EventHandler(this.listBoxOcrFixList_DoubleClick);
             this.listBoxOcrFixList.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
+            this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxOcrFixList_KeyDown);
             // 
             // textBoxOcrFixKey
             // 
@@ -189,7 +189,7 @@
             this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
             this.listBoxUserWordLists.DoubleClick += new System.EventHandler(this.listBoxUserWordLists_DoubleClick);
             this.listBoxUserWordLists.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
+            this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxUserWordLists_KeyDown);
             // 
             // textBoxUserWord
             // 
