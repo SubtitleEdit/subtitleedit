@@ -745,7 +745,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixCommonOcrErrors>Corrigir erros comuns de OCR (usando lista de substituição OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erros comuns de OCR corrigidos (arquivo OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Eliminar espaços entre números</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Corrigir diálogos em uma linha</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Corrigir diálogos em uma linha</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Remover traço na primeira linha para não diálogos</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizar sequências</NormalizeStrings>
     <FixTurkishAnsi>Corrigir letras Turcas ANSI (Islandês) para Unicode</FixTurkishAnsi>

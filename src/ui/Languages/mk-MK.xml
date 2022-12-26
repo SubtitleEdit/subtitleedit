@@ -607,7 +607,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Поправи чести OCR грешки (користејќи OCR листа за замена)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Поправени чести OCR грешки (Користена OcrЛиста за замена): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Отстрани празни места меѓу броеви</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Поправи дијалози кои се во еден ред</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Поправи дијалози кои се во еден ред</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Отстранети празни места меѓу броеви: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Поправи Турски ANSI (Исландски) букви во Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Поправи ја данската буква 'i'</FixDanishLetterI>

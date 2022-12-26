@@ -773,7 +773,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Διόρθωση σφαλμάτων OCR (χρήση καταλόγου αντικατάστασης OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Διορθώσεις σφαλμάτων OCR (χρήση του αρχείου OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Αφαίρεση διαστήματος μεταξύ αριθμών</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Διόρθωση διαλόγων</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Διόρθωση διαλόγων</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Αφαίρεση παύλας πρώτης γραμμής για μη διαλόγους</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Κανονικοποίηση συμβολοσειρών</NormalizeStrings>
     <FixTurkishAnsi>Διόρθωση Τουρκικών ANSI (Ισλανδικών) γραμμάτων σε Unicode</FixTurkishAnsi>

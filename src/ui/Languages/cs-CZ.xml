@@ -710,7 +710,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FixCommonOcrErrors>Opravit běžné chyby OCR (používá seznam náhrad OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Opraveny běžné chyby OCR (použit soubor OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Odebrat mezeru mezi čísly</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Opravit dialogy na jednom řádku</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Opravit dialogy na jednom řádku</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Odebrat pomlčku na začátku prvního řádku, pokud se nejedná o dialogy</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizovat řetězce</NormalizeStrings>
     <FixTurkishAnsi>Opravit znaky v tureckém ANSI (islandština) na Unicode</FixTurkishAnsi>

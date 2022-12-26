@@ -770,7 +770,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixCommonOcrErrors>Исправить OCR ошибки (используя список замен OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Исправлено OCR ошибок (согласно списка замен OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Удалить пробел между цифрами</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Исправить однострочные диалоги</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Исправить однострочные диалоги</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Удалить начальный тире в первой строке для не диалогов</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Нормализовать строки</NormalizeStrings>
     <FixTurkishAnsi>Исправить Turkish ANSI (Icelandic) символы в Unicode</FixTurkishAnsi>

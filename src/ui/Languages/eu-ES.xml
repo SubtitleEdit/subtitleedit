@@ -662,7 +662,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FixCommonOcrErrors>Zuzendu OCR akats arruntak (OCR ordezpen zerrenda erabiliz)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>OCR akats arruntak zuzenduta (OcrOrdezpen Zerrenda erabiliz): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Kendu zenbaki arteko tarteak</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</BreakDialogsOnOneLine>
     <NormalizeStrings>Normalizatu Kateak</NormalizeStrings>
     <FixTurkishAnsi>Zuzendu Turkiera ANSI (Islandiarra) hizkiak Unicodera</FixTurkishAnsi>
     <FixDanishLetterI>Zuzendu 'i' Daniar hizkia</FixDanishLetterI>

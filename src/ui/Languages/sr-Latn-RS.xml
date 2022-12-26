@@ -583,7 +583,7 @@ Napomena: Proverite slobodan prostor na disku.</WaveFileMalformed>
     <FixCommonOcrErrors>Ispravi česte greške u prepoznavanju znakova</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ispravljeno grešaka u prepoznavanju znakova: {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Ukloni razmak između brojeva</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Uklonjeno razmaka između brojeva: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Ispravi Turski ANSI (Islandski) slova u Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ispravi Dansko slovo 'i'</FixDanishLetterI>

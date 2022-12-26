@@ -468,7 +468,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FixCommonOcrErrors>ありがちな OCR エラーを修正する (OCR の置換の一覧を使用します)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>修正されたありがちな OCR エラー (OcrReplaceList ファイルが使用されました): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>数字の間のスペースを削除する</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>1 行中の複数の会話を修正する</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>1 行中の複数の会話を修正する</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>修正された数字の間のスペース: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>トルコ語 ANSI (アイスランド語) 文字を Unicode へ修正する</FixTurkishAnsi>
     <FixDanishLetterI>デンマーク語の文字 'i' を修正する</FixDanishLetterI>
