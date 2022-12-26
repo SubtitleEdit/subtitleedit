@@ -14,12 +14,7 @@
     <Authors>Nikolaj Olsson</Authors>
     <PackageIcon>Icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>
-SE 3.6.7
-- Keep paltte when re-saving bd sup
-- Minor bug fixes
-- New subtitle formats
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>SE 3.6.10</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
