@@ -524,7 +524,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Виправити типові помилки розпізнавання тексту (за допомогою списку замін)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Виправлено типові помилки розпізнавання тексту (використано файл OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Видалити пробіли між числами</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Виправити діалоги на одному рядку</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Виправити діалоги на одному рядку</SplitDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Видалено пробіли між числами: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Виправити турецькі (ісландські) ANSI-символи на Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Виправити данську літеру 'i'</FixDanishLetterI>

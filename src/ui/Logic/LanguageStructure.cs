@@ -859,7 +859,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string FixCommonOcrErrors { get; set; }
             public string CommonOcrErrorsFixed { get; set; }
             public string RemoveSpaceBetweenNumber { get; set; }
-            public string FixDialogsOnOneLine { get; set; }
+            public string SplitDialogsOnOneLine { get; set; }
             public string RemoveDialogFirstInNonDialogs { get; set; }
             public string NormalizeStrings { get; set; }
             public string FixTurkishAnsi { get; set; }

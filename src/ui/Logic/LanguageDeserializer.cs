@@ -2035,8 +2035,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/RemoveSpaceBetweenNumber":
                     language.FixCommonErrors.RemoveSpaceBetweenNumber = reader.Value;
                     break;
-                case "FixCommonErrors/FixDialogsOnOneLine":
-                    language.FixCommonErrors.FixDialogsOnOneLine = reader.Value;
+                case "FixCommonErrors/SplitDialogsOnOneLine":
+                    language.FixCommonErrors.SplitDialogsOnOneLine = reader.Value;
                     break;
                 case "FixCommonErrors/RemoveDialogFirstInNonDialogs":
                     language.FixCommonErrors.RemoveDialogFirstInNonDialogs = reader.Value;

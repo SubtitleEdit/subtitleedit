@@ -278,7 +278,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>(باستخدام قائمة استبدالOCR ) إصلاح الأخطاء الشائعة في التعرف الضوئي على الحروف</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>{0} : قائمة ملف استبدال المستخدمة ) إصلاح الأخطاء الشائعة)</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>إزالة المسافة بين الأرقام</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>إصلاح الحوارات على سطر واحد</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>إصلاح الحوارات على سطر واحد</SplitDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>{إزالة المسافة بين الأرقام المصلحة : {0</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>'i' إصلاح الرسالة الدنماركية</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>إصلاح مسألة الاسبانية المقلوبة وعلامات التعجب</FixSpanishInvertedQuestionAndExclamationMarks>

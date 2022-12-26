@@ -718,7 +718,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixCommonOcrErrors>修復一般 OCR 錯誤 (使用 OCR 取代清單)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>已修復一般 OCR 錯誤 (使用 OcrReplaceList 檔案): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>移除數字之間的空格</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Fix dialogs on one line</SplitDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Remove start dash in first line for non dialogs</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalize strings</NormalizeStrings>
     <FixTurkishAnsi>修復土耳其語 ANSI (冰島) 字母為 Unicode</FixTurkishAnsi>

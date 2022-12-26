@@ -563,7 +563,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <FixCommonOcrErrors>Perbaiki eror OCR umum (menggunakan daftar ganti OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Eror OCR umum diperbaiki (file OcrReplaceList digunakan): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Buang spasi di antara angka</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Perbaiki dialog pada satu baris</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Perbaiki dialog pada satu baris</SplitDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Buang spasi di antara nomor diperbaiki: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Perbaiki huruf ANSI Turki (Islandia) ke Unikode</FixTurkishAnsi>
     <FixDanishLetterI>Perbaiki huruf 'i" Denmark</FixDanishLetterI>

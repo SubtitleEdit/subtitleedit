@@ -677,7 +677,7 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <FixCommonOcrErrors>Repară erorile uzuale OCR (cu lista relocării OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erori OCR uzuale reparate (fișier OCR utilizat): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Elimină spațiile dintre numere</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Repară dialogurile dintr-o linie</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Repară dialogurile dintr-o linie</SplitDialogsOnOneLine>
     <NormalizeStrings>Normalizează rândurile</NormalizeStrings>
     <FixTurkishAnsi>Repară literele turcești (islandeze) ANSI cu Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Repară litera daneză 'i'</FixDanishLetterI>

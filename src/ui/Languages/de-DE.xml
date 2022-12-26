@@ -580,7 +580,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixCommonOcrErrors>Häufige OCR Fehler korrigieren (OCR Korrekturliste verwenden)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Häufige OCR Fehler korrigiert (OCR Korrekturliste verwendet): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Leerzeichen zwischen Zahlen entfernen</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Einzeilige Dialoge korrigieren</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Einzeilige Dialoge korrigieren</SplitDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Leerzeichen zwischen zahlen entfernt: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Wandle türkische ANSI Buchstaben (Isländisch) nach Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Dänischen Buchstaben 'i' korrigieren</FixDanishLetterI>

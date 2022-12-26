@@ -771,7 +771,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <FixCommonOcrErrors>일반적인 OCR 오류 수정하기 (OCR 재배치 목록 사용)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>수정된 일반적인 OCR 오류 (OCR 재배치 목록을 사용함): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>숫자 사이의 공백 제거하기</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>한 줄 안에 많은 대화형식이 있을 때 수정하기</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>한 줄 안에 많은 대화형식이 있을 때 수정하기</SplitDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>대화 상자가 아닌 첫번째 줄의 시작 대시 제거하기</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>문자열 정규화</NormalizeStrings>
     <FixTurkishAnsi>유니코드로 터키의 ANSI (아이슬란드) 문자 수정하기</FixTurkishAnsi>

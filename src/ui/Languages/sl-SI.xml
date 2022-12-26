@@ -456,7 +456,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FixCommonOcrErrors>Popravi pogoste OCR napake (uporabi OCR listo)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Pogoste OCR napake popravljene (uporabljena OCR lista): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Odstrani presledke med številkami</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Popravi dialoge v eni vrstici</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Popravi dialoge v eni vrstici</SplitDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Odstrani presledke med številkami, odstranjeno: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Popravi turški ANSI (Islandsko) črke v Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Popravi dansko črko 'i'</FixDanishLetterI>

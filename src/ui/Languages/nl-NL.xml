@@ -602,7 +602,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixCommonOcrErrors>Veelvoorkomende OCR-fouten corrigeren (m.b.v. de OCR-correctielĳst)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Veelvoorkomende OCR-fouten gecorrigeerd (m.b.v. de OCR-correctielĳst): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Spaties tussen getallen verwĳderen</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Dialogen op één regel corrigeren</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Dialogen op één regel corrigeren</SplitDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Spaties tussen getallen verwĳderd: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Turkse ANSI-letters (Ĳslands) naar Unicode omzetten</FixTurkishAnsi>
     <FixDanishLetterI>Deense letter i corrigeren</FixDanishLetterI>
