@@ -997,7 +997,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartWithUppercaseLetterAfterColon = "Start with uppercase letter after colon/semicolon",
                 CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",
                 RemoveSpaceBetweenNumber = "Remove space between numbers",
-                FixDialogsOnOneLine = "Fix dialogs on one line",
+                SplitDialogsOnOneLine = "Split dialogs on one line",
                 RemoveDialogFirstInNonDialogs = "Remove start dash in first line for non-dialogs",
                 NormalizeStrings = "Normalize strings",
                 FixLowercaseIToUppercaseI = "Fix alone lowercase 'i' to 'I' (English)",

@@ -775,7 +775,7 @@ További információ (web)?</WhisperNotFound>
     <FixCommonOcrErrors>Gyakori OCR hibák javítása (OCR helyettesítési lista használata)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Gyakori OCR hibák javítva (OcrReplaceList fájl használva): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>A számok közti szóközök eltávolítása</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Párbeszédek javítása egy sorban</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Párbeszédek javítása egy sorban</SplitDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Nem párbeszédek esetén távolítsa el a kezdő kötőjelet az első sorban</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Karakterláncok normalizálása</NormalizeStrings>
     <FixTurkishAnsi>Török ANSI (izlandi) betűk javítása Unicode-osra</FixTurkishAnsi>

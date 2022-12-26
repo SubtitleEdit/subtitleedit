@@ -775,7 +775,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <FixCommonOcrErrors>Fixa vanliga OCR-fel (med OCR-ersättningslistan)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Vanliga OCR-fel fixade (via OcrReplaceList-fil): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Ta bort mellanslag mellan siffror</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Fixa dialoger på en rad</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Fixa dialoger på en rad</SplitDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Ta bort startstreck på första raden för icke-dialoger</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalisera strängar</NormalizeStrings>
     <FixTurkishAnsi>Fixa Turkiska ANSI-tecken (Isländska) till Unicode</FixTurkishAnsi>

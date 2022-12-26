@@ -609,7 +609,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Arregla errors comuns d'OCR (amb llista substitucions OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Errors comuns d'OCR Arreglats (s'ha emprat llista substitucions OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Suprimeix espais entre nombres</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Arregla diàlegs en una línia</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Arregla diàlegs en una línia</SplitDialogsOnOneLine>
     <NormalizeStrings>Normalitza cadenes</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Suprimeix espais entre nombres arreglats: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Arregla lletres ANSI Turc (Icelandic) a Unicode</FixTurkishAnsi>

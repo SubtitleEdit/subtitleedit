@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     string part0 = noTagLines[0];
                     string part1 = noTagLines[1];
-                    if (part0.Length > 1 && "-—!?.\")]♫♪".Contains(part0[part0.Length - 1]) &&
+                    if (part0.Length > 1 && "-—!?.…\")]♫♪".Contains(part0[part0.Length - 1]) &&
                         part1.Length > 1 && (char.IsUpper(part1[0]) || "\"'♫♪{[(".Contains(part1[0])))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");

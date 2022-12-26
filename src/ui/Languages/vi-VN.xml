@@ -734,7 +734,7 @@ Các video hướng dẫn Subtitle Edit
     <FixCommonOcrErrors>(TIẾNG VIỆT KHÔNG CHỌN) Sữa lỗi OCR thông thường (OCR sử dụng thay thế danh sách)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>(TIẾNG VIỆT KHÔNG CHỌN) Lỗi cố định thường gặp trong OCR (Danh sách tập tin Ocr được sử dụng): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>(KHÔNG CHỌN) Xóa khoảng cách giữa các số</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Sửa lỗi 2 NHÂN VẬT CÙNG THOẠI</FixDialogsOnOneLine>
+    <SplitDialogsOnOneLine>Sửa lỗi 2 NHÂN VẬT CÙNG THOẠI</SplitDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Xóa dấu gạch ngang đầu dòng khi chỉ có một câu thoại trong "-"</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>(KHÔNG CHỌN) Normalize strings (dành cho tiếng HY LẠP)</NormalizeStrings>
     <FixTurkishAnsi>(KHÔNG CHỌN) Sữa lỗi tiếng Thổ Nhĩ Kỳ ANSI (Iceland) trong Unicode</FixTurkishAnsi>
