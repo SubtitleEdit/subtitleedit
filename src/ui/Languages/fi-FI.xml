@@ -776,7 +776,7 @@ rostiedosto</DrawingFile>
     <FixCommonOcrErrors>Korjaa yleiset tekstintunnistusvirheet (korvausluettelon avulla)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Yleisiä tekstintunnistusvirheitä korjattu (käytetty korvausluettelotiedostoa): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Poista välilyönti numeroiden välistä</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Korjaa yhden rivin vuoropuhelut</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Korjaa yhden rivin vuoropuhelut</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Poista ajatusviiva rivin alusta muualta kuin keskusteluista</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalisoi merkkijonot</NormalizeStrings>
     <FixTurkishAnsi>Korjaa turkkilaiset ja islantilaiset ANSI-kirjaimet Unicode-muotoon</FixTurkishAnsi>

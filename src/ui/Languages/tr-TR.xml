@@ -668,7 +668,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixCommonOcrErrors>Yaygın OCR hatalarını düzelt (OCR liste değiştirmeyi kullanarak)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Yaygın OCR hataları düzeltildi (OCR değiştirme dosyası kullanıldı): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Sayılar arasındaki boşluğu kaldır</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</BreakDialogsOnOneLine>
     <NormalizeStrings>Dizeleri normalleştir</NormalizeStrings>
     <FixTurkishAnsi>Türk ANSI (İzlanda) harfleri Unicode için düzelt</FixTurkishAnsi>
     <FixDanishLetterI>Danimarka 'i' harfini düzelt</FixDanishLetterI>

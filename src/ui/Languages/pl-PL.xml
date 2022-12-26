@@ -776,7 +776,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <FixCommonOcrErrors>Popraw typowe błędy OCR (przy użyciu listy zamienników OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Poprawiono typowe błędy OCR (używając listy zamienników OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Usuń spację między liczbami</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Popraw dialogi znajdujące się w jednej linii</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Popraw dialogi znajdujące się w jednej linii</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Usuń myślnik początkowy w pierwszej linii dla nie-dialogów</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizuj ciągi</NormalizeStrings>
     <FixTurkishAnsi>Popraw tureckie litery ANSI (Icelandic) na Unicode</FixTurkishAnsi>

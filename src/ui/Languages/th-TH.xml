@@ -482,7 +482,7 @@
     <FixCommonOcrErrors>แก้ข้อผิดพลาด OCR ทั่วไป (ใช้รายการแทนที่คำ OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>ข้อผิดพลาด OCR ทั่วไปที่แก้ (ไฟล์แทนที่คำ Ocr ที่ใช้): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>ลบช่องว่างระหว่างตัวเลข</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>แก้ไดอะล็อกในหนึ่งบรรทัด</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>แก้ไดอะล็อกในหนึ่งบรรทัด</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>ลบช่องว่างระหว่างตัวเลขไปแล้ว: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>แก้อักษร ANSI ตุรกี (Icelandic) เป็นยูนิโค้ด</FixTurkishAnsi>
     <FixDanishLetterI>แก้อักษรเดนมาร์ก 'i'</FixDanishLetterI>

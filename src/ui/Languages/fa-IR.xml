@@ -734,7 +734,7 @@
     <FixCommonOcrErrors>تعمیر خطاهای او سی آر /با استفاده از لیست جایگزین</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>اشتباهات او سی آر معمول رفع شد /پرونده OcrReplaceList استفاده می شود : {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>حذف فضای بین اعداد</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>فیسک کردن گفتگو ها بر روی خط</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>فیسک کردن گفتگو ها بر روی خط</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>خط تیره از خط اول را برای غیر دیالوگ ها حذف کنید</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>رشته ها را عادی کنید</NormalizeStrings>
     <FixTurkishAnsi>اصلاح حروف ANSI ترکی (ایسلندی) به یونیکد</FixTurkishAnsi>

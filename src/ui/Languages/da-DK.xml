@@ -769,7 +769,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixCommonOcrErrors>Ret OCR-fejl (ved hjælp af OCR erstat liste)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ret OCR fejl (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>Fix dialoger på én linje</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Fix dialoger på én linje</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Fjern startstreg i første linje for ikke-dialoger</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normaliser strenge</NormalizeStrings>
     <FixTurkishAnsi>Fix tyrkiske ANSI (islandske) bogstaver til Unicode</FixTurkishAnsi>

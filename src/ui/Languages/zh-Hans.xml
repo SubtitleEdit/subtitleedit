@@ -775,7 +775,7 @@ Command line: {1} {2}
     <FixCommonOcrErrors>修复 OCR 常规错误 (使用 OCR 替换列表)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>已修复 OCR 常规错误 (使用了 OcrReplaceList 文件): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>删除数字间空格</RemoveSpaceBetweenNumber>
-    <SplitDialogsOnOneLine>修复一行上的对话</SplitDialogsOnOneLine>
+    <BreakDialogsOnOneLine>修复一行上的对话</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>删除非对话第一行的开始破折号</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>使字符串规格化</NormalizeStrings>
     <FixTurkishAnsi>修复土耳其语 ANSI (冰岛) 字母为 Unicode</FixTurkishAnsi>
