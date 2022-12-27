@@ -2336,6 +2336,7 @@ Command line: {1} {2}
     <MusicSymbolsReplace>要替换的音乐符号（用逗号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>使用分词列表（OCR + FCE）</UseWordSplitList>
+    <AvoidPropercase>避免首字母大写</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>修正较短的显示时间 - 允许移动起始时间</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
     <DefaultFormat>默认格式</DefaultFormat>
