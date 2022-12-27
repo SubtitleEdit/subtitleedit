@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
 
             double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
-            int halfSecGap = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
+            int halfSecGap = (int)Math.Round(controller.FrameRate / 2);
 
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {

@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 shotChanges = shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
             }
 
-            int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
+            int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2);
             double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
 
             foreach (Paragraph p in subtitle.Paragraphs)
