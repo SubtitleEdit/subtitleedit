@@ -28,6 +28,7 @@
    * Remember font in burn-in - thx Nespula95
    * Remember "Merge lines with same text" settings - thx kamitsu2004
    * Update Whisper CPP to v1.0.4
+   * Rename "Fix dialogs on one line" to "Break dialogs on one line"
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
@@ -36,6 +37,8 @@
    * Fix for "replace all" non reg-ex
    * Fix wrongful removal of "Unneeded Space" - thx Minherre
    * Fix possible crash in Choosee Profile - thx darnn
+   * Make "Add missing space" work with non-English letters - thx Redjan
+   * Fix a few UI issues in "Word lists" - thx Edwin
 
 
 3.6.10 (21th November 2022)
