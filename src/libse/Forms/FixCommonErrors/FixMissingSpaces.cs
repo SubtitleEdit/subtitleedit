@@ -14,11 +14,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         }
 
         private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z\d]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z\d]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[a-zäöåA-ZÄÖÅ]+", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"\p{Ll}\p{Ll}[.][\p{Ll}\p{Lu}]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[\p{Ll}\p{Lu}\-\d]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![\p{Ll}\p{Lu}\-\d]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[\p{Ll}\p{Lu}]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[\p{Ll}\p{Lu}]+", RegexOptions.Compiled);
         private static readonly Regex Url = new Regex(@"\w\.(?:com|net|org)\b", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
