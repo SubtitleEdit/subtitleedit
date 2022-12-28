@@ -120,31 +120,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
 
             var lines = new List<string>();
-            int start = 0;
-            int max = s.Length;
-            int i = 0;
+            var start = 0;
+            var max = s.Length;
+            var i = 0;
             while (i < max)
             {
                 var ch = s[i];
                 if (ch == '\r')
                 {
-                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
                     {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        lines.Add(s.Substring(start, i - start));
                         i += 3;
                         start = i;
                         continue;
                     }
 
-                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
+                    if (i < max - 1 && s[i + 1] == '\n') // \r\n
                     {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        lines.Add(s.Substring(start, i - start));
                         i += 2;
                         start = i;
                         continue;
                     }
 
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
                     continue;
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
                     continue;
@@ -161,38 +161,37 @@ namespace Nikse.SubtitleEdit.Core.Common
                 i++;
             }
 
-            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+            lines.Add(s.Substring(start, i - start));
             return lines;
         }
 
-        public static List<string> SplitToLines(this string s, int maxCount)
+        public static List<string> SplitToLines(this string s, int max)
         {
             var lines = new List<string>();
-            int start = 0;
-            int max = Math.Min(maxCount, s.Length);
-            int i = 0;
+            var start = 0;
+            var i = 0;
             while (i < max)
             {
                 var ch = s[i];
                 if (ch == '\r')
                 {
-                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    if (i < max - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
                     {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        lines.Add(s.Substring(start, i - start));
                         i += 3;
                         start = i;
                         continue;
                     }
 
-                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
+                    if (i < max - 1 && s[i + 1] == '\n') // \r\n
                     {
-                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        lines.Add(s.Substring(start, i - start));
                         i += 2;
                         start = i;
                         continue;
                     }
 
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
                     continue;
@@ -200,7 +199,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
-                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
                     continue;
@@ -209,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 i++;
             }
 
-            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+            lines.Add(s.Substring(start, i - start));
             return lines;
         }
 
