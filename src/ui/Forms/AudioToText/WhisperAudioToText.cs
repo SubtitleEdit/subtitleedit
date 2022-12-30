@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private int _initialWidth = 725;
         private readonly Regex _timeRegexShort = new Regex(@"^\[\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d[\.,]\d\d\d\]", RegexOptions.Compiled);
         private readonly Regex _timeRegexLong = new Regex(@"^\[\d\d:\d\d:\d\d[\.,]\d\d\d --> \d\d:\d\d:\d\d[\.,]\d\d\d]", RegexOptions.Compiled);
+        private readonly Regex _pctWhisper = new Regex(@"^\d+%\|", RegexOptions.Compiled);
         private List<ResultText> _resultList;
         private string _languageCode;
         private ConcurrentBag<string> _outputText = new ConcurrentBag<string>();
@@ -640,6 +641,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                             _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
                             _showProgressPct = pct;
                         }
+                    }
+                }
+                else if (_pctWhisper.IsMatch(line))
+                {
+                    var arr = line.Split('%');
+                    if (arr.Length > 1 && double.TryParse(arr[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var pct))
+                    {
+                        _endSeconds = _videoInfo.TotalSeconds * pct / 100.0;
+                        _showProgressPct = pct;
                     }
                 }
             }

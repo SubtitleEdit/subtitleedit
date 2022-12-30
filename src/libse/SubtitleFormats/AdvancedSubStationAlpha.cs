@@ -109,7 +109,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public override string ToText(Subtitle subtitle, string title)
         {
             var fromTtml = false;
-            var header = @"[Script Info]
+            var header = $@"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {{0}}
 ScriptType: v4.00+" +
