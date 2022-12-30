@@ -79,6 +79,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Cancel":
                     language.General.Cancel = reader.Value;
                     break;
+                case "General/Yes":
+                    language.General.Yes = reader.Value;
+                    break;
+                case "General/No":
+                    language.General.No = reader.Value;
+                    break;
                 case "General/Apply":
                     language.General.Apply = reader.Value;
                     break;

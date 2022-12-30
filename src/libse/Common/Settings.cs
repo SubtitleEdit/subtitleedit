@@ -676,7 +676,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public List<string> AssaOverrideTagHistory { get; set; }
         public bool AssaResolutionAutoNew { get; set; }
         public bool AssaResolutionPromptChange { get; set; }
-
+        public bool AssaShowScaledBorderAndShadow { get; set; }
+        public bool AssaShowPlayDepth { get; set; }
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
         public int DCinemaFontSize { get; set; }
@@ -768,6 +769,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             AssaOverrideTagHistory = new List<string>();
             AssaResolutionAutoNew = true;
             AssaResolutionPromptChange = true;
+            AssaShowScaledBorderAndShadow = true;
+            AssaShowPlayDepth = true;
 
             DCinemaFontFile = "Arial.ttf";
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
@@ -6456,6 +6459,18 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.AssaResolutionPromptChange = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("AssaShowPlayDepth");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.AssaShowPlayDepth = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("AssaShowScaledBorderAndShadow");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.AssaShowScaledBorderAndShadow = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                 {
@@ -10580,6 +10595,8 @@ $HorzAlign          =   Center
 
                 textWriter.WriteElementString("AssaResolutionAutoNew", settings.SubtitleSettings.AssaResolutionAutoNew.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AssaResolutionPromptChange", settings.SubtitleSettings.AssaResolutionPromptChange.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaShowPlayDepth", settings.SubtitleSettings.AssaShowPlayDepth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AssaShowScaledBorderAndShadow", settings.SubtitleSettings.AssaShowScaledBorderAndShadow.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
                 textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));

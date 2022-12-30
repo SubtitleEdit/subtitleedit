@@ -91,12 +91,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public const string HeaderNoStyles = @"[Script Info]
+        public static string HeaderNoStyles = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
-ScriptType: v4.00+
-PlayDepth: 0
-ScaledBorderAndShadow: Yes
+ScriptType: v4.00+" + 
+(Configuration.Settings.SubtitleSettings.AssaShowPlayDepth ? Environment.NewLine + "PlayDepth: 0" : string.Empty) +
+(Configuration.Settings.SubtitleSettings.AssaShowScaledBorderAndShadow ? Environment.NewLine + "ScaledBorderAndShadow: Yes" : string.Empty) +
+@"
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -107,13 +108,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            bool fromTtml = false;
-            string header = $@"[Script Info]
+            var fromTtml = false;
+            var header = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {{0}}
-ScriptType: v4.00+
-PlayDepth: 0
-ScaledBorderAndShadow: Yes
+ScriptType: v4.00+" +
+(Configuration.Settings.SubtitleSettings.AssaShowPlayDepth ? (Environment.NewLine + "PlayDepth: 0") : string.Empty) +
+(Configuration.Settings.SubtitleSettings.AssaShowScaledBorderAndShadow ? (Environment.NewLine + "ScaledBorderAndShadow: Yes") : string.Empty) +
+$@"
 
 [V4+ Styles]
 {SsaStyle.DefaultAssStyleFormat}

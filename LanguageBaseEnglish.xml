@@ -8,6 +8,8 @@
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>C&amp;ancel</Cancel>
+    <Yes>Yes</Yes>
+    <No>No</No>
     <Apply>Apply</Apply>
     <ApplyTo>Apply to</ApplyTo>
     <None>None</None>

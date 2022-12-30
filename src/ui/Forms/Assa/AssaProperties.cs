@@ -39,6 +39,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
             }
 
+            comboBoxScaleBorderAndShadow.Items.Clear();
+            comboBoxScaleBorderAndShadow.Items.Add(LanguageSettings.Current.General.Yes);
+            comboBoxScaleBorderAndShadow.Items.Add(LanguageSettings.Current.General.No);
+            comboBoxScaleBorderAndShadow.Items.Add("[" + LanguageSettings.Current.General.NotAvailable + "]");
+            comboBoxScaleBorderAndShadow.SelectedIndex = 2;
+
             var header = subtitle.Header;
             foreach (var line in header.SplitToLines())
             {
@@ -91,7 +97,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 }
                 else if (s.StartsWith("scaledborderandshadow:", StringComparison.Ordinal))
                 {
-                    checkBoxScaleBorderAndShadow.Checked = line.Trim().Remove(0, 22).Trim().ToLowerInvariant().Equals("yes");
+                    var scale = line.Trim().Remove(0, 22).Trim().ToLowerInvariant();
+                    if (scale == "yes")
+                    {
+                        comboBoxScaleBorderAndShadow.SelectedIndex = 0;
+                    }
+                    else if (scale == "no")
+                    {
+                        comboBoxScaleBorderAndShadow.SelectedIndex = 1;
+                    }
+                    else 
+                    {
+                        comboBoxScaleBorderAndShadow.SelectedIndex = 2;
+                    }
                 }
                 else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
                 {
@@ -120,12 +138,13 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonGetResolutionFromCurrentVideo.Text = l.FromCurrentVideo;
             groupBoxOptions.Text = l.Options;
             labelWrapStyle.Text = l.WrapStyle;
-            checkBoxScaleBorderAndShadow.Text = l.ScaleBorderAndShadow;
+
+            labelScaleBorderAndShadow.Text = l.ScaleBorderAndShadow;
+            comboBoxScaleBorderAndShadow.Left = labelScaleBorderAndShadow.Right + 3;
 
             comboBoxWrapStyle.Left = labelWrapStyle.Right + 10;
             comboBoxWrapStyle.Width = groupBoxOptions.Right - comboBoxWrapStyle.Left - 25;
-            checkBoxScaleBorderAndShadow.Left = labelWrapStyle.Right + 10;
-
+            
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
@@ -146,11 +165,11 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             DialogResult = DialogResult.Cancel;
         }
 
-        private string GetDefaultHeader()
+        private static string GetDefaultHeader()
         {
             SubtitleFormat format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
-            string text = format.ToText(sub, string.Empty);
+            var text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();
@@ -163,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _subtitle.Header = GetDefaultHeader();
             }
 
-            string title = textBoxTitle.Text;
+            var title = textBoxTitle.Text;
             if (string.IsNullOrWhiteSpace(title))
             {
                 title = "untitled";
@@ -181,13 +200,17 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoHeight.Value == 0);
 
             UpdateTag("WrapStyle", comboBoxWrapStyle.SelectedIndex.ToString(CultureInfo.InvariantCulture), false);
-            if (checkBoxScaleBorderAndShadow.Checked)
+            if (comboBoxScaleBorderAndShadow.SelectedIndex == 0)
             {
                 UpdateTag("ScaledBorderAndShadow", "Yes", false);
             }
-            else
+            else if (comboBoxScaleBorderAndShadow.SelectedIndex == 1)
             {
                 UpdateTag("ScaledBorderAndShadow", "No", false);
+            }
+            else
+            {
+                UpdateTag("ScaledBorderAndShadow", "Hide", true);
             }
 
             DialogResult = DialogResult.OK;
@@ -195,10 +218,10 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
         private void UpdateTag(string tag, string text, bool remove)
         {
-            bool scriptInfoOn = false;
+            var scriptInfoOn = false;
             var sb = new StringBuilder();
-            bool found = false;
-            foreach (string line in _subtitle.Header.SplitToLines())
+            var found = false;
+            foreach (var line in _subtitle.Header.SplitToLines())
             {
                 if (line.StartsWith("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
@@ -217,7 +240,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     scriptInfoOn = false;
                 }
 
-                string s = line.ToLowerInvariant();
+                var s = line.ToLowerInvariant();
                 if (s.StartsWith(tag.ToLowerInvariant() + ":", StringComparison.Ordinal))
                 {
                     if (!remove)
@@ -257,7 +280,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                VideoInfo info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                 if (info != null && info.Success)
                 {
                     numericUpDownVideoWidth.Value = info.Width;

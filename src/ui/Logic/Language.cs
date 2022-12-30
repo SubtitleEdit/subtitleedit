@@ -138,6 +138,8 @@ namespace Nikse.SubtitleEdit.Logic
                 HelpFile = string.Empty,
                 Ok = "&OK",
                 Cancel = "C&ancel",
+                Yes = "Yes",
+                No = "No",
                 Apply = "Apply",
                 ApplyTo = "Apply to",
                 None = "None",
