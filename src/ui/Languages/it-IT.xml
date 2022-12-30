@@ -3,11 +3,13 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 11.12.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 30.12.2022</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Annulla</Cancel>
+    <Yes>Sì</Yes>
+    <No>No</No>
     <Apply>Applica</Apply>
     <ApplyTo>Applica a</ApplyTo>
     <None>Nessuno</None>
@@ -758,7 +760,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <FixShortDisplayTimes>Correggi tempi di visualizzazione corti</FixShortDisplayTimes>
     <FixLongDisplayTimes>Correggi tempi di visualizzazione lunghi</FixLongDisplayTimes>
     <FixShortGaps>Correggi spazi vuoti</FixShortGaps>
-    <FixInvalidItalicTags>Correggi tag dei corsivi invalidi</FixInvalidItalicTags>
+    <FixInvalidItalicTags>Correggi tag corsivi non validi</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Elimina spazi non necessari</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Elimina punti non necessari</RemoveUnneededPeriods>
     <FixCommas>Correggi le virgole</FixCommas>
@@ -774,9 +776,9 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <StartWithUppercaseLetterAfterColon>Inizia la riga con una lettera maiuscola dopo i due punti/punto e virgola</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Sostituisci la lettera minuscola 'i' da sola con 'I' (Inglese)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Correggi gli errori comuni OCR (usando elenco sostituzioni OCR)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Corretti rrrori comuni OCR (usato elenco sostituzioni OCR): {0}</CommonOcrErrorsFixed>
+    <CommonOcrErrorsFixed>Corretti errori comuni OCR (usato elenco sostituzioni OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Rimuovi spazio tra i numeri</RemoveSpaceBetweenNumber>
-    <BreakDialogsOnOneLine>Correggi i dialoghi in una sola riga</BreakDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Dividi i dialoghi in una sola riga</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Rimuovi trattino iniziale nella prima riga per i non dialoghi</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizza stringhe</NormalizeStrings>
     <FixTurkishAnsi>Correggi ANSI turco (Icelandic) lettere a Unicode</FixTurkishAnsi>
@@ -901,7 +903,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <From>Da:</From>
     <To>A:</To>
     <Translate>Traduci</Translate>
-    <PleaseWait>Attendere... ci potrebbe volere un po di tempo</PleaseWait>
+    <PleaseWait>Attendi. Ci potrebbe volere un po di tempo.</PleaseWait>
     <PoweredByGoogleTranslate>Servizio traduzione di Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Servizio traduzione di Microsoft</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>Per usare il traduttore Microsoft più recente, è necessaria una chiave "Testo traduttore" dei servizi cognitivi.
@@ -1346,7 +1348,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <Help>Aiuto</Help>
         <ShowHideWaveform>Visualizza/nascondi forma onda</ShowHideWaveform>
         <ShowHideVideo>Visualizza/nascondi video</ShowHideVideo>
-        <AssaDraw>Sorteggio Alpha Sub Station avanzato</AssaDraw>
+        <AssaDraw>Disegno Advanced Sub Station Alpha</AssaDraw>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Ridimensiona tutte le colonne per adattarle</SizeAllColumnsToFit>
@@ -1636,7 +1638,7 @@ Vuoi continuare?</SubtitleAppendPrompt>
     <BlurayNotSubtitlesFound>Il file Blu-ray sup non contiene sottotitoli o contiene errori - prova a demuxarlo di nuovo.</BlurayNotSubtitlesFound>
     <ImportingChapters>Importazione dei capitoli in corso...</ImportingChapters>
     <XChaptersImported>{0} capitoli importati</XChaptersImported>
-    <ParsingMatroskaFile>Analisi file Matroska. Attendere...</ParsingMatroskaFile>
+    <ParsingMatroskaFile>Analisi file Matroska. Attendi...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analisi file Transport Stream. Attendi...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Prima di importare sottotitolo da file Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Sottotitolo importato da file Matroska</SubtitleImportedFromMatroskaFile>
@@ -1738,13 +1740,13 @@ Vuoi continuare?</SubtitleAppendPrompt>
     <UnableToCreateBackupDirectory>Impossibile creare la cartella del backup {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Prima di unisci sottotitoli</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Sottotitoli uniti</SubtitlesJoined>
-    <StatusLog>Log di stato</StatusLog>
+    <StatusLog>Registri di stato</StatusLog>
     <XShotChangesImported>{0} cambi scena importati</XShotChangesImported>
     <PluginXExecuted>Plugin '{0}' eseguito</PluginXExecuted>
     <NotAValidXSubFile>Non è un file XSub valido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Prima di unire righe con lo stesso testo</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Il sottotitolo con timecode ha un differente numero di righe ({0}) rispetto a quello attuale ({1}) - vuoi continuare comunque?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream>Analisi transport stream, attendere...</ParsingTransportStream>
+    <ParsingTransportStream>Analisi transport stream, attendi...</ParsingTransportStream>
     <XPercentCompleted>{0}% completato</XPercentCompleted>
     <NextX>Avanti: {0}</NextX>
     <PromptInsertSubtitleOverlap>L'inserimento dei sottotitoli nella posizione della forma d'onda causerà la sovrapposizione!
@@ -1889,7 +1891,7 @@ Vuoi scaricare mpv e youtuibe-dl e continuare?</VideoFromUrlRequirements>
     <Knots>Nodi</Knots>
     <PoundsForce>Libbre-forza</PoundsForce>
     <Newtons>Newton</Newtons>
-    <KilosForce>Chiilogrammi forza</KilosForce>
+    <KilosForce>Chilogrammi forza</KilosForce>
     <Jouls>Joule</Jouls>
     <Calories>Calorie</Calories>
     <Ergs>Erg</Ergs>
@@ -2348,6 +2350,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <MusicSymbolsReplace>Caratteri sostitutivi (separati da "Virgole")</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Correggi errori OCR comuni - usa anche regole forti</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Usa elenco diviso in parole (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Evita il caso corretto</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Correggi tempo vista breve - consente spostamento del tempo iniziale</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Salta il primo passaggio (scegli le regole di correzione)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Formato preferito</DefaultFormat>
@@ -2780,15 +2783,15 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <MostUsedWords>Parole più comunemente usate</MostUsedWords>
     <NothingFound>Nulla da Visualizzare</NothingFound>
     <NumberOfLinesX>Numero di righe sottotitolo: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Numero di caratteri per {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Numero di caratteri nel testo: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <LengthInFormatXinCharactersY>Numero caratteri per {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Numero caratteri nel testo: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalDuration>Durata totale di tutti i sottotitoli: {0:#,##0}</TotalDuration>
     <TotalCharsPerSecond>Caratteri totali/secondi: {0:0.0} secondi</TotalCharsPerSecond>
     <TotalWords>Totale parole nel sottotitolo: {0:#,##0}</TotalWords>
-    <NumberOfItalicTags>Numero di tag corsivi: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Numero di tag grassetto: {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Numero di tag sottolineatura: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Numero di tag per font: {0}</NumberOfFontTags>
+    <NumberOfItalicTags>Numero tag corsivi: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Numero tag grassetto: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Numero tag sottolineatura: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Numero tag per font: {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Numero di tag allineamento: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Lunghezza sottotitolo - minima: {0}</LineLengthMinimum>
     <LineLengthMaximum>Lunghezza sottotitolo - massima: {0}</LineLengthMaximum>
