@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string HelpFile { get; set; }
             public string Ok { get; set; }
             public string Cancel { get; set; }
+            public string Yes { get; set; }
+            public string No { get; set; }
             public string Apply { get; set; }
             public string ApplyTo { get; set; }
             public string None { get; set; }

@@ -46,10 +46,12 @@
             this.textBoxTitle = new System.Windows.Forms.TextBox();
             this.labelTitle = new System.Windows.Forms.Label();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
-            this.checkBoxScaleBorderAndShadow = new System.Windows.Forms.CheckBox();
+            this.comboBoxScaleBorderAndShadow = new System.Windows.Forms.ComboBox();
+            this.labelScaleBorderAndShadow = new System.Windows.Forms.Label();
             this.comboBoxWrapStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
             this.groupBoxResolution = new System.Windows.Forms.GroupBox();
+            this.labelCurrentVideoResolution = new System.Windows.Forms.Label();
             this.labelVideoResolution = new System.Windows.Forms.Label();
             this.numericUpDownVideoHeight = new System.Windows.Forms.NumericUpDown();
             this.buttonGetResolutionFromVideo = new System.Windows.Forms.Button();
@@ -59,7 +61,6 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.labelCurrentVideoResolution = new System.Windows.Forms.Label();
             this.groupBoxScript.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             this.groupBoxResolution.SuspendLayout();
@@ -227,7 +228,8 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxOptions.Controls.Add(this.checkBoxScaleBorderAndShadow);
+            this.groupBoxOptions.Controls.Add(this.comboBoxScaleBorderAndShadow);
+            this.groupBoxOptions.Controls.Add(this.labelScaleBorderAndShadow);
             this.groupBoxOptions.Controls.Add(this.comboBoxWrapStyle);
             this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
             this.groupBoxOptions.Location = new System.Drawing.Point(12, 327);
@@ -237,15 +239,28 @@
             this.groupBoxOptions.TabStop = false;
             this.groupBoxOptions.Text = "Options";
             // 
-            // checkBoxScaleBorderAndShadow
+            // comboBoxScaleBorderAndShadow
             // 
-            this.checkBoxScaleBorderAndShadow.AutoSize = true;
-            this.checkBoxScaleBorderAndShadow.Location = new System.Drawing.Point(110, 45);
-            this.checkBoxScaleBorderAndShadow.Name = "checkBoxScaleBorderAndShadow";
-            this.checkBoxScaleBorderAndShadow.Size = new System.Drawing.Size(147, 17);
-            this.checkBoxScaleBorderAndShadow.TabIndex = 2;
-            this.checkBoxScaleBorderAndShadow.Text = "Scale border and shadow";
-            this.checkBoxScaleBorderAndShadow.UseVisualStyleBackColor = true;
+            this.comboBoxScaleBorderAndShadow.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxScaleBorderAndShadow.FormattingEnabled = true;
+            this.comboBoxScaleBorderAndShadow.Items.AddRange(new object[] {
+            "0: Smart wrapping, top line is wider",
+            "1: End-of-line word wrapping, only \\N breaks",
+            "2: No word wrapping, both \\n and \\N break",
+            "3: Smart wrapping, bottom line is wider"});
+            this.comboBoxScaleBorderAndShadow.Location = new System.Drawing.Point(110, 46);
+            this.comboBoxScaleBorderAndShadow.Name = "comboBoxScaleBorderAndShadow";
+            this.comboBoxScaleBorderAndShadow.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxScaleBorderAndShadow.TabIndex = 4;
+            // 
+            // labelScaleBorderAndShadow
+            // 
+            this.labelScaleBorderAndShadow.AutoSize = true;
+            this.labelScaleBorderAndShadow.Location = new System.Drawing.Point(7, 49);
+            this.labelScaleBorderAndShadow.Name = "labelScaleBorderAndShadow";
+            this.labelScaleBorderAndShadow.Size = new System.Drawing.Size(128, 13);
+            this.labelScaleBorderAndShadow.TabIndex = 3;
+            this.labelScaleBorderAndShadow.Text = "Scale border and shadow";
             // 
             // comboBoxWrapStyle
             // 
@@ -287,6 +302,16 @@
             this.groupBoxResolution.TabIndex = 1;
             this.groupBoxResolution.TabStop = false;
             this.groupBoxResolution.Text = "Resolution";
+            // 
+            // labelCurrentVideoResolution
+            // 
+            this.labelCurrentVideoResolution.ForeColor = System.Drawing.Color.Red;
+            this.labelCurrentVideoResolution.Location = new System.Drawing.Point(405, 45);
+            this.labelCurrentVideoResolution.Name = "labelCurrentVideoResolution";
+            this.labelCurrentVideoResolution.Size = new System.Drawing.Size(82, 13);
+            this.labelCurrentVideoResolution.TabIndex = 6;
+            this.labelCurrentVideoResolution.Text = "X*Y";
+            this.labelCurrentVideoResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelVideoResolution
             // 
@@ -377,16 +402,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // labelCurrentVideoResolution
-            // 
-            this.labelCurrentVideoResolution.ForeColor = System.Drawing.Color.Red;
-            this.labelCurrentVideoResolution.Location = new System.Drawing.Point(405, 45);
-            this.labelCurrentVideoResolution.Name = "labelCurrentVideoResolution";
-            this.labelCurrentVideoResolution.Size = new System.Drawing.Size(82, 13);
-            this.labelCurrentVideoResolution.TabIndex = 6;
-            this.labelCurrentVideoResolution.Text = "X*Y";
-            this.labelCurrentVideoResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // AssaProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -438,7 +453,6 @@
         private System.Windows.Forms.Label labelOriginalScript;
         private System.Windows.Forms.TextBox textBoxTitle;
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.CheckBox checkBoxScaleBorderAndShadow;
         private System.Windows.Forms.ComboBox comboBoxWrapStyle;
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.GroupBox groupBoxResolution;
@@ -452,5 +466,7 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelCurrentVideoResolution;
+        private System.Windows.Forms.ComboBox comboBoxScaleBorderAndShadow;
+        private System.Windows.Forms.Label labelScaleBorderAndShadow;
     }
 }
