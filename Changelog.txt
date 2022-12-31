@@ -8,6 +8,7 @@
    * Add line merge option for Google Cloud Vision OCR
    * Add new subtitle format - thx Christophe
    * Add new subtitle format - thx Chris
+   * Add ASSA style "Replace" - thxMishasama
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Korean translation - thx domddol
@@ -39,6 +40,7 @@
    * Fix possible crash in Choosee Profile - thx darnn
    * Make "Add missing space" work with non-English letters - thx Redjan
    * Fix a few UI issues in "Word lists" - thx Edwin
+   * Fix crash in ""Sync via other sub"" - thx JP
 
 
 3.6.10 (21th November 2022)
