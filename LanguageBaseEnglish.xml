@@ -2880,6 +2880,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Copy {0} of {1}</CopyXOfY>
     <New>New</New>
     <Remove>Remove</Remove>
+    <ReplaceWith>Replace with...</ReplaceWith>
     <RemoveAll>Remove all</RemoveAll>
     <ImportStyleFromFile>Import style from file...</ImportStyleFromFile>
     <ExportStyleToFile>Export style to file... (will add style if file already exists)</ExportStyleToFile>

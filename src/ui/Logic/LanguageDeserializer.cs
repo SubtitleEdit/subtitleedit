@@ -7891,6 +7891,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SubStationAlphaStyles/Remove":
                     language.SubStationAlphaStyles.Remove = reader.Value;
                     break;
+                case "SubStationAlphaStyles/ReplaceWith":
+                    language.SubStationAlphaStyles.ReplaceWith = reader.Value;
+                    break;
                 case "SubStationAlphaStyles/RemoveAll":
                     language.SubStationAlphaStyles.RemoveAll = reader.Value;
                     break;
