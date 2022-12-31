@@ -17,6 +17,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool Forced { get; set; }
 
+        /// <summary>
+        /// Extra info (style name for ASSA).
+        /// </summary>
         public string Extra { get; set; }
 
         public bool IsComment { get; set; }

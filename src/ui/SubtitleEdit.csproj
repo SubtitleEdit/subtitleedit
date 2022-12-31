@@ -180,6 +180,12 @@
     <Compile Include="Forms\Assa\ImageColorPicker.Designer.cs">
       <DependentUpon>ImageColorPicker.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Assa\ReplaceStyleWith.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Assa\ReplaceStyleWith.Designer.cs">
+      <DependentUpon>ReplaceStyleWith.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Assa\ResolutionResampler.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1508,6 +1514,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\ImageColorPicker.resx">
       <DependentUpon>ImageColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Assa\ReplaceStyleWith.resx">
+      <DependentUpon>ReplaceStyleWith.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Assa\ResolutionResampler.resx">
       <DependentUpon>ResolutionResampler.cs</DependentUpon>
