@@ -3800,10 +3800,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
 
                 RemoveOriginal(true, false);
-                //if (!format.HasStyleSupport) -- remove -- see https://www.nikse.dk/Home/Details/637741307830000000
-                //{
-                //    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
-                //}
+                if (format.HasStyleSupport && format.Name == AdvancedSubStationAlpha.NameOfFormat)
+                {
+                    SubtitleListview1.ShowExtraColumn(_languageGeneral.Style);
+                }
 
                 new BookmarkPersistence(newSubtitle, fileName).Load();
 

@@ -3090,6 +3090,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string CopyXOfY { get; set; }
             public string New { get; set; }
             public string Remove { get; set; }
+            public string ReplaceWith { get; set; }
             public string RemoveAll { get; set; }
             public string ImportStyleFromFile { get; set; }
             public string ExportStyleToFile { get; set; }
