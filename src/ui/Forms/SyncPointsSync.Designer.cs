@@ -211,7 +211,7 @@
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListView1_MouseDoubleClick);
             // 
             // labelSyncInfo
             // 
