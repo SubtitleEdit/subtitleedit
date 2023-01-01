@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.AudioToText;
+﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -14,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public bool AutoClose { get; internal set; }
         public WhisperModel LastDownloadedModel { get; private set; }
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private bool _error = false;
+        private bool _error;
         private string _downloadFileName;
 
         public WhisperModelDownload()

@@ -25796,8 +25796,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private string _lastWrittenAutoBackup = string.Empty;
-        private bool _showAutoBackupError = true;
-
         private void TimerAutoBackupTick(object sender, EventArgs e)
         {
             string currentText = string.Empty;
