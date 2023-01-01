@@ -1240,9 +1240,25 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            if (index < originalParagraphs.Count && Math.Abs(originalParagraphs[index].StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
+            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.Duration.TotalMilliseconds / 2.0;
+            if (index < originalParagraphs.Count)
             {
-                return originalParagraphs[index];
+                var o = originalParagraphs[index];
+                if (Math.Abs(o.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
+                {
+                    return o;
+                }
+
+                if (Math.Abs(o.EndTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds) < 50 &&
+                    paragraph.StartTime.TotalMilliseconds < o.EndTime.TotalMilliseconds)
+                {
+                    return o;
+                }
+
+                if (o.StartTime.TotalMilliseconds < middle && o.EndTime.TotalMilliseconds > middle)
+                {
+                    return o;
+                }
             }
 
             if (paragraph.StartTime.IsMaxTime && index < originalParagraphs.Count && originalParagraphs[index].StartTime.IsMaxTime)
@@ -1261,8 +1277,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             foreach (var p in originalParagraphs)
             {
                 if (!p.StartTime.IsMaxTime &&
-                    p.StartTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds - 200 &&
-                    p.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + TimeCode.BaseUnit)
+                    p.StartTime.TotalMilliseconds < middle && p.EndTime.TotalMilliseconds > middle)
                 {
                     return p;
                 }

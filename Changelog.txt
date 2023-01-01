@@ -40,7 +40,7 @@
    * Fix possible crash in Choosee Profile - thx darnn
    * Make "Add missing space" work with non-English letters - thx Redjan
    * Fix a few UI issues in "Word lists" - thx Edwin
-   * Fix crash in ""Sync via other sub"" - thx JP
+   * Fix crash in "Sync via other sub" - thx JP
 
 
 3.6.10 (21th November 2022)
