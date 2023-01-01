@@ -8,6 +8,8 @@
     <HelpFile />
     <Ok>확인(&amp;O)</Ok>
     <Cancel>취소(&amp;A)</Cancel>
+    <Yes>예</Yes>
+    <No>아니오</No>
     <Apply>적용</Apply>
     <ApplyTo>적용 대상</ApplyTo>
     <None>없음</None>
@@ -2347,6 +2349,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>단어 분할 목록 사용 (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>propercase 피하기</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>짧은 표시시간 수정 - 시작 시간 이동을 허용</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>1 단계 건너뛰기 (수정 규칙 선택)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>기본 자막 형식</DefaultFormat>
@@ -2876,6 +2879,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CopyXOfY>{0}의 {1} 복사</CopyXOfY>
     <New>새 작업</New>
     <Remove>제거</Remove>
+    <ReplaceWith>다음으로 교체...</ReplaceWith>
     <RemoveAll>모두 제거</RemoveAll>
     <ImportStyleFromFile>파일에서 스타일 가져오기...</ImportStyleFromFile>
     <ExportStyleToFile>스타일 파일로 내보내기... (파일이 존재하면 스타일 추가)</ExportStyleToFile>
