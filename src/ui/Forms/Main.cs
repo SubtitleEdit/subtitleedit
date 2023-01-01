@@ -8883,66 +8883,9 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.OpenFolder(Path.GetDirectoryName(audioClips[0].AudioFileName));
                 };
 
-                audioToTextWhisper.Click += (senderNew, eNew) =>
-                {
-                    if (!RequireFfmpegOk())
-                    {
-                        return;
-                    }
+                audioToTextWhisper.Click += (senderNew, eNew) => { AudioToTextWhisperSelectedLines(); };
 
-                    var audioClips = GetAudioClips();
-                    using (var form = new WhisperAudioToTextSelectedLines(audioClips, this))
-                    {
-                        CheckWhisperCpp();
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper")));
-                            SubtitleListview1.BeginUpdate();
-                            foreach (var ac in audioClips)
-                            {
-                                var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
-                                if (p != null)
-                                {
-                                    p.Text = ac.Paragraph.Text;
-                                    var idx = _subtitle.Paragraphs.IndexOf(p);
-                                    SubtitleListview1.SetText(idx, p.Text);
-                                }
-                            }
-                            SubtitleListview1.EndUpdate();
-                            RefreshSelectedParagraph();
-                        }
-                    }
-                };
-
-                audioToTextVosk.Click += (senderNew, eNew) =>
-                {
-                    if (!RequireFfmpegOk())
-                    {
-                        return;
-                    }
-
-                    var audioClips = GetAudioClips();
-                    using (var form = new VoskAudioToTextSelectedLines(audioClips, this))
-                    {
-                        if (form.ShowDialog(this) == DialogResult.OK)
-                        {
-                            MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi")));
-                            SubtitleListview1.BeginUpdate();
-                            foreach (var ac in audioClips)
-                            {
-                                var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
-                                if (p != null)
-                                {
-                                    p.Text = ac.Paragraph.Text;
-                                    var idx = _subtitle.Paragraphs.IndexOf(p);
-                                    SubtitleListview1.SetText(idx, p.Text);
-                                }
-                            }
-                            SubtitleListview1.EndUpdate();
-                            RefreshSelectedParagraph();
-                        }
-                    }
-                };
+                audioToTextVosk.Click += (senderNew, eNew) => { AudioToTextVoskSelectedLines(); };
             }
 
             toolStripMenuItemSetRegion.Visible = false;
@@ -9397,6 +9340,69 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemAssaTools.Visible = false;
                 toolStripSeparatorAssa.Visible = false;
+            }
+        }
+
+        private void AudioToTextVoskSelectedLines()
+        {
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
+            var audioClips = GetAudioClips();
+            using (var form = new VoskAudioToTextSelectedLines(audioClips, this))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi")));
+                    SubtitleListview1.BeginUpdate();
+                    foreach (var ac in audioClips)
+                    {
+                        var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
+                        if (p != null)
+                        {
+                            p.Text = ac.Paragraph.Text;
+                            var idx = _subtitle.Paragraphs.IndexOf(p);
+                            SubtitleListview1.SetText(idx, p.Text);
+                        }
+                    }
+
+                    SubtitleListview1.EndUpdate();
+                    RefreshSelectedParagraph();
+                }
+            }
+        }
+
+        private void AudioToTextWhisperSelectedLines()
+        {
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
+            var audioClips = GetAudioClips();
+            using (var form = new WhisperAudioToTextSelectedLines(audioClips, this))
+            {
+                CheckWhisperCpp();
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper")));
+                    SubtitleListview1.BeginUpdate();
+                    foreach (var ac in audioClips)
+                    {
+                        var p = _subtitle.Paragraphs.FirstOrDefault(pa => pa.Id == ac.Paragraph.Id);
+                        if (p != null)
+                        {
+                            p.Text = ac.Paragraph.Text;
+                            var idx = _subtitle.Paragraphs.IndexOf(p);
+                            SubtitleListview1.SetText(idx, p.Text);
+                        }
+                    }
+
+                    SubtitleListview1.EndUpdate();
+                    RefreshSelectedParagraph();
+                }
             }
         }
 
@@ -17628,6 +17634,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 AutoGuessStartTime(_subtitleListViewIndex);
                 e.SuppressKeyPress = true;
+            }
+            else if (!string.IsNullOrEmpty(_videoFileName) && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAudioToTextVosk)
+            {
+                e.SuppressKeyPress = true;
+                AudioToTextVoskSelectedLines();
+            }
+            else if (!string.IsNullOrEmpty(_videoFileName) && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformAudioToTextWhisper)
+            {
+                e.SuppressKeyPress = true;
+                AudioToTextWhisperSelectedLines();
             }
             else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
             {

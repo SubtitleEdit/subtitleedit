@@ -6904,8 +6904,11 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/VideoToggleContrast":
                     language.Settings.VideoToggleContrast = reader.Value;
                     break;
-                case "Settings/VideoAudioToText":
-                    language.Settings.VideoAudioToText = reader.Value;
+                case "Settings/AudioToTextX":
+                    language.Settings.AudioToTextX = reader.Value;
+                    break;
+                case "Settings/AudioToTextSelectedLinesX":
+                    language.Settings.AudioToTextSelectedLinesX = reader.Value;
                     break;
                 case "Settings/VideoToggleBrightness":
                     language.Settings.VideoToggleBrightness = reader.Value;

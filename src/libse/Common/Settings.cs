@@ -2362,7 +2362,8 @@ $HorzAlign          =   Center
         public string MainVideoReset { get; set; }
         public string MainVideoToggleBrightness { get; set; }
         public string MainVideoToggleContrast { get; set; }
-        public string MainVideoAudioToText { get; set; }
+        public string MainVideoAudioToTextVosk { get; set; }
+        public string MainVideoAudioToTextWhisper { get; set; }
 
         // spell check
         public string MainSpellCheck { get; set; }
@@ -2538,6 +2539,8 @@ $HorzAlign          =   Center
         public string Waveform100MsRight { get; set; }
         public string Waveform1000MsLeft { get; set; }
         public string Waveform1000MsRight { get; set; }
+        public string WaveformAudioToTextVosk { get; set; }
+        public string WaveformAudioToTextWhisper { get; set; }
         public string MainCheckFixTimingViaShotChanges { get; set; }
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslateIt { get; set; }
@@ -8787,10 +8790,16 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoToggleContrast = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainVideoAudioToText");
+                subNode = node.SelectSingleNode("MainVideoAudioToTextVosk");
                 if (subNode != null)
                 {
-                    shortcuts.MainVideoAudioToText = subNode.InnerText;
+                    shortcuts.MainVideoAudioToTextVosk = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoAudioToTextWhisper");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoAudioToTextWhisper = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainSpellCheck");
@@ -9859,6 +9868,18 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     shortcuts.Waveform1000MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAudioToTextVosk");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAudioToTextVosk = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("WaveformAudioToTextWhisper");
+                if (subNode != null)
+                {
+                    shortcuts.WaveformAudioToTextWhisper = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainCheckFixTimingViaShotChanges");
@@ -11107,7 +11128,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoReset", shortcuts.MainVideoReset);
             textWriter.WriteElementString("MainVideoToggleBrightness", shortcuts.MainVideoToggleBrightness);
             textWriter.WriteElementString("MainVideoToggleContrast", shortcuts.MainVideoToggleContrast);
-            textWriter.WriteElementString("MainVideoAudioToText", shortcuts.MainVideoAudioToText);
+            textWriter.WriteElementString("MainVideoAudioToTextVosk", shortcuts.MainVideoAudioToTextVosk);
+            textWriter.WriteElementString("MainVideoAudioToTextWhisper", shortcuts.MainVideoAudioToTextWhisper);
             textWriter.WriteElementString("MainSpellCheck", shortcuts.MainSpellCheck);
             textWriter.WriteElementString("MainSpellCheckFindDoubleWords", shortcuts.MainSpellCheckFindDoubleWords);
             textWriter.WriteElementString("MainSpellCheckAddWordToNames", shortcuts.MainSpellCheckAddWordToNames);
@@ -11285,6 +11307,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("Waveform100MsRight", shortcuts.Waveform100MsRight);
             textWriter.WriteElementString("Waveform1000MsLeft", shortcuts.Waveform1000MsLeft);
             textWriter.WriteElementString("Waveform1000MsRight", shortcuts.Waveform1000MsRight);
+            textWriter.WriteElementString("WaveformAudioToTextVosk", shortcuts.WaveformAudioToTextVosk);
+            textWriter.WriteElementString("WaveformAudioToTextWhisper", shortcuts.WaveformAudioToTextWhisper);
             textWriter.WriteElementString("MainCheckFixTimingViaShotChanges", shortcuts.MainCheckFixTimingViaShotChanges);
             textWriter.WriteElementString("MainTranslateGoogleIt", shortcuts.MainTranslateGoogleIt);
             textWriter.WriteElementString("MainTranslateGoogleTranslateIt", shortcuts.MainTranslateGoogleTranslateIt);
