@@ -7404,7 +7404,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
-            
+
             for (var i = 0; i < oldSubtitle.Paragraphs.Count; i++)
             {
                 if (oldSubtitle.Paragraphs[i].Bookmark != null)
