@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {

@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 whisperModel.CreateModelFolder();
             }
 
+            var models = new List<WhisperModel>();
             foreach (var fileName in Directory.GetFiles(modelsFolder))
             {
                 var name = Path.GetFileName(fileName);
@@ -145,6 +146,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     continue;
                 }
 
+                model.Bytes = fileInfo.Length;
+                models.Add(model);
+            }
+
+            foreach (var model in models.OrderBy(m => m.Bytes))
+            {
                 comboBoxModels.Items.Add(model);
                 if (model.Name == selectName)
                 {
@@ -829,7 +836,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             var w = WhisperHelper.GetWhisperPathAndFileName();
             var m = WhisperHelper.GetWhisperModelForCmdLine(model);
-            var parameters = $"--language \"{language}\" --model \"{m}\" {outputSrt}{translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
+            var parameters = $"--language {language} --model \"{m}\" {outputSrt}{translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
             var process = new Process { StartInfo = new ProcessStartInfo(w, parameters) { WindowStyle = ProcessWindowStyle.Hidden, CreateNoWindow = true } };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && process.StartInfo.EnvironmentVariables["Path"] != null)
@@ -846,6 +853,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (!string.IsNullOrEmpty(whisperFolder) && process.StartInfo.EnvironmentVariables["Path"] != null)
             {
                 process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + whisperFolder;
+            }
+
+            if (!Configuration.Settings.Tools.WhisperUseCpp)
+            {
+                process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                process.StartInfo.EnvironmentVariables["PYTHONLEGACYWINDOWSSTDIO"] = "utf-8";
             }
 
             if (dataReceivedHandler != null)
@@ -999,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (_showProgressPct > 0)
             {
-                progressBar1.Value =(int)Math.Round(_showProgressPct, MidpointRounding.AwayFromZero);
+                progressBar1.Value = (int)Math.Round(_showProgressPct, MidpointRounding.AwayFromZero);
             }
             else
             {
