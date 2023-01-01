@@ -9917,7 +9917,7 @@ $HorzAlign          =   Center
             }
         }
 
-        private static void CustomSerialize(string fileName, Settings settings)
+        public static void CustomSerialize(string fileName, Settings settings)
         {
             var xws = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
             var sb = new StringBuilder();
