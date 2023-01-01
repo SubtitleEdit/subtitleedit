@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             UiUtil.FixLargeFonts(this, buttonDownload);
 
             var selectedIndex = 0;
-            foreach (var downloadModel in WhisperHelper.GetWhisperModel().Models.OrderBy(p => p.Name))
+            foreach (var downloadModel in WhisperHelper.GetWhisperModel().Models)
             {
                 var fileName = MakeDownloadFileName(downloadModel);
                 downloadModel.AlreadyDownloaded = File.Exists(fileName);
