@@ -8,7 +8,7 @@
    * Add line merge option for Google Cloud Vision OCR
    * Add new subtitle format - thx Christophe
    * Add new subtitle format - thx Chris
-   * Add ASSA style "Replace" - thxMishasama
+   * Add ASSA style "Replace" - thx Mishasama
    * Add "audio to text selected lines" shortcuts
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
