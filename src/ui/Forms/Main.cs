@@ -28297,14 +28297,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.VideoPlayer is LibVlcDynamic libVlc)
             {
                 var item = sender as ToolStripItem;
-                int number = int.Parse(item.Tag.ToString());
+                var number = int.Parse(item.Tag.ToString());
                 libVlc.AudioTrackNumber = number;
                 VideoAudioTrackNumber = number;
             }
             else if (mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
             {
                 var item = sender as ToolStripItem;
-                int number = int.Parse(item.Tag.ToString());
+                var number = int.Parse(item.Tag.ToString());
                 number--;
                 libMpv.AudioTrackNumber = number;
                 VideoAudioTrackNumber = number;
