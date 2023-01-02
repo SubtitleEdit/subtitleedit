@@ -21985,6 +21985,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (audioTracks.Count <= 1)
                     {
                         _videoAudioTrackNumber = -1;
+                        audioTrack = 0;
                     }
                 }
                 catch
@@ -21993,8 +21994,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName, VideoAudioTrackNumber);
-            var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName, VideoAudioTrackNumber);
+            var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName, audioTrack);
+            var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName, audioTrack);
             if (File.Exists(peakWaveFileName))
             {
                 audioVisualizer.ZoomFactor = 1.0;
