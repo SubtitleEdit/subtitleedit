@@ -3,11 +3,13 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Последен превод на български 21.11.2022: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 02.01.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Отказ</Cancel>
+    <Yes>Да</Yes>
+    <No>Не</No>
     <Apply>Приложи</Apply>
     <ApplyTo>Приложи за</ApplyTo>
     <None>Нищо</None>
@@ -1160,6 +1162,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <OpenOriginal>Отваряне на оригиналните субтитри (режим на превод)...</OpenOriginal>
         <SaveOriginal>Запис на оригиналните субтитри</SaveOriginal>
         <CloseOriginal>Затваряне на оригиналните субтитри</CloseOriginal>
+        <CloseTranslation>Затваряне на проведените субтитри</CloseTranslation>
         <OpenContainingFolder>Отвори папката, съдържаща субтитрите</OpenContainingFolder>
         <Compare>Сравняване...</Compare>
         <Statistics>Статистика...</Statistics>
@@ -1784,7 +1787,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleEditNeedsVideoPlayer>Subtitle Edit се нуждае от видео плейър.</SubtitleEditNeedsVideoPlayer>
     <UseRecommendMpv>За използване препоръчания видео плейър "mpv", кликнете върху бутона по-долу.</UseRecommendMpv>
     <DownloadAndUseMpv>Изтегляне и използване на "mpv" като видео плейър</DownloadAndUseMpv>
-   </Main>
+  </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
     <TitleMp4>Избор на субтитри от файл MP4</TitleMp4>
@@ -2346,6 +2349,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MusicSymbolsReplace>Музикални символи за замяна (разделени със запетая)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR(разпознаване на текст) грешки</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Използване на списъка за разделяне на думи [OCR + FCE(код)]</UseWordSplitList>
+    <AvoidPropercase>Избягване на правилния случай</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Попр.на краткотр.време за показ-позволява преместване на нач.време</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Пропускане на първата стъпка (избор на правилата за поправяне)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Формат по подразбиране</DefaultFormat>
@@ -2514,7 +2518,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <VideoResetSpeedAndZoom>Нулиране на скорост/увеличение</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Превключване на видео управлението</MainToggleVideoControls>
     <VideoToggleContrast>Превключване на контраста (само за mpv)</VideoToggleContrast>
-    <VideoAudioToText>Видео/аудио към текст (разпознаване на говор)</VideoAudioToText>
+    <AudioToTextX>Видео/аудио към текст (разпознаване на говор) ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Audio to text selected lines ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Превключване на яркостта (само за mpv)</VideoToggleBrightness>
     <CustomSearch1>Превод, лично търсене 1</CustomSearch1>
     <CustomSearch2>Превод, лично търсене 2</CustomSearch2>
@@ -2876,6 +2881,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CopyXOfY>Копиране {0} от {1}</CopyXOfY>
     <New>Нови</New>
     <Remove>Премахване</Remove>
+    <ReplaceWith>Замяна с...</ReplaceWith>
     <RemoveAll>Премахване на всички</RemoveAll>
     <ImportStyleFromFile>Импорт на стил от файл...</ImportStyleFromFile>
     <ExportStyleToFile>Експорт на стил във файл... (ще добави стила ако файла съществува)</ExportStyleToFile>
