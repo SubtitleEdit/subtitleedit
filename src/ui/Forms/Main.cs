@@ -21894,10 +21894,12 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         private void OpenVideo(string fileName)
         {
             OpenVideo(fileName, VideoAudioTrackNumber);
         }
+
         private void OpenVideo(string fileName, int audioTrack)
         {
             if (!_resetVideo)
@@ -21975,9 +21977,24 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
             }
 
+            if (audioTrack > 0 && mediaPlayer.VideoPlayer is LibMpvDynamic libMpv)
+            {
+                try
+                {
+                    var audioTracks = libMpv.AudioTracks;
+                    if (audioTracks.Count <= 1)
+                    {
+                        _videoAudioTrackNumber = -1;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
 
-            string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
-            string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
+            var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName, VideoAudioTrackNumber);
+            var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName, VideoAudioTrackNumber);
             if (File.Exists(peakWaveFileName))
             {
                 audioVisualizer.ZoomFactor = 1.0;

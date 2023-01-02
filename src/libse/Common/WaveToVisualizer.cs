@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             DataChunkSize = BitConverter.ToUInt32(buffer, 4);
             DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
-            // if some other ChunkId than 'data' (e.g. LIST) we search for 'data'
+            // if some other ChunckId than 'data' (e.g. LIST) we search for 'data'
             long oldPos = ConstantHeaderSize + FmtChunkSize;
             while (DataId != "data" && oldPos + DataChunkSize + 16 < stream.Length)
             {
@@ -112,24 +112,47 @@ namespace Nikse.SubtitleEdit.Core.Common
             BlockAlign = BytesPerSample * NumberOfChannels;
         }
 
-        public int BytesPerSample =>
-            // round up to the next byte (20 bit WAVs are like 24 bit WAVs with the 4 least significant bits unused)
-            (BitsPerSample + 7) / 8;
+        public int BytesPerSample
+        {
+            get
+            {
+                // round up to the next byte (20 bit WAVs are like 24 bit WAVs with the 4 least significant bits unused)
+                return (BitsPerSample + 7) / 8;
+            }
+        }
 
-        public long BytesPerSecond => (long)SampleRate * BlockAlign;
+        public long BytesPerSecond
+        {
+            get
+            {
+                return (long)SampleRate * BlockAlign;
+            }
+        }
 
-        public double LengthInSeconds => (double)DataChunkSize / BytesPerSecond;
+        public double LengthInSeconds
+        {
+            get
+            {
+                return (double)DataChunkSize / BytesPerSecond;
+            }
+        }
 
-        public long LengthInSamples => DataChunkSize / BlockAlign;
+        public long LengthInSamples
+        {
+            get
+            {
+                return DataChunkSize / BlockAlign;
+            }
+        }
 
         internal static void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int sampleCount)
         {
             const int headerSize = 44;
-            var bytesPerSample = (bitsPerSample + 7) / 8;
-            var blockAlign = numberOfChannels * bytesPerSample;
-            var byteRate = sampleRate * blockAlign;
-            var dataSize = sampleCount * bytesPerSample * numberOfChannels;
-            var header = new byte[headerSize];
+            int bytesPerSample = (bitsPerSample + 7) / 8;
+            int blockAlign = numberOfChannels * bytesPerSample;
+            int byteRate = sampleRate * blockAlign;
+            int dataSize = sampleCount * bytesPerSample * numberOfChannels;
+            byte[] header = new byte[headerSize];
             WriteStringToByteArray(header, 0, "RIFF");
             WriteInt32ToByteArray(header, 4, headerSize + dataSize - 8); // size of RIFF chunk's data
             WriteStringToByteArray(header, 8, "WAVE");
@@ -148,19 +171,19 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static void WriteInt16ToByteArray(byte[] headerData, int index, int value)
         {
-            var buffer = BitConverter.GetBytes((short)value);
+            byte[] buffer = BitConverter.GetBytes((short)value);
             Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
 
         private static void WriteInt32ToByteArray(byte[] headerData, int index, int value)
         {
-            var buffer = BitConverter.GetBytes(value);
+            byte[] buffer = BitConverter.GetBytes(value);
             Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
 
         private static void WriteStringToByteArray(byte[] headerData, int index, string value)
         {
-            var buffer = Encoding.ASCII.GetBytes(value);
+            byte[] buffer = Encoding.ASCII.GetBytes(value);
             Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
     }
@@ -176,7 +199,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             Min = min;
         }
 
-        public int Abs => Math.Max(Math.Abs((int)Max), Math.Abs((int)Min));
+        public int Abs
+        {
+            get { return Math.Max(Math.Abs((int)Max), Math.Abs((int)Min)); }
+        }
     }
 
     public class WavePeakData
@@ -202,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             HighestPeak = 0;
             foreach (var peak in Peaks)
             {
-                var abs = peak.Abs;
+                int abs = peak.Abs;
                 if (abs > HighestPeak)
                 {
                     HighestPeak = abs;
@@ -242,7 +268,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private SpectrogramData(string loadFromDirectory)
         {
             _loadFromDirectory = loadFromDirectory;
-            Images = Array.Empty<Bitmap>();
+            Images = new Bitmap[0];
         }
 
         public int FftSize { get; private set; }
@@ -253,7 +279,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public IList<Bitmap> Images { get; private set; }
 
-        public bool IsLoaded => _loadFromDirectory == null;
+        public bool IsLoaded
+        {
+            get { return _loadFromDirectory == null; }
+        }
 
         public void Load()
         {
@@ -262,12 +291,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return;
             }
 
-            var directory = _loadFromDirectory;
+            string directory = _loadFromDirectory;
             _loadFromDirectory = null;
 
             try
             {
-                var xmlInfoFileName = Path.Combine(directory, "Info.xml");
+                string xmlInfoFileName = Path.Combine(directory, "Info.xml");
                 if (!File.Exists(xmlInfoFileName))
                 {
                     return;
@@ -328,6 +357,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetPeakWaveFileName(string videoFileName, int trackNumber = 0)
         {
+            if (trackNumber < 0)
+            {
+                trackNumber = 0;
+            }
+
             var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
 
             if (videoFileName != null && (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
@@ -425,19 +459,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 peaksPerSecond++;
             }
 
-            var delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
+            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
             // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
             delaySampleCount = Math.Max(delaySampleCount, 0);
 
             var peaks = new List<WavePeak>();
             var readSampleDataValue = GetSampleDataReader();
-            var sampleAndChannelScale = (float)GetSampleAndChannelScale();
-            var fileSampleCount = _header.LengthInSamples;
-            var fileSampleOffset = -delaySampleCount;
+            float sampleAndChannelScale = (float)GetSampleAndChannelScale();
+            long fileSampleCount = _header.LengthInSamples;
+            long fileSampleOffset = -delaySampleCount;
             int chunkSampleCount = _header.SampleRate / peaksPerSecond;
-            var data = new byte[chunkSampleCount * _header.BlockAlign];
-            var chunkSamples = new float[chunkSampleCount * 2];
+            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
+            float[] chunkSamples = new float[chunkSampleCount * 2];
 
             _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
 
@@ -450,7 +484,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             while (fileSampleOffset < fileSampleCount)
             {
                 // calculate how many samples to skip at the beginning (for positive delays)
-                var startSkipSampleCount = 0;
+                int startSkipSampleCount = 0;
                 if (fileSampleOffset < 0)
                 {
                     startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
@@ -458,23 +492,23 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // calculate how many samples to read from the file
-                var fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
-                var fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
 
                 // read samples from the file
                 if (fileReadSampleCount > 0)
                 {
-                    var fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
                     _stream.Read(data, 0, fileReadByteCount);
                     fileSampleOffset += fileReadSampleCount;
 
-                    var chunkSampleOffset = 0;
-                    var dataByteOffset = 0;
+                    int chunkSampleOffset = 0;
+                    int dataByteOffset = 0;
                     while (dataByteOffset < fileReadByteCount)
                     {
-                        var valuePositive = 0F;
-                        var valueNegative = -0F;
-                        for (var iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
+                        float valuePositive = 0F;
+                        float valueNegative = -0F;
+                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
                         {
                             var v = readSampleDataValue(data, ref dataByteOffset);
                             if (v < 0)
@@ -524,13 +558,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static WavePeakData GenerateEmptyPeaks(string peakFileName, int totalSeconds)
         {
-            var peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
+            int peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
             var peaks = new List<WavePeak>
             {
                 new WavePeak(1000, -1000)
             };
             var totalPeaks = peaksPerSecond * totalSeconds;
-            for (var i = 0; i < totalPeaks; i++)
+            for (int i = 0; i < totalPeaks; i++)
             {
                 peaks.Add(new WavePeak(1, -1));
             }
@@ -540,7 +574,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var stream = File.Create(peakFileName))
             {
                 WaveHeader.WriteHeader(stream, peaksPerSecond, 2, 16, peaks.Count);
-                var buffer = new byte[4];
+                byte[] buffer = new byte[4];
                 foreach (var peak in peaks)
                 {
                     WriteValue16Bit(buffer, 0, peak.Max);
@@ -592,31 +626,31 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // load data
-            var data = new byte[_header.DataChunkSize];
+            byte[] data = new byte[_header.DataChunkSize];
             _stream.Position = _header.DataStartPosition;
             _stream.Read(data, 0, data.Length);
 
             // read peak values
             WavePeak[] peaks = new WavePeak[_header.LengthInSamples];
-            var peakIndex = 0;
+            int peakIndex = 0;
             if (_header.NumberOfChannels == 2)
             {
                 // max value in left channel, min value in right channel
                 int byteIndex = 0;
                 while (byteIndex < data.Length)
                 {
-                    var max = (short)ReadValue16Bit(data, ref byteIndex);
-                    var min = (short)ReadValue16Bit(data, ref byteIndex);
+                    short max = (short)ReadValue16Bit(data, ref byteIndex);
+                    short min = (short)ReadValue16Bit(data, ref byteIndex);
                     peaks[peakIndex++] = new WavePeak(max, min);
                 }
             }
             else
             {
                 // single sample value (for backwards compatibility)
-                var byteIndex = 0;
+                int byteIndex = 0;
                 while (byteIndex < data.Length)
                 {
-                    var value = (short)ReadValue16Bit(data, ref byteIndex);
+                    short value = (short)ReadValue16Bit(data, ref byteIndex);
                     if (value == short.MinValue)
                     {
                         value = -short.MaxValue;
@@ -632,21 +666,23 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static int ReadValue8Bit(byte[] data, ref int index)
         {
-            var result = sbyte.MinValue + data[index];
-            index ++;
+            int result = sbyte.MinValue + data[index];
+            index += 1;
             return result;
         }
 
         private static int ReadValue16Bit(byte[] data, ref int index)
         {
-            var result = data[index] | (data[index + 1] << 8);
+            int result = (short)
+                ((data[index]) |
+                 (data[index + 1] << 8));
             index += 2;
             return result;
         }
 
         private static int ReadValue24Bit(byte[] data, ref int index)
         {
-            var result =
+            int result =
                 ((data[index] << 8) |
                  (data[index + 1] << 16) |
                  (data[index + 2] << 24)) >> 8;
@@ -656,7 +692,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static int ReadValue32Bit(byte[] data, ref int index)
         {
-            var result =
+            int result =
                 (data[index]) |
                 (data[index + 1] << 8) |
                 (data[index + 2] << 16) |
@@ -693,7 +729,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private double GetSampleScale()
         {
-            return 1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1);
+            return (1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1));
         }
 
         private double GetSampleAndChannelScale()
@@ -742,7 +778,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public void Close()
         {
-            _stream?.Close();
+            if (_stream != null)
+            {
+                _stream.Close();
+            }
         }
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
@@ -878,6 +917,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             public static string GetSpectrogramFolder(string videoFileName, int trackNumber = 0)
             {
+                if (trackNumber < 0)
+                {
+                    trackNumber = 0;
+                }
+
                 var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))
                 {
