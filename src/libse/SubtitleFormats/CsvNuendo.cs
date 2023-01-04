@@ -47,13 +47,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            bool continuation = false;
+            var continuation = false;
             Paragraph p = null;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    string[] parts = line.Split(',');
+                    var parts = line.Split(',');
                     if (parts.Length == 4)
                     {
                         try
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var actor = Utilities.FixQuotes(parts[0]);
                             var start = DecodeTime(parts[1]);
                             var end = DecodeTime(parts[2]);
-                            string text = Utilities.FixQuotes(parts[3]);
+                            var text = Utilities.FixQuotes(parts[3]);
                             p = new Paragraph(start, end, text);
                             if (!string.IsNullOrEmpty(actor))
                             {
