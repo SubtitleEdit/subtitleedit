@@ -26,7 +26,7 @@
    * Optimize ASSA style import
    * Improve line split a little - thx i990049
    * Add a few English words/names to dictionaries
-   * Make formatting shortcuts in waveform work w multi-lines
+   * Make formatting shortcuts in waveform work w selected lines
    * Remember font in burn-in - thx Nespula95
    * Remember "Merge lines with same text" settings - thx kamitsu2004
    * Update Whisper CPP to v1.0.4
