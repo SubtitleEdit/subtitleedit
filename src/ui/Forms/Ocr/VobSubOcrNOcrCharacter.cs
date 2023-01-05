@@ -56,6 +56,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool IsItalic => checkBoxItalic.Checked;
 
+        public bool UseOnce { get; private set; }
+
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showExpand, bool showShrink, string text)
         {
             listBoxLinesForeground.Items.Clear();
@@ -66,6 +68,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             radioButtonHot.Checked = true;
             ShrinkSelection = false;
             ExpandSelection = false;
+            UseOnce = false;
 
             textBoxCharacters.Text = text;
             NOcrChar = new NOcrChar { MarginTop = character.Top };
@@ -191,6 +194,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             NOcrChar.Text = textBoxCharacters.Text;
             NOcrChar.Italic = checkBoxItalic.Checked;
+            UseOnce = false;
             DialogResult = DialogResult.OK;
         }
 
@@ -890,7 +894,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                buttonOK_Click(null, null);
+
+                if (e.Modifiers == Keys.Control)
+                {
+                    buttonOnce_Click(null, null);
+                } 
+                else
+                {
+                    buttonOK_Click(null, null);
+                }
             }
         }
 
@@ -1007,6 +1019,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubOcrNOcrCharacter_Shown(object sender, EventArgs e)
         {
             textBoxCharacters.Focus();
+        }
+
+        private void buttonOnce_Click(object sender, EventArgs e)
+        {
+            NOcrChar.Text = textBoxCharacters.Text;
+            NOcrChar.Italic = checkBoxItalic.Checked;
+            UseOnce = true;
+            DialogResult = DialogResult.OK;
         }
     }
 }

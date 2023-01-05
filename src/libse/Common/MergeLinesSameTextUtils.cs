@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var mergedIndexes = new List<int>();
             var removed = new List<int>();
             var mergedSubtitle = new Subtitle();
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (removed.Contains(i - 1))
                 {
@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                 mergedSubtitle.Paragraphs.Add(p);
 
-                for (int j = i; j < subtitle.Paragraphs.Count; j++)
+                for (var j = i; j < subtitle.Paragraphs.Count; j++)
                 {
                     if (removed.Contains(j))
                     {
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                     var next = subtitle.GetParagraphOrDefault(j);
                     var incrementText = string.Empty;
-                    if ((QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)))
+                    if (QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText))
                     {
                         p.Text = next.Text;
                         if (!string.IsNullOrEmpty(incrementText))
@@ -49,6 +49,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                         {
                             mergedIndexes.Add(i - 1);
                         }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
@@ -77,10 +81,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (p.Text != null && next.Text != null)
             {
-                string currentTextNoTags = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
-                string nextTextNoTags = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
+                var currentTextNoTags = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+                var nextTextNoTags = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
                 return string.Compare(currentTextNoTags, nextTextNoTags, StringComparison.OrdinalIgnoreCase) == 0;
             }
+
             return false;
         }
 

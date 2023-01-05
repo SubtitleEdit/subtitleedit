@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -18,6 +19,7 @@ namespace UpdateAssemblyInfo
         private static readonly Regex AssemblyInfoFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.226")]
         private static readonly Regex TemplateFileCopyrightRegex; // e.g.: [assembly: AssemblyCopyright("Copyright 2001-2019, Nikse")]
         private static readonly Regex AssemblyInfoFileRevisionGuidRegex; // e.g.: [assembly: AssemblyDescription("0e82e5769c9b235383991082c0a0bba96d20c69d")]
+
         static Program()
         {
             var options = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant;
@@ -39,10 +41,11 @@ namespace UpdateAssemblyInfo
             private int Major { get; }
             private int Minor { get; }
             private int Maintenance { get; }
-            public int Build { get; }
+            public int Build { get; set; }
             public string RevisionGuid { get; }
 
             public string FullVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
+            public string NormalVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D}", Major, Minor, Maintenance, Build).TrimEnd();
             public string ShortVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
             public string MajorMinor => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}", Major, Minor);
 
@@ -92,7 +95,7 @@ namespace UpdateAssemblyInfo
 
             public int CompareTo(VersionInfo vi)
             {
-                int cmp = 1;
+                var cmp = 1;
                 if (!ReferenceEquals(vi, null))
                 {
                     cmp = Major.CompareTo(vi.Major);
@@ -105,6 +108,7 @@ namespace UpdateAssemblyInfo
                         cmp = Maintenance.CompareTo(vi.Maintenance);
                     }
                 }
+
                 return cmp;
             }
 
@@ -254,7 +258,7 @@ namespace UpdateAssemblyInfo
             {
                 currentRepositoryVersion = new VersionInfo(); // no git repository
             }
-            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify refs/heads/master", workingDirectory) && clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags refs/heads/master", workingDirectory))
+            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify refs/heads/main", workingDirectory) && clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags refs/heads/main", workingDirectory))
             {
                 if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
@@ -309,10 +313,19 @@ namespace UpdateAssemblyInfo
             Console.Write(WorkInProgress);
         }
 
+        //debug: "..\..\ui\Properties\AssemblyInfo.cs.template" "..\..\src\libse\Properties\AssemblyInfo.cs.template"
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
+
+            if (args.Length == 1 && Environment.GetCommandLineArgs()[1] == "winget")
+            {
+                GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
+                UpdateWinGet(latestRepositoryVersion);
+                return 0;
+            }
+
             if (args.Length != 2)
             {
                 Console.WriteLine("Usage: " + myName + " <se-assmbly-template> <libse-assmbly-template>");
@@ -325,11 +338,10 @@ namespace UpdateAssemblyInfo
             {
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
                 var libSeTemplateFileName = Environment.GetCommandLineArgs()[2];
-                VersionInfo newVersion;
-
                 GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 var currentVersion = GetCurrentVersion(seTemplateFileName);
                 var updateTemplateFile = false;
+                VersionInfo newVersion;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)
                 {
                     // version sequence has been bumped for new release: must update template file too
@@ -359,6 +371,7 @@ namespace UpdateAssemblyInfo
                         var tmx14FileName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(libSeTemplateFileName)) ?? throw new InvalidOperationException(), "SubtitleFormats", "Tmx14.cs");
                         UpdateTmx14ToolVersion(tmx14FileName, newVersion, oldVersion);
                     }
+
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
                     UpdateAssemblyInfo(seTemplateFileName, newVersion, updateTemplateFile);
                 }
@@ -376,6 +389,107 @@ namespace UpdateAssemblyInfo
 
                 return 2;
             }
+        }
+
+        private static void UpdateWinGet(VersionInfo version)
+        {
+            if (version.Build != 0)
+            {
+                return;
+            }
+
+            var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+            var dir = Path.Combine(workingDirectory, "winget");
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "winget");
+            }
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "..", "winget");
+            }
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "..", "..", "winget");
+            }
+            if (!Directory.Exists(dir))
+            {
+                dir = Path.Combine(workingDirectory, "..", "..", "..", "..", "winget");
+            }
+
+            if (!Directory.Exists(dir))
+            {
+                return;
+            }
+
+            var sha256Hash = ComputeSha256HashForInstaller(version);
+
+            var installer = Path.Combine(dir, "Nikse.SubtitleEdit.installer.yaml");
+            var yaml = File.ReadAllText(installer);
+            yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); //PackageVersion: 3.6.7.0
+            yaml = SetVariable(yaml, "ReleaseDate", DateTime.Now.ToString("yyyy-MM-dd")); //ReleaseDate: 2022-08-13
+            yaml = SetVariable(yaml, "InstallerUrl", $"https://github.com/SubtitleEdit/subtitleedit/releases/download/{version.ShortVersion}/SubtitleEdit-{version.ShortVersion}-Setup.exe"); //InstallerUrl: https://github.com/SubtitleEdit/subtitleedit/releases/download/3.6.7/SubtitleEdit-3.6.7-Setup.exe
+            yaml = SetVariable(yaml, "InstallerSha256", sha256Hash); //InstallerSha256: 66F2BEFD07E2295EE606BC02A4EAACB1E0D2DEBE42B4D167AE45C5CC76F5E9A3
+            File.WriteAllText(installer, yaml.TrimEnd()+ Environment.NewLine + Environment.NewLine);
+
+            var locale = Path.Combine(dir, "Nikse.SubtitleEdit.locale.en-US.yaml");
+            yaml = File.ReadAllText(locale);
+            yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); // PackageVersion: 3.6.7.0
+            File.WriteAllText(locale, yaml.TrimEnd() + Environment.NewLine + Environment.NewLine);
+
+            var main = Path.Combine(dir, "Nikse.SubtitleEdit.yaml");
+            yaml = File.ReadAllText(main);
+            yaml = SetVariable(yaml, "PackageVersion", version.NormalVersion); // PackageVersion: 3.6.7.0
+            File.WriteAllText(main, yaml.TrimEnd() + Environment.NewLine + Environment.NewLine);
+
+            Console.WriteLine("Winget updated.");
+        }
+
+        static string ComputeSha256HashForInstaller(VersionInfo version)
+        {
+            var exe = $"SubtitleEdit-{version.ShortVersion}-Setup.exe";
+            if (!File.Exists(exe))
+            {
+                exe = @"C:\git\subtitleedit\" + exe;
+            }
+
+            if (!File.Exists(exe))
+            {
+                return "TODO: fix sha 256 hash";
+            }
+
+            using (var sha256Hash = SHA256.Create())
+            {
+                var bytes = sha256Hash.ComputeHash(File.ReadAllBytes(exe));
+                var builder = new StringBuilder();
+                for (var i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("X2"));
+                }
+
+                return builder.ToString();
+            }
+        }
+
+        private static string SetVariable(string txt, string targetVariable, string targetValue)
+        {
+            var sb = new StringBuilder();
+            foreach (var line in txt.Split('\n'))
+            {
+                var s = line.Trim('\r');
+                var searchStr = $"{targetVariable}:";
+                if (s.TrimStart().StartsWith(searchStr.TrimStart(), StringComparison.OrdinalIgnoreCase))
+                {
+                    var start = line.Substring(0, line.IndexOf(searchStr, StringComparison.OrdinalIgnoreCase) + searchStr.Length);
+                    sb.AppendLine($"{start} {targetValue}");
+                }
+                else
+                {
+                    sb.AppendLine(s);
+                }
+            }
+
+            return sb.ToString();
         }
 
         private static string GetGitPath()

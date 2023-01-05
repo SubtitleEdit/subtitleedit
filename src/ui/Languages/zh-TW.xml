@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>譯者: BAWAN | 風逸蘭 | Jackie Lam | SiderealArt</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -204,7 +204,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Bottom>底部</Bottom>
     <TakePosFromVideo>Take video position</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Change script resolution</Title>
     <SourceVideoRes>原始影片解析度</SourceVideoRes>
     <TargetVideoRes>目標影片解析度</TargetVideoRes>
@@ -212,7 +212,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChangeResolutionFontSize>Change resolution for font size</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Change resolution for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Change resolution for drawing</ChangeResolutionDrawing>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetPosition>
     <SetPosition>設定位置</SetPosition>
     <VideoResolutionX>影片解析度: {0}</VideoResolutionX>
@@ -718,7 +718,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixCommonOcrErrors>修復一般 OCR 錯誤 (使用 OCR 取代清單)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>已修復一般 OCR 錯誤 (使用 OcrReplaceList 檔案): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>移除數字之間的空格</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Fix dialogs on one line</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Remove start dash in first line for non dialogs</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalize strings</NormalizeStrings>
     <FixTurkishAnsi>修復土耳其語 ANSI (冰島) 字母為 Unicode</FixTurkishAnsi>
@@ -2117,7 +2117,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <AutoBackupDeleteAfter>指定時間後刪除</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 個月</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 個月</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 個月</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} 個月</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>檢查有無更新</CheckForUpdates>
     <AutoSave>自動儲存</AutoSave>
     <AllowEditOfOriginalSubtitle>允許編輯原始字幕</AllowEditOfOriginalSubtitle>

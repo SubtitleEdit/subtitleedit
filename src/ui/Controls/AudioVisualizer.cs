@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (_shotChanges?.Count > 0)
                 {
-                    _shotChanges = _shotChanges.Select(sc => sc /= 1.001).ToList();
+                    _shotChanges = _shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
                 }
             }
         }
@@ -1158,13 +1158,13 @@ namespace Nikse.SubtitleEdit.Controls
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int SecondsToXPosition(double seconds)
         {
-            return (int)Math.Round(seconds * _wavePeaks.SampleRate * _zoomFactor);
+            return (int)Math.Round(seconds * _wavePeaks.SampleRate * _zoomFactor, MidpointRounding.AwayFromZero);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int SecondsToSampleIndex(double seconds)
         {
-            return (int)Math.Round(seconds * _wavePeaks.SampleRate);
+            return (int)Math.Round(seconds * _wavePeaks.SampleRate, MidpointRounding.AwayFromZero);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

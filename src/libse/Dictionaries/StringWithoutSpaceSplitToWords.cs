@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -38,7 +39,22 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var s = input;
             var check = s;
             var spaces = new List<int>();
-            for (int i = 0; i < words.Length; i++)
+
+            if (words.Contains(input))
+            {
+                return input;
+            }
+
+            if (Configuration.Settings.Tools.OcrUseWordSplitListAvoidPropercase && input.Length > 1 &&
+                input.StartsWith(input[0].ToString().ToUpperInvariant()) &&
+                input != input.ToLowerInvariant() && input != input.ToUpperInvariant() &&
+                input.Length < 12)
+            { 
+                //TODO: Improve... some better way to detect uncommon/special names
+                return input;
+            }
+
+            for (var i = 0; i < words.Length; i++)
             {
                 var w = words[i];
                 if (w.Length >= input.Length)
@@ -76,6 +92,35 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             return s.Trim();
+        }
+
+        public static string[] LoadWordSplitList(string threeLetterIsoLanguageName, NameList nameList)
+        {
+            var fileName = $"{Configuration.DictionariesDirectory}{threeLetterIsoLanguageName}_WordSplitList.txt";
+            if (!File.Exists(fileName))
+            {
+                return Array.Empty<string>();
+            }
+
+            var wordList = File.ReadAllText(fileName).SplitToLines().Where(p => p.Trim().Length > 0).ToList();
+
+            if (threeLetterIsoLanguageName == "eng")
+            {
+                wordList.AddRange(new List<string>
+                {
+                    // Ignore list
+                    "Andor", "honour", "honours", "putain", "whoah", "eastside", "Starpath", "comlink", "Taamet",
+                    "Atwater", "Lakeview", "Glassman", "Starfleet", "Coulda", "Woulda", "percenters", 
+                    "starbase", "damnit", "Goddamnit", "Goodfellas", "Stillwater", "ahold", "Coldplay",
+                });
+            }
+
+            if (nameList != null)
+            {
+                wordList.AddRange(nameList.GetNames().Where(p => p.Length > 4));
+            }
+
+            return wordList.OrderByDescending(p => p.Length).ToArray();
         }
     }
 }

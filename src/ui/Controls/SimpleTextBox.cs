@@ -35,15 +35,26 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetAlignment()
         {
-            if (Configuration.Settings.General.CenterSubtitleInTextBox &&
-                TextAlign != HorizontalAlignment.Center)
+            if (Configuration.Settings.General.CenterSubtitleInTextBox && TextAlign != HorizontalAlignment.Center)
             {
                 TextAlign = HorizontalAlignment.Center;
             }
         }
 
+        //TODO: make textbox work with shift+up/down
+        //[DllImport("user32.dll")]
+        //public static extern bool GetCaretPos(out System.Drawing.Point lpPoint);
+
+        //private bool? KeyDownAtTop;
+        //private bool? KeyDownAtBottom;
         private void SETextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            //var p = new Point();
+            //bool result = GetCaretPos(out p);
+            //int idx = GetCharIndexFromPosition(p);
+            //Console.WriteLine(idx);
+
+
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 SelectAll();
@@ -54,6 +65,77 @@ namespace Nikse.SubtitleEdit.Controls
                 UiUtil.ApplyControlBackspace(this);
                 e.SuppressKeyPress = true;
             }
+            //else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Up)
+            //{
+            //    var line = GetLineFromCharIndex(SelectionStart);
+            //    if (line == 0)
+            //    {
+            //        if (SelectionLength >= TextLength)
+            //        {
+            //            e.SuppressKeyPress = true;
+            //            if (KeyDownAtBottom == true && Lines.Length > 1)
+            //            {
+            //                KeyDownAtTop = null;
+            //                KeyDownAtBottom = null;
+            //                var charIndex = GetFirstCharIndexFromLine(Lines.Length - 1) - Environment.NewLine.Length;
+            //                SelectionStart = 0;
+            //                SelectionLength = 0;
+            //                Refresh();
+            //                SelectionLength = charIndex;
+            //                KeyDownAtTop = null;
+            //                KeyDownAtBottom = null;
+            //            }
+            //            else if (KeyDownAtTop == true)
+            //            {
+            //                var pOld = GetPositionFromCharIndex(SelectionStart);
+            //                var pNew = new Point(pOld.X, pOld.Y - Font.Height);
+            //                var charIndex = GetCharIndexFromPosition(pNew);
+            //                SelectionStart = charIndex;
+            //                SelectionLength = charIndex + TextLength - charIndex;
+            //                if (SelectionLength > 1)
+            //                    SelectionLength -= 2;
+            //                KeyDownAtTop = true;
+            //                KeyDownAtBottom = false;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            //e.SuppressKeyPress = true;
+            //            //var oldSelectionStart = SelectionStart;
+            //            //var oldSelectionLength = SelectionLength;
+            //            //SelectionStart = 0;
+            //            //SelectionLength = oldSelectionStart + oldSelectionLength;
+            //            //KeyDownAtTop = null;
+            //            //KeyDownAtBottom = null;
+            //        }
+            //    }
+
+            //}
+            //else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Down)
+            //{
+            //    var line = GetLineFromCharIndex(SelectionStart + SelectionLength);
+            //    if (line == Lines.Length - 1)
+            //    {
+            //        if (SelectionLength >= TextLength)
+            //        {
+            //            e.SuppressKeyPress = true;
+            //            var pOld = GetPositionFromCharIndex(TextLength + 1);
+            //            var pNew = new Point(pOld.X, pOld.Y + Font.Height);
+            //            var charIndex = GetCharIndexFromPosition(pNew);
+            //            SelectionStart = charIndex;
+            //            SelectionLength = charIndex + TextLength - charIndex + 1;
+            //            KeyDownAtTop = null;
+            //            KeyDownAtBottom = null;
+            //        }
+            //        else
+            //        {
+            //            e.SuppressKeyPress = true;
+            //            SelectionLength = Text.Length - SelectionStart + 1;
+            //            KeyDownAtTop = false;
+            //            KeyDownAtBottom = true;
+            //        }
+            //    }
+            //}
         }
 
         private void SETextBox_MouseUp(object sender, MouseEventArgs e)
@@ -67,7 +149,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (MouseButtons == MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
             {
                 var pt = new Point(e.X, e.Y);
-                int index = GetCharIndexFromPosition(pt);
+                var index = GetCharIndexFromPosition(pt);
                 if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
                 {
                     // re-make selection
@@ -103,7 +185,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void SETextBox_DragDrop(object sender, DragEventArgs e)
         {
             var pt = PointToClient(new Point(e.X, e.Y));
-            int index = GetCharIndexFromPosition(pt);
+            var index = GetCharIndexFromPosition(pt);
 
             string newText;
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
@@ -121,12 +203,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                bool justAppend = index == Text.Length - 1 && index > 0;
+                var justAppend = index == Text.Length - 1 && index > 0;
                 const string expectedChars = ":;]<.!?؟";
                 if (_dragFromThis)
                 {
                     _dragFromThis = false;
-                    long milliseconds = (DateTime.UtcNow.Ticks - _dragStartTicks) / 10000;
+                    var milliseconds = (DateTime.UtcNow.Ticks - _dragStartTicks) / 10000;
                     if (milliseconds < 400)
                     {
                         SelectionLength = 0;
@@ -184,6 +266,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                     }
                 }
+
                 if (justAppend)
                 {
                     index = Text.Length;
@@ -195,7 +278,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // fix start spaces
-                int endIndex = index + newText.Length;
+                var endIndex = index + newText.Length;
                 if (index > 0 && !newText.StartsWith(' ') && Text[index - 1] != ' ')
                 {
                     Text = Text.Insert(index, " ");
@@ -210,7 +293,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // fix end spaces
                 if (endIndex < Text.Length && !newText.EndsWith(' ') && Text[endIndex] != ' ')
                 {
-                    bool lastWord = expectedChars.Contains(Text[endIndex]);
+                    var lastWord = expectedChars.Contains(Text[endIndex]);
                     if (!lastWord)
                     {
                         Text = Text.Insert(endIndex, " ");
@@ -254,7 +337,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (m.Msg == WM_LBUTTONDOWN)
             {
-                long milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
+                var milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
                 if (milliseconds > 10)
                 {
                     _dragText = SelectedText;

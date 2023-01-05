@@ -2,7 +2,7 @@
 <Language Name="Македонски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Превод на македонски: Numberguy
 dzoole@hotmail.com</TranslatedBy>
     <CultureName>mk-MK</CultureName>
@@ -607,7 +607,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Поправи чести OCR грешки (користејќи OCR листа за замена)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Поправени чести OCR грешки (Користена OcrЛиста за замена): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Отстрани празни места меѓу броеви</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Поправи дијалози кои се во еден ред</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Поправи дијалози кои се во еден ред</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Отстранети празни места меѓу броеви: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Поправи Турски ANSI (Исландски) букви во Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Поправи ја данската буква 'i'</FixDanishLetterI>
@@ -1869,8 +1869,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBackupEveryFifteenMinutes>на 15 минути</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Избриши по</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месец</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 месеци</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 месеци</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} месеци</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Провери за нова верзија</CheckForUpdates>
     <AutoSave>Автоматско зачувување</AutoSave>
     <AllowEditOfOriginalSubtitle>Дозволи уредување на изворен титл</AllowEditOfOriginalSubtitle>

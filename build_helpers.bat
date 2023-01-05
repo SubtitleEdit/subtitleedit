@@ -20,7 +20,7 @@ IF NOT EXIST "%ToolPath%" (
   GOTO END
 )
 
-"%ToolPath%" "LanguageMaster.xml" "src\ui\Logic\LanguageDeserializer.cs"
+"%ToolPath%" "LanguageBaseEnglish.xml" "src\ui\Logic\LanguageDeserializer.cs"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the language files...

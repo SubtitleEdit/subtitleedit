@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
     {
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.UtcNow;
-
         private List<string> _wordListNames = new List<string>();
         private List<string> _userWordList = new List<string>();
         private OcrFixReplaceList _ocrFixReplaceList;
@@ -74,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                         }
                     }
                 }
+
                 // Neutral culture e.g: "en" for all (en-US, en-GB, en-JM...)
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                     var namesFile = Path.Combine(dir, culture.TwoLetterISOLanguageName + "_names.xml");
                     if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile))
                     {
-                        bool alreadyInList = false;
+                        var alreadyInList = false;
                         foreach (var ci in cultures)
                         {
                             // If culture is already added to the list, it doesn't matter if it's "culture specific" do not re-add.
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 labelStatus.Text = string.Format(LanguageSettings.Current.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
-                for (int i = 0; i < listViewNames.Items.Count; i++)
+                for (var i = 0; i < listViewNames.Items.Count; i++)
                 {
                     if (listViewNames.Items[i].ToString() == text)
                     {
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
             else
             {
-                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
+                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists, LanguageSettings.Current.General.Title, MessageBoxButtons.OK);
             }
         }
 
@@ -291,18 +291,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 DialogResult result;
                 if (itemsToRemoveCount == 1)
                 {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel);
                 }
                 else
                 {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel);
                 }
 
                 if (result == DialogResult.Yes)
                 {
                     var removeCount = 0;
                     var namesList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                    for (int idx = listViewNames.SelectedIndices.Count - 1; idx >= 0; idx--)
+                    for (var idx = listViewNames.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listViewNames.SelectedIndices[idx];
                         text = listViewNames.Items[index].Text;
@@ -332,13 +332,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
                     if (removeCount < itemsToRemoveCount && Configuration.Settings.WordLists.UseOnlineNames && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesUrl))
                     {
-                        MessageBox.Show(LanguageSettings.Current.Settings.CannotUpdateNamesOnline);
+                        MessageBox.Show(LanguageSettings.Current.Settings.CannotUpdateNamesOnline, LanguageSettings.Current.General.Title, MessageBoxButtons.OK);
                         return;
                     }
 
                     if (removeCount == 0)
                     {
-                        MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound);
+                        MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound, LanguageSettings.Current.General.Title, MessageBoxButtons.OK);
                     }
                 }
             }
@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
             else
             {
-                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
+                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists, LanguageSettings.Current.General.Title, MessageBoxButtons.OK);
             }
         }
 
@@ -418,11 +418,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 DialogResult result;
                 if (itemsToRemoveCount == 1)
                 {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel);
                 }
                 else
                 {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel);
                 }
 
                 if (result == DialogResult.Yes)
@@ -449,12 +449,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
                         words.Sort();
                         var doc = new XmlDocument();
                         doc.Load(userWordFileName);
+
+                        if (doc.DocumentElement == null)
+                        {
+                            return;
+                        }
+
                         doc.DocumentElement.RemoveAll();
-                        foreach (string word in words)
+                        foreach (var word in words)
                         {
                             XmlNode node = doc.CreateElement("word");
                             node.InnerText = word;
-                            doc.DocumentElement.AppendChild(node);
+                            doc.DocumentElement?.AppendChild(node);
                         }
                         doc.Save(userWordFileName);
                         LoadUserWords(language, false); // reload
@@ -475,7 +481,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
                     if (removeCount < itemsToRemoveCount)
                     {
-                        MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound);
+                        MessageBox.Show(LanguageSettings.Current.Settings.WordNotFound, LanguageSettings.Current.General.Title, MessageBoxButtons.OK);
                     }
                 }
             }
@@ -503,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var added = _ocrFixReplaceList.AddWordOrPartial(key, value);
             if (!added)
             {
-                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists);
+                MessageBox.Show(LanguageSettings.Current.Settings.WordAlreadyExists, LanguageSettings.Current.General.Title, MessageBoxButtons.OK);
                 return;
             }
 
@@ -598,6 +604,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 return;
             }
 
+            e.SuppressKeyPress = true;
             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
                 TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
             {
@@ -606,25 +613,24 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             if (e.KeyCode == Keys.Delete)
             {
-                if (_listBoxSearchString.Length > 0)
-                {
-                    _listBoxSearchString = _listBoxSearchString.Remove(_listBoxSearchString.Length - 1, 1);
-                }
-            }
-            else
-            {
-                _listBoxSearchString += e.KeyCode.ToString();
+                ButtonRemoveNameEtcClick(null, null);
+                return;
             }
 
+            _listBoxSearchString += e.KeyCode.ToString();
             _listBoxSearchStringLastUsed = DateTime.UtcNow;
             FindAndSelectListViewItem(sender as ListView);
-            e.SuppressKeyPress = true;
         }
 
         private void FindAndSelectListViewItem(ListView listView)
         {
+            if (listView == null)
+            {
+                return;
+            }
+
             listView.SelectedItems.Clear();
-            int i = 0;
+            var i = 0;
             foreach (ListViewItem s in listView.Items)
             {
                 if (s.Text.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
@@ -651,76 +657,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
 
             UiUtil.OpenFolder(dictionaryFolder);
-        }
-
-        private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
-        {
-            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
-            if (languageIndex < 0)
-            {
-                return;
-            }
-
-            if (!(comboBoxWordListLanguage.Items[languageIndex] is Settings.ComboBoxLanguage))
-            {
-                return;
-            }
-
-            if (listBoxOcrFixList.SelectedIndices.Count == 0)
-            {
-                return;
-            }
-
-            var itemsToRemoveCount = listBoxOcrFixList.SelectedIndices.Count;
-
-            var index = listBoxOcrFixList.SelectedIndex;
-            var text = listBoxOcrFixList.Items[index].ToString();
-            var key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
-
-            if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
-            {
-                DialogResult result;
-                if (itemsToRemoveCount == 1)
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-                else
-                {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
-                }
-
-                if (result == DialogResult.Yes)
-                {
-                    listBoxOcrFixList.BeginUpdate();
-                    for (var idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
-                    {
-                        index = listBoxOcrFixList.SelectedIndices[idx];
-                        text = listBoxOcrFixList.Items[index].ToString();
-                        key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
-
-                        if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
-                        {
-                            _ocrFixReplaceList.RemoveWordOrPartial(key);
-                        }
-                        listBoxOcrFixList.Items.RemoveAt(index);
-                    }
-                    listBoxOcrFixList.EndUpdate();
-
-                    LoadOcrFixList(false);
-                    buttonRemoveOcrFix.Enabled = false;
-
-                    if (index < listBoxOcrFixList.Items.Count)
-                    {
-                        listBoxOcrFixList.SelectedIndex = index;
-                    }
-                    else if (listBoxOcrFixList.Items.Count > 0)
-                    {
-                        listBoxOcrFixList.SelectedIndex = index - 1;
-                    }
-
-                    listBoxOcrFixList.Focus();
-                }
-            }
         }
 
         private void ButtonRemoveOcrFixClick(object sender, EventArgs e)
@@ -752,17 +688,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 DialogResult result;
                 if (itemsToRemoveCount == 1)
                 {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel);
                 }
                 else
                 {
-                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
+                    result = MessageBox.Show(string.Format(LanguageSettings.Current.Main.DeleteXLinesPrompt, itemsToRemoveCount), LanguageSettings.Current.General.Title, MessageBoxButtons.YesNoCancel);
                 }
 
                 if (result == DialogResult.Yes)
                 {
                     listBoxOcrFixList.BeginUpdate();
-                    for (int idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
+                    for (var idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxOcrFixList.SelectedIndices[idx];
                         text = listBoxOcrFixList.Items[index].ToString();
@@ -820,6 +756,78 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void listBoxUserWordLists_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape ||
+                e.KeyCode == Keys.Tab ||
+                e.KeyCode == Keys.Return ||
+                e.KeyCode == Keys.Enter ||
+                e.KeyCode == Keys.Down ||
+                e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.PageDown ||
+                e.KeyCode == Keys.PageUp ||
+                e.KeyCode == Keys.None ||
+                e.KeyCode == UiUtil.HelpKeys ||
+                e.KeyCode == Keys.Home ||
+                e.KeyCode == Keys.End)
+            {
+                return;
+            }
+
+            e.SuppressKeyPress = true;
+            if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
+                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
+            {
+                _listBoxSearchString = string.Empty;
+            }
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                ButtonRemoveUserWordClick(null, null);
+                return;
+            }
+
+            _listBoxSearchString += e.KeyCode.ToString();
+            _listBoxSearchStringLastUsed = DateTime.UtcNow;
+            FindAndSelectListViewItem(sender as ListView);
+        }
+
+        private void listBoxOcrFixList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape ||
+                e.KeyCode == Keys.Tab ||
+                e.KeyCode == Keys.Return ||
+                e.KeyCode == Keys.Enter ||
+                e.KeyCode == Keys.Down ||
+                e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.PageDown ||
+                e.KeyCode == Keys.PageUp ||
+                e.KeyCode == Keys.None ||
+                e.KeyCode == UiUtil.HelpKeys ||
+                e.KeyCode == Keys.Home ||
+                e.KeyCode == Keys.End)
+            {
+                return;
+            }
+
+            e.SuppressKeyPress = true;
+            if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
+                TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds)
+            {
+                _listBoxSearchString = string.Empty;
+            }
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                ButtonRemoveOcrFixClick(null, null);
+                return;
+            }
+
+            _listBoxSearchString += e.KeyCode.ToString();
+            _listBoxSearchStringLastUsed = DateTime.UtcNow;
+            FindAndSelectListViewItem(sender as ListView);
         }
     }
 }

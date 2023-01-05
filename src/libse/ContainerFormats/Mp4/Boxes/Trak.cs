@@ -7,9 +7,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     /// </summary>
     public class Trak : Box
     {
-
-        public Mdia Mdia;
-        public Tkhd Tkhd;
+        public Mdia Mdia { get; set; }
+        public Tkhd Tkhd { get; set; }
 
         public Trak(Stream fs, ulong maximumLength)
         {
@@ -33,6 +32,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }
-
     }
 }

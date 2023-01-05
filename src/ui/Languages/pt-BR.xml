@@ -2,7 +2,7 @@
 <Language Name="Português (Brasil)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Tradução (Português do Brasil): igorruckert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -222,7 +222,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <Bottom>Inferior</Bottom>
     <TakePosFromVideo>Obter posição do vídeo</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Alterar resolução do script ASSA</Title>
     <SourceVideoRes>Resolução do vídeo fonte</SourceVideoRes>
     <TargetVideoRes>Resolução do vídeo de destino</TargetVideoRes>
@@ -231,7 +231,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <ChangeResolutionPositions>Alterar resolução para posição</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Alterar resolução para desenho</ChangeResolutionDrawing>
     <SourceAndTargetEqual>A resoluções de origem e destino são iguais, nada a ser feito.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Gerar caixa de fundo</Title>
     <Padding>Preenchimento</Padding>
@@ -345,8 +345,8 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <ChangeAlphaForSelectedLines>Ajustar alpha para linhas selecionadas...</ChangeAlphaForSelectedLines>
     <AlignSelectedLines>Alinhas linhas selecionadas</AlignSelectedLines>
     <CenterSelectedLines>Centralizar linhas selecionadas (horizontalmente, manter posição vertical)</CenterSelectedLines>
-    <TopAlignSelectedLines>Alinhamento superior da linhas selecionadas (manter posição horizontal)</TopAlignSelectedLines>
-    <BottomAlignSelectedLines>Alinhamento inferior da linhas selecionadas (manter posição horizontal)</BottomAlignSelectedLines>
+    <TopAlignSelectedLines>Alinhamento superior das linhas selecionadas (manter posição horizontal)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>Alinhamento inferior das linhas selecionadas (manter posição horizontal)</BottomAlignSelectedLines>
     <ToggleForcedSelectedLines>Alternar "legendas forçadas" para linhas selecionadas</ToggleForcedSelectedLines>
     <SelectForcedLines>Selecionar linhas de legendas forçadas</SelectForcedLines>
     <SizeXY>Tamanho: {0}x{1}</SizeXY>
@@ -745,7 +745,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixCommonOcrErrors>Corrigir erros comuns de OCR (usando lista de substituição OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erros comuns de OCR corrigidos (arquivo OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Eliminar espaços entre números</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Corrigir diálogos em uma linha</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Corrigir diálogos em uma linha</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Remover traço na primeira linha para não diálogos</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizar sequências</NormalizeStrings>
     <FixTurkishAnsi>Corrigir letras Turcas ANSI (Islandês) para Unicode</FixTurkishAnsi>
@@ -798,7 +798,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixDoubleGreaterThan>Remover &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
     <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
-    <FixMusicNotation>Sustituir símbolos musicais (ex.: âTª) por símbolos adequados</FixMusicNotation>
+    <FixMusicNotation>Substituir símbolos musicais (ex.: âTª) por símbolos adequados</FixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
@@ -1479,7 +1479,7 @@ Para usar uma chave API, acesse "Opções -&gt; Configurações -&gt; Ferramenta
     <FileNotFound>Arquivo não encontrado: {0}</FileNotFound>
     <SavedSubtitleX>Legenda salva {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Legenda original salva {0}</SavedOriginalSubtitleX>
-    <FileOnDiskModified>arquivo modificado no disco</FileOnDiskModified>
+    <FileOnDiskModified>Arquivo modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Sobrescrever arquivo {0} modificado em {1} {2}{3} pelo arquivo atual carregado do disco em {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Incapaz de salvar arquivo {0}
 
@@ -2160,8 +2160,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Excluir após</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1mês</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} meses</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Verificar atualizações</CheckForUpdates>
     <AutoSave>Salvar automático</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
@@ -2388,7 +2387,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ToggleMusicSymbols>Alternar símbolos musicais</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas selecionadas)</Alignment>
     <AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
-    <AlignmentN2>Alinhamento infeior central - {\an2}</AlignmentN2>
+    <AlignmentN2>Alinhamento inferior central - {\an2}</AlignmentN2>
     <AlignmentN3>Alinhamento inferior direito - {\an3}</AlignmentN3>
     <AlignmentN4>Alinhamento central esquerdo - {\an4}</AlignmentN4>
     <AlignmentN5>Alinhamento central meio - {\an5}</AlignmentN5>

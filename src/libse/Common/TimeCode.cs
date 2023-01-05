@@ -27,6 +27,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
+
+            if (parts.Length == 3)
+            {
+                if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(parts[2], out var milliseconds))
+                {
+                    return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
+                }
+            }
+
             return 0;
         }
 

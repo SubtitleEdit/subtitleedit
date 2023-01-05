@@ -37,6 +37,9 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelImagePrefix = new System.Windows.Forms.Label();
+            this.textBoxImagePrefix = new System.Windows.Forms.TextBox();
+            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
             this.labelResize = new System.Windows.Forms.Label();
             this.comboBoxResizePercentage = new System.Windows.Forms.ComboBox();
             this.comboBoxBottomMarginUnit = new System.Windows.Forms.ComboBox();
@@ -69,7 +72,6 @@
             this.comboBoxImageFormat = new System.Windows.Forms.ComboBox();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.labelResolution = new System.Windows.Forms.Label();
-            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
             this.checkBoxSimpleRender = new System.Windows.Forms.CheckBox();
@@ -105,6 +107,10 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.profilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -113,6 +119,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).BeginInit();
             this.groupBoxExportImage.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
+            this.contextMenuStripProfile.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -176,6 +183,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.labelImagePrefix);
+            this.groupBoxImageSettings.Controls.Add(this.textBoxImagePrefix);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
             this.groupBoxImageSettings.Controls.Add(this.labelResize);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResizePercentage);
@@ -231,6 +240,48 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // labelImagePrefix
+            // 
+            this.labelImagePrefix.AutoSize = true;
+            this.labelImagePrefix.Location = new System.Drawing.Point(284, 165);
+            this.labelImagePrefix.Name = "labelImagePrefix";
+            this.labelImagePrefix.Size = new System.Drawing.Size(64, 13);
+            this.labelImagePrefix.TabIndex = 64;
+            this.labelImagePrefix.Text = "Image prefix";
+            // 
+            // textBoxImagePrefix
+            // 
+            this.textBoxImagePrefix.Location = new System.Drawing.Point(354, 162);
+            this.textBoxImagePrefix.Name = "textBoxImagePrefix";
+            this.textBoxImagePrefix.Size = new System.Drawing.Size(317, 20);
+            this.textBoxImagePrefix.TabIndex = 63;
+            // 
+            // comboBoxResolution
+            // 
+            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResolution.DropDownWidth = 160;
+            this.comboBoxResolution.FormattingEnabled = true;
+            this.comboBoxResolution.Items.AddRange(new object[] {
+            "4K (4096x2160)",
+            "UHD (3840x2160)",
+            "2K (2048x1080)",
+            "DCI 2K Scope (2048x858)",
+            "DCI 2K Flat (1998x1080)",
+            "1080p (1920x1080)",
+            "1440x1080",
+            "720p (1280x720)",
+            "960x720",
+            "480p (848x480)",
+            "PAL (720x576)",
+            "NTSC (720x480)",
+            "640x352",
+            "640x272"});
+            this.comboBoxResolution.Location = new System.Drawing.Point(112, 78);
+            this.comboBoxResolution.Name = "comboBoxResolution";
+            this.comboBoxResolution.Size = new System.Drawing.Size(123, 21);
+            this.comboBoxResolution.TabIndex = 5;
+            this.comboBoxResolution.SelectedIndexChanged += new System.EventHandler(this.comboBoxResolution_SelectedIndexChanged);
             // 
             // labelResize
             // 
@@ -614,32 +665,6 @@
             this.labelResolution.Size = new System.Drawing.Size(51, 13);
             this.labelResolution.TabIndex = 4;
             this.labelResolution.Text = "Video res";
-            // 
-            // comboBoxResolution
-            // 
-            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxResolution.DropDownWidth = 160;
-            this.comboBoxResolution.FormattingEnabled = true;
-            this.comboBoxResolution.Items.AddRange(new object[] {
-            "4K (4096x2160)",
-            "UHD (3840x2160)",
-            "2K (2048x1080)",
-            "DCI 2K Scope (2048x858)",
-            "DCI 2K Flat (1998x1080)",
-            "1080p (1920x1080)",
-            "1440x1080",
-            "720p (1280x720)",
-            "960x720",
-            "480p (848x480)",
-            "PAL (720x576)",
-            "NTSC (720x480)",
-            "640x352",
-            "640x272"});
-            this.comboBoxResolution.Location = new System.Drawing.Point(112, 78);
-            this.comboBoxResolution.Name = "comboBoxResolution";
-            this.comboBoxResolution.Size = new System.Drawing.Size(123, 21);
-            this.comboBoxResolution.TabIndex = 5;
-            this.comboBoxResolution.SelectedIndexChanged += new System.EventHandler(this.comboBoxResolution_SelectedIndexChanged);
             // 
             // comboBoxHAlign
             // 
@@ -1056,11 +1081,42 @@
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // contextMenuStripProfile
+            // 
+            this.contextMenuStripProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.profilesToolStripMenuItem});
+            this.contextMenuStripProfile.Name = "contextMenuStripProfile";
+            this.contextMenuStripProfile.Size = new System.Drawing.Size(181, 48);
+            // 
+            // profilesToolStripMenuItem
+            // 
+            this.profilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importToolStripMenuItem,
+            this.exportToolStripMenuItem});
+            this.profilesToolStripMenuItem.Name = "profilesToolStripMenuItem";
+            this.profilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.profilesToolStripMenuItem.Text = "Profiles";
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Text = "Export...";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importToolStripMenuItem.Text = "Import...";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 632);
+            this.ContextMenuStrip = this.contextMenuStripProfile;
             this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.groupBoxExportImage);
             this.Controls.Add(this.groupBoxImageSettings);
@@ -1090,6 +1146,7 @@
             this.groupBoxExportImage.ResumeLayout(false);
             this.groupBoxExportImage.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
+            this.contextMenuStripProfile.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1172,5 +1229,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAdjust;
         private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxFcpFullPathUrl;
+        private System.Windows.Forms.Label labelImagePrefix;
+        private System.Windows.Forms.TextBox textBoxImagePrefix;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripProfile;
+        private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
     }
 }

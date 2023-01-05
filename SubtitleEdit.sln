@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.31912.275
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 15.2.26430.04
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "src\ui\SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyInfo", "src\UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
 EndProject
@@ -13,10 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateResourceScript", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
 		build.bat = build.bat
 		build_beta.bat = build_beta.bat
 		build_helpers.bat = build_helpers.bat
 		Changelog.txt = Changelog.txt
+		LanguageBaseEnglish.xml = LanguageBaseEnglish.xml
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 		installer\Subtitle_Edit_installer.iss = installer\Subtitle_Edit_installer.iss
@@ -27,7 +32,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "src\libse\LibSE.cs
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "src\Test\Test.csproj", "{E74CBE84-D225-46F1-BAA4-DB4CF228E7CF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "winget", "winget", "{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28}"
+	ProjectSection(SolutionItems) = preProject
+		winget\Nikse.SubtitleEdit.installer.yaml = winget\Nikse.SubtitleEdit.installer.yaml
+		winget\Nikse.SubtitleEdit.locale.en-US.yaml = winget\Nikse.SubtitleEdit.locale.en-US.yaml
+		winget\Nikse.SubtitleEdit.yaml = winget\Nikse.SubtitleEdit.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +49,10 @@ Global
 		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{511A5B59-1C35-4719-8536-23B19AF9B21A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -50,20 +64,16 @@ Global
 		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Release|Any CPU.ActiveCfg = Release|Win32
-		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Release|Any CPU.Build.0 = Release|Win32
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E74CBE84-D225-46F1-BAA4-DB4CF228E7CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E74CBE84-D225-46F1-BAA4-DB4CF228E7CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E74CBE84-D225-46F1-BAA4-DB4CF228E7CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E74CBE84-D225-46F1-BAA4-DB4CF228E7CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E12BDE22-B6A4-4AB6-AF96-F3C0F89C15EC}

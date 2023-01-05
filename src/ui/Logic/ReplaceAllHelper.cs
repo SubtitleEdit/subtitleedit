@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static int ReplaceAllNonRegEx(FindReplaceDialogHelper findHelper, Subtitle subtitle, int stopAtIndex)
         {
             var replaceCount = 0;
-            for (int i = Math.Max(0, findHelper.StartLineIndex); i < subtitle.Paragraphs.Count; i++)
+            for (var i = Math.Max(0, findHelper.StartLineIndex); i < subtitle.Paragraphs.Count; i++)
             {
                 if (i >= stopAtIndex)
                 {
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic
                 while (findHelper.FindNext(p.Text, start))
                 {
                     p.Text = p.Text.Remove(findHelper.SelectedIndex, findHelper.FindTextLength).Insert(findHelper.SelectedIndex, findHelper.ReplaceText);
-                    start = findHelper.SelectedIndex + findHelper.FindTextLength;
+                    start = findHelper.SelectedIndex + findHelper.ReplaceText.Length -1;
                     replaceCount++;
                 }
             }
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = RegexUtils.ReplaceNewLineSafe(r, p.Text, findHelper.ReplaceText);
                 if (before != p.Text)
                 {
-                    replaceCount += RegexUtils.CountNewLineSafe(r, p.Text);
+                    replaceCount += RegexUtils.CountNewLineSafe(r, before);
                 }
             }
 

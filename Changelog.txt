@@ -1,26 +1,165 @@
 ﻿Subtitle Edit Changelog
 
-3.6.8 (xth November 2022) BETA
+3.6.11 (xth January 2023) BETA
 * NEW:
+   * Add File - Close translated subtitle - thx zcraber/Leon 
+   * Add auto-naming rule for translation - thx Leon/OmrSi
+   * Add more Whisper post-processing
+   * Add line merge option for Google Cloud Vision OCR
+   * Add new subtitle format - thx Christophe
+   * Add new subtitle format - thx Chris
+   * Add ASSA style "Replace" - thx Mishasama
+   * Add "audio to text selected lines" shortcuts
+* IMPROVED:
+   * Update Chinese translation - thx nkh0472
+   * Update Korean translation - thx domddol
+   * Update Italian translation - thx bovirus
+   * Update Polish translation - thx admas
+   * Update Portuguese translation - thx hugok79
+   * Update Finnish translation - thx Teijo S
+   * Update Hungarian translation - thx Zityi
+   * Update French translation - thx Pierre
+   * Update Bulgarian translation - thx Калин
+   * Improve DVB in mkv (fix batch/cmd convert + pos) - thx antoniu200
+   * Better ffmpeg detection - thx SMSourov
+   * Avoid standby a few places - thx mpek
+   * Optimize ASSA style import
+   * Improve line split a little - thx i990049
+   * Add a few English words/names to dictionaries
+   * Make formatting shortcuts in waveform work w selected lines
+   * Remember font in burn-in - thx Nespula95
+   * Remember "Merge lines with same text" settings - thx kamitsu2004
+   * Update Whisper CPP to v1.0.4
+   * Rename "Fix dialogs on one line" to "Break dialogs on one line"
+* FIXED:
+   * Fix italic in DCinema interop - thx Andrey
+   * Fix Whisper model download - thx darnn
+   * Fix "play video from url" for installer version
+   * Keep bookmarks after source view edit - thx MMT
+   * Fix for "replace all" non reg-ex
+   * Fix wrongful removal of "Unneeded Space" - thx Minherre
+   * Fix possible crash in Choosee Profile - thx darnn
+   * Make "Add missing space" work with non-English letters - thx Redjan
+   * Fix a few UI issues in "Word lists" - thx Edwin
+   * Fix crash in "Sync via other sub" - thx JP
+   * Fix original desync after set start time - thx Leon
+   * Handle multi-audio-track waveform/spectrogram better - thx AlfonZ42
+
+
+3.6.10 (21th November 2022)
+* FIXED:
+   * Fix missing dll file
+
+
+3.6.9 (20th November 2022)
+* NEW:
+   * Support mp4 webvtt in cmd line convert
+   * Add Whisper translate to English option - thx David 
+   * Add some support for frame rate in Spruce format
+   * Allow minimize for audio-to-text windows
+   * Set x11 as default mpv vo (video output) on Linux
+   * Add shortcut for ASSA bacground box - thx Fuad
+* IMPROVED:
+   * Update French translation - the Peirre
+   * Update Italian translation - thx bovirus
+   * Update Chinese translation - thx nkh0472
+   * Update Bulgarian translation - thx Калин
+   * Update Korean translation - thx domddol
+   * Update Polish translation - thx admas
+   * Update Greek translation - thx PMitsakis
+   * Optimize bd sup saving in batch/cmd-line convert
+   * Add a few English words/names to dictionaries
+   * Add more settings for "Delete auto-backup after" - thx pahtashow 
+   * Add more options for actor in custom text export - thx Francois
+   * Improve video auto load (allow eg. "_nl") - thx Hilde
+   * Improve fix italic tags - thx uckthis
+   * Whisper.cpp is default for Windows + in-program download
+   * Improve ELR format support - thx Alex
+* FIXED:
+   * Fix VLC video player not working
+   * Fix for ASSA timestamps (rounding output) - thx Jerome
+   * Fix for mp4 subtitle timestamps - thx DrReddP/Ding-adong
+   * Fix crash trying to locate Whisper
+   * Fix setting path to ffmpeg when using Whisper
+   * Fix OCR window resize on Linux - thx Mangoes
+   * Fix bookmark showing on first spell check line - thx OmrSi
+   * Fix format XIF writing - thx Per
+   * Fix for WebVTT with line# hours - thx garion84
+   * Fix " 's" / Dutch in "Fix missing spaces" - thx Jean-Pierre
+
+
+3.6.8 (24th October 2022)
+* NEW:
+   * Option to use only "front center" audio channel - thx shanedk
+   * Add support for OCR via Google's Cloud Vision API - thx Flitskikker 
+   * "Convert colors to dialog" (also batch) - thx Flitskikker 
    * Add EBU stl file property icon - thx Leon 
    * Add new sub format - thx Edward
+   * Add new json sub format - thx Flitskikker
+   * Add new sub format - thx George
    * Add shortcut "Loop selection" - thx OmrSi
    * Add shortcut for "Open containing folder" - thx OmrSi
    * Add shorcuts for play with speed 1.5x/2x - thx OmrSi
    * Add "nOCR" option to "Batch convert" - thx Gen3ric
+   * New proxy settings
+   * Add "ASSA image color picker" incl. shortcut - thx Érico
+   * Add CLI param /deletecontains:word - thx sweetngx
+   * Add ignore white space to compare - thx Leon
+   * Enable "Audio to text" for Linux - thx edcol/coastal45
+   * Add "Allow overlap" in "Change speed" - thx OmrSi
+   * Add bookmarks to spell check dialog - thx cyzs233/OmrSi 
+   * Add dictate shortcut for main text box - thx Xenos71
+   * Change spell check window font size via context menu - thx Marko G
+   * Add experimental "Audio to text via Whisper"
+   * Add toolbar icon for source view toggle - thx Leon
+   * SE can now be installed via "winget install Nikse.SubtitleEdit"
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Bulgarian translation - thx Калин
    * Update Chinese translation - thx nkh0472
    * Update Italian translation - thx bovirus
    * Update Korean translation - thx domddol
+   * Update Portuguese translation - thx hugok79
+   * Update French translation - the Peirre
+   * Update Hungarian translation - thx Zityi
    * Add error label for "Batch convert" - thx Leon
    * Batch convert: Improved "Remove lines with style/actor"
-   * Allow empty splitting for split at video/cursor - thx OmrSi
+   * Allow empty split for "split at video/cursor" - thx OmrSi
+   * Improve fullscreen play video size with mpv - thx GrampaWildWilly
+   * Can detect Tesseract 5 on Linux - thx shag00
+   * OCR selected lines only (list view context menu)
+   * Audio to text: Auto select downloaded model after download
+   * Allow for multiple X-TIMESTAMP-MAPs in WebVTT - thx doctorm
+   * Use subtitle file name for blank video - thx OmrSi
+   * Add list view column sort to "File - Plugins"
+   * Add "Use once" button for binary image compare - thx Flitskikker
+   * Add drag-n-drop to "Audio-to-text" batch - thx ard-av
+   * Do not halt on errors in "Audio to text" batch - thx javiavid
+   * SE does not contain/install any "*_user.xml" dictionary files
+   * Add bold support to DCP format - thx felagund
+   * A few fixes for eng_OCRFixReplaceList.xml - thx Ding-adong
+   * Most plugins should now work on Linux
+   * Add import/export of binary export profile
+   * Mp4 import: Support sample size + default size/dur - thx LucretiaAudrey
+   * Add mp4 support in "Batch convert" - thx DrReddP
 * FIXED:
+   * Fix crash with large files (+25GB) in burn-in - thx OmrSi  
    * Fix crash when switching text-boxes/list-view-items - thx Leon
    * Fix minor bug for shortcut "Go to prev line and play" - thx nissansz
    * Fix minor issue with "FCE:Remove dash single line" - thx Minherre  
+   * Re-add FinalCutProXml properties - thx hu
+   * Don't check "Continuation style" when merging dialog - thx OmrSi 
+   * Fix ASSA background box issue - thx Érico
+   * Fix "*" showing in titlebar after offsetting with no change - thx OmrSi
+   * Fix issues with NQC shot change rules - thx OmrSi
+   * Fix UI issue in copy-paste translate
+   * Fix merge lines for Greek - thx Xenos71
+   * Fix not showing vobsub from mp4 - thx Luc
+   * Fix writing bd sup hours > 6½ hours - thx Keith
+   * Fix installer dot net version check - thx Christoph
+   * Fix a few typos - thx nkh0472
+   * Fix for mp4 with vtt subtitles - thx LucretiaAudrey
+   * Fix rounding error when writing ASSA - thx tormento 
 
 
 3.6.7 (13th August 2022)

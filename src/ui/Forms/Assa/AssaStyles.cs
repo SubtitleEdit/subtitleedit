@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _subtitle = subtitle;
+            _subtitle = new Subtitle(subtitle);
             RenameActions = new List<NameEdit>();
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
@@ -149,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = LanguageSettings.Current.General.Preview;
+            toolStripMenuItemStorageMoveStylesToCategory.Text = l.MoveToCategory;
 
             labelScaleX.Text = l.ScaleX;
             labelScaleY.Text = l.ScaleY;
@@ -180,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             buttonAddStyleToStorage.Text = l.AddToStorage;
 
             deleteToolStripMenuItem.Text = l.Remove;
+            removeAndReplaceWithToolStripMenuItem.Text = l.ReplaceWith;
             toolStripMenuItemRemoveAll.Text = l.RemoveAll;
             addToStorageToolStripMenuItem1.Text = l.AddToStorage;
             moveUpToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
@@ -992,16 +994,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             AddStyle(listViewStorage, defaultStyle, _subtitle, _isSubStationAlpha);
         }
 
-        private void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
+        private static void UpdateSelectedIndices(ListView listView, int startingIndex = -1, int numberOfSelectedItems = 1)
         {
             if (numberOfSelectedItems == 0)
             {
                 return;
             }
 
-            if (startingIndex == -1 || startingIndex >= listview.Items.Count)
+            if (startingIndex == -1 || startingIndex >= listView.Items.Count)
             {
-                startingIndex = listview.Items.Count - 1;
+                startingIndex = listView.Items.Count - 1;
             }
 
             if (startingIndex - numberOfSelectedItems < -1)
@@ -1009,12 +1011,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 return;
             }
 
-            listview.SelectedItems.Clear();
-            for (int i = 0; i < numberOfSelectedItems; i++)
+            listView.SelectedItems.Clear();
+            for (var i = 0; i < numberOfSelectedItems; i++)
             {
-                listview.Items[startingIndex - i].Selected = true;
-                listview.Items[startingIndex - i].EnsureVisible();
-                listview.Items[startingIndex - i].Focused = true;
+                listView.Items[startingIndex - i].Selected = true;
+                listView.Items[startingIndex - i].EnsureVisible();
+                listView.Items[startingIndex - i].Focused = true;
             }
         }
 
@@ -1334,6 +1336,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
             }
+
             return AdvancedSubStationAlpha.GetSsaColorString(c);
         }
 
@@ -1398,8 +1401,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var name = LanguageSettings.Current.SubStationAlphaStyles.New;
             if (GetSsaStyleFile(name) != null)
             {
-                int count = 2;
-                bool doRepeat = true;
+                var count = 2;
+                var doRepeat = true;
                 while (doRepeat)
                 {
                     name = LanguageSettings.Current.SubStationAlphaStyles.New + count;
@@ -1508,6 +1511,42 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             UpdateSelectedIndices(listViewStyles);
             UpdateStorageButtonsState();
             CheckDuplicateStyles();
+        }
+
+        private void buttonRemoveAndReplaceWith_Click(object sender, EventArgs e)
+        {
+            if (listViewStyles.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listViewStyles.SelectedIndices[0];
+            var style = _currentFileStyles[idx];
+            using (var form = new ReplaceStyleWith(style, _currentFileStyles,  _storageCategories, _subtitle))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(form.NewSubtitle.Paragraphs);
+
+                    _currentFileStyles.Remove(style);
+                    if (form.NewStorageStyle != null)
+                    {
+                        AddStyle(listViewStyles, form.NewStorageStyle, _subtitle, _isSubStationAlpha);
+                        AddStyleToHeader(form.NewStorageStyle);
+                        _doUpdate = true;
+                        UpdateSelectedIndices(listViewStyles);
+                        SetControlsFromStyle(form.NewStorageStyle);
+                        RenameActions.Add(new NameEdit(style.Name, form.NewStorageStyle.Name));
+                        InitializeStylesListView(form.NewStorageStyle.Name);
+                    }
+                    else
+                    {
+                        RenameActions.Add(new NameEdit(style.Name, form.NewFileStyle.Name));
+                        InitializeStylesListView(form.NewFileStyle.Name);
+                    }
+                }
+            }
         }
 
         private void buttonRemoveAll_Click(object sender, EventArgs e)
@@ -1897,14 +1936,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                             if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleNames.Count > 0)
                             {
                                 var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
-
+                                SsaStyle lastStyle = null;
                                 foreach (var styleName in cs.SelectedStyleNames)
                                 {
                                     var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                    lastStyle = style;
                                     if (GetSsaStyleFile(style.Name) != null && GetSsaStyleFile(style.Name) != null)
                                     {
-                                        int count = 2;
-                                        bool doRepeat = GetSsaStyleFile(style.Name + count) != null;
+                                        var count = 2;
+                                        var doRepeat = GetSsaStyleFile(style.Name + count) != null;
                                         while (doRepeat)
                                         {
                                             doRepeat = GetSsaStyleFile(style.Name + count) != null;
@@ -1928,12 +1968,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                     {
                                         _header = _header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
                                     }
+                                }
 
+                                if (lastStyle != null)
+                                {
                                     UpdateSelectedIndices(listViewStyles);
-                                    textBoxStyleName.Text = style.Name;
+                                    textBoxStyleName.Text = lastStyle.Name;
                                     textBoxStyleName.Focus();
                                     _doUpdate = true;
-                                    SetControlsFromStyle(style);
+                                    SetControlsFromStyle(lastStyle);
                                     listViewStyles_SelectedIndexChanged(null, null);
                                 }
 
@@ -2108,8 +2151,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var name = LanguageSettings.Current.SubStationAlphaStyles.New;
             if (_currentCategory.Styles.Any(p => p.Name == name))
             {
-                int count = 2;
-                bool doRepeat = true;
+                var count = 2;
+                var doRepeat = true;
                 while (doRepeat)
                 {
                     name = LanguageSettings.Current.SubStationAlphaStyles.New + count;
@@ -2140,8 +2183,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                     var style = new SsaStyle(oldStyle) { Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy contructor
                     if (_currentCategory.Styles.Any(p => p.Name == style.Name))
                     {
-                        int count = 2;
-                        bool doRepeat = true;
+                        var count = 2;
+                        var doRepeat = true;
                         while (doRepeat)
                         {
                             style.Name = string.Format(LanguageSettings.Current.SubStationAlphaStyles.CopyXOfY, count, styleName);
@@ -2193,13 +2236,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                         {
                             var styleNames = string.Join(", ", cs.SelectedStyleNames.ToArray());
 
+                            SsaStyle lastStyle = null;
                             foreach (var styleName in cs.SelectedStyleNames)
                             {
                                 var style = AdvancedSubStationAlpha.GetSsaStyle(styleName, s.Header);
+                                lastStyle = style;
                                 if (GetSsaStyleStorage(style.Name) != null && GetSsaStyleStorage(style.Name) != null)
                                 {
-                                    int count = 2;
-                                    bool doRepeat = GetSsaStyleStorage(style.Name + count) != null;
+                                    var count = 2;
+                                    var doRepeat = GetSsaStyleStorage(style.Name + count) != null;
                                     while (doRepeat)
                                     {
                                         doRepeat = GetSsaStyleStorage(style.Name + count) != null;
@@ -2212,11 +2257,15 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                                 _doUpdate = false;
                                 _currentCategory.Styles.Add(style);
                                 AddStyle(listViewStorage, style, _subtitle, _isSubStationAlpha);
+                            }
+
+                            if (lastStyle != null)
+                            {
                                 UpdateSelectedIndices(listViewStorage);
-                                textBoxStyleName.Text = style.Name;
+                                textBoxStyleName.Text = lastStyle.Name;
                                 textBoxStyleName.Focus();
                                 _doUpdate = true;
-                                SetControlsFromStyle(style);
+                                SetControlsFromStyle(lastStyle);
                                 listViewStorage_SelectedIndexChanged(null, null);
                             }
 
@@ -2709,6 +2758,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             var oneOrMoreSelected = listViewStyles.SelectedItems.Count > 0;
             deleteToolStripMenuItem.Visible = oneOrMoreSelected;
+            removeAndReplaceWithToolStripMenuItem.Visible = listViewStyles.SelectedItems.Count == 1;
             addToStorageToolStripMenuItem1.Visible = oneOrMoreSelected;
             toolStripSeparator4.Visible = oneOrMoreSelected;
             copyToolStripMenuItemCopy.Visible = oneOrMoreSelected;

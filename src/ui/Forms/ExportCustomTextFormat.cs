@@ -4,10 +4,10 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             var p1 = new Paragraph("Line 1a." + Environment.NewLine + "Line 1b.", 1000, 3500) { Actor = "Joe" };
             var start1 = GetTimeCode(p1.StartTime, comboBoxTimeCode.Text);
             var end1 = GetTimeCode(p1.EndTime, comboBoxTimeCode.Text);
-            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 4000, 3500) { Actor = "Smith" };
+            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 4000, 5500) { Actor = "Smith" };
             var start2 = GetTimeCode(p2.StartTime, comboBoxTimeCode.Text);
             var end2 = GetTimeCode(p2.EndTime, comboBoxTimeCode.Text);
             subtitle.Paragraphs.Add(p1);
@@ -104,10 +104,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var newLine = comboBoxNewLine.Text.Replace(LanguageSettings.Current.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
                 var template = GetParagraphTemplate(textBoxParagraph.Text);
-                textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, gap1, comboBoxTimeCode.Text, p1) +
-                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, gap2, comboBoxTimeCode.Text, p2) +
-                                      GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
+                var videoFileName = "C:\\Video\\MyVideo.mp4";
+                textBoxPreview.Text = GetHeaderOrFooter("Demo", videoFileName, subtitle, textBoxHeader.Text) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, gap1, comboBoxTimeCode.Text, p1, videoFileName) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, gap2, comboBoxTimeCode.Text, p2, videoFileName) +
+                                      GetHeaderOrFooter("Demo", videoFileName, subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
             {
@@ -127,6 +128,8 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{number-1:", "{5:");
             s = s.Replace("{duration}", "{6}");
             s = s.Replace("{actor}", "{7}");
+            s = s.Replace("{actor-colon-space}", "{21}");
+            s = s.Replace("{actor-upper-brackets-space}", "{22}");
             s = s.Replace("{text-line-1}", "{8}");
             s = s.Replace("{text-line-2}", "{9}");
             s = s.Replace("{cps-comma}", "{10}");
@@ -136,6 +139,10 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{text-length-br1}", "{14}");
             s = s.Replace("{text-length-br2}", "{15}");
             s = s.Replace("{gap}", "{16}");
+            s = s.Replace("{bookmark}", "{17}");
+            s = s.Replace("{media-file-name}", "{18}");
+            s = s.Replace("{media-file-name-full}", "{19}");
+            s = s.Replace("{media-file-name-with-ext}", "{20}");
             s = s.Replace("{tab}", "\t");
             return s;
         }
@@ -326,15 +333,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public static string GetHeaderOrFooter(string title, Subtitle subtitle, string template)
+        public static string GetHeaderOrFooter(string title, string videoFileName, Subtitle subtitle, string template)
         {
             template = template.Replace("{title}", title);
+            template = template.Replace("{media-file-name-full}", videoFileName);
+            template = template.Replace("{media-file-name}", string.IsNullOrEmpty(videoFileName) ? videoFileName : Path.GetFileNameWithoutExtension(videoFileName));
+            template = template.Replace("{media-file-name-with-ext}", string.IsNullOrEmpty(videoFileName) ? videoFileName : Path.GetFileName(videoFileName));
             template = template.Replace("{#lines}", subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture));
+            
             template = template.Replace("{tab}", "\t");
             return template;
         }
 
-        internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p)
+        internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)
         {
             var cps = Utilities.GetCharactersPerSecond(p);
             var d = duration.ToString();
@@ -417,6 +428,8 @@ namespace Nikse.SubtitleEdit.Forms
             var s = template;
             var replaceStart = GetReplaceChar(s);
             var replaceEnd = GetReplaceChar(s + replaceStart);
+            var actorColonSpace = string.IsNullOrEmpty(actor) ? string.Empty : $"{actor}: ";
+            var actorUppercaseBracketsSpace = string.IsNullOrEmpty(actor) ? string.Empty : $"[{actor.ToUpperInvariant()}] ";
             s = PreBeginCurly(s, replaceStart);
             s = PreEndCurly(s, replaceEnd);
             s = string.Format(s, start, end, text, originalText, number + 1, number, d, actor, line1, line2,
@@ -426,7 +439,14 @@ namespace Nikse.SubtitleEdit.Forms
                               p.Text.RemoveChar('\r', '\n').Length,
                               p.Text.RemoveChar('\r', '\n').Length + lines.Count - 1,
                               p.Text.RemoveChar('\r', '\n').Length + (lines.Count - 1) * 2,
-                              gap)
+                              gap,
+                              p.Bookmark == string.Empty ? "*" : p.Bookmark,
+                              string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileNameWithoutExtension(videoFileName),
+                              videoFileName,
+                              string.IsNullOrEmpty(videoFileName) ? string.Empty : Path.GetFileName(videoFileName),
+                              actorColonSpace,
+                              actorUppercaseBracketsSpace
+                              )
                 ;
             s = PostCurly(s, replaceStart, replaceEnd);
             return s;

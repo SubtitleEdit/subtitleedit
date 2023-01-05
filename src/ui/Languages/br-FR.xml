@@ -2,7 +2,7 @@
 <Language Name="brezhoneg">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
@@ -529,7 +529,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <FixCommonOcrErrors>Reizhañ ar fazioù OCR reoliek (diwar al listenn reizhañ OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Fazioù OCR reoliek reizhet (diwar ar restr OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Diverkañ ar spasoù etre an niveroù</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Reizhañ diviz ul linenn</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Reizhañ diviz ul linenn</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Lemmel kuit ar spasoù etre an niveroù: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Reizhañ an Turkeg ANSI gant an unikod</FixTurkishAnsi>
     <FixDanishLetterI>Reizhañ an 'i' Daneg</FixDanishLetterI>

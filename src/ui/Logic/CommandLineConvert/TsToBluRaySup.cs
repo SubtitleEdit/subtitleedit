@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
                 using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                 {
-                    for (int index = 0; index < sub.Count; index++)
+                    for (var index = 0; index < sub.Count; index++)
                     {
                         var p = sub[index];
                         var pos = p.GetPosition();
@@ -40,8 +40,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         var tsWidth = bmp.Width;
                         var tsHeight = bmp.Height;
                         var nBmp = new NikseBitmap(bmp);
-                        pos.Top += nBmp.CropTopTransparent(0);
-                        pos.Left += nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                        nBmp.CropTopTransparent(0);
+                        nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
                         bmp.Dispose();
                         bmp = nBmp.GetBitmap();
                         var mp = form.MakeMakeBitmapParameter(index, subtitleScreenSize.X, subtitleScreenSize.Y);

@@ -56,6 +56,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UiUtil.OpenFolderFromFileName(_fileName);
             }
+
+            DialogResult = DialogResult.OK;
         }
     }
 }

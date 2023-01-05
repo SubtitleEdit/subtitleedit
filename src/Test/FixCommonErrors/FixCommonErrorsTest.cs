@@ -564,6 +564,17 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixMissingSpacesNotWhenHyphenBeforeQuote()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "There is a pre-\"do it\" conversation about price.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("There is a pre-\"do it\" conversation about price.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
         public void FixMissingSpacesBeforePeriod1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1689,6 +1700,17 @@ namespace Test.FixCommonErrors
                 InitializeFixCommonErrorsLine(target, "- Uh-huh.");
                 new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Uh-huh.");
+            }
+        }
+
+        [TestMethod]
+        public void FixSingleLineDash5NoChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "- Tallie, start your" + Environment.NewLine + "approach. - Copy that.");
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Tallie, start your" + Environment.NewLine + "approach. - Copy that.");
             }
         }
 

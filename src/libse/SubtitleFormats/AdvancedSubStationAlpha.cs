@@ -91,12 +91,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public const string HeaderNoStyles = @"[Script Info]
+        public static string HeaderNoStyles = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
-ScriptType: v4.00+
-PlayDepth: 0
-ScaledBorderAndShadow: Yes
+ScriptType: v4.00+" + 
+(Configuration.Settings.SubtitleSettings.AssaShowPlayDepth ? Environment.NewLine + "PlayDepth: 0" : string.Empty) +
+(Configuration.Settings.SubtitleSettings.AssaShowScaledBorderAndShadow ? Environment.NewLine + "ScaledBorderAndShadow: Yes" : string.Empty) +
+@"
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -107,13 +108,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            bool fromTtml = false;
-            string header = $@"[Script Info]
+            var fromTtml = false;
+            var header = $@"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {{0}}
-ScriptType: v4.00+
-PlayDepth: 0
-ScaledBorderAndShadow: Yes
+ScriptType: v4.00+" +
+(Configuration.Settings.SubtitleSettings.AssaShowPlayDepth ? (Environment.NewLine + "PlayDepth: 0") : string.Empty) +
+(Configuration.Settings.SubtitleSettings.AssaShowScaledBorderAndShadow ? (Environment.NewLine + "ScaledBorderAndShadow: Yes") : string.Empty) +
+$@"
 
 [V4+ Styles]
 {SsaStyle.DefaultAssStyleFormat}
@@ -165,8 +167,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             }
             foreach (var p in subtitle.Paragraphs)
             {
-                var start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                var end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                var start = MakeTimeCode(timeCodeFormat, p.StartTime);
+                var end = MakeTimeCode(timeCodeFormat, p.EndTime);
                 var style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                 {
@@ -226,6 +228,19 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 sb.AppendLine(subtitle.Footer);
             }
             return sb.ToString().Trim() + Environment.NewLine;
+        }
+
+        private static string MakeTimeCode(string timeCodeFormat, TimeCode timeCode)
+        {
+            var tc = new TimeCode(timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);
+            var fragment = (int)Math.Round(timeCode.Milliseconds / 10.0, MidpointRounding.AwayFromZero);
+            if (fragment >= 100)
+            {
+                tc = new TimeCode(tc.Hours, tc.Minutes, tc.Seconds + 1, 0);
+                fragment = 0;
+            }
+
+            return string.Format(timeCodeFormat, tc.Hours, tc.Minutes, tc.Seconds, fragment);
         }
 
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
@@ -1981,6 +1996,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var alpha = 255 - c.A; // ASS stores alpha in reverse (0=full intensity and 255=fully transparent)
             return $"alpha&H{alpha:X2}&\\c&H{c.B:X2}{c.G:X2}{c.R:X2}";
         }
+
+        public static string GetSsaColorStringNoTransparency(Color c) => $"&H{c.B:X2}{c.G:X2}{c.R:X2}";
 
         public static string CheckForErrors(string header)
         {

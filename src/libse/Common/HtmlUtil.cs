@@ -641,9 +641,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             text = text.Replace(beginTag + beginTag, beginTag);
             text = text.Replace(endTag + endTag, endTag);
 
-            int italicBeginTagCount = Utilities.CountTagInText(text, beginTag);
-            int italicEndTagCount = Utilities.CountTagInText(text, endTag);
-            int noOfLines = Utilities.GetNumberOfLines(text);
+            var italicBeginTagCount = Utilities.CountTagInText(text, beginTag);
+            var italicEndTagCount = Utilities.CountTagInText(text, endTag);
+            var noOfLines = Utilities.GetNumberOfLines(text);
             if (italicBeginTagCount + italicEndTagCount == 0)
             {
                 return preTags + text;
@@ -659,9 +659,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 2 && italicEndTagCount == 0)
             {
-                int firstIndex = text.IndexOf(beginTag, StringComparison.Ordinal);
-                int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
+                var firstIndex = text.IndexOf(beginTag, StringComparison.Ordinal);
+                var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                var lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
                 if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
                 {
                     text = text.Replace(Environment.NewLine, endTag + Environment.NewLine) + endTag;
@@ -674,7 +674,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 1 && italicEndTagCount == 2)
             {
-                int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
+                var firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
                 if (text.StartsWith("</i>-<i>-", StringComparison.Ordinal) ||
                     text.StartsWith("</i>- <i>-", StringComparison.Ordinal) ||
                     text.StartsWith("</i>- <i> -", StringComparison.Ordinal) ||
@@ -702,7 +702,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                    var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
                     if (text.Length > lastIndex + endTag.Length)
                     {
                         text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
@@ -720,10 +720,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 1 && italicEndTagCount == 0)
             {
-                int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
-                int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
+                var lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
+                var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
 
-                if (text.StartsWith(beginTag, StringComparison.Ordinal))
+                if (text.StartsWith(beginTag, StringComparison.Ordinal) || text.Contains(": <i>"))
                 {
                     text += endTag;
                 }
@@ -740,7 +740,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (italicBeginTagCount == 0 && italicEndTagCount == 1)
             {
                 var cleanText = RemoveOpenCloseTags(text, TagItalic, TagBold, TagUnderline, TagCyrillicI);
-                bool isFixed = false;
+                var isFixed = false;
 
                 // Foo.</i>
                 if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith('-') && !cleanText.Contains(Environment.NewLine + "-"))
@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // - Bar.    | - Foo.</i>
                 if (!isFixed && Utilities.GetNumberOfLines(cleanText) == 2)
                 {
-                    int newLineIndex = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    var newLineIndex = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     if (newLineIndex > 0)
                     {
                         var firstLine = text.Substring(0, newLineIndex).Trim();
@@ -787,7 +787,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (italicBeginTagCount == 0 && italicEndTagCount == 2)
             {
-                int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
+                var firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
                 text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, beginTag);
             }
 
@@ -795,7 +795,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // <i>Bar</i>
             if (italicBeginTagCount == 2 && italicEndTagCount == 2 && noOfLines == 2)
             {
-                int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                var index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                 if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
                 {
                     var firstLine = text.Substring(0, index).Trim();
@@ -875,7 +875,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var lines = text.SplitToLines();
                 if ((italicBeginTagCount == 3 && italicEndTagCount == 2) || (italicBeginTagCount == 2 && italicEndTagCount == 3))
                 {
-                    int numberOfItalics = 0;
+                    var numberOfItalics = 0;
                     foreach (var line in lines)
                     {
                         if (line.StartsWith(beginTag, StringComparison.Ordinal))
@@ -1003,5 +1003,52 @@ namespace Nikse.SubtitleEdit.Core.Common
             return c;
         }
 
+        public static string RemoveColorTags(string input)
+        {
+            var r = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*");
+            var s = input;
+            var match = r.Match(s);
+            while (match.Success)
+            {
+                s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
+                if (match.Index > 4)
+                {
+                    var font = s.Substring(match.Index - 5);
+                    if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                    {
+                        s = s.Remove(match.Index - 5, 7);
+                        var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            s = s.Remove(endIndex, 7);
+                        }
+                        else
+                        {
+                            endIndex = s.IndexOf("< /font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex >= 0)
+                            {
+                                s = s.Remove(endIndex, 7);
+                            }
+                            else
+                            {
+                                endIndex = s.IndexOf("</ font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                                if (endIndex >= 0)
+                                {
+                                    s = s.Remove(endIndex, 7);
+                                }
+                            }
+                        }
+                    }
+                    else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
+                    {
+                        s = s.Remove(match.Index, 1);
+                    }
+                }
+
+                match = r.Match(s);
+            }
+
+            return s.Trim();
+        }
     }
 }

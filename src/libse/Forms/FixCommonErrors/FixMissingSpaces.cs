@@ -14,18 +14,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         }
 
         private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z\d]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z\d]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[a-zäöåA-ZÄÖÅ]+", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"\p{Ll}\p{Ll}[.][\p{Ll}\p{Lu}]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[\p{Ll}\p{Lu}\-\d]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![\p{Ll}\p{Lu}\-\d]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[\p{Ll}\p{Lu}]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[\p{Ll}\p{Lu}]+", RegexOptions.Compiled);
         private static readonly Regex Url = new Regex(@"\w\.(?:com|net|org)\b", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            string languageCode = callbacks.Language;
-            string fixAction = Language.FixMissingSpace;
-            int missingSpaces = 0;
+            var languageCode = callbacks.Language;
+            var fixAction = Language.FixMissingSpace;
+            var missingSpaces = 0;
             var dialogHelper = new DialogSplitMerge
             {
                 DialogStyle = Configuration.Settings.General.DialogStyle,
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 ContinuationStyle = Configuration.Settings.General.ContinuationStyle
             };
             const string expectedChars = @"""”<.";
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
 
@@ -44,14 +44,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
                         !Url.IsMatch(p.Text)) // Skip urls.
                     {
-                        string newText = FixSpaceAfter(p.Text, '؟');
+                        var newText = FixSpaceAfter(p.Text, '؟');
                         newText = FixSpaceAfter(newText, '\u060C'); // Arabic comma
                         newText = FixSpaceAfter(newText, '.');
                         newText = FixSpaceAfter(newText, '!');
                         if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                         {
                             missingSpaces++;
-                            string oldText = p.Text;
+                            var oldText = p.Text;
                             p.Text = newText;
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var match = FixMissingSpacesReComma.Match(p.Text);
                 while (match.Success)
                 {
-                    bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
+                    var doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
 
                     if (doFix && languageCode == "el" &&
                         (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) ||
@@ -80,14 +80,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (doFix && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                     match = match.NextMatch();
                 }
 
-                bool allowFix = callbacks.AllowFix(p, fixAction);
+                var allowFix = callbacks.AllowFix(p, fixAction);
 
                 // missing space after "?"
                 match = FixMissingSpacesReQuestionMark.Match(p.Text);
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -121,22 +121,22 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 match = FixMissingSpacesReColon.Match(p.Text);
                 while (match.Success)
                 {
-                    int start = match.Index;
+                    var start = match.Index;
                     start -= 4;
                     if (start < 0)
                     {
                         start = 0;
                     }
 
-                    int indexOfStartCodeTag = p.Text.IndexOf('{', start);
-                    int indexOfEndCodeTag = p.Text.IndexOf('}', start);
+                    var indexOfStartCodeTag = p.Text.IndexOf('{', start);
+                    var indexOfEndCodeTag = p.Text.IndexOf('}', start);
                     if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
                     {
                         // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
                     }
                     else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        bool skipSwedishOrFinish = false;
+                        var skipSwedishOrFinish = false;
                         if (languageCode == "sv" || languageCode == "fi")
                         {
                             var m = FixMissingSpacesReColonWithAfter.Match(p.Text, match.Index);
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (!skipSwedishOrFinish)
                         {
                             missingSpaces++;
-                            string oldText = p.Text;
+                            var oldText = p.Text;
                             p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
@@ -161,9 +161,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
                         !Url.IsMatch(p.Text)) // Skip urls.
                     {
-                        bool isMatchAbbreviation = false;
+                        var isMatchAbbreviation = false;
 
-                        string word = GetWordFromIndex(p.Text, match.Index);
+                        var word = GetWordFromIndex(p.Text, match.Index);
                         if (Utilities.CountTagInText(word, '.') > 1)
                         {
                             isMatchAbbreviation = true;
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (!isMatchAbbreviation && callbacks.AllowFix(p, fixAction))
                         {
                             missingSpaces++;
-                            string oldText = p.Text;
+                            var oldText = p.Text;
                             p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -205,16 +205,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
                 if (Utilities.CountTagInText(p.Text, '"') == 2)
                 {
-                    int start = p.Text.IndexOf('"');
-                    int end = p.Text.LastIndexOf('"');
-                    string quote = p.Text.Substring(start, end - start + 1);
+                    var start = p.Text.IndexOf('"');
+                    var end = p.Text.LastIndexOf('"');
+                    var quote = p.Text.Substring(start, end - start + 1);
                     if (!quote.Contains(Environment.NewLine))
                     {
-                        string newText = p.Text;
-                        int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-                        bool isAfterAssTag = newText.Contains("{\\") && start > 0 && newText[start - 1] == '}';
-                        bool isAfterEllipsis = start >= 3 && newText.Substring(start - 3, 3) == "...";
-                        if (!isAfterAssTag && !isAfterEllipsis && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
+                        var newText = p.Text;
+                        var indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+                        var isAfterAssTag = newText.Contains("{\\") && start > 0 && newText[start - 1] == '}';
+                        var isAfterHyphen = start > 0 && newText[start - 1] == '-';
+                        var isAfterEllipsis = start >= 3 && newText.Substring(start - 3, 3) == "...";
+                        if (!isAfterAssTag && !isAfterEllipsis && !isAfterHyphen && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
                         {
                             if (indexOfFontTag < 0 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
@@ -232,7 +233,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                         {
                             missingSpaces++;
-                            string oldText = p.Text;
+                            var oldText = p.Text;
                             p.Text = newText;
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
@@ -260,7 +261,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
-                    string newText = string.Join(Environment.NewLine, lines);
+                    var newText = string.Join(Environment.NewLine, lines);
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
@@ -271,10 +272,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 //fix missing spaces in "Hey...move it!" to "Hey... move it!"
-                int index = p.Text.IndexOf("...", StringComparison.Ordinal);
+                var index = p.Text.IndexOf("...", StringComparison.Ordinal);
                 if (index > 0 && p.Text.Length > 5)
                 {
-                    string newText = p.Text;
+                    var newText = p.Text;
                     while (index != -1)
                     {
                         if (newText.Length > index + 4 && index >= 1)
@@ -290,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -300,7 +301,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 index = p.Text.IndexOf("<i>", StringComparison.OrdinalIgnoreCase);
                 if (index >= 0 && p.Text.Length > 5)
                 {
-                    string newText = p.Text;
+                    var newText = p.Text;
                     while (index != -1)
                     {
                         if (newText.Length > index + 6 && index > 1)
@@ -316,7 +317,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -326,7 +327,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 index = p.Text.IndexOf("</i>", StringComparison.OrdinalIgnoreCase);
                 if (index > 3 && p.Text.Length > 5)
                 {
-                    string newText = p.Text;
+                    var newText = p.Text;
                     while (index != -1)
                     {
                         if (newText.Length > index + 6 && index > 1)
@@ -342,7 +343,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -357,7 +358,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     while (matchFontStart.Success && jumpOut < 10)
                     {
                         p.Text = p.Text.Insert(matchFontStart.Index + 1, " ");
-                        matchFontStart = regexFontStart.Match(p.Text, matchFontStart.Index+1);
+                        matchFontStart = regexFontStart.Match(p.Text, matchFontStart.Index + 1);
                         jumpOut++;
                     }
 
@@ -370,8 +371,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 if (callbacks.Language == "fr") // special rules for French
                 {
-                    string newText = p.Text;
-                    int j = 1;
+                    var newText = p.Text;
+                    var j = 1;
                     while (j < newText.Length)
                     {
                         if (@"!?:;".Contains(newText[j]) && char.IsLetter(newText[j - 1]))
@@ -383,7 +384,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
-                        string oldText = p.Text;
+                        var oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -403,10 +404,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     return text;
                 }
 
-                bool skip = false;
+                var skip = false;
                 if (fixSpaceAfterChar == '.')
                 {
-                    string word = GetWordFromIndex(text, idx);
+                    var word = GetWordFromIndex(text, idx);
                     if (word.Contains('@')) // skip emails
                     {
                         skip = true;
@@ -509,8 +510,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return string.Empty;
             }
 
-            int endIndex = index;
-            for (int i = index; i < text.Length; i++)
+            var endIndex = index;
+            for (var i = index; i < text.Length; i++)
             {
                 if ((@" " + Environment.NewLine).Contains(text[i]))
                 {
@@ -520,8 +521,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 endIndex = i;
             }
 
-            int startIndex = index;
-            for (int i = index; i >= 0; i--)
+            var startIndex = index;
+            for (var i = index; i >= 0; i--)
             {
                 if ((@" " + Environment.NewLine).Contains(text[i]))
                 {

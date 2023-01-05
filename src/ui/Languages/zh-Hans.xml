@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
@@ -96,6 +96,7 @@
     <ExampleX>示例: {0}</ExampleX>
     <Reset>重置</Reset>
     <Warning>警告</Warning>
+    <UseLargerFontForThisWindow>在此窗口使用更大的字体</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -174,16 +175,26 @@ Command line: {1} {2}
   <AudioToText>
     <Title>音频转文字</Title>
     <Info>通过 Vosk/Kaldi 语音识别从音频生成文本</Info>
-    <VoskWebsite>Vosk网站</VoskWebsite>
+    <WhisperInfo>通过 Whisper 语音识别从音频生成文本</WhisperInfo>
+    <VoskWebsite>Vosk 网站</VoskWebsite>
+    <WhisperWebsite>Whisper 网站</WhisperWebsite>
+    <WhisperNotFound>未找到 Whisper。
+
+在线查看更多信息？</WhisperNotFound>
     <Models>模型</Models>
+    <LanguagesAndModels>语言和模型</LanguagesAndModels>
     <ChooseModel>选择模型</ChooseModel>
+    <ChooseLanguage>选择语言</ChooseLanguage>
     <OpenModelsFolder>打开模型文件夹</OpenModelsFolder>
     <LoadingVoskModel>正在加载 Vosk 语音识别模型...</LoadingVoskModel>
     <Transcribing>将音频转录为文本...</Transcribing>
     <TranscribingXOfY>将音频转录为文本 - 第{0}/{1}个文件...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} 个文件已保存到视频源文件夹</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>使用后处理（行合并、修复大小写、标点符号等）</UsePostProcessing>
+    <AutoAdjustTimings>自动调整时间</AutoAdjustTimings>
     <BatchMode>批处理模式</BatchMode>
+    <KeepPartialTranscription>保留部分转录</KeepPartialTranscription>
+    <TranslateToEnglish>翻译为英语</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
@@ -223,7 +234,7 @@ Command line: {1} {2}
     <Bottom>底部</Bottom>
     <TakePosFromVideo>从视频中获取位置</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>更改 ASSA 脚本分辨率</Title>
     <SourceVideoRes>源视频分辨率</SourceVideoRes>
     <TargetVideoRes>目标视频分辨率</TargetVideoRes>
@@ -232,7 +243,13 @@ Command line: {1} {2}
     <ChangeResolutionPositions>缩放位置</ChangeResolutionPositions>
     <ChangeResolutionDrawing>缩放图形</ChangeResolutionDrawing>
     <SourceAndTargetEqual>源视频与目标分辨率相同 - 别管了……</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
+  <ImageColorPicker>
+    <Title>取色器</Title>
+    <CopyColorHex>以 HEX 格式复制到剪切板 {0}</CopyColorHex>
+    <CopyColorAssa>以 ASSA 格式复制到剪切板 {0}</CopyColorAssa>
+    <CopyColorRgb>以 RGB 格式复制到剪切板 {0}</CopyColorRgb>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>生成背景框</Title>
     <Padding>填充</Padding>
@@ -248,6 +265,7 @@ Command line: {1} {2}
     <MarginY>Y边距</MarginY>
     <OnlyDrawing>仅绘制</OnlyDrawing>
     <DrawingFile>绘制文件</DrawingFile>
+    <ColorPickerSetLastColor>当前拾色器为最近选择的颜色: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>设置/获取位置</SetPosition>
@@ -283,6 +301,7 @@ Command line: {1} {2}
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
     <RemoveStyleActor>删除样式/演员</RemoveStyleActor>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
+    <ConvertColorsToDialog>将颜色转换为对话框</ConvertColorsToDialog>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
     <RedoCasing>重做外壳</RedoCasing>
     <Convert>转换</Convert>
@@ -396,6 +415,7 @@ Command line: {1} {2}
     <Custom>自定义</Custom>
     <ToDropFrame>至丢失帧</ToDropFrame>
     <FromDropFrame>自丢失帧</FromDropFrame>
+    <AllowOverlap>允许重叠</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>检查更新</Title>
@@ -447,10 +467,17 @@ Command line: {1} {2}
     <XNumberOfDifferenceAndPercentLettersChanged>忽略断行</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>仅显示差异</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略断行</IgnoreLineBreaks>
+    <IgnoreWhitespace>忽略空格</IgnoreWhitespace>
     <IgnoreFormatting>忽略格式</IgnoreFormatting>
     <OnlyLookForDifferencesInText>仅查找差异文本</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>无法比较基于图像的字幕</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>将颜色转换为对话框</Title>
+    <RemoveColorTags>去除颜色标签</RemoveColorTags>
+    <AddNewLines>将每个破折号放在新行上</AddNewLines>
+    <ReBreakLines>重新分行</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>数字电影性能 (协同)</Title>
     <TitleSmpte>数字电影性能 (美国影视协会)</TitleSmpte>
@@ -627,6 +654,7 @@ Command line: {1} {2}
     <SimpleRendering>简单渲染</SimpleRendering>
     <AntiAliasingWithTransparency>带透明度抗锯齿</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>图像前缀</ImagePrefix>
     <SideBySide3D>左右型 3D 格式</SideBySide3D>
     <HalfTopBottom3D>上下型 3D 格式</HalfTopBottom3D>
     <Depth>深度</Depth>
@@ -747,7 +775,7 @@ Command line: {1} {2}
     <FixCommonOcrErrors>修复 OCR 常规错误 (使用 OCR 替换列表)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>已修复 OCR 常规错误 (使用了 OcrReplaceList 文件): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>删除数字间空格</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>修复一行上的对话</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>修复一行上的对话</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>删除非对话第一行的开始破折号</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>使字符串规格化</NormalizeStrings>
     <FixTurkishAnsi>修复土耳其语 ANSI (冰岛) 字母为 Unicode</FixTurkishAnsi>
@@ -831,6 +859,7 @@ Command line: {1} {2}
     <XGeneratedWithBurnedInSubsInX>带有内嵌字幕的“{0}”已在{1}生成完毕。</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>剩余时间：{0} 分钟</TimeRemainingMinutes>
     <TimeRemainingSeconds>剩余时间: {0} 秒</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>剩余时间: 几秒钟</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>剩余时间: {0} 分 {1} 秒</TimeRemainingMinutesAndSeconds>
     <TargetFileName>目标文件名：{0}</TargetFileName>
     <TargetFileSize>目标文件大小（需要启用2次编码）</TargetFileSize>
@@ -1130,6 +1159,7 @@ Command line: {1} {2}
         <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
         <SaveOriginal>保存原始字幕</SaveOriginal>
         <CloseOriginal>关闭原始字幕</CloseOriginal>
+        <CloseTranslation>关闭翻译字幕</CloseTranslation>
         <OpenContainingFolder>打开所在文件夹</OpenContainingFolder>
         <Compare>比较(&amp;C)...</Compare>
         <Statistics>统计(&amp;C)...</Statistics>
@@ -1197,6 +1227,7 @@ Command line: {1} {2}
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>将颜色转换为对话框...</ConvertColorsToDialog>
         <ChangeCasing>更改大小写...</ChangeCasing>
         <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <ChangeSpeedInPercent>更改速度 (百分比)...</ChangeSpeedInPercent>
@@ -1242,7 +1273,7 @@ Command line: {1} {2}
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>视频/音频到文本...</VideoAudioToText>
+        <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>删除/导出场景切换...</RemoveOrExportShotChanges>
@@ -1333,7 +1364,6 @@ Command line: {1} {2}
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
-        <Insert>插入</Insert>
         <InsertFirstLine>插入行</InsertFirstLine>
         <InsertBefore>之前插入</InsertBefore>
         <InsertAfter>之后插入</InsertAfter>
@@ -1349,6 +1379,7 @@ Command line: {1} {2}
         <ColumnTextUp>文本上移</ColumnTextUp>
         <ColumnTextDown>文本下移</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>从原始文本列复制到当前列</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR所选行</OcrSelectedLines>
         <Split>分割</Split>
         <MergeSelectedLines>合并所选行</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>合并所选行为对话</MergeSelectedLinesAsDialog>
@@ -1387,6 +1418,7 @@ Command line: {1} {2}
         <GenerateProgressBar>生成进度条...</GenerateProgressBar>
         <AssaResolutionChanger>更改ASSA脚本分辨率...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>生成背景框...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>图像颜色选择器...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>修复所选行常规错误...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>更改所选行大小写...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
@@ -1737,6 +1769,14 @@ Command line: {1} {2}
     <HideVideoControls>隐藏视频控件</HideVideoControls>
     <GeneratingWaveformInBackground>在后台生成波形...</GeneratingWaveformInBackground>
     <AutoBackupSaved>自动备份 已保存</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>仅使用前置中置音频通道</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>在将颜色转换为对话框之前</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>将颜色转换为对话框</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>请安装视频播放器</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE 无法播放此音/视频文件 (或此文件不是音/视频文件).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit 需要一个视频播放器组件.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>要使用推荐的播放组件 "mpv" 请点击下方按钮.</UseRecommendMpv>
+    <DownloadAndUseMpv>下载并使用 "mpv" 作为视频播放器</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件中选择字幕</Title>
@@ -1871,6 +1911,7 @@ Command line: {1} {2}
   <MergeTextWithSameTimeCodes>
     <Title>合并时间码相同的行</Title>
     <MaxDifferenceMilliseconds>最大毫秒差</MaxDifferenceMilliseconds>
+    <MakeDialog>制作对话框</MakeDialog>
     <ReBreakLines>再次添加断行线</ReBreakLines>
     <NumberOfMergesX>合并行数：{0}</NumberOfMergesX>
     <MergedText>已合并文本</MergedText>
@@ -2136,6 +2177,7 @@ Command line: {1} {2}
     <ApplyAssaOverrideTags>应用ASSA覆盖标签到所选</ApplyAssaOverrideTags>
     <SetAssaPosition>设置/获取ASSA位置</SetAssaPosition>
     <SetAssaResolution>设置ASSA分辨率(PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>设置ASSA背景框</SetAssaBgBox>
     <TakeAutoBackup>立即生成自动备份</TakeAutoBackup>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <SaveAsFileNameFrom>“另存为...”使用的文件名来源</SaveAsFileNameFrom>
@@ -2157,9 +2199,9 @@ Command line: {1} {2}
     <AutoBackupEveryFiveMinutes>每隔 5 分钟</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>每隔 15 分钟</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>超过此时间后删除</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>翻译文件名自动后缀</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1个月</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3个月</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6个月</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0}个月</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>检查更新</CheckForUpdates>
     <AutoSave>自动保存</AutoSave>
     <AllowEditOfOriginalSubtitle>允许编辑原始字幕</AllowEditOfOriginalSubtitle>
@@ -2218,6 +2260,7 @@ Command line: {1} {2}
     <SpectrogramOneColorGradient>单色梯度</SpectrogramOneColorGradient>
     <SpectrogramClassic>经典</SpectrogramClassic>
     <WaveformUseFFmpeg>使用 FFmpeg 提取波形</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>仅使用前置/中置声道（适用于 5.1/7.1声道）</WaveformUseCenterChannelOnly>
     <DownloadX>下载 {0}</DownloadX>
     <WaveformFFmpegPath>FFmpeg 文件路径</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>浏览 FFmpeg 文件</WaveformBrowseToFFmpeg>
@@ -2249,6 +2292,8 @@ Command line: {1} {2}
     <ProxyUserName>用户名</ProxyUserName>
     <ProxyPassword>密码</ProxyPassword>
     <ProxyDomain>域</ProxyDomain>
+    <ProxyAuthType>认证类型</ProxyAuthType>
+    <ProxyUseDefaultCredentials>使用默认凭据</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>网络会话设置</NetworkSessionSettings>
     <NetworkSessionNewSound>当有新消息到达时播放声音文件</NetworkSessionNewSound>
     <PlayXSecondsAndBack>播放 X 秒后返回，X 为</PlayXSecondsAndBack>
@@ -2291,6 +2336,7 @@ Command line: {1} {2}
     <MusicSymbolsReplace>要替换的音乐符号（用逗号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>使用分词列表（OCR + FCE）</UseWordSplitList>
+    <AvoidPropercase>避免首字母大写</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>修正较短的显示时间 - 允许移动起始时间</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
     <DefaultFormat>默认格式</DefaultFormat>
@@ -2368,6 +2414,7 @@ Command line: {1} {2}
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <MergeDialogWithNext>与下一条合并对话 (插入破折号)</MergeDialogWithNext>
     <MergeDialogWithPrevious>与上一条合并对话 (插入破折号)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>自动平衡选中行</AutoBalanceSelectedLines>
     <GoToNext>转到下一行</GoToNext>
     <GoToNextPlayTranslate>转到下一行（并以“翻译模式”播放）</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>转到下一行并将光标置于末尾</GoToNextCursorAtEnd>
@@ -2441,19 +2488,21 @@ Command line: {1} {2}
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
     <PlaySelectedLines>播放选定的行</PlaySelectedLines>
+    <LoopSelectedLines>循环播放选定的行</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>转到上一条字幕（从当前视频位置起）</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>转到下一条字幕（从当前视频位置起）</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>转到上一章节</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>转到下一章节</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>选择下一行字幕 (从当前视频位置起, 保持视频位置不变)</WaveformSelectNextSubtitle>
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
-    <Play150Speed>以1.5倍速播放视频</Play150Speed>
-    <Play200Speed>以2倍速播放视频</Play200Speed>
     <Pause>暂停</Pause>
     <Fullscreen>全屏幕</Fullscreen>
+    <Play150Speed>以1.5倍速播放视频</Play150Speed>
+    <Play200Speed>以2倍速播放视频</Play200Speed>
     <PlayRateSlower>减慢播放速度</PlayRateSlower>
     <PlayRateFaster>加快播放速度</PlayRateFaster>
-    <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
+    <PlayRateToggle>播放速度切换 (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
+    <VideoResetSpeedAndZoom>重置播放速度/波形缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
     <VideoAudioToText>视频/音频到文本（语音识别）</VideoAudioToText>
@@ -2486,6 +2535,8 @@ Command line: {1} {2}
     <MergeSelectedLinesAndUnbreakCjk>合并所选行，取消断行且不带空格（用于中日韩等语言）</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>合并所选行, 仅保留首个非空文本</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>合并双语字幕</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>与上一条的双语合并</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>与下一条的双语合并</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>拆分双语字幕</SplitSelectedLineBilingual>
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
@@ -2523,6 +2574,7 @@ Command line: {1} {2}
     <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>在指针后的第一个空格处换行</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>在指针后的第一个空格处换行，并转到下一行</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>听写（向下键=开始录音，向上键=结束录音）</MainTextBoxDictate>
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>显示ASSA标签助手</MainTextBoxAssaIntellisense>
@@ -2653,7 +2705,7 @@ Command line: {1} {2}
   </SpellCheck>
   <NetflixQualityCheck>
     <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
-    <WhiteSpaceCheckReport>{1} 栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
+    <WhiteSpaceCheckReport>栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
     <ReportPrompt>完整报告请看这里: {0}</ReportPrompt>
     <OpenReportInFolder>在文件夹中打开报告</OpenReportInFolder>
     <FoundXIssues>Netflix 品质检查找到 {0} 个问题</FoundXIssues>
@@ -2914,8 +2966,9 @@ Command line: {1} {2}
     <OcrMethod>OCR 方式</OcrMethod>
     <OcrViaTesseractVersionX>Tesseract: {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>使用图像比较 OCR</OcrViaImageCompare>
-    <OcrViaModi>使用 Microsoft Office 文档图像(MODI) OCR，需要 Microsoft Office</OcrViaModi>
-    <OcrViaNOCR>用 nOCR 执行 OCR</OcrViaNOCR>
+    <OcrViaModi>通过 Microsoft Office 文档图像(MODI) OCR，需要 Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>通过 nOCR 进行 OCR</OcrViaNOCR>
+    <OcrViaCloudVision>通过 Google Cloud Vision API 进行 OCR</OcrViaCloudVision>
     <TesseractEngineMode>引擎模式</TesseractEngineMode>
     <TesseractEngineModeLegacy>仅使用原始Tesseract (可侦测斜体)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>仅使用神经网络 LSTM</TesseractEngineModeNeural>
@@ -2928,7 +2981,6 @@ Command line: {1} {2}
     <New>新建</New>
     <Edit>编辑</Edit>
     <StartOcr>开始 OCR</StartOcr>
-    <Stop>停止</Stop>
     <StartOcrFrom>从下列字幕编号开始 OCR:</StartOcrFrom>
     <LoadingVobSubImages>正在加载 VobSub 图像...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>正在加载图像比照数据库...</LoadingImageCompareDatabase>
@@ -2986,6 +3038,10 @@ Command line: {1} {2}
     <StartTraining>开始训练</StartTraining>
     <NowTraining>正在训练字体 '{1}', 已训练字符数: {0:#,###,##0}, 已获知 {2:#,###,##0}</NowTraining>
     <ImagesWithTimeCodesInFileName>文件名中带有时间码的图像...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>API 密钥</ApiKey>
+    <SendOriginalImages>发送原始图像</SendOriginalImages>
+    <SeHandlesTextMerge>由 SE 处理文本合并</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
@@ -2997,6 +3053,7 @@ Command line: {1} {2}
     <Italic>斜体(&amp;I)</Italic>
     <Abort>中止(&amp;A)</Abort>
     <Skip>跳过(&amp;S)</Skip>
+    <UseOnce>使用一次(&amp;O)</UseOnce>
     <Nordic>日耳曼</Nordic>
     <Spanish>西班牙</Spanish>
     <German>德国</German>

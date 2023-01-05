@@ -159,11 +159,11 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.Location = new System.Drawing.Point(26, 43);
+            this.textBoxLog.Location = new System.Drawing.Point(12, 43);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(886, 441);
+            this.textBoxLog.Size = new System.Drawing.Size(900, 441);
             this.textBoxLog.TabIndex = 20;
             // 
             // columnHeaderTarget
@@ -193,9 +193,9 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             this.listViewTranslate.FullRowSelect = true;
             this.listViewTranslate.GridLines = true;
             this.listViewTranslate.HideSelection = false;
-            this.listViewTranslate.Location = new System.Drawing.Point(12, -6);
+            this.listViewTranslate.Location = new System.Drawing.Point(12, 43);
             this.listViewTranslate.Name = "listViewTranslate";
-            this.listViewTranslate.Size = new System.Drawing.Size(886, 441);
+            this.listViewTranslate.Size = new System.Drawing.Size(900, 441);
             this.listViewTranslate.TabIndex = 7;
             this.listViewTranslate.UseCompatibleStateImageBehavior = false;
             this.listViewTranslate.View = System.Windows.Forms.View.Details;

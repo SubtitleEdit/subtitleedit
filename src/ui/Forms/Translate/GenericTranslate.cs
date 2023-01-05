@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Translate.Service;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -145,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             AddTranslationService(GoogleTranslationInitializer.Init(this));
             AddTranslationService(MicrosoftTranslationInitializer.Init());
-          //  AddTranslationService(new NikseDkTranslationService());
+            //  AddTranslationService(new NikseDkTranslationService());
 
             if (comboBoxTranslationServices.Items.Count > 0 && comboBoxTranslationServices.SelectedIndex < 0)
             {
@@ -219,10 +220,14 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         public static string EvaluateDefaultTargetLanguageCode(string defaultSourceLanguage)
         {
-            var installedLanguages = new List<InputLanguage>();
+            var installedLanguages = new List<string>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
             {
-                installedLanguages.Add(language);
+                var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(language.LayoutName);
+                if (!string.IsNullOrEmpty(iso639) && !installedLanguages.Contains(iso639))
+                {
+                    installedLanguages.Add(iso639.ToLowerInvariant());
+                }
             }
 
             var uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
@@ -234,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     if (temp.Length > 4)
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
-                        if (temp != defaultSourceLanguage && installedLanguages.Any(p => p.Culture.TwoLetterISOLanguageName.Contains(temp)))
+                        if (temp != defaultSourceLanguage && installedLanguages.Any(p => p.Contains(temp)))
                         {
                             uiCultureTargetLanguage = temp;
                             break;
@@ -247,10 +252,28 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             {
                 foreach (var language in installedLanguages)
                 {
-                    if (language.Culture.TwoLetterISOLanguageName != defaultSourceLanguage)
+                    if (language != defaultSourceLanguage)
                     {
-                        uiCultureTargetLanguage = language.Culture.TwoLetterISOLanguageName;
+                        uiCultureTargetLanguage = language;
                         break;
+                    }
+                }
+            }
+
+            if (uiCultureTargetLanguage == defaultSourceLanguage)
+            {
+                var name = CultureInfo.CurrentCulture.Name;
+                if (name.Length > 2)
+                {
+                    name = name.Remove(0, name.Length - 2);
+                }
+                var iso = IsoCountryCodes.ThreeToTwoLetterLookup.FirstOrDefault(p => p.Value == name);
+                if (!iso.Equals(default(KeyValuePair<string, string>)))
+                {
+                    var iso639 = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(iso.Key);
+                    if (!string.IsNullOrEmpty(iso639))
+                    {
+                        uiCultureTargetLanguage = iso639;
                     }
                 }
             }

@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -553,7 +553,7 @@ Napomena: Provjeri slobodan prostor na disku.</WaveFileMalformed>
     <FixCommonOcrErrors>Ispravi česte greške u prepoznavanju znakova</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ispravljeno grešaka u prepoznavanju znakova: {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Ukloni razmak između brojeva</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Ispravi dijaloge na jednoj liniji</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Ispravljeno grešaka u uklanjanju razmaka između brojeva: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Popraviti Turski ANSI (Islandski) slova u Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ispravi Dansko slovo I</FixDanishLetterI>
@@ -1733,8 +1733,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoBackupEveryFifteenMinutes>svakih 15 minuta</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Obriši nakon</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mjesec</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 mjeseca</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 mjeseci</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} mjeseci</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Provjera ažuriranja</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>&amp;Dozvoli uređivanje izvornog podnaslova</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pitaj za brisanje linija</PromptDeleteLines>

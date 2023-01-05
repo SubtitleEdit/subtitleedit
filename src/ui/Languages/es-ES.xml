@@ -2,7 +2,7 @@
 <Language Name="Español (España)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Traducido por m2s y paconaranjo</TranslatedBy>
     <CultureName>es-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -203,7 +203,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Bottom>Inferior</Bottom>
     <TakePosFromVideo>Tomar posición del video</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Cambiar la resolución del script ASSA</Title>
     <SourceVideoRes>Resolución del video de origen</SourceVideoRes>
     <TargetVideoRes>Resolución de video de destino</TargetVideoRes>
@@ -211,7 +211,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <ChangeResolutionFontSize>Cambiar la resolución para el tamaño de la fuente</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Cambiar la resolución de la posición</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Cambiar la resolución del dibujo</ChangeResolutionDrawing>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetPosition>
     <SetPosition>Fijar la posición</SetPosition>
     <VideoResolutionX>Resolución del video: {0}</VideoResolutionX>
@@ -717,7 +717,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <FixCommonOcrErrors>Corregir errores comunes de OCR (usando la lista de sustitución OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Errores comunes de OCR corregidos (archivo OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Eliminar espacios entre números</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Corregir diálogos en una línea</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Corregir diálogos en una línea</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Eliminar el guión de inicio en la primera línea para los que no son diálogos</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizar secuencia de palabras</NormalizeStrings>
     <FixTurkishAnsi>Reparar turcos ANSI (islandés) cartas a Unicode</FixTurkishAnsi>
@@ -2122,8 +2122,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Eliminar después de</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 mes</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} meses</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Buscar actualizaciones</CheckForUpdates>
     <AutoSave>Autoguardado</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir la edición del subtítulo original</AllowEditOfOriginalSubtitle>

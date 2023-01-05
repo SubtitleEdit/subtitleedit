@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Panel panelC6;
         private Panel panelC5;
         private Panel panelC4;
+        private Button buttonColorPicker;
         private bool _hexEditOn;
 
         public ColorChooser()
@@ -102,6 +103,18 @@ namespace Nikse.SubtitleEdit.Forms
             panelC5.BackColor = Configuration.Settings.General.LastColorPickerColor5;
             panelC6.BackColor = Configuration.Settings.General.LastColorPickerColor6;
             panelC7.BackColor = Configuration.Settings.General.LastColorPickerColor7;
+
+            if (Configuration.Settings.General.LastColorPickerDropper == Color.Transparent)
+            {
+                buttonColorPicker.Visible = false;
+            }
+            else
+            {
+                buttonColorPicker.BackColor = Configuration.Settings.General.LastColorPickerDropper;
+                buttonColorPicker.BackgroundImage = Properties.Resources.color_picker_small2;
+                buttonColorPicker.ImageAlign = ContentAlignment.MiddleCenter;
+                buttonColorPicker.BackgroundImageLayout = ImageLayout.Center;
+            }
         }
 
         public bool ShowAlpha
@@ -207,14 +220,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_hexEditOn)
             {
-                if (_showAlpha)
-                {
-                    _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
-                }
-                else
-                {
-                    _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
-                }
+                ShowHexColorCode(argb);
+            }
+        }
+
+        private void ShowHexColorCode(ColorHandler.Argb argb)
+        {
+            if (_showAlpha)
+            {
+                _tbHexCode.Text = $"{argb.Alpha:X2}{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
+            }
+            else
+            {
+                _tbHexCode.Text = $"{argb.Red:X2}{argb.Green:X2}{argb.Blue:X2}";
             }
         }
 
@@ -368,6 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelC6 = new System.Windows.Forms.Panel();
             this.panelC5 = new System.Windows.Forms.Panel();
             this.panelC4 = new System.Windows.Forms.Panel();
+            this.buttonColorPicker = new System.Windows.Forms.Button();
             this._flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._tbRed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._tbGreen)).BeginInit();
@@ -783,10 +802,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelC4.TabIndex = 65;
             this.panelC4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelC4_MouseClick);
             // 
+            // buttonColorPicker
+            // 
+            this.buttonColorPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonColorPicker.Location = new System.Drawing.Point(295, 150);
+            this.buttonColorPicker.Name = "buttonColorPicker";
+            this.buttonColorPicker.Size = new System.Drawing.Size(102, 74);
+            this.buttonColorPicker.TabIndex = 69;
+            this.buttonColorPicker.UseVisualStyleBackColor = true;
+            this.buttonColorPicker.Click += new System.EventHandler(this.buttonColorPicker_Click);
+            // 
             // ColorChooser
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(413, 441);
+            this.Controls.Add(this.buttonColorPicker);
             this.Controls.Add(this.panelC7);
             this.Controls.Add(this.panelC3);
             this.Controls.Add(this.panelC6);
@@ -836,6 +866,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this._tbValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion Windows Form Designer generated code
@@ -850,6 +881,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            SetLastColor(Color);
+            DialogResult = DialogResult.OK;
+        }
+
+        public static void SetLastColor(Color color)
+        {
             var colorList = new List<Color>
             {
                 Configuration.Settings.General.LastColorPickerColor,
@@ -862,14 +899,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.LastColorPickerColor7,
             };
 
-            colorList = colorList.Where(c => c != Color).ToList();
+            colorList = colorList.Where(c => c != color).ToList();
             var random = new Random();
             while (colorList.Count < 7)
             {
                 colorList.Add(Color.FromArgb(random.Next(byte.MaxValue), random.Next(byte.MaxValue), random.Next(byte.MaxValue)));
             }
 
-            Configuration.Settings.General.LastColorPickerColor = Color;
+            Configuration.Settings.General.LastColorPickerColor = color;
             Configuration.Settings.General.LastColorPickerColor1 = colorList[0];
             Configuration.Settings.General.LastColorPickerColor2 = colorList[1];
             Configuration.Settings.General.LastColorPickerColor3 = colorList[2];
@@ -877,8 +914,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LastColorPickerColor5 = colorList[4];
             Configuration.Settings.General.LastColorPickerColor6 = colorList[5];
             Configuration.Settings.General.LastColorPickerColor7 = colorList[6];
-
-            DialogResult = DialogResult.OK;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -977,52 +1012,58 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
+        private void PanelColorClick(Control panel)
+        {
+            var c = panel.BackColor;
+            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            _tbHexCode.TextChanged -= _tbHexCode_TextChanged;
+            ShowHexColorCode(new ColorHandler.Argb { Alpha = c.A, Red = c.R, Green = c.R, Blue = c.B });
+            _tbHexCode.TextChanged += _tbHexCode_TextChanged;
+        }
+
+
         private void panelC0_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC0.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC0);
         }
 
         private void panelC1_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC1.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC1);
         }
 
         private void panelC2_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC2.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC2);
+
         }
 
         private void panelC3_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC3.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC3);
+
         }
 
         private void panelC4_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC4.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC4);
+
         }
 
         private void panelC5_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC5.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC5);
+
         }
 
         private void panelC6_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC6.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC6);
         }
 
         private void panelC7_MouseClick(object sender, MouseEventArgs e)
         {
-            var c = panelC7.BackColor;
-            UpdateRgb($"{c.A:x2}{c.R:x2}{c.G:x2}{c.B:x2}");
+            PanelColorClick(panelC7);
         }
 
         private void _tbHexCode_MouseUp(object sender, MouseEventArgs e)
@@ -1031,6 +1072,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 CheckValidHexInput();
             }
+        }
+
+        private void buttonColorPicker_Click(object sender, EventArgs e)
+        {
+            PanelColorClick(buttonColorPicker);
         }
     }
 }

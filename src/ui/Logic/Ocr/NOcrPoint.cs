@@ -27,11 +27,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return new PointF((float)(p.X * 100.0 / pixelWidth), (float)(p.Y * 100.0 / pixelHeight));
         }
 
-        public static Point PointPercentToPixels(PointF p, int pixelWidth, int pixelHeight)
-        {
-            return new Point((int)Math.Round(p.X / 100.0 * pixelWidth), (int)Math.Round(p.Y / 100.0 * pixelHeight));
-        }
-
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "{0},{1} -> {2},{3} ", Start.X, Start.Y, End.X, End.Y);
@@ -59,11 +54,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public static List<Point> GetPoints(Point start, Point end)
         {
-            var list = new List<Point>();
-            int x1 = start.X;
-            int x2 = end.X;
-            int y1 = start.Y;
-            int y2 = end.Y;
+            List<Point> list;
+            var x1 = start.X;
+            var x2 = end.X;
+            var y1 = start.Y;
+            var y2 = end.Y;
             if (Math.Abs(start.X - end.X) > Math.Abs(start.Y - end.Y))
             {
                 if (x1 > x2)
@@ -73,10 +68,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     y2 = start.Y;
                     y1 = end.Y;
                 }
-                double factor = (double)(y2 - y1) / (x2 - x1);
-                for (int i = x1; i <= x2; i++)
+                var factor = (double)(y2 - y1) / (x2 - x1);
+                list = new List<Point>(x2 - x1 + 1);
+                for (var i = x1; i <= x2; i++)
                 {
-                    list.Add(new Point(i, (int)Math.Round(y1 + factor * (i - x1))));
+                    list.Add(new Point(i, (int)Math.Round(y1 + factor * (i - x1), MidpointRounding.AwayFromZero)));
                 }
             }
             else
@@ -88,23 +84,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     y2 = start.Y;
                     y1 = end.Y;
                 }
-                double factor = (double)(x2 - x1) / (y2 - y1);
-                for (int i = y1; i <= y2; i++)
+                var factor = (double)(x2 - x1) / (y2 - y1);
+                list = new List<Point>(y2 - y1 + 1);
+                for (var i = y1; i <= y2; i++)
                 {
-                    list.Add(new Point((int)Math.Round(x1 + factor * (i - y1)), i));
+                    list.Add(new Point((int)Math.Round(x1 + factor * (i - y1), MidpointRounding.AwayFromZero), i));
                 }
             }
+
             return list;
         }
 
         internal Point GetScaledStart(NOcrChar ocrChar, int width, int height)
         {
-            return new Point((int)Math.Round(Start.X * 100.0 / ocrChar.Width * width / 100.0), (int)Math.Round(Start.Y * 100.0 / ocrChar.Height * height / 100.0));
+            return new Point((int)Math.Round(Start.X * 100.0 / ocrChar.Width * width / 100.0, MidpointRounding.AwayFromZero), (int)Math.Round(Start.Y * 100.0 / ocrChar.Height * height / 100.0, MidpointRounding.AwayFromZero));
         }
 
         internal Point GetScaledEnd(NOcrChar ocrChar, int width, int height)
         {
-            return new Point((int)Math.Round(End.X * 100.0 / ocrChar.Width * width / 100.0), (int)Math.Round(End.Y * 100.0 / ocrChar.Height * height / 100.0));
+            return new Point((int)Math.Round(End.X * 100.0 / ocrChar.Width * width / 100.0, MidpointRounding.AwayFromZero), (int)Math.Round(End.Y * 100.0 / ocrChar.Height * height / 100.0, MidpointRounding.AwayFromZero));
         }
     }
 }

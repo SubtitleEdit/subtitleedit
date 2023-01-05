@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -468,7 +468,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FixCommonOcrErrors>ありがちな OCR エラーを修正する (OCR の置換の一覧を使用します)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>修正されたありがちな OCR エラー (OcrReplaceList ファイルが使用されました): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>数字の間のスペースを削除する</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>1 行中の複数の会話を修正する</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>1 行中の複数の会話を修正する</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>修正された数字の間のスペース: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>トルコ語 ANSI (アイスランド語) 文字を Unicode へ修正する</FixTurkishAnsi>
     <FixDanishLetterI>デンマーク語の文字 'i' を修正する</FixDanishLetterI>
@@ -1602,8 +1602,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <AutoBackupEveryFifteenMinutes>15 分ごと</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>定期的に削除</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 ヶ月後</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 ヶ月後</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 ヶ月後</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} ヶ月後</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>更新を確認</CheckForUpdates>
     <AutoSave>自動保存</AutoSave>
     <AllowEditOfOriginalSubtitle>翻訳前の字幕の編集を許可する</AllowEditOfOriginalSubtitle>

@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.components = new System.ComponentModel.Container();
             this.panelColor = new System.Windows.Forms.Panel();
             this.buttonColor = new System.Windows.Forms.Button();
-            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonGenerate = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelDuration = new System.Windows.Forms.Label();
@@ -67,9 +67,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemResBrowse = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
             this.buttonChooseDuration = new System.Windows.Forms.Button();
-            this.toolStripMenuItemResBrowse = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.groupBoxBackground.SuspendLayout();
@@ -98,15 +98,15 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonOK
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(549, 217);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(121, 23);
-            this.buttonOK.TabIndex = 20;
-            this.buttonOK.Text = "Generate";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGenerate.Location = new System.Drawing.Point(549, 217);
+            this.buttonGenerate.Name = "buttonGenerate";
+            this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
+            this.buttonGenerate.TabIndex = 20;
+            this.buttonGenerate.Text = "Generate";
+            this.buttonGenerate.UseVisualStyleBackColor = true;
+            this.buttonGenerate.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // buttonCancel
             // 
@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem,
             this.toolStripMenuItemResBrowse});
             this.contextMenuStripRes.Name = "contextMenuStripRes";
-            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 356);
+            this.contextMenuStripRes.Size = new System.Drawing.Size(204, 334);
             // 
             // x2160ToolStripMenuItem
             // 
@@ -468,6 +468,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
+            // toolStripMenuItemResBrowse
+            // 
+            this.toolStripMenuItemResBrowse.Name = "toolStripMenuItemResBrowse";
+            this.toolStripMenuItemResBrowse.Size = new System.Drawing.Size(203, 22);
+            this.toolStripMenuItemResBrowse.Text = "...";
+            this.toolStripMenuItemResBrowse.Click += new System.EventHandler(this.toolStripMenuItemResBrowse_Click);
+            // 
             // buttonVideoChooseStandardRes
             // 
             this.buttonVideoChooseStandardRes.Location = new System.Drawing.Point(323, 60);
@@ -488,17 +495,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonChooseDuration.UseVisualStyleBackColor = true;
             this.buttonChooseDuration.Click += new System.EventHandler(this.buttonChooseDuration_Click);
             // 
-            // toolStripMenuItemResBrowse
-            // 
-            this.toolStripMenuItemResBrowse.Name = "toolStripMenuItemResBrowse";
-            this.toolStripMenuItemResBrowse.Size = new System.Drawing.Size(203, 22);
-            this.toolStripMenuItemResBrowse.Text = "...";
-            this.toolStripMenuItemResBrowse.Click += new System.EventHandler(this.toolStripMenuItemResBrowse_Click);
-            // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(763, 252);
             this.Controls.Add(this.buttonChooseDuration);
             this.Controls.Add(this.buttonVideoChooseStandardRes);
@@ -514,7 +515,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.numericUpDownWidth);
             this.Controls.Add(this.labelDuration);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -525,6 +526,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "GenerateVideo";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideo_FormClosing);
+            this.Shown += new System.EventHandler(this.GenerateVideo_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             this.groupBoxBackground.ResumeLayout(false);
@@ -539,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
         #endregion
         private System.Windows.Forms.Panel panelColor;
         private System.Windows.Forms.Button buttonColor;
-        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonGenerate;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelDuration;

@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            int length = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Length;
+            var length = textBox.Text.CountCharacters(false);
             if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && length > Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 string newText;
@@ -736,13 +736,11 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.Append(count);
                 if (count > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
-                    label.ForeColor = ErrorTextColor;
+                    label.ForeColor = Color.Red;
                 }
             }
             label.Text = sb.ToString();
         }
-
-        public static Color ErrorTextColor => Configuration.Settings.General.UseDarkTheme ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : Color.Red;
 
         public static void GetLinePixelWidths(Label label, string text)
         {

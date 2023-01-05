@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -200,7 +200,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Bottom>Dolů</Bottom>
     <TakePosFromVideo>Vzít pozici videa</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Změnit rozlišení skriptu</Title>
     <SourceVideoRes>Rozlišení zdrojového videa</SourceVideoRes>
     <TargetVideoRes>Rozlišení cílového videa</TargetVideoRes>
@@ -208,7 +208,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <ChangeResolutionFontSize>Změnit rozlišení pro velikost písma</ChangeResolutionFontSize>
     <ChangeResolutionPositions>Změnit rozlišení pro pozici</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Změnit rozlišení pro kresbu</ChangeResolutionDrawing>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetPosition>
     <SetPosition>Nastavit pozici</SetPosition>
     <VideoResolutionX>Rozlišení videa: {0}</VideoResolutionX>
@@ -710,7 +710,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FixCommonOcrErrors>Opravit běžné chyby OCR (používá seznam náhrad OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Opraveny běžné chyby OCR (použit soubor OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Odebrat mezeru mezi čísly</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Opravit dialogy na jednom řádku</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Opravit dialogy na jednom řádku</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Odebrat pomlčku na začátku prvního řádku, pokud se nejedná o dialogy</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizovat řetězce</NormalizeStrings>
     <FixTurkishAnsi>Opravit znaky v tureckém ANSI (islandština) na Unicode</FixTurkishAnsi>
@@ -2090,8 +2090,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoBackupEveryFifteenMinutes>Každých 15 minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Odstranit každých</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 měsíc</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 měsíce</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 měsíců</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} měsíců</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Kontrolovat aktualizace</CheckForUpdates>
     <AutoSave>Automatické ukládání</AutoSave>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>

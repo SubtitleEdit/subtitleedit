@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -53,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 return string.Empty;
             }
 
-            return Encoding.UTF8.GetString(buffer, index, count);
+            return string.Join(Environment.NewLine, Encoding.UTF8.GetString(buffer, index, count).SplitToLines());
         }
 
         internal bool InitializeSizeAndName(System.IO.Stream fs)

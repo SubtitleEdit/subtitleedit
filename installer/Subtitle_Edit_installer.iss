@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2022, Nikse"
+#define app_copyright "Nikse 2001-2023"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -84,7 +84,7 @@ AppPublisher=Nikse
 AppPublisherURL=https://www.nikse.dk/SubtitleEdit/
 AppSupportURL=https://www.nikse.dk/SubtitleEdit/
 AppUpdatesURL=https://www.nikse.dk/SubtitleEdit/
-UninstallDisplayName=Subtitle Edit {#app_ver}
+UninstallDisplayName=Subtitle Edit
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
@@ -113,49 +113,14 @@ SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64
 WizardStyle=modern
 
-[Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl"
-#ifdef localize
-Name: "ar"; MessagesFile: "Languages\Arabic.isl"
-Name: "bg"; MessagesFile: "Languages\Bulgarian.isl"
-Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "eu"; MessagesFile: "Languages\Basque.isl"
-Name: "fa"; MessagesFile: "Languages\Farsi.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "hr"; MessagesFile: "Languages\Croatian.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "ko"; MessagesFile: "Languages\Korean.isl"
-Name: "mk"; MessagesFile: "Languages\Macedonian.isl"
-Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "no"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ptBR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ro"; MessagesFile: "Languages\Romanian.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "sv"; MessagesFile: "Languages\Swedish.isl"
-Name: "th"; MessagesFile: "Languages\Thai.isl"
-Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
-Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
-Name: "vi"; MessagesFile: "Languages\Vietnamese.islu"
-Name: "zh"; MessagesFile: "Languages\ChineseSimplified.islu"
-Name: "zhTW"; MessagesFile: "Languages\ChineseTraditional.isl"
-#endif
+; Include the installer's language files
+#include "SubTitle_Edit_Languages.iss"
 
 ; Include the installer's custom messages
-#include "Custom_Messages.iss"
+#include "Subtitle_Edit_Custom_Messages.iss"
 
-[Messages]
-;BeveledLabel=Subtitle Edit {#app_ver} by Nikse
-SetupAppTitle=Setup - Subtitle Edit
-SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+; Include the installer's messages
+#include "Subtitle_Edit_Messages.iss"
 
 
 [Types]
@@ -220,15 +185,15 @@ Source: ..\Dictionaries\mk_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\pt_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\ru_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\sr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_US_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\da_DK_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\de_DE_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\en_US_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
-Source: ..\Dictionaries\es_MX_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\fi_FI_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\nl_NL_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\es_MX_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\fi_FI_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\nl_NL_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\pt_PT_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
+Source: ..\Dictionaries\ru_RU_se.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\dan_WordSplitList.txt;     DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist; Components: main
@@ -312,6 +277,17 @@ Source: ..\src\ui\DLLs\Interop.QuartzTypeLib.dll;  DestDir: {app};              
 Source: {#bindir}\Newtonsoft.Json.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Extensions.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\System.Net.Http.Primitives.dll;  DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\NAudio.Core.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\NAudio.WinMM.dll;                DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\cpuid.dll;                       DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.dll;                   DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Hardware.Common.dll;   DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Hardware.CrossPlatform.Cpuid.dll; DestDir: {app};                         Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Interop.CrossPlatform.Cpuid.dll; DestDir: {app};                          Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Core.Interop.Shared.dll;    DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Hardware.Specification.Cpuid.dll; DestDir: {app};                              Flags: ignoreversion; Components: main
+Source: {#bindir}\iTin.Logging.dll;                DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\Microsoft.Win32.Registry.dll;    DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -351,15 +327,27 @@ Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsU
 Type: files;      Name: {app}\Newtonsoft.Json.dll;                    Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Extensions.dll;         Check: IsUpgrade()
 Type: files;      Name: {app}\System.Net.Http.Primitives.dll;         Check: IsUpgrade()
+Type: files;      Name: {app}\NAudio.Core.dll;                        Check: IsUpgrade()
+Type: files;      Name: {app}\NAudio.WinMM.dll;                       Check: IsUpgrade()
+Type: files;      Name: {app}\cpuid.dll;                              Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.dll;                          Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Hardware.Common.dll;          Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Hardware.CrossPlatform.Cpuid.dll; Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Interop.CrossPlatform.Cpuid.dll; Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Core.Interop.Shared.dll;           Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Hardware.Specification.Cpuid.dll;  Check: IsUpgrade()
+Type: files;      Name: {app}\iTin.Logging.dll;                       Check: IsUpgrade()
+Type: files;      Name: {app}\Microsoft.Win32.Registry.dll;           Check: IsUpgrade()
+
 
 ; Remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_names.xml;               Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\da_DK_user.xml;             Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\da_DK_se.xml;               Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml;  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_US.aff;                  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_US.dic;                  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_names.xml;               Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\en_US_user.xml;             Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US_se.xml;               Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\en_US_se.xml;               Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml;  Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\names.xml;                  Check: IsUpgrade()
@@ -677,15 +665,15 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\pt_NoBreakAfterList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\ru_NoBreakAfterList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\sr_NoBreakAfterList.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_user.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\de_DE_user.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_user.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\de_DE_se.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_se.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\es_MX_user.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\fi_FI_user.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nl_NL_user.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\pt_PT_user.xml'));
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\ru_RU_user.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\es_MX_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\fi_FI_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nl_NL_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\pt_PT_se.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\ru_RU_se.xml'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\???_OCRFixReplaceList_User.xml'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), False, True, False);
@@ -789,6 +777,7 @@ function IsDotNetDetected(version: string; service: cardinal): boolean;
 //    'v4.7.1'        .NET Framework 4.7.1
 //    'v4.7.2'        .NET Framework 4.7.2
 //    'v4.8'          .NET Framework 4.8
+//    'v4.8.1'        .NET Framework 4.8.1
 //
 // service -- Specify any non-negative integer for the required service pack level:
 //    0               No service packs required
@@ -822,6 +811,7 @@ begin
           'v4.7.1': versionRelease := 461308; // 461310 before Win10 Fall Creators Update
           'v4.7.2': versionRelease := 461808; // 461814 before Win10 April 2018 Update
           'v4.8':   versionRelease := 528040; // 528049 before Win10 May 2019 Update
+          '4.8.1':  versionRelease := 533325; 
         end;
     end;
 
@@ -856,8 +846,8 @@ function InitializeSetup(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  // Returns True if .NET Framework version 4.7.2 is installed, or a compatible version such as 4.8
-  Result := IsDotNetDetected('v4.7.2', 0);
+  // Returns True if .NET Framework version 4.8 is installed, or a compatible version such as 4.8.1
+  Result := IsDotNetDetected('v4.8', 0);
   if not Result then
   begin
     if not WizardSilent() then

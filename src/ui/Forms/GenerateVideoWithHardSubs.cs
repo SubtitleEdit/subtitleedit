@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             _assaSubtitle = new Subtitle(assaSubtitle);
             _inputVideoFileName = inputVideoFileName;
-            buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
+            buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelResolution.Text = LanguageSettings.Current.SubStationAlphaProperties.Resolution;
             labelPreviewPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -148,7 +148,11 @@ namespace Nikse.SubtitleEdit.Forms
                 labelInfo.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.InfoAssaOn;
             }
 
-            var initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
+            var initialFont = Configuration.Settings.Tools.GenVideoFontName;
+            if (string.IsNullOrEmpty(initialFont))
+            {
+                initialFont = Configuration.Settings.Tools.ExportBluRayFontName;
+            }
             if (string.IsNullOrEmpty(initialFont))
             {
                 initialFont = UiUtil.GetDefaultFont().Name;
@@ -169,17 +173,23 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSubtitleFont.SelectedIndex = 0;
             }
 
+            if (Configuration.Settings.Tools.GenVideoFontSize >= numericUpDownFontSize.Minimum &&
+                Configuration.Settings.Tools.GenVideoFontSize >= numericUpDownFontSize.Minimum)
+            {
+                numericUpDownFontSize.Value = Configuration.Settings.Tools.GenVideoFontSize;
+            }
+
             checkBoxRightToLeft.Checked = Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(_assaSubtitle);
             textBoxLog.Visible = false;
 
-            UiUtil.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonGenerate);
             UiUtil.FixFonts(this, 2000);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             _abort = true;
-            if (buttonOK.Enabled)
+            if (buttonGenerate.Enabled)
             {
                 DialogResult = DialogResult.Cancel;
             }
@@ -215,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             _log = new StringBuilder();
-            buttonOK.Enabled = false;
+            buttonGenerate.Enabled = false;
             var oldFontSizeEnabled = numericUpDownFontSize.Enabled;
             numericUpDownFontSize.Enabled = false;
 
@@ -223,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (saveDialog.ShowDialog(this) != DialogResult.OK)
                 {
-                    buttonOK.Enabled = true;
+                    buttonGenerate.Enabled = true;
                     numericUpDownFontSize.Enabled = true;
                     return;
                 }
@@ -240,7 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     MessageBox.Show($"Cannot overwrite video file { VideoFileName} - probably in use!");
-                    buttonOK.Enabled = true;
+                    buttonGenerate.Enabled = true;
                     numericUpDownFontSize.Enabled = oldFontSizeEnabled;
                     return;
                 }
@@ -395,6 +405,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (!process.HasExited)
             {
                 System.Threading.Thread.Sleep(100);
+                WindowsHelper.PreventStandBy();
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -419,6 +430,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (!process.HasExited)
             {
                 System.Threading.Thread.Sleep(100);
+                WindowsHelper.PreventStandBy();
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -500,6 +512,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (!process.HasExited)
             {
                 Application.DoEvents();
+                WindowsHelper.PreventStandBy();
                 System.Threading.Thread.Sleep(100);
                 if (_abort)
                 {
@@ -548,24 +561,8 @@ namespace Nikse.SubtitleEdit.Forms
             var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
             var msPerFrame = (float)durationMs / _processedFrames;
             var estimatedTotalMs = msPerFrame * _totalFrames;
-            var estimatedLeft = ToProgressTime(estimatedTotalMs - durationMs);
+            var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
             labelProgress.Text = estimatedLeft;
-        }
-
-        public static string ToProgressTime(float estimatedTotalMs)
-        {
-            var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            if (timeCode.TotalSeconds / 60 > 5)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
-            }
-
-            return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
 
         private void numericUpDownWidth_ValueChanged(object sender, EventArgs e)
@@ -664,6 +661,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateVideoWithHardSubs_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Configuration.Settings.Tools.GenVideoFontName = comboBoxSubtitleFont.Text;
+            Configuration.Settings.Tools.GenVideoFontSize = (int)numericUpDownFontSize.Value;
             Configuration.Settings.Tools.GenVideoEncoding = comboBoxVideoEncoding.Text;
             Configuration.Settings.Tools.GenVideoPreset = comboBoxPreset.Text;
             Configuration.Settings.Tools.GenVideoCrf = comboBoxCrf.Text;
@@ -929,7 +928,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!File.Exists(_inputVideoFileName))
             {
                 MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileNotFound, _inputVideoFileName));
-                buttonOK.Enabled = false;
+                buttonGenerate.Enabled = false;
                 return;
             }
 
@@ -937,6 +936,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownTargetFileSize.Value = Math.Max(targetFileSizeMb, numericUpDownTargetFileSize.Minimum);
             _loading = false;
             UiUtil.FixFonts(groupBoxSettings, 2000);
+
+            buttonGenerate.Focus();
         }
 
         private void checkBoxTargetFileSize_CheckedChanged(object sender, EventArgs e)
@@ -979,6 +980,7 @@ namespace Nikse.SubtitleEdit.Forms
                 while (!process.HasExited)
                 {
                     System.Threading.Thread.Sleep(100);
+                    WindowsHelper.PreventStandBy();
                     Application.DoEvents();
                 }
 

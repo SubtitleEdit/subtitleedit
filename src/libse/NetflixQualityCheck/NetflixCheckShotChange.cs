@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
             if (Configuration.Settings.General.CurrentVideoIsSmpte)
             {
-                shotChanges = shotChanges.Select(sc => sc /= 1.001).ToList();
+                shotChanges = shotChanges.Select(sc => Math.Round(sc /= 1.001, 3, MidpointRounding.AwayFromZero)).ToList();
             }
 
             int halfSecGapInFrames = (int)Math.Round(controller.FrameRate / 2, MidpointRounding.AwayFromZero);
@@ -47,7 +47,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (previousStartShotChanges.Count > 0)
                 {
                     double nearestStartPrevShotChange = previousStartShotChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
-                    if (SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevShotChange * 1000) < halfSecGapInFrames)
+                    var gapToShotChange = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds - nearestStartPrevShotChange * 1000);
+                    if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
                     {
                         fixedParagraph.StartTime.TotalMilliseconds = nearestStartPrevShotChange * 1000;
                         comment = $"The in-cue is within {halfSecGapInFrames} frames after the shot change, snap the in-cue to the shot-change";

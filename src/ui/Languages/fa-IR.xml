@@ -2,7 +2,7 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما، مجید عبدالهی</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
@@ -213,7 +213,7 @@
     <Bottom>پایین</Bottom>
     <TakePosFromVideo>موقعیت ویدئو را بگیرید</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>وضوح اسکریپت ASSA را تغییر دهید</Title>
     <SourceVideoRes>وضوح تصویر منبع</SourceVideoRes>
     <TargetVideoRes>وضوح ویدئو را هدف قرار دهید</TargetVideoRes>
@@ -222,7 +222,7 @@
     <ChangeResolutionPositions>تغییر وضوح برای موقعیت</ChangeResolutionPositions>
     <ChangeResolutionDrawing>تغییر وضوح برای طراحی</ChangeResolutionDrawing>
     <SourceAndTargetEqual>وضوح منبع و هدف یکسان است - کاری برای انجام دادن ندارد.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>جعبه پس زمینه را ایجاد کنید</Title>
     <Padding>لایه گذاری</Padding>
@@ -734,7 +734,7 @@
     <FixCommonOcrErrors>تعمیر خطاهای او سی آر /با استفاده از لیست جایگزین</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>اشتباهات او سی آر معمول رفع شد /پرونده OcrReplaceList استفاده می شود : {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>حذف فضای بین اعداد</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>فیسک کردن گفتگو ها بر روی خط</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>فیسک کردن گفتگو ها بر روی خط</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>خط تیره از خط اول را برای غیر دیالوگ ها حذف کنید</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>رشته ها را عادی کنید</NormalizeStrings>
     <FixTurkishAnsi>اصلاح حروف ANSI ترکی (ایسلندی) به یونیکد</FixTurkishAnsi>
@@ -2144,8 +2144,7 @@
     <AutoBackupEveryFifteenMinutes>هر 15 دقیقه</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>حذف بعد از</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 ماه</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 ماه</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 ماه</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} ماه</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>بررسی برای به روز رسانی</CheckForUpdates>
     <AutoSave>ذخیره خودکار</AutoSave>
     <AllowEditOfOriginalSubtitle>اجازه ویرایش از نام اصلی</AllowEditOfOriginalSubtitle>

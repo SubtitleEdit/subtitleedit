@@ -273,7 +273,7 @@
     <FixCommonOcrErrors>Исправи честе грешке у препознавању знакова</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Исправљено грешака у препознавању знакова: {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Уклони размак између бројева</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Исправи дијалоге на једној линији</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Исправи дијалоге на једној линији</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Исправљено грешака у уклањању размака између бројева: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Исправи данско слово И</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Исправи обрнути упитник и узвичник у шпанском језику.</FixSpanishInvertedQuestionAndExclamationMarks>

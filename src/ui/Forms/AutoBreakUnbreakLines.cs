@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             _modeAutoBalance = autoBalance;
             _paragraphs = new List<Paragraph>();
 
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 _paragraphs.Add(p);
             }
@@ -54,8 +54,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelCondition.Text = LanguageSettings.Current.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;
                 const int start = 10;
-                const int max = 60;
-                for (int i = start; i <= max; i++)
+                const int max = 200;
+                for (var i = start; i <= max; i++)
                 {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                     if (i == Configuration.Settings.General.MergeLinesShorterThan - 1)
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 labelCondition.Text = LanguageSettings.Current.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan;
-                for (int i = 5; i < 51; i++)
+                for (var i = 5; i < 51; i++)
                 {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                     if (i == Configuration.Settings.General.MergeLinesShorterThan - 1)
@@ -88,16 +88,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 Unbreak();
             }
+
             comboBoxConditions.SelectedIndexChanged += ComboBoxConditionsSelectedIndexChanged;
         }
 
-        public int MinimumLength
-        {
-            get
-            {
-                return int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
-            }
-        }
+        public int MinimumLength => int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
 
         public int MergeLinesShorterThan
         {
@@ -117,13 +112,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             _notAllowedFixes = new HashSet<string>();
             _fixedText = new Dictionary<string, string>();
-            int minLength = MinimumLength;
+            var minLength = MinimumLength;
             Text = LanguageSettings.Current.AutoBreakUnbreakLines.TitleAutoBreak;
 
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            foreach (Paragraph p in _paragraphs)
+            foreach (var p in _paragraphs)
             {
                 if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
@@ -138,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(LanguageSettings.Current.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+            AutoBreakUnbreakLines_ResizeEnd(null, null);
         }
 
         private void Unbreak()
@@ -220,13 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (e.Item == null)
-            {
-                return;
-            }
-
-            var p = e.Item.Tag as Paragraph;
-            if (p == null)
+            if (!(e.Item?.Tag is Paragraph p))
             {
                 return;
             }

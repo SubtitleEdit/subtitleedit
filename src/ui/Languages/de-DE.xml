@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -580,7 +580,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixCommonOcrErrors>Häufige OCR Fehler korrigieren (OCR Korrekturliste verwenden)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Häufige OCR Fehler korrigiert (OCR Korrekturliste verwendet): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Leerzeichen zwischen Zahlen entfernen</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Einzeilige Dialoge korrigieren</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Einzeilige Dialoge korrigieren</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Leerzeichen zwischen zahlen entfernt: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Wandle türkische ANSI Buchstaben (Isländisch) nach Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Dänischen Buchstaben 'i' korrigieren</FixDanishLetterI>
@@ -1809,8 +1809,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoBackupEveryFifteenMinutes>Alle 15 Minuten</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Entfernen nach</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 Monat</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 Monate</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 Monate</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} Monate</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Nach Aktualisierungen suchen</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim Löschen von Texten</PromptDeleteLines>

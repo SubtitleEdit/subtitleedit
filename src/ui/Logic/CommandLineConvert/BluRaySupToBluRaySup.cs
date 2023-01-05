@@ -27,12 +27,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     var p = sub[index];
                     var brSub = new BluRaySupPicture
                     {
-                        StartTime = (long)p.StartTimeCode.TotalMilliseconds,
-                        EndTime = (long)p.EndTimeCode.TotalMilliseconds,
+                        StartTime = (long)Math.Round(p.StartTimeCode.TotalMilliseconds, MidpointRounding.AwayFromZero) ,
+                        EndTime = (long)Math.Round(p.EndTimeCode.TotalMilliseconds, MidpointRounding.AwayFromZero),
                         Width = screenWidth,
                         Height = screenHeight,
                         IsForced = p.IsForced,
-                        CompositionNumber = (index + 1) * 2
+                        CompositionNumber = (index + 1) * 2,
                     };
                     var bitmap = p.GetBitmap();
                     var pos = p.GetPosition();

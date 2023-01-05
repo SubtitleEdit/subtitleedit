@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 var useImmersiveDarkMode = enabled ? 1 : 0;
-                return NativeMethods.DwmSetWindowAttribute(handle, (int)attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
+                return NativeMethods.DwmSetWindowAttribute(handle, attribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
             }
 
             return false;
@@ -976,19 +976,18 @@ namespace Nikse.SubtitleEdit.Logic
                     return new SolidBrush(SelectedTabColor);
                 }
 
-                bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
+                var isHighlighted = _tabRects[index].Contains(_mouseCursor);
                 return isHighlighted
                     ? new SolidBrush(HighlightedTabColor)
                     : new SolidBrush(BackColor);
             }
 
-            private Pen GetBorderPen() =>
-                new Pen(SystemBrushes.ControlDark, BorderWidth);
+            private static Pen GetBorderPen() => new Pen(SystemBrushes.ControlDark, BorderWidth);
         }
 
         private static void SetStyle(Control control, ControlStyles styles, bool value) =>
             typeof(TabControl).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic)
-            .Invoke(control, new object[] { styles, value });
+                ?.Invoke(control, new object[] { styles, value });
 
         internal static void SetDarkTheme(ToolStripItem item)
         {

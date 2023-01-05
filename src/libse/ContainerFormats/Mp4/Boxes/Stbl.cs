@@ -4,28 +4,33 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     public class Stbl : Box
     {
-        public List<string> Texts;
         public List<SubPicture> SubPictures;
         public ulong StszSampleCount;
         public ulong TimeScale { get; set; }
         private readonly Mdia _mdia;
         public List<uint> SampleSizes;
-        public List<SampleTimeInfo> Ssts { get; set; }
+        public List<uint> Ssts { get; set; }
+        public List<SampleToChunkMap> Stsc { get; set; }
+        public List<ulong> ChunkOffsets;
+        public List<Paragraph> Paragraphs;
+        public List<Paragraph> GetParagraphs() => Paragraphs;
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
             TimeScale = timeScale;
             _mdia = mdia;
             Position = (ulong)fs.Position;
-            Ssts = new List<SampleTimeInfo>();
+            Ssts = new List<uint>();
+            Stsc = new List<SampleToChunkMap>();
             SampleSizes = new List<uint>();
-            Texts = new List<string>();
+            ChunkOffsets = new List<ulong>();
             SubPictures = new List<SubPicture>();
             while (fs.Position < (long)maximumLength)
             {
@@ -36,40 +41,34 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "stco") // 32-bit - chunk offset
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
-                    int version = Buffer[0];
-                    uint totalEntries = GetUInt(4);
-
-                    uint lastOffset = 0;
-                    for (int i = 0; i < totalEntries; i++)
+                    if (handlerType != "vide" && handlerType != "soun")
                     {
-                        uint offset = GetUInt(8 + i * 4);
-                        if (lastOffset + 5 < offset)
-                        {
-                            ReadText(fs, offset, handlerType, i);
-                        }
+                        Buffer = new byte[Size - 4];
+                        fs.Read(Buffer, 0, Buffer.Length);
+                        int version = Buffer[0];
+                        var totalEntries = GetUInt(4);
 
-                        lastOffset = offset;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = GetUInt(8 + i * 4);
+                            ChunkOffsets.Add(offset);
+                        }
                     }
                 }
                 else if (Name == "co64") // 64-bit
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
-                    int version = Buffer[0];
-                    uint totalEntries = GetUInt(4);
-
-                    ulong lastOffset = 0;
-                    for (int i = 0; i < totalEntries; i++)
+                    if (handlerType != "vide" && handlerType != "soun")
                     {
-                        ulong offset = GetUInt64(8 + i * 8);
-                        if (lastOffset + 8 < offset)
-                        {
-                            ReadText(fs, offset, handlerType, i);
-                        }
+                        Buffer = new byte[Size - 4];
+                        fs.Read(Buffer, 0, Buffer.Length);
+                        int version = Buffer[0];
+                        var totalEntries = GetUInt(4);
 
-                        lastOffset = offset;
+                        for (var i = 0; i < totalEntries; i++)
+                        {
+                            var offset = GetUInt64(8 + i * 8);
+                            ChunkOffsets.Add(offset);
+                        }
                     }
                 }
                 else if (Name == "stsz") // sample sizes
@@ -77,14 +76,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint uniformSizeOfEachSample = GetUInt(4);
-                    uint numberOfSampleSizes = GetUInt(8);
+                    var uniformSizeOfEachSample = GetUInt(4);
+                    var numberOfSampleSizes = GetUInt(8);
                     StszSampleCount = numberOfSampleSizes;
-                    for (int i = 0; i < numberOfSampleSizes; i++)
+                    for (var i = 0; i < numberOfSampleSizes; i++)
                     {
                         if (12 + i * 4 + 4 < Buffer.Length)
                         {
-                            uint sampleSize = GetUInt(12 + i * 4);
+                            var sampleSize = GetUInt(12 + i * 4);
                             SampleSizes.Add(sampleSize);
                         }
                     }
@@ -96,23 +95,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint numberOfSampleTimes = GetUInt(4);
-                    if (_mdia.IsClosedCaption)
+                    var numberOfSampleTimes = GetUInt(4);
+                    for (var i = 0; i < numberOfSampleTimes; i++)
                     {
-                        for (int i = 0; i < numberOfSampleTimes; i++)
+                        var sampleCount = GetUInt(8 + i * 8);
+                        var sampleDelta = GetUInt(12 + i * 8);
+                        for (var j = 0; j < sampleCount; j++)
                         {
-                            uint sampleCount = GetUInt(8 + i * 8);
-                            uint sampleDelta = GetUInt(12 + i * 8);
-                            Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < numberOfSampleTimes; i++)
-                        {
-                            uint sampleCount = GetUInt(8 + i * 8);
-                            uint sampleDelta = GetUInt(12 + i * 8);
-                            Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
+                            Ssts.Add(sampleDelta);
                         }
                     }
                 }
@@ -121,149 +111,153 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
-                    uint numberOfSampleTimes = GetUInt(4);
-                    for (int i = 0; i < numberOfSampleTimes; i++)
+                    var numberOfSampleTimes = GetUInt(4);
+                    for (var i = 0; i < numberOfSampleTimes; i++)
                     {
                         if (16 + i * 12 + 4 < Buffer.Length)
                         {
-                            uint firstChunk = GetUInt(8 + i * 12);
-                            uint samplesPerChunk = GetUInt(12 + i * 12);
-                            uint sampleDescriptionIndex = GetUInt(16 + i * 12);
+                            var firstChunk = GetUInt(8 + i * 12);
+                            var samplesPerChunk = GetUInt(12 + i * 12);
+                            var sampleDescriptionIndex = GetUInt(16 + i * 12);
+                            Stsc.Add(new SampleToChunkMap { FirstChunk = firstChunk, SamplesPerChunk = samplesPerChunk, SampleDescriptionIndex = sampleDescriptionIndex });
                         }
                     }
                 }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
-        }
 
-        private void ReadText(Stream fs, ulong offset, string handlerType, int index)
-        {
-            if (handlerType == "vide")
+            if (handlerType != "vide" && handlerType != "soun")
             {
-                return;
-            }
-
-            fs.Seek((long)offset, SeekOrigin.Begin);
-            var data = new byte[4];
-            fs.Read(data, 0, 2);
-            uint textSize = (uint)GetWord(data, 0);
-
-            if (handlerType == "subp") // VobSub created with Mp4Box
-            {
-                if (textSize > 100)
-                {
-                    fs.Seek((long)offset, SeekOrigin.Begin);
-                    data = new byte[textSize + 2];
-                    fs.Read(data, 0, data.Length);
-                    SubPictures.Add(new SubPicture(data)); // TODO: Where is palette?
-                }
-            }
-            else
-            {
-                if (handlerType == "text" && index + 1 < SampleSizes.Count && SampleSizes[index + 1] <= 2)
-                {
-                    return;
-                }
-
-                if (textSize == 0)
-                {
-                    fs.Read(data, 2, 2);
-                    textSize = GetUInt(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
-                }
-                if (textSize > 0 && textSize < 500)
-                {
-                    data = new byte[textSize];
-                    fs.Read(data, 0, data.Length);
-                    string text = GetString(data, 0, (int)textSize).TrimEnd();
-
-                    if (_mdia.IsClosedCaption)
-                    {
-                        var sb = new StringBuilder();
-                        for (int j = 8; j < data.Length - 3; j++)
-                        {
-                            string h = data[j].ToString("X2").ToLowerInvariant();
-                            if (h.Length < 2)
-                            {
-                                h = "0" + h;
-                            }
-
-                            sb.Append(h);
-                            if (j % 2 == 1)
-                            {
-                                sb.Append(' ');
-                            }
-                        }
-                        string hex = sb.ToString();
-                        int errorCount = 0;
-                        text = ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
-                        if (text.StartsWith('n') && text.Length > 1)
-                        {
-                            text = "<i>" + text.Substring(1) + "</i>";
-                        }
-
-                        if (text.StartsWith("-n", StringComparison.Ordinal))
-                        {
-                            text = text.Remove(0, 2);
-                        }
-
-                        if (text.StartsWith("-N", StringComparison.Ordinal))
-                        {
-                            text = text.Remove(0, 2);
-                        }
-
-                        if (text.StartsWith('-') && !text.Contains(Environment.NewLine + "-"))
-                        {
-                            text = text.Remove(0, 1);
-                        }
-                    }
-                    Texts.Add(text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine));
-                }
+                Paragraphs = GetParagraphs(fs, handlerType == "subp");
             }
         }
 
-        public List<Paragraph> GetParagraphs()
+        private List<Paragraph> GetParagraphs(Stream fs, bool subtitlePicture)
         {
             var paragraphs = new List<Paragraph>();
-            double totalTime = 0;
-            var allTimes = new List<double>();
-
-            // expand time codes
-            foreach (var timeInfo in Ssts)
-            {
-                for (var i = 0; i < timeInfo.SampleCount; i++)
-                {
-                    totalTime += timeInfo.SampleDelta / (double)TimeScale;
-                    allTimes.Add(totalTime);
-                }
-            }
-
+            uint samplesPerChunk = 1;
+            var max = ChunkOffsets.Count;
             var index = 0;
-            var textIndex = 0;
-            while (index < allTimes.Count - 1)
+            double totalTime = 0;
+            for (var chunkIndex = 0; chunkIndex < max; chunkIndex++)
             {
-                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
+                var newSamplesPerChunk = Stsc.FirstOrDefault(item => item.FirstChunk == chunkIndex + 1);
+                if (newSamplesPerChunk != null)
                 {
+                    samplesPerChunk = newSamplesPerChunk.SamplesPerChunk;
+                }
+
+                var chunkOffset = ChunkOffsets[chunkIndex];
+                var p = new Paragraph();
+                for (var i = 0; i < samplesPerChunk; i++)
+                {
+                    if (index >= SampleSizes.Count || index >= Ssts.Count)
+                    {
+                        return paragraphs;
+                    }
+
+                    var sampleSize = SampleSizes[index];
+                    var sampleTime = Ssts[index];
+                    var before = totalTime;
+                    totalTime += sampleTime / (double)TimeScale;
+
+                    if (sampleSize > 2)
+                    {
+                        p.StartTime.TotalSeconds = before;
+
+                        fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                        var buffer = new byte[2];
+                        fs.Read(buffer, 0, buffer.Length);
+                        var textSize = (uint)GetWord(buffer, 0);
+                        if (textSize == 0 && samplesPerChunk > 1)
+                        {
+                            fs.Read(buffer, 0, buffer.Length);
+                            textSize = (uint)GetWord(buffer, 0);
+                        }
+
+                        if (textSize > 0)
+                        {
+                            if (subtitlePicture) // VobSub created with Mp4Box
+                            {
+                                if (textSize > 100)
+                                {
+                                    buffer = new byte[textSize + 2];
+                                    fs.Seek((long)chunkOffset, SeekOrigin.Begin);
+                                    fs.Read(buffer, 0, buffer.Length);
+                                    SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
+                                    paragraphs.Add(p);
+                                }
+                            }
+                            else
+                            {
+                                buffer = new byte[textSize];
+                                fs.Read(buffer, 0, buffer.Length);
+                                p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
+
+                                if (_mdia.IsClosedCaption)
+                                {
+                                    p.Text = MakeScenaristText(buffer);
+                                }
+                            }
+                        }
+                    }
+
+                    p.EndTime.TotalSeconds = totalTime;
                     index++;
                 }
 
-                var timeStart = allTimes[index];
-                var timeEnd = timeStart + 2;
-                if (index + 1 < allTimes.Count)
+                if (!string.IsNullOrEmpty(p.Text))
                 {
-                    timeEnd = allTimes[index + 1];
+                    paragraphs.Add(p);
                 }
-
-                if (Texts.Count > textIndex)
-                {
-                    paragraphs.Add(new Paragraph(Texts[textIndex], timeStart * 1000.0, timeEnd * 1000.0));
-                }
-
-                index++;
-                textIndex++;
             }
+
             return paragraphs;
         }
 
+        private static string MakeScenaristText(byte[] buffer)
+        {
+            var sb = new StringBuilder();
+            for (var j = 8; j < buffer.Length - 3; j++)
+            {
+                var h = buffer[j].ToString("X2").ToLowerInvariant();
+                if (h.Length < 2)
+                {
+                    h = "0" + h;
+                }
+
+                sb.Append(h);
+                if (j % 2 == 1)
+                {
+                    sb.Append(' ');
+                }
+            }
+
+            var hex = sb.ToString();
+            var errorCount = 0;
+            var text = ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
+            if (text.StartsWith('n') && text.Length > 1)
+            {
+                text = "<i>" + text.Substring(1) + "</i>";
+            }
+
+            if (text.StartsWith("-n", StringComparison.Ordinal))
+            {
+                text = text.Remove(0, 2);
+            }
+
+            if (text.StartsWith("-N", StringComparison.Ordinal))
+            {
+                text = text.Remove(0, 2);
+            }
+
+            if (text.StartsWith('-') && !text.Contains(Environment.NewLine + "-"))
+            {
+                text = text.Remove(0, 1);
+            }
+
+            return text;
+        }
     }
 }

@@ -66,6 +66,7 @@
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonOnce = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.groupBoxNewInput.SuspendLayout();
@@ -107,7 +108,7 @@
             this.buttonAbort.Location = new System.Drawing.Point(541, 613);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(75, 23);
-            this.buttonAbort.TabIndex = 25;
+            this.buttonAbort.TabIndex = 26;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
             this.buttonAbort.Click += new System.EventHandler(this.buttonAbort_Click);
@@ -159,13 +160,13 @@
             // contextMenuStripLetters
             // 
             this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(181, 26);
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(61, 4);
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(379, 613);
+            this.buttonOK.Location = new System.Drawing.Point(298, 613);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 23;
@@ -181,7 +182,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(460, 613);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 24;
+            this.buttonCancel.TabIndex = 25;
             this.buttonCancel.Text = "&Skip";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -472,11 +473,24 @@
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
+            // buttonOnce
+            // 
+            this.buttonOnce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOnce.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOnce.Location = new System.Drawing.Point(379, 613);
+            this.buttonOnce.Name = "buttonOnce";
+            this.buttonOnce.Size = new System.Drawing.Size(75, 23);
+            this.buttonOnce.TabIndex = 24;
+            this.buttonOnce.Text = "&Use once";
+            this.buttonOnce.UseVisualStyleBackColor = true;
+            this.buttonOnce.Click += new System.EventHandler(this.buttonOnce_Click);
+            // 
             // VobSubOcrNOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 642);
+            this.Controls.Add(this.buttonOnce);
             this.Controls.Add(this.groupBoxNewInput);
             this.Controls.Add(this.buttonShrinkSelection);
             this.Controls.Add(this.buttonExpandSelection);
@@ -548,5 +562,6 @@
         private System.Windows.Forms.Label labelLinestoDraw;
         private System.Windows.Forms.Button buttonGuessAgain;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripLetters;
+        private System.Windows.Forms.Button buttonOnce;
     }
 }

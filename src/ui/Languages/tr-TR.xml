@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006
 Son eklemeler: ismail0100</TranslatedBy>
     <CultureName>tr-TR</CultureName>
@@ -668,7 +668,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixCommonOcrErrors>Yaygın OCR hatalarını düzelt (OCR liste değiştirmeyi kullanarak)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Yaygın OCR hataları düzeltildi (OCR değiştirme dosyası kullanıldı): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Sayılar arasındaki boşluğu kaldır</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Bir satırdaki diyalogları düzelt(tire ile yeni satıra ayırır)</BreakDialogsOnOneLine>
     <NormalizeStrings>Dizeleri normalleştir</NormalizeStrings>
     <FixTurkishAnsi>Türk ANSI (İzlanda) harfleri Unicode için düzelt</FixTurkishAnsi>
     <FixDanishLetterI>Danimarka 'i' harfini düzelt</FixDanishLetterI>
@@ -2026,8 +2026,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AutoBackupEveryFifteenMinutes>Her 15 dakikada bir...</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Sonra sil</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 Ay</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 Ay</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 Ay</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} Ay</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Güncellemeleri kontrol et</CheckForUpdates>
     <AutoSave>Otomatik kaydet</AutoSave>
     <AllowEditOfOriginalSubtitle>Orijinal altyazının düzenlenmesine izin ver</AllowEditOfOriginalSubtitle>

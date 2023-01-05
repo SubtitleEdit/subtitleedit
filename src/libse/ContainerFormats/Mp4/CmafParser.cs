@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
@@ -56,9 +57,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 else if (Name == "mdat")
                 {
                     var mdat = new Mdat(fs, Position);
-                    if (mdat.Payloads.Count > 0)
+                    if (mdat.Vtts.Count > 0)
                     {
-                        payloads.AddRange(mdat.Payloads);
+                        payloads.AddRange(mdat.Vtts.Select(p=>p.Payload).ToList());
                     }
                 }
                 else if (Name == "moof")

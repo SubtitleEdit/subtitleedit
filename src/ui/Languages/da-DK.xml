@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -96,6 +96,7 @@
     <ExampleX>Eksempel: {0}</ExampleX>
     <Reset>Nulstil</Reset>
     <Warning>Advarsel</Warning>
+    <UseLargerFontForThisWindow>Brug stor skrifttype til dette vindue</UseLargerFontForThisWindow>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -170,9 +171,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <AudioToText>
     <Title>Lyd til tekst</Title>
     <Info>Generer tekst fra lyd via Vosk/Kaldi talegenkendelse</Info>
+    <WhisperInfo>Generer tekst fra lyd via Whisper-talegenkendelse</WhisperInfo>
     <VoskWebsite>Vosk hjemmeside</VoskWebsite>
+    <WhisperWebsite>Whisper hjemmeside</WhisperWebsite>
+    <WhisperNotFound>Whisper ikke fundet - læs mere (web)?</WhisperNotFound>
     <Models>Modeller</Models>
+    <LanguagesAndModels>Sprog og modeller</LanguagesAndModels>
     <ChooseModel>Vælg model</ChooseModel>
+    <ChooseLanguage>Vælg sprog</ChooseLanguage>
     <OpenModelsFolder>Åbn mappen modeller</OpenModelsFolder>
     <LoadingVoskModel>Indlæser Vosk talegenkendelsesmodel...</LoadingVoskModel>
     <Transcribing>Transskriberer lyd til tekst...</Transcribing>
@@ -180,6 +186,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XFilesSavedToVideoSourceFolder>{0} filer gemt i videokildemappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
     <BatchMode>Batch-tilstand</BatchMode>
+    <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
+    <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -220,7 +228,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Bottom>Bund</Bottom>
     <TakePosFromVideo>Tag videoposition</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Skift scriptopløsning</Title>
     <SourceVideoRes>Kilde video opløsning</SourceVideoRes>
     <TargetVideoRes>Mål videoopløsning</TargetVideoRes>
@@ -229,7 +237,13 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ChangeResolutionPositions>Skift opløsning for position</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Skift opløsning for tegninger</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Kilde og målopløsning er den samme - intet at gøre.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
+  <ImageColorPicker>
+    <Title>Vælg farve fra billede</Title>
+    <CopyColorHex>Kopiér til udklipsholder som HEX-farve {0}</CopyColorHex>
+    <CopyColorAssa>Kopiér til udklipsholder som ASSA-farve {0}</CopyColorAssa>
+    <CopyColorRgb>Kopiér til udklipsholder som RGB-farve {0}</CopyColorRgb>
+  </ImageColorPicker>
   <AssaSetBackgroundBox>
     <Title>Generer baggrundsboks</Title>
     <Padding>Padding</Padding>
@@ -245,6 +259,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MarginY>Margen Y</MarginY>
     <OnlyDrawing>Kun tegning</OnlyDrawing>
     <DrawingFile>Tegning fil</DrawingFile>
+    <ColorPickerSetLastColor>Farvevælgerens sidste farve er nu: {0}</ColorPickerSetLastColor>
   </AssaSetBackgroundBox>
   <AssaSetPosition>
     <SetPosition>Indstil/hent position</SetPosition>
@@ -280,6 +295,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveStyleActor>Fjern style/skuespiller</RemoveStyleActor>
     <RemoveTextForHI>Fjern tekst for høre-hæmmede</RemoveTextForHI>
+    <ConvertColorsToDialog>Konverter farver til dialog</ConvertColorsToDialog>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
     <RedoCasing>Sæt store/små bogstaver</RedoCasing>
     <Convert>Konverter</Convert>
@@ -393,11 +409,12 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Custom>Brugerdefineret</Custom>
     <ToDropFrame>Til drop-frame</ToDropFrame>
     <FromDropFrame>Fra drop-frame</FromDropFrame>
+    <AllowOverlap>Tillad overlap</AllowOverlap>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Tjek for opdateringer</Title>
-    <CheckingForUpdates>Kontrollerer for opdateringer...</CheckingForUpdates>
-    <CheckingForUpdatesFailedX>Kontrol for opdateringer mislykkedes: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdates>Tjek for opdateringer...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Tjek for opdateringer mislykkedes: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Du bruger den nyeste version af Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Ny version tilgængelig!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Gå til download side</InstallUpdate>
@@ -444,10 +461,17 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1:0.##}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer linjeskift</IgnoreLineBreaks>
+    <IgnoreWhitespace>Ignorer mellemrum/linjeskift</IgnoreWhitespace>
     <IgnoreFormatting>Ignorer formatering</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan ikke sammenligne med billede baseret undertekster</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>Konverter farver til dialog</Title>
+    <RemoveColorTags>Fjern farvemærker</RemoveColorTags>
+    <AddNewLines>Placer hver tankestreg på ny linje</AddNewLines>
+    <ReBreakLines>Bryd linjer igen</ReBreakLines>
+  </ConvertColorsToDialog>
   <DCinemaProperties>
     <Title>D-Cinema egenskaber (INTEROP)</Title>
     <TitleSmpte>D-Cinema egenskaber (SMPTE)</TitleSmpte>
@@ -624,6 +648,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SimpleRendering>Simpel rendering</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing med gennemsigtighed</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
+    <ImagePrefix>Billedpræfiks</ImagePrefix>
     <SideBySide3D>Half-Side-by-side</SideBySide3D>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>Dybde</Depth>
@@ -744,7 +769,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixCommonOcrErrors>Ret OCR-fejl (ved hjælp af OCR erstat liste)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ret OCR fejl (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Fix dialoger på én linje</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Fix dialoger på én linje</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Fjern startstreg i første linje for ikke-dialoger</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normaliser strenge</NormalizeStrings>
     <FixTurkishAnsi>Fix tyrkiske ANSI (islandske) bogstaver til Unicode</FixTurkishAnsi>
@@ -1197,6 +1222,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <FixCommonErrors>&amp;Ret almindelige fejl...</FixCommonErrors>
         <StartNumberingFrom>Begynd nummerering fra...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Fjern tekst for hørehæmmede...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>Konverter farver til dialog...</ConvertColorsToDialog>
         <ChangeCasing>Skift store/små bogstaver...</ChangeCasing>
         <ChangeFrameRate>Skift frame rate...</ChangeFrameRate>
         <ChangeSpeedInPercent>Ændr hastighed (procent)...</ChangeSpeedInPercent>
@@ -1242,7 +1268,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
-        <VideoAudioToText>Video/lyd til tekst...</VideoAudioToText>
+        <VideoAudioToTextX>Lyd til tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
         <RemoveOrExportShotChanges>Fjern/eksporter sceneændringer...</RemoveOrExportShotChanges>
@@ -1333,7 +1359,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
-        <Insert>Indsæt</Insert>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
@@ -1349,6 +1374,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <ColumnTextUp>Tekst op</ColumnTextUp>
         <ColumnTextDown>Tekst ned</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Kopier text fra original to aktuel</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>OCR valgte linjer</OcrSelectedLines>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesAsDialog>
@@ -1387,6 +1413,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateProgressBar>Generer statuslinje...</GenerateProgressBar>
         <AssaResolutionChanger>Skift scriptopløsning...</AssaResolutionChanger>
         <AssaGenerateBackgroundBox>Generer baggrundsboks...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>Vælg farve fra billeder...</ImageColorPicker>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
@@ -1739,6 +1766,9 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <HideVideoControls>Skjul vide vindue</HideVideoControls>
     <GeneratingWaveformInBackground>Genererer bølgeform i baggrunden...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Auto-backup gemt</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>Bruger kun lydkanal foran i midten</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>Før konverterering af farver til dialog</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>Konverterede farver til dialog</ConvertedColorsToDialog>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1873,6 +1903,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
   <MergeTextWithSameTimeCodes>
     <Title>Flet linjer med samme tidskoder</Title>
     <MaxDifferenceMilliseconds>Max. millisekunder forskel</MaxDifferenceMilliseconds>
+    <MakeDialog>Lav dialog</MakeDialog>
     <ReBreakLines>Auto-bryd linjer</ReBreakLines>
     <NumberOfMergesX>Antal fletninger: {0}</NumberOfMergesX>
     <MergedText>Fusioneret tekst</MergedText>
@@ -2140,6 +2171,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ApplyAssaOverrideTags>Anvend ASSA override tags til valgte linjer</ApplyAssaOverrideTags>
     <SetAssaPosition>Indstil/hent ASSA position</SetAssaPosition>
     <SetAssaResolution>Indstil ASSA -opløsning (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>Indstil ASSA baggrundsboks</SetAssaBgBox>
     <TakeAutoBackup>Tag automatisk backup nu</TakeAutoBackup>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>
@@ -2162,8 +2194,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Slet efter</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>En måned</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 måneder</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 måneder</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} måneder</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
     <AutoSave>Automatisk gem</AutoSave>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
@@ -2222,6 +2253,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
     <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>Brug kun forreste centerkanal (til 5.1/7.1)</WaveformUseCenterChannelOnly>
     <DownloadX>Download {0}</DownloadX>
     <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
@@ -2253,6 +2285,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ProxyUserName>Bruger-navn</ProxyUserName>
     <ProxyPassword>Password</ProxyPassword>
     <ProxyDomain>Domæne</ProxyDomain>
+    <ProxyAuthType>Auth type</ProxyAuthType>
+    <ProxyUseDefaultCredentials>Brug standard brugerlogin</ProxyUseDefaultCredentials>
     <NetworkSessionSettings>Netværk session indstillinger</NetworkSessionSettings>
     <NetworkSessionNewSound>Afspil lydfil ved ny meddelelse</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Spil X sekunder og tilbage, X</PlayXSecondsAndBack>
@@ -2372,6 +2406,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <MergeDialogWithNext>Flet dialog med næste (indsæt bindestreger)</MergeDialogWithNext>
     <MergeDialogWithPrevious>Flet dialog med forrige (indsæt bindestreger)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>Autobalancer valgte linjer</AutoBalanceSelectedLines>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToNextPlayTranslate>Gå til næste linje (og spil i 'Oversæt tilstand')</GoToNextPlayTranslate>
     <GoToNextCursorAtEnd>Gå til næste linje, og indstil markøren i slutningen</GoToNextCursorAtEnd>
@@ -2445,6 +2480,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
     <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
     <PlaySelectedLines>Afspil valgte linjer</PlaySelectedLines>
+    <LoopSelectedLines>Loop valgt linjer</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPrevChapter>Gå til forrige kapitel</WaveformGoToPrevChapter>
@@ -2453,8 +2489,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
+    <Play150Speed>Afspil video med 1,5x hastighed</Play150Speed>
+    <Play200Speed>Afspil video med 2,0x hastighed</Play200Speed>
     <PlayRateSlower>Afspilningshastigheden langsommere</PlayRateSlower>
     <PlayRateFaster>Afspilningshastighed hurtigere</PlayRateFaster>
+    <PlayRateToggle>Skift mellem afspilningshastighed (0,5x, 1x, 1,5x, 2x)</PlayRateToggle>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
@@ -2488,6 +2527,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MergeSelectedLinesAndUnbreakCjk>Flet valgte linjer og fjern linjeskift uden mellemrum (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Flet valgte linjer, beholde første ikke-tomme tekst</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Flet valgte linjer tosproget</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>Flet sammen med tidligere (tosproget)</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>Flet sammen med næste (tosproget)</MergeWithNextBilingual>
     <SplitSelectedLineBilingual>Split valgte linie tosproget</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
@@ -2525,6 +2566,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Bryd ved første mellemrum fra markørposition</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Bryd i første mellemrum fra markørposition og gå til næste</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>Dikter (tast ned=start optagelse, tast op=afslut optagelse)</MainTextBoxDictate>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainTextBoxUnbreakNoSpace>Unbreak uden plads (CJK)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>Vis ASSA-tag-hjælper</MainTextBoxAssaIntellisense>
@@ -2919,6 +2961,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <OcrViaImageCompare>OCR via billede sammenligning</OcrViaImageCompare>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
+    <OcrViaCloudVision>OCR via Google Cloud Vision API</OcrViaCloudVision>
     <TesseractEngineMode>Motor</TesseractEngineMode>
     <TesseractEngineModeLegacy>Kun original Tesseract (kan registrere kursiv)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Neurale net kun LSTM</TesseractEngineModeNeural>
@@ -2931,7 +2974,6 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <New>Ny</New>
     <Edit>Ret</Edit>
     <StartOcr>Start OCR</StartOcr>
-    <Stop>Stop</Stop>
     <StartOcrFrom>Start OCR fra undertekst nr:</StartOcrFrom>
     <LoadingVobSubImages>Indlæser VobSub billeder...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Loader billede database...</LoadingImageCompareDatabase>
@@ -2989,6 +3031,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <StartTraining>Start træning</StartTraining>
     <NowTraining>Træner nu font '{1}'. Bogstaver trænet: {0:#,###,##0}, {2:#,###,##0} kendte</NowTraining>
     <ImagesWithTimeCodesInFileName>Billeder med tidskoder i filnavn...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>API nøgle</ApiKey>
+    <SendOriginalImages>Send originale billeder</SendOriginalImages>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
@@ -3000,6 +3045,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Italic>&amp;Kursiv</Italic>
     <Abort>&amp;Afbryd</Abort>
     <Skip>&amp;Skip</Skip>
+    <UseOnce>&amp;Benyt én gang</UseOnce>
     <Nordic>Nordic</Nordic>
     <Spanish>Spansk</Spanish>
     <German>Tysk</German>

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
 	<WholeWords>
+         <Word from="tñere" to="there" />
+         <Word from="ri9ht" to="right" />
 		<Word from="$COff$" to="scoffs" />
 		<Word from="$ergei" to="Sergei" />
 		<Word from="$lighnly" to="Slightly" />
@@ -560,7 +562,7 @@
 		<Word from="doesnt" to="doesn't" />
 		<Word from="doesn'T" to="doesn't" />
 		<Word from="doesn'tjust" to="doesn't just" />
-		<Word from="doesri't" to="doesnt't" />
+		<Word from="doesri't" to="doesn't" />
 		<Word from="Doesrt" to="Doesn't" />
 		<Word from="doesrt" to="doesn't" />
 		<Word from="doit" to="do it" />
@@ -1287,7 +1289,7 @@
 		<Word from="l‘m" to="I'm" />
 		<Word from="l0ng's" to="long's" />
 		<Word from="lam" to="I am" />
-		<Word from="Laml6" to="I am l6" />
+		<Word from="Laml6" to="I am 16" />
 		<Word from="lasagna" to="lasagne" />
 		<Word from="Lcad" to="Load" />
 		<Word from="lcan" to="I can" />
@@ -1312,20 +1314,20 @@
 		<Word from="let'sjust" to="let's just" />
 		<Word from="Let'sjust" to="Let's just" />
 		<Word from="Lf" to="If" />
-		<Word from="lf" to="If" />
+		<Word from="lf" to="if" />
 		<Word from="lfeelonelung" to="I feel one lung" />
-		<Word from="lfhe's" to="If he's" />
+		<Word from="lfhe's" to="if he's" />
 		<Word from="lfl" to="if I" />
-		<Word from="lfstill" to="If still" />
+		<Word from="lfstill" to="if still" />
 		<Word from="lfthafs" to="if that's" />
-		<Word from="lfthere" to="If there" />
+		<Word from="lfthere" to="if there" />
 		<Word from="lfthey" to="if they" />
 		<Word from="lfthis" to="if this" />
-		<Word from="lfwe" to="If we" />
+		<Word from="lfwe" to="if we" />
 		<Word from="lfwe're" to="if we're" />
-		<Word from="lfyou" to="If you" />
+		<Word from="lfyou" to="if you" />
 		<Word from="Lfyou" to="If you" />
-		<Word from="lfyou're" to="If you're" />
+		<Word from="lfyou're" to="if you're" />
 		<Word from="lget" to="I get" />
 		<Word from="lgive" to="I give" />
 		<Word from="lgot" to="I got" />
@@ -1393,7 +1395,6 @@
 		<Word from="lsolation" to="Isolation" />
 		<Word from="Lst's" to="Let's" />
 		<Word from="lsuppose" to="I suppose" />
-		<Word from="Lt" to="It" />
 		<Word from="ltake" to="I take" />
 		<Word from="ltalian" to="Italian" />
 		<Word from="ltell" to="I tell" />
@@ -1868,7 +1869,7 @@
 		<Word from="Polynes/ans" to="Polynesians" />
 		<Word from="pooL" to="pool" />
 		<Word from="poorshowing" to="poor showing" />
-		<Word from="popsicle" to="Popsicle" />
+		<Word from="popsicle" to="popsicle" />
 		<Word from="Potterfan" to="Potter fan" />
 		<Word from="poweryour" to="power your" />
 		<Word from="preferjournalist" to="prefer journalist" />
@@ -2185,7 +2186,7 @@
 		<Word from="theyve" to="they've" />
 		<Word from="Theyve" to="They've" />
 		<Word from="Thinkbackto" to="Think back to" />
-		<Word from="thinkl" to="think l" />
+		<Word from="thinkl" to="think I" />
 		<Word from="thinkofafew" to="think of a few" />
 		<Word from="thinkthat" to="think that" />
 		<Word from="thinktheyTe" to="think they're" />
@@ -2669,7 +2670,7 @@
 		<Word from="IfTom" to="If Tom" />
 		<Word from="hadlearnedanything" to="had learned anything" />
 		<Word from="thatyou" to="that you" />
-		<Word from="cosmicsigniflcance" to="cosmic signiflcance" />
+		<Word from="cosmicsigniflcance" to="cosmic significance" />
 		<Word from="allanything" to="all anything" />
 		<Word from="everis" to="ever is" />
 		<Word from="wasprettysure" to="was pretty sure" />
@@ -2703,7 +2704,7 @@
 		<Word from="everyonego" to="everyone go" />
 		<Word from="evilandgood" to="evil and good" />
 		<Word from="findthe" to="find the" />
-		<Word from="flndthem" to="flnd them" />
+		<Word from="flndthem" to="find them" />
 		<Word from="Forbeing" to="For being" />
 		<Word from="greatnumbers" to="great numbers" />
 		<Word from="heardthe" to="heard the" />
@@ -2711,7 +2712,7 @@
 		<Word from="hisprivate" to="his private" />
 		<Word from="Howdo" to="How do" />
 		<Word from="inflictmore" to="inflict more" />
-		<Word from="inyourinflnite" to="in your inflnite" />
+		<Word from="inyourinflnite" to="in your infinite" />
 		<Word from="mydear" to="my dear" />
 		<Word from="ofwar" to="of war" />
 		<Word from="orgreed" to="or greed" />
@@ -2879,6 +2880,7 @@
 		<LinePart from=" lf " to=" if " />
 		<LinePart from=". lf " to=". If " />
 		<LinePart from=" . " to=". " />
+		<LinePart from=". Lt " to=". It " />
 	</PartialLinesAlways>
 	<PartialLines>
 		<LinePart from=" /be " to=" I be " />
@@ -3346,6 +3348,7 @@
 		<Beginning from="Im sorry" to="I'm sorry" />
 		<Beginning from="lce " to="Ice " />
 		<Beginning from="lf " to="If " />
+		<Beginning from="lfhe's" to="If he's" />
 		<Beginning from="-lf " to="-If " />
 		<Beginning from="-lt " to="-It " />
 	</BeginLines>
@@ -3376,10 +3379,15 @@
 		<RegEx find="\bI KEA\b" replaceWith="IKEA" />
 		<RegEx find="\b(A|a)m (l|1)\b" replaceWith="$1m I" />
 		<RegEx find="\b1 00K\b" replaceWith="100K" />
-		<RegEx find="\bl\b" replaceWith="I" />
+		<RegEx find="(\bl\b)(?!-)" replaceWith="I" />
+		<RegEx find="\bl-l-I\b" replaceWith="I-I-I" />
 		<RegEx find="\. lt\b" replaceWith=". It" />
 		<RegEx find="\. lf\b" replaceWith=". If" />
 		<RegEx find="(\p{Ll})('II)([ \r\n])" replaceWith="$1'll$3" />
 		<RegEx find="(\p{Ll}')(\|\|)([ \n\r])" replaceWith="$1ll$3" />
+		<RegEx find="(1 )(st\b)" replaceWith="1$2" />
+		<RegEx find="(2 )(nd\b)" replaceWith="2$2" />
+		<RegEx find="(3 )(rd\b)" replaceWith="3$2" />
+		<RegEx find="([456789])( th\b)" replaceWith="$1th" />
 	</RegularExpressions>
 </OCRFixReplaceList>

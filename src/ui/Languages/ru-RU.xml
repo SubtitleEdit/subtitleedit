@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
 Последующие правки и дополнения перевода: Elheym https://discord.gg/Z7a5qtDc || (mailto:Subs.for.everybody@gmail.com)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
@@ -236,7 +236,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TakePosFromVideo>
     </TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Изменить разрешение скрипта ASSA</Title>
     <SourceVideoRes>Исходное разрешение видео</SourceVideoRes>
     <TargetVideoRes>Целевое разрешение видео</TargetVideoRes>
@@ -246,7 +246,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChangeResolutionDrawing>Изменить разрешение для отрисовки</ChangeResolutionDrawing>
     <SourceAndTargetEqual>
     </SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>
     </Title>
@@ -770,7 +770,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixCommonOcrErrors>Исправить OCR ошибки (используя список замен OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Исправлено OCR ошибок (согласно списка замен OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Удалить пробел между цифрами</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Исправить однострочные диалоги</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Исправить однострочные диалоги</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Удалить начальный тире в первой строке для не диалогов</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Нормализовать строки</NormalizeStrings>
     <FixTurkishAnsi>Исправить Turkish ANSI (Icelandic) символы в Unicode</FixTurkishAnsi>
@@ -2202,8 +2202,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupEveryFifteenMinutes>Каждые 15 минут</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Удал. после:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месяца</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 месяцев</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} месяцев</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Проверка обновлений</CheckForUpdates>
     <AutoSave>Автосохранение</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>

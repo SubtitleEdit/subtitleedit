@@ -2,7 +2,7 @@
 <Language Name="Vietnamese">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Ghé thăm www.nikse.dk của chủ phần mềm - Nikse
 thường xuyên để biết thêm thông tin và tải về phiên bản mới nhất.
 Rất hân hạnh chào đón các bạn :))
@@ -212,7 +212,7 @@ Các video hướng dẫn Subtitle Edit
     <Bottom>Bottom</Bottom>
     <TakePosFromVideo>Nhận vị trí từ video</TakePosFromVideo>
   </AssaProgressBarGenerator>
-  <AssaResulationChanger>
+  <AssaResolutionChanger>
     <Title>Đổi độ phân giải phụ đề</Title>
     <SourceVideoRes>Độ phân giải video nguồn</SourceVideoRes>
     <TargetVideoRes>Độ phân giải video đích</TargetVideoRes>
@@ -221,7 +221,7 @@ Các video hướng dẫn Subtitle Edit
     <ChangeResolutionPositions>Đổi độ phân giải cho vị trí (position)</ChangeResolutionPositions>
     <ChangeResolutionDrawing>Đổi độ phân giải cho vẽ (drawing)</ChangeResolutionDrawing>
     <SourceAndTargetEqual>Độ phân giải nguồn và mục tiêu giống nhau - không phải làm gì cả.</SourceAndTargetEqual>
-  </AssaResulationChanger>
+  </AssaResolutionChanger>
   <AssaSetBackgroundBox>
     <Title>Chỉnh độ phân giải phụ đề theo video</Title>
     <Padding>Padding</Padding>
@@ -734,7 +734,7 @@ Các video hướng dẫn Subtitle Edit
     <FixCommonOcrErrors>(TIẾNG VIỆT KHÔNG CHỌN) Sữa lỗi OCR thông thường (OCR sử dụng thay thế danh sách)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>(TIẾNG VIỆT KHÔNG CHỌN) Lỗi cố định thường gặp trong OCR (Danh sách tập tin Ocr được sử dụng): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>(KHÔNG CHỌN) Xóa khoảng cách giữa các số</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Sửa lỗi 2 NHÂN VẬT CÙNG THOẠI</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Sửa lỗi 2 NHÂN VẬT CÙNG THOẠI</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Xóa dấu gạch ngang đầu dòng khi chỉ có một câu thoại trong "-"</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>(KHÔNG CHỌN) Normalize strings (dành cho tiếng HY LẠP)</NormalizeStrings>
     <FixTurkishAnsi>(KHÔNG CHỌN) Sữa lỗi tiếng Thổ Nhĩ Kỳ ANSI (Iceland) trong Unicode</FixTurkishAnsi>
@@ -2136,8 +2136,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <AutoBackupEveryFifteenMinutes>Trong 15 phút</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Xóa sau</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 tháng</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 tháng</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 tháng</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} tháng</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Kiểm tra cập nhật</CheckForUpdates>
     <AutoSave>Tự động lưu</AutoSave>
     <AllowEditOfOriginalSubtitle>Cho phép chỉnh sửa phụ đề của ban</AllowEditOfOriginalSubtitle>

@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -11,14 +10,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     /// </summary>
     public class Vttc : Box
     {
+        public class VttData
+        {
+            public string Payload { get; set; }
+            public int PayloadSize { get; set; }
+            public string Style { get; set; }
+        }
 
-        public List<string> Payload { get; set; }
+        public VttData Data { get; set; }
 
         public Vttc(Stream fs, ulong maximumLength)
         {
-            Payload = new List<string>();
-            long max = (long)maximumLength;
-            int count = 0;
+            Data = new VttData { PayloadSize = 8 };
+            var max = (long)maximumLength;
+            var count = 0;
             while (fs.Position < max)
             {
                 if (!InitializeSizeAndName(fs))
@@ -28,19 +33,34 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "payl")
                 {
-                    var length = (int)(max - fs.Position);
+                    var length = (int)Size - 8;
                     if (length > 0 && length < 5000)
                     {
                         var buffer = new byte[length];
                         fs.Read(buffer, 0, length);
                         var s = Encoding.UTF8.GetString(buffer);
                         s = string.Join(Environment.NewLine, s.SplitToLines());
-                        Payload.Add(s.Trim());
+                        Data.Payload = s.Trim();
+                        Data.PayloadSize += (int)Size;
                         count++;
                     }
                     else
                     {
-                        Payload.Add(string.Empty);
+                        Data.Payload = string.Empty;
+                    }
+                }
+                else if (Name == "sttg")
+                {
+                    var length = (int)Size-8;
+                    if (length > 0 && length < 5000)
+                    {
+                        var buffer = new byte[length];
+                        fs.Read(buffer, 0, length);
+                        var s = Encoding.UTF8.GetString(buffer);
+                        s = string.Join(Environment.NewLine, s.SplitToLines());
+                        Data.Style = s.Trim();
+                        Data.PayloadSize += (int)Size;
+                        count++;
                     }
                 }
 
@@ -49,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             if (count == 0)
             {
-                Payload.Add(null);
+                Data.Payload = null;
             }
         }
     }

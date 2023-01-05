@@ -99,7 +99,7 @@ SET "LanguageToolPath=src\UpdateLanguageFiles\bin\debug\UpdateLanguageFiles.exe"
 IF NOT EXIST "%LanguageToolPath%" (
   ECHO Compile UpdateLanguageFiles!
 )
-"%LanguageToolPath%" "LanguageMaster.xml" "src\ui\Logic\LanguageDeserializer.cs"
+"%LanguageToolPath%" "LanguageBaseEnglish.xml" "src\ui\Logic\LanguageDeserializer.cs"
 ECHO.
 
 "%MSBUILD%" SubtitleEdit.sln /r /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
@@ -127,6 +127,20 @@ IF DEFINED INNOSETUP IF EXIST "%INNOSETUP%" (
 ) ELSE (
   ECHO Inno Setup wasn't found; the installer wasn't built.
 )
+
+
+
+
+SET "WinGetFix=src\UpdateAssemblyInfo\bin\debug\UpdateAssemblyInfo.exe"
+IF NOT EXIST "%WinGetFix%" (
+  ECHO Compile UpdateAssemblyInfo!
+)
+"%WinGetFix%" "winget" 
+ECHO.
+ECHO Validate with: winget validate --manifest C:\git\subtitleedit\winget
+ECHO Test with    : winget install --manifest C:\git\subtitleedit\winget
+ECHO Submit with  : wingetcreate submit C:\git\subtitleedit\winget
+pause
 
 
 :EndSuccessful
@@ -191,6 +205,17 @@ COPY /Y /V "..\..\DLLs\Interop.QuartzTypeLib.dll"  "temp_zip\"
 COPY /Y /V "System.Net.Http.Extensions.dll"        "temp_zip\"
 COPY /Y /V "Newtonsoft.Json.dll"                   "temp_zip\"
 COPY /Y /V "System.Net.Http.Primitives.dll"        "temp_zip\"
+COPY /Y /V "NAudio.Core.dll"                       "temp_zip\"
+COPY /Y /V "NAudio.WinMM.dll"                      "temp_zip\"
+COPY /Y /V "cpuid.dll"                             "temp_zip\"
+COPY /Y /V "iTin.Core.dll"                         "temp_zip\"
+COPY /Y /V "iTin.Core.Hardware.Common.dll"         "temp_zip\"
+COPY /Y /V "iTin.Core.Hardware.CrossPlatform.Cpuid.dll" "temp_zip\"
+COPY /Y /V "iTin.Core.Interop.CrossPlatform.Cpuid.dll" "temp_zip\"
+COPY /Y /V "iTin.Core.Interop.Shared.dll"          "temp_zip\"
+COPY /Y /V "iTin.Hardware.Specification.Cpuid.dll" "temp_zip\"
+COPY /Y /V "iTin.Logging.dll"                      "temp_zip\"
+COPY /Y /V "Microsoft.Win32.Registry.dll"          "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"                      "temp_zip\"
 COPY /Y /V "Languages\*.xml"                       "temp_zip\Languages\"
 COPY /Y /V "..\..\..\..\Dictionaries\*.*"          "temp_zip\Dictionaries\"

@@ -259,15 +259,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowInstalledPlugins()
         {
-            var path = Configuration.PluginsDirectory;
-            if (!Directory.Exists(path))
-            {
-                return;
-            }
-
             listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
-            foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
+            foreach (var pluginFileName in Configuration.GetPlugins())
             {
                 Main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
@@ -565,6 +559,35 @@ namespace Nikse.SubtitleEdit.Forms
             ShowAvailablePlugins();
             listViewGetPlugins.EndUpdate();
             buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
+        }
+
+        private void listViewInstalledPlugins_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            var lv = (ListView)sender;
+
+            if (!(lv.ListViewItemSorter is ListViewSorter sorter))
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column,
+                    IsNumber = false,
+                    Descending = true,
+                };
+                lv.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsNumber = false;
+            }
+
+            lv.Sort();
         }
     }
 }

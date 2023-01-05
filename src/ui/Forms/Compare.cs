@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = LanguageSettings.Current.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = LanguageSettings.Current.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = LanguageSettings.Current.CompareSubtitles.IgnoreLineBreaks;
+            checkBoxIgnoreWhitespace.Text = LanguageSettings.Current.CompareSubtitles.IgnoreWhitespace;
             checkBoxIgnoreFormatting.Text = LanguageSettings.Current.CompareSubtitles.IgnoreFormatting;
             checkBoxOnlyListDifferencesInText.Text = LanguageSettings.Current.CompareSubtitles.OnlyLookForDifferencesInText;
             buttonExport.Text = LanguageSettings.Current.Statistics.Export;
@@ -160,19 +161,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.FileName = string.Empty;
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
-                if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
-                {
-                    MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
-                    return;
-                }
-
-                LoadAndCompare(1, openFileDialog1.FileName);
-                labelSubtitle1.Text = openFileDialog1.FileName;
-                _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
-                buttonReloadSubtitle1.Enabled = true;
+                return;
             }
+
+            if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
+            {
+                MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                return;
+            }
+
+            LoadAndCompare(1, openFileDialog1.FileName);
+            labelSubtitle1.Text = openFileDialog1.FileName;
+            _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
+            buttonReloadSubtitle1.Enabled = true;
         }
 
         private void ButtonReloadSubtitle1Click(object sender, EventArgs e)
@@ -188,18 +191,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.FileName = string.Empty;
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
-                if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
-                {
-                    MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
-                    return;
-                }
-
-                LoadAndCompare(2, openFileDialog1.FileName);
-                labelSubtitle2.Text = openFileDialog1.FileName;
-                buttonReloadSubtitle2.Enabled = true;
+                return;
             }
+
+            if (FileUtil.IsVobSub(openFileDialog1.FileName) || FileUtil.IsBluRaySup(openFileDialog1.FileName))
+            {
+                MessageBox.Show(LanguageSettings.Current.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
+                return;
+            }
+
+            LoadAndCompare(2, openFileDialog1.FileName);
+            labelSubtitle2.Text = openFileDialog1.FileName;
+            buttonReloadSubtitle2.Enabled = true;
         }
 
         private void ButtonReloadSubtitle2Click(object sender, EventArgs e)
@@ -275,6 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
                 index++;
                 p1 = sub1.GetParagraphOrDefault(index);
                 p2 = sub2.GetParagraphOrDefault(index);
@@ -316,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, ListViewRed);
                     }
-                    else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
+                    else if (IsTextDifferent(p1, p2))
                     {
                         addIndexToDifferences = true;
                         subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
@@ -381,7 +387,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexDuration);
                             }
                             // Text
-                            if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
+                            else if (IsTextDifferent(p1, p2))
                             {
                                 subtitleListView1.SetBackgroundColor(index, ListViewGreen, subtitleListView1.ColumnIndexText);
                                 subtitleListView2.SetBackgroundColor(index, ListViewGreen, subtitleListView2.ColumnIndexText);
@@ -399,6 +405,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _differences.Add(index);
                     }
+
                     index++;
                     p1 = sub1.GetParagraphOrDefault(index);
                     p2 = sub2.GetParagraphOrDefault(index);
@@ -409,7 +416,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (max > min) // color extra lines as has-difference
             {
                 var listView = subtitleListView1.Items.Count > subtitleListView2.Items.Count ? subtitleListView1 : subtitleListView2;
-                for (int i = min; i < max; i++)
+                for (var i = min; i < max; i++)
                 {
                     if (!onlyTextDiff)
                     {
@@ -431,7 +438,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (wordsChanged != totalWords && wordsChanged > 0)
                 {
-                    string formatString = LanguageSettings.Current.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
+                    var formatString = LanguageSettings.Current.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
                     if (ShouldBreakToLetter())
                     {
                         formatString = LanguageSettings.Current.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
@@ -491,23 +498,67 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ShouldBreakToLetter() => _language != null && (_language == "ja" || _language == "zh");
 
-        private string FixWhitespace(string p)
+        private bool IsTextDifferent(Paragraph p1, Paragraph p2)
         {
-            if (checkBoxIgnoreLineBreaks.Checked)
-            {
-                p = p.Replace(Environment.NewLine, " ");
-                while (p.Contains("  "))
-                {
-                    p = p.Replace("  ", " ");
-                }
-            }
+            var t1 = p1.Text;
+            var t2 = p2.Text;
 
             if (checkBoxIgnoreFormatting.Checked)
             {
-                p = HtmlUtil.RemoveHtmlTags(p, true);
+                t1 = HtmlUtil.RemoveHtmlTags(t1, true);
+                t2 = HtmlUtil.RemoveHtmlTags(t2, true);
             }
 
-            return p;
+            else if (checkBoxIgnoreWhitespace.Checked)
+            {
+                t1 = RemoveWhitespace(t1);
+                t2 = RemoveWhitespace(t2);
+            }
+            else if (checkBoxIgnoreLineBreaks.Checked)
+            {
+                t1 = t1.Replace(Environment.NewLine, " ");
+                t2 = t2.Replace(Environment.NewLine, " ");
+
+                t1 = RemoveDoubleSpace(t1);
+                t2 = RemoveDoubleSpace(t2);
+            }
+
+            return t1 != t2;
+        }
+
+        private static string RemoveWhitespace(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder(s.Length);
+            foreach (var ch in s)
+            {
+                if (!char.IsWhiteSpace(ch))
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static string RemoveDoubleSpace(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            s = s.Replace(Environment.NewLine, " ");
+            while (s.Contains("  "))
+            {
+                s = s.Replace("  ", " ");
+            }
+
+            return s;
         }
 
         private int GetColumnsEqualExceptNumber(Paragraph p1, Paragraph p2)
@@ -611,7 +662,7 @@ namespace Nikse.SubtitleEdit.Forms
                     lv = subtitleListView2;
                 }
 
-                int selectedIndex = 0;
+                var selectedIndex = 0;
                 if (lv.SelectedItems.Count > 0)
                 {
                     selectedIndex = lv.SelectedItems[0].Index;
@@ -627,7 +678,7 @@ namespace Nikse.SubtitleEdit.Forms
                     lv = subtitleListView2;
                 }
 
-                int selectedIndex = 0;
+                var selectedIndex = 0;
                 if (lv.SelectedItems.Count > 0)
                 {
                     selectedIndex = lv.SelectedItems[0].Index;
@@ -645,8 +696,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowText()
         {
-            string text1 = string.Empty;
-            string text2 = string.Empty;
+            var text1 = string.Empty;
+            var text2 = string.Empty;
 
             if (subtitleListView1.SelectedItems.Count == 1)
             {
@@ -693,7 +744,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // from start
-            var minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
+            var minLength = Math.Min(richTextBox1.Text.RemoveChar('\r').Length, richTextBox2.Text.RemoveChar('\r').Length);
             var startCharactersOk = 0;
             for (var i = 0; i < minLength; i++)
             {
@@ -881,7 +932,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    int index = subtitleListView1.SelectedItems[0].Index;
+                    var index = subtitleListView1.SelectedItems[0].Index;
                     buttonPreviousDifference.Enabled = _differences[0] < index;
                     buttonNextDifference.Enabled = _differences[_differences.Count - 1] > index;
                 }
@@ -908,8 +959,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOpenSubtitle2.Left = subtitleListView2.Left;
             buttonReloadSubtitle2.Left = buttonOpenSubtitle2.Left + buttonOpenSubtitle2.Width + 7;
 
-            subtitleListView1.Height = Height - (subtitleListView1.Top + 155);
-            subtitleListView2.Height = Height - (subtitleListView2.Top + 155);
+            subtitleListView1.Height = Height - (subtitleListView1.Top + 165);
+            subtitleListView2.Height = Height - (subtitleListView2.Top + 165);
 
             richTextBox1.Width = subtitleListView1.Width;
             richTextBox2.Width = subtitleListView2.Width;
@@ -926,7 +977,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    for (int i = subtitleListView1.SelectedItems[0].Index - 1; i >= 0; i--)
+                    for (var i = subtitleListView1.SelectedItems[0].Index - 1; i >= 0; i--)
                     {
                         if (_differences.Contains(i))
                         {
@@ -950,7 +1001,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    for (int i = subtitleListView1.SelectedItems[0].Index + 1; i < subtitleListView1.Items.Count; i++)
+                    for (var i = subtitleListView1.SelectedItems[0].Index + 1; i < subtitleListView1.Items.Count; i++)
                     {
                         if (_differences.Contains(i))
                         {
@@ -1131,7 +1182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string filePath = files[0];
+            var filePath = files[0];
             if (FileUtil.IsDirectory(filePath))
             {
                 MessageBox.Show(LanguageSettings.Current.Main.ErrorDirectoryDropNotAllowed, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1224,6 +1275,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowOnlyDifferences.Checked = config.ShowOnlyDifferences;
             checkBoxOnlyListDifferencesInText.Checked = config.OnlyLookForDifferenceInText;
             checkBoxIgnoreLineBreaks.Checked = config.IgnoreLineBreaks;
+            checkBoxIgnoreWhitespace.Checked = config.IgnoreWhitespace;
             checkBoxIgnoreFormatting.Checked = config.IgnoreFormatting;
             _loadingConfig = false;
         }
@@ -1234,6 +1286,7 @@ namespace Nikse.SubtitleEdit.Forms
             config.ShowOnlyDifferences = checkBoxShowOnlyDifferences.Checked;
             config.OnlyLookForDifferenceInText = checkBoxOnlyListDifferencesInText.Checked;
             config.IgnoreLineBreaks = checkBoxIgnoreLineBreaks.Checked;
+            config.IgnoreWhitespace = checkBoxIgnoreWhitespace.Checked;
             config.IgnoreFormatting = checkBoxIgnoreFormatting.Checked;
         }
 
@@ -1253,59 +1306,73 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var saveFile = new SaveFileDialog { Filter = "Html files|*.html" })
             {
-                if (saveFile.ShowDialog() == DialogResult.OK)
+                if (saveFile.ShowDialog() != DialogResult.OK)
                 {
-                    var fileName = saveFile.FileName;
-                    var sb = new StringBuilder();
-                    sb.AppendLine("<!DOCTYPE html>");
-                    sb.AppendLine("<html>");
-                    sb.AppendLine("  <head>");
-                    sb.AppendLine("    <title>Subtitle Edit compare</title>");
-                    sb.AppendLine("  </head>");
-                    sb.AppendLine("  <style>");
-                    sb.AppendLine("    td { font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu }");
-                    sb.AppendLine("  </style>");
-                    sb.AppendLine("  <body>");
-                    sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
-                    sb.AppendLine("    <table>");
-                    sb.AppendLine("    <tr>");
-                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle1.Text + "</th>");
-                    sb.AppendLine("      <th>&nbsp;</th>");
-                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle2.Text + "</th>");
-                    sb.AppendLine("    </tr>");
-                    for (var i = 0; i < subtitleListView1.Items.Count; i++)
-                    {
-                        if (subtitleListView1.Items[i].Tag is Paragraph itemLeft &&
-                            subtitleListView2.Items.Count > i &&
-                            subtitleListView2.Items[i].Tag is Paragraph itemRight)
-                        {
-                            sb.AppendLine("    <tr>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[1]) + ">" + GetHtmlText(itemLeft, itemLeft.StartTime.ToShortDisplayString()) + "</td>");
-                            if (subtitleListView1.ColumnIndexEnd >= 0)
-                            {
-                                sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemLeft, itemLeft.EndTime.ToShortDisplayString()) + "</td>");
-                            }
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemLeft, itemLeft.Text) + "</td>");
-                            sb.AppendLine("      <td>&nbsp;</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[0]) + ">" + GetHtmlText(itemRight, itemRight.Number.ToString()) + "</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[1]) + ">" + GetHtmlText(itemRight, itemRight.StartTime.ToShortDisplayString()) + "</td>");
-                            if (subtitleListView2.ColumnIndexEnd >= 0)
-                            {
-                                sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemRight, itemRight.EndTime.ToShortDisplayString()) + "</td>");
-                            }
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemRight, itemRight.Text) + "</td>");
-                            sb.AppendLine("    </tr>");
-                        }
-                    }
-                    sb.AppendLine("    <tr>");
-                    sb.AppendLine("      <td colspan='9' style='text-align:left'><br />" + labelStatus.Text + "</td>");
-                    sb.AppendLine("    </tr>");
-                    sb.AppendLine("    </table>");
-                    sb.AppendLine("  </body>");
-                    sb.AppendLine("</html>");
-                    File.WriteAllText(fileName, sb.ToString());
+                    return;
                 }
+
+                var fileName = saveFile.FileName;
+                var sb = new StringBuilder();
+                sb.AppendLine("<!DOCTYPE html>");
+                sb.AppendLine("<html>");
+                sb.AppendLine("  <head>");
+                sb.AppendLine("    <title>Subtitle Edit compare</title>");
+                sb.AppendLine("  </head>");
+                sb.AppendLine("  <style>");
+                sb.AppendLine("    td { font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu; padding: 8px; }");
+                sb.AppendLine("  </style>");
+                sb.AppendLine("  <body>");
+                sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
+                sb.AppendLine("    <table>");
+                sb.AppendLine("    <tr>");
+                sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(labelSubtitle1.Text) + "</th>");
+                sb.AppendLine("      <th>&nbsp;</th>");
+                sb.AppendLine("      <th colspan='4' style='text-align:left'>" + GetFileName(labelSubtitle2.Text) + "</th>");
+                sb.AppendLine("    </tr>");
+                for (var i = 0; i < subtitleListView1.Items.Count; i++)
+                {
+                    if (subtitleListView1.Items[i].Tag is Paragraph itemLeft &&
+                        subtitleListView2.Items.Count > i &&
+                        subtitleListView2.Items[i].Tag is Paragraph itemRight)
+                    {
+                        sb.AppendLine("    <tr>");
+                        sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
+                        sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[1]) + ">" + GetHtmlText(itemLeft, itemLeft.StartTime.ToDisplayString()) + "</td>");
+                        if (subtitleListView1.ColumnIndexEnd >= 0)
+                        {
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemLeft, itemLeft.EndTime.ToDisplayString()) + "</td>");
+                        }
+                        sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemLeft, itemLeft.Text) + "</td>");
+                        sb.AppendLine("      <td>&nbsp;</td>");
+                        sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[0]) + ">" + GetHtmlText(itemRight, itemRight.Number.ToString()) + "</td>");
+                        sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[1]) + ">" + GetHtmlText(itemRight, itemRight.StartTime.ToDisplayString()) + "</td>");
+                        if (subtitleListView2.ColumnIndexEnd >= 0)
+                        {
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemRight, itemRight.EndTime.ToDisplayString()) + "</td>");
+                        }
+                        sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemRight, itemRight.Text) + "</td>");
+                        sb.AppendLine("    </tr>");
+                    }
+                }
+                sb.AppendLine("    <tr>");
+                sb.AppendLine("      <td colspan='9' style='text-align:left'><br />" + labelStatus.Text + "</td>");
+                sb.AppendLine("    </tr>");
+                sb.AppendLine("    </table>");
+                sb.AppendLine("  </body>");
+                sb.AppendLine("</html>");
+                File.WriteAllText(fileName, sb.ToString());
+            }
+        }
+
+        private static string GetFileName(string fileName)
+        {
+            try
+            {
+                return string.IsNullOrEmpty(fileName) ? string.Empty : Path.GetFileName(fileName);
+            }
+            catch
+            {
+                return fileName;
             }
         }
 
@@ -1322,6 +1389,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return " style='background-color:" + ColorTranslator.ToHtml(item.BackColor) + "'";
+        }
+
+        private void checkBoxIgnoreWhiteSpace_CheckedChanged(object sender, EventArgs e)
+        {
+            var selectedIndices = subtitleListView1.GetSelectedIndices();
+            var selectedIndex = selectedIndices.Length > 0 ? selectedIndices[0] : 0;
+            CompareSubtitles(selectedIndex);
         }
     }
 }

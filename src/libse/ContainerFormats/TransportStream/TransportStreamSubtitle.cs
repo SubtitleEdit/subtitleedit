@@ -90,6 +90,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 return TransportStreamPosition;
             }
 
+            if (IsDvbSub)
+            {
+                return Pes.GetPosition();
+            }
+
             return new Position(0, 0);
         }
 

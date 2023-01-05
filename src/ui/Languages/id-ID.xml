@@ -2,7 +2,7 @@
 <Language Name="Bahasa Indonesia">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Diterjemahkan oleh Nicedward (04/2018)</TranslatedBy>
     <CultureName>id-ID</CultureName>
     <HelpFile />
@@ -563,7 +563,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <FixCommonOcrErrors>Perbaiki eror OCR umum (menggunakan daftar ganti OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Eror OCR umum diperbaiki (file OcrReplaceList digunakan): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Buang spasi di antara angka</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Perbaiki dialog pada satu baris</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Perbaiki dialog pada satu baris</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Buang spasi di antara nomor diperbaiki: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Perbaiki huruf ANSI Turki (Islandia) ke Unikode</FixTurkishAnsi>
     <FixDanishLetterI>Perbaiki huruf 'i" Denmark</FixDanishLetterI>
@@ -1766,8 +1766,7 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <AutoBackupEveryFifteenMinutes>Tiap 15 menit</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Hapus setelah</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 bulan</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 bulan</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 bulan</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} bulan</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Periksa pembaruan</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Izinkan edit subjudul asli</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Beritahukan saat menghapus baris</PromptDeleteLines>

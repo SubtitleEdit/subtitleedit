@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Vertaald door Quetsbeek, minouhse, René Maassen en Flitskikker</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -602,7 +602,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixCommonOcrErrors>Veelvoorkomende OCR-fouten corrigeren (m.b.v. de OCR-correctielĳst)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Veelvoorkomende OCR-fouten gecorrigeerd (m.b.v. de OCR-correctielĳst): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Spaties tussen getallen verwĳderen</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Dialogen op één regel corrigeren</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Dialogen op één regel corrigeren</BreakDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Spaties tussen getallen verwĳderd: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Turkse ANSI-letters (Ĳslands) naar Unicode omzetten</FixTurkishAnsi>
     <FixDanishLetterI>Deense letter i corrigeren</FixDanishLetterI>
@@ -1857,8 +1857,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <AutoBackupEveryFifteenMinutes>Elke 15 minuten</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Wissen na</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 maand</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 maanden</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 maanden</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} maanden</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Naar updates zoeken</CheckForUpdates>
     <AutoSave>Automatisch opslaan</AutoSave>
     <AllowEditOfOriginalSubtitle>Bewerken van originele ondertitel toestaan</AllowEditOfOriginalSubtitle>

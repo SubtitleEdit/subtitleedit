@@ -1,7 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -17,6 +19,10 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Keys _mainGeneralGoToPrevSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitlePlayTranslate);
         private bool _autoSized;
 
+        private Dictionary<DateTime, int> _mouseMoveDiff;
+        private int _mouseLastX = -1;
+        private int _mouseLastY = -1;
+
         public bool RedockOnFullscreenEnd { get; set; }
 
         public Panel PanelContainer => panelContainer;
@@ -31,7 +37,10 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer = videoPlayerContainer;
             _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
+
+            _mouseMoveDiff = new Dictionary<DateTime, int>();
             videoPlayerContainer.TextBox.MouseMove += VideoPlayerUndocked_MouseMove;
+            videoPlayerContainer.PanelPlayer.MouseMove += VideoPlayerUndocked_MouseMove;
         }
 
         public VideoPlayerUndocked()
@@ -59,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoPlayerUndocked_KeyDown(object sender, KeyEventArgs e)
         {
-            VideoPlayerUndocked_MouseMove(null, null);
+            ShowControlsAfterMouseMove();
 
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
             {
@@ -154,6 +163,53 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void VideoPlayerUndocked_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!IsFullscreen)
+            {
+                _mouseLastX = -1;
+                _mouseLastY = -1;
+                return;
+            }
+
+            if (_mouseLastX == -1 && _mouseLastY == -1)
+            {
+                _mouseLastX = MousePosition.X;
+                _mouseLastY = MousePosition.Y;
+            }
+
+            var diff = Math.Abs(MousePosition.X - _mouseLastX) + Math.Abs(MousePosition.Y - _mouseLastY);
+            var dateTime = DateTime.UtcNow;
+
+            if (_mouseMoveDiff.Count > 100)
+            {
+                _mouseMoveDiff.Remove(_mouseMoveDiff.First().Key);
+            }
+
+            if (!_mouseMoveDiff.ContainsKey(dateTime) && diff > 0)
+            {
+                _mouseMoveDiff.Add(dateTime, diff);
+            }
+
+            var totalDiff = 0;
+            var fromTime = dateTime.AddSeconds(-1);
+            foreach (var kvp in _mouseMoveDiff)
+            {
+                if (kvp.Key > fromTime)
+                {
+                    totalDiff += kvp.Value;
+                }
+            }
+
+            if (totalDiff > 75)
+            {
+                ShowControlsAfterMouseMove();
+            }
+
+            _mouseLastX = MousePosition.X;
+            _mouseLastY = MousePosition.Y;
+        }
+
+        private void ShowControlsAfterMouseMove()
         {
             if (timer1.Enabled)
             {

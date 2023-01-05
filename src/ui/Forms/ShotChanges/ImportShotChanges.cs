@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                     {
                         if (radioButtonFrames.Checked)
                         {
-                            ShotChangesInSeconds.Add(d / _frameRate);
+                            ShotChangesInSeconds.Add(Math.Round(d / _frameRate, 3, MidpointRounding.AwayFromZero));
                         }
                         else if (radioButtonSeconds.Checked)
                         {
@@ -284,7 +284,12 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             }
             else
             {
+                progressBar1.Visible = false;
                 MessageBox.Show(LanguageSettings.Current.ImportShotChanges.NoShotChangesFound);
+                groupBoxImportText.Enabled = true;
+                buttonOK.Enabled = true;
+                buttonImportWithFfmpeg.Enabled = true;
+                numericUpDownThreshold.Enabled = true;
             }
         }
 

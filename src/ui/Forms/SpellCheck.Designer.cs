@@ -26,6 +26,10 @@
             this.addXToUserDictionaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookmarkCommentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBoxSuggestions = new System.Windows.Forms.ListBox();
             this.labelFullText = new System.Windows.Forms.Label();
             this.textBoxWord = new System.Windows.Forms.TextBox();
@@ -49,12 +53,19 @@
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
             this.pictureBoxBdSup = new System.Windows.Forms.PictureBox();
-            this.openImagedBasedSourceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
+            this.panelBookmark = new System.Windows.Forms.Panel();
+            this.labelBookmark = new System.Windows.Forms.Label();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.useLargerFontForThisWindowToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
             this.groupBoxEditWholeText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).BeginInit();
+            this.panelBookmark.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonAddToDictionary
@@ -120,9 +131,12 @@
             this.addXToUserDictionaryToolStripMenuItem,
             this.toolStripSeparator1,
             this.deleteToolStripMenuItem,
-            this.openImagedBasedSourceFileToolStripMenuItem});
+            this.bookmarkCommentToolStripMenuItem,
+            this.openImagedBasedSourceFileToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.useLargerFontForThisWindowToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(247, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(247, 148);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
             // addXToNamesnoiseListToolStripMenuItem
@@ -150,6 +164,32 @@
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
             this.deleteToolStripMenuItem.Text = "Delete...";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // bookmarkCommentToolStripMenuItem
+            // 
+            this.bookmarkCommentToolStripMenuItem.Name = "bookmarkCommentToolStripMenuItem";
+            this.bookmarkCommentToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.bookmarkCommentToolStripMenuItem.Text = "Bookmark text...";
+            this.bookmarkCommentToolStripMenuItem.Click += new System.EventHandler(this.bookmarkCommentToolStripMenuItem_Click);
+            // 
+            // openImagedBasedSourceFileToolStripMenuItem
+            // 
+            this.openImagedBasedSourceFileToolStripMenuItem.Name = "openImagedBasedSourceFileToolStripMenuItem";
+            this.openImagedBasedSourceFileToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.openImagedBasedSourceFileToolStripMenuItem.Text = "Open imaged based source file...";
+            this.openImagedBasedSourceFileToolStripMenuItem.Click += new System.EventHandler(this.openImagedBasedSourceFileToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(243, 6);
+            // 
+            // useLargerFontForThisWindowToolStripMenuItem
+            // 
+            this.useLargerFontForThisWindowToolStripMenuItem.Name = "useLargerFontForThisWindowToolStripMenuItem";
+            this.useLargerFontForThisWindowToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
+            this.useLargerFontForThisWindowToolStripMenuItem.Text = "Use larger font for this window";
+            this.useLargerFontForThisWindowToolStripMenuItem.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
             // listBoxSuggestions
             // 
@@ -409,18 +449,59 @@
             this.pictureBoxBdSup.TabIndex = 41;
             this.pictureBoxBdSup.TabStop = false;
             // 
-            // openImagedBasedSourceFileToolStripMenuItem
+            // pictureBoxBookmark
             // 
-            this.openImagedBasedSourceFileToolStripMenuItem.Name = "openImagedBasedSourceFileToolStripMenuItem";
-            this.openImagedBasedSourceFileToolStripMenuItem.Size = new System.Drawing.Size(246, 22);
-            this.openImagedBasedSourceFileToolStripMenuItem.Text = "Open imaged based source file...";
-            this.openImagedBasedSourceFileToolStripMenuItem.Click += new System.EventHandler(this.openImagedBasedSourceFileToolStripMenuItem_Click);
+            this.pictureBoxBookmark.Image = global::Nikse.SubtitleEdit.Properties.Resources.bookmark22;
+            this.pictureBoxBookmark.Location = new System.Drawing.Point(11, 131);
+            this.pictureBoxBookmark.Name = "pictureBoxBookmark";
+            this.pictureBoxBookmark.Size = new System.Drawing.Size(22, 22);
+            this.pictureBoxBookmark.TabIndex = 42;
+            this.pictureBoxBookmark.TabStop = false;
+            this.pictureBoxBookmark.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxBookmark_MouseClick);
+            this.pictureBoxBookmark.MouseEnter += new System.EventHandler(this.pictureBoxBookmark_MouseEnter);
+            // 
+            // panelBookmark
+            // 
+            this.panelBookmark.BackColor = System.Drawing.Color.LemonChiffon;
+            this.panelBookmark.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBookmark.Controls.Add(this.labelBookmark);
+            this.panelBookmark.Location = new System.Drawing.Point(39, 130);
+            this.panelBookmark.Name = "panelBookmark";
+            this.panelBookmark.Size = new System.Drawing.Size(224, 25);
+            this.panelBookmark.TabIndex = 43;
+            this.panelBookmark.Visible = false;
+            // 
+            // labelBookmark
+            // 
+            this.labelBookmark.AutoSize = true;
+            this.labelBookmark.Location = new System.Drawing.Point(4, 4);
+            this.labelBookmark.Name = "labelBookmark";
+            this.labelBookmark.Size = new System.Drawing.Size(75, 13);
+            this.labelBookmark.TabIndex = 0;
+            this.labelBookmark.Text = "labelBookmark";
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useLargerFontForThisWindowToolStripMenuItem1});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(237, 26);
+            // 
+            // useLargerFontForThisWindowToolStripMenuItem1
+            // 
+            this.useLargerFontForThisWindowToolStripMenuItem1.Name = "useLargerFontForThisWindowToolStripMenuItem1";
+            this.useLargerFontForThisWindowToolStripMenuItem1.Size = new System.Drawing.Size(236, 22);
+            this.useLargerFontForThisWindowToolStripMenuItem1.Text = "Use larger font for this window";
+            this.useLargerFontForThisWindowToolStripMenuItem1.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
             // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 427);
+            this.ContextMenuStrip = this.contextMenuStrip2;
+            this.Controls.Add(this.panelBookmark);
+            this.Controls.Add(this.pictureBoxBookmark);
             this.Controls.Add(this.buttonSpellCheckDownload);
             this.Controls.Add(this.labelActionInfo);
             this.Controls.Add(this.comboBoxDictionaries);
@@ -441,7 +522,7 @@
             this.Name = "SpellCheck";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Spell check";
+            this.Text = "Kom";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SpellCheck_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSpellCheck_KeyDown);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -452,6 +533,10 @@
             this.groupBoxEditWholeText.ResumeLayout(false);
             this.groupBoxEditWholeText.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBdSup)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBookmark)).EndInit();
+            this.panelBookmark.ResumeLayout(false);
+            this.panelBookmark.PerformLayout();
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -493,5 +578,13 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBoxBdSup;
         private System.Windows.Forms.ToolStripMenuItem openImagedBasedSourceFileToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBoxBookmark;
+        private System.Windows.Forms.Panel panelBookmark;
+        private System.Windows.Forms.Label labelBookmark;
+        private System.Windows.Forms.ToolStripMenuItem bookmarkCommentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem1;
     }
 }

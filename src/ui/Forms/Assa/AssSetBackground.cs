@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private string _mpvTextFileName;
         private bool _closing;
         private bool _videoLoaded;
+        private string _videoText;
         private bool _updatePreview = true;
         private bool _updateDrawingFile;
         private readonly string _videoFileName;
@@ -45,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private bool _loading = true;
         private string _assaBox;
         private readonly Random _random = new Random();
+        private readonly string _boxStyleName;
         private int _top;
         private int _bottom;
         private int _left;
@@ -54,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
         private Color _boxOutlineColor;
         private long _totalFrames;
         private FileSystemWatcher _drawingFileWatcher;
+        private readonly Subtitle _wholeSubtitle;
 
         public AssSetBackground(Subtitle subtitle, int[] selectedIndices, string videoFileName, VideoInfo videoInfo, double videoPositionSeconds)
         {
@@ -64,6 +67,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             _videoFileName = videoFileName;
             _videoInfo = videoInfo;
             _videoPositionSeconds = videoPositionSeconds;
+            _wholeSubtitle = subtitle;
 
             _subtitleWithNewHeader = new Subtitle(subtitle, false);
             if (string.IsNullOrWhiteSpace(_subtitleWithNewHeader.Header))
@@ -211,7 +215,16 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             SetPosition_ResizeEnd(null, null);
             buttonAssaDraw.Visible = File.Exists(Path.Combine(Configuration.PluginsDirectory, "AssaDraw.dll"));
             progressBar1.Visible = false;
-            labelProgress.Visible = false;
+            labelProgress.Text = string.Empty;
+
+            var tryCount = 0;
+            _boxStyleName = "SE-box-bg";
+            var styleNames = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
+            while (styleNames.Any(p => p == _boxStyleName) && tryCount < 100)
+            {
+                _boxStyleName = $"SE-box-bg{_random.Next(1234)}";
+                tryCount++;
+            }
         }
 
         private static void SafeNumericUpDownAssign(NumericUpDown numericUpDown, int value)
@@ -291,8 +304,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
                 var p2 = new Paragraph(_assaBox ?? string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)
                 {
-                    Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
-                    Extra = "SE-box-bg"
+                    Layer = GetLayer(),
+                    Extra = _boxStyleName,
                 };
 
                 if (!checkBoxOnlyDrawing.Checked)
@@ -305,6 +318,19 @@ namespace Nikse.SubtitleEdit.Forms.Assa
 
             UpdatedSubtitle.Renumber();
             DialogResult = DialogResult.OK;
+        }
+
+        private int GetLayer()
+        {
+            var layer = Configuration.Settings.Tools.AssaBgBoxLayer;
+            var tryCount = 0;
+            while (_wholeSubtitle.Paragraphs.Any(p => p.Layer == layer) && tryCount < 100)
+            {
+                layer = Configuration.Settings.Tools.AssaBgBoxLayer - _random.Next(8421);
+                tryCount++;
+            }
+
+            return layer;
         }
 
         private void AddBgBoxStyles(Subtitle subtitle)
@@ -337,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             var styleBoxBg = new SsaStyle
             {
                 Alignment = "7",
-                Name = "SE-box-bg",
+                Name = _boxStyleName,
                 MarginLeft = 0,
                 MarginRight = 0,
                 MarginVertical = 0,
@@ -481,8 +507,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             {
                 StartTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds },
                 EndTime = { TotalMilliseconds = p.EndTime.TotalMilliseconds },
-                Layer = Configuration.Settings.Tools.AssaBgBoxLayer,
-                Extra = "SE-box-bg"
+                Layer = GetLayer(),
+                Extra = _boxStyleName,
             };
 
             if (!checkBoxOnlyDrawing.Checked)
@@ -515,10 +541,12 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _videoLoaded = true;
                 timerPreview.Start();
 
-                labelProgress.Text = $"{Path.GetFileName(_videoFileName)} - {string.Format(LanguageSettings.Current.Main.LineNumberX, _subtitleWithNewHeader.GetIndex(p) + 1)} - {p.StartTime}";
+                _videoText = $"{Path.GetFileName(_videoFileName)} - {string.Format(LanguageSettings.Current.Main.LineNumberX, _subtitleWithNewHeader.GetIndex(p) + 1)} - {p.StartTime}";
+                labelProgress.Text = _videoText;
                 if (p.StartTime.TotalSeconds > _videoInfo.TotalSeconds)
                 {
                     labelProgress.Text = "Video position is after end of video - NO PREVIEW!";
+                    _videoText = string.Empty;
                 }
 
                 labelProgress.Visible = true;
@@ -757,11 +785,6 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             GeneratePreviewViaMpv();
             _loading = false;
             timerFileChange.Start();
-        }
-
-        private void pictureBoxPreview_Click(object sender, EventArgs e)
-        {
-            VideoLoaded(null, null);
         }
 
         private void SetPosition_ResizeEnd(object sender, EventArgs e)
@@ -1384,9 +1407,55 @@ namespace Nikse.SubtitleEdit.Forms.Assa
             }
         }
 
-        private void AssSetBackground_Load(object sender, EventArgs e)
+        private void pictureBoxPreview_Click(object sender, EventArgs e)
         {
+            VideoLoaded(null, null);
+        }
 
+        private void ColorPickerClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                var timeCode = new TimeCode(_mpv.CurrentPosition * 1000.0 + 1000).ToHHMMSS();
+
+                var colorMatrix = string.Empty;
+                //    colorMatrix = "bt601:bt709";
+
+                var bmpFileName = VideoPreviewGenerator.GetScreenShot(_videoFileName, timeCode, colorMatrix);
+                using (var bmp = new Bitmap(bmpFileName))
+                {
+                    Cursor = Cursors.Default;
+                    using (var form = new ImageColorPicker(bmp))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        ColorChooser.SetLastColor(form.Color);
+                        Configuration.Settings.General.LastColorPickerDropper = form.Color;
+                        labelProgress.Text = string.Format(LanguageSettings.Current.AssaSetBackgroundBox.ColorPickerSetLastColor, Utilities.ColorToHexWithTransparency(form.Color));
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(3500), () =>
+                        {
+                            labelProgress.Text = _videoText;
+                        });
+                    }
+                }
+
+                try
+                {
+                    File.Delete(bmpFileName);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
         }
     }
 }

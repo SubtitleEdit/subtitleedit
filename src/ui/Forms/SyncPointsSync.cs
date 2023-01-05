@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listBoxSyncPoints.Items.Clear();
 
-            for (int i = 0; i < SubtitleListview1.Items.Count; i++)
+            for (var i = 0; i < SubtitleListview1.Items.Count; i++)
             {
                 if (_synchronizationPoints.ContainsKey(i))
                 {
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (subtitleListView2.Visible)
             {
-                SetSyncPointViaOthersubtitle();
+                SetSyncPointViaOtherSubtitle();
             }
             else
             {
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     using (var getTime = new SetSyncPoint())
                     {
-                        int index = SubtitleListview1.SelectedItems[0].Index;
+                        var index = SubtitleListview1.SelectedItems[0].Index;
                         getTime.Initialize(_subtitle, _subtitleFileName, index, VideoFileName, _audioTrackNumber);
                         if (getTime.ShowDialog(this) == DialogResult.OK)
                         {
@@ -202,12 +202,17 @@ namespace Nikse.SubtitleEdit.Forms
             SetSyncFactorLabel();
         }
 
-        private void SetSyncPointViaOthersubtitle()
+        private void SetSyncPointViaOtherSubtitle()
         {
+            if (SubtitleListview1.SelectedItems.Count != 1 || subtitleListView2.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
             if (_otherSubtitle != null && subtitleListView2.SelectedItems.Count == 1)
             {
-                int index = SubtitleListview1.SelectedItems[0].Index;
-                int indexOther = subtitleListView2.SelectedItems[0].Index;
+                var index = SubtitleListview1.SelectedItems[0].Index;
+                var indexOther = subtitleListView2.SelectedItems[0].Index;
 
                 if (_synchronizationPoints.ContainsKey(index))
                 {
@@ -227,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle != null)
             {
-                int index = SubtitleListview1.SelectedItems[0].Index;
+                var index = SubtitleListview1.SelectedItems[0].Index;
                 if (_synchronizationPoints.ContainsKey(index))
                 {
                     _synchronizationPoints.Remove(index);
@@ -266,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
-                int selectedIndex = 0;
+                var selectedIndex = 0;
                 if (SubtitleListview1.SelectedItems.Count > 0)
                 {
                     selectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -277,7 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
-                int selectedIndex = 0;
+                var selectedIndex = 0;
                 if (SubtitleListview1.SelectedItems.Count > 0)
                 {
                     selectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -313,28 +318,28 @@ namespace Nikse.SubtitleEdit.Forms
             labelAdjustFactor.Text = string.Empty;
             if (_synchronizationPoints.Count == 1)
             {
-                double startPos = _synchronizationPoints.First().Value.TotalMilliseconds / TimeCode.BaseUnit;
-                double subStart = _originalSubtitle.Paragraphs[_synchronizationPoints.First().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var startPos = _synchronizationPoints.First().Value.TotalMilliseconds / TimeCode.BaseUnit;
+                var subStart = _originalSubtitle.Paragraphs[_synchronizationPoints.First().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 var adjustment = startPos - subStart;
                 labelAdjustFactor.Text = $"{adjustment:+0.000;-0.000}";
             }
             else if (_synchronizationPoints.Count == 2)
             {
-                double startPos = _synchronizationPoints.First().Value.TotalMilliseconds / TimeCode.BaseUnit;
-                double endPos = _synchronizationPoints.Last().Value.TotalMilliseconds / TimeCode.BaseUnit;
+                var startPos = _synchronizationPoints.First().Value.TotalMilliseconds / TimeCode.BaseUnit;
+                var endPos = _synchronizationPoints.Last().Value.TotalMilliseconds / TimeCode.BaseUnit;
 
-                double subStart = _originalSubtitle.Paragraphs[_synchronizationPoints.First().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-                double subEnd = _originalSubtitle.Paragraphs[_synchronizationPoints.Last().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var subStart = _originalSubtitle.Paragraphs[_synchronizationPoints.First().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var subEnd = _originalSubtitle.Paragraphs[_synchronizationPoints.Last().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
-                double subDiff = subEnd - subStart;
-                double realDiff = endPos - startPos;
+                var subDiff = subEnd - subStart;
+                var realDiff = endPos - startPos;
 
                 // speed factor
-                double factor = realDiff / subDiff;
+                var factor = realDiff / subDiff;
 
                 // adjust to starting position
-                double adjust = startPos - subStart * factor;
+                var adjust = startPos - subStart * factor;
 
                 labelAdjustFactor.Text = $"*{factor:0.000}, {adjust:+0.000;-0.000}";
             }
@@ -344,27 +349,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (endPos > startPos)
             {
-                double subStart = _originalSubtitle.Paragraphs[startIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-                double subEnd = _originalSubtitle.Paragraphs[endIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var subStart = _originalSubtitle.Paragraphs[startIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                var subEnd = _originalSubtitle.Paragraphs[endIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
-                double subDiff = subEnd - subStart;
-                double realDiff = endPos - startPos;
+                var subDiff = subEnd - subStart;
+                var realDiff = endPos - startPos;
 
                 // speed factor
-                double factor = Math.Abs(subDiff) < 0.001 ? 1 : realDiff / subDiff;
+                var factor = Math.Abs(subDiff) < 0.001 ? 1 : realDiff / subDiff;
 
                 // adjust to starting position
-                double adjust = startPos - subStart * factor;
+                var adjust = startPos - subStart * factor;
 
-                for (int i = minIndex; i < _subtitle.Paragraphs.Count; i++)
+                for (var i = minIndex; i < _subtitle.Paragraphs.Count && i <= maxIndex; i++)
                 {
-                    if (i <= maxIndex)
-                    {
-                        Paragraph p = _subtitle.Paragraphs[i];
-                        p.StartTime.TotalMilliseconds = _originalSubtitle.Paragraphs[i].StartTime.TotalMilliseconds;
-                        p.EndTime.TotalMilliseconds = _originalSubtitle.Paragraphs[i].EndTime.TotalMilliseconds;
-                        p.Adjust(factor, adjust);
-                    }
+                    var p = _subtitle.Paragraphs[i];
+                    p.StartTime.TotalMilliseconds = _originalSubtitle.Paragraphs[i].StartTime.TotalMilliseconds;
+                    p.EndTime.TotalMilliseconds = _originalSubtitle.Paragraphs[i].EndTime.TotalMilliseconds;
+                    p.Adjust(factor, adjust);
                 }
             }
         }
@@ -384,15 +386,15 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int endIndex = -1;
-            int minIndex = 0;
+            var endIndex = -1;
+            var minIndex = 0;
             var syncIndices = new List<int>();
             foreach (var kvp in _synchronizationPoints)
             {
                 syncIndices.Add(kvp.Key);
             }
 
-            for (int i = 0; i < syncIndices.Count; i++)
+            for (var i = 0; i < syncIndices.Count; i++)
             {
                 if (i == 0)
                 {
@@ -438,11 +440,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SubtitleListview1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void SubtitleListView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
-                int index = SubtitleListview1.SelectedItems[0].Index;
+                var index = SubtitleListview1.SelectedItems[0].Index;
                 if (_synchronizationPoints.ContainsKey(index))
                 {
                     buttonRemoveSyncPoint_Click(null, null);
@@ -458,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (subtitleListView2.Visible)
             {
-                int widthInMiddle = listBoxSyncPoints.Width;
+                var widthInMiddle = listBoxSyncPoints.Width;
                 SubtitleListview1.Width = (groupBoxImportResult.Width - widthInMiddle) / 2 - 12;
                 subtitleListView2.Width = SubtitleListview1.Width;
                 subtitleListView2.Left = SubtitleListview1.Left + SubtitleListview1.Width + widthInMiddle + 10;
@@ -502,6 +504,5 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
     }
 }

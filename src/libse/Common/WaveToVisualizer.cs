@@ -325,6 +325,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             catch
             {
+                // ignore
             }
         }
 
@@ -338,9 +339,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 catch
                 {
+                    // ignore
                 }
             }
-            Images = new Bitmap[0];
+            Images = Array.Empty<Bitmap>();
         }
 
         public static SpectrogramData FromDisk(string spectrogramDirectory)
@@ -355,6 +357,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string GetPeakWaveFileName(string videoFileName, int trackNumber = 0)
         {
+            if (trackNumber < 0)
+            {
+                trackNumber = 0;
+            }
+
             var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
 
             if (videoFileName != null && (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
@@ -371,7 +378,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             var hash = MovieHasher.GenerateHash(videoFileName);
 
             string wavePeakName;
-            if (trackNumber > 0)
+            if (trackNumber > 0 || Directory.GetFiles(dir, "-*.wav").Length == 0)
             {
                 wavePeakName = $"{hash}-{trackNumber}.wav";
             }
@@ -910,6 +917,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             public static string GetSpectrogramFolder(string videoFileName, int trackNumber = 0)
             {
+                if (trackNumber < 0)
+                {
+                    trackNumber = 0;
+                }
+
                 var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))
                 {

@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
@@ -17,21 +19,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public Moov Moov { get; private set; }
         internal Moof Moof { get; private set; }
         public Subtitle VttcSubtitle { get; private set; }
+        public string VttcLanguage { get; private set; }
 
         public List<Trak> GetSubtitleTracks()
         {
             var list = new List<Trak>();
-            if (Moov?.Tracks != null)
+            if (Moov?.Tracks == null)
             {
-                foreach (var trak in Moov.Tracks)
+                return list;
+            }
+
+            foreach (var trak in Moov.Tracks)
+            {
+                if (trak.Mdia != null && (trak.Mdia.IsTextSubtitle || trak.Mdia.IsVobSubSubtitle || trak.Mdia.IsClosedCaption) &&
+                    trak.Mdia.Minf?.Stbl != null && trak.Mdia.Minf.Stbl.GetParagraphs().Count > 0)
                 {
-                    if (trak.Mdia != null && (trak.Mdia.IsTextSubtitle || trak.Mdia.IsVobSubSubtitle || trak.Mdia.IsClosedCaption) && trak.Mdia.Minf?.Stbl != null)
-                    {
-                        if (trak.Mdia.Minf.Stbl.GetParagraphs().Count > 0)
-                        {
-                            list.Add(trak);
-                        }
-                    }
+                    list.Add(trak);
                 }
             }
 
@@ -41,32 +44,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public List<Trak> GetAudioTracks()
         {
             var list = new List<Trak>();
-            if (Moov?.Tracks != null)
+            if (Moov?.Tracks == null)
             {
-                foreach (var trak in Moov.Tracks)
+                return list;
+            }
+
+            foreach (var trak in Moov.Tracks)
+            {
+                if (trak.Mdia != null && trak.Mdia.IsAudio)
                 {
-                    if (trak.Mdia != null && trak.Mdia.IsAudio)
-                    {
-                        list.Add(trak);
-                    }
+                    list.Add(trak);
                 }
             }
+
             return list;
         }
 
         public List<Trak> GetVideoTracks()
         {
             var list = new List<Trak>();
-            if (Moov?.Tracks != null)
+            if (Moov?.Tracks == null)
             {
-                foreach (var trak in Moov.Tracks)
+                return list;
+            }
+
+            foreach (var trak in Moov.Tracks)
+            {
+                if (trak.Mdia != null && trak.Mdia.IsVideo)
                 {
-                    if (trak.Mdia != null && trak.Mdia.IsVideo)
-                    {
-                        list.Add(trak);
-                    }
+                    list.Add(trak);
                 }
             }
+
             return list;
         }
 
@@ -103,19 +112,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         {
             get
             {
-                if (Moov?.Tracks != null)
+                if (Moov?.Tracks == null)
                 {
-                    foreach (var trak in Moov.Tracks)
+                    return new System.Drawing.Point(0, 0);
+                }
+
+                foreach (var trak in Moov.Tracks)
+                {
+                    if (trak?.Mdia != null && trak.Tkhd != null && trak.Mdia.IsVideo)
                     {
-                        if (trak?.Mdia != null && trak.Tkhd != null)
-                        {
-                            if (trak.Mdia.IsVideo)
-                            {
-                                return new System.Drawing.Point((int)trak.Tkhd.Width, (int)trak.Tkhd.Height);
-                            }
-                        }
+                        return new System.Drawing.Point((int)trak.Tkhd.Width, (int)trak.Tkhd.Height);
                     }
                 }
+
                 return new System.Drawing.Point(0, 0);
             }
         }
@@ -132,10 +141,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
         private void ParseMp4(Stream fs)
         {
-            int count = 0;
+            var count = 0;
             Position = 0;
             fs.Seek(0, SeekOrigin.Begin);
-            bool moreBytes = true;
+            var moreBytes = true;
             var timeTotalMs = 0d;
             while (moreBytes)
             {
@@ -156,39 +165,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 else if (Name == "mdat" && Moof != null && Moof?.Traf?.Trun?.Samples?.Count > 0)
                 {
                     var mdat = new Mdat(fs, Position);
-                    if (mdat.Payloads.Count > 0)
+                    if (Moof.Traf?.Trun?.Samples.Count > 0)
                     {
-                        if (Moof.Traf?.Trun?.Samples.Count > 0 && Moof?.Traf?.Trun?.Samples.Count >= mdat.Payloads.Count)
+                        if (VttcSubtitle == null)
                         {
-                            if (VttcSubtitle == null)
-                            {
-                                VttcSubtitle = new Subtitle();
-                            }
+                            VttcSubtitle = new Subtitle();
 
-                            var timeScale = (double)(Moov?.Mvhd?.TimeScale ?? 1000.0);
-                            var sampleIdx = 0;
-                            foreach (var payload in mdat.Payloads)
+                            if (Moov?.Tracks.FirstOrDefault()?.Mdia?.Mdhd != null)
                             {
-                                var presentation = Moof.Traf.Trun.Samples[sampleIdx];
-                                if (presentation.Duration.HasValue)
+                                var track = Moov.Tracks.FirstOrDefault();
+                                VttcLanguage = track.Mdia.Mdhd.Iso639ThreeLetterCode;
+                                if (string.IsNullOrEmpty(VttcLanguage))
                                 {
-                                    var before = timeTotalMs;
-                                    timeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
-                                    sampleIdx++;
-                                    if (payload != null)
-                                    {
-                                        VttcSubtitle.Paragraphs.Add(new Paragraph(payload, before, timeTotalMs));
-                                    }
+                                    VttcLanguage = track.Mdia.Mdhd.LanguageString;
                                 }
                             }
                         }
 
-                        Moof = null;
+                        if (Moof.Traf.Trun.Samples.All(p => p.Size != null))
+                        {
+                            ReadVttWithSize(mdat, Moof.Traf.Trun.Samples, ref timeTotalMs);
+                        }
+                        else
+                        {
+                            ReadVttWithoutSize(mdat.Vtts, Moof.Traf.Trun.Samples, ref timeTotalMs);
+                        }
                     }
+
+                    Moof = null;
                 }
 
                 count++;
-                if (count > 1000)
+                if (count > 3000)
                 {
                     break;
                 }
@@ -210,20 +218,103 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
+        private void ReadVttWithSize(Mdat mdat, List<TimeSegment> trunSamples, ref double timeTotalMs)
+        {
+            var payloadIndex = 0;
+            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+            foreach (var timeSegment in trunSamples)
+            {
+                var before = timeTotalMs;
+                if (timeSegment.Duration.HasValue)
+                {
+                    timeTotalMs += timeSegment.Duration.Value / timeScale * 1000.0;
+                }
+
+                var timeSegmentSize = timeSegment.Size;
+                if (payloadIndex < mdat.Vtts?.Count && timeSegmentSize > 8)
+                {
+                    var payloadSize = mdat.Vtts[payloadIndex].PayloadSize;
+                    var payload = mdat.Vtts[payloadIndex].Payload;
+                    var style = mdat.Vtts[payloadIndex].Style;
+
+                    if (timeSegment.Duration.HasValue && payload != null)
+                    {
+                        AddVttParagraph(timeTotalMs, payload, before, style);
+                    }
+
+                    while (payloadIndex + 1 < mdat.Vtts.Count && timeSegmentSize >= payloadSize + mdat.Vtts[payloadIndex + 1].PayloadSize)
+                    {
+                        payloadIndex++;
+                        payload = mdat.Vtts[payloadIndex].Payload;
+                        style = mdat.Vtts[payloadIndex].Style;
+
+                        if (timeSegment.Duration.HasValue && payload != null)
+                        {
+                            AddVttParagraph(timeTotalMs, payload, before, style);
+                        }
+
+                        payloadSize += mdat.Vtts[payloadIndex].PayloadSize; // add 8
+                    }
+                }
+
+                payloadIndex++;
+            }
+        }
+
+        private void AddVttParagraph(double timeTotalMs, string payload, double before, string style)
+        {
+            var p = new Paragraph(payload, before, timeTotalMs);
+            var positionInfo = WebVTT.GetPositionInfo(style);
+            if (!string.IsNullOrEmpty(positionInfo))
+            {
+                p.Text = positionInfo + p.Text;
+                p.Extra = style;
+                VttcSubtitle.Header = "WEBVTT";
+            }
+            VttcSubtitle.Paragraphs.Add(p);
+        }
+
+        private void ReadVttWithoutSize(List<Vttc.VttData> vtts, List<TimeSegment> trunSamples, ref double timeTotalMs)
+        {
+            if (vtts == null || trunSamples.Count <= 0 || trunSamples.Count < vtts.Count)
+            {
+                return;
+            }
+
+            var timeScale = Moov?.Mvhd?.TimeScale ?? 1000.0;
+            var sampleIdx = 0;
+            foreach (var vtt in vtts)
+            {
+                var presentation = Moof.Traf.Trun.Samples[sampleIdx];
+                if (presentation.Duration.HasValue)
+                {
+                    var before = timeTotalMs;
+                    timeTotalMs += presentation.Duration.Value / timeScale * 1000.0;
+                    sampleIdx++;
+                    if (vtt.Payload != null)
+                    {
+                        VttcSubtitle.Paragraphs.Add(new Paragraph(vtt.Payload, before, timeTotalMs));
+                    }
+                }
+            }
+        }
+
         internal double FrameRate
         {
             get
             {
                 // Formula: moov.mdia.stbl.stsz.samplecount / (moov.trak.tkhd.duration / moov.mvhd.timescale) - http://www.w3.org/2008/WebVideo/Annotations/drafts/ontology10/CR/test.php?table=containerMPEG4
-                if (Moov?.Mvhd != null && Moov.Mvhd.TimeScale > 0)
+                if (Moov?.Mvhd == null || Moov.Mvhd.TimeScale <= 0)
                 {
-                    var videoTracks = GetVideoTracks();
-                    if (videoTracks.Count > 0 && videoTracks[0].Tkhd != null && videoTracks[0].Mdia?.Minf?.Stbl != null)
-                    {
-                        double duration = videoTracks[0].Tkhd.Duration;
-                        double sampleCount = videoTracks[0].Mdia.Minf.Stbl.StszSampleCount;
-                        return sampleCount / (duration / Moov.Mvhd.TimeScale);
-                    }
+                    return 0;
+                }
+
+                var videoTracks = GetVideoTracks();
+                if (videoTracks.Count > 0 && videoTracks[0].Tkhd != null && videoTracks[0].Mdia?.Minf?.Stbl != null)
+                {
+                    double duration = videoTracks[0].Tkhd.Duration;
+                    double sampleCount = videoTracks[0].Mdia.Minf.Stbl.StszSampleCount;
+                    return sampleCount / (duration / Moov.Mvhd.TimeScale);
                 }
 
                 return 0;
@@ -237,7 +328,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             {
                 Position = 0;
                 fs.Seek(0, SeekOrigin.Begin);
-                bool moreBytes = true;
+                var moreBytes = true;
                 while (moreBytes)
                 {
                     moreBytes = InitializeSizeAndName(fs);
@@ -249,11 +340,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     if (Name == "mdat")
                     {
                         var before = fs.Position;
-                        var readLength = ((long)Position) - before;
-                        if (readLength > 10)
+                        var readLength = (int)((long)Position - before);
+                        if (readLength > 10 && readLength < 1_000_000)
                         {
                             var buffer = new byte[readLength];
-                            fs.Read(buffer, 0, (int)readLength);
+                            fs.Read(buffer, 0, readLength);
                             list.Add(Encoding.UTF8.GetString(buffer));
                         }
                     }

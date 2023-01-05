@@ -16,63 +16,30 @@
  * NOTE: Converted to C# and modified by Nikse.dk@gmail.com
  */
 
-using System.Text;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.BluRaySup
 {
     public static class ToolBox
     {
-        /// <summary>
-        /// Convert bytes to a C-style hex string with leading zeroes
-        /// </summary>
-        public static string ToHex(byte[] buffer, int index, int digits)
-        {
-            var sb = new StringBuilder();
-            for (int i = index; i < index + digits; i++)
-            {
-                string s = $"{buffer[i]:X}";
-                if (s.Length < 2)
-                {
-                    sb.Append('0');
-                }
-
-                sb.Append(s);
-            }
-            return "0x" + sb;
-        }
-
-        /// <summary>
-        /// Convert a long integer to a C-style hex string with leading zeroes
-        /// </summary>
-        public static string ToHex(int number, int digits)
-        {
-            string s = $"{number:X}";
-            if (s.Length < digits)
-            {
-                s = s.PadLeft(digits, '0');
-            }
-
-            return "0x" + s;
-        }
-
         /**
          * Convert time in milliseconds to array containing hours, minutes, seconds and milliseconds
          * @param ms Time in milliseconds
          * @return Array containing hours, minutes, seconds and milliseconds (in this order)
          */
-        public static int[] MillisecondsToTime(double ms)
+        public static long[] MillisecondsToTime(double ms)
         {
-            int[] time = new int[4];
+            var time = new long[4];
             // time[0] = hours
-            time[0] = (int)(ms / (60 * 60 * 1000));
-            ms -= time[0] * 60 * 60 * 1000;
+            time[0] = (long)Math.Round(ms / (60 * 60 * 1000), MidpointRounding.AwayFromZero);
+            ms -= time[0] * 60.0 * 60.0 * 1000.0;
             // time[1] = minutes
-            time[1] = (int)(ms / (60 * 1000));
+            time[1] = (long)Math.Round(ms / (60.0 * 1000.0), MidpointRounding.AwayFromZero);
             ms -= time[1] * 60 * 1000;
             // time[2] = seconds
-            time[2] = (int)(ms / 1000);
-            ms -= time[2] * 1000;
-            time[3] = (int)ms;
+            time[2] = (long)Math.Round(ms / 1000.0, MidpointRounding.AwayFromZero);
+            ms -= time[2] * 1000.0;
+            time[3] = (long)Math.Round(ms, MidpointRounding.AwayFromZero);
             return time;
         }
 
@@ -83,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>String in format hh:mm:ss:ms</returns>
         public static string PtsToTimeString(long pts)
         {
-            int[] time = MillisecondsToTime(pts / 90.0);
+            var time = MillisecondsToTime(pts / 90.0);
             return $@"{time[0]:D2}:{time[1]:D2}:{time[2]:D2}.{time[3]:D3}";
         }
 
@@ -93,8 +60,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="buffer">Byte array</param>
         /// <param name="index">Index to write to</param>
         /// <param name="val">Integer value of double word to write</param>
-        public static void SetDWord(byte[] buffer, int index, int val)
+        public static void SetDWord(byte[] buffer, int index, uint val)
         {
+            if (val > 4_294_967_295)
+            {
+                throw new ArgumentException("val");
+            }
+
             buffer[index] = (byte)(val >> 24);
             buffer[index + 1] = (byte)(val >> 16);
             buffer[index + 2] = (byte)(val >> 8);
@@ -123,6 +95,5 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             buffer[index] = (byte)val;
         }
-
     }
 }

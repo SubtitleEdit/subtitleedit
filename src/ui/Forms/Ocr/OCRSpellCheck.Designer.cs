@@ -59,6 +59,8 @@
             this.addXToUserDictionaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonEditWholeText = new System.Windows.Forms.Button();
             this.buttonEditWord = new System.Windows.Forms.Button();
+            this.contextMenuStripForm = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.useLargerFontForThisWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxSuggestions.SuspendLayout();
             this.GroupBoxEditWord.SuspendLayout();
             this.groupBoxEditWholeText.SuspendLayout();
@@ -66,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxText)).BeginInit();
             this.groupBoxText.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStripForm.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonAbort
@@ -391,6 +394,20 @@
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStripForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useLargerFontForThisWindowToolStripMenuItem});
+            this.contextMenuStripForm.Name = "contextMenuStripForm";
+            this.contextMenuStripForm.Size = new System.Drawing.Size(237, 48);
+            // 
+            // useLargerFontForThisWindowToolStripMenuItem1
+            // 
+            this.useLargerFontForThisWindowToolStripMenuItem.Name = "useLargerFontForThisWindowToolStripMenuItem";
+            this.useLargerFontForThisWindowToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.useLargerFontForThisWindowToolStripMenuItem.Text = "Use larger font for this window";
+            this.useLargerFontForThisWindowToolStripMenuItem.Click += new System.EventHandler(this.useLargerFontForThisWindowToolStripMenuItem_Click);
+            // 
             // OcrSpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,6 +439,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxText)).EndInit();
             this.groupBoxText.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStripForm.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -459,5 +477,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem addXToNamesnoiseListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addXToUserDictionaryToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripForm;
+        private System.Windows.Forms.ToolStripMenuItem useLargerFontForThisWindowToolStripMenuItem;
     }
 }

@@ -22,28 +22,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".elr", StringComparison.OrdinalIgnoreCase) && File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.EndsWith(".elr", StringComparison.OrdinalIgnoreCase))
+                    var buffer = FileUtil.ReadAllBytesShared(fileName);
+                    byte[] compareBuffer = { 0x05, 0x01, 0x0D, 0x15, 0x11, 0x00, 0xA9, 0x00, 0x45, 0x00, 0x6C, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x20, 0x00, 0x53, 0x00, 0x74, 0x00, 0x75, 0x00, 0x64, 0x00, 0x69, 0x00, 0x6F, 0x00 };
+
+                    for (var i = 6; i < compareBuffer.Length; i++)
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-                        byte[] compareBuffer = { 0x05, 0x01, 0x0D, 0x15, 0x11, 0x00, 0xA9, 0x00, 0x45, 0x00, 0x6C, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x20, 0x00, 0x53, 0x00, 0x74, 0x00, 0x75, 0x00, 0x64, 0x00, 0x69, 0x00, 0x6F, 0x00 };
-
-                        for (int i = 6; i < compareBuffer.Length; i++)
+                        if (buffer[i] != compareBuffer[i])
                         {
-                            if (buffer[i] != compareBuffer[i])
-                            {
-                                return false;
-                            }
+                            return false;
                         }
-
-                        var sub = new Subtitle();
-                        LoadSubtitle(sub, lines, fileName);
-                        return sub.Paragraphs.Count > 0;
                     }
+
+                    var sub = new Subtitle();
+                    LoadSubtitle(sub, lines, fileName);
+                    return sub.Paragraphs.Count > 0;
                 }
             }
             return false;
@@ -59,54 +56,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-
-            int i = 128;
+            var buffer = FileUtil.ReadAllBytesShared(fileName);
+            var i = 128;
             while (i < buffer.Length - 40)
             {
+                // 00 00 FE FF FF FF (00 00 01 = sub number 1)
                 try
                 {
-                    if ((buffer[i] == 0xc4 || buffer[i] == 0x5d) && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10) // start time (hopefully)
+                    if (IsSubNumber(buffer, i, out var number))
                     {
-                        var p = new Paragraph { StartTime = GetTimeCode(buffer, i + 4) };
-                        i += 7;
-
-                        // seek to endtime
-                        while (i < buffer.Length - 10 && !((buffer[i] == 0xc4 || buffer[i] == 0x5d) && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
+                        var p = new Paragraph
                         {
-                            i++;
-                        }
-                        if (buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10)
-                        {
-                            p.EndTime = GetTimeCode(buffer, i + 4);
-                            i += 7;
-                        }
-                        if (Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
-                        {
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 2000;
-                        }
+                            Number = number,
+                            StartTime = GetTimeCode(buffer, i - 12),
+                            EndTime = GetTimeCode(buffer, i - 4),
+                        };
+                        i += 9;
 
                         // seek to text
                         var sb = new StringBuilder();
-                        int min = 4;
-                        while (min > 0 || i < buffer.Length - 10 && !((buffer[i] == 0xc4 || buffer[i] == 0x5d) && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
+                        while (i < buffer.Length - 10 && !IsSubNumber(buffer, i, out _))
                         {
-                            min--;
-                            if (buffer[i] == 9 && buffer[i + 1] == 0 && buffer[i + 2] == 0x44)
+                            if (buffer[i] >= 9 && buffer[i + 1] == 0 && buffer[i + 2] == 0x44)
                             {
-                                var length = buffer[i - 1];
-                                i += 12;
-                                for (int j = i; j < i + length * 4; j += 4)
-                                {
-                                    sb.Append(Encoding.GetEncoding(1252).GetString(buffer, j, 1));
-                                }
-                                sb.AppendLine();
+                                i = ReadText(buffer, i, sb);
                             }
                             else
                             {
                                 i++;
                             }
                         }
+
                         p.Text = (p.Text + " " + sb).Trim();
                         subtitle.Paragraphs.Add(p);
                     }
@@ -120,7 +100,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     i += 5;
                 }
             }
+
             subtitle.Renumber();
+        }
+
+        private static int ReadText(byte[] buffer, int i, StringBuilder sb)
+        {
+            var length = buffer[i - 1];
+            i += 12;
+            for (var j = i; j < i + length * 4; j += 4)
+            {
+                sb.Append(Encoding.Unicode.GetString(buffer, j, 2));
+            }
+
+            sb.AppendLine();
+            return i;
+        }
+
+        private static bool IsSubNumber(byte[] buffer, int i, out int number)
+        {
+            number = 0;
+
+            if (buffer[i] == 0 && buffer[i + 1] == 0 && buffer[i + 2] == 0xfe && buffer[i + 3] == 0xff && buffer[i + 4] == 0xff && buffer[i + 5] == 0xff)
+            {
+                number = (buffer[i + 6] << 16) + (buffer[i + 7] << 8) + buffer[i + 8];
+                return true;
+            }
+
+            return false;
         }
 
         private static TimeCode GetTimeCode(byte[] buffer, int idx)
@@ -128,10 +135,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             try
             {
                 const string format = "X4";
-                int frames = int.Parse(buffer[idx].ToString(format));
-                int seconds = int.Parse(buffer[idx + 1].ToString(format));
-                int minutes = int.Parse(buffer[idx + 2].ToString(format));
-                int hours = int.Parse(buffer[idx + 3].ToString(format));
+                var frames = int.Parse(buffer[idx].ToString(format));
+                var seconds = int.Parse(buffer[idx + 1].ToString(format));
+                var minutes = int.Parse(buffer[idx + 2].ToString(format));
+                var hours = int.Parse(buffer[idx + 3].ToString(format));
                 return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
             }
             catch
@@ -139,6 +146,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode();
             }
         }
-
     }
 }

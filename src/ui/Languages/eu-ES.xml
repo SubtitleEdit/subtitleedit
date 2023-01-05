@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.7</Version>
+    <Version>3.6.10</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -662,7 +662,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FixCommonOcrErrors>Zuzendu OCR akats arruntak (OCR ordezpen zerrenda erabiliz)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>OCR akats arruntak zuzenduta (OcrOrdezpen Zerrenda erabiliz): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Kendu zenbaki arteko tarteak</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</FixDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</BreakDialogsOnOneLine>
     <NormalizeStrings>Normalizatu Kateak</NormalizeStrings>
     <FixTurkishAnsi>Zuzendu Turkiera ANSI (Islandiarra) hizkiak Unicodera</FixTurkishAnsi>
     <FixDanishLetterI>Zuzendu 'i' Daniar hizkia</FixDanishLetterI>
@@ -2007,8 +2007,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <AutoBackupEveryFifteenMinutes>15 min behin</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Kendu:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 hilabete</AutoBackupDeleteAfterOneMonth>
-    <AutoBackupDeleteAfterThreeMonths>3 hilabete</AutoBackupDeleteAfterThreeMonths>
-    <AutoBackupDeleteAfterSixMonths>6 hilabete</AutoBackupDeleteAfterSixMonths>
+    <AutoBackupDeleteAfterXMonths>{0} hilabete</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Egiaztatu eguneraketak</CheckForUpdates>
     <AutoSave>Berez gorde</AutoSave>
     <AllowEditOfOriginalSubtitle>Ahalbidetu jatorrizko azpidatzia editatzea</AllowEditOfOriginalSubtitle>
