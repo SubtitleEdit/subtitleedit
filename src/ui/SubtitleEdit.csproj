@@ -31,7 +31,7 @@
 		<PackageReference Include="NAudio.Core" Version="2.1.0" />
 		<PackageReference Include="NAudio.WinMM" Version="2.1.0" />
 		<PackageReference Include="ncalc" Version="1.3.8" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="NHunspell" Version="1.2.5554.16953" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
 		<PackageReference Include="Vosk" Version="0.3.32" />
