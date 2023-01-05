@@ -26,7 +26,10 @@
 	  <None Remove="Resources\TesseractDictionaries.xml.gz" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="iCPUID" Version="1.0.5" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+		<PackageReference Include="NAudio.Core" Version="2.1.0" />
+		<PackageReference Include="NAudio.WinMM" Version="2.1.0" />
 		<PackageReference Include="ncalc" Version="1.3.8" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NHunspell" Version="1.2.5554.16953" />
