@@ -18,9 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            int fine = 0;
+            var fine = 0;
             var sb = new StringBuilder();
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 sb.Append(line);
                 if (line.IndexOf(':') > 0 && CsvLine.IsMatch(line))
@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     fine++;
                 }
             }
+
             return fine > 0 && sb.ToString().Contains(Header);
         }
 
@@ -35,10 +36,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             sb.AppendLine(Header);
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                string text = string.IsNullOrEmpty(p.Text) ? string.Empty : "\"" + p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n") + "\"";
-                string actor = string.IsNullOrEmpty(p.Actor) ? string.Empty : "\"" + p.Actor.Replace(",", " ").Replace("\"", string.Empty) + "\"";
+                var text = string.IsNullOrEmpty(p.Text) ? string.Empty : "\"" + p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n") + "\"";
+                var actor = string.IsNullOrEmpty(p.Actor) ? string.Empty : "\"" + p.Actor.Replace(",", " ").Replace("\"", string.Empty) + "\"";
                 sb.AppendLine(string.Format(LineFormat, ",", actor, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), text));
             }
             return sb.ToString().Trim();
@@ -53,7 +54,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    var parts = line.Split(',');
+                    var parts = CsvUtil.CsvSplit(line, false, out var con);
+                    continuation = con;
                     if (parts.Length == 4)
                     {
                         try
@@ -69,7 +71,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             subtitle.Paragraphs.Add(p);
-                            continuation = parts[3].StartsWith('"') && !parts[3].EndsWith('"');
                         }
                         catch
                         {
@@ -81,12 +82,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (continuation)
                     {
-                        if (p.Text.Length < 300)
+                        var parts = CsvUtil.CsvSplit(line, true, out var con);
+                        continuation = con;
+                        if (parts.Length == 1 && p.Text.Length < 300)
                         {
-                            p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
+                            p.Text = (p.Text + Environment.NewLine + parts[0]).Trim();
                         }
-
-                        continuation = !line.TrimEnd().EndsWith('"');
                     }
                     else
                     {
@@ -94,6 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
+
             subtitle.Renumber();
         }
 
