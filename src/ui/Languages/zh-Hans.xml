@@ -8,6 +8,8 @@
     <HelpFile>https://www.nikse.dk/SubtitleEdit/Help</HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
+    <Yes>是</Yes>
+    <No>否</No>
     <Apply>应用</Apply>
     <ApplyTo>应用于</ApplyTo>
     <None>无</None>
@@ -2505,7 +2507,8 @@ Command line: {1} {2}
     <VideoResetSpeedAndZoom>重置播放速度/波形缩放</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>切换视频控件</MainToggleVideoControls>
     <VideoToggleContrast>切换对比度（仅适用于MPV）</VideoToggleContrast>
-    <VideoAudioToText>视频/音频到文本（语音识别）</VideoAudioToText>
+    <AudioToTextX>语音转文本 ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>对选定行语音转文本 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>切换亮度（仅限mpv）</VideoToggleBrightness>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
@@ -2865,6 +2868,7 @@ Command line: {1} {2}
     <CopyXOfY>复制 {0}/{1}</CopyXOfY>
     <New>新建</New>
     <Remove>删除</Remove>
+    <ReplaceWith>替换...</ReplaceWith>
     <RemoveAll>全部删除</RemoveAll>
     <ImportStyleFromFile>从文件导入样式...</ImportStyleFromFile>
     <ExportStyleToFile>将样式导出为文件... (若文件已存在，则新建样式)</ExportStyleToFile>
