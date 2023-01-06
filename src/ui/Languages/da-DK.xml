@@ -8,6 +8,8 @@
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
+    <Yes>Ja</Yes>
+    <No>Nej</No>
     <Apply>Anvend</Apply>
     <ApplyTo>Anvend for</ApplyTo>
     <None>Ingen</None>
@@ -185,6 +187,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TranscribingXOfY>Transskriberer lyd til tekst - fil {0} af {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} filer gemt i videokildemappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Brug efterbehandling (linjefletning, ret store og små bogstaver, tegnsætning og mere)</UsePostProcessing>
+    <AutoAdjustTimings>Autojuster tid</AutoAdjustTimings>
     <BatchMode>Batch-tilstand</BatchMode>
     <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
     <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
@@ -853,6 +856,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XGeneratedWithBurnedInSubsInX>"{0}" genereret med indbrændt undertekst tog {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Resterende tid: {0} minutter</TimeRemainingMinutes>
     <TimeRemainingSeconds>Resterende tid: {0} sekunder</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Resterende tid: Et par sekunder</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Resterende tid: {0} minutter og {1} sekunder</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Målfilnavn: {0}</TargetFileName>
     <TargetFileSize>Målfilstørrelse (kræver 2 -pass -kodning)</TargetFileSize>
@@ -1155,6 +1159,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
         <SaveOriginal>Gem original</SaveOriginal>
         <CloseOriginal>Luk original</CloseOriginal>
+        <CloseTranslation>Luk oversat undertekst</CloseTranslation>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
         <Statistics>Statistik...</Statistics>
@@ -1769,6 +1774,11 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <UsingOnlyFrontCenterChannel>Bruger kun lydkanal foran i midten</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Før konverterering af farver til dialog</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Konverterede farver til dialog</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Installer venligst videoafspiller</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE kunne ikke afspille video-/lydfilen (eller filen er ikke en gyldig video-/lydfil).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit kræver en videoafspiller.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>For at bruge den anbefalede videoafspiller "mpv" skal du klikke på knappen nedenfor.</UseRecommendMpv>
+    <DownloadAndUseMpv>Download og brug "mpv" som videoafspiller</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -2193,6 +2203,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Slet efter</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Oversættelse filnavn auto suffiks</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>En måned</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} måneder</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
@@ -2329,6 +2340,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Brug ordopdel liste (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Undgå ord der starter med stort bogstav</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Spring trin 1 over (vælg fix regler)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Standardformat</DefaultFormat>
@@ -2497,7 +2509,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Toggle videokontrol</MainToggleVideoControls>
     <VideoToggleContrast>Skift kontrast (kun mpv)</VideoToggleContrast>
-    <VideoAudioToText>Lyd til tekst</VideoAudioToText>
+    <AudioToTextX>Lyd til tekst ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Lyd til tekst valgte linjer ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Skift lysstyrke (kun mpv)</VideoToggleBrightness>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
@@ -2858,6 +2871,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Kopier {0} af {1}</CopyXOfY>
     <New>Ny</New>
     <Remove>Fjern</Remove>
+    <ReplaceWith>Erstat med...</ReplaceWith>
     <RemoveAll>Fjern alle</RemoveAll>
     <ImportStyleFromFile>Importer style fra fil...</ImportStyleFromFile>
     <ExportStyleToFile>Export style til fil...</ExportStyleToFile>
@@ -3034,6 +3048,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API nøgle</ApiKey>
     <SendOriginalImages>Send originale billeder</SendOriginalImages>
+    <SeHandlesTextMerge>SE håndterer tekstfletning</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
