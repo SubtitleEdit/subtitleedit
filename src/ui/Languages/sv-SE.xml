@@ -8,6 +8,8 @@
     <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Avbryt</Cancel>
+    <Yes>Ja</Yes>
+    <No>Nej</No>
     <Apply>Verkställ</Apply>
     <ApplyTo>Verkställ på</ApplyTo>
     <None>Ingen</None>
@@ -192,6 +194,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <TranscribingXOfY>Transkriberar ljud till text - fil {0} av {1}...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} filer sparade i videokällmappen</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Använd efterbearbetning (radsammanfogning, fixa skiftläge, skiljetecken och mer)</UsePostProcessing>
+    <AutoAdjustTimings>Automatisk justering av tider</AutoAdjustTimings>
     <BatchMode>Batch-läge</BatchMode>
     <KeepPartialTranscription>Behåll partiell transkription</KeepPartialTranscription>
     <TranslateToEnglish>Översätt till engelska</TranslateToEnglish>
@@ -859,6 +862,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <XGeneratedWithBurnedInSubsInX>"{0}" genererad med inbränd undertext i {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Återstående tid: {0} minuter</TimeRemainingMinutes>
     <TimeRemainingSeconds>Återstående tid: {0} sekunder</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Återstående tid: Några sekunder</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Återstående tid: {0} minuter och {1} sekunder</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Målfilnamn: {0}</TargetFileName>
     <TargetFileSize>Målfilstorlek (kräver 2 pass-kodning)</TargetFileSize>
@@ -1161,6 +1165,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
         <OpenOriginal>Öppna originaltext (översattningsläge)...</OpenOriginal>
         <SaveOriginal>Spara original undertext</SaveOriginal>
         <CloseOriginal>Stäng original undertext</CloseOriginal>
+        <CloseTranslation>Stäng översatt undertext</CloseTranslation>
         <OpenContainingFolder>Öppna behållarmappen</OpenContainingFolder>
         <Compare>&amp;Jämför...</Compare>
         <Statistics>Statistik...</Statistics>
@@ -1778,6 +1783,11 @@ Ladda ner och fortsätta?</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>Använder endast främre mittljudkanal</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Innan du konverterar färger till dialog</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Konverterade färger till dialog</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Installera videospelaren</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE kunde inte spela upp video-/ljudfilen (eller filen är inte en giltig video-/ljudfil).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit behöver en videospelare.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>För att använda den rekommenderade videospelaren "mpv" klicka på knappen nedan.</UseRecommendMpv>
+    <DownloadAndUseMpv>Ladda ner och använd "mpv" som videospelare</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Välj undertext från Matroska-fil</Title>
@@ -2202,6 +2212,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <AutoBackupEveryFiveMinutes>Var 5:e minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Var 15:e minut</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Ta bort efter</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Översättning filnamn auto suffix</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 månad</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} månader</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Sök efter uppdateringar</CheckForUpdates>
@@ -2338,6 +2349,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <MusicSymbolsReplace>Musiksymboler att ersätta (separera med kommatecken)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fixa vanliga OCR-fel - använda också hårdkodade regler</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Använd orddelad lista (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Undvik börja med stor bokstav</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fixa kort visningstid - tillåt flyttning av starttid</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Hoppa över steg ett (välj fix-regler)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Standardformat</DefaultFormat>
@@ -2506,7 +2518,8 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <VideoResetSpeedAndZoom>Återställ uppspelningshastighet (hastighet) och vågformszoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Växla videokontroller</MainToggleVideoControls>
     <VideoToggleContrast>Växla kontrast (endast mpv)</VideoToggleContrast>
-    <VideoAudioToText>Ljud till text</VideoAudioToText>
+    <AudioToTextX>Ljud till text ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Ljud till text, markerade rader ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Växla ljusstyrka (endast mpv)</VideoToggleBrightness>
     <CustomSearch1>Översätt, anpassad sökning 1</CustomSearch1>
     <CustomSearch2>Översätt, anpassad sökning 2</CustomSearch2>
@@ -2868,6 +2881,7 @@ och N bryter</WrapStyle2>
     <CopyXOfY>Kopiera {0} av {1}</CopyXOfY>
     <New>Nytt</New>
     <Remove>Ta bort</Remove>
+    <ReplaceWith>Ersätta med...</ReplaceWith>
     <RemoveAll>Ta bort alla</RemoveAll>
     <ImportStyleFromFile>Importera stil från fil...</ImportStyleFromFile>
     <ExportStyleToFile>Exportera stil till fil... (stil läggs till om filen redan existerar)</ExportStyleToFile>
@@ -3046,6 +3060,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API-nyckel</ApiKey>
     <SendOriginalImages>Skicka originalbilder</SendOriginalImages>
+    <SeHandlesTextMerge>SE hanterar textsammanslagning</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuell bild till text</Title>
