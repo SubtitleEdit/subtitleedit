@@ -2518,7 +2518,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <VideoResetSpeedAndZoom>재생 배속(속도) 및 파형 줌 재설정</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>비디오 컨트롤 전환</MainToggleVideoControls>
     <VideoToggleContrast>대비 전환 (mpv 만)</VideoToggleContrast>
-    <VideoAudioToText>오디오를 텍스트로</VideoAudioToText>
+    <AudioToTextX>오디오를 텍스트로 ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>선택한 줄 오디오를 텍스트로 ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>밝기 전환 (mpv 만)</VideoToggleBrightness>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
