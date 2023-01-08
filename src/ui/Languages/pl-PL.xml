@@ -8,6 +8,8 @@
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
+    <Yes>Tak</Yes>
+    <No>Nie</No>
     <Apply>Zastosuj</Apply>
     <ApplyTo>Zastosuj do</ApplyTo>
     <None>Brak</None>
@@ -121,7 +123,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Dodaj do słownika użytkownika</Title>
-    <Description>Dodaj słowo do słownika użytkownika (wielkość liter nie jest uwzględniana)</Description>
+    <Description>Dodaj słowo do słownika użytkownika (bez rozróżniania wielkości liter)</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Generuj dane wykresu falowego</Title>
@@ -151,7 +153,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
   <AddWaveformBatch>
     <Title>Wsadowe generowanie wykresów falowych</Title>
     <ExtractingAudio>Wyodrębnianie dźwięku...</ExtractingAudio>
-    <Calculating>Obliczenie...</Calculating>
+    <Calculating>Obliczanie...</Calculating>
     <Done>Gotowe</Done>
     <Error>Błąd</Error>
   </AddWaveformBatch>
@@ -776,7 +778,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <FixCommonOcrErrors>Popraw typowe błędy OCR (przy użyciu listy zamienników OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Poprawiono typowe błędy OCR (używając listy zamienników OCR): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Usuń spację między liczbami</RemoveSpaceBetweenNumber>
-    <BreakDialogsOnOneLine>Popraw dialogi znajdujące się w jednej linii</BreakDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Podziel dialogi będące w jednej linii</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Usuń myślnik początkowy w pierwszej linii dla nie-dialogów</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Normalizuj ciągi</NormalizeStrings>
     <FixTurkishAnsi>Popraw tureckie litery ANSI (Icelandic) na Unicode</FixTurkishAnsi>
@@ -1164,6 +1166,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <OpenOriginal>Otwórz oryginalne napisy (tryb tłumacza)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
         <CloseOriginal>Zamknij oryginalne napisy</CloseOriginal>
+        <CloseTranslation>Zamknij przetłumaczone napisy</CloseTranslation>
         <OpenContainingFolder>Otwórz folder z zawartością</OpenContainingFolder>
         <Compare>&amp;Porównaj...</Compare>
         <Statistics>S&amp;tatystyki...</Statistics>
@@ -2347,6 +2350,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MusicSymbolsReplace>Symbole muzyczne do zastąpienia (oddzielone przecinkiem)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem reguł zakodowanych na stałe</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Użyj listy dzielenia wyrazów (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Unikaj kapitalizacji pierwszych liter każdego słowa w łańcuchu</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania - zezwól na przesunięcie czasu rozpoczęcia</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Domyślny format</DefaultFormat>
@@ -2515,7 +2519,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Przełącz elementy sterujące wideo</MainToggleVideoControls>
     <VideoToggleContrast>Przełącz kontrast (tylko mpv)</VideoToggleContrast>
-    <VideoAudioToText>Audio na tekst (rozpoznawanie mowy)</VideoAudioToText>
+    <AudioToTextX>Audio na tekst ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Audio na tekst wybranych linii ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Przełącz jasność (tylko mpv)</VideoToggleBrightness>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
@@ -2699,7 +2704,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
     <AddXToNames>Dodaj '{0}' do listy imion/nazwisk/nazw własnych</AddXToNames>
     <AddXToUserDictionary>Dodaj '{0}' do słownika użytkownika</AddXToUserDictionary>
-    <AutoFixNames>Automatycznie popraw nazwy różniące się tylko wielkością liter</AutoFixNames>
+    <AutoFixNames>Auto popraw nazwy różniące się tylko wielkością liter</AutoFixNames>
     <AutoFixNamesViaSuggestions>Popraw nazwy własne również za pomocą "sugestii sprawdzania pisowni"</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się "in'" jako "ing" (tylko w języku angielskim)</TreatINQuoteAsING>
@@ -2876,6 +2881,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Kopiuj {0} z {1}</CopyXOfY>
     <New>Nowy</New>
     <Remove>Usuń</Remove>
+    <ReplaceWith>Zastąp...</ReplaceWith>
     <RemoveAll>Usuń wszystko</RemoveAll>
     <ImportStyleFromFile>Importuj styl z pliku...</ImportStyleFromFile>
     <ExportStyleToFile>Eksportuj styl do pliku... (doda styl, jeśli plik już istnieje)</ExportStyleToFile>
