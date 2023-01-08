@@ -1971,10 +1971,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_preprocessingSettings != null && _preprocessingSettings.CropTransparentColors)
                 {
-                    nb.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
-                    nb.CropTop(2, Color.FromArgb(0, 0, 0, 0));
-                    nb.CropSidesAndBottom(2, Color.Transparent, true);
-                    nb.CropTop(2, Color.Transparent);
+                    nb.CropTransparentSidesAndBottom(2, true);
+                    nb.CropTopTransparent(2);
                 }
 
                 nb.AddMargin(10);
@@ -2014,10 +2012,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 var nb = new NikseBitmap(returnBmp);
-                nb.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
-                nb.CropTop(2, Color.FromArgb(0, 0, 0, 0));
-                nb.CropSidesAndBottom(2, Color.Transparent, true);
-                nb.CropTop(2, Color.Transparent);
+                nb.CropTransparentSidesAndBottom(2, true);
+                nb.CropTopTransparent(2);
                 if (_preprocessingSettings.InvertColors)
                 {
                     nb.InvertColors();
@@ -2043,10 +2039,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var n = new NikseBitmap(returnBmp);
-            n.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
-            n.CropTop(2, Color.FromArgb(0, 0, 0, 0));
-            n.CropSidesAndBottom(2, Color.Transparent, true);
-            n.CropTop(2, Color.Transparent);
+            n.CropTransparentSidesAndBottom(2, true);
+            n.CropTopTransparent(2);
             if (_preprocessingSettings != null && _preprocessingSettings.Active)
             {
                 if (_preprocessingSettings.InvertColors)

@@ -564,9 +564,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public int CropTransparentSidesAndBottom(int maximumCropping, bool bottom)
         {
-            int leftStart = 0;
-            bool done = false;
-            int x = 0;
+            var leftStart = 0;
+            var done = false;
+            var x = 0;
             int y;
             while (!done && x < Width)
             {
@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         leftStart = x;
                         if (leftStart > maximumCropping)
                         {
-                            leftStart = leftStart - maximumCropping;
+                            leftStart -= maximumCropping;
                         }
 
                         if (leftStart < 0)
@@ -595,7 +595,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 x++;
             }
 
-            int rightEnd = Width - 1;
+            var rightEnd = Width - 1;
             done = false;
             x = Width - 1;
             while (!done && x >= 0)
@@ -627,7 +627,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             //crop bottom
             done = false;
-            int newHeight = Height;
+            var newHeight = Height;
             if (bottom)
             {
                 y = Height - 1;
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
-            int index = 0;
+            var index = 0;
             var newWidthX4 = 4 * newWidth;
             for (y = 0; y < newHeight; y++)
             {
