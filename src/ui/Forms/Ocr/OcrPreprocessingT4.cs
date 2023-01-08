@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     {
         private readonly NikseBitmap _source;
         private bool _loading = true;
-        public PreprocessingSettings PreprocessingSettings { get; }        
+        public PreprocessingSettings PreprocessingSettings { get; }
 
         public OcrPreprocessingT4(Bitmap bitmap, PreprocessingSettings preprocessingSettings)
         {
@@ -83,10 +83,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (PreprocessingSettings.CropTransparentColors)
             {
-                n.CropSidesAndBottom(2, Color.Transparent, true);
-                n.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
-                n.CropTop(2, Color.Transparent);
-                n.CropTop(2, Color.FromArgb(0, 0, 0, 0));
+                n.CropTransparentSidesAndBottom(2, true);
+                n.CropTopTransparent(2);
             }
 
             if (PreprocessingSettings.InvertColors)
