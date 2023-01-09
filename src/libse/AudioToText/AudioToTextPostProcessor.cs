@@ -47,8 +47,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public Subtitle Generate(Engine engine, Subtitle input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             var subtitle = new Subtitle();
-            foreach (var resultText in input.Paragraphs)
+            for (var index = 0; index < input.Paragraphs.Count; index++)
             {
+                var resultText = input.Paragraphs[index];
                 if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.EndTime.TotalSeconds - resultText.StartTime.TotalSeconds > 1)
                 {
                     continue;
@@ -64,6 +65,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     if (resultText.Text.StartsWith('.') && resultText.Text.EndsWith(").", StringComparison.Ordinal))
                     {
                         resultText.Text = resultText.Text.TrimEnd('.');
+                    }
+
+                    var next = input.GetParagraphOrDefault(index + 1);
+                    if (next != null && Math.Abs(resultText.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.01)
+                    {
+                        next.StartTime.TotalMilliseconds++;
                     }
                 }
 

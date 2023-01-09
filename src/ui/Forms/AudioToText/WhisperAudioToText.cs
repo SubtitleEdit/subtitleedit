@@ -40,6 +40,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
         private readonly WavePeakData _wavePeaks;
+        public bool IncompleteModel { get; set; }
+        public string IncompleteModelName { get; set; }
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
@@ -177,6 +179,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                                     FfmpegMediaInfo.Parse(_videoFileName).HasFrontCenterAudio(_audioTrackNumber);
 
             _languageCode = GetLanguage(comboBoxLanguages.Text);
+            IncompleteModel = false;
             ShowProgressBar();
 
             if (_batchMode)
@@ -233,6 +236,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 UpdateLog();
                 SeLogger.Error(textBoxLog.Text);
+                IncompleteModelName = comboBoxModels.Text;
             }
             else
             {
@@ -595,6 +599,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 return;
             }
 
+            if (outLine.Data.Contains("not all tensors loaded from model file"))
+            {
+                IncompleteModel = true;
+            }
+
             _outputText.Add(outLine.Data.Trim() + Environment.NewLine);
 
             foreach (var line in outLine.Data.SplitToLines())
@@ -819,7 +828,25 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (Configuration.Settings.Tools.WhisperUseCpp)
             {
-                translateToEnglish += "--print-progress ";
+                if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--print-progress"))
+                {
+                    translateToEnglish += "--print-progress ";
+                }
+
+                if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len"))
+                {
+                    var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
+                    if (language == "jp")
+                    {
+                        maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
+                    }
+
+                    if (language == "cn")
+                    {
+                        maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
+                    }
+                    translateToEnglish += $"--max-len {maxChars} ";
+                }
             }
 
             var outputSrt = string.Empty;
