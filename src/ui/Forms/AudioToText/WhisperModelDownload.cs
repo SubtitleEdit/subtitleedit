@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     WhisperHelper.GetWhisperModel().CreateModelFolder();
                 }
 
-                _downloadFileName = MakeDownloadFileName(LastDownloadedModel);
+                _downloadFileName = MakeDownloadFileName(LastDownloadedModel) + ".$$$";
                 using (var downloadStream = new FileStream(_downloadFileName, FileMode.Create, FileAccess.Write))
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
@@ -135,15 +135,28 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             DialogResult = DialogResult.Cancel;
         }
 
-        private void CompleteDownload(FileStream downloadStream)
+        private void CompleteDownload(Stream downloadStream)
         {
             if (downloadStream.Length == 0)
             {
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
 
+            var newFileName = _downloadFileName.Replace(".$$$", string.Empty);
+            try
+            {
+                File.Delete(newFileName);
+            }
+            catch
+            {
+                // ignore
+            }
+
             downloadStream.Flush();
             downloadStream.Close();
+
+            Application.DoEvents();
+            File.Move(_downloadFileName, newFileName);
 
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;

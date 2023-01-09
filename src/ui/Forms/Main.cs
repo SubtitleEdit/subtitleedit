@@ -34808,7 +34808,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (form.TranscribedSubtitle.Paragraphs.Count == 0)
                 {
-                    MessageBox.Show("No text found!");
+                    if (form.IncompleteModel)
+                    {
+                        MessageBox.Show($"No text found - model incomplete.{Environment.NewLine}Please re-download model: {form.IncompleteModelName}");
+                    }
+                    else
+                    {
+                        MessageBox.Show("No text found!");
+                    }
+
                     return;
                 }
 
