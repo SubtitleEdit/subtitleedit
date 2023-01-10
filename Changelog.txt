@@ -10,6 +10,7 @@
    * Add new subtitle format - thx Chris
    * Add ASSA style "Replace" - thx Mishasama
    * Add "audio to text selected lines" shortcuts
+   * Add Vosk Korean/Uzbek models
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Korean translation - thx domddol
@@ -31,6 +32,7 @@
    * Remember "Merge lines with same text" settings - thx kamitsu2004
    * Update Whisper CPP to v1.0.4
    * Rename "Fix dialogs on one line" to "Break dialogs on one line"
+   * Update Tesseract 5.2.0 to 5.3.0
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
