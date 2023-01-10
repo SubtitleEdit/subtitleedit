@@ -142,8 +142,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
 
-            
-
             if (AutoClose)
             {
                 DialogResult = DialogResult.OK;
