@@ -30,7 +30,7 @@
    * Make formatting shortcuts in waveform work w selected lines
    * Remember font in burn-in - thx Nespula95
    * Remember "Merge lines with same text" settings - thx kamitsu2004
-   * Update Whisper CPP to v1.0.4
+   * Update Whisper CPP to 2023-01-08
    * Rename "Fix dialogs on one line" to "Break dialogs on one line"
    * Update Tesseract 5.2.0 to 5.3.0
 * FIXED:
@@ -46,6 +46,7 @@
    * Fix crash in "Sync via other sub" - thx JP
    * Fix original desync after set start time - thx Leon
    * Handle multi-audio-track waveform/spectrogram better - thx AlfonZ42
+   * Fix CSV reading issue - thx Instinct64 
 
 
 3.6.10 (21th November 2022)
