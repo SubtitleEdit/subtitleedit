@@ -9,6 +9,8 @@
     <HelpFile />
     <Ok>&amp;Εντάξει</Ok>
     <Cancel>&amp;Ακύρωση</Cancel>
+    <Yes>Ναι</Yes>
+    <No>Όχι</No>
     <Apply>Εφαρμογή</Apply>
     <ApplyTo>Εφαρμογή σε</ApplyTo>
     <None>Κανένα</None>
@@ -190,6 +192,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranscribingXOfY>Μετατροπή {0} αρχείου ήχου από {1} σε κείμενο</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>Αποθηκεύτηκαν {0} αρχεία στον φάκελο του βίντεο</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Χρήση μετεπεξαργασίας (συγχώνευση γραμμών, διόρθωση πεζών - κεφαλαίων, στίξη κ.α.)</UsePostProcessing>
+    <AutoAdjustTimings>Αυτόματη προσαρμογή χρόνων</AutoAdjustTimings>
     <BatchMode>Ομαδική λειτουργία</BatchMode>
     <KeepPartialTranscription>Κράτημα μερικής μετατροπής</KeepPartialTranscription>
     <TranslateToEnglish>Μετάφραση στα Αγγλικά</TranslateToEnglish>
@@ -857,6 +860,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XGeneratedWithBurnedInSubsInX>Το "{0}" δημιουργήθηκε με ενσωματωμένους υποτίτλους σε {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Υπολειπόμενος χρόνος: {0} λεπτά</TimeRemainingMinutes>
     <TimeRemainingSeconds>Υπολειπόμενος χρόνος: {0} δευτερόλεπτα</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Υπολειπόμενος χρόνος: Μερικά δευτερόλεπτα</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Υπολειπόμενος χρόνος: {0} λεπτά και {1} δευτερόλεπτα</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Καθορισμός ονόματος αρχείου: {0}</TargetFileName>
     <TargetFileSize>Καθορισμός μεγέθους αρχείου (απαιτείται διπλό πέρασμα κωδικοποίησης)</TargetFileSize>
@@ -1157,6 +1161,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenOriginal>Άνοιγμα αρχικού υποτίτλου (λειτουργία μετάφρασης)…</OpenOriginal>
         <SaveOriginal>Αποθήκευση αρχικού υποτίτλου</SaveOriginal>
         <CloseOriginal>Κλείσιμο αρχικού υποτίτλου</CloseOriginal>
+        <CloseTranslation>Κλείσιμο μεταφρασμένου υποτίτλου</CloseTranslation>
         <OpenContainingFolder>Άνοιγμα φακέλου περιεχομένων</OpenContainingFolder>
         <Compare>&amp;Σύγκριση…</Compare>
         <Statistics>Στατιστι&amp;κά…</Statistics>
@@ -1772,6 +1777,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UsingOnlyFrontCenterChannel>Χρήση μόνο μπροστινού,  κεντρικού καναλιού ήχου</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Πριν από τη μετατροπή χρωμάτων σε παύλες διαλόγου</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Αλλαγμένα χρώματα σε παύλες διαλόγου</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Παρακαλώ, να εγκαταστείσετε πρόγραμμα αναπαραγωγής βίντεο</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>Αδυναμία αναπαραγωγής αρχείου βίντεο ή ήχου από το SE.</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Το Subtitle Edit χρειάζεται πρόγραμμα αναπαραγωγής βίντεο.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>Για τη χρήση τού mpv, πατήστε το παρακάτω κουμπί.</UseRecommendMpv>
+    <DownloadAndUseMpv>Λήψη και χρήση τού mpv ως πρόγραμμα αναπαραγωγής</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υποτίτλου από αρχείο Matroska</Title>
@@ -2197,6 +2207,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBackupEveryFiveMinutes>Κάθε 5 λεπτά</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Κάθε 15 λεπτά</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Διαγραφή σε</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Αυτόματο επίθημα μεταφρασμένου αρχείου</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 μήνα</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} μήνες</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Έλεγχος ενημερώσεων</CheckForUpdates>
@@ -2333,6 +2344,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MusicSymbolsReplace>Αντικατάσταση μουσικών συμβόλων (χωρισμένα με κόμμα)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Διόρθωση σφαλμάτων OCR - χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Χρήση λίστας χωρισμού λέξης (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Αποφυγή έναρξης πρότασης με κεφαλαίο</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Διόρθωση σύντομου χρόνου εμφάνισης - αλλαγή χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προεπιλεγμένα)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Προεπιλεγμένη μορφή</DefaultFormat>
@@ -2501,7 +2513,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoResetSpeedAndZoom>Επαναφορά ταχύτητας/μεγένθυσης</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Εναλλαγή ελέγχων βίντεο</MainToggleVideoControls>
     <VideoToggleContrast>Εναλλαγή αντίθεσης (μόνο mpv)</VideoToggleContrast>
-    <VideoAudioToText>Ήχος σε κείμενο</VideoAudioToText>
+    <AudioToTextX>Ήχος σε κείμενο ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Ήχος σε κείμενο επιλεγμένων γραμμών ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Εναλλαγή φωτεινότητας (μόνο mpv)</VideoToggleBrightness>
     <CustomSearch1>Μετάφραση, προσαρμοσμένη αναζήτηση 1</CustomSearch1>
     <CustomSearch2>Μετάφραση, προσαρμοσμένη αναζήτηση 2</CustomSearch2>
@@ -2859,6 +2872,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyXOfY>Αντιγραφή {0} από {1}</CopyXOfY>
     <New>Νέο</New>
     <Remove>Αφαίρεση</Remove>
+    <ReplaceWith>Αντικατάσταση με…</ReplaceWith>
     <RemoveAll>Αφ. όλων</RemoveAll>
     <ImportStyleFromFile>Εισαγωγή στυλ από αρχείο…</ImportStyleFromFile>
     <ExportStyleToFile>Εξαγωγή στυλ σε αρχείο… (προσθήκη σε περίπτωση υπάρχοντος στυλ)</ExportStyleToFile>
@@ -3037,6 +3051,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CloudVisionApi>Google Cloud Vision</CloudVisionApi>
     <ApiKey>Κλειδί API</ApiKey>
     <SendOriginalImages>Αποστολή αρχικών εικόνων</SendOriginalImages>
+    <SeHandlesTextMerge>Χειρισμός συγχώνευσης κειμένου από το SE</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Εικόνα σε κείμενο χειροκίνητα</Title>
