@@ -42,7 +42,6 @@
   <Item>ενώ</Item>
   <Item>εσείς</Item>
   <Item>εσύ</Item>
-  <Item>εώς</Item>
   <Item>η</Item>
   <Item>θα</Item>
   <Item>κάθε</Item>
@@ -94,6 +93,7 @@
   <Item>στου</Item>
   <Item>στους</Item>
   <Item>στων</Item>
+  <Item>σχεδόν</Item>
   <Item>τα</Item>
   <Item>τη</Item>
   <Item>την</Item>
@@ -116,5 +116,4 @@
   <Item>όντως</Item>
   <Item>όσο</Item>
   <Item>ότι</Item>
-  <Item>σχεδόν</Item>
 </NoBreakAfterList>
