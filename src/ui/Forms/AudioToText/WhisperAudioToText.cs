@@ -1056,7 +1056,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (p > progressBar1.Maximum)
             {
-                p = progressBar1.Minimum;
+                p = progressBar1.Maximum;
             }
 
             if (p < progressBar1.Minimum)
