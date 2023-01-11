@@ -1006,7 +1006,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (_batchMode)
             {
                 var pct = _batchFileNumber * 100.0 / listViewInputFiles.Items.Count;
-                progressBar1.Value = Math.Min(100, (int)Math.Round(pct));
+                SetProgressBarPct(pct);
                 return;
             }
 
@@ -1039,15 +1039,32 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (_showProgressPct > 0)
             {
-                progressBar1.Value = (int)Math.Round(_showProgressPct, MidpointRounding.AwayFromZero);
+                SetProgressBarPct(_showProgressPct);
             }
             else
             {
-                progressBar1.Value = (int)Math.Round(_endSeconds * 100.0 / _videoInfo.TotalSeconds, MidpointRounding.AwayFromZero);
+                SetProgressBarPct(_endSeconds * 100.0 / _videoInfo.TotalSeconds);
             }
 
             labelTime.Text = ProgressHelper.ToProgressTime(msEstimatedLeft);
             BringToFront();
+        }
+
+        private void SetProgressBarPct(double pct)
+        {
+            var p = (int)Math.Round(pct, MidpointRounding.AwayFromZero);
+
+            if (p > progressBar1.Maximum)
+            {
+                p = progressBar1.Minimum;
+            }
+
+            if (p < progressBar1.Minimum)
+            {
+                p = progressBar1.Minimum;
+            }
+
+            progressBar1.Value = p;
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
