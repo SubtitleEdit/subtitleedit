@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -30,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             FixLargeFonts();
-            _dictionaries = TesseractDictionary.List();
+            _dictionaries = TesseractDictionary.List().OrderBy(p=>p.Name).ToList();
             LoadDictionaryList(first);
             _cancellationTokenSource = new CancellationTokenSource();
         }
