@@ -51,6 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
+                client.Timeout = Timeout.InfiniteTimeSpan;
                 using (var response = await client.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
                     var contentLength = response.Content.Headers.ContentLength;
