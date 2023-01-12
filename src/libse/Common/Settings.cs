@@ -3725,6 +3725,10 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.VideoPlayerDefaultVolume = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                if (settings.General.VideoPlayerDefaultVolume < 0)
+                {
+                    settings.General.VideoPlayerDefaultVolume = 75;
+                }
             }
 
             subNode = node.SelectSingleNode("VideoPlayerPreviewFontName");
