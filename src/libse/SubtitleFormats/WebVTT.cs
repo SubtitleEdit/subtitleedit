@@ -50,6 +50,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".vtt";
 
+        public override List<string> AlternateExtensions => new List<string> { ".webvtt" };
+
         public override string Name => "WebVTT";
 
         public override string ToText(Subtitle subtitle, string title)
@@ -589,7 +591,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var regexWebVttColorMulti = new Regex(@"<c.[a-z0-9_\.]*>", RegexOptions.Compiled);
+            var regexWebVttColorMulti = new Regex(@"<c.[A-Za-z0-9-_\.]*>", RegexOptions.Compiled);
             var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\d]*)\>", RegexOptions.Compiled);
             var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
             var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
