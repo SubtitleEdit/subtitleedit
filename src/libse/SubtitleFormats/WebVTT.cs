@@ -592,7 +592,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
             var regexWebVttColorMulti = new Regex(@"<c.[A-Za-z0-9-_\.]*>", RegexOptions.Compiled);
-            var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\d]*)\>", RegexOptions.Compiled);
+            var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\-\d%#]*)\>", RegexOptions.Compiled);
             var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
             var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
 
