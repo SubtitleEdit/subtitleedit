@@ -1716,6 +1716,68 @@ VÄLKOMMEN TILL TEXAS
         }
 
         [TestMethod]
+        public void WebVttItalicCue1()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            var raw = @"WEBVTT
+
+STYLE
+::cue(.background-color_transparent) {
+  background-color: rgba(255,255,255,0.0);
+}
+::cue(.font-family_proportionalSansSerif) {
+  font-family: proportionalSansSerif;
+}
+::cue(.font-style_normal) {
+  font-style: normal;
+}
+::cue(.font-weight_normal) {
+  font-weight: normal;
+}
+::cue(.text-shadow_black-4%) {
+  text-shadow: black 4%;
+}
+::cue(.font-style_italic) {
+  font-style: italic;
+}
+
+
+00:02:36.840 --> 00:02:39.120 line:81.11% align:center
+<c.background-color_transparent.font-family_proportionalSansSerif.font-style_normal.font-weight_normal.text-shadow_black-4%><c.font-style_italic>Hallo world!</c></c>
+
+";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            target.RemoveNativeFormatting(subtitle, new SubRip());
+            Assert.AreEqual("<i>Hallo world!</i>", subtitle.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void WebVttItalicCue2()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            var raw = @"WEBVTT
+
+STYLE
+::cue(.bold) {
+  font-weight: bold;
+}
+::cue(.italic) {
+  font-style: italic;
+}
+
+
+00:02:36.840 --> 00:02:39.120 line:81.11% align:center
+<c.bold.italic>Hallo world!</c>
+
+";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            target.RemoveNativeFormatting(subtitle, new SubRip());
+            Assert.AreEqual("<b><i>Hallo world!</i></b>", subtitle.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
         public void WebVttEscapeEncoding()
         {
             var target = new WebVTT();
