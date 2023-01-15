@@ -576,7 +576,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     v = v.Remove(end + 1);
                 }
-                
+
                 end = v.IndexOf(' ');
                 if (end >= 0)
                 {
@@ -591,55 +591,56 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var regexWebVttColorMulti = new Regex(@"<c.[A-Za-z0-9-_\.]*>", RegexOptions.Compiled);
             var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\-\d%#]*)\>", RegexOptions.Compiled);
             var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
             var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
+
+            var cueStyles = GetCueStyles(subtitle.Header);
+            var italicStyles = GetStylesWith(cueStyles, "font-style:italic;");
+            var boldStyles = GetStylesWith(cueStyles, "font-weight:bold;");
 
             foreach (var p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains('<') || p.Text.Contains('&'))
                 {
                     var text = p.Text.Replace("&rlm;", string.Empty).Replace("&lrm;", string.Empty); // or use rlm=\u202B, lrm=\u202A ?
-                    foreach (var knownLanguage in KnownLanguages)
-                    {
-                        text = text.Replace("<c." + knownLanguage + ">", string.Empty).Replace("</c." + knownLanguage + ">", string.Empty);
-                    }
                     text = System.Net.WebUtility.HtmlDecode(text);
-
-                    var match = regexWebVttColorMulti.Match(text);
+                    var match = regexRemoveCTags.Match(text);
                     while (match.Success)
                     {
-                        var tag = match.Value.Substring(3, match.Value.Length - 4);
-                        tag = FindBestColorTagOrDefault(tag);
-                        if (tag == null)
+                        var start = match.Index + 1;
+                        var styles = GetStyles(match.Value);
+                        var hasItalic = italicStyles.Any(st => styles.Contains(st));
+                        var hasBold = boldStyles.Any(st => styles.Contains(st));
+                        var colorTag = FindBestColorTagOrDefault(styles.ToList());
+                        if (hasItalic)
                         {
-                            text = text.Replace(match.Value, string.Empty);
-                            text = text.Replace(match.Value.Insert(1, "/"), string.Empty);
-                            match = regexWebVttColorMulti.Match(text);
-                            continue;
+                            text = text.Insert(match.Index, "<i>");
+                            start += 3;
                         }
-                        var fontString = "<font color=\"" + tag + "\">";
-                        fontString = fontString.Trim('"').Trim('\'');
-                        text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                        var endIndex = text.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
-                        if (endIndex >= 0)
+                        if (hasBold)
                         {
-                            text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                            text = text.Insert(match.Index, "<b>");
+                            start += 3;
                         }
-                        else
+                        if (colorTag != null)
                         {
-                            endIndex = text.IndexOf("</c.", match.Index, StringComparison.OrdinalIgnoreCase);
-                            if (endIndex >= 0)
-                            {
-                                var endEndIndex = text.IndexOf('>', endIndex);
-                                if (endEndIndex > 0)
-                                {
-                                    text = text.Remove(endIndex, endEndIndex - endIndex).Insert(endIndex, "</font>");
-                                }
-                            }
+                            var fontString = "<font color=\"" + colorTag + "\">";
+                            fontString = fontString.Trim('"').Trim('\'');
+                            text = text.Insert(match.Index, fontString);
+                            start += fontString.Length;
+                            text = SetEndTag(text, text.IndexOf("<c", match.Index, StringComparison.Ordinal), "</font>");
                         }
-                        match = regexWebVttColorMulti.Match(text);
+                        if (hasItalic)
+                        {
+                            text = SetEndTag(text, text.IndexOf("<c", match.Index, StringComparison.Ordinal), "</i>");
+                        }
+                        if (hasBold)
+                        {
+                            text = SetEndTag(text, text.IndexOf("<c", match.Index, StringComparison.Ordinal), "</b>");
+                        }
+
+                        match = regexRemoveCTags.Match(text, start);
                     }
 
                     text = RemoveTag("v", text);
@@ -654,9 +655,94 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string FindBestColorTagOrDefault(string tag)
+        /// <summary>
+        /// Set end tag taking nested level into account.
+        /// </summary>
+        private static string SetEndTag(string text, int matchIndex, string endTag)
         {
-            var tags = tag.Split('.').ToList();
+            var level = 0;
+            var startLevel = -1;
+            for (var i = 0; i < text.Length - 2; i++)
+            {
+                if (text[i] == '<')
+                {
+                    if (text[i + 1] == 'c' && text[i + 2] == '.')
+                    {
+                        if (i == matchIndex)
+                        {
+                            startLevel = level;
+                        }
+
+                        level++;
+                    }
+                    else if (text[i + 1] == '/' && text[i + 2] == 'c')
+                    {
+                        level--;
+
+                        if (startLevel == level)
+                        {
+                            text = text.Insert(i, endTag);
+                            return text;
+                        }
+                    }
+                }
+            }
+
+            return text + endTag; //TODO: fix
+        }
+
+        private static List<string> GetStylesWith(Dictionary<string, string> cueStyles, string searchText)
+        {
+            var styleList = new List<string>();
+
+            foreach (var cueStyle in cueStyles)
+            {
+                if (cueStyle.Value.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                {
+                    styleList.Add(cueStyle.Key);
+                }
+            }
+
+            return styleList;
+        }
+
+        private Dictionary<string, string> GetCueStyles(string header)
+        {
+            var dic = new Dictionary<string, string>();
+
+            if (string.IsNullOrEmpty(header))
+            {
+                return dic;
+            }
+
+            var matches = new Regex(@"::cue\(([a-zA-Z\._\-\d%#]*)\)\s*{").Matches(header);
+            for (var i = 0; i < matches.Count; i++)
+            {
+                var match = matches[i];
+                var cueName = match.Value
+                    .Replace(" ", string.Empty)
+                    .Replace("::cue(", string.Empty)
+                    .TrimEnd('{')
+                    .TrimEnd(')')
+                    .TrimStart('.');
+                var end = header.IndexOf('}', match.Index + match.Length);
+                if (end > 0)
+                {
+                    var content = header.Substring(match.Index + match.Length, end - (match.Index + match.Length));
+                    dic.Add(cueName, content.Trim().Replace(" ", string.Empty));
+                }
+            }
+
+            return dic;
+        }
+
+        private static string[] GetStyles(string cTag)
+        {
+            return cTag.Replace("<c.", string.Empty).TrimEnd('>').Split('.');
+        }
+
+        private static string FindBestColorTagOrDefault(List<string> tags)
+        {
             tags.Reverse();
             foreach (var s in tags)
             {
