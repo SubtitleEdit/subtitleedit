@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void whisperPhpOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.WhisperChoice = "OpenAI";
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
 
             if (Configuration.IsRunningOnWindows)
             {
