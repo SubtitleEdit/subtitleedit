@@ -18,7 +18,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWebSiteUrl()
         {
-            return Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ? "https://github.com/ggerganov/whisper.cpp" : "https://github.com/openai/whisper";
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+            {
+                return "https://github.com/ggerganov/whisper.cpp";
+            }
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+            {
+                return "https://github.com/m-bain/whisperX";
+            }
+
+            return "https://github.com/openai/whisper";
         }
 
         public static bool IsWhisperInstalled()
@@ -66,6 +76,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return Directory.Exists(path) ? path : null;
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperXLocation))
+                {
+                    if (Configuration.Settings.Tools.WhisperXLocation.EndsWith("whisperx.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                    {
+                        return Path.GetDirectoryName(Configuration.Settings.Tools.WhisperXLocation);
+                    }
+
+                    if (Directory.Exists(Configuration.Settings.Tools.WhisperXLocation) && File.Exists(Path.Combine(location, "whisperx.exe")))
+                    {
+                        return Configuration.Settings.Tools.WhisperXLocation;
+                    }
+                }
+
                 var pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     "AppData",
                     "Local",
@@ -78,6 +101,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         var dirName = Path.GetFileName(dir);
                         if (dirName != null && dirName.StartsWith("Python3"))
                         {
+                            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+                            {
+                                var whisperXFullPath = Path.Combine(dir, "Scripts", "whisperx.exe");
+                                if (File.Exists(whisperXFullPath))
+                                {
+                                    return Path.Combine(dir, "Scripts");
+                                }
+                            }
+
                             var whisperFullPath = Path.Combine(dir, "Scripts", "whisper.exe");
                             if (File.Exists(whisperFullPath))
                             {
@@ -99,8 +131,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             if (Configuration.IsRunningOnWindows)
             {
-
-                if (Configuration.Settings.Tools.WhisperChoice == "CPP")
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
                 {
                     var f = Path.Combine(GetWhisperFolder(), "main.exe");
                     if (File.Exists(f))
@@ -108,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         return f;
                     }
                 }
-                else if (Configuration.Settings.Tools.WhisperChoice == "WhisperX")
+                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
                 {
                     var f = Path.Combine(GetWhisperFolder(), "whisperx.exe");
                     if (File.Exists(f))
@@ -134,7 +165,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return f;
                 }
             }
-            else if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperChoice == "WhisperX")
+            else if (Configuration.IsRunningOnLinux && Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
             {
                 var f = Path.Combine(GetWhisperFolder(), "whisperx");
                 if (File.Exists(f))
