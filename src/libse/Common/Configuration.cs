@@ -267,6 +267,20 @@ namespace Nikse.SubtitleEdit.Core.Common
                     // though advertised, this code page is not supported
                 }
             }
+
+            try
+            {
+                var enc = Encoding.GetEncoding(28606);
+                if (!encodings.Contains(enc))
+                {
+                    encodings.Add(enc);
+                }
+            }
+            catch 
+            {
+                // ignore
+            }
+
             return encodings.AsEnumerable();
         }
 
