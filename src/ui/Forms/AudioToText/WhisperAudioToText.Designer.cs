@@ -355,13 +355,13 @@
             // labelCpp
             // 
             this.labelCpp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCpp.AutoSize = true;
             this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCpp.Location = new System.Drawing.Point(669, 9);
+            this.labelCpp.Location = new System.Drawing.Point(580, 9);
             this.labelCpp.Name = "labelCpp";
-            this.labelCpp.Size = new System.Drawing.Size(28, 13);
+            this.labelCpp.Size = new System.Drawing.Size(117, 13);
             this.labelCpp.TabIndex = 21;
             this.labelCpp.Text = "CPP";
+            this.labelCpp.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelElapsed
             // 

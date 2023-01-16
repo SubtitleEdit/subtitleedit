@@ -112,10 +112,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             FillModels(comboBoxModels, string.Empty);
 
             labelFC.Text = string.Empty;
-            labelCpp.Visible = Configuration.Settings.Tools.WhisperUseCpp;
+            labelCpp.Text = Configuration.Settings.Tools.WhisperChoice;
+            labelCpp.Visible = true;
 
-            whisperCppCToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperUseCpp;
-            whisperPhpOriginalToolStripMenuItem.Checked = !Configuration.Settings.Tools.WhisperUseCpp;
+            whisperCppCToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
+            whisperPhpOriginalToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.OpenAI;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
         }
@@ -467,7 +468,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _resultList = new List<ResultText>();
             var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.WhisperUseCpp ? "-CPP" : string.Empty)} with : {process.StartInfo.FileName} {process.StartInfo.Arguments}");
+            _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}");
             _startTicks = DateTime.UtcNow.Ticks;
             _videoInfo = UiUtil.GetVideoInfo(waveFileName);
             timer1.Start();
@@ -507,7 +508,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            _outputText.Add($"Calling whisper{(Configuration.Settings.Tools.WhisperUseCpp ? "-CPP" : string.Empty)} done in {sw.Elapsed}{Environment.NewLine}");
+            _outputText.Add($"Calling whisper {Configuration.Settings.Tools.WhisperChoice}) done in {sw.Elapsed}{Environment.NewLine}");
 
             for (var i = 0; i < 10; i++)
             {
@@ -826,7 +827,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 translateToEnglish = string.Empty;
             }
 
-            if (Configuration.Settings.Tools.WhisperUseCpp)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
             {
                 if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--print-progress"))
                 {
@@ -850,7 +851,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var outputSrt = string.Empty;
-            if (Configuration.Settings.Tools.WhisperUseCpp)
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
             {
                 outputSrt = "--output-srt ";
 
@@ -882,7 +883,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 process.StartInfo.EnvironmentVariables["Path"] = process.StartInfo.EnvironmentVariables["Path"].TrimEnd(';') + ";" + whisperFolder;
             }
 
-            if (!Configuration.Settings.Tools.WhisperUseCpp)
+            if (Configuration.Settings.Tools.WhisperChoice != WhisperChoice.Cpp)
             {
                 process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
                 process.StartInfo.EnvironmentVariables["PYTHONLEGACYWINDOWSSTDIO"] = "utf-8";
@@ -1236,7 +1237,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void whisperPhpOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.WhisperUseCpp = false;
+            Configuration.Settings.Tools.WhisperChoice = "OpenAI";
 
             if (Configuration.IsRunningOnWindows)
             {
@@ -1251,7 +1252,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                         if (openFileDialog1.ShowDialog() != DialogResult.OK || !openFileDialog1.FileName.EndsWith("whisper.exe", StringComparison.OrdinalIgnoreCase))
                         {
-                            Configuration.Settings.Tools.WhisperUseCpp = true;
+                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
                         }
                         else
                         {
@@ -1266,7 +1267,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void whisperCppCToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.WhisperUseCpp = true;
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
             Init();
         }
 

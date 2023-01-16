@@ -33,6 +33,7 @@
    * Update Whisper CPP to 2023-01-08
    * Rename "Fix dialogs on one line" to "Break dialogs on one line"
    * Update Tesseract 5.2.0 to 5.3.0
+   * Improve convert of WebVTT to SubRip style handling - thx maknol
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn

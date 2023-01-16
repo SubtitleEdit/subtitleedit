@@ -287,13 +287,13 @@
             // labelCpp
             // 
             this.labelCpp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCpp.AutoSize = true;
             this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.labelCpp.Location = new System.Drawing.Point(669, 9);
+            this.labelCpp.Location = new System.Drawing.Point(589, 9);
             this.labelCpp.Name = "labelCpp";
-            this.labelCpp.Size = new System.Drawing.Size(28, 13);
+            this.labelCpp.Size = new System.Drawing.Size(108, 13);
             this.labelCpp.TabIndex = 22;
             this.labelCpp.Text = "CPP";
+            this.labelCpp.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // contextMenuStripWhisperAdvanced
             // 
@@ -303,31 +303,31 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(200, 98);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 76);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
             this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
-            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper OpenAI (Python)";
             this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
             // 
             // whisperCppCToolStripMenuItem
             // 
             this.whisperCppCToolStripMenuItem.Name = "whisperCppCToolStripMenuItem";
-            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
             this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(196, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(206, 6);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
