@@ -318,5 +318,163 @@ namespace Nikse.SubtitleEdit.Core.Common
             var s = sb.ToString().Trim();
             return s.Substring(0, s.Length - 1);
         }
+
+        public static SsaStyle FromRawSsa(string header, string styleLine)
+        {
+            var result = new SsaStyle();
+            var styleArray = styleLine.Split(',');
+            var format = GetSsaFormatList(header);
+
+            if (styleArray.Length != format.Length)
+            {
+                return result;
+            }
+
+            for (var i = 0; i < format.Length; i++)
+            {
+                var f = format[i].Trim();
+                var v = styleArray[i].Trim();
+
+                if (f == "name")
+                {
+                    result.Name = v;
+                }
+                else if (f == "fontname")
+                {
+                    result.FontName = v;
+                }
+                else if (f == "fontsize")
+                {
+                    if (decimal.TryParse(v, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
+                    {
+                        result.FontSize = d;
+                    }
+                }
+                else if (f == "primarycolour")
+                {
+                    result.Primary = AdvancedSubStationAlpha.GetSsaColor(v, Color.White);
+                }
+                else if (f == "secondarycolour")
+                {
+                    result.Secondary = AdvancedSubStationAlpha.GetSsaColor(v, Color.Yellow);
+                }
+                else if (f == "tertiarycolour")
+                {
+                    result.Tertiary = AdvancedSubStationAlpha.GetSsaColor(v, Color.Yellow);
+                }
+                else if (f == "backcolour")
+                {
+                    result.Outline = AdvancedSubStationAlpha.GetSsaColor(v, Color.Black);
+                }
+                else if (f == "bold")
+                {
+                    result.Bold = v != "0";
+                }
+                else if (f == "italic")
+                {
+                    result.Italic = v != "0";
+                }
+                else if (f == "outline")
+                {
+                    if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                    {
+                        result.OutlineWidth = number;
+                    }
+                }
+                else if (f == "shadow")
+                {
+                    if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                    {
+                        result.ShadowWidth = number;
+                    }
+                }
+                else if (f == "marginl")
+                {
+                    if (int.TryParse(f, out var number))
+                    {
+                        result.MarginLeft = number;
+                    }
+                }
+                else if (f == "marginr")
+                {
+                    if (int.TryParse(f, out var number))
+                    {
+                        result.MarginRight = number;
+                    }
+                }
+                else if (f == "marginv")
+                {
+                    if (int.TryParse(f, out var number))
+                    {
+                        result.MarginVertical = number;
+                    }
+                }
+                else if (f == "borderstyle")
+                {
+                    result.BorderStyle = v;
+                }
+                else if (f == "alignment")
+                {
+                    switch (v)
+                    {
+                        case "1":
+                            result.Alignment = "1"; // bottom left
+                            break;
+                        case "2":
+                            result.Alignment = "2"; // bottom center
+                            break;
+                        case "3":
+                            result.Alignment = "3"; // bottom right
+                            break;
+                        case "9":
+                            result.Alignment = "4"; // middle left
+                            break;
+                        case "10":
+                            result.Alignment = "5"; // middle center
+                            break;
+                        case "11":
+                            result.Alignment = "6"; // middle right
+                            break;
+                        case "5":
+                            result.Alignment = "7"; // top left
+                            break;
+                        case "6":
+                            result.Alignment = "8"; // top center
+                            break;
+                        case "7":
+                            result.Alignment = "9"; // top right
+                            break;
+                        default:
+                            result.Alignment = "2";
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static string[] GetSsaFormatList(string header)
+        {
+            if (string.IsNullOrEmpty(header))
+            {
+                header = SubStationAlpha.DefaultHeader;
+            }
+
+            foreach (var line in header.SplitToLines())
+            {
+                var s = line.Trim().ToLowerInvariant();
+                if (s.StartsWith("format:"))
+                {
+                    s = s.Remove(0, "format:".Length).TrimStart().Replace(" ", string.Empty);
+                    return s.Split(',');
+                }
+            }
+
+            return "Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding"
+                .Replace(" ", string.Empty)
+                .ToLowerInvariant()
+                .Split();
+        }
     }
 }
