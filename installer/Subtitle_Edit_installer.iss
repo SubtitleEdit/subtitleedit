@@ -1,4 +1,4 @@
-﻿;* Subtitle Edit - Installer script
+;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2016 XhmikosR
 ;*
@@ -30,8 +30,11 @@
   #error Use Inno Setup unicode
 #endif
 
+#define app_name             "Subtitle Edit"
+#define app_copyright        "Nikse"
+#define app_copyright_start  "2001"
+#define app_copyright_end    GetDateTimeString('yyyy','','')
 
-#define app_copyright "Nikse 2001-2023"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -72,23 +75,33 @@
 #define keyAppPaths "Software\Microsoft\Windows\CurrentVersion\App Paths"
 #define keyMuiCache "Software\Classes\Local Settings\MuiCache"
 
-
 [Setup]
-AppID=SubtitleEdit
-AppCopyright={#app_copyright}
-AppContact=https://www.nikse.dk/SubtitleEdit/Help
-AppName=Subtitle Edit
-AppVerName=Subtitle Edit {#app_ver}
+AppID={#app_name}
+AppName={#app_name}
 AppVersion={#app_ver_full}
-AppPublisher=Nikse
+AppVerName={#app_name} {#app_ver}
+
+AppCopyright={#app_copyright} {#app_copyright_start} {#app_copyright_end}
+AppPublisher={#app_copyright}
+
+AppContact=https://www.nikse.dk/SubtitleEdit/Help
 AppPublisherURL=https://www.nikse.dk/SubtitleEdit/
 AppSupportURL=https://www.nikse.dk/SubtitleEdit/
 AppUpdatesURL=https://www.nikse.dk/SubtitleEdit/
-UninstallDisplayName=Subtitle Edit
-UninstallDisplayIcon={app}\SubtitleEdit.exe
-DefaultDirName={pf}\Subtitle Edit
-DefaultGroupName=Subtitle Edit
+
 VersionInfoVersion={#app_ver_full}
+VersionInfoDescription={#app_name} installer
+VersionInfoProductName={#app_name}
+
+UninstallDisplayName={#app_name}
+UninstallDisplayIcon={app}\SubtitleEdit.exe
+
+WizardStyle=modern
+ShowLanguageDialog=yes
+UsePreviousLanguage=no
+
+DefaultDirName={pf}\{#app_name}
+DefaultGroupName={#app_name}
 MinVersion=6.0
 LicenseFile=..\LICENSE.txt
 InfoAfterFile=..\Changelog.txt
@@ -96,7 +109,7 @@ SetupIconFile=..\src\ui\Icons\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
-OutputBaseFilename=SubtitleEdit-{#app_ver}-Setup
+OutputBaseFilename={#app_name}-{#app_ver}-Setup
 AllowNoIcons=yes
 Compression=lzma2/ultra
 InternalCompressLevel=ultra
@@ -105,13 +118,11 @@ ShowTasksTreeLines=yes
 DisableReadyPage=yes
 PrivilegesRequired=admin
 ChangesAssociations=yes
-ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
 CloseApplications=true
 SetupMutex='subtitle_edit_setup_mutex'
 ArchitecturesInstallIn64BitMode=x64
-WizardStyle=modern
 
 ; Include the installer's language files
 #include "SubTitle_Edit_Languages.iss"
@@ -121,7 +132,6 @@ WizardStyle=modern
 
 ; Include the installer's messages
 #include "Subtitle_Edit_Messages.iss"
-
 
 [Types]
 Name: default;            Description: {cm:types_default}
