@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private List<string> GetFontNames(byte[] fontBytes)
+        private static List<string> GetFontNames(byte[] fontBytes)
         {
             var privateFontCollection = new PrivateFontCollection();
             var handle = GCHandle.Alloc(fontBytes, GCHandleType.Pinned);
@@ -570,25 +570,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 listViewStyles.Items[0].Selected = true;
             }
-        }
-
-        private static string FixDuplicateStyleName(string newStyleName, List<SsaStyle> existingStyles)
-        {
-            if (existingStyles.All(p => p.Name != newStyleName))
-            {
-                return newStyleName;
-            }
-
-            for (int i = 1; i < int.MaxValue; i++)
-            {
-                var name = $"{newStyleName}_{i}";
-                if (existingStyles.All(p => p.Name != name))
-                {
-                    return name;
-                }
-            }
-
-            return Guid.NewGuid().ToString();
         }
 
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
@@ -848,7 +829,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             return sb.ToString();
         }
 
-        private void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
+        private static void UpdateSelectedIndices(ListView listview, int startingIndex = -1, int numberOfSelectedItems = 1)
         {
             if (numberOfSelectedItems == 0)
             {
@@ -866,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             listview.SelectedItems.Clear();
-            for (int i = 0; i < numberOfSelectedItems; i++)
+            for (var i = 0; i < numberOfSelectedItems; i++)
             {
                 listview.Items[startingIndex - i].Selected = true;
                 listview.Items[startingIndex - i].EnsureVisible();
@@ -880,11 +861,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (listViewStyles.SelectedItems.Count == 1)
             {
-                string styleName = listViewStyles.SelectedItems[0].Text;
+                var styleName = listViewStyles.SelectedItems[0].Text;
                 _startName = styleName;
                 _editedName = null;
                 _oldSsaName = styleName;
-                SsaStyle style = GetSsaStyleFile(styleName);
+                var style = GetSsaStyleFile(styleName);
                 SetControlsFromStyle(style);
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
