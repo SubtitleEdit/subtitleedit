@@ -49,10 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             // Empty callback
         }
 
-        public SubtitleFormat Format
-        {
-            get { return new SubRip(); }
-        }
+        public SubtitleFormat Format => new SubRip();
 
         public string Language { get; set; } = "en";
 

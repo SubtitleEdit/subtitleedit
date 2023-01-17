@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var subCulture = GetCultureInfoFromLanguage(_language);
             Paragraph last = null;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 if (last != null)
                 {

@@ -36,51 +36,71 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 ParagraphMaxChars = 86;
             }
         }
-        public Subtitle Generate(Engine engine, List<ResultText> input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        public Subtitle Fix(Engine engine, List<ResultText> input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             var subtitle = new Subtitle();
             subtitle.Paragraphs.AddRange(input.Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
 
-            return Generate(engine, subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
+            return Fix(engine, subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
         }
 
-        public Subtitle Generate(Engine engine, Subtitle input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        public Subtitle Fix(Engine engine, Subtitle input, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             var subtitle = new Subtitle();
+
             for (var index = 0; index < input.Paragraphs.Count; index++)
             {
-                var resultText = input.Paragraphs[index];
-                if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && resultText.Text == "the" && resultText.EndTime.TotalSeconds - resultText.StartTime.TotalSeconds > 1)
+                var paragraph = input.Paragraphs[index];
+                if (usePostProcessing && engine == Engine.Vosk && TwoLetterLanguageCode == "en" && paragraph.Text == "the" && paragraph.EndTime.TotalSeconds - paragraph.StartTime.TotalSeconds > 1)
                 {
                     continue;
                 }
 
                 if (usePostProcessing && engine == Engine.Whisper)
                 {
-                    if (new[] { "(.", "(" }.Contains(resultText.Text))
+                    if (new[] { "(.", "(" }.Contains(paragraph.Text))
                     {
                         continue;
                     }
 
-                    if (resultText.Text.StartsWith('.') && resultText.Text.EndsWith(").", StringComparison.Ordinal))
+                    if (TwoLetterLanguageCode == "en")
                     {
-                        resultText.Text = resultText.Text.TrimEnd('.');
+                        // anything?
+                    }
+                    else if (TwoLetterLanguageCode == "da")
+                    {
+                        if (paragraph.Text.Contains("Danske tekster af nicolai winther", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue; // from some training data...
+                        }
+                    }
+
+                    paragraph.Text = Utilities.RemoveUnneededSpaces(paragraph.Text, TwoLetterLanguageCode);
+
+                    if (paragraph.Text.StartsWith('.') && paragraph.Text.EndsWith(").", StringComparison.Ordinal))
+                    {
+                        paragraph.Text = paragraph.Text.TrimEnd('.');
                     }
 
                     var next = input.GetParagraphOrDefault(index + 1);
-                    if (next != null && Math.Abs(resultText.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.01)
+                    if (next != null && Math.Abs(paragraph.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.01)
                     {
                         next.StartTime.TotalMilliseconds++;
                     }
                 }
 
-                subtitle.Paragraphs.Add(resultText);
+                subtitle.Paragraphs.Add(paragraph);
             }
 
-            return Generate(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
+            if (usePostProcessing && engine == Engine.Whisper && TwoLetterLanguageCode == "da")
+            {
+                new FixDanishLetterI().Fix(subtitle, new EmptyFixCallback());
+            }
+
+            return Fix(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
         }
 
-        public Subtitle Generate(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        public Subtitle Fix(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
         {
             if (usePostProcessing)
             {
@@ -325,13 +345,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             var subtitle = new Subtitle(inputSubtitle);
 
-            // fix casing normal
-            var fixCasing = new FixCasing(language);
-            fixCasing.Fix(subtitle);
-
             // fix casing for names
             var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             var nameListInclMulti = nameList.GetAllNames();
+            var lastLine = string.Empty;
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 var text = paragraph.Text;
@@ -339,9 +356,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
                 {
                     var st = new StrippableText(text);
-                    st.FixCasing(nameListInclMulti, true, false, false, string.Empty);
+                    st.FixCasing(nameListInclMulti, true, false, false, lastLine);
                     paragraph.Text = st.MergedString;
                 }
+
+                lastLine = text;
             }
 
             // fix german nouns
