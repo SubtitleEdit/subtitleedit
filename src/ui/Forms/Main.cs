@@ -21894,7 +21894,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         private void OpenVideo(string fileName)
         {
             OpenVideo(fileName, VideoAudioTrackNumber);
@@ -34820,6 +34820,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                MakeHistoryForUndo(string.Format(_language.BeforeX, string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Whisper")));
                 _subtitle.Paragraphs.Clear();
                 _subtitle.Paragraphs.AddRange(form.TranscribedSubtitle.Paragraphs);
                 var idx = FirstSelectedIndex;

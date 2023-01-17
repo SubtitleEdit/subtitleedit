@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     return;
                 }
 
-                TranscribedSubtitle = postProcessor.Generate(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, false, true, false, false, false);
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Vosk, transcript, checkBoxUsePostProcessing.Checked, false, true, false, false, false);
 
                 progressBar1.Value = (int)Math.Round(_batchFileNumber * 100.0 / _audioClips.Count, MidpointRounding.AwayFromZero);
                 progressBar1.Refresh();
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 postSub.Paragraphs.Add(audioClip.Paragraph);
             }
 
-            var postSubFixed = postProcessor.Generate(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false);
+            var postSubFixed = postProcessor.Fix(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false);
             for (var index = 0; index < _audioClips.Count; index++)
             {
                 var audioClip = _audioClips[index];
