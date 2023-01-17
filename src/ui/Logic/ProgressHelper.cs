@@ -7,22 +7,20 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static string ToProgressTime(double estimatedTotalMs)
         {
+            var totalSeconds = (int)Math.Round(estimatedTotalMs / 1000.0);
+            if (totalSeconds < 60)
+            {
+                return totalSeconds < 3
+                    ? string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingAFewSeconds)
+                    : string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, totalSeconds);
+            }
+
+            if (totalSeconds / 60 > 5)
+            {
+                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(totalSeconds / 60.0));
+            }
+
             var timeCode = new TimeCode(estimatedTotalMs);
-            if (timeCode.TotalSeconds < 60)
-            {
-                if (timeCode.TotalSeconds < 3)
-                {
-                    return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingAFewSeconds);
-                }
-
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingSeconds, (int)Math.Round(timeCode.TotalSeconds));
-            }
-
-            if (timeCode.TotalSeconds / 60 > 5)
-            {
-                return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutes, (int)Math.Round(timeCode.TotalSeconds / 60));
-            }
-
             return string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
     }

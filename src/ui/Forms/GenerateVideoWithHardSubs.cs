@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    MessageBox.Show($"Cannot overwrite video file { VideoFileName} - probably in use!");
+                    MessageBox.Show($"Cannot overwrite video file {VideoFileName} - probably in use!");
                     buttonGenerate.Enabled = true;
                     numericUpDownFontSize.Enabled = oldFontSizeEnabled;
                     return;
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static string GetAssaFileName(string inputVideoFileName)
         {
             var path = Path.GetDirectoryName(inputVideoFileName);
-            for (var i =0; i< int.MaxValue; i++)
+            for (var i = 0; i < int.MaxValue; i++)
             {
                 var guidLetters = Guid.NewGuid().ToString().RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-');
                 var fileName = Path.Combine(path, $"{guidLetters}.ass");
@@ -1044,7 +1044,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelPreviewPleaseWait.Visible = false;
                     return;
                 }
-                
+
 
                 try
                 {
@@ -1142,7 +1142,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
                 bitRate -= audioBitRate;
             }
-            
+
             return bitRate;
         }
 
@@ -1159,7 +1159,7 @@ namespace Nikse.SubtitleEdit.Forms
             var audioBitRate = 0;
             if (separateAudio)
             {
-                 audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
+                audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
             }
 
             labelVideoBitrate.Left = numericUpDownTargetFileSize.Right + 5;

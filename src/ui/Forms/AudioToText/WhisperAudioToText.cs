@@ -891,6 +891,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (dataReceivedHandler != null)
             {
+                process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
