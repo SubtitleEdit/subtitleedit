@@ -21,6 +21,7 @@
    * Update Hungarian translation - thx Zityi
    * Update French translation - thx Pierre
    * Update Bulgarian translation - thx Калин
+   * Update Greek translation - thx PMitsakis
    * Improve DVB in mkv (fix batch/cmd convert + pos) - thx antoniu200
    * Better ffmpeg detection - thx SMSourov
    * Avoid standby a few places - thx mpek
@@ -30,10 +31,12 @@
    * Make formatting shortcuts in waveform work w selected lines
    * Remember font in burn-in - thx Nespula95
    * Remember "Merge lines with same text" settings - thx kamitsu2004
-   * Update Whisper CPP to 2023-01-08
-   * Rename "Fix dialogs on one line" to "Break dialogs on one line"
-   * Update Tesseract 5.2.0 to 5.3.0
    * Improve convert of WebVTT to SubRip style handling - thx maknol
+   * Rename "Fix dialogs on one line" to "Break dialogs on one line"
+   * Sort Tesseract dictionaries in download drop-down-list
+   * Update Tesseract 5.2.0 to 5.3.0
+   * Update Whisper CPP to 2023-01-08
+   * Update yt-dlp to 2023.01.06
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
@@ -48,6 +51,7 @@
    * Fix original desync after set start time - thx Leon
    * Handle multi-audio-track waveform/spectrogram better - thx AlfonZ42
    * Fix CSV reading issue - thx Instinct64 
+   * Fix SSA to ASSA style issue - thx Alain
 
 
 3.6.10 (21th November 2022)
