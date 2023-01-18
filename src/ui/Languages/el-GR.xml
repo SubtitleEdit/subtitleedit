@@ -843,7 +843,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveDialogFirstInNonDialogsExample>- Πώς είσαι; -&gt; Πώς είσαι;</RemoveDialogFirstInNonDialogsExample>
     <SelectDefault>Προεπιλεγμένα</SelectDefault>
     <SetDefault>Ορισμός προεπιλεγμένων</SetDefault>
-    <FixContinuationStyleX>Διόρθωση στυλ συνέχισης: {0}</FixContinuationStyleX>
+    <FixContinuationStyleX>Διόρθωση στυλ συνέχειας: {0}</FixContinuationStyleX>
     <FixUnnecessaryLeadingDots>Αφαίρεση αρχικών αποσιωπητικών</FixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GenerateBlankVideo>
@@ -971,7 +971,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TwoLinesAreOneSubtitle>Δύο γραμμές είναι ένας υπότιτλος</TwoLinesAreOneSubtitle>
     <LineBreak>Αλλαγή γραμμής</LineBreak>
     <SplitAtBlankLines>Διαχωρισμός σε κενές γραμμές</SplitAtBlankLines>
-    <MergeShortLines>Συγχώνευση σύντομων γραμμών με συνέχιση</MergeShortLines>
+    <MergeShortLines>Συγχώνευση σύντομων γραμμών με συνέχεια</MergeShortLines>
     <RemoveEmptyLines>Αφαίρεση κενών γραμμών</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Αφαίρεση γραμμών χωρίς γράμματα</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Δημιουργία κωδικών χρόνου</GenerateTimeCodes>
@@ -1912,7 +1912,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaximumMillisecondsBetween>Μέγιστος αριθμός χιλ. δευτερολέπτου μεταξύ των γραμμών</MaximumMillisecondsBetween>
     <NumberOfMergesX>Σύνολο συγχωνεύσεων: {0}</NumberOfMergesX>
     <MergedText>Συγχωνευμένο κείμενο</MergedText>
-    <OnlyMergeContinuationLines>Συγχώνευση μόνο συνεχόμενων γραμμών</OnlyMergeContinuationLines>
+    <OnlyMergeContinuationLines>Συγχώνευση γραμμών μόνο με συνέχεια</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
     <Title>Συγχώνευση γραμμών με ίδιους κωδικούς χρόνου</Title>
@@ -2317,7 +2317,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DialogStyleDashBothLinesWithoutSpace>Παύλες χωρίς κενό</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Μία παύλα με κενό</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Δεύτερη γραμμή χωρίς κενό</DialogStyleDashSecondLineWithoutSpace>
-    <ContinuationStyle>Στυλ συνέχισης</ContinuationStyle>
+    <ContinuationStyle>Στυλ συνέχειας</ContinuationStyle>
     <ContinuationStyleNone>Χωρίς</ContinuationStyleNone>
     <ContinuationStyleNoneTrailingDots>Χωρίς, τελείες για παύσεις (μόνο συνέχεια)</ContinuationStyleNoneTrailingDots>
     <ContinuationStyleNoneLeadingTrailingDots>Χωρίς, τελείες για παύσεις</ContinuationStyleNoneLeadingTrailingDots>
@@ -2607,12 +2607,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RestoreDefaultSettingsMsg>Επαναφορά ρυθμίσεων σε προεπιλεγμένες τιμές.
 Συνέχεια;</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Αφαίρεση κωδικών χρόνου</RemoveTimeCodes>
-    <EditFixContinuationStyleSettings>Επεξεργασία ρυθμίσεων για διόρθωση στυλ συνέχισης…</EditFixContinuationStyleSettings>
-    <FixContinuationStyleSettings>Ρυθμίσεις διόρθωσης στυλ συνέχισης</FixContinuationStyleSettings>
+    <EditFixContinuationStyleSettings>Επεξεργασία ρυθμίσεων για διόρθωση στυλ συνέχειας…</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Ρυθμίσεις διόρθωσης στυλ συνέχειας</FixContinuationStyleSettings>
     <UncheckInsertsAllCaps>Εντοπισμός και αποεπιλογή κεφαλαίων τίτλων μίας γραμμής</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Εντοπισμός και αποεπιλογή τίτλων ή στίχων σε πλάγια γραφή</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Εντοπισμός και αποεπιλογή πεζών τίτλων ή στίχων μίας γραμμής</UncheckInsertsLowercase>
-    <HideContinuationCandidatesWithoutName>Απόκρυψη απίθανων προτάσεων συνέχισης</HideContinuationCandidatesWithoutName>
+    <HideContinuationCandidatesWithoutName>Απόκρυψη απίθανων προτάσεων συνέχειας</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Αγνόηση στίχων μεταξύ μουσικών συμβόλων</IgnoreLyrics>
     <ContinuationPause>Όριο παύσης:</ContinuationPause>
     <Milliseconds>χιλ. / δευτ.</Milliseconds>
@@ -2740,7 +2740,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Σπάσιμο/διαχωρισμός μεγάλων γραμμών</Title>
     <SingleLineMaximumLength>Μέγιστο μήκος μονής γραμμής</SingleLineMaximumLength>
     <LineMaximumLength>Μέγιστο μήκος γραμμής</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Συμβολοσειρές έναρξης/λήξης συνέχισης της γραμμής</LineContinuationBeginEndStrings>
+    <LineContinuationBeginEndStrings>Συμβολοσειρές έναρξης/λήξης συνέχειας της γραμμής</LineContinuationBeginEndStrings>
     <NumberOfSplits>Σύνολο σπασιμάτων/διαχωρισμών: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Το μεγαλύτερο μήκος μονής γραμμής είναι {0} στη γραμμή {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Το μεγαλύτερο μήκος μήκος ολικής γραμμής είναι {0} στη γραμμή {1}</LongestLineIsXAtY>
