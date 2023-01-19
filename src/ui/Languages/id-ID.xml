@@ -2289,7 +2289,7 @@ Jaga perubahan?</KeepChangesMessage>
     <TransportStreamGrayscale>Skala abu</TransportStreamGrayscale>
     <TransportStreamGetColor>Gunakan warna (pemisahan baris bisa terjadi)</TransportStreamGetColor>
     <PromptForUnknownWords>Beritahukan untuk kata yg tidak diketahui</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Coba menebak kata yg tidak dikenal</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Coba menebak kata yg tidak dikenal</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Oto. jeda paragraf bila lebih dari dua baris</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Semua perbaikan</AllFixes>
     <GuessesUsed>Penebakan digunakan</GuessesUsed>

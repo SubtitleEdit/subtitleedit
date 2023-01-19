@@ -3037,7 +3037,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TransportStreamGrayscale>Шкала серого</TransportStreamGrayscale>
     <TransportStreamGetColor>Использовать цвет (с учетом разделения строк)</TransportStreamGetColor>
     <PromptForUnknownWords>Запрос при неизвестных словах</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Попробовать предугадать неизвестные слова</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Попробовать предугадать неизвестные слова</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Разделить абзац, если в нем более двух строк</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Все исправления</AllFixes>
     <GuessesUsed>Предположения</GuessesUsed>

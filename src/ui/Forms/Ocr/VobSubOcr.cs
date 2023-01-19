@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellChecking;
-            checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
+            checkBoxGuessUnknownWords.Text = language.TryToGuessUnknownWords;
             checkBoxAutoBreakLines.Text = language.AutoBreakSubtitleIfMoreThanTwoLines;
             checkBoxAutoBreakLines.Checked = Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines;
             tabControlLogs.TabPages[0].Text = language.UnknownWords;
@@ -5500,8 +5500,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (wordsNotFound > 0 || correctWords == 0)
                 {
-                    var oldUnkownWords = new List<LogItem>();
-                    oldUnkownWords.AddRange(_ocrFixEngine.UnknownWordsFound);
+                    var oldUnknownWords = new List<LogItem>();
+                    oldUnknownWords.AddRange(_ocrFixEngine.UnknownWordsFound);
                     _ocrFixEngine.UnknownWordsFound.Clear();
 
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
@@ -5561,7 +5561,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else
                     {
                         _ocrFixEngine.UnknownWordsFound.Clear();
-                        _ocrFixEngine.UnknownWordsFound.AddRange(oldUnkownWords);
+                        _ocrFixEngine.UnknownWordsFound.AddRange(oldUnknownWords);
                     }
                 }
 
@@ -6075,7 +6075,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 _ocrFixEngine.AutoGuessesUsed.Clear();
 
-                // Log unkown words guess (found via spelling dictionaries)
+                // Log unknown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
                 ColorLineByNumberOfUnknownWords(index, wordsNotFound, line);
@@ -9713,7 +9713,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            var unkownWords = new List<LogItem>();
+            var unknownWords = new List<LogItem>();
             foreach (var item in listBoxUnknownWords.Items)
             {
                 var raw = item as LogItem;
@@ -9724,13 +9724,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (!word.Equals(raw.Text, StringComparison.OrdinalIgnoreCase))
                 {
-                    unkownWords.Add(raw);
+                    unknownWords.Add(raw);
                 }
             }
 
             listBoxUnknownWords.BeginUpdate();
             listBoxUnknownWords.Items.Clear();
-            listBoxUnknownWords.Items.AddRange(unkownWords.Cast<object>().ToArray());
+            listBoxUnknownWords.Items.AddRange(unknownWords.Cast<object>().ToArray());
             listBoxUnknownWords.EndUpdate();
 
             if (listBoxUnknownWords.Items.Count > 0)

@@ -3014,7 +3014,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <TransportStreamGrayscale>회색조</TransportStreamGrayscale>
     <TransportStreamGetColor>색 사용 (줄 분할이 발생할 수 있음)</TransportStreamGetColor>
     <PromptForUnknownWords>알 수 없는 단어 알림</PromptForUnknownWords>
-    <TryToGuessUnkownWords>알 수 없는 단어 추측</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>알 수 없는 단어 추측</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>세 줄 이상의 텍스트 자동 줄바꿈</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>수정 목록</AllFixes>
     <GuessesUsed>추측 사용</GuessesUsed>

@@ -2864,7 +2864,7 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
     <TransportStreamGrayscale>Escala de grises</TransportStreamGrayscale>
     <TransportStreamGetColor>Usar color (incluirá algunas líneas de división)</TransportStreamGetColor>
     <PromptForUnknownWords>Comfirmar palabras desconocidas</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Tratar de adivinar palabras desconocidas</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Tratar de adivinar palabras desconocidas</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Salto de párrafo automático si son mas de 2 líneas</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Corregir todo</AllFixes>
     <GuessesUsed>Utilizar suposiciones</GuessesUsed>

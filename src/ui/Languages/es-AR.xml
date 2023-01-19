@@ -2861,7 +2861,7 @@ La configuración de una fuente para un subtítulo se realiza normalmente en el 
     <TransportStreamGrayscale>Escala de grises</TransportStreamGrayscale>
     <TransportStreamGetColor>Usar el color (se incluyen algunas de las líneas de división)</TransportStreamGetColor>
     <PromptForUnknownWords>Confirmar palabras desconocidas</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Tratar de adivinar palabras desconocidas</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Tratar de adivinar palabras desconocidas</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Salto de párrafo automático si son mas de 2 líneas</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Corregir todo</AllFixes>
     <GuessesUsed>Utilizar suposiciones</GuessesUsed>

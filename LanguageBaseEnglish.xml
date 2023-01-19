@@ -3016,7 +3016,7 @@ Keep changes?</KeepChangesMessage>
     <TransportStreamGrayscale>Grayscale</TransportStreamGrayscale>
     <TransportStreamGetColor>Use color (splitting of lines may occur)</TransportStreamGetColor>
     <PromptForUnknownWords>Prompt for unknown words</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Try to guess unknown words</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Try to guess unknown words</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto break paragraph if more than two lines</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>All fixes</AllFixes>
     <GuessesUsed>Guesses used</GuessesUsed>

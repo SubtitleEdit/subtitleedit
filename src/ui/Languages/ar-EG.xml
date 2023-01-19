@@ -1311,7 +1311,7 @@ Keep changes?</KeepChangesMessage>
     <UseCustomColors>استخدام ألوان مخصصة</UseCustomColors>
     <Transparent>شفاف</Transparent>
     <PromptForUnknownWords>موجه لكلمات غير معروفة</PromptForUnknownWords>
-    <TryToGuessUnkownWords>في محاولة لتخمين كلمات غير معروفة</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>في محاولة لتخمين كلمات غير معروفة</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>قطع الفقرة تلقائى إذا كان أكثر من سطرين</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>إصلاح الكل</AllFixes>
     <GuessesUsed>استخدمت التخمينات</GuessesUsed>

@@ -2808,7 +2808,7 @@ Zachovat změny?</KeepChangesMessage>
     <TransportStreamGrayscale>Stupně šedé</TransportStreamGrayscale>
     <TransportStreamGetColor>Použít barvu (může dojít k rozdělení řádků)</TransportStreamGetColor>
     <PromptForUnknownWords>Dotázat se na neznámá slova</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Pokusit se odhadnout neznámá slova</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automaticky zalamovat odstavce při více než dvou řádcích</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Všechny opravy</AllFixes>
     <GuessesUsed>Použité odhady</GuessesUsed>

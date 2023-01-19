@@ -2133,7 +2133,7 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <TransportStreamGrayscale>Live ar gris</TransportStreamGrayscale>
     <TransportStreamGetColor>Implijout al liv (war linennoù da zispatartiañ 'zo)</TransportStreamGetColor>
     <PromptForUnknownWords>Goulenn evit ar gerioù dianv</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Klask divinout ar gerioù dianv</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Klask divinout ar gerioù dianv</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Rannañ ar rannbennad a zibas div linenn</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Holl ar reizhadennoù</AllFixes>
     <GuessesUsed>Martezeadennoù implijet</GuessesUsed>

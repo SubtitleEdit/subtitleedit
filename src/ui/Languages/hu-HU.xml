@@ -3002,7 +3002,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <TransportStreamGrayscale>Szürkeárnyalatos</TransportStreamGrayscale>
     <TransportStreamGetColor>Szín használata (magába foglalja az egyes sorok felosztását)</TransportStreamGetColor>
     <PromptForUnknownWords>Kérdezzen rá az ismeretlen szavakra</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Próbája meg kitalálni az ismeretlen szavakat</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Próbája meg kitalálni az ismeretlen szavakat</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automatikus szakasztörés, ha két sornál több van</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Összes javítás</AllFixes>
     <GuessesUsed>Használt becslések</GuessesUsed>

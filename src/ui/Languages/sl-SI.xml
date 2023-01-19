@@ -1988,7 +1988,7 @@ Ohranim spremembe?</KeepChangesMessage>
     <TransportStreamGrayscale>Sivinsko</TransportStreamGrayscale>
     <TransportStreamGetColor>Uporabi barvo (vključilo bo tudi razdeljevanje vrstic)</TransportStreamGetColor>
     <PromptForUnknownWords>Opomni na neznane besede</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Poskusi uganiti neznane besede</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Poskusi uganiti neznane besede</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Samodejno lomi odstavek, če je več kot dve vrstici</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Vsi popravki</AllFixes>
     <GuessesUsed>Uporabljena ugibanja</GuessesUsed>

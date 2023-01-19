@@ -2366,7 +2366,7 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <TransportStreamGrayscale>Sivi tonovi</TransportStreamGrayscale>
     <TransportStreamGetColor>Koristi boju (može doći do razdvajanja linija)</TransportStreamGetColor>
     <PromptForUnknownWords>Pitaj za nepoznate reči</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Nagađaj nepoznate reči</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Nagađaj nepoznate reči</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automatski razdvoji tekst ako ima više od dve linije</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Ispravke</AllFixes>
     <GuessesUsed>Korišćena nagađanja</GuessesUsed>

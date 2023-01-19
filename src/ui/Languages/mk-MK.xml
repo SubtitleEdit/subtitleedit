@@ -2496,7 +2496,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Скала на сивило</TransportStreamGrayscale>
     <TransportStreamGetColor>Употреби боја (може да настане разделба на линии)</TransportStreamGetColor>
     <PromptForUnknownWords>Извести за непознати зборови</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Можност за претпоставка на непознати зборови</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Можност за претпоставка на непознати зборови</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Автоматски прекрши го параграфот ако има повеќе од два реда</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Сите поправки</AllFixes>
     <GuessesUsed>Употребени претпоставки</GuessesUsed>

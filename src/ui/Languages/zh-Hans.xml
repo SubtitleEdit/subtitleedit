@@ -3001,7 +3001,7 @@ Command line: {1} {2}
     <TransportStreamGrayscale>灰度图</TransportStreamGrayscale>
     <TransportStreamGetColor>使用颜色 (将拆离某些行)</TransportStreamGetColor>
     <PromptForUnknownWords>提示未知词</PromptForUnknownWords>
-    <TryToGuessUnkownWords>尝试猜测未知词</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>尝试猜测未知词</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>如果超过两行自动断开</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>全部修复</AllFixes>
     <GuessesUsed>已用猜测</GuessesUsed>

@@ -2703,7 +2703,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <TransportStreamGrayscale>Urdinabar-neurria</TransportStreamGrayscale>
     <TransportStreamGetColor>Erabili margoa (lerro banaketa batzuk barneratuko ditu)</TransportStreamGetColor>
     <PromptForUnknownWords>Galdetu hitz ezezagunak</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Saiatu hitz ezezagunen adiera asmatzen</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Berez hautsi esaldia bi lerro baino gehiagokoa bada</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Zuzenketa denak</AllFixes>
     <GuessesUsed>Erabilitako adiera asmatuak</GuessesUsed>

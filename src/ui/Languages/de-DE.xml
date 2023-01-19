@@ -2309,7 +2309,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <TransportStreamGrayscale>Graustufen</TransportStreamGrayscale>
     <TransportStreamGetColor>Farbe verwenden (bei einigen Zeilentrennungen)</TransportStreamGetColor>
     <PromptForUnknownWords>Frage nach unbekannten Wörtern</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Unbekannte Wörter versuchen zu erraten</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Unbekannte Wörter versuchen zu erraten</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Text automatisch trennen bei mehr als zwei Zeilen</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle Korrekturen</AllFixes>
     <GuessesUsed>Erraten</GuessesUsed>

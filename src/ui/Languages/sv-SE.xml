@@ -3016,7 +3016,7 @@ Behålla ändringarna?</KeepChangesMessage>
     <TransportStreamGrayscale>Gråskala</TransportStreamGrayscale>
     <TransportStreamGetColor>Använd färg (splittring av linjer kan uppstå)</TransportStreamGetColor>
     <PromptForUnknownWords>Fråga efter okända ord</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Försök att gissa okända ord</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Försök att gissa okända ord</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Bryt automatiskt stycke om det är mer än två rader</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alla korrigeringar</AllFixes>
     <GuessesUsed>Gissningar som används</GuessesUsed>

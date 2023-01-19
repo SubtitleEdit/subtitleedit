@@ -3007,7 +3007,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Κλίμακα του γκρι</TransportStreamGrayscale>
     <TransportStreamGetColor>Χρήση χρώματος (πιθανή διάσπαση γραμμών)</TransportStreamGetColor>
     <PromptForUnknownWords>Ερώτηση για άγνωστες λέξεις</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Προσπάθεια μαντέματος άγνωστων λέξεων</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Προσπάθεια μαντέματος άγνωστων λέξεων</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Αυτόματος διαχωρισμός παραγράφου, εάν έχει περισσότερες από δύο γραμμές</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Όλες οι διορθώσεις</AllFixes>
     <GuessesUsed>Εικασίες που χρησιμοποιήθηκαν</GuessesUsed>

@@ -2592,7 +2592,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Escala de grisos</TransportStreamGrayscale>
     <TransportStreamGetColor>Empra color (s'inclou alguna divisió de línies)</TransportStreamGetColor>
     <PromptForUnknownWords>Sol·licita mots desconeguts</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Intenta endevinar mots desconeguts</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Intenta endevinar mots desconeguts</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Salt de paràgraf automàtic si té més de dues línies</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Arregla-ho tot</AllFixes>
     <GuessesUsed>Endevinades</GuessesUsed>

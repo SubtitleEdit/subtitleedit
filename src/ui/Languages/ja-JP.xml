@@ -2054,7 +2054,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <UseCustomColors>カスタム色を使用する</UseCustomColors>
     <Transparent>透明</Transparent>
     <PromptForUnknownWords>不明な単語を確認する</PromptForUnknownWords>
-    <TryToGuessUnkownWords>不明な単語の推測を試行する</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>不明な単語の推測を試行する</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>3 行以上の段落を自動改行する</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>すべての修正</AllFixes>
     <GuessesUsed>使用された推測</GuessesUsed>

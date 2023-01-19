@@ -3004,7 +3004,7 @@ visuelle'. Les garder ?</KeepChangesMessage>
     <TransportStreamGrayscale>Niveaux de gris</TransportStreamGrayscale>
     <TransportStreamGetColor>Utiliser la couleur (scission de ligne possible)</TransportStreamGetColor>
     <PromptForUnknownWords>Demander pour mots inconnus</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Tenter de deviner mots inconnus</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Tenter de deviner mots inconnus</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Scinder paragraphe dépassant deux lignes</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tous les correctifs</AllFixes>
     <GuessesUsed>Suppositions utilisées</GuessesUsed>
