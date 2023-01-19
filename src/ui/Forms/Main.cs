@@ -24017,7 +24017,9 @@ namespace Nikse.SubtitleEdit.Forms
         public void RunTranslateSearch(Action<string> act)
         {
             string text;
-            if (textBoxSearchWord.Focused)
+            if (!string.IsNullOrWhiteSpace(textBoxSearchWord.Text) && 
+                !textBoxListViewText.Focused && 
+                !textBoxListViewTextOriginal.Focused)
             {
                 text = textBoxSearchWord.Text;
             }
