@@ -44,6 +44,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Forms.AudioToText;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -3749,30 +3750,58 @@ namespace Nikse.SubtitleEdit.Forms
                     var enc = encodingFromFile;
                     var s = File.ReadAllText(fileName, enc);
 
-                    // check for RTF file
-                    if (ext == ".rtf" && s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
+                    // check for badly formatted SRT
+                    var badSrtLines = s
+                        .Replace(" —>", "-->")
+                        .Replace("—>", "-->")
+                        .Replace("——>", "-->")
+                        .Replace("- - >", "-->")
+                        .Replace("- ->", "-->")
+                        .Replace("-- >", "-->")
+                        .Replace(" ->", "-->")
+                        .Replace("--->", "-->")
+                        .SplitToLines();
+                    if (new SubRip().IsMine(badSrtLines, fileName))
                     {
-                        using (var rtb = new RichTextBox { Rtf = s })
-                        {
-                            s = rtb.Text;
-                        }
-                    }
-
-                    var uknownFormatImporter = new UnknownFormatImporter { UseFrames = true };
-                    var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
-                    if (genericParseSubtitle.Paragraphs.Count > 1)
-                    {
-                        newSubtitle = genericParseSubtitle;
+                        new SubRip().LoadSubtitle(newSubtitle, badSrtLines, fileName);
+                        _oldSubtitleFormat = new SubRip();
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
                         encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
                         ShowStatus("Guessed subtitle format via generic subtitle parser!");
                     }
+
+                    if (format == null)
+                    {
+                        // check for RTF file
+                        if (ext == ".rtf" && s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
+                        {
+                            using (var rtb = new RichTextBox { Rtf = s })
+                            {
+                                s = rtb.Text;
+                            }
+                        }
+
+                        var uknownFormatImporter = new UnknownFormatImporter { UseFrames = true };
+                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
+                        if (genericParseSubtitle.Paragraphs.Count > 1)
+                        {
+                            newSubtitle = genericParseSubtitle;
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            justConverted = true;
+                            format = GetCurrentSubtitleFormat();
+                            ShowStatus("Guessed subtitle format via generic subtitle parser!");
+                        }
+                    }
                 }
                 catch
                 {
+                    // ignore
                 }
             }
 
