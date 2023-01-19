@@ -3240,7 +3240,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string TransportStreamGrayscale { get; set; }
             public string TransportStreamGetColor { get; set; }
             public string PromptForUnknownWords { get; set; }
-            public string TryToGuessUnkownWords { get; set; }
+            public string TryToGuessUnknownWords { get; set; }
             public string AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
             public string AllFixes { get; set; }
             public string GuessesUsed { get; set; }

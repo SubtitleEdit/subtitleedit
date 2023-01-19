@@ -2128,7 +2128,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamGrayscale>Відтінки сірого</TransportStreamGrayscale>
     <TransportStreamGetColor>Використовувати колір (включатиме розбиття деяких рядків)</TransportStreamGetColor>
     <PromptForUnknownWords>Запитувати про невідомі слова</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Намагатися вгадати невідомі слова</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Намагатися вгадати невідомі слова</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Автоматично розбивати субтитр, якщо більше двох рядків</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Всі виправлення</AllFixes>
     <GuessesUsed>Використані здогадки</GuessesUsed>

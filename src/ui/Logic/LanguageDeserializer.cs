@@ -8245,8 +8245,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/PromptForUnknownWords":
                     language.VobSubOcr.PromptForUnknownWords = reader.Value;
                     break;
-                case "VobSubOcr/TryToGuessUnkownWords":
-                    language.VobSubOcr.TryToGuessUnkownWords = reader.Value;
+                case "VobSubOcr/TryToGuessUnknownWords":
+                    language.VobSubOcr.TryToGuessUnknownWords = reader.Value;
                     break;
                 case "VobSubOcr/AutoBreakSubtitleIfMoreThanTwoLines":
                     language.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = reader.Value;

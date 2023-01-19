@@ -2892,7 +2892,7 @@
     <TransportStreamGrayscale>سیاه و سفید</TransportStreamGrayscale>
     <TransportStreamGetColor>استفاده از رنگ (تقسیم خطوط ممکن است رخ دهد)</TransportStreamGetColor>
     <PromptForUnknownWords>اعلان کلمات ناشناخته</PromptForUnknownWords>
-    <TryToGuessUnkownWords>سعی کنید به حدس زدن کلمات ناشناخته</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>سعی کنید به حدس زدن کلمات ناشناخته</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>خودکار بند شکستن اگر بیش از دو خط</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>همه رفع</AllFixes>
     <GuessesUsed>حدس استفاده</GuessesUsed>

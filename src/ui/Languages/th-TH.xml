@@ -2033,7 +2033,7 @@
     <TransportStreamGrayscale>ขาวดำ</TransportStreamGrayscale>
     <TransportStreamGetColor>ใช้สี (อาจเกิดการแบ่งบรรทัด)</TransportStreamGetColor>
     <PromptForUnknownWords>ยืนยันคำที่ไม่รู้จัก</PromptForUnknownWords>
-    <TryToGuessUnkownWords>พยายามเดาคำที่ไม่รู้จัก</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>พยายามเดาคำที่ไม่รู้จัก</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>แบ่งย่อหน้าอัตโนมัติถ้ายาวเกินสองบรรทัด</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>ส่วนที่แก้ทั้งหมด</AllFixes>
     <GuessesUsed>สิ่งที่เดาไปทั้งหมด</GuessesUsed>

@@ -2136,7 +2136,7 @@ Vil du beholde endringene?</KeepChangesMessage>
     <TransportStreamGrayscale>Monokrom</TransportStreamGrayscale>
     <TransportStreamGetColor>Bruk farger (vil inkludere litt oppdeling av linjer)</TransportStreamGetColor>
     <PromptForUnknownWords>Versel ved ukjente ord</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Prøv å gjette på ukjente ord</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Prøv å gjette på ukjente ord</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Autobryt paragrafer hvis de er mer enn to linjer</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle korrigeringer</AllFixes>
     <GuessesUsed>Gjetninger brukt</GuessesUsed>

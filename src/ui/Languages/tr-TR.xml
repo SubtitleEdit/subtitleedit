@@ -2730,7 +2730,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <TransportStreamGrayscale>Gri tonlama</TransportStreamGrayscale>
     <TransportStreamGetColor>Renk kullan (satırlarda bölme oluşabilir)</TransportStreamGetColor>
     <PromptForUnknownWords>Bilinmeyen kelimeler için sor</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Bilinmeyen kelimeleri tahmin etmeyi dene</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Bilinmeyen kelimeleri tahmin etmeyi dene</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>İki satırdan fazla ise otomatik olarak böl</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tüm düzeltmeler</AllFixes>
     <GuessesUsed>Tahminler-Kullanılmış</GuessesUsed>

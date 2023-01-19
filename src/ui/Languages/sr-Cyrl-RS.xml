@@ -1301,7 +1301,7 @@
     <UseCustomColors>Прилагођене &amp;боје</UseCustomColors>
     <Transparent>Провидност</Transparent>
     <PromptForUnknownWords>&amp;Питај ме за непознате речи</PromptForUnknownWords>
-    <TryToGuessUnkownWords>&amp;Нагађај непознате речи</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>&amp;Нагађај непознате речи</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>&amp;Размакни ред ако има више од две линије</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Све исправке</AllFixes>
     <GuessesUsed>Коришћена нагађања</GuessesUsed>

@@ -2741,7 +2741,7 @@ Reții schimbările?</KeepChangesMessage>
     <TransportStreamGrayscale>Nuanțe de gri</TransportStreamGrayscale>
     <TransportStreamGetColor>Folosește culoare (pot avea loc scindări de linii)</TransportStreamGetColor>
     <PromptForUnknownWords>Avizează cuvintele necunoscute</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Estimează cuvintele necunoscute</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Estimează cuvintele necunoscute</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto-întrerupere paragraf cu mai mult de două linii</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Toate reparările</AllFixes>
     <GuessesUsed>Estimări folosite</GuessesUsed>

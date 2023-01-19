@@ -2839,7 +2839,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <TransportStreamGrayscale>灰階</TransportStreamGrayscale>
     <TransportStreamGetColor>使用色彩 (將分割某些行)</TransportStreamGetColor>
     <PromptForUnknownWords>提示未知單字</PromptForUnknownWords>
-    <TryToGuessUnkownWords>嘗試猜測未知單字</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>嘗試猜測未知單字</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>如果超過兩行自動換行</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>全部修復</AllFixes>
     <GuessesUsed>已用猜測</GuessesUsed>

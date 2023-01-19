@@ -2888,7 +2888,7 @@ Cài đặt font cho phụ đề thường được dùng cho trình phát video
     <TransportStreamGrayscale>Thang độ xám</TransportStreamGrayscale>
     <TransportStreamGetColor>Sử dụng màu sắc (có thể xảy ra hiện tượng tách dòng)</TransportStreamGetColor>
     <PromptForUnknownWords>Nhắc nhở từ ngữ chưa biết</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Thử đoán từ ngữ chưa biết</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Thử đoán từ ngữ chưa biết</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Tự động ngắt đoạn nếu có nhiều hơn 2 dòng</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Tất cả các bản sửa lỗi</AllFixes>
     <GuessesUsed>Phỏng đoán sử dụng</GuessesUsed>

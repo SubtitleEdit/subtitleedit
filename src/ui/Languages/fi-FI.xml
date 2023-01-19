@@ -2985,7 +2985,7 @@ edelliseen kohtauksen vaihtoon (tai tekstitykseen)</AdjustExtendToPreviousShotCh
     <TransportStreamGrayscale>Harmaasävy</TransportStreamGrayscale>
     <TransportStreamGetColor>Käytä värejä (aiheuttaa joidenkien rivien katkeilua)</TransportStreamGetColor>
     <PromptForUnknownWords>Kysy tuntemattomat sanat</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Yritä arvata tuntemattomat sanat</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Yritä arvata tuntemattomat sanat</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automaattinen kappaleen rivitys, jos enemmän kuin kaksi riviä</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Kaikki korjaukset</AllFixes>
     <GuessesUsed>Arvaukset</GuessesUsed>

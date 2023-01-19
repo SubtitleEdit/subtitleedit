@@ -3015,7 +3015,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TransportStreamGrayscale>Сива гама</TransportStreamGrayscale>
     <TransportStreamGetColor>Използване на цвят (ще включи и разделяне на редове)</TransportStreamGetColor>
     <PromptForUnknownWords>Запитване за непознати думи</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Опит за отгатване на непознати думи</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Опит за отгатване на непознати думи</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Авт. прекъсване на субтитри, ако са на повече от два реда</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Всички поправки</AllFixes>
     <GuessesUsed>Използвани подсказки</GuessesUsed>

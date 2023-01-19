@@ -3016,7 +3016,7 @@ Zachować te zmiany?</KeepChangesMessage>
     <TransportStreamGrayscale>Skala szarości</TransportStreamGrayscale>
     <TransportStreamGetColor>Użyj koloru (może wystąpić podział linii)</TransportStreamGetColor>
     <PromptForUnknownWords>Pytaj o nieznane słowa</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Próbuj odgadnąć nieznane słowa</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Próbuj odgadnąć nieznane słowa</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Automatycznie przełam akapit, jeśli więcej niż dwie linie</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Wszystkie poprawki</AllFixes>
     <GuessesUsed>Użyte przypuszczenia</GuessesUsed>

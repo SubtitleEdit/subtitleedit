@@ -2475,7 +2475,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <TransportStreamGrayscale>Grĳswaarden</TransportStreamGrayscale>
     <TransportStreamGetColor>Kleur gebruiken (ook bĳ enkele regeleinden)</TransportStreamGetColor>
     <PromptForUnknownWords>Naar onbekende woorden vragen</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Proberen onbekende woorden te raden</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Proberen onbekende woorden te raden</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Titel met meer dan twee regels automatisch afbreken</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle correcties</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>

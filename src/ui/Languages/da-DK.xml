@@ -3004,7 +3004,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <TransportStreamGrayscale>Gråtone</TransportStreamGrayscale>
     <TransportStreamGetColor>Brug farve (vil omfatte nogle opdeling af linjer)</TransportStreamGetColor>
     <PromptForUnknownWords>Spørg om ukendte ord</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Prøv at gætte ukendte ord</TryToGuessUnkownWords>
+    <TryToGuessUnknownWords>Prøv at gætte ukendte ord</TryToGuessUnknownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Autoombryd afsnit, hvis mere end to linjer</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Alle rettelser</AllFixes>
     <GuessesUsed>Gæt brugt</GuessesUsed>
