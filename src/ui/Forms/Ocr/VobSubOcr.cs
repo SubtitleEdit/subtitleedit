@@ -3495,7 +3495,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
 
-                            if (!_vobSubOcrCharacter.UseOnce) 
+                            if (!_vobSubOcrCharacter.UseOnce)
                             {
                                 string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
                                 var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
@@ -3822,7 +3822,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         continue;
                     }
-                    
+
                     list.Add(imageSplitterItem);
                 }
                 UpdateLineHeights(list);
@@ -3913,7 +3913,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                             else if (result == DialogResult.OK)
                             {
-                                if (!_vobSubOcrNOcrCharacter.UseOnce) 
+                                if (!_vobSubOcrNOcrCharacter.UseOnce)
                                 {
                                     _nOcrDb.Add(_vobSubOcrNOcrCharacter.NOcrChar);
                                     SaveNOcrWithCurrentLanguage();
@@ -4826,7 +4826,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             var parentBitmap = new NikseBitmap(bmp);
             bmp.Dispose();
-            
+
 
             var minLineHeight = GetMinLineHeight();
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
@@ -6941,20 +6941,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var findDialog = new FindDialog(_subtitle))
             {
-                var idx = _selectedIndex + 1;
+                var idx = _selectedIndex;
 
                 findDialog.Initialize(string.Empty, _findHelper);
                 if (findDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     _findHelper = findDialog.GetFindDialogHelper(idx);
-                    if (_findHelper.Find(_subtitle, null, idx + 1))
+                    if (_findHelper.Find(_subtitle, null, idx, textBoxCurrentText.SelectionStart))
                     {
-                        subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
+                        subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedLineIndex, true);
+                        textBoxCurrentText.SelectionStart = _findHelper.SelectedPosition;
+                        textBoxCurrentText.SelectionLength = _findHelper.FindTextLength;
+                        _findNextLastLineIndex = idx;
+                        _findNextLastTextPosition = _findHelper.SelectedPosition;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(_findHelper.FindText) && (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText))
+                    {
+                        Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
                     }
                 }
             }
         }
 
+        private int _findNextLastLineIndex = -1;
+        private int _findNextLastTextPosition = -1;
         private void FindNext()
         {
             if (_findHelper == null)
@@ -6962,10 +6973,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            var idx = _selectedIndex + 1;
-            if (_findHelper.Find(_subtitle, null, idx + 1))
+            var idx = _selectedIndex;
+            if (_findHelper.Find(_subtitle, null, idx, textBoxCurrentText.SelectionStart + 1))
             {
-                subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
+                if (_findHelper.SelectedLineIndex == _findNextLastLineIndex &&
+                    _findHelper.SelectedPosition == _findNextLastTextPosition &&
+                    !_findHelper.Find(_subtitle, null, idx, textBoxCurrentText.SelectionStart + _findHelper.FindTextLength))
+                {
+                    return;
+                }
+
+                subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedLineIndex, true);
+                textBoxCurrentText.SelectionStart = _findHelper.SelectedPosition;
+                textBoxCurrentText.SelectionLength = _findHelper.FindTextLength;
+                _findNextLastLineIndex = idx;
+                _findNextLastTextPosition = _findHelper.SelectedPosition;
             }
         }
 
