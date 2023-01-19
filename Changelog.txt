@@ -52,6 +52,8 @@
    * Handle multi-audio-track waveform/spectrogram better - thx AlfonZ42
    * Fix CSV reading issue - thx Instinct64 
    * Fix SSA to ASSA style issue - thx Alain
+   * Fix Find/Find-next in OCR window - thx dokax
+   * Fix issue with online text search in translation mode - thx domddol	
 
 
 3.6.10 (21th November 2022)
