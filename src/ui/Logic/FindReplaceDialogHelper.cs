@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool Success { get; set; }
         public ReplaceType FindReplaceType { get; set; }
-        public int SelectedIndex { get; set; }
+        public int SelectedLineIndex { get; set; }
         public int SelectedPosition { get; set; }
         public int ReplaceFromPosition { get; set; }
         public int StartLineIndex { get; set; }
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (match.Success)
             {
-                string groupName = RegexUtils.GetRegExGroup(FindText);
+                var groupName = RegexUtils.GetRegExGroup(FindText);
                 if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                 {
                     FindTextLength = match.Groups[groupName].Length;
@@ -117,14 +117,14 @@ namespace Nikse.SubtitleEdit.Logic
         public bool FindNext(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
         {
             Success = false;
-            int index = 0;
+            var index = 0;
             if (position < 0)
             {
                 position = 0;
             }
 
-            bool first = true;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            var first = true;
+            foreach (var p in subtitle.Paragraphs)
             {
                 if (index >= startIndex)
                 {
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (pos >= 0)
                         {
                             MatchInOriginal = false;
-                            SelectedIndex = index;
+                            SelectedLineIndex = index;
                             SelectedPosition = pos;
                             ReplaceFromPosition = pos;
                             Success = true;
@@ -148,6 +148,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         position = 0;
                     }
+
                     if (index < subtitle.Paragraphs.Count - 1)
                     {
                         MatchInOriginal = false;
@@ -155,14 +156,14 @@ namespace Nikse.SubtitleEdit.Logic
 
                     if (originalSubtitle != null && allowEditOfOriginalSubtitle)
                     {
-                        Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
+                        var o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
                         if (o != null)
                         {
                             pos = FindPositionInText(o.Text, position);
                             if (pos >= 0)
                             {
                                 MatchInOriginal = true;
-                                SelectedIndex = index;
+                                SelectedLineIndex = index;
                                 SelectedPosition = pos;
                                 ReplaceFromPosition = pos;
                                 Success = true;
@@ -174,6 +175,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 index++;
             }
+
             return false;
         }
 
@@ -208,7 +210,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     {
                                         pos += position - j;
                                         MatchInOriginal = true;
-                                        SelectedIndex = index;
+                                        SelectedLineIndex = index;
                                         SelectedPosition = pos;
                                         ReplaceFromPosition = pos;
                                         Success = true;
@@ -237,7 +239,7 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             pos += position - j;
                             MatchInOriginal = false;
-                            SelectedIndex = index;
+                            SelectedLineIndex = index;
                             SelectedPosition = pos;
                             ReplaceFromPosition = pos;
                             Success = true;
@@ -305,32 +307,34 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (FindReplaceType.FindType == FindType.RegEx)
                 {
-                    Match match = _regEx.Match(text, startIndex);
+                    var match = _regEx.Match(text, startIndex);
                     if (match.Success)
                     {
-                        string groupName = RegexUtils.GetRegExGroup(FindText);
+                        var groupName = RegexUtils.GetRegExGroup(FindText);
                         if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                         {
                             FindTextLength = match.Groups[groupName].Length;
-                            SelectedIndex = match.Groups[groupName].Index;
+                            SelectedLineIndex = match.Groups[groupName].Index;
                         }
                         else
                         {
                             FindTextLength = match.Length;
-                            SelectedIndex = match.Index;
+                            SelectedLineIndex = match.Index;
                         }
                         Success = true;
                     }
                     return match.Success;
                 }
-                string searchText = text.Substring(startIndex);
-                int pos = FindPositionInText(searchText, 0);
+
+                var searchText = text.Substring(startIndex);
+                var pos = FindPositionInText(searchText, 0);
                 if (pos >= 0)
                 {
-                    SelectedIndex = pos + startIndex;
+                    SelectedLineIndex = pos + startIndex;
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -350,12 +354,12 @@ namespace Nikse.SubtitleEdit.Logic
                         if (groupName != null && last.Groups[groupName] != null && last.Groups[groupName].Success)
                         {
                             FindTextLength = last.Groups[groupName].Length;
-                            SelectedIndex = last.Groups[groupName].Index;
+                            SelectedLineIndex = last.Groups[groupName].Index;
                         }
                         else
                         {
                             FindTextLength = last.Length;
-                            SelectedIndex = last.Index;
+                            SelectedLineIndex = last.Index;
                         }
                         Success = true;
                     }
@@ -387,7 +391,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (pos >= 0)
                 {
-                    SelectedIndex = pos;
+                    SelectedLineIndex = pos;
                     return true;
                 }
             }

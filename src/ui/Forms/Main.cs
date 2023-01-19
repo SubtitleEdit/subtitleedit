@@ -6417,11 +6417,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (found)
                     {
-                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
                         tb.Focus();
                         tb.SelectionStart = _findHelper.SelectedPosition;
                         tb.SelectionLength = _findHelper.FindTextLength;
-                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
                         _findHelper.SelectedPosition++;
                     }
                     else
@@ -6433,7 +6433,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_findHelper.Find(textBoxSource, textBoxSource.SelectionStart))
                     {
-                        textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                        textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
                         textBoxSource.SelectionLength = _findHelper.FindTextLength;
                         textBoxSource.ScrollToCaret();
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart)));
@@ -6500,8 +6500,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         tb = GetFindReplaceTextBox();
 
-                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
-                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
                         tb.Focus();
                         tb.SelectionStart = _findHelper.SelectedPosition;
                         tb.SelectionLength = _findHelper.FindTextLength;
@@ -6516,11 +6516,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 _findHelper.StartLineIndex = 0;
                                 if (_findHelper.Find(_subtitle, _subtitleOriginal, 0))
                                 {
-                                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
                                     tb.SelectionLength = _findHelper.FindTextLength;
-                                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
                                     _findHelper.SelectedPosition++;
                                     return;
                                 }
@@ -6534,7 +6534,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_findHelper.FindNext(textBoxSource.Text, textBoxSource.SelectionStart))
                     {
-                        textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                        textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
                         textBoxSource.SelectionLength = _findHelper.FindTextLength;
                         textBoxSource.ScrollToCaret();
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart)));
@@ -6591,8 +6591,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_findHelper.FindPrevious(_subtitle, _subtitleOriginal, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                 {
                     tb = GetFindReplaceTextBox();
-                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
-                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
                     tb.Focus();
                     tb.SelectionStart = _findHelper.SelectedPosition;
                     tb.SelectionLength = _findHelper.FindTextLength;
@@ -6607,7 +6607,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_findHelper.FindPrevious(textBoxSource.Text, textBoxSource.SelectionStart))
                 {
-                    textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                    textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
                     textBoxSource.SelectionLength = _findHelper.FindTextLength;
                     textBoxSource.ScrollToCaret();
                     ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart)));
@@ -6686,7 +6686,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_findHelper.FindNext(textBoxSource.Text, start))
                 {
-                    textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                    textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
                     textBoxSource.SelectionLength = _findHelper.FindTextLength;
                     if (!replaceDialog.FindOnly)
                     {
@@ -6702,7 +6702,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_findHelper.FindNext(textBoxSource.Text, start))
                         {
-                            textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                            textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
                             textBoxSource.SelectionLength = _findHelper.FindTextLength;
                             textBoxSource.ScrollToCaret();
                         }
@@ -6779,8 +6779,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_findHelper.FindNext(text, start))
                 {
-                    text = text.Remove(findHelper.SelectedIndex, findHelper.FindTextLength).Insert(findHelper.SelectedIndex, findHelper.ReplaceText);
-                    start = findHelper.SelectedIndex + findHelper.FindTextLength;
+                    text = text.Remove(findHelper.SelectedLineIndex, findHelper.FindTextLength).Insert(findHelper.SelectedLineIndex, findHelper.ReplaceText);
+                    start = findHelper.SelectedLineIndex + findHelper.FindTextLength;
                     replaceCount++;
                     searchStringFound = true;
                 }
@@ -6888,7 +6888,7 @@ namespace Nikse.SubtitleEdit.Forms
                     index = SubtitleListview1.SelectedItems[0].Index;
                 }
 
-                _findHelper.SelectedIndex = index;
+                _findHelper.SelectedLineIndex = index;
                 if (textBoxListViewTextOriginal.Focused)
                 {
                     _findHelper.SelectedPosition = textBoxListViewTextOriginal.SelectionStart;
@@ -6922,12 +6922,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    int line = _findHelper.SelectedIndex;
+                    int line = _findHelper.SelectedLineIndex;
                     int pos = _findHelper.ReplaceFromPosition;
                     bool success = _findHelper.Success;
                     var matchInOriginal = _findHelper.MatchInOriginal;
                     _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.SelectedIndex = line;
+                    _findHelper.SelectedLineIndex = line;
                     _findHelper.SelectedPosition = pos;
                     _findHelper.Success = success;
                     _findHelper.MatchInOriginal = matchInOriginal;
@@ -6967,7 +6967,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 stopAtIndex = firstIndex;
                                 _findHelper.StartLineIndex = 0;
-                                _findHelper.SelectedIndex = 0;
+                                _findHelper.SelectedLineIndex = 0;
                                 replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
                                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                             }
@@ -6977,16 +6977,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (replaceDialog.FindOnly)
                     {
-                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
                             var tb = GetFindReplaceTextBox();
-                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
                             tb.SelectionLength = _findHelper.FindTextLength;
                             _findHelper.ReplaceFromPosition = _findHelper.SelectedPosition;
                             _findHelper.SelectedPosition += _findHelper.FindTextLength;
-                            ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedIndex + 1, _findHelper.FindText));
+                            ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedLineIndex + 1, _findHelper.FindText));
                             Replace(replaceDialog);
                             if (replaceDialog != null && !replaceDialog.IsDisposed)
                             {
@@ -7004,19 +7004,19 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 SelectListViewIndexAndEnsureVisible(0);
                                 _findHelper.StartLineIndex = 0;
-                                _findHelper.SelectedIndex = 0;
+                                _findHelper.SelectedLineIndex = 0;
                                 _findHelper.SelectedPosition = 0;
                                 _findHelper.ReplaceFromPosition = 0;
-                                if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                                if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                 {
                                     var tb = GetFindReplaceTextBox();
-                                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
                                     tb.SelectionLength = _findHelper.FindTextLength;
                                     _findHelper.ReplaceFromPosition = _findHelper.SelectedPosition;
                                     _findHelper.SelectedPosition += _findHelper.FindTextLength;
-                                    ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedIndex + 1, _findHelper.FindText));
+                                    ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedLineIndex + 1, _findHelper.FindText));
                                     Replace(replaceDialog);
                                     if (replaceDialog != null)
                                     {
@@ -7068,9 +7068,9 @@ namespace Nikse.SubtitleEdit.Forms
                             _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                         }
 
-                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
-                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
                             tb = GetFindReplaceTextBox();
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
@@ -7080,7 +7080,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                             }
 
-                            ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                            ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
                         }
                         else
                         {
@@ -7094,18 +7094,18 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     SelectListViewIndexAndEnsureVisible(0);
                                     _findHelper.StartLineIndex = 0;
-                                    _findHelper.SelectedIndex = 0;
+                                    _findHelper.SelectedLineIndex = 0;
                                     _findHelper.SelectedPosition = 0;
                                     _findHelper.ReplaceFromPosition = 0;
-                                    if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                                    if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                     {
-                                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
                                         tb = GetFindReplaceTextBox();
                                         tb.Focus();
                                         tb.SelectionStart = _findHelper.SelectedPosition;
                                         tb.SelectionLength = _findHelper.FindTextLength;
                                         _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                                        ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                                        ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
                                     }
                                 }
                                 else
@@ -7141,7 +7141,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
-                    if (_findHelper.SelectedIndex > stopAtIndex)
+                    if (_findHelper.SelectedLineIndex > stopAtIndex)
                     {
                         break;
                     }
@@ -10359,7 +10359,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null && !_findHelper.InProgress)
             {
                 _findHelper.StartLineIndex = _subtitleListViewIndex;
-                _findHelper.SelectedIndex = _subtitleListViewIndex;
+                _findHelper.SelectedLineIndex = _subtitleListViewIndex;
                 _findHelper.SelectedPosition = 0;
                 _findHelper.ReplaceFromPosition = 0;
                 _findHelper.MatchInOriginal = false;
