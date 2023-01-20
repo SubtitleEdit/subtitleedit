@@ -12240,6 +12240,8 @@ namespace Nikse.SubtitleEdit.Forms
                         addText = RemoveAssStartAlignmentTag(addText);
                     }
 
+                    addText = RemoveAssaKarokeTag(addText);
+
                     if (breakMode == BreakMode.UnbreakNoSpace)
                     {
                         sb.Append(addText);
@@ -12647,9 +12649,21 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemoveAssStartAlignmentTag(string text)
         {
             var s = text.TrimStart();
-            if (s.StartsWith("{\\an") && s.Length > 5 && s[5] == '}')
+            if (s.StartsWith("{\\an", StringComparison.Ordinal) && s.Length > 5 && s[5] == '}')
             {
                 s = s.Remove(0, 6);
+            }
+
+            return s;
+        }
+
+        private static string RemoveAssaKarokeTag(string text)
+        {
+            var s = text.TrimStart();
+            var end = s.IndexOf('}');
+            if (end > 5 && end < 9 && s.StartsWith("{\\k", StringComparison.Ordinal))
+            {
+                s = s.Remove(0, end + 1);
             }
 
             return s;
@@ -19892,7 +19906,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 var pre = string.Empty;
                                 var s = SplitStartTags(line, ref pre);
-                                if (!line.StartsWith("-"))
+                                if (!line.StartsWith('-'))
                                 {
                                     sb.Append(pre).Append("- ").AppendLine(s);
                                 }
@@ -24017,8 +24031,8 @@ namespace Nikse.SubtitleEdit.Forms
         public void RunTranslateSearch(Action<string> act)
         {
             string text;
-            if (!string.IsNullOrWhiteSpace(textBoxSearchWord.Text) && 
-                !textBoxListViewText.Focused && 
+            if (!string.IsNullOrWhiteSpace(textBoxSearchWord.Text) &&
+                !textBoxListViewText.Focused &&
                 !textBoxListViewTextOriginal.Focused)
             {
                 text = textBoxSearchWord.Text;
