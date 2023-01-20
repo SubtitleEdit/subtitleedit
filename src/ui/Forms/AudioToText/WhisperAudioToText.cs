@@ -1277,5 +1277,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
         }
+
+        private void whisperXextraWADToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.WhisperX;
+            Init();
+        }
     }
 }
