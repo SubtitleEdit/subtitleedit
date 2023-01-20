@@ -348,6 +348,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             // fix casing for names
             var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             var nameListInclMulti = nameList.GetAllNames();
+            if (nameListInclMulti.Contains("US") && language == "en")
+            {
+                nameListInclMulti.Remove("US");
+            }
+
             var lastLine = string.Empty;
             foreach (var paragraph in subtitle.Paragraphs)
             {
