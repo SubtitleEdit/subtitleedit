@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             _resultList = new List<ResultText>();
             var process = WhisperAudioToText.GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
             var sw = Stopwatch.StartNew();
-            _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : whisper {process.StartInfo.Arguments}");
+            _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : whisper {process.StartInfo.Arguments}{Environment.NewLine}");
             buttonCancel.Visible = true;
             try
             {
@@ -199,7 +199,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 System.Threading.Thread.Sleep(100);
                 WindowsHelper.PreventStandBy();
 
-                Invalidate();
                 if (_cancel)
                 {
                     process.Kill();
