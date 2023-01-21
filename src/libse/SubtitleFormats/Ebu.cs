@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// EBU Subtitling data exchange format
+    /// EBU Subtitling data exchange format.
     /// </summary>
     public class Ebu : SubtitleFormat, IBinaryPersistableSubtitle
     {
@@ -612,7 +612,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var newStart = line.Substring(i);
                         if (newStart.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
-                            int end = line.IndexOf('>', i);
+                            var end = line.IndexOf('>', i);
                             if (end > 0)
                             {
                                 if (displayStandardCode != "0")
@@ -659,7 +659,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var end = line.IndexOf('>', i);
                 if (end > 0)
                 {
-                    string f = line.Substring(i, end - i);
+                    var f = line.Substring(i, end - i);
                     if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                     {
                         var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
                             if (colorStart > 1)
                             {
-                                string color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
+                                var color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
                                 color = color.Trim('\'');
                                 color = color.Trim('\"');
                                 color = color.Trim('#');
@@ -677,6 +677,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
+
                 return string.Empty;
             }
 
@@ -728,9 +729,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (RegExprColor.IsMatch(color))
                     {
                         const int maxDiff = 130;
-                        int r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
-                        int g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
-                        int b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
+                        var r = int.Parse(color.Substring(0, 2), NumberStyles.HexNumber);
+                        var g = int.Parse(color.Substring(2, 2), NumberStyles.HexNumber);
+                        var b = int.Parse(color.Substring(4, 2), NumberStyles.HexNumber);
                         if (r < maxDiff && g < maxDiff && b < maxDiff)
                         {
                             return encoding.GetString(new byte[] { 0x00 }); // black
@@ -772,6 +773,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
+
                 return string.Empty;
             }
 
@@ -789,6 +791,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return specialCharacter + newCharacters[i];
                     }
                 }
+
                 return ch.ToString();
             }
 
@@ -1549,10 +1552,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // - has a fixed length of 112 byte
                 // - 8Ah = new line
                 // - unused space = 8Fh
-                int i = index + 16; // text block start at 17th byte (index 16)
+                var i = index + 16; // text block start at 17th byte (index 16)
                 var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
                 var closed = header.DisplayStandardCode != "0";
-                int max = i + 112;
+                var max = i + 112;
                 var sb = new StringBuilder();
                 while (i < max)
                 {
@@ -1564,7 +1567,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var tag = GetColorOrTag(b);
                             if (!string.IsNullOrEmpty(tag))
                             {
-                                sb.Append(tag);
+                                CloseFontTagIfNewColor(sb, tag);
                             }
                         }
                     }
@@ -1634,6 +1637,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     i++;
                 }
+
+                CloseFontTagIfNewColor(sb, string.Empty);
                 tti.TextField = FixSpacesAndTags(sb.ToString());
 
                 if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out var rows))
@@ -1686,6 +1691,66 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 list.Add(tti);
             }
             return list;
+        }
+
+        private static void CloseFontTagIfNewColor(StringBuilder sb, string tag)
+        {
+            var previousText = sb.ToString();
+            if (string.IsNullOrEmpty(previousText))
+            {
+                if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
+                {
+                    sb.Append(tag);
+                }
+
+                return;
+            }
+
+            var lastFontStartTag = previousText.LastIndexOf("<font color", StringComparison.OrdinalIgnoreCase);
+            if (lastFontStartTag < 0)
+            {
+                if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
+                {
+                    sb.Append(tag);
+                }
+
+                return;
+            }
+
+            var lastFontEndTag = previousText.LastIndexOf("</font>", StringComparison.OrdinalIgnoreCase);
+            if (lastFontEndTag > lastFontStartTag)
+            {
+                if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
+                {
+                    sb.Append(tag);
+                }
+
+                return;
+            }
+
+            if (previousText.TrimEnd(' ').EndsWith(Environment.NewLine))
+            {
+                var text = sb.ToString();
+                sb.Clear();
+                sb.Append(text.TrimEnd());
+                sb.Append("</font>" + Environment.NewLine);
+            }
+            else if (previousText.EndsWith(' '))
+            {
+                var text = sb.ToString();
+                sb.Clear();
+                sb.Append(text.TrimEnd(' '));
+                sb.Append("</font> ");
+            }
+            else
+            {
+                sb.Append("</font> ");
+            }
+
+            if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
+            {
+                sb.Append(tag);
+            }
         }
 
         private static string GetColorOrTag(byte b)
