@@ -404,6 +404,7 @@
             this.whisperXextraWADToolStripMenuItem.Name = "whisperXextraWADToolStripMenuItem";
             this.whisperXextraWADToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.whisperXextraWADToolStripMenuItem.Text = "WhisperX (Forced Alignment)";
+            this.whisperXextraWADToolStripMenuItem.Visible = false;
             this.whisperXextraWADToolStripMenuItem.Click += new System.EventHandler(this.whisperXextraWADToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
