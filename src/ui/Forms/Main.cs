@@ -4862,15 +4862,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
             {
-                if (_converted && !string.IsNullOrEmpty(_fileName) && !File.Exists(_fileName))
-                {
-                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName) + suffix;
-                }
-                else
-                {
-                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName) + suffix;
-                }
-
+                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName) + suffix;
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             }
             else if (!string.IsNullOrWhiteSpace(_fileName))
