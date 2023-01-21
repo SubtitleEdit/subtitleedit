@@ -136,22 +136,52 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxErrors.Text = string.Empty;
             var sb = new StringBuilder();
-            int errorCount = 0;
-            int i = 1;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            var errorCount = 0;
+            var i = 1;
+            var isTeletext = comboBoxDiscFormatCode.SelectedIndex == 1 || comboBoxDiscFormatCode.SelectedIndex == 2;
+            foreach (var p in subtitle.Paragraphs)
             {
                 var arr = p.Text.SplitToLines();
-                foreach (string line in arr)
+                for (var index = 0; index < arr.Count; index++)
                 {
-                    string s = HtmlUtil.RemoveHtmlTags(line, true);
+                    var line = arr[index];
+                    var s = HtmlUtil.RemoveHtmlTags(line, true);
                     if (s.Length > numericUpDownMaxCharacters.Value)
                     {
                         sb.AppendLine(string.Format(LanguageSettings.Current.EbuSaveOptions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
                         errorCount++;
                     }
+
+                    if (isTeletext)
+                    {
+                        // See https://kb.fab-online.com/0040-fabsubtitler-editor/00010-linelengthineditor/
+
+                        // 36 characters for double height colored tex
+                        if (arr.Count == 2 && s.Length > 36 && arr[index].Contains("<font ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.AppendLine($"Line {i}-{index + 1}: 36 (not {s.Length}) should be maximum characters for double height colored text");
+                            errorCount++;
+                        }
+
+                        // 37 characters for double height white text
+                        else if (arr.Count == 2 && s.Length > 37 && !p.Text.Contains("<font ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.AppendLine($"Line {i}-{index + 1}: 37 (not {s.Length}) should be maximum characters for double height white text");
+                            errorCount++;
+                        }
+
+                        // 38 characters for single height white text
+                        else if (arr.Count == 1 && s.Length > 38)
+                        {
+                            sb.AppendLine($"Line {i}: 38 (not {s.Length}) should be maximum characters for single height white text");
+                            errorCount++;
+                        }
+                    }
                 }
+
                 i++;
             }
+
             textBoxErrors.Text = sb.ToString();
             tabPageErrors.Text = string.Format(LanguageSettings.Current.EbuSaveOptions.ErrorsX, errorCount);
         }
