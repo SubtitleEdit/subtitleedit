@@ -128,10 +128,7 @@ ArchitecturesInstallIn64BitMode=x64
 #include "SubTitle_Edit_Languages.iss"
 
 ; Include the installer's custom messages
-#include "Subtitle_Edit_Custom_Messages.iss"
-
-; Include the installer's messages
-#include "Subtitle_Edit_Messages.iss"
+#include "Subtitle_Edit_localization.iss"
 
 [Types]
 Name: default;            Description: {cm:types_default}

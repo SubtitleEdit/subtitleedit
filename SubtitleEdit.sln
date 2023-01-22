@@ -39,6 +39,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "winget", "winget", "{4FE90C
 		winget\Nikse.SubtitleEdit.yaml = winget\Nikse.SubtitleEdit.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{7137CF3B-7769-4B10-8719-83B1C41F1CB1}"
+	ProjectSection(SolutionItems) = preProject
+		installer\Subtitle_Edit_Localization.iss = installer\Subtitle_Edit_Localization.iss
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +79,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
+		{7137CF3B-7769-4B10-8719-83B1C41F1CB1} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E12BDE22-B6A4-4AB6-AF96-F3C0F89C15EC}
