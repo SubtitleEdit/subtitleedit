@@ -28,7 +28,7 @@
    * Optimize ASSA style import
    * Improve line split a little - thx i990049
    * Add a few English words/names to dictionaries
-   * Make formatting shortcuts in waveform work w selected lines
+   * Make formatting shortcuts in waveform work on selected lines
    * Remember font in burn-in - thx Nespula95
    * Remember "Merge lines with same text" settings - thx kamitsu2004
    * Improve convert of WebVTT to SubRip style handling - thx maknol
@@ -47,11 +47,11 @@
    * Keep bookmarks after source view edit - thx MMT
    * Fix for "replace all" non reg-ex
    * Fix wrongful removal of "Unneeded Space" - thx Minherre
-   * Fix possible crash in Choosee Profile - thx darnn
+   * Fix possible crash in "Choosee profile" - thx darnn
    * Make "Add missing space" work with non-English letters - thx Redjan
    * Fix a few UI issues in "Word lists" - thx Edwin
    * Fix crash in "Sync via other sub" - thx JP
-   * Fix original desync after set start time - thx Leon
+   * Fix original desync after "set start time" - thx Leon
    * Handle multi-audio-track waveform/spectrogram better - thx AlfonZ42
    * Fix CSV reading issue - thx Instinct64 
    * Fix SSA to ASSA style issue - thx Alain
