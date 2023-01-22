@@ -60,10 +60,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            var actor = Utilities.FixQuotes(parts[0]);
+                            var actor = parts[0];
                             var start = DecodeTime(parts[1]);
                             var end = DecodeTime(parts[2]);
-                            var text = Utilities.FixQuotes(parts[3]);
+                            var text = parts[3];
                             p = new Paragraph(start, end, text);
                             if (!string.IsNullOrEmpty(actor))
                             {
