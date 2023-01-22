@@ -10,7 +10,7 @@
    * Add new subtitle format - thx Chris
    * Add ASSA style "Replace" - thx Mishasama
    * Add "audio to text selected lines" shortcuts
-   * Add Vosk Korean/Uzbek models
+   * Add Vosk Korean/Uzbek/large-Hindi models
 * IMPROVED:
    * Update Chinese translation - thx nkh0472
    * Update Korean translation - thx domddol
