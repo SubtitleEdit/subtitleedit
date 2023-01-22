@@ -365,11 +365,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 return DefaultHeader;
             }
 
-            return string.Format($@"{scriptInfo.Trim() + Environment.NewLine}
-[V4+ Styles]
-{SsaStyle.DefaultAssStyleFormat}
-{style.ToString().Trim() + Environment.NewLine}
-[Events]");
+            return scriptInfo.Trim() + Environment.NewLine + 
+                   Environment.NewLine +
+                   "[V4+ Styles]" + Environment.NewLine + 
+                   SsaStyle.DefaultAssStyleFormat + Environment.NewLine + 
+                   style.ToString().Trim() + Environment.NewLine +
+                   Environment.NewLine +
+                   "[Events]";
         }
 
         private static string FixScriptType(string header)
