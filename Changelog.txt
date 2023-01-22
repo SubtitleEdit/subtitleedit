@@ -37,6 +37,8 @@
    * Update Tesseract 5.2.0 to 5.3.0
    * Update Whisper CPP to 2023-01-08
    * Update yt-dlp to 2023.01.06
+   * Improve setting color tags when reading from EBU STL
+   * Add more validation for EBU STL teletext - thx Stefan
 * FIXED:
    * Fix italic in DCinema interop - thx Andrey
    * Fix Whisper model download - thx darnn
@@ -54,6 +56,7 @@
    * Fix SSA to ASSA style issue - thx Alain
    * Fix Find/Find-next in OCR window - thx dokax
    * Fix issue with online text search in translation mode - thx domddol	
+   * Allow curly brackets in assa styles - thx Ahmad
 
 
 3.6.10 (21th November 2022)
