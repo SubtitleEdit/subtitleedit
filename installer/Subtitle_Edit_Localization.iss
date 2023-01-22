@@ -143,20 +143,24 @@ de.types_custom=Benutzerdefinierte Installation
 de.types_default=Standardinstallation
 
 ; Greek
-;el.comp_translations=Μεταφράσεις
-;el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 4.8. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 4.8 τώρα;
-;el.msg_DeleteSettings=Θέλετε επίσης να διαγράψετε τις ρυθμίσεις του Subtitle Edit και οποιεσδήποτε τροποποιήσεις έχετε κάνει στους φακέλους;%n%nΑν σκοπεύετε να επανεγκαταστήσετε το Subtitle Edit δε χρειάζεται να τις διαγράψετε.
-;el.msg_OptimizingPerformance=Βελτιστοποίηση απόδοσης...
-;el.run_VisitWebsite=Επισκεφτείτε την Ιστοσελίδα του Subtitle Edit
-;el.sm_com_Changelog=Ιστορικό του Subtitle Edit
-;el.tsk_AllUsers=Για όλους τους χρήστες
-;el.tsk_CurrentUser=Μόνο για τον τρέχων χρήστη
-;el.tsk_Other=Άλλα:
-;el.tsk_ResetDictionaries=Επαναφορά Λεξικών και διαγραφή πρόσθετων ονομάτων
-;;el.tsk_ResetSettings=Επαναφορά ρυθμίσεων του Subtitle Edit
-;el.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-;el.types_custom=Προσαρμοσμένη εγκατάσταση
-;el.types_default=Προεπιλεγμένη εγκατάσταση
+[Messages]
+es.SetupAppTitle=Setup - Subtitle Edit
+es.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+[CustomMessages]
+el.comp_translations=Μεταφράσεις
+el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 4.8. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 4.8 τώρα;
+el.msg_DeleteSettings=Θέλετε επίσης να διαγράψετε τις ρυθμίσεις του Subtitle Edit και οποιεσδήποτε τροποποιήσεις έχετε κάνει στους φακέλους;%n%nΑν σκοπεύετε να επανεγκαταστήσετε το Subtitle Edit δε χρειάζεται να τις διαγράψετε.
+el.msg_OptimizingPerformance=Βελτιστοποίηση απόδοσης...
+el.run_VisitWebsite=Επισκεφτείτε την Ιστοσελίδα του Subtitle Edit
+el.sm_com_Changelog=Ιστορικό του Subtitle Edit
+el.tsk_AllUsers=Για όλους τους χρήστες
+el.tsk_CurrentUser=Μόνο για τον τρέχων χρήστη
+el.tsk_Other=Άλλα:
+el.tsk_ResetDictionaries=Επαναφορά Λεξικών και διαγραφή πρόσθετων ονομάτων
+el.tsk_ResetSettings=Επαναφορά ρυθμίσεων του Subtitle Edit
+el.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+el.types_custom=Προσαρμοσμένη εγκατάσταση
+el.types_default=Προεπιλεγμένη εγκατάσταση
 
 ; Spanish
 [Messages]
@@ -295,20 +299,24 @@ hr.types_default=Default installation
 ;hu.types_default=Default installation
 
 ; Indonesian
-;id.comp_translations=Terjemahan
-;id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.8. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.8 sekarang?
-;id.msg_DeleteSettings=Apakah Anda juga ingin menghapus pengaturan Subtitle Edit dan perubahan khusus yang Anda buat dalam kamus?%n%nBila Anda berencana menginstal ulang Subtitle Edit, Anda tidak perlu menghapusnya.
-;id.msg_OptimizingPerformance=Mengoptimalkan kinerja...
-;id.run_VisitWebsite=Kunjungi Situs Subtitle Edit
-;id.sm_com_Changelog=Riwayat Versi Subtitle Edit
-;id.tsk_AllUsers=Untuk semua pengguna
-;id.tsk_CurrentUser=Untuk pengguna saat ini
-;id.tsk_Other=Lainnya:
-;id.tsk_ResetDictionaries=Atur ulang Kamus dan hapus nama khusus apa pun
-;id.tsk_ResetSettings=Atur ulang pengaturan Subtitle Edit
-;id.tsk_SetFileTypes=Asosiasikan file Teks SubRip (.srt) dengan Subtitle Edit
-;id.types_custom=Instalasi khusus
-;id.types_default=Instalasi standar
+[Messages]
+es.SetupAppTitle=Setup - Subtitle Edit
+es.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+[CustomMessages]
+id.comp_translations=Terjemahan
+id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.8. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.8 sekarang?
+id.msg_DeleteSettings=Apakah Anda juga ingin menghapus pengaturan Subtitle Edit dan perubahan khusus yang Anda buat dalam kamus?%n%nBila Anda berencana menginstal ulang Subtitle Edit, Anda tidak perlu menghapusnya.
+id.msg_OptimizingPerformance=Mengoptimalkan kinerja...
+id.run_VisitWebsite=Kunjungi Situs Subtitle Edit
+id.sm_com_Changelog=Riwayat Versi Subtitle Edit
+id.tsk_AllUsers=Untuk semua pengguna
+id.tsk_CurrentUser=Untuk pengguna saat ini
+id.tsk_Other=Lainnya:
+id.tsk_ResetDictionaries=Atur ulang Kamus dan hapus nama khusus apa pun
+id.tsk_ResetSettings=Atur ulang pengaturan Subtitle Edit
+id.tsk_SetFileTypes=Asosiasikan file Teks SubRip (.srt) dengan Subtitle Edit
+id.types_custom=Instalasi khusus
+id.types_default=Instalasi standar
 
 ; Italian
 [Messages]
