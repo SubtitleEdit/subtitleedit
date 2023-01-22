@@ -3657,7 +3657,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
             }
 
-            if (textWithOutFixes.Trim() != line.Trim())
+            if (textWithOutFixes.Trim() != line.Trim() && checkBoxAutoFixCommonErrors.Checked)
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
