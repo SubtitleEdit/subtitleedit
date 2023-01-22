@@ -12232,8 +12232,6 @@ namespace Nikse.SubtitleEdit.Forms
                         addText = RemoveAssStartAlignmentTag(addText);
                     }
 
-                    addText = RemoveAssaKarokeTag(addText);
-
                     if (breakMode == BreakMode.UnbreakNoSpace)
                     {
                         sb.Append(addText);
@@ -12246,7 +12244,7 @@ namespace Nikse.SubtitleEdit.Forms
                     endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
                 }
 
-                if (sb.Length > 200)
+                if (HtmlUtil.RemoveHtmlTags(sb.ToString(), true).Length > 200)
                 {
                     return;
                 }
@@ -12644,18 +12642,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (s.StartsWith("{\\an", StringComparison.Ordinal) && s.Length > 5 && s[5] == '}')
             {
                 s = s.Remove(0, 6);
-            }
-
-            return s;
-        }
-
-        private static string RemoveAssaKarokeTag(string text)
-        {
-            var s = text.TrimStart();
-            var end = s.IndexOf('}');
-            if (end > 5 && end < 9 && s.StartsWith("{\\k", StringComparison.Ordinal))
-            {
-                s = s.Remove(0, end + 1);
             }
 
             return s;
