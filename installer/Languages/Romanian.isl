@@ -1,8 +1,8 @@
-; *** Inno Setup version 5.5.3+ Romanian messages ***
+; *** Inno Setup version 6.1.0+ Romanian messages ***
 ; Translator : Alexandru Bogdan Munteanu (muntealb@gmail.com)
 ;
 ; To download user-contributed translations of this file, go to:
-;   http://www.jrsoftware.org/files/istrans/
+;   https://jrsoftware.org/files/istrans/
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
 ; messages that didn't have them already, because on those messages Inno
@@ -43,6 +43,7 @@ ErrorTitle=Eroare
 SetupLdrStartupMessage=Va fi instalat programul %1. Vrei sã continui?
 LdrCannotCreateTemp=Nu pot crea o filã temporarã. Instalare abandonatã
 LdrCannotExecTemp=Nu pot executa o filã din dosarul temporar. Instalare abandonatã
+HelpTextNote=
 
 ; *** Startup error messages
 LastErrorMessage=%1.%n%nEroarea %2: %3
@@ -56,13 +57,22 @@ WindowsServicePackRequired=Acest program necesitã %1 Service Pack %2 sau mai nou
 NotOnThisPlatform=Acest program nu va rula pe %1.
 OnlyOnThisPlatform=Acest program trebuie sã ruleze pe %1.
 OnlyOnTheseArchitectures=Acest program poate fi instalat doar pe versiuni de Windows proiectate pentru urmãtoarele arhitecturi de procesor:%n%n%1
-MissingWOW64APIs=Versiunea de Windows pe care o rulezi nu include funcþionalitatea cerutã de Instalator pentru a realiza o instalare pe 64-biþi. Pentru a corecta problema, va trebui sã instalezi Service Pack %1.
 WinVersionTooLowError=Acest program necesitã %1 versiunea %2 sau mai nouã.
 WinVersionTooHighError=Acest program nu poate fi instalat pe %1 versiunea %2 sau mai nouã.
 AdminPrivilegesRequired=Trebuie sã fii logat ca Administrator pentru instalarea acestui program.
 PowerUserPrivilegesRequired=Trebuie sã fii logat ca Administrator sau ca Membru al Grupului de Utilizatori Pricepuþi ("Power Users") pentru a instala acest program.
 SetupAppRunningError=Instalatorul a detectat cã %1 ruleazã în acest moment.%n%nÎnchide toate instanþele programului respectiv, apoi clicheazã OK pentru a continua sau Anuleazã pentru a abandona instalarea.
 UninstallAppRunningError=Dezinstalatorul a detectat cã %1 ruleazã în acest moment.%n%nÎnchide toate instanþele programului respectiv, apoi clicheazã OK pentru a continua sau Anuleazã pentru a abandona dezinstalarea.
+
+; *** Startup questions
+PrivilegesRequiredOverrideTitle=Select Modul de Instalare al Instalatorului
+PrivilegesRequiredOverrideInstruction=Selecteazã modul de instalare
+PrivilegesRequiredOverrideText1=%1 poate fi instalat pentru toþi utilizatorii (necesitã calitatea de administrator), sau doar pentru tine.
+PrivilegesRequiredOverrideText2=%1 poate fi instalat doar pentru tine, sau pentru toþi utilizatorii (necesitã calitatea de administrator).
+PrivilegesRequiredOverrideAllUsers=Instaleazã pentru toþi utiliz&atorii
+PrivilegesRequiredOverrideAllUsersRecommended=Instaleazã pentru toþi utiliz&atorii (recomandat)
+PrivilegesRequiredOverrideCurrentUser=Instaleazã doar pentru &mine
+PrivilegesRequiredOverrideCurrentUserRecommended=Instaleazã doar pentru &mine (recomandat)
 
 ; *** Misc. errors
 ErrorCreatingDir=Instalatorul nu a putut crea dosarul "%1"
@@ -142,6 +152,7 @@ WizardSelectDir=Selectarea Locului de Destinaþie
 SelectDirDesc=Unde vrei sã instalezi [name]?
 SelectDirLabel3=Instalatorul va pune [name] în dosarul specificat mai jos.
 SelectDirBrowseLabel=Pentru a avansa cu instalarea, clicheazã pe Continuã. Dacã vrei sã selectezi un alt dosar, clicheazã pe Exploreazã.
+DiskSpaceGBLabel=Este necesar un spaþiu liber de stocare de cel puþin [gb] GB.
 DiskSpaceMBLabel=Este necesar un spaþiu liber de stocare de cel puþin [mb] MB.
 CannotInstallToNetworkDrive=Instalatorul nu poate realiza instalarea pe un dispozitiv de reþea.
 CannotInstallToUNCPath=Instalatorul nu poate realiza instalarea pe o cale în format UNC.
@@ -169,6 +180,7 @@ NoUninstallWarningTitle=Componentele Existã
 NoUninstallWarning=Instalatorul a detectat cã urmãtoarele componente sînt deja instalate pe calculator:%n%n%1%n%nDeselectarea lor nu le va dezinstala.%n%nVrei sã continui oricum?
 ComponentSize1=%1 KB
 ComponentSize2=%1 MB
+ComponentsDiskSpaceGBLabel=Selecþia curentã necesitã cel puþin [gb] GB spaþiu de stocare.
 ComponentsDiskSpaceMBLabel=Selecþia curentã necesitã cel puþin [mb] MB spaþiu de stocare.
 
 ; *** "Select Additional Tasks" wizard page
@@ -199,6 +211,18 @@ ReadyMemoComponents=Componente Selectate:
 ReadyMemoGroup=Dosarul Meniului de Start:
 ReadyMemoTasks=Sarcini Suplimentare:
 
+; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
+DownloadingLabel=Descarc file suplimentare...
+ButtonStopDownload=O&preºte descãrcarea
+StopDownload=Sigur vrei sã opreºti descãrcarea?
+ErrorDownloadAborted=Descãrcare abandonatã
+ErrorDownloadFailed=Descãrcare eºuatã: %1 %2
+ErrorDownloadSizeFailed=Obþinerea mãrimii a eºuat: %1 %2
+ErrorFileHash1=Haºul filei a eºuat: %1
+ErrorFileHash2=Haºul filei e nevalid: aºteptat %1, gãsit %2
+ErrorProgress=Progres nevalid: %1 of %2
+ErrorFileSize=Mãrime a filei nevalidã: aºteptatã %1, gãsitã %2
+
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Pregãtire pentru Instalare
 PreparingDesc=Instalatorul pregãteºte instalarea [name] pe calculator.
@@ -209,6 +233,7 @@ ApplicationsFound2=Aplicaþiile urmãtoare folosesc file care trebuie actualizate 
 CloseApplications=Închide &automat aplicaþiile
 DontCloseApplications=Nu închi&de aplicaþiile
 ErrorCloseApplications=Instalatorul nu a putut închide automat toate aplicaþiile. Înainte de a continua, e recomandat sã închizi manual toate aplicaþiile care folosesc file ce trebuie actualizate de Instalator.
+PrepareToInstallNeedsRestart=Instalatorul trebuie sã repornescã calculatorul. Dupã repornire, ruleazã Instalatorul din nou pentru a termina instalarea [name].%n%nVrei sã reporneºti acum?
 
 ; *** "Installing" wizard page
 WizardInstalling=Instalare în Desfãºurare
@@ -238,7 +263,10 @@ SelectDirectoryLabel=Specificã locul discului urmãtor.
 
 ; *** Installation phase messages
 SetupAborted=Instalarea nu a fost terminatã.%n%nCorecteazã problema ºi apoi ruleazã Instalarea din nou.
-EntryAbortRetryIgnore=Clicheazã pe Reîncearcã pentru a încerca din nou, pe Ignorã pentru a continua oricum, sau pe Abandoneazã pentru a anula instalarea.
+AbortRetryIgnoreSelectAction=Selecteazã acþiunea
+AbortRetryIgnoreRetry=Încearcã din &nou
+AbortRetryIgnoreIgnore=&Ignorã eroarea ºi continuã
+AbortRetryIgnoreCancel=Anuleazã instalarea
 
 ; *** Installation status messages
 StatusClosingApplications=Închid aplicaþiile...
@@ -269,14 +297,24 @@ ErrorRegWriteKey=Eroare la scrierea în cheia de registru:%n%1\%2
 ErrorIniEntry=Eroare la crearea intrãrii INI în fiºierul "%1".
 
 ; *** File copying errors
-FileAbortRetryIgnore=Clicheazã pe Reîncearcã pentru a încerca din nou, pe Ignorã pentru a sãri aceastã filã (nerecomandat), sau pe Abandoneazã pentru a anula instalarea.
-FileAbortRetryIgnore2=Clicheazã pe Reîncearcã pentru a încerca din nou, pe Ignorã pentru a continua oricum (nerecomandat), sau pe Abandoneazã pentru a anula instalarea.
+FileAbortRetryIgnoreSkipNotRecommended=&Sari peste aceastã filã (nerecomandat)
+FileAbortRetryIgnoreIgnoreNotRecommended=&Ignorã eroarea ºi continuã (nerecomandat)
 SourceIsCorrupted=Fila sursã este stricatã (coruptã)
 SourceDoesntExist=Fila sursã "%1" nu existã
-ExistingFileReadOnly=Fila deja existentã este marcatã doar-citire.%n%nClicheazã pe Reîncearcã pentru a înlãtura atributul doar-citire ºi a încerca din nou, pe Ignorã pentru a sãri aceastã filã, sau pe Abandoneazã pentru a anula instalarea.
-ErrorReadingExistingDest=A apãrut o eroare în timpul citirii filei deja existente:
-FileExists=Fila existã deja.%n%Vrei ca ea sã fie suprascrisã de Instalator?
-ExistingFileNewer=Fila deja existentã este mai nouã decît cea care trebuie instalatã. Este recomandat s-o pãstrezi pe cea existentã.%n%nVrei sã pãstrezi fila deja existentã?
+ExistingFileReadOnly2=Fila deja existentã nu poate fi înlocuitã pentru cã-i marcatã doar-citire.
+ExistingFileReadOnlyRetry=Înlãtu&rã atributul doar-citire ºi reîncearcã
+ExistingFileReadOnlyKeepExisting=&Pãstreazã fila existentã
+ErrorReadingExistingDest=A apãrut o eroare la citirea filei deja existente:
+FileExistsSelectAction=Selecteazã acþiunea
+FileExists2=Fila existã deja.
+FileExistsOverwriteExisting=&Suprascrie fila existentã
+FileExistsKeepExisting=&Pãstreazã fila existentã
+FileExistsOverwriteOrKeepAll=&Fã la fel pentru conflictele urmãtoare
+ExistingFileNewerSelectAction=Selecteazã acþiunea
+ExistingFileNewer2=Fila existentã e mai nouã decît cea pe care încearcã Instalatorul s-o instaleze.
+ExistingFileNewerOverwriteExisting=&Suprascrie fila existentã
+ExistingFileNewerKeepExisting=&Pãstreazã fila existentã (recomandat)
+ExistingFileNewerOverwriteOrKeepAll=&Fã la fel pentru conflictele urmãtoare
 ErrorChangingAttr=A apãrut o eroare în timpul schimbãrii atributelor filei deja existente:
 ErrorCreatingTemp=A apãrut o eroare în timpul creãrii filei în dosarul de destinaþie:
 ErrorReadingSource=A apãrut o eroare în timpul citirii filei sursã:
@@ -287,6 +325,16 @@ ErrorRenamingTemp=A apãrut o eroare în timpul renumirii unei file din dosarul de
 ErrorRegisterServer=Nu pot înregistra DLL/OCX: %1
 ErrorRegSvr32Failed=RegSvr32 a eºuat, avînd codul de ieºire %1
 ErrorRegisterTypeLib=Nu pot înregistra biblioteca de tipuri: %1
+
+; *** Uninstall display name markings
+; used for example as 'My Program (32-bit)'
+UninstallDisplayNameMark=%1 (%2)
+; used for example as 'My Program (32-bit, All users)'
+UninstallDisplayNameMarks=%1 (%2, %3)
+UninstallDisplayNameMark32Bit=32-biþi
+UninstallDisplayNameMark64Bit=64-biþi
+UninstallDisplayNameMarkAllUsers=Toþi utilizatorii
+UninstallDisplayNameMarkCurrentUser=Utilizatorul curent
 
 ; *** Post-installation errors
 ErrorOpeningReadme=A apãrut o eroare la deschiderea filei de informare (README).
@@ -324,9 +372,9 @@ ShutdownBlockReasonUninstallingApp=Dezinstalez %1.
 [CustomMessages]
 
 NameAndVersion=%1 versiunea %2
-AdditionalIcons=Icoane suplimentare:
-CreateDesktopIcon=Creeazã o icoanã pe &Birou ("Desktop")
-CreateQuickLaunchIcon=Creeazã o icoanã în Bara de &Lansare Rapidã ("Quick Launch")
+AdditionalIcons=Scurtãturi suplimentare:
+CreateDesktopIcon=Creeazã o scurtãturã pe &Birou ("Desktop")
+CreateQuickLaunchIcon=Creeazã o scurtãturã în Bara de &Lansare Rapidã ("Quick Launch")
 ProgramOnTheWeb=%1 pe internet
 UninstallProgram=Dezinstaleazã %1
 LaunchProgram=Lanseazã %1
