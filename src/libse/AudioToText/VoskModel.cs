@@ -178,8 +178,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new VoskModel
             {
                 TwoLetterLanguageCode = "hi",
-                LanguageName = "Hindi",
+                LanguageName = "Hindi (small, 42 MB)",
                 Url = "https://alphacephei.com/vosk/models/vosk-model-small-hi-0.22.zip",
+            },
+            new VoskModel
+            {
+                TwoLetterLanguageCode = "hi",
+                LanguageName = "Hindi (large, 1.5 GB)",
+                Url = "https://alphacephei.com/vosk/models/vosk-model-hi-0.22.zip",
             },
             new VoskModel
             {
