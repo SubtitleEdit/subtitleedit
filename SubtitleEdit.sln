@@ -24,7 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LanguageBaseEnglish.xml = LanguageBaseEnglish.xml
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
-		installer\Subtitle_Edit_installer.iss = installer\Subtitle_Edit_installer.iss
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "src\libse\LibSE.csproj", "{D6F64CD3-C3EA-4B36-B575-9B3B8A3CA13F}"
@@ -41,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "winget", "winget", "{4FE90C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{7137CF3B-7769-4B10-8719-83B1C41F1CB1}"
 	ProjectSection(SolutionItems) = preProject
+		installer\Subtitle_Edit_Installer.iss = installer\Subtitle_Edit_Installer.iss
 		installer\Subtitle_Edit_Localization.iss = installer\Subtitle_Edit_Localization.iss
 	EndProjectSection
 EndProject
