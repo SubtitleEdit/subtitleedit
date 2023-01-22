@@ -144,8 +144,8 @@ de.types_default=Standardinstallation
 
 ; Greek
 [Messages]
-es.SetupAppTitle=Setup - Subtitle Edit
-es.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+el.SetupAppTitle=Setup - Subtitle Edit
+el.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
 el.comp_translations=Μεταφράσεις
 el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 4.8. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 4.8 τώρα;
@@ -283,25 +283,29 @@ hr.types_custom=Custom installation
 hr.types_default=Default installation
 
 ; Hungarian
-;hu.comp_translations=Translations
-;hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 4.8 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 4.8 telepítőt most?
-;hu.msg_DeleteSettings=Törölni szeretné a Subtitle Edit beállításait és a szótárakban végrehajtott egyéni módosításokat?%n%nHa a Subtitle Edit újratelepítését tervezi, Önnek nem kell törölni azt.
-;hu.msg_OptimizingPerformance=Optimizing performance...
-;hu.run_VisitWebsite=A Subtitle Edit weboldalának felkeresése
-;hu.sm_com_Changelog=Subtitle Edit's változásnapló
-;hu.tsk_AllUsers=Az összes felhasználó számára
-;hu.tsk_CurrentUser=Csak a jelenlegi felhasználó számára
-;hu.tsk_Other=Egyéb:
-;hu.tsk_ResetDictionaries=A szótárak visszaállítása és az egyéni nevek törlése
-;hu.tsk_ResetSettings=A Subtitle Edit beállításainak visszaállítása
-;hu.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-;hu.types_custom=Custom installation
-;hu.types_default=Default installation
+[Messages]
+hr.SetupAppTitle=Setup - Subtitle Edit
+hr.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+[CustomMessages]
+hu.comp_translations=Translations
+hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 4.8 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 4.8 telepítőt most?
+hu.msg_DeleteSettings=Törölni szeretné a Subtitle Edit beállításait és a szótárakban végrehajtott egyéni módosításokat?%n%nHa a Subtitle Edit újratelepítését tervezi, Önnek nem kell törölni azt.
+hu.msg_OptimizingPerformance=Optimizing performance...
+hu.run_VisitWebsite=A Subtitle Edit weboldalának felkeresése
+hu.sm_com_Changelog=Subtitle Edit's változásnapló
+hu.tsk_AllUsers=Az összes felhasználó számára
+hu.tsk_CurrentUser=Csak a jelenlegi felhasználó számára
+hu.tsk_Other=Egyéb:
+hu.tsk_ResetDictionaries=A szótárak visszaállítása és az egyéni nevek törlése
+hu.tsk_ResetSettings=A Subtitle Edit beállításainak visszaállítása
+hu.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+hu.types_custom=Custom installation
+hu.types_default=Default installation
 
 ; Indonesian
 [Messages]
-es.SetupAppTitle=Setup - Subtitle Edit
-es.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+id.SetupAppTitle=Setup - Subtitle Edit
+id.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
 id.comp_translations=Terjemahan
 id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.8. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.8 sekarang?
@@ -539,36 +543,44 @@ sl.types_custom=Custom installation
 sl.types_default=Default installation
 
 ; Serbian Cyrillic
-;srC.comp_translations=Преводи
-;srC.msg_AskToDownNET=Програм захтева .NET радни оквир 4.8. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
-;srC.msg_DeleteSettings=Желите ли да обришете поставке и друге прилагођене измене које сте направили у речницима?%n%nАко планирате да поново инсталирате програм, не морате их брисати.
-;srC.msg_OptimizingPerformance=Учитавам…
-;srC.run_VisitWebsite=Посетите страницу пројекта
-;srC.sm_com_Changelog=Дневник измена
-;srC.tsk_AllUsers=За све кориснике
-;srC.tsk_CurrentUser=Само за текућег корисника
-;srC.tsk_Other=Друго:
-;srC.tsk_ResetDictionaries=Поништи речнике и обриши прилагођене измене
-;srC.tsk_ResetSettings=Поништи поставке програма
-;srC.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-;srC.types_custom=Прилагођена инсталација
-;srC.types_default=Подразумевана инсталација
+[Messages]
+srC.SetupAppTitle=Setup - Subtitle Edit
+srC.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+[CustomMessages]
+srC.comp_translations=Преводи
+srC.msg_AskToDownNET=Програм захтева .NET радни оквир 4.8. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
+srC.msg_DeleteSettings=Желите ли да обришете поставке и друге прилагођене измене које сте направили у речницима?%n%nАко планирате да поново инсталирате програм, не морате их брисати.
+srC.msg_OptimizingPerformance=Учитавам…
+srC.run_VisitWebsite=Посетите страницу пројекта
+srC.sm_com_Changelog=Дневник измена
+srC.tsk_AllUsers=За све кориснике
+srC.tsk_CurrentUser=Само за текућег корисника
+srC.tsk_Other=Друго:
+srC.tsk_ResetDictionaries=Поништи речнике и обриши прилагођене измене
+srC.tsk_ResetSettings=Поништи поставке програма
+srC.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+srC.types_custom=Прилагођена инсталација
+srC.types_default=Подразумевана инсталација
 
 ; Serbian Latin
-;srL.comp_translations=Prevodi
-;srL.msg_AskToDownNET=Program zahteva .NET radni okvir 4.8. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
-;srL.msg_DeleteSettings=Želite li da obrišete postavke i druge prilagođene izmene koje ste napravili u rečnicima?%n%nAko planirate da ponovo instalirate program, ne morate ih brisati.
-;srL.msg_OptimizingPerformance=Učitavam…
-;srL.run_VisitWebsite=Posetite stranicu projekta
-;srL.sm_com_Changelog=Dnevnik izmena
-;srL.tsk_AllUsers=Za sve korisnike
-;srL.tsk_CurrentUser=Samo za tekućeg korisnika
-;srL.tsk_Other=Drugo:
-;srL.tsk_ResetDictionaries=Poništi rečnike i obriši prilagođene izmene
-;srL.tsk_ResetSettings=Poništi postavke programa
-;srL.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-;srL.types_custom=Prilagođena instalacija
-;srL.types_default=Podrazumevana instalacija
+[Messages]
+srL.SetupAppTitle=Setup - Subtitle Edit
+srL.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+[CustomMessages]
+srL.comp_translations=Prevodi
+srL.msg_AskToDownNET=Program zahteva .NET radni okvir 4.8. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
+srL.msg_DeleteSettings=Želite li da obrišete postavke i druge prilagođene izmene koje ste napravili u rečnicima?%n%nAko planirate da ponovo instalirate program, ne morate ih brisati.
+srL.msg_OptimizingPerformance=Učitavam…
+srL.run_VisitWebsite=Posetite stranicu projekta
+srL.sm_com_Changelog=Dnevnik izmena
+srL.tsk_AllUsers=Za sve korisnike
+srL.tsk_CurrentUser=Samo za tekućeg korisnika
+srL.tsk_Other=Drugo:
+srL.tsk_ResetDictionaries=Poništi rečnike i obriši prilagođene izmene
+srL.tsk_ResetSettings=Poništi postavke programa
+srL.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+srL.types_custom=Prilagođena instalacija
+srL.types_default=Podrazumevana instalacija
 
 ; Swedish
 [Messages]
