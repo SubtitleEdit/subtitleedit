@@ -284,8 +284,8 @@ hr.types_default=Default installation
 
 ; Hungarian
 [Messages]
-hr.SetupAppTitle=Setup - Subtitle Edit
-hr.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
+hu.SetupAppTitle=Setup - Subtitle Edit
+hu.SetupWindowTitle=Setup - Subtitle Edit {#app_ver}
 [CustomMessages]
 hu.comp_translations=Translations
 hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 4.8 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 4.8 telepítőt most?
