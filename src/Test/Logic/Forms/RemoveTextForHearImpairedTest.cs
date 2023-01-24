@@ -1824,9 +1824,20 @@ namespace Test.Logic.Forms
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
-            target.Settings.OnlyIfInSeparateLine = true;
+            target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("<i>-Era stato avveritito.</i>" + Environment.NewLine + "-(PARLA IN SPANOLO)");
             Assert.AreEqual("<i>Era stato avveritito.</i>", actual);
+        }
+
+        [TestMethod]
+        public void RemoveHiSecondLineHiDialog2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.OnlyIfInSeparateLine = true;
+            string actual = target.RemoveTextFromHearImpaired("<i>-Era stato avveritito.</i>" + Environment.NewLine + "-(PARLA IN SPANOLO)");
+            Assert.AreEqual("<i>-Era stato avveritito.</i>" + Environment.NewLine + "-(PARLA IN SPANOLO)", actual);
         }
 
         [TestMethod]
