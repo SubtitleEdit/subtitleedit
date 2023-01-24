@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public string RemoveHearingImpairedTagsInsideLine(string newText)
         {
             const string endChars = ".?!";
-            for (int i = 6; i < newText.Length; i++)
+            for (var i = 6; i < newText.Length; i++)
             {
                 var s = newText.Substring(i);
                 if (s.Length > 2 && endChars.Contains(s[0]))
@@ -79,10 +79,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return text;
             }
 
-            string preAssTag = string.Empty;
+            var preAssTag = string.Empty;
             if (text.StartsWith("{\\", StringComparison.Ordinal))
             {
-                int indexOfEndBracketSuccessor = text.IndexOf('}') + 1;
+                var indexOfEndBracketSuccessor = text.IndexOf('}') + 1;
                 if (indexOfEndBracketSuccessor > 0)
                 {
                     preAssTag = text.Substring(0, indexOfEndBracketSuccessor);
@@ -92,24 +92,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
-            string noTagText = HtmlUtil.RemoveHtmlTags(text);
+            var noTagText = HtmlUtil.RemoveHtmlTags(text);
             if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpperInvariant())
             {
                 return preAssTag + text;
             }
 
-            string language = Settings.NameList != null ? Settings.NameList.LanguageName : "en";
-            string newText = string.Empty;
+            var language = Settings.NameList != null ? Settings.NameList.LanguageName : "en";
+            var newText = string.Empty;
             var lines = text.Trim().SplitToLines();
-            int noOfNames = 0;
-            int count = 0;
-            bool removedInFirstLine = false;
-            bool removedInSecondLine = false;
-            bool removedFirstLineNotStart = false;
-            foreach (string line in lines)
+            var noOfNames = 0;
+            var count = 0;
+            var removedInFirstLine = false;
+            var removedInSecondLine = false;
+            var removedFirstLineNotStart = false;
+            foreach (var line in lines)
             {
-                int indexOfColon = line.IndexOf(':');
-                bool isLastColon = count == lines.Count - 1 && !HtmlUtil.RemoveHtmlTags(line).TrimEnd(':').Contains(':');
+                var indexOfColon = line.IndexOf(':');
+                var isLastColon = count == lines.Count - 1 && !HtmlUtil.RemoveHtmlTags(line).TrimEnd(':').Contains(':');
                 if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon) || (isLastColon && Utilities.CountTagInText(HtmlUtil.RemoveHtmlTags(line), ' ') > 1))
                 {
                     newText = (newText + Environment.NewLine + line).Trim();
@@ -129,12 +129,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
                     if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpperInvariant())
                     {
-                        bool remove = true;
+                        var remove = true;
                         newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
                         if (remove)
                         {
-                            string s = line;
-                            string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                            var s = line;
+                            var l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
                             if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
                                                                    !l1Trim.EndsWith('!') &&
                                                                    !l1Trim.EndsWith('?'))
@@ -443,17 +443,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         else
                         {
                             char[] endChars = { '.', '?', '!' };
-                            string s2 = line;
-                            for (int k = 0; k < 2; k++)
+                            var s2 = line;
+                            for (var k = 0; k < 2; k++)
                             {
                                 if (s2.Contains(':'))
                                 {
-                                    int colonIndex = s2.IndexOf(':');
-                                    string start = s2.Substring(0, colonIndex);
+                                    var colonIndex = s2.IndexOf(':');
+                                    var start = s2.Substring(0, colonIndex);
 
                                     if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpperInvariant())
                                     {
-                                        int endIndex = start.LastIndexOfAny(endChars);
+                                        var endIndex = start.LastIndexOfAny(endChars);
                                         if (colonIndex > 0 && colonIndex < s2.Length - 1)
                                         {
                                             if (char.IsDigit(s2[colonIndex - 1]) && char.IsDigit(s2[colonIndex + 1]))
@@ -490,14 +490,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
             newText = newText.Trim();
             if ((noOfNames > 0 || removedInFirstLine) && Utilities.GetNumberOfLines(newText) == 2)
             {
-                int indexOfDialogChar = newText.IndexOf('-');
-                bool insertDash = true;
+                var indexOfDialogChar = newText.IndexOf('-');
+                var insertDash = true;
                 var arr = newText.SplitToLines();
                 if (arr.Count == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
-                    string arr0 = new StrippableText(arr[0]).StrippedText;
+                    var arr0 = new StrippableText(arr[0]).StrippedText;
                     var arr1Strippable = new StrippableText(arr[1]);
-                    string arr1 = arr1Strippable.StrippedText;
+                    var arr1 = arr1Strippable.StrippedText;
 
                     if (arr0.Length > 0 && arr1.Length > 1)
                     {
@@ -550,8 +550,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         newText = st.Pre + "- " + st.StrippedText + st.Post;
                     }
 
-                    int indexOfNewLine = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                    string second = newText.Substring(indexOfNewLine).Trim();
+                    var indexOfNewLine = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    var second = newText.Substring(indexOfNewLine).Trim();
                     indexOfDialogChar = second.IndexOf(" -", StringComparison.Ordinal);
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
                     {
@@ -586,8 +586,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             else if (removedInSecondLine && !removedInFirstLine && Utilities.GetNumberOfLines(newText) == 2)
             {
-                string noTags = HtmlUtil.RemoveHtmlTags(newText, true).Trim();
-                bool insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, '-') == 1;
+                var noTags = HtmlUtil.RemoveHtmlTags(newText, true).Trim();
+                var insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, '-') == 1;
                 if (insertDash)
                 {
                     if (newText.Contains(Environment.NewLine + "<i>"))
@@ -868,8 +868,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var originalAfterU2010Replace = input;
 
             var text = RemoveColon(input);
-            string pre = " >-\"'‘`´♪¿¡.…—";
-            string post = " -\"'`´♪.!?:…—";
+            var pre = " >-\"'‘`´♪¿¡.…—";
+            var post = " -\"'`´♪.!?:…—";
             if (Settings.RemoveTextBetweenCustomTags)
             {
                 pre = pre.Replace(Settings.CustomStart, string.Empty);
@@ -896,57 +896,21 @@ namespace Nikse.SubtitleEdit.Core.Forms
             var st = new StrippableText(text, pre, post);
             var sb = new StringBuilder();
             var parts = st.StrippedText.Trim().SplitToLines();
-            int lineNumber = 0;
-            bool removedDialogInFirstLine = false;
-            int noOfNamesRemoved = 0;
-            int noOfNamesRemovedNotInLineOne = 0;
-            foreach (string s in parts)
+            var lineNumber = 0;
+            var removedDialogInFirstLine = false;
+            var noOfNamesRemoved = 0;
+            var noOfNamesRemovedNotInLineOne = 0;
+            foreach (var s in parts)
             {
                 var stSub = new StrippableText(s, pre, post);
-                string strippedText = stSub.StrippedText;
+                var strippedText = stSub.StrippedText;
                 if (lineNumber == parts.Count - 1 && st.Post.Contains('?') || stSub.Post.Contains('?'))
                 {
                     strippedText += "?";
                 }
 
-                if (!StartsAndEndsWithHearImpairedTags(strippedText))
-                {
-                    if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
-                    {
-                        stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
-                    }
-
-                    string newText = stSub.StrippedText;
-
-                    newText = RemoveHearImpairedTags(newText);
-                    if (newText.IsOnlyControlCharactersOrWhiteSpace())
-                    {
-                        newText = string.Empty;
-                    }
-
-                    if (stSub.StrippedText.Length - newText.Length > 2)
-                    {
-                        string removedText = GetRemovedString(stSub.StrippedText, newText);
-                        if (!IsHIDescription(removedText))
-                        {
-                            noOfNamesRemoved++;
-                            if (lineNumber > 0)
-                            {
-                                noOfNamesRemovedNotInLineOne++;
-                            }
-                        }
-                    }
-
-                    if (stSub.Pre == "<i>- " && newText.StartsWith("</i>", StringComparison.Ordinal))
-                    {
-                        sb.AppendLine("- " + newText.Remove(0, 4).Trim() + stSub.Post);
-                    }
-                    else
-                    {
-                        sb.AppendLine(stSub.Pre + newText + stSub.Post);
-                    }
-                }
-                else
+                var allowStartEnd = parts.Count == 1 || !Settings.OnlyIfInSeparateLine;
+                if (allowStartEnd && StartsAndEndsWithHearImpairedTags(strippedText))
                 {
                     if (!IsHIDescription(stSub.StrippedText))
                     {
@@ -989,6 +953,48 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                     }
                 }
+                else
+                {
+                    if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
+                    {
+                        stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
+                    }
+
+                    var newText = stSub.StrippedText;
+
+                    if (allowStartEnd)
+                    {
+                        newText = RemoveHearImpairedTags(newText);
+                    }
+
+                    if (newText.IsOnlyControlCharactersOrWhiteSpace())
+                    {
+                        newText = string.Empty;
+                    }
+
+                    if (stSub.StrippedText.Length - newText.Length > 2)
+                    {
+                        var removedText = GetRemovedString(stSub.StrippedText, newText);
+                        if (!IsHIDescription(removedText))
+                        {
+                            noOfNamesRemoved++;
+                            if (lineNumber > 0)
+                            {
+                                noOfNamesRemovedNotInLineOne++;
+                            }
+                        }
+                    }
+
+                    if (stSub.Pre == "<i>- " && newText.StartsWith("</i>", StringComparison.Ordinal))
+                    {
+                        sb.AppendLine("- " + newText.Remove(0, 4).Trim() + stSub.Post);
+                    }
+                    else
+                    {
+                        sb.AppendLine(stSub.Pre + newText + stSub.Post);
+                    }
+                }
+
                 lineNumber++;
             }
 
@@ -1042,7 +1048,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     var temp = new StrippableText(text);
                     temp.StrippedText = temp.StrippedText.Replace(Environment.NewLine, " ");
-                    int splitIndex = temp.StrippedText.LastIndexOfAny(splitChars);
+                    var splitIndex = temp.StrippedText.LastIndexOfAny(splitChars);
                     if (splitIndex > 0)
                     {
                         text = temp.Pre + temp.StrippedText.Insert(splitIndex + 1, Environment.NewLine) + temp.Post;
@@ -1132,7 +1138,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
-            string removeText = "<i>- </i>" + Environment.NewLine + "-";
+            var removeText = "<i>- </i>" + Environment.NewLine + "-";
             if (text.StartsWith(removeText, StringComparison.Ordinal))
             {
                 text = text.Remove(0, removeText.Length).TrimStart(' ');
@@ -1201,29 +1207,36 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static string RemoveEmptyFontTag(string text)
         {
-            int indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-            if (indexOfStartFont >= 0)
+            var indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            if (indexOfStartFont < 0)
             {
-                int indexOfEndFont = text.IndexOf("</font>", StringComparison.OrdinalIgnoreCase);
-                if (indexOfEndFont > indexOfStartFont)
-                {
-                    int startTagBefore = text.Substring(0, indexOfEndFont).LastIndexOf('<');
-                    if (startTagBefore == indexOfStartFont)
-                    {
-                        var lastTwo = text.Substring(indexOfEndFont - 2, 2);
-                        if (lastTwo.TrimEnd().EndsWith('>'))
-                        {
-                            text = text.Remove(indexOfStartFont, indexOfEndFont + "</font>".Length - indexOfStartFont);
-                            if (lastTwo.EndsWith(' '))
-                            {
-                                text = text.Insert(indexOfStartFont, " ");
-                            }
-
-                            text = text.Replace("  ", " ");
-                        }
-                    }
-                }
+                return text;
             }
+
+            var indexOfEndFont = text.IndexOf("</font>", StringComparison.OrdinalIgnoreCase);
+            if (indexOfEndFont <= indexOfStartFont)
+            {
+                return text;
+            }
+
+            var startTagBefore = text.Substring(0, indexOfEndFont).LastIndexOf('<');
+            if (startTagBefore != indexOfStartFont)
+            {
+                return text;
+            }
+
+            var lastTwo = text.Substring(indexOfEndFont - 2, 2);
+            if (lastTwo.TrimEnd().EndsWith('>'))
+            {
+                text = text.Remove(indexOfStartFont, indexOfEndFont + "</font>".Length - indexOfStartFont);
+                if (lastTwo.EndsWith(' '))
+                {
+                    text = text.Insert(indexOfStartFont, " ");
+                }
+
+                text = text.Replace("  ", " ");
+            }
+
             return text;
         }
 
@@ -1287,7 +1300,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             oldText = oldText.ToLowerInvariant();
             newText = newText.ToLowerInvariant();
 
-            int start = oldText.IndexOf(newText, StringComparison.Ordinal);
+            var start = oldText.IndexOf(newText, StringComparison.Ordinal);
             string result;
             if (start > 0)
             {
@@ -1303,8 +1316,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private string RemoveStartEndTags(string text)
         {
-            string newText = text;
-            string s = text;
+            var newText = text;
+            var s = text;
             int index;
             if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && (index = s.IndexOf(']', 1)) > 0)
             {
@@ -1363,14 +1376,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return text;
             }
 
-            string preAssTag = string.Empty;
+            var preAssTag = string.Empty;
             if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}', 2) > 0)
             {
-                int indexOfEndBracketSuccessor = text.IndexOf('}', 3) + 1;
+                var indexOfEndBracketSuccessor = text.IndexOf('}', 3) + 1;
                 preAssTag = text.Substring(0, indexOfEndBracketSuccessor);
                 text = text.Remove(0, indexOfEndBracketSuccessor).TrimStart();
             }
-            string preNewLine = string.Empty;
+
+            var preNewLine = string.Empty;
             if (text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
             {
                 preNewLine = Environment.NewLine;
@@ -1478,7 +1492,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return text;
             }
 
-            int start = text.IndexOf(startTag, StringComparison.Ordinal);
+            var start = text.IndexOf(startTag, StringComparison.Ordinal);
             if (start < 0 || text.Length - start - startTag.Length < endTag.Length)
             {
                 return text;
@@ -1486,7 +1500,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             do
             {
-                int end = text.IndexOf(endTag, start + startTag.Length, StringComparison.Ordinal);
+                var end = text.IndexOf(endTag, start + startTag.Length, StringComparison.Ordinal);
                 if (end < 0)
                 {
                     break;

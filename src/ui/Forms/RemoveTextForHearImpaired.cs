@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
         private readonly List<Paragraph> _edited = new List<Paragraph>();
         private readonly List<Paragraph> _editedOld = new List<Paragraph>();
-        private static readonly Color _listBackMarkColor = Configuration.Settings.General.UseDarkTheme? Color.PaleVioletRed : Color.PeachPuff;
+        private static readonly Color ListBackMarkColor = Configuration.Settings.General.UseDarkTheme? Color.PaleVioletRed : Color.PeachPuff;
 
         public FormRemoveTextForHearImpaired(Main main, Subtitle subtitle)
         {
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
             groupBoxLinesFound.Visible = false;
-            int h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
+            var h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
             MinimumSize = new Size(MinimumSize.Width, h);
             Height = h;
         }
@@ -109,11 +109,11 @@ namespace Nikse.SubtitleEdit.Forms
             _removeTextForHiLib.Warnings = new List<int>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            int count = 0;
+            var count = 0;
             _fixes = new Dictionary<Paragraph, string>();
-            for (int index = 0; index < Subtitle.Paragraphs.Count; index++)
+            for (var index = 0; index < Subtitle.Paragraphs.Count; index++)
             {
-                Paragraph p = Subtitle.Paragraphs[index];
+                var p = Subtitle.Paragraphs[index];
                 _removeTextForHiLib.WarningIndex = index - 1;
                 if (_edited.Contains(p))
                 {
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index);
+                    var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index);
                     if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
                     {
                         count++;
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_removeTextForHiLib.Warnings != null && _removeTextForHiLib.Warnings.Contains(_removeTextForHiLib.WarningIndex))
             {
                 item.UseItemStyleForSubItems = true;
-                item.BackColor = _listBackMarkColor;
+                item.BackColor = ListBackMarkColor;
             }
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int fixes = RemoveTextFromHearImpaired();
+            var fixes = RemoveTextFromHearImpaired();
             Subtitle.Renumber();
             if (_mainForm != null && fixes > 0)
             {
@@ -213,15 +213,15 @@ namespace Nikse.SubtitleEdit.Forms
         public int RemoveTextFromHearImpaired()
         {
             _unchecked.Clear();
-            int fixes = 0;
+            var fixes = 0;
 
-            for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
+            for (var i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
                 var item = listViewFixes.Items[i];
                 var p = (Paragraph)item.Tag;
                 if (item.Checked)
                 {
-                    string newText = _fixes[p];
+                    var newText = _fixes[p];
                     if (string.IsNullOrWhiteSpace(newText))
                     {
                         Subtitle.Paragraphs.Remove(p);
@@ -237,6 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _unchecked.Add(p);
                 }
             }
+
             return fixes;
         }
 
@@ -270,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)
         {
-            int availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
+            var availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
             columnHeaderBefore.Width = availableWidth;
             columnHeaderAfter.Width = -2;
         }
