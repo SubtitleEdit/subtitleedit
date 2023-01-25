@@ -134,6 +134,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonAddUserWord.Enabled = false;
             buttonRemoveOcrFix.Enabled = false;
             buttonAddOcrFix.Enabled = false;
+
+            listViewNames.BeginUpdate();
+            listBoxUserWordLists.BeginUpdate();
+            listBoxOcrFixList.BeginUpdate();
+            
             listViewNames.Items.Clear();
             listBoxUserWordLists.Items.Clear();
             listBoxOcrFixList.Items.Clear();
@@ -153,6 +158,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
                 LoadNames(language, true);
             }
+            
+            listViewNames.EndUpdate();
+            listBoxUserWordLists.EndUpdate();
+            listBoxOcrFixList.EndUpdate();
         }
 
         private void LoadOcrFixList(bool reloadListBox)
@@ -167,8 +176,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 listBoxOcrFixList.BeginUpdate();
                 listBoxOcrFixList.Items.Clear();
-                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.WordReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray<object>());
-                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.PartialLineWordBoundaryReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray<object>());
+                // ReSharper disable once CoVariantArrayConversion
+                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.WordReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray());
+                // ReSharper disable once CoVariantArrayConversion
+                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.PartialLineWordBoundaryReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray());
                 listBoxOcrFixList.Sorted = true;
                 listBoxOcrFixList.EndUpdate();
             }
@@ -182,8 +193,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             if (reloadListBox)
             {
+                listBoxUserWordLists.BeginUpdate();
                 listBoxUserWordLists.Items.Clear();
                 listBoxUserWordLists.Items.AddRange(_userWordList.ToArray<object>());
+                listBoxUserWordLists.BeginUpdate();
             }
         }
 
