@@ -322,6 +322,8 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.Theme();
             timeUpDownVideoPosition.Theme();
             timeUpDownVideoPositionAdjust.Theme();
+            UiUtil.FixFonts(timeUpDownVideoPosition, 10);
+            UiUtil.FixFonts(timeUpDownVideoPositionAdjust, 10);
 
             if (Application.RenderWithVisualStyles && !Configuration.Settings.General.UseDarkTheme)
             {
