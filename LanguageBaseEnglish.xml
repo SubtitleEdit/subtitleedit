@@ -1725,7 +1725,7 @@ Continue?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Line {0} - error reading: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Line {0} - error reading time code: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Line {0} - expected subtitle number: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Line {0} - expected empty line but found number + time code (number skipped): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>Line {0}: Empty line expected, but found number ({1}) followed by time code.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Before guessing time codes</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Before auto-duration for selected lines</BeforeAutoDuration>
     <BeforeColumnPaste>Before column paste</BeforeColumnPaste>
