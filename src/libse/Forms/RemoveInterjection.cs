@@ -36,13 +36,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return context.Text;
             }
 
-            string text = context.Text;
-            string oldText = text;
-            bool doRepeat = true;
+            var text = context.Text;
+            var oldText = text;
+            var doRepeat = true;
             while (doRepeat)
             {
                 doRepeat = false;
-                foreach (string s in context.Interjections)
+                foreach (var s in context.Interjections)
                 {
                     if (text.Contains(s))
                     {
@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         var match = regex.Match(text);
                         if (match.Success)
                         {
-                            int index = match.Index;
-                            string temp = text.Remove(index, s.Length);
+                            var index = match.Index;
+                            var temp = text.Remove(index, s.Length);
                             if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(0, 4);
@@ -104,6 +104,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             {
                                 temp = temp.Remove(0, 1);
                             }
+                            else if (index == 0 && temp.StartsWith("...! ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(0, 5);
+                            }
+                            else if (index == 0 && temp.StartsWith("...? ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(0, 5);
+                            }
                             else if (index > 3 && (temp.Substring(index - 2) == ".  —" || temp.Substring(index - 2) == "!  —" || temp.Substring(index - 2) == "?  —"))
                             {
                                 temp = temp.Remove(index - 2, 1).Replace("  ", " ");
@@ -113,13 +121,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index, 1).TrimEnd();
                             }
 
-                            string pre = string.Empty;
+                            var pre = string.Empty;
                             if (index > 0)
                             {
                                 doRepeat = true;
                             }
 
-                            bool removeAfter = true;
+                            var removeAfter = true;
 
                             if (index > 2 && temp.Length > index)
                             {
@@ -135,8 +143,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             {
                                 if (temp.Length > index - s.Length + 3)
                                 {
-                                    int subIndex = index - s.Length + 1;
-                                    string subTemp = temp.Substring(subIndex, 3);
+                                    var subIndex = index - s.Length + 1;
+                                    var subTemp = temp.Substring(subIndex, 3);
                                     if (subTemp == ", !" || subTemp == ", ?" || subTemp == ", .")
                                     {
                                         temp = temp.Remove(subIndex, 2);
@@ -155,8 +163,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (removeAfter && temp.Length > index - s.Length + 2)
                                 {
-                                    int subIndex = index - s.Length;
-                                    string subTemp = temp.Substring(subIndex, 3);
+                                    var subIndex = index - s.Length;
+                                    var subTemp = temp.Substring(subIndex, 3);
                                     if (subTemp == ", !" || subTemp == ", ?" || subTemp == ", .")
                                     {
                                         temp = temp.Remove(subIndex, 2);
@@ -185,8 +193,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (removeAfter && temp.Length > index - s.Length + 2)
                                 {
-                                    int subIndex = index - s.Length + 1;
-                                    string subTemp = temp.Substring(subIndex, 2);
+                                    var subIndex = index - s.Length + 1;
+                                    var subTemp = temp.Substring(subIndex, 2);
                                     if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
                                     {
                                         temp = temp.Remove(subIndex, 1);
@@ -204,7 +212,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                             if (index > 3 && index - 2 < temp.Length)
                             {
-                                string subTemp = temp.Substring(index - 2);
+                                var subTemp = temp.Substring(index - 2);
                                 if (subTemp.StartsWith(",  —", StringComparison.Ordinal) || subTemp.StartsWith(", —", StringComparison.Ordinal))
                                 {
                                     temp = temp.Remove(index - 2, 1);
@@ -509,7 +517,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return text;
         }
 
-        private string RemoveStartDashSingleLine(string input)
+        private static string RemoveStartDashSingleLine(string input)
         {
             if (string.IsNullOrEmpty(input))
             {

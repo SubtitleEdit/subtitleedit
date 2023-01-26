@@ -618,6 +618,15 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjections16()
+        {
+            var text = "Ah...! Missy, you're a real bitch!";
+            var expected = "Missy, you're a real bitch!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
