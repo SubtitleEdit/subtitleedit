@@ -146,7 +146,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
         {
             AddTranslationService(GoogleTranslationInitializer.Init(this));
             AddTranslationService(MicrosoftTranslationInitializer.Init());
-            //  AddTranslationService(new NikseDkTranslationService());
 
             if (comboBoxTranslationServices.Items.Count > 0 && comboBoxTranslationServices.SelectedIndex < 0)
             {
@@ -202,17 +201,10 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
         public static string EvaluateDefaultSourceLanguageCode(Encoding encoding, Subtitle subtitle)
         {
-            string defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            var defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultSourceLanguageCode))
             {
                 defaultSourceLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
-            }
-
-            //convert new Hebrew code (he) to old Hebrew code (iw)  http://www.mathguide.de/info/tools/languagecode.html
-            //brummochse: why get it converted to the old code?
-            if (defaultSourceLanguageCode == "he")
-            {
-                defaultSourceLanguageCode = "iw";
             }
 
             return defaultSourceLanguageCode;
@@ -386,23 +378,23 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     return _breakTranslation;
                 });
             }
-            catch (TranslationException translationException)
-            {
-                if (translationException.InnerException != null && !IsAvailableNetworkActive())
-                {
-                    ShowNetworkError(translationException.InnerException);
-                }
-                else
-                {
-                    MessageBox.Show(translationException.Message + Environment.NewLine +
-                                    translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
-                }
-            }
-            catch (Exception exception)
-            {
-                SeLogger.Error(exception);
-                ShowNetworkError(exception);
-            }
+            //catch (TranslationException translationException)
+            //{
+            //    if (translationException.InnerException != null && !IsAvailableNetworkActive())
+            //    {
+            //        ShowNetworkError(translationException.InnerException);
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show(translationException.Message + Environment.NewLine +
+            //                        translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
+            //    }
+            //}
+            //catch (Exception exception)
+            //{
+            //    SeLogger.Error(exception);
+            //    ShowNetworkError(exception);
+            //}
             finally
             {
                 labelPleaseWait.Visible = false;

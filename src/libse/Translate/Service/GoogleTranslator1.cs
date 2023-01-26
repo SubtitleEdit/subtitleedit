@@ -178,7 +178,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                     var c = result[i];
                     if (start)
                     {
-                        if (c == '"' && result[i - 1] != '\\')
+                        if (c == '\\' && result[i + 1] == '\\')
+                        {
+                            i++;
+                        }
+                        else if (c == '"')
                         {
                             count++;
                             if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
@@ -208,7 +212,15 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             }
 
             var res = sbAll.ToString().Trim();
-            res = Regex.Unescape(res);
+            try
+            {
+                res = Regex.Unescape(res);
+            }
+            catch
+            {
+                res = res.Replace("\\n", "\n");
+            }
+
             var lines = res.SplitToLines().ToList();
             return lines;
         }

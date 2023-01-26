@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                 new TranslationPair("HAITIAN CREOLE", "ht"),
                 new TranslationPair("HAUSA", "ha"),
                 new TranslationPair("HAWAIIAN", "haw"),
-                new TranslationPair("HEBREW", "iw"),
+                new TranslationPair("HEBREW", "he"),
                 new TranslationPair("HINDI", "hi"),
                 new TranslationPair("HMOUNG", "hmn"),
                 new TranslationPair("HUNGARIAN", "hu"),
