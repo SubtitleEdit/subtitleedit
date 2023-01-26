@@ -2407,7 +2407,7 @@ Continui?</RestoreDefaultSettingsMsg>
     <TotalAdjustmentX>Ajustare totală: {0}</TotalAdjustmentX>
     <AllLines>&amp;Toate liniile</AllLines>
     <SelectedLinesOnly>&amp;Doar liniile selectate</SelectedLinesOnly>
-    <SelectedLinesAndForward>Linia/liniile selectată/selectate și &amp;dinainte</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Linia/liniile selectată/selectate și &amp;următoarele</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Istoric (ptr. anulări)</Title>
