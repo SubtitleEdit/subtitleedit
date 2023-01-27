@@ -53,7 +53,6 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
             var formatList = new List<Formatting>();
             for (var index = 0; index < sourceParagraphs.Count; index++)
             {
-
                 var p = sourceParagraphs[index];
                 var f = new Formatting();
                 formatList.Add(f);
@@ -180,6 +179,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
                     {
                         if (c == '\\' && result[i + 1] == '\\')
                         {
+                            i++;
+                        }
+                        else if (c == '\\' && result[i + 1] == '"')
+                        {
+                            c = '"';
                             i++;
                         }
                         else if (c == '"')

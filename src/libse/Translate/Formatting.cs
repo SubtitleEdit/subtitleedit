@@ -22,12 +22,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private int BreakNumberOfLines { get; set; }
         private bool BreakSplitAtLineEnding { get; set; }
         private bool BreakIsDialog { get; set; }
+        private bool HasReset { get; set; }
+        private string ReplaceAllText { get; set; }
 
         public string SetTagsAndReturnTrimmed(string input, string sourceLanguage)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(HtmlUtil.RemoveHtmlTags(input, true)))
             {
-                return string.Empty;
+                ReplaceAllText = input;
+                return "...";
             }
 
             var text = input.Trim();
@@ -41,6 +44,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     StartTags = text.Substring(0, endIndex + 1);
                     text = text.Remove(0, endIndex + 1).Trim();
                 }
+            }
+
+            // ASSA reset tag
+            if (text.Contains("\\r}", StringComparison.Ordinal) ||
+                text.Contains("\\r\\", StringComparison.Ordinal))
+            {
+                text = text.Replace("\\r}", "\\RESET}");
+                text = text.Replace("\\r\\", "\\RESET\\");
+
+                HasReset = true;
             }
 
             // Italic tags
@@ -102,6 +115,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             var text = input.Trim();
 
+            if (ReplaceAllText != null)
+            {
+                return ReplaceAllText;
+            }
+
             // Auto-break line
             if (AutoBreak)
             {
@@ -137,6 +155,13 @@ namespace Nikse.SubtitleEdit.Core.Translate
             if (!string.IsNullOrEmpty(Font))
             {
                 text = Font + text + "</font>";
+            }
+
+            // ASSA reset tag
+            if (HasReset)
+            {
+                text = text.Replace("\\RESET}", "\\r}");
+                text = text.Replace("\\RESET\\", "\\r\\");
             }
 
             // SSA/ASS tags

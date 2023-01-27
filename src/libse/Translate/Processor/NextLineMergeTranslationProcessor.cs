@@ -58,7 +58,8 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
 
                 var baseUnitText = currentParagraphText;
                 if (Configuration.Settings.Tools.TranslateAllowSplit &&
-                    !string.IsNullOrEmpty(nextParagraphText) && !string.IsNullOrEmpty(currentParagraphText) &&
+                    !string.IsNullOrEmpty(HtmlUtil.RemoveHtmlTags(nextParagraphText, true)) && 
+                    !string.IsNullOrEmpty(HtmlUtil.RemoveHtmlTags(currentParagraphText, true)) &&
                     (char.IsLetterOrDigit(currentParagraphText[currentParagraphText.Length - 1]) || currentParagraphText[currentParagraphText.Length - 1] == ',' || currentParagraphText[currentParagraphText.Length - 1] == '\u060C') && //  \u060C = arabic comma
                     char.IsLower(nextParagraphText[0]) &&
                     !currentParagraphText.Contains('-') && !nextParagraphText.Contains('-'))
@@ -88,6 +89,11 @@ namespace Nikse.SubtitleEdit.Core.Translate.Processor
             {
                 var sourceTranslationUnit = sourceTranslationUnits[i];
                 var targetText = targetTexts[i].Trim();
+
+                if (targetTexts.Count < sourceTranslationUnits.Count)
+                {
+                    targetTexts.Add(string.Empty);
+                }
 
                 var currentText = targetText;
                 string nextText = null;
