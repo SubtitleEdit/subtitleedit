@@ -96,6 +96,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             {
                                 temp = temp.Remove(2, 1);
                             }
+                            else if (index == 2 && temp.StartsWith($"- .{Environment.NewLine}", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(2, $"- .{Environment.NewLine}".Length - 2);
+                            }
+                            else if (index == 2 && temp.StartsWith($"- !{Environment.NewLine}", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(2, $"- !{Environment.NewLine}".Length - 2);
+                            }
+                            else if (index == 2 && temp.StartsWith($"- ?{Environment.NewLine}", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(2, $"- ?{Environment.NewLine}".Length - 2);
+                            }
                             else if (index == 0 && temp.StartsWith(" —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(0, 2);

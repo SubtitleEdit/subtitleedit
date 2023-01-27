@@ -627,6 +627,38 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjections17A()
+        {
+            var text = $"- Hm.{Environment.NewLine}- Hm.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections17B()
+        {
+            var text = $"- Hm.{Environment.NewLine}- Hm.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections18A()
+        {
+            var text = $"- Hm!{Environment.NewLine}- Hm!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections18B()
+        {
+            var text = $"- Hm!{Environment.NewLine}- Hm!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
