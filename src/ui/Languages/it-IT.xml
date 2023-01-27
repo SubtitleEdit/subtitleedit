@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.10</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 30.12.2022</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.01.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -1725,7 +1725,7 @@ Vuoi continuare?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Riga {0} - errore leggendo: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Riga {0} - errore leggendo codice temporale: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Riga {0} - previsto sottotitolo numero: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Riga {0} - prevista riga vuota, ma trovato il numero - codice di tempo (numero ignorato): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>Riga {0} - prevista riga vuota, ma trovato il numero ({1}) seguito dal codice temporale</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Prima di indovinare il codice temporale</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Prima della durata automatica per righe selezionate</BeforeAutoDuration>
     <BeforeColumnPaste>Prima di incolla colonna</BeforeColumnPaste>
