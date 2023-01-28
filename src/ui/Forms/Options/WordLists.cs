@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 listBoxUserWordLists.BeginUpdate();
                 listBoxUserWordLists.Items.Clear();
                 listBoxUserWordLists.Items.AddRange(_userWordList.ToArray<object>());
-                listBoxUserWordLists.BeginUpdate();
+                listBoxUserWordLists.EndUpdate();
             }
         }
 
