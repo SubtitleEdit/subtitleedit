@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
@@ -315,6 +316,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
             return false;
+        }
+
+        public static async Task<NameList> CreateAsync(string dictionaryFolder, string languageName, bool useOnlineNameList, string namesUrl)
+        {
+            return await Task.Run(() => new NameList(dictionaryFolder, languageName, useOnlineNameList, namesUrl));
         }
     }
 }
