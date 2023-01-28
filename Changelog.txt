@@ -58,6 +58,7 @@
    * Fix Find/Find-next in OCR window - thx dokax
    * Fix issue with online text search in translation mode - thx domddol	
    * Allow curly brackets in ASSA styles - thx Ahmad
+   * A few fixes for "Remove text for HI" - thx Zezslav	
 
 
 3.6.10 (21th November 2022)
