@@ -1628,7 +1628,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumberXErrorReadingFromSourceLineY = "Line {0} - error reading: {1}",
                 LineNumberXErrorReadingTimeCodeFromSourceLineY = "Line {0} - error reading time code: {1}",
                 LineNumberXExpectedNumberFromSourceLineY = "Line {0} - expected subtitle number: {1}",
-                LineNumberXExpectedEmptyLine = "Line {0} - expected empty line but found number + time code (number skipped): {1}",
+                LineNumberXExpectedEmptyLine = "Line {0}: Empty line expected, but found number ({1}) followed by time code.",
                 BeforeGuessingTimeCodes = "Before guessing time codes",
                 BeforeAutoDuration = "Before auto-duration for selected lines",
                 BeforeColumnPaste = "Before column paste",
