@@ -423,10 +423,10 @@ ZA ŁATWO, PRAGNIE MŁODOŚCI";
             Assert.AreEqual("00:27:21,175", subtitle.Paragraphs[6].StartTime.ToString(false));
             Assert.AreEqual("00:27:23,121", subtitle.Paragraphs[6].EndTime.ToString(false));
 
-            Assert.IsTrue(target.Errors.Contains("Line 8 -"));
-            Assert.IsTrue(target.Errors.Contains("Line 14 -"));
-            Assert.IsTrue(target.Errors.Contains("Line 18 -"));
-            Assert.IsTrue(target.Errors.Contains("Line 32 -"));
+            Assert.IsTrue(target.Errors.Contains("Line 8: "));
+            Assert.IsTrue(target.Errors.Contains("Line 14: "));
+            Assert.IsTrue(target.Errors.Contains("Line 18: "));
+            Assert.IsTrue(target.Errors.Contains("Line 32: "));
         }
 
         #endregion SubRip (.srt)
