@@ -264,10 +264,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 textBoxNameEtc.Focus();
                 for (var i = 0; i < listViewNames.Items.Count; i++)
                 {
-                    if (listViewNames.Items[i].ToString() == text)
+                    var item = listViewNames.Items[i];
+                    if (item.Text == text)
                     {
-                        listViewNames.Items[i].Selected = true;
-                        listViewNames.Items[i].Focused = true;
+                        item.Selected = true;
+                        item.Focused = true;
                         var top = i - 5;
                         if (top < 0)
                         {
