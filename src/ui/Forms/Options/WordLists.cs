@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
+        private async void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
         {
             buttonRemoveNameEtc.Enabled = false;
             buttonAddNames.Enabled = false;
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 // OCR fix words
                 LoadOcrFixList(true);
 
-                LoadNames(language, true);
+                await LoadNamesAsync(language, true);
             }
             
             listViewNames.EndUpdate();
@@ -200,33 +200,31 @@ namespace Nikse.SubtitleEdit.Forms.Options
             }
         }
 
-        private void LoadNames(string language, bool reloadListBox)
+        private async Task LoadNamesAsync(string language, bool reloadListBox)
         {
-            var task = Task.Factory.StartNew(() =>
-            {
-                // names etc
-                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                _wordListNames = nameList.GetAllNames();
-                _wordListNames.Sort();
-                return _wordListNames;
-            });
-
+            // update all names
+            _wordListNames = await GetNamesSortedFromSourceAsync().ConfigureAwait(true);
+            
             if (reloadListBox)
             {
-                // reload the listbox on a continuation ui thead
-                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
-                task.ContinueWith(originalTask =>
+                listViewNames.BeginUpdate();
+                listViewNames.Items.Clear();
+                var list = new List<ListViewItem>();
+                foreach (var item in _wordListNames)
                 {
-                    listViewNames.BeginUpdate();
-                    listViewNames.Items.Clear();
-                    var list = new List<ListViewItem>();
-                    foreach (var item in originalTask.Result)
-                    {
-                        list.Add(new ListViewItem(item));
-                    }
-                    listViewNames.Items.AddRange(list.ToArray());
-                    listViewNames.EndUpdate();
-                }, uiContext);
+                    list.Add(new ListViewItem(item));
+                }
+                listViewNames.Items.AddRange(list.ToArray());
+                listViewNames.EndUpdate();
+            }
+
+            async Task<List<string>> GetNamesSortedFromSourceAsync()
+            {
+                var nameList = await NameList.CreateAsync(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl)
+                    .ConfigureAwait(false);
+                var names = nameList.GetAllNames();
+                names.Sort();
+                return names;
             }
         }
 
@@ -242,7 +240,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
-        private void ButtonAddNamesClick(object sender, EventArgs e)
+        private async void ButtonAddNamesClick(object sender, EventArgs e)
         {
             var languageIndex = comboBoxWordListLanguage.SelectedIndex;
             if (languageIndex < 0)
@@ -254,9 +252,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
             var text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNames.Contains(text))
             {
-                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                // adds new name
+                var nameList = await NameList.CreateAsync(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 nameList.Add(text);
-                LoadNames(language, true);
+                
+                // reload
+                await LoadNamesAsync(language, true).ConfigureAwait(true);
+                
                 labelStatus.Text = string.Format(LanguageSettings.Current.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
@@ -288,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             buttonRemoveNameEtc.Enabled = listViewNames.SelectedItems.Count >= 1;
         }
 
-        private void ButtonRemoveNameEtcClick(object sender, EventArgs e)
+        private async void ButtonRemoveNameEtcClick(object sender, EventArgs e)
         {
             if (listViewNames.SelectedItems.Count == 0)
             {
@@ -314,7 +316,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 if (result == DialogResult.Yes)
                 {
                     var removeCount = 0;
-                    var namesList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                    var namesList = await NameList.CreateAsync(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl)
+                        .ConfigureAwait(true);
                     for (var idx = listViewNames.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listViewNames.SelectedIndices[idx];
@@ -326,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
                     if (removeCount > 0)
                     {
-                        LoadNames(language, true); // reload
+                        await LoadNamesAsync(language, true).ConfigureAwait(true); // reload
 
                         if (index < listViewNames.Items.Count)
                         {
