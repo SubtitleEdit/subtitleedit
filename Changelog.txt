@@ -35,7 +35,7 @@
    * Rename "Fix dialogs on one line" to "Break dialogs on one line"
    * Sort Tesseract dictionaries in download drop-down-list
    * Update Tesseract 5.2.0 to 5.3.0
-   * Update Whisper CPP to 2023-01-08
+   * Update Whisper CPP to 2023-01-28
    * Update yt-dlp to 2023.01.06
    * Improve setting color tags when reading from EBU STL
    * Add more validation for EBU STL teletext - thx Stefan
