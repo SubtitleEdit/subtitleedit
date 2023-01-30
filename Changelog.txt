@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.11 (xth January 2023) BETA
+3.6.11 (30th January 2023)
 * NEW:
    * Add File - Close translated subtitle - thx zcraber/Leon 
    * Add auto-naming rule for translation - thx Leon/OmrSi
