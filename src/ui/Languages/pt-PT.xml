@@ -1725,8 +1725,8 @@ Continuar?</SubtitleAppendPrompt>
     <SubtitleExported>Legenda exportada</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Linha {0} - erro de leitura: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linha {0} - erro ao ler os tempos: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Linha {0} - número da legenda esperado: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Linha {0} - prevista linha em branco mas foi encontrado número + tempos: {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedNumberFromSourceLineY>Linha {0} - número da legenda previsto: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Linha {0} - Linha em branco prevista, mas foi encontrado número ({1}) seguido por tempos.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Antes de saber os tempos</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Antes de auto-duração para as linhas seleccionadas</BeforeAutoDuration>
     <BeforeColumnPaste>Antes de colar coluna</BeforeColumnPaste>
@@ -2616,7 +2616,7 @@ informação do tipo de letra embutida como o "Advanced Sub Station Alpha" ou vi
     <RestoreDefaultSettingsMsg>Todas as definições serão repostas para os valores predefinidos
 
 Continuar?</RestoreDefaultSettingsMsg>
-    <RemoveTimeCodes>Remover códigos de tempo</RemoveTimeCodes>
+    <RemoveTimeCodes>Remover tempos</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Editar definições para fixar o estilo de continuação...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Definições da fixação do estilo de continuação</FixContinuationStyleSettings>
     <UncheckInsertsAllCaps>Detectar e desmarcar linhas apenas em maiúscula (por exemplo: SEM ENTRADA)</UncheckInsertsAllCaps>
