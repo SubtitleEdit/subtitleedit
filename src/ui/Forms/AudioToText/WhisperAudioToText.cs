@@ -503,6 +503,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     progressBar1.Visible = false;
                     buttonCancel.Visible = false;
                     DialogResult = DialogResult.Cancel;
+
+                    var partialSub = new Subtitle();
+                    partialSub.Paragraphs.AddRange(_resultList.OrderBy(p => p.Start).Select(p => new Paragraph(p.Text, (double)p.Start * 1000.0, (double)p.End * 1000.0)).ToList());
+                    if (partialSub.Paragraphs.Count > 0)
+                    {
+                        return partialSub;
+                    }
+
                     return null;
                 }
             }
