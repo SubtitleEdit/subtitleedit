@@ -1725,7 +1725,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Linia {0} - błąd odczytu: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linia {0} - błąd odczytu kodu czasowego: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linia {0} - oczekiwany numer napisu: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Linia {0} - spodziewana pusta linia, ale znaleziono numer + kod czasowy (numer pominięty): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>Linia {0}: Oczekiwano pustej linii, ale znaleziono numer ({1}), po którym następuje kod czasowy.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Przed odgadnięciem kodów czasowych</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Przed automatycznym czasem trwania dla wybranych linii</BeforeAutoDuration>
     <BeforeColumnPaste>Przed wklejeniem kolumny</BeforeColumnPaste>
