@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 postSub.Paragraphs.Add(audioClip.Paragraph);
             }
 
-            var postSubFixed = postProcessor.Fix(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false);
+            var postSubFixed = postProcessor.Fix(postSub, checkBoxUsePostProcessing.Checked, true, false, true, false, false, AudioToTextPostProcessor.Engine.Vosk);
             for (var index = 0; index < _audioClips.Count; index++)
             {
                 var audioClip = _audioClips[index];
