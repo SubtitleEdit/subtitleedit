@@ -97,10 +97,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 new FixDanishLetterI().Fix(subtitle, new EmptyFixCallback());
             }
 
-            return Fix(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines);
+            return Fix(subtitle, usePostProcessing, addPeriods, mergeLines, fixCasing, fixShortDuration, splitLines, engine);
         }
 
-        public Subtitle Fix(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines)
+        public Subtitle Fix(Subtitle subtitle, bool usePostProcessing, bool addPeriods, bool mergeLines, bool fixCasing, bool fixShortDuration, bool splitLines, Engine engine)
         {
             if (usePostProcessing)
             {
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                 if (fixCasing)
                 {
-                    subtitle = FixCasing(subtitle, TwoLetterLanguageCode);
+                    subtitle = FixCasing(subtitle, TwoLetterLanguageCode, engine);
                 }
 
                 if (fixShortDuration)
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             }
         }
 
-        private static Subtitle FixCasing(Subtitle inputSubtitle, string language)
+        private static Subtitle FixCasing(Subtitle inputSubtitle, string language, Engine engine)
         {
             var subtitle = new Subtitle(inputSubtitle);
 
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
                 {
                     var st = new StrippableText(text);
-                    st.FixCasing(nameListInclMulti, true, false, false, lastLine);
+                    st.FixCasing(nameListInclMulti, true, engine == Engine.Vosk, engine == Engine.Vosk, lastLine);
                     paragraph.Text = st.MergedString;
                 }
 
