@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]") || uiFormat.Name != AdvancedSubStationAlpha.NameOfFormat)
                     {
-                        if (subtitle.Header == null && uiFormat.Name == SubStationAlpha.NameOfFormat)
+                        if (string.IsNullOrEmpty(subtitle.Header) && uiFormat.Name == SubStationAlpha.NameOfFormat)
                         {
                             subtitle.Header = SubStationAlpha.DefaultHeader;
                         }
