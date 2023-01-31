@@ -3,11 +3,13 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.11</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 22/12/01</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 23/01/23</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Annuler</Cancel>
+    <Yes>Oui</Yes>
+    <No>Non</No>
     <Apply>Appliquer</Apply>
     <ApplyTo>Appliquer à</ApplyTo>
     <None>Aucun</None>
@@ -424,7 +426,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <CheckingForUpdatesFailedX>Recherche de mise à jour en échec : {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Vous utilisez la dernière version de Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Aller à la page de téléchargement</InstallUpdate>
+    <InstallUpdate>Page de téléchargement</InstallUpdate>
     <NoUpdates>Ne pas mettre à jour</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
@@ -1164,6 +1166,7 @@ Pour utiliser une clé API, allez à \"Options -&gt; Paramètres -&gt; Outils\" 
         <OpenOriginal>Ouvrir sous-titre original (mode traduction)...</OpenOriginal>
         <SaveOriginal>Sauvegarder l'original</SaveOriginal>
         <CloseOriginal>Fermer l'original</CloseOriginal>
+        <CloseTranslation>Fermer le sous-titre traduit</CloseTranslation>
         <OpenContainingFolder>Ouvrir le dossier des sous-titres</OpenContainingFolder>
         <Compare>Comparer des sous-titres...</Compare>
         <Statistics>Statistiques...</Statistics>
@@ -1722,7 +1725,7 @@ Continuer ?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Ligne {0} - Erreur de lecture : {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Ligne {0} - Erreur de lecture du horodatage : {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Ligne {0} - n° de sous-titre attendu : {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Line {0} - ligne vide attendue mais reçu un chiffre + horodatage (chiffre ignoré) :{1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>Line {0} - ligne vide attendue mais nombre ({1}) trouvé, suivi de l'horodatage</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Avant d'estimer les horodatages</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Avant durée auto. des lignes sélectionnées</BeforeAutoDuration>
     <BeforeColumnPaste>Avant de coller une colonne</BeforeColumnPaste>
@@ -1781,6 +1784,11 @@ Télécharger et continuer ??</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>N'utilise que le canal audio central avant</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Avant de convertir les couleurs en dialogue</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Couleurs converties en dialogue</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Installez un lecteur vidéo</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE ne peut lire le fichier vidéo/audio (ou le fichier n'est pas un vidéo/audio valide).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit demande un lecteur vidéo.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>Pour utiliser le lecteur recommandé "mpv", cliquez le bouton ci-dessous.</UseRecommendMpv>
+    <DownloadAndUseMpv>Télécharger et utiliser "mpv" comme lecteur vidéo</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
@@ -2205,6 +2213,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <AutoBackupEveryFiveMinutes>Chaque 5 min.</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Chaque 15 min.</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Effacer après</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Auto-suffixer par le nom du fichier traduction</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 mois</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} mois</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Mises à jour ??</CheckForUpdates>
@@ -2322,11 +2331,11 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ContinuationStyleNoneLeadingTrailingEllipsis>Aucun, points aux pauses</ContinuationStyleNoneLeadingTrailingEllipsis>
     <ContinuationStyleOnlyTrailingDots>Points de clôture</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Points</ContinuationStyleLeadingTrailingDots>
-    <ContinuationStyleLeadingTrailingEllipsis>Ellipse</ContinuationStyleLeadingTrailingEllipsis>
-    <ContinuationStyleNoneTrailingEllipsis>Aucun, ellipse aux pauses</ContinuationStyleNoneTrailingEllipsis>
     <ContinuationStyleOnlyTrailingEllipsis>Ellipse (en fin seulement)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>Ellipse</ContinuationStyleLeadingTrailingEllipsis>
     <ContinuationStyleLeadingTrailingDash>Tiret</ContinuationStyleLeadingTrailingDash>
     <ContinuationStyleLeadingTrailingDashDots>Tiret mais points aux pauses</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>Personnalisé</ContinuationStyleCustom>
     <CpsLineLengthStyle>Cps/longueur ligne</CpsLineLengthStyle>
     <CpsLineLengthStyleCalcAll>Compter tous caractères</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>Compter tout sauf blancs majuscules</CpsLineLengthStyleCalcNoSpaceCpsOnly>
@@ -2341,6 +2350,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <MusicSymbolsReplace>Symboles musicaux à remplacer (séparés par une virgule)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corriger les erreurs OCR - utiliser aussi les règles intégrées</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Utiliser la liste de fractionnement de mot (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Eviter les majuscules à chaque mot</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corriger durées courtes - autoriser déplacement heure début</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorer la première étape (choix des règles de correction)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Format par défaut</DefaultFormat>
@@ -2509,7 +2519,8 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <VideoResetSpeedAndZoom>Rétablir vitesse / zoom audio</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Activer/désactiver les contrôles vidéo</MainToggleVideoControls>
     <VideoToggleContrast>Commuter contraste (mpv seul)</VideoToggleContrast>
-    <VideoAudioToText>Audio -&gt; texte (reconnaissance vocale)</VideoAudioToText>
+    <AudioToTextX>Audio en texte ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Lignes d'audio -&gt; texte sélectionnées ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Commuter luminosité (mpv seul)</VideoToggleBrightness>
     <CustomSearch1>Traduction, recherche personnalisée 1</CustomSearch1>
     <CustomSearch2>Traduction, recherche personnalisée 2</CustomSearch2>
@@ -2870,6 +2881,7 @@ Continuer ?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Copier {0} de {1}</CopyXOfY>
     <New>Nouveau</New>
     <Remove>Retirer</Remove>
+    <ReplaceWith>Remplacer par…</ReplaceWith>
     <RemoveAll>Retirer tout</RemoveAll>
     <ImportStyleFromFile>Importer le style du fichier...</ImportStyleFromFile>
     <ExportStyleToFile>Exporter le style vers le fichier... (Ajout du style si le fichier existe déjà)</ExportStyleToFile>
