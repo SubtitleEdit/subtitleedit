@@ -48,7 +48,7 @@ using static System.Windows.Forms.LinkLabel;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class Main : Form
+    public sealed partial class Main : Form, IReloadSubtitle
     {
         private class ComboBoxZoomItem
         {
@@ -8800,7 +8800,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sub.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[idx], false));
                     }
 
-                    multipleReplace.Initialize(sub);
+                    multipleReplace.Initialize(sub, this);
                     if (multipleReplace.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeMultipleReplace);
@@ -20984,7 +20984,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var multipleReplace = new MultipleReplace())
             {
-                multipleReplace.Initialize(_subtitle);
+                multipleReplace.Initialize(_subtitle, this);
                 if (multipleReplace.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeMultipleReplace);
@@ -34876,6 +34876,14 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
                 RefreshSelectedParagraph();
             }
+        }
+
+        public void ReloadSubtitle(Subtitle subtitle)
+        {
+            SaveSubtitleListviewIndices();
+            SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+            RestoreSubtitleListviewIndices();
+            RefreshSelectedParagraph();
         }
     }
 }

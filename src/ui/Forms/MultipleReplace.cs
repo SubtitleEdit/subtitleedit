@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<MultipleSearchAndReplaceGroup> _oldMultipleSearchAndReplaceGroups = new List<MultipleSearchAndReplaceGroup>();
         private readonly Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         private Subtitle _subtitle;
+        private IReloadSubtitle _reloadSubtitle;
         private Subtitle _original;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
@@ -120,11 +121,12 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
         }
 
-        public void Initialize(Subtitle subtitle)
+        public void Initialize(Subtitle subtitle, IReloadSubtitle reloadSubtitle)
         {
             _subtitle = subtitle ?? throw new ArgumentNullException(nameof(subtitle));
             _original = new Subtitle(_subtitle);
             _oldMultipleSearchAndReplaceGroups.Clear();
+            _reloadSubtitle = reloadSubtitle;
 
             if (Configuration.Settings.MultipleSearchAndReplaceGroups.Count == 0)
             {
@@ -151,11 +153,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, Configuration.Settings.MultipleSearchAndReplaceGroups[0]);
+            buttonApply.Enabled = _reloadSubtitle != null;
         }
 
         internal void RunFromBatch(Subtitle subtitle)
         {
-            Initialize(subtitle);
+            Initialize(subtitle, null);
             GeneratePreview();
             SetDeleteIndices();
         }
@@ -1226,7 +1229,9 @@ namespace Nikse.SubtitleEdit.Forms
             SetDeleteIndices();
             ResetUncheckLines();
             _subtitle = new Subtitle(FixedSubtitle);
+            _reloadSubtitle?.ReloadSubtitle(_subtitle);
             GeneratePreview();
+            SaveReplaceList(true);
         }
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)

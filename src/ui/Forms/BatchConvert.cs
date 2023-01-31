@@ -3377,7 +3377,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var form = new MultipleReplace())
                 {
-                    form.Initialize(new Subtitle());
+                    form.Initialize(new Subtitle(), null);
                     form.ShowDialog(this);
                 }
             }
