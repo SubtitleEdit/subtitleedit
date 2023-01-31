@@ -54,7 +54,7 @@ PlayDepth: 0
 
 [V4 Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,{9},0,1,{4},{5},2,{6},{7},{8},0,1
+Style: Default,{1},{2},{3},65535,65535,-2147483640,{9:0.##},0,1,{4:0.##},{5:0.##},2,{6:0.##},{7:0.##},{8:0.##},0,1
 
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
