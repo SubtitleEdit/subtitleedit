@@ -70,6 +70,7 @@
     <Compile Include="LanguageFiles\LanguageFileTest.cs" />
     <Compile Include="Logic\ConvertColorsToDialogTest.cs" />
     <Compile Include="Logic\NetflixHelperTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\EbuStlTest.cs" />
     <Compile Include="Logic\SubtitleFormats\PacTest.cs" />
     <Compile Include="Core\UUEncodingTest.cs" />
     <Compile Include="Core\CharUtilsTest.cs" />
