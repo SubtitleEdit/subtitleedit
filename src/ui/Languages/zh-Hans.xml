@@ -1717,7 +1717,7 @@ Command line: {1} {2}
     <LineNumberXErrorReadingFromSourceLineY>行 {0} - 出错于读取: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>行 {0} - 出错于读取时间码: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>行 {0} - 期望的字幕编号: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>行 {0} - 本应是空白字幕编号但发现了编号 + 时间码 (已跳过的编号): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>行 {0}: 应是空行，但发现了编号 ({1}) 及时间码。</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>猜测时间码之前</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>为所选行自动设置时长之前</BeforeAutoDuration>
     <BeforeColumnPaste>列粘贴之前</BeforeColumnPaste>
