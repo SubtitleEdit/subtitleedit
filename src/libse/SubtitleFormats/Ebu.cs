@@ -1744,7 +1744,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else
             {
-                sb.Append("</font> ");
+                sb.Append("</font>");
             }
 
             if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
