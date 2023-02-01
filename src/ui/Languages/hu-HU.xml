@@ -8,6 +8,8 @@
     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>Mégse</Cancel>
+    <Yes>Igen</Yes>
+    <No>Nem</No>
     <Apply>Alkalmaz</Apply>
     <ApplyTo>Alkalmazás a következőre</ApplyTo>
     <None>Nincs</None>
@@ -192,6 +194,7 @@ További információ (web)?</WhisperNotFound>
     <TranscribingXOfY>Hang átírása szöveggé - {1} - {1} fájl...</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} fájl mentve a videó forrásmappájába</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Utófeldolgozás használata (sorok összevonása, betűjelek és írásjelek javítása, stb.)</UsePostProcessing>
+    <AutoAdjustTimings>Időzítések automatikus beállítása</AutoAdjustTimings>
     <BatchMode>Kötegelt mód</BatchMode>
     <KeepPartialTranscription>Részleges átírás fenntartása</KeepPartialTranscription>
     <TranslateToEnglish>Fordítás angolra</TranslateToEnglish>
@@ -775,7 +778,7 @@ További információ (web)?</WhisperNotFound>
     <FixCommonOcrErrors>Gyakori OCR hibák javítása (OCR helyettesítési lista használata)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Gyakori OCR hibák javítva (OcrReplaceList fájl használva): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>A számok közti szóközök eltávolítása</RemoveSpaceBetweenNumber>
-    <BreakDialogsOnOneLine>Párbeszédek javítása egy sorban</BreakDialogsOnOneLine>
+    <BreakDialogsOnOneLine>Dialógusok felosztása egy sorban</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>Nem párbeszédek esetén távolítsa el a kezdő kötőjelet az első sorban</RemoveDialogFirstInNonDialogs>
     <NormalizeStrings>Karakterláncok normalizálása</NormalizeStrings>
     <FixTurkishAnsi>Török ANSI (izlandi) betűk javítása Unicode-osra</FixTurkishAnsi>
@@ -859,6 +862,7 @@ További információ (web)?</WhisperNotFound>
     <XGeneratedWithBurnedInSubsInX>"{0}" létrehozva ráégetett felirattal a következőben: {1}</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Hátralévő idő: {0} perc</TimeRemainingMinutes>
     <TimeRemainingSeconds>Hátralévő idő: {0} másodperc</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>Hátralévő idő: Néhány másodperc</TimeRemainingAFewSeconds>
     <TimeRemainingMinutesAndSeconds>Hátralévő idő: {0} perc és {1} másodperc</TimeRemainingMinutesAndSeconds>
     <TargetFileName>Célfájl neve: {0}</TargetFileName>
     <TargetFileSize>Célfájl mérete (2 menetes kódolást igényel)</TargetFileSize>
@@ -1162,6 +1166,7 @@ Az API-kulcs használatához lépjen az "Opciók -&gt; Beállítások -&gt; Eszk
         <OpenOriginal>Eredeti felirat megnyitása (fordító mód)...</OpenOriginal>
         <SaveOriginal>Eredeti felirat mentése</SaveOriginal>
         <CloseOriginal>Eredeti felirat bezárása</CloseOriginal>
+        <CloseTranslation>Lefordított felirat bezárása</CloseTranslation>
         <OpenContainingFolder>Fájlt tartalmazó mappa megnyitása</OpenContainingFolder>
         <Compare>Összehasonlítás...</Compare>
         <Statistics>Statisztika...</Statistics>
@@ -1720,7 +1725,7 @@ Folytatja?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>{0} sor - olvasási hiba: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>{0} sor - időkód olvasási hiba: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>{0} sor - várt feliratszám: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <LineNumberXExpectedEmptyLine>Sor {0} - üres sor várható, de szám + időkód található (szám kihagyva): {1}</LineNumberXExpectedEmptyLine>
+    <LineNumberXExpectedEmptyLine>{0} sor: Üres sor várható, de találtunk egy ({1}) számot, amelyet egy időkód követ.</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Az időkódok becslése előtti állapotra</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>A kiválasztott sorok autmatikus időtartam előtti állapotra</BeforeAutoDuration>
     <BeforeColumnPaste>Az oszlop beillesztése előtti állapotra</BeforeColumnPaste>
@@ -1779,6 +1784,11 @@ Letölti és folytatja?</VideoFromUrlRequirements>
     <UsingOnlyFrontCenterChannel>Csak az elülső középső hangcsatorna használata</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Mielőtt a színeket dialógussá alakítaná</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Dialógussá alakított színek</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>Kérjük, telepítse a videólejátszót</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>Az SE nem tudta lejátszani a videót/hangfájlt (vagy a fájl nem érvényes videó/hangfájl).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>A Subtitle Edit-nek videolejátszóra van szüksége.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>Az ajánlott "mpv" videólejátszó használatához kattintson az alábbi gombra.</UseRecommendMpv>
+    <DownloadAndUseMpv>Letöltés és az "mpv" használata videólejátszóként</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Válassza ki a feliratot a Matroska fájlból</Title>
@@ -2203,6 +2213,7 @@ szerkesztheti ugyanazt a feliratfájlt (együttműködés)</Information>
     <AutoBackupEveryFiveMinutes>5 percenként</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 percenként</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Törlés ez után:</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>Fordítási fájlnév automatikus utótag</TranslationAutoSuffix>
     <AutoBackupDeleteAfterOneMonth>1 hónap</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterXMonths>{0} hónap</AutoBackupDeleteAfterXMonths>
     <CheckForUpdates>Frissítések ellenőrzése</CheckForUpdates>
@@ -2339,6 +2350,7 @@ szerkesztheti ugyanazt a feliratfájlt (együttműködés)</Information>
     <MusicSymbolsReplace>Cserélendő zenei szimbólumok (vesszővel elválasztva)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Közös OCR hibák javítása - rögzített hivatkozású szabály is használható</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Szófelosztási lista használata (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>Kezdő nagybetűk kerülése</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Rövid megjelenítési idő javítása - kezdési idő léptetési lehetőség</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Első lépés kihagyása (javítási szabályok kiválasztása)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Alapértelmezett formátum</DefaultFormat>
@@ -2507,7 +2519,8 @@ szerkesztheti ugyanazt a feliratfájlt (együttműködés)</Information>
     <VideoResetSpeedAndZoom>Lejátszási arány (sebesség) és hullámforma nagyítás visszaállítása</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Videóvezérlők kapcsoló</MainToggleVideoControls>
     <VideoToggleContrast>Kontraszt váltása (csak mpv)</VideoToggleContrast>
-    <VideoAudioToText>Hangból szöveg</VideoAudioToText>
+    <AudioToTextX>Hang szöveggé alakítása ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Hang a kiválasztott sorok szövegére ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Fényerő váltása (csak mpv)</VideoToggleBrightness>
     <CustomSearch1>Fordítás, egyéni keresés 1</CustomSearch1>
     <CustomSearch2>Fordítás, egyéni keresés 2</CustomSearch2>
@@ -2868,6 +2881,7 @@ Folytatja?</RestoreDefaultSettingsMsg>
     <CopyXOfY>{0} - {1} másolás</CopyXOfY>
     <New>Új</New>
     <Remove>Eltávolítás</Remove>
+    <ReplaceWith>Csere a következőre...</ReplaceWith>
     <RemoveAll>Összes eltávolítása</RemoveAll>
     <ImportStyleFromFile>Stílus importálása fájlból...</ImportStyleFromFile>
     <ExportStyleToFile>Stílus exportálása fájlba... (a stílus hozzáadásra kerül, ha a fájl már létezik)</ExportStyleToFile>
@@ -3046,6 +3060,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
     <ApiKey>API-kulcs</ApiKey>
     <SendOriginalImages>Eredeti képek küldése</SendOriginalImages>
+    <SeHandlesTextMerge>SE kezeli a szövegegyesítést</SeHandlesTextMerge>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Manuális kép a szöveghez</Title>
