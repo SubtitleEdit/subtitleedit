@@ -1383,7 +1383,24 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + resolution.Value.Y.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
                             }
 
-                            FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                            try
+                            {
+                                FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                            }
+                            catch
+                            {
+                                Thread.Sleep(100);
+                                try
+                                {
+                                    FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                }
+                                catch
+                                {
+                                    Thread.Sleep(500);
+                                    FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                }
+                            }
+
                         }
                     }
                     catch (Exception ex)
