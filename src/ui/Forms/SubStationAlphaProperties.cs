@@ -45,13 +45,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxWrapStyle.SelectedIndex = 2;
             comboBoxCollision.SelectedIndex = 0;
 
-            string header = subtitle.Header;
+            var header = subtitle.Header;
             if (subtitle.Header == null)
             {
                 var ssa = new SubStationAlpha();
                 var sub = new Subtitle();
                 var lines = subtitle.ToText(ssa).SplitToLines();
-                string title = "Untitled";
+                var title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
                 {
                     title = Path.GetFileNameWithoutExtension(subtitleFileName);
@@ -67,9 +67,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (header != null)
             {
-                foreach (string line in header.SplitToLines())
+                foreach (var line in header.SplitToLines())
                 {
-                    string s = line.ToLowerInvariant().Trim();
+                    var s = line.ToLowerInvariant().Trim();
                     if (s.StartsWith("title:", StringComparison.Ordinal))
                     {
                         textBoxTitle.Text = line.Trim().Remove(0, 6).Trim();
@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var sub = new Subtitle();
-            string text = format.ToText(sub, string.Empty);
+            var text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Header = GetDefaultHeader();
             }
 
-            string title = textBoxTitle.Text;
+            var title = textBoxTitle.Text;
             if (string.IsNullOrWhiteSpace(title))
             {
                 title = "untitled";
@@ -241,9 +241,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateTag(string tag, string text, bool remove)
         {
-            bool scriptInfoOn = false;
+            var scriptInfoOn = false;
             var sb = new StringBuilder();
-            bool found = false;
+            var found = false;
             foreach (string line in _subtitle.Header.SplitToLines())
             {
                 if (line.StartsWith("[script info]", StringComparison.OrdinalIgnoreCase))
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
                     scriptInfoOn = false;
                 }
 
-                string s = line.ToLowerInvariant();
+                var s = line.ToLowerInvariant();
                 if (s.StartsWith(tag.ToLowerInvariant() + ":", StringComparison.Ordinal))
                 {
                     if (!remove)
@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                VideoInfo info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                 if (info != null && info.Success)
                 {
                     numericUpDownVideoWidth.Value = info.Width;
