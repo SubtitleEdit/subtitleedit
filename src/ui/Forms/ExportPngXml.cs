@@ -213,15 +213,32 @@ namespace Nikse.SubtitleEdit.Forms
             var text = p.P.Text;
             if (format.GetType() == typeof(SubStationAlpha) && text.Length > 5)
             {
-                text = p.P.Text.Substring(0, 6);
-                alignment = GetSsaAlignment(text, alignment);
+                var assaTag = GetStartAssaTag(text);
+                alignment = GetSsaAlignment(assaTag, alignment);
             }
             else if (text.Length > 6)
             {
-                text = p.P.Text.Substring(0, 6);
-                alignment = GetAssAlignment(text, alignment);
+                var assaTag = GetStartAssaTag(text);
+                alignment = GetAssAlignment(assaTag, alignment);
             }
+
             return alignment;
+        }
+
+        private static string GetStartAssaTag(string text)
+        {
+            if (string.IsNullOrEmpty(text) || !text.StartsWith("{\\", StringComparison.Ordinal))
+            {
+                return string.Empty;
+            }
+
+            var tagEnd = text.IndexOf('}');
+            if (tagEnd < 0)
+            {
+                return string.Empty;
+            }
+
+            return text.Substring(0, tagEnd + 1);
         }
 
         private static ContentAlignment GetSsaAlignment(string text, ContentAlignment defaultAlignment)
@@ -235,27 +252,52 @@ namespace Nikse.SubtitleEdit.Forms
             //5: Top left
             //6: Top center
             //7: Top right
-            switch (text)
+
+            if (text.Contains("\\a1\\", StringComparison.Ordinal) || text.Contains("\\a1}", StringComparison.Ordinal))
             {
-                case "{\\a1}":
-                    return ContentAlignment.BottomLeft;
-                case "{\\a2}":
-                    return ContentAlignment.BottomCenter;
-                case "{\\a3}":
-                    return ContentAlignment.BottomRight;
-                case "{\\a9}":
-                    return ContentAlignment.MiddleLeft;
-                case "{\\a10}":
-                    return ContentAlignment.MiddleCenter;
-                case "{\\a11}":
-                    return ContentAlignment.MiddleRight;
-                case "{\\a5}":
-                    return ContentAlignment.TopLeft;
-                case "{\\a6}":
-                    return ContentAlignment.TopCenter;
-                case "{\\a7}":
-                    return ContentAlignment.TopRight;
+                return ContentAlignment.BottomLeft;
             }
+
+            if (text.Contains("\\a2\\", StringComparison.Ordinal) || text.Contains("\\a2}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomCenter;
+            }
+
+            if (text.Contains("\\a3\\", StringComparison.Ordinal) || text.Contains("\\a3}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomRight;
+            }
+
+            if (text.Contains("\\a9\\", StringComparison.Ordinal) || text.Contains("\\a9}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleLeft;
+            }
+
+            if (text.Contains("\\a10\\", StringComparison.Ordinal) || text.Contains("\\a10}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleCenter;
+            }
+
+            if (text.Contains("\\a11\\", StringComparison.Ordinal) || text.Contains("\\a11}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleRight;
+            }
+
+            if (text.Contains("\\a5\\", StringComparison.Ordinal) || text.Contains("\\a5}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopLeft;
+            }
+
+            if (text.Contains("\\a6\\", StringComparison.Ordinal) || text.Contains("\\a6}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopCenter;
+            }
+
+            if (text.Contains("\\a7\\", StringComparison.Ordinal) || text.Contains("\\a7}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopRight;
+            }
+
             return defaultAlignment;
         }
 
@@ -270,27 +312,52 @@ namespace Nikse.SubtitleEdit.Forms
             //7: Top left
             //8: Top center
             //9: Top right
-            switch (text)
+
+            if (text.Contains("\\an1\\", StringComparison.Ordinal) || text.Contains("\\an1}", StringComparison.Ordinal))
             {
-                case "{\\an1}":
-                    return ContentAlignment.BottomLeft;
-                case "{\\an2}":
-                    return ContentAlignment.BottomCenter;
-                case "{\\an3}":
-                    return ContentAlignment.BottomRight;
-                case "{\\an4}":
-                    return ContentAlignment.MiddleLeft;
-                case "{\\an5}":
-                    return ContentAlignment.MiddleCenter;
-                case "{\\an6}":
-                    return ContentAlignment.MiddleRight;
-                case "{\\an7}":
-                    return ContentAlignment.TopLeft;
-                case "{\\an8}":
-                    return ContentAlignment.TopCenter;
-                case "{\\an9}":
-                    return ContentAlignment.TopRight;
+                return ContentAlignment.BottomLeft;
             }
+
+            if (text.Contains("\\an2\\", StringComparison.Ordinal) || text.Contains("\\an2}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomCenter;
+            }
+
+            if (text.Contains("\\an3\\", StringComparison.Ordinal) || text.Contains("\\an3}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.BottomRight;
+            }
+
+            if (text.Contains("\\an4\\", StringComparison.Ordinal) || text.Contains("\\an4}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleLeft;
+            }
+
+            if (text.Contains("\\an5\\", StringComparison.Ordinal) || text.Contains("\\an5}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleCenter;
+            }
+
+            if (text.Contains("\\an6\\", StringComparison.Ordinal) || text.Contains("\\an6}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.MiddleRight;
+            }
+
+            if (text.Contains("\\an7\\", StringComparison.Ordinal) || text.Contains("\\an7}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopLeft;
+            }
+
+            if (text.Contains("\\an8\\", StringComparison.Ordinal) || text.Contains("\\an8}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopCenter;
+            }
+
+            if (text.Contains("\\an9\\", StringComparison.Ordinal) || text.Contains("\\an9}", StringComparison.Ordinal))
+            {
+                return ContentAlignment.TopRight;
+            }
+
             return defaultAlignment;
         }
 
@@ -2799,8 +2866,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Bitmap bmp = null;
             if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLineText)))
             {
-                string old = parameter.P.Text;
-                int oldType3D = parameter.Type3D;
+                var old = parameter.P.Text;
+                var oldType3D = parameter.Type3D;
                 if (parameter.Type3D == 2) // Half-Top/Bottom 3D
                 {
                     parameter.Type3D = 0; // fix later
@@ -2815,7 +2882,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var italicOn = false;
                 var boldOn = false;
                 var fontTag = string.Empty;
-                var lineWidts = new List<int>();
+                var lineWidths = new List<int>();
                 foreach (var line in parameter.P.Text.SplitToLines())
                 {
                     parameter.P.Text = line;
@@ -2849,7 +2916,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     var lineImage = GenerateImageFromTextWithStyleInner(parameter);
-                    lineWidts.Add(lineImage.Width);
+                    lineWidths.Add(lineImage.Width);
                     if (bmp == null)
                     {
                         bmp = lineImage;
@@ -2904,7 +2971,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 l2 = w - lineImage.Width;
                                 if (parameter.BoxSingleLine)
                                 {
-                                    l1 = w - lineWidts[0];
+                                    l1 = w - lineWidths[0];
                                 }
                             }
                         }
@@ -2957,7 +3024,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
             {
                 var oldBackgroundColor = parameter.BackgroundColor;
-                string oldText = parameter.P.Text;
+                var oldText = parameter.P.Text;
                 if (parameter.P.Text.Contains(BoxMultiLineText) || parameter.P.Text.Contains(BoxSingleLineText))
                 {
                     parameter.P.Text = parameter.P.Text.Replace("<" + BoxMultiLineText + ">", string.Empty).Replace("</" + BoxMultiLineText + ">", string.Empty);
@@ -3814,10 +3881,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string AssToHtmlTagsIfKnow(string s)
         {
-            int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            var k = s.IndexOf("{\\", StringComparison.Ordinal);
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k + 1);
+                var l = s.IndexOf('}', k + 1);
                 if (l < k)
                 {
                     break;
