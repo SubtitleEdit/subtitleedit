@@ -212,9 +212,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             var sb = new StringBuilder();
             sb.Append("Style: ");
             var format = styleFormat.ToLowerInvariant().Substring(8).Split(',');
-            for (int i = 0; i < format.Length; i++)
+            for (var i = 0; i < format.Length; i++)
             {
-                string f = format[i].Trim();
+                var f = format[i].Trim();
                 if (f == "name")
                 {
                     sb.Append(Name);
@@ -365,6 +365,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (f == "backcolour")
                 {
                     result.Outline = AdvancedSubStationAlpha.GetSsaColor(v, Color.Black);
+                    result.Background = AdvancedSubStationAlpha.GetSsaColor(v, Color.Black);
                 }
                 else if (f == "bold")
                 {

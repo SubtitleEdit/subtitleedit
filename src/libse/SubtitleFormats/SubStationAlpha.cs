@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        const string HeaderNoStyles =
+        private const string HeaderNoStyles =
             @"[Script Info]
 ; This is a Sub Station Alpha v4 script.
 Title: {0}
@@ -54,7 +54,7 @@ PlayDepth: 0
 
 [V4 Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,{9:0.##},0,1,{4:0.##},{5:0.##},2,{6:0.##},{7:0.##},{8:0.##},0,1
+Style: Default,{1},{2},{3},{4},{5},{6},{12:0.##},0,1,{7:0.##},{8:0.##},2,{9:0.##},{10:0.##},{11:0.##},0,1
 
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -104,6 +104,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             style.FontName,
                                             style.FontSize,
                                             ColorTranslator.ToWin32(style.Primary),
+                                            ColorTranslator.ToWin32(style.Secondary),
+                                            ColorTranslator.ToWin32(style.Tertiary),
+                                            ColorTranslator.ToWin32(style.Background),
                                             style.OutlineWidth,
                                             style.ShadowWidth,
                                             style.MarginLeft,
@@ -186,6 +189,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 var defaultStyle = storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles.FirstOrDefault(x => x.Name.ToLowerInvariant() == "default");
                 style = defaultStyle ?? storageCategories.FirstOrDefault(x => x.IsDefault)?.Styles[0];
+                if (style != null)
+                {
+                    style.Tertiary = style.Outline;
+                }
             }
 
             style = style ?? new SsaStyle();
