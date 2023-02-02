@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Forms.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,6 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
-
     public static class CommandLineConverter
     {
         private static StreamWriter _stdOutWriter;
@@ -1931,6 +1931,38 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 }
                             }
                         }
+                    }
+                }
+
+                else if (!targetFormatFound && targetFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+                {
+                    var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    if (binaryParagraphs.Count > 0)
+                    {
+                        targetFormatFound = true;
+                        for (var i = 0; i < binaryParagraphs.Count; i++)
+                        {
+                            var p = binaryParagraphs[i];
+                            var bmp = p.GetBitmap();
+                            if (bmp == null)
+                            {
+                                continue;
+                            }
+
+                            // 0_00_01_042__0_00_03_919_01.png
+                            var imageFileName = $"{p.StartTimeCode.Hours}_{p.StartTimeCode.Minutes:00}_{p.StartTimeCode.Seconds:00}_{p.StartTimeCode.Milliseconds:000}__" +
+                                           $"{p.EndTimeCode.Hours}_{p.EndTimeCode.Minutes:00}_{p.EndTimeCode.Seconds:00}_{p.EndTimeCode.Milliseconds:000}_{(i + 1):00}.png";
+                            bmp.Save(Path.Combine(path, imageFileName), ImageFormat.Png);
+                            bmp.Dispose();
+                        }
+
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {path}...");
+                        _stdOutWriter?.WriteLine(" done.");
                     }
                 }
             }
