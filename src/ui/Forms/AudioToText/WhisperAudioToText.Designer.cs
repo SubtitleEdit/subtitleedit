@@ -359,10 +359,11 @@
             this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.labelCpp.Location = new System.Drawing.Point(580, 9);
             this.labelCpp.Name = "labelCpp";
-            this.labelCpp.Size = new System.Drawing.Size(117, 13);
+            this.labelCpp.Size = new System.Drawing.Size(117, 30);
             this.labelCpp.TabIndex = 21;
             this.labelCpp.Text = "CPP";
             this.labelCpp.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelCpp.Click += new System.EventHandler(this.labelCpp_Click);
             // 
             // labelElapsed
             // 
@@ -383,7 +384,7 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(231, 120);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(231, 98);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
@@ -405,7 +406,7 @@
             this.whisperXextraWADToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.whisperXextraWADToolStripMenuItem.Text = "WhisperX (Forced Alignment)";
             this.whisperXextraWADToolStripMenuItem.Visible = false;
-            this.whisperXextraWADToolStripMenuItem.Click += new System.EventHandler(this.whisperXextraWADToolStripMenuItem_Click);
+            this.whisperXextraWADToolStripMenuItem.Click += new System.EventHandler(this.whisperXExtraWADToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
