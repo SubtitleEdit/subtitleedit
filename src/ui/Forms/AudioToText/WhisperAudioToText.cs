@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private double _lastEstimatedMs = double.MaxValue;
         private VideoInfo _videoInfo;
         private readonly WavePeakData _wavePeaks;
+        public bool UnknownArgument { get; set; }
         public bool IncompleteModel { get; set; }
         public string IncompleteModelName { get; set; }
 
@@ -515,7 +516,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            _outputText.Add($"Calling whisper {Configuration.Settings.Tools.WhisperChoice}) done in {sw.Elapsed}{Environment.NewLine}");
+            _outputText.Add($"Calling whisper {Configuration.Settings.Tools.WhisperChoice} done in {sw.Elapsed}{Environment.NewLine}");
 
             for (var i = 0; i < 10; i++)
             {
@@ -610,6 +611,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (outLine.Data.Contains("not all tensors loaded from model file"))
             {
                 IncompleteModel = true;
+            }
+
+            if (outLine.Data.Contains("error: unknown argument: ", StringComparison.OrdinalIgnoreCase))
+            {
+                UnknownArgument = true;
             }
 
             _outputText.Add(outLine.Data.Trim() + Environment.NewLine);
