@@ -34810,6 +34810,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MessageBox.Show($"No text found - model incomplete.{Environment.NewLine}Please re-download model: {form.IncompleteModelName}");
                     }
+                    else if (form.UnknownArgument)
+                    {
+                        if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        {
+                            using (var downloadForm = new WhisperDownload())
+                            {
+                                if (form.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    audioToTextWhisperTolStripMenuItem_Click(null, null);
+                                }
+                            }
+                        }
+                    }
                     else
                     {
                         MessageBox.Show("No text found!");
