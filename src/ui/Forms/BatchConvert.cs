@@ -229,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             formatNames.Add(BdnXmlSubtitle);
             formatNames.Add(FcpImageSubtitle);
             formatNames.Add(LanguageSettings.Current.ExportCustomText.Title);
+            formatNames.Add(LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'));
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, formatNames, Configuration.Settings.Tools.BatchConvertFormat);
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
@@ -1451,7 +1452,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (bluRaySubtitles.Count > 0)
                         {
                             if ((toFormat == BdnXmlSubtitle || toFormat == BluRaySubtitle ||
-                                toFormat == VobSubSubtitle || toFormat == DostImageSubtitle) &&
+                                toFormat == VobSubSubtitle || toFormat == DostImageSubtitle || toFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.')) &&
                                 AllowImageToImage())
                             {
                                 foreach (var b in bluRaySubtitles)
