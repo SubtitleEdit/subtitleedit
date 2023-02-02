@@ -44,6 +44,51 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{
 		installer\Subtitle_Edit_Localization.iss = installer\Subtitle_Edit_Localization.iss
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Languages", "Languages", "{E5DFF721-5EFC-4E2A-A678-1884B7BF5BE6}"
+	ProjectSection(SolutionItems) = preProject
+		installer\Languages\Arabic.isl = installer\Languages\Arabic.isl
+		installer\Languages\Armenian.isl = installer\Languages\Armenian.isl
+		installer\Languages\Basque.isl = installer\Languages\Basque.isl
+		installer\Languages\BrazilianPortuguese.isl = installer\Languages\BrazilianPortuguese.isl
+		installer\Languages\Bulgarian.isl = installer\Languages\Bulgarian.isl
+		installer\Languages\Catalan.isl = installer\Languages\Catalan.isl
+		installer\Languages\ChineseSimplified.isl = installer\Languages\ChineseSimplified.isl
+		installer\Languages\ChineseTraditional.isl = installer\Languages\ChineseTraditional.isl
+		installer\Languages\Corsican.isl = installer\Languages\Corsican.isl
+		installer\Languages\Croatian.isl = installer\Languages\Croatian.isl
+		installer\Languages\Czech.isl = installer\Languages\Czech.isl
+		installer\Languages\Danish.isl = installer\Languages\Danish.isl
+		installer\Languages\Dutch.isl = installer\Languages\Dutch.isl
+		installer\Languages\Farsi.isl = installer\Languages\Farsi.isl
+		installer\Languages\Finnish.isl = installer\Languages\Finnish.isl
+		installer\Languages\French.isl = installer\Languages\French.isl
+		installer\Languages\German.isl = installer\Languages\German.isl
+		installer\Languages\Greek.isl = installer\Languages\Greek.isl
+		installer\Languages\Hebrew.isl = installer\Languages\Hebrew.isl
+		installer\Languages\Hungarian.isl = installer\Languages\Hungarian.isl
+		installer\Languages\Icelandic.isl = installer\Languages\Icelandic.isl
+		installer\Languages\Indonesian.isl = installer\Languages\Indonesian.isl
+		installer\Languages\Italian.isl = installer\Languages\Italian.isl
+		installer\Languages\Japanese.isl = installer\Languages\Japanese.isl
+		installer\Languages\Korean.isl = installer\Languages\Korean.isl
+		installer\Languages\Macedonian.isl = installer\Languages\Macedonian.isl
+		installer\Languages\Norwegian.isl = installer\Languages\Norwegian.isl
+		installer\Languages\Polish.isl = installer\Languages\Polish.isl
+		installer\Languages\Portuguese.isl = installer\Languages\Portuguese.isl
+		installer\Languages\Romanian.isl = installer\Languages\Romanian.isl
+		installer\Languages\Russian.isl = installer\Languages\Russian.isl
+		installer\Languages\SerbianCyrillic.isl = installer\Languages\SerbianCyrillic.isl
+		installer\Languages\SerbianLatin.isl = installer\Languages\SerbianLatin.isl
+		installer\Languages\Slovak.isl = installer\Languages\Slovak.isl
+		installer\Languages\Slovenian.isl = installer\Languages\Slovenian.isl
+		installer\Languages\Spanish.isl = installer\Languages\Spanish.isl
+		installer\Languages\Swedish.isl = installer\Languages\Swedish.isl
+		installer\Languages\Thai.isl = installer\Languages\Thai.isl
+		installer\Languages\Turkish.isl = installer\Languages\Turkish.isl
+		installer\Languages\Ukrainian.isl = installer\Languages\Ukrainian.isl
+		installer\Languages\Vietnamese.isl = installer\Languages\Vietnamese.isl
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +125,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4FE90C81-B6AD-4706-8D1A-C8B1B698DB28} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
 		{7137CF3B-7769-4B10-8719-83B1C41F1CB1} = {B1BB9DD1-0EE8-4D43-AAAB-C39D0CC882A9}
+		{E5DFF721-5EFC-4E2A-A678-1884B7BF5BE6} = {7137CF3B-7769-4B10-8719-83B1C41F1CB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E12BDE22-B6A4-4AB6-AF96-F3C0F89C15EC}
