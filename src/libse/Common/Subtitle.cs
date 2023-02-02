@@ -294,6 +294,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             encoding = sr.CurrentEncoding;
             var lines = sr.ReadToEnd().SplitToLines();
             sr.Close();
+            sr.Dispose();
             return lines;
         }
 
