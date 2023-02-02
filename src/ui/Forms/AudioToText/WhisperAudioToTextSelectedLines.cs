@@ -469,5 +469,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
         }
+
+        private void labelCpp_Click(object sender, EventArgs e)
+        {
+            contextMenuStripWhisperAdvanced.Show(MousePosition);
+        }
     }
 }

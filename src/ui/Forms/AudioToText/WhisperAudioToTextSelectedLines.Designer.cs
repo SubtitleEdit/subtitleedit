@@ -290,10 +290,11 @@
             this.labelCpp.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.labelCpp.Location = new System.Drawing.Point(589, 9);
             this.labelCpp.Name = "labelCpp";
-            this.labelCpp.Size = new System.Drawing.Size(108, 13);
+            this.labelCpp.Size = new System.Drawing.Size(108, 30);
             this.labelCpp.TabIndex = 22;
             this.labelCpp.Text = "CPP";
             this.labelCpp.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelCpp.Click += new System.EventHandler(this.labelCpp_Click);
             // 
             // contextMenuStripWhisperAdvanced
             // 
