@@ -2702,6 +2702,20 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixContinuationStyle0()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "No comma before dots...", "but is no problem.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.Custom;
+                Configuration.Settings.General.CustomContinuationStyleSuffix = "...";
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("No comma before dots...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("but is no problem.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
         public void FixContinuationStyle1()
         {
             using (var target = GetFixCommonErrorsLib())
