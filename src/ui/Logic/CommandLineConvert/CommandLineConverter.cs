@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -1250,7 +1251,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, string deleteContains, TextEncoding targetEncoding, string outputFolder, string targetFileName, int count, ref int converted, ref int errors,
                                               List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraphWithPosition> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
-                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null, CancellationToken cancellationToken = default)
+                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuHeaderFile = null, string ocrEngine = null, string preExt = null, int? renumber = null, double? adjustDurationMs = null, PreprocessingSettings preprocessingSettings = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(preExt))
             {
@@ -1258,337 +1259,604 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
 
             var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            //try
-            //{
-            var success = true;
-
-            // adjust offset
-            if (offset.Ticks != 0)
+            try
             {
-                sub.AddTimeToAllParagraphs(offset);
-            }
+                var success = true;
 
-            // delete lines containing a specific text
-            if (!string.IsNullOrEmpty(deleteContains))
-            {
-                DeleteContains(sub, deleteContains);
-            }
-
-            // adjust frame rate
-            if (targetFrameRate.HasValue && targetFrameRate > 0)
-            {
-                sub.ChangeFrameRate(Configuration.Settings.General.CurrentFrameRate, targetFrameRate.Value);
-                Configuration.Settings.General.CurrentFrameRate = targetFrameRate.Value;
-            }
-
-            // renumber
-            if (renumber.HasValue)
-            {
-                sub.Renumber(renumber.Value);
-            }
-
-            // adjust duration by milliseconds
-            if (adjustDurationMs.HasValue)
-            {
-                sub.AdjustDisplayTimeUsingSeconds(adjustDurationMs.Value / 1000.0, null);
-            }
-
-            sub = RunActions(targetEncoding, sub, format, actions, autoDetectLanguage);
-
-            if (multipleReplaceImportFiles != null && multipleReplaceImportFiles.Count > 0)
-            {
-                using (var mr = new MultipleReplace())
+                // adjust offset
+                if (offset.Ticks != 0)
                 {
-                    mr.RunFromBatch(sub, multipleReplaceImportFiles);
-                    sub = mr.FixedSubtitle;
-                    sub.RemoveParagraphsByIndices(mr.DeleteIndices);
+                    sub.AddTimeToAllParagraphs(offset);
                 }
-            }
 
-            var targetFormatFound = false;
-            string outputFileName;
-
-            if (binaryParagraphs != null && binaryParagraphs.Count > 0 && !HasImageTarget(targetFormat))
-            {
-                using (var vobSubOcr = new VobSubOcr())
+                // delete lines containing a specific text
+                if (!string.IsNullOrEmpty(deleteContains))
                 {
-                    _stdOutWriter?.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
-                    vobSubOcr.ProgressCallback = progress =>
-                    {
-                        _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
-                    };
-                    vobSubOcr.FileName = Path.GetFileName(fileName);
-                    vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, null, ocrEngine);
-                    _stdOutWriter?.WriteLine();
-                    sub = vobSubOcr.SubtitleFromOcr;
-                    _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
+                    DeleteContains(sub, deleteContains);
                 }
-            }
 
-            foreach (var sf in formats)
-            {
-                if (sf.IsTextBased && sf.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                // adjust frame rate
+                if (targetFrameRate.HasValue && targetFrameRate > 0)
                 {
-                    targetFormatFound = true;
-                    sf.BatchMode = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + sf.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                    sub.ChangeFrameRate(Configuration.Settings.General.CurrentFrameRate, targetFrameRate.Value);
+                    Configuration.Settings.General.CurrentFrameRate = targetFrameRate.Value;
+                }
 
-                    if (sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber))
+                // renumber
+                if (renumber.HasValue)
+                {
+                    sub.Renumber(renumber.Value);
+                }
+
+                // adjust duration by milliseconds
+                if (adjustDurationMs.HasValue)
+                {
+                    sub.AdjustDisplayTimeUsingSeconds(adjustDurationMs.Value / 1000.0, null);
+                }
+
+                sub = RunActions(targetEncoding, sub, format, actions, autoDetectLanguage);
+
+                if (multipleReplaceImportFiles != null && multipleReplaceImportFiles.Count > 0)
+                {
+                    using (var mr = new MultipleReplace())
                     {
-                        if (!targetEncoding.IsUtf8)
-                        {
-                            targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
-                        }
+                        mr.RunFromBatch(sub, multipleReplaceImportFiles);
+                        sub = mr.FixedSubtitle;
+                        sub.RemoveParagraphsByIndices(mr.DeleteIndices);
                     }
+                }
 
-                    // Remove native formatting
-                    if (format != null && format.Name != sf.Name)
+                var targetFormatFound = false;
+                string outputFileName;
+
+                if (binaryParagraphs != null && binaryParagraphs.Count > 0 && !HasImageTarget(targetFormat))
+                {
+                    using (var vobSubOcr = new VobSubOcr())
                     {
-                        format.RemoveNativeFormatting(sub, sf);
+                        _stdOutWriter?.WriteLine($"Using OCR via {ocrEngine} to extract subtitles");
+                        vobSubOcr.ProgressCallback = progress =>
+                        {
+                            _stdOutWriter?.Write($"\r{LanguageSettings.Current.BatchConvert.Ocr} : {progress}");
+                        };
+                        vobSubOcr.FileName = Path.GetFileName(fileName);
+                        vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, null, ocrEngine);
+                        _stdOutWriter?.WriteLine();
+                        sub = vobSubOcr.SubtitleFromOcr;
+                        _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
                     }
+                }
 
-                    try
+                foreach (var sf in formats)
+                {
+                    if (sf.IsTextBased && sf.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
-                        if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
+                        targetFormatFound = true;
+                        sf.BatchMode = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + sf.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+
+                        if (sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber))
                         {
-                            var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                            using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
+                            if (!targetEncoding.IsUtf8)
                             {
-                                file.Write(sub.ToText(sf));
-                            } // save and close it
+                                targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                            }
                         }
-                        else if (targetEncoding.IsUtf8 && format != null && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+
+                        // Remove native formatting
+                        if (format != null && format.Name != sf.Name)
                         {
-                            var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                            using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
+                            format.RemoveNativeFormatting(sub, sf);
+                        }
+
+                        try
+                        {
+                            if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
                             {
-                                file.Write(sub.ToText(sf));
-                            } // save and close it
-                        }
-                        else if (sf.Extension == ".rtf")
-                        {
-                            File.WriteAllText(outputFileName, sub.ToText(sf), Encoding.ASCII);
-                        }
-                        else
-                        {
-                            if (sf.Name == AdvancedSubStationAlpha.NameOfFormat && resolution?.X > 0 && resolution?.Y > 0)
-                            {
-                                if (string.IsNullOrEmpty(sub.Header))
+                                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                                using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
                                 {
-                                    sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                                    file.Write(sub.ToText(sf));
+                                } // save and close it
+                            }
+                            else if (targetEncoding.IsUtf8 && format != null && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                            {
+                                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                                using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
+                                {
+                                    file.Write(sub.ToText(sf));
+                                } // save and close it
+                            }
+                            else if (sf.Extension == ".rtf")
+                            {
+                                File.WriteAllText(outputFileName, sub.ToText(sf), Encoding.ASCII);
+                            }
+                            else
+                            {
+                                if (sf.Name == AdvancedSubStationAlpha.NameOfFormat && resolution?.X > 0 && resolution?.Y > 0)
+                                {
+                                    if (string.IsNullOrEmpty(sub.Header))
+                                    {
+                                        sub.Header = AdvancedSubStationAlpha.DefaultHeader;
+                                    }
+
+                                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + resolution.Value.X.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+                                    sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + resolution.Value.Y.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
                                 }
 
-                                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + resolution.Value.X.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
-                                sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + resolution.Value.Y.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
-                            }
-
-                            try
-                            {
-                                FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
-                            }
-                            catch
-                            {
-                                Thread.Sleep(100);
                                 try
                                 {
                                     FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                                 }
                                 catch
                                 {
-                                    Thread.Sleep(500);
-                                    FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                    Thread.Sleep(100);
+                                    try
+                                    {
+                                        FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                    }
+                                    catch
+                                    {
+                                        Thread.Sleep(500);
+                                        FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                    }
                                 }
+
                             }
-
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _stdOutWriter?.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace);
-                        errors++;
-                        return false;
-                    }
-
-                    if (format != null && (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern)))
-                    {
-                        foreach (var className in Sami.GetStylesFromHeader(sub.Header))
+                        catch (Exception ex)
                         {
-                            var newSub = new Subtitle();
-                            foreach (var p in sub.Paragraphs)
-                            {
-                                if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
-                                {
-                                    newSub.Paragraphs.Add(p);
-                                }
-                            }
-                            if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
-                            {
-                                string s = fileName;
-                                if (s.LastIndexOf('.') > 0)
-                                {
-                                    s = s.Insert(s.LastIndexOf('.'), "." + className);
-                                }
-                                else
-                                {
-                                    s += "." + className + format.Extension;
-                                }
+                            _stdOutWriter?.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace);
+                            errors++;
+                            return false;
+                        }
 
-                                outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite, targetFileName);
-                                FileUtil.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                        if (format != null && (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern)))
+                        {
+                            foreach (var className in Sami.GetStylesFromHeader(sub.Header))
+                            {
+                                var newSub = new Subtitle();
+                                foreach (var p in sub.Paragraphs)
+                                {
+                                    if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        newSub.Paragraphs.Add(p);
+                                    }
+                                }
+                                if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
+                                {
+                                    string s = fileName;
+                                    if (s.LastIndexOf('.') > 0)
+                                    {
+                                        s = s.Insert(s.LastIndexOf('.'), "." + className);
+                                    }
+                                    else
+                                    {
+                                        s += "." + className + format.Extension;
+                                    }
+
+                                    outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite, targetFileName);
+                                    FileUtil.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                }
                             }
                         }
+                        _stdOutWriter?.WriteLine(" done.");
+                        break;
                     }
-                    _stdOutWriter?.WriteLine(" done.");
-                    break;
                 }
-            }
 
-            if (!targetFormatFound)
-            {
-                var ebu = new Ebu();
-                if (ebu.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    if (!string.IsNullOrEmpty(ebuHeaderFile))
+                    var ebu = new Ebu();
+                    if (ebu.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
-                        var ebuOriginal = new Ebu();
-                        var temp = new Subtitle();
-                        ebuOriginal.LoadSubtitle(temp, null, ebuHeaderFile);
-                        sub.Header = ebuOriginal.Header.ToString();
-                        ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
-                    }
-                    else if (format != null && format.GetType() == typeof(Ebu))
-                    {
-                        var ebuOriginal = new Ebu();
-                        var temp = new Subtitle();
-                        ebuOriginal.LoadSubtitle(temp, null, fileName);
-                        if (sub.Header != null && new Regex("^\\d\\d\\dSTL\\d\\d").IsMatch(sub.Header))
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        if (!string.IsNullOrEmpty(ebuHeaderFile))
                         {
-                            ebuOriginal.Header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(sub.Header));
+                            var ebuOriginal = new Ebu();
+                            var temp = new Subtitle();
+                            ebuOriginal.LoadSubtitle(temp, null, ebuHeaderFile);
+                            sub.Header = ebuOriginal.Header.ToString();
+                            ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
                         }
-                        ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
-                    }
-                    else
-                    {
-                        if (sub.Header != null && new Regex("^\\d\\d\\dSTL\\d\\d").IsMatch(sub.Header))
+                        else if (format != null && format.GetType() == typeof(Ebu))
                         {
-                            var header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(sub.Header));
-                            ebu.Save(outputFileName, sub, true, header);
+                            var ebuOriginal = new Ebu();
+                            var temp = new Subtitle();
+                            ebuOriginal.LoadSubtitle(temp, null, fileName);
+                            if (sub.Header != null && new Regex("^\\d\\d\\dSTL\\d\\d").IsMatch(sub.Header))
+                            {
+                                ebuOriginal.Header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(sub.Header));
+                            }
+                            ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
                         }
                         else
                         {
-                            ebu.Save(outputFileName, sub, true);
+                            if (sub.Header != null && new Regex("^\\d\\d\\dSTL\\d\\d").IsMatch(sub.Header))
+                            {
+                                var header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(sub.Header));
+                                ebu.Save(outputFileName, sub, true, header);
+                            }
+                            else
+                            {
+                                ebu.Save(outputFileName, sub, true);
+                            }
                         }
+                        _stdOutWriter?.WriteLine(" done.");
                     }
-                    _stdOutWriter?.WriteLine(" done.");
                 }
-            }
-            if (!targetFormatFound)
-            {
-                var pac = new Pac();
-                if (pac.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("pac", StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    pac.BatchMode = true;
-                    pac.CodePage = pacCodePage;
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    pac.Save(outputFileName, sub);
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-            }
-            if (!targetFormatFound)
-            {
-                var cavena890 = new Cavena890();
-                if (cavena890.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    cavena890.Save(outputFileName, sub);
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-            }
-            if (!targetFormatFound)
-            {
-                var cheetahCaption = new CheetahCaption();
-                if (cheetahCaption.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    CheetahCaption.Save(outputFileName, sub);
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-            }
-            if (!targetFormatFound)
-            {
-                var ayato = new Ayato();
-                if (ayato.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    ayato.Save(outputFileName, null, sub);
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-            }
-            if (!targetFormatFound)
-            {
-                var capMakerPlus = new CapMakerPlus();
-                if (capMakerPlus.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    CapMakerPlus.Save(outputFileName, sub);
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-            }
-            if (!targetFormatFound)
-            {
-                if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    var exportOptions = new ExportText.ExportOptions
+                    var pac = new Pac();
+                    if (pac.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("pac", StringComparison.OrdinalIgnoreCase))
                     {
-                        ShowLineNumbers = Configuration.Settings.Tools.ExportTextShowLineNumbers,
-                        AddNewlineAfterLineNumber = Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine,
-                        ShowTimeCodes = Configuration.Settings.Tools.ExportTextShowTimeCodes,
-                        TimeCodeSrt = Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Srt",
-                        TimeCodeHHMMSSFF = Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Frames",
-                        AddNewlineAfterTimeCodes = Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine,
-                        TimeCodeSeparator = Configuration.Settings.Tools.ExportTextTimeCodeSeparator,
-                        RemoveStyling = Configuration.Settings.Tools.ExportTextRemoveStyling,
-                        FormatUnbreak = Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
-                        AddNewAfterText = Configuration.Settings.Tools.ExportTextNewLineAfterText,
-                        AddNewAfterText2 = Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
-                        FormatMergeAll = Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"
-                    };
-                    FileUtil.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, exportOptions), targetEncoding);
-                    _stdOutWriter?.WriteLine(" done.");
+                        pac.BatchMode = true;
+                        pac.CodePage = pacCodePage;
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        pac.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
                 }
-            }
-            if (!targetFormatFound)
-            {
-                if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + ".sup", outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    using (var form = new ExportPngXml())
+                    var cavena890 = new Cavena890();
+                    if (cavena890.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
-                        form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
-                        var width = 1920;
-                        var height = 1080;
-                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        cavena890.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    var cheetahCaption = new CheetahCaption();
+                    if (cheetahCaption.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        CheetahCaption.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    var ayato = new Ayato();
+                    if (ayato.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        ayato.Save(outputFileName, null, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    var capMakerPlus = new CapMakerPlus();
+                    if (capMakerPlus.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        CapMakerPlus.Save(outputFileName, sub);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    if (LanguageSettings.Current.BatchConvert.PlainText.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        var exportOptions = new ExportText.ExportOptions
                         {
-                            var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                            ShowLineNumbers = Configuration.Settings.Tools.ExportTextShowLineNumbers,
+                            AddNewlineAfterLineNumber = Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine,
+                            ShowTimeCodes = Configuration.Settings.Tools.ExportTextShowTimeCodes,
+                            TimeCodeSrt = Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Srt",
+                            TimeCodeHHMMSSFF = Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Frames",
+                            AddNewlineAfterTimeCodes = Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine,
+                            TimeCodeSeparator = Configuration.Settings.Tools.ExportTextTimeCodeSeparator,
+                            RemoveStyling = Configuration.Settings.Tools.ExportTextRemoveStyling,
+                            FormatUnbreak = Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
+                            AddNewAfterText = Configuration.Settings.Tools.ExportTextNewLineAfterText,
+                            AddNewAfterText2 = Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
+                            FormatMergeAll = Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"
+                        };
+                        FileUtil.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, exportOptions), targetEncoding);
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + ".sup", outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
+                            var width = 1920;
+                            var height = 1080;
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            {
+                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                                if (resolution != null)
+                                {
+                                    width = resolution.Value.X;
+                                    height = resolution.Value.Y;
+                                }
+                            }
+
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                return false;
+                            }
+
+                            using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
+                            {
+                                var isImageBased = IsImageBased(format);
+                                BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs.Cast<IBinaryParagraph>().ToList(), form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
+                            }
+
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                try
+                                {
+                                    File.Delete(outputFileName);
+                                }
+                                catch
+                                {
+                                    // ignore
+                                }
+
+                                return false;
+                            }
+                        }
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+
+                    else if (BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sub", outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.VobSub, fileName, null, null);
+                            int width = DvbSubPes.DefaultScreenWidth;
+                            int height = DvbSubPes.DefaultScreenHeight;
+
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
+                            {
+                                var parts = Configuration.Settings.Tools.ExportVobSubVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                            }
+
+                            var cfg = Configuration.Settings.Tools;
+                            var language = DvdSubtitleLanguage.GetLanguageOrNull(LanguageAutoDetect.AutoDetectGoogleLanguage(sub)) ?? DvdSubtitleLanguage.English;
+                            var isImageBased = IsImageBased(format);
+                            var bottomMarginPixels = 15;
+                            var leftRightMarginPixels = 15;
+                            if (resolution != null && resolution.Value.X > 0 && resolution.Value.Y > 0)
+                            {
+                                width = resolution.Value.X;
+                                height = resolution.Value.Y;
+                            }
+                            if (sub.Paragraphs.Count > 0)
+                            {
+                                var param = form.MakeMakeBitmapParameter(0, width, height);
+                                width = param.ScreenWidth;
+                                height = param.ScreenHeight;
+                                bottomMarginPixels = param.BottomMargin;
+                                leftRightMarginPixels = param.LeftMargin;
+                            }
+
+                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, bottomMarginPixels, leftRightMarginPixels, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
+                            {
+                                for (int index = 0; index < sub.Paragraphs.Count; index++)
+                                {
+                                    var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                    if (binaryParagraphs != null && binaryParagraphs.Count > 0)
+                                    {
+                                        if (index < binaryParagraphs.Count)
+                                        {
+                                            var sourceBitmap = binaryParagraphs[index].GetBitmap();
+                                            var nbmp = new NikseBitmap(sourceBitmap);
+                                            nbmp.ConvertToFourColors(Color.Transparent, Color.White, Color.Black, true);
+                                            mp.Bitmap = nbmp.GetBitmap();
+                                            sourceBitmap.Dispose();
+                                            mp.Forced = binaryParagraphs[index].IsForced;
+                                        }
+                                    }
+                                    else if (isImageBased)
+                                    {
+                                        using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                        {
+                                            var sourceBitmap = (Bitmap)Image.FromStream(ms);
+                                            var nbmp = new NikseBitmap(sourceBitmap);
+                                            nbmp.ConvertToFourColors(Color.Transparent, Color.White, Color.Black, true);
+                                            mp.Bitmap = nbmp.GetBitmap();
+                                            sourceBitmap.Dispose();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                        mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                    }
+                                    vobSubWriter.WriteParagraph(mp.P, mp.Bitmap, mp.Alignment);
+                                    if (mp.Bitmap != null)
+                                    {
+                                        mp.Bitmap.Dispose();
+                                        mp.Bitmap = null;
+                                    }
+                                    if (index % 50 == 0)
+                                    {
+                                        System.Windows.Forms.Application.DoEvents();
+                                    }
+                                }
+                                vobSubWriter.WriteIdxFile();
+                            }
+                        }
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+
+                    else if (BatchConvert.DostImageSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".dost", outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.Dost, fileName, null, null);
+                            int width = 1920;
+                            int height = 1080;
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            {
+                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                            }
+                            if (resolution != null)
+                            {
+                                width = resolution.Value.X;
+                                height = resolution.Value.Y;
+                            }
+
+                            var sb = new StringBuilder();
+                            var imagesSavedCount = 0;
+                            var isImageBased = IsImageBased(format);
+                            for (int index = 0; index < sub.Paragraphs.Count; index++)
+                            {
+                                var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
+                                {
+                                    if (index < binaryParagraphs.Count)
+                                    {
+                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                        mp.Forced = binaryParagraphs[index].IsForced;
+                                    }
+                                }
+                                else if (isImageBased)
+                                {
+                                    using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                    {
+                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                    }
+                                }
+                                else
+                                {
+                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                }
+                                form.WriteParagraphDost(sb, imagesSavedCount, mp, index, outputFileName);
+
+                                if (index % 50 == 0)
+                                {
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            form.WriteDostFile(outputFileName, sb.ToString());
+                        }
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+
+                    else if (BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.BdnXml, fileName, null, null);
+                            int width = 1920;
+                            int height = 1080;
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            {
+                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                            }
+                            if (resolution != null)
+                            {
+                                width = resolution.Value.X;
+                                height = resolution.Value.Y;
+                            }
+
+                            var sb = new StringBuilder();
+                            var imagesSavedCount = 0;
+                            var isImageBased = IsImageBased(format);
+                            for (int index = 0; index < sub.Paragraphs.Count; index++)
+                            {
+                                var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
+                                {
+                                    if (index < binaryParagraphs.Count)
+                                    {
+                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                        mp.Forced = binaryParagraphs[index].IsForced;
+                                    }
+                                }
+                                else if (isImageBased)
+                                {
+                                    using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                    {
+                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                    }
+                                }
+                                else
+                                {
+                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                }
+                                imagesSavedCount = form.WriteBdnXmlParagraph(width, sb, form.GetBottomMarginInPixels(sub.Paragraphs[index]), height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
+
+                                if (index % 50 == 0)
+                                {
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
+                        }
+                        _stdOutWriter?.WriteLine(" done.");
+                    }
+
+                    else if (BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite, targetFileName);
+                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.Fcp, fileName, null, null);
+                            int width = 1920;
+                            int height = 1080;
+                            var parts = Configuration.Settings.Tools.ExportFcpVideoResolution.Split('x');
                             if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
                             {
                                 width = int.Parse(parts[0]);
@@ -1599,90 +1867,19 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 width = resolution.Value.X;
                                 height = resolution.Value.Y;
                             }
-                        }
 
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            return false;
-                        }
-
-                        using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
-                        {
+                            var sb = new StringBuilder();
+                            var imagesSavedCount = 0;
                             var isImageBased = IsImageBased(format);
-                            BdSupSaver.SaveBdSup(fileName, sub, binaryParagraphs.Cast<IBinaryParagraph>().ToList(), form, width, height, isImageBased, binarySubtitleFile, format, cancellationToken);
-                        }
-
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            try
-                            {
-                                File.Delete(outputFileName);
-                            }
-                            catch
-                            {
-                                // ignore
-                            }
-
-                            return false;
-                        }
-                    }
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-
-                else if (BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sub", outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    using (var form = new ExportPngXml())
-                    {
-                        form.Initialize(sub, format, ExportPngXml.ExportFormats.VobSub, fileName, null, null);
-                        int width = DvbSubPes.DefaultScreenWidth;
-                        int height = DvbSubPes.DefaultScreenHeight;
-
-                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
-                        {
-                            var parts = Configuration.Settings.Tools.ExportVobSubVideoResolution.Split('x');
-                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
-                            {
-                                width = int.Parse(parts[0]);
-                                height = int.Parse(parts[1]);
-                            }
-                        }
-
-                        var cfg = Configuration.Settings.Tools;
-                        var language = DvdSubtitleLanguage.GetLanguageOrNull(LanguageAutoDetect.AutoDetectGoogleLanguage(sub)) ?? DvdSubtitleLanguage.English;
-                        var isImageBased = IsImageBased(format);
-                        var bottomMarginPixels = 15;
-                        var leftRightMarginPixels = 15;
-                        if (resolution != null && resolution.Value.X > 0 && resolution.Value.Y > 0)
-                        {
-                            width = resolution.Value.X;
-                            height = resolution.Value.Y;
-                        }
-                        if (sub.Paragraphs.Count > 0)
-                        {
-                            var param = form.MakeMakeBitmapParameter(0, width, height);
-                            width = param.ScreenWidth;
-                            height = param.ScreenHeight;
-                            bottomMarginPixels = param.BottomMargin;
-                            leftRightMarginPixels = param.LeftMargin;
-                        }
-
-                        using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, bottomMarginPixels, leftRightMarginPixels, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
-                        {
                             for (int index = 0; index < sub.Paragraphs.Count; index++)
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
                                 if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                 {
                                     if (index < binaryParagraphs.Count)
                                     {
-                                        var sourceBitmap = binaryParagraphs[index].GetBitmap();
-                                        var nbmp = new NikseBitmap(sourceBitmap);
-                                        nbmp.ConvertToFourColors(Color.Transparent, Color.White, Color.Black, true);
-                                        mp.Bitmap = nbmp.GetBitmap();
-                                        sourceBitmap.Dispose();
+                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
                                         mp.Forced = binaryParagraphs[index].IsForced;
                                     }
                                 }
@@ -1690,296 +1887,144 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 {
                                     using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
                                     {
-                                        var sourceBitmap = (Bitmap)Image.FromStream(ms);
-                                        var nbmp = new NikseBitmap(sourceBitmap);
-                                        nbmp.ConvertToFourColors(Color.Transparent, Color.White, Color.Black, true);
-                                        mp.Bitmap = nbmp.GetBitmap();
-                                        sourceBitmap.Dispose();
+                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
                                     }
                                 }
                                 else
                                 {
-                                    mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
                                     mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
                                 }
-                                vobSubWriter.WriteParagraph(mp.P, mp.Bitmap, mp.Alignment);
-                                if (mp.Bitmap != null)
-                                {
-                                    mp.Bitmap.Dispose();
-                                    mp.Bitmap = null;
-                                }
+                                form.WriteFcpParagraph(sb, imagesSavedCount, mp, index, Path.GetFileNameWithoutExtension(Path.GetFileName(outputFileName)), outputFileName);
+
                                 if (index % 50 == 0)
                                 {
                                     System.Windows.Forms.Application.DoEvents();
                                 }
                             }
-                            vobSubWriter.WriteIdxFile();
+                            form.WriteFcpFile(width, height, sb, outputFileName);
                         }
-                    }
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-
-                else if (BatchConvert.DostImageSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".dost", outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    using (var form = new ExportPngXml())
-                    {
-                        form.Initialize(sub, format, ExportPngXml.ExportFormats.Dost, fileName, null, null);
-                        int width = 1920;
-                        int height = 1080;
-                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
-                        {
-                            var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
-                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
-                            {
-                                width = int.Parse(parts[0]);
-                                height = int.Parse(parts[1]);
-                            }
-                        }
-                        if (resolution != null)
-                        {
-                            width = resolution.Value.X;
-                            height = resolution.Value.Y;
-                        }
-
-                        var sb = new StringBuilder();
-                        var imagesSavedCount = 0;
-                        var isImageBased = IsImageBased(format);
-                        for (int index = 0; index < sub.Paragraphs.Count; index++)
-                        {
-                            var mp = form.MakeMakeBitmapParameter(index, width, height);
-                            mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                            if (binaryParagraphs != null && binaryParagraphs.Count > 0)
-                            {
-                                if (index < binaryParagraphs.Count)
-                                {
-                                    mp.Bitmap = binaryParagraphs[index].GetBitmap();
-                                    mp.Forced = binaryParagraphs[index].IsForced;
-                                }
-                            }
-                            else if (isImageBased)
-                            {
-                                using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
-                                {
-                                    mp.Bitmap = (Bitmap)Image.FromStream(ms);
-                                }
-                            }
-                            else
-                            {
-                                mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
-                            }
-                            form.WriteParagraphDost(sb, imagesSavedCount, mp, index, outputFileName);
-
-                            if (index % 50 == 0)
-                            {
-                                System.Windows.Forms.Application.DoEvents();
-                            }
-                        }
-                        form.WriteDostFile(outputFileName, sb.ToString());
-                    }
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-
-                else if (BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    using (var form = new ExportPngXml())
-                    {
-                        form.Initialize(sub, format, ExportPngXml.ExportFormats.BdnXml, fileName, null, null);
-                        int width = 1920;
-                        int height = 1080;
-                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
-                        {
-                            var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
-                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
-                            {
-                                width = int.Parse(parts[0]);
-                                height = int.Parse(parts[1]);
-                            }
-                        }
-                        if (resolution != null)
-                        {
-                            width = resolution.Value.X;
-                            height = resolution.Value.Y;
-                        }
-
-                        var sb = new StringBuilder();
-                        var imagesSavedCount = 0;
-                        var isImageBased = IsImageBased(format);
-                        for (int index = 0; index < sub.Paragraphs.Count; index++)
-                        {
-                            var mp = form.MakeMakeBitmapParameter(index, width, height);
-                            mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                            if (binaryParagraphs != null && binaryParagraphs.Count > 0)
-                            {
-                                if (index < binaryParagraphs.Count)
-                                {
-                                    mp.Bitmap = binaryParagraphs[index].GetBitmap();
-                                    mp.Forced = binaryParagraphs[index].IsForced;
-                                }
-                            }
-                            else if (isImageBased)
-                            {
-                                using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
-                                {
-                                    mp.Bitmap = (Bitmap)Image.FromStream(ms);
-                                }
-                            }
-                            else
-                            {
-                                mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
-                            }
-                            imagesSavedCount = form.WriteBdnXmlParagraph(width, sb, form.GetBottomMarginInPixels(sub.Paragraphs[index]), height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
-
-                            if (index % 50 == 0)
-                            {
-                                System.Windows.Forms.Application.DoEvents();
-                            }
-                        }
-                        form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
-                    }
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-
-                else if (BatchConvert.FcpImageSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite, targetFileName);
-                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                    using (var form = new ExportPngXml())
-                    {
-                        form.Initialize(sub, format, ExportPngXml.ExportFormats.Fcp, fileName, null, null);
-                        int width = 1920;
-                        int height = 1080;
-                        var parts = Configuration.Settings.Tools.ExportFcpVideoResolution.Split('x');
-                        if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
-                        {
-                            width = int.Parse(parts[0]);
-                            height = int.Parse(parts[1]);
-                        }
-                        if (resolution != null)
-                        {
-                            width = resolution.Value.X;
-                            height = resolution.Value.Y;
-                        }
-
-                        var sb = new StringBuilder();
-                        var imagesSavedCount = 0;
-                        var isImageBased = IsImageBased(format);
-                        for (int index = 0; index < sub.Paragraphs.Count; index++)
-                        {
-                            var mp = form.MakeMakeBitmapParameter(index, width, height);
-                            mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                            if (binaryParagraphs != null && binaryParagraphs.Count > 0)
-                            {
-                                if (index < binaryParagraphs.Count)
-                                {
-                                    mp.Bitmap = binaryParagraphs[index].GetBitmap();
-                                    mp.Forced = binaryParagraphs[index].IsForced;
-                                }
-                            }
-                            else if (isImageBased)
-                            {
-                                using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
-                                {
-                                    mp.Bitmap = (Bitmap)Image.FromStream(ms);
-                                }
-                            }
-                            else
-                            {
-                                mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
-                            }
-                            form.WriteFcpParagraph(sb, imagesSavedCount, mp, index, Path.GetFileNameWithoutExtension(Path.GetFileName(outputFileName)), outputFileName);
-
-                            if (index % 50 == 0)
-                            {
-                                System.Windows.Forms.Application.DoEvents();
-                            }
-                        }
-                        form.WriteFcpFile(width, height, sb, outputFileName);
-                    }
-                    _stdOutWriter?.WriteLine(" done.");
-                }
-
-                else if (!targetFormatFound && targetFormat.StartsWith("CustomText:", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
-                    {
-                        var arr = targetFormat.Split(':');
-                        if (arr.Length == 2)
-                        {
-                            foreach (var template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
-                            {
-                                if (template.StartsWith(arr[1] + "Æ", StringComparison.Ordinal))
-                                {
-                                    targetFormatFound = true;
-                                    var title = string.Empty;
-                                    if (!string.IsNullOrEmpty(fileName))
-                                    {
-                                        title = Path.GetFileNameWithoutExtension(fileName);
-                                    }
-
-                                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ExportCustomText.GetFileExtension(template), outputFolder, overwrite, targetFileName);
-                                    _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                                    FileUtil.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, null, template), targetEncoding);
-                                    _stdOutWriter?.WriteLine(" done.");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                else if (!targetFormatFound && targetFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
-                {
-                    var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-
-                    if (binaryParagraphs.Count > 0)
-                    {
-                        targetFormatFound = true;
-                        for (var i = 0; i < binaryParagraphs.Count; i++)
-                        {
-                            var p = binaryParagraphs[i];
-                            var bmp = p.GetBitmap();
-                            if (bmp == null)
-                            {
-                                continue;
-                            }
-
-                            // 0_00_01_042__0_00_03_919_01.png
-                            var imageFileName = $"{p.StartTimeCode.Hours}_{p.StartTimeCode.Minutes:00}_{p.StartTimeCode.Seconds:00}_{p.StartTimeCode.Milliseconds:000}__" +
-                                           $"{p.EndTimeCode.Hours}_{p.EndTimeCode.Minutes:00}_{p.EndTimeCode.Seconds:00}_{p.EndTimeCode.Milliseconds:000}_{(i + 1):00}.png";
-                            bmp.Save(Path.Combine(path, imageFileName), ImageFormat.Png);
-                            bmp.Dispose();
-                        }
-
-                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {path}...");
                         _stdOutWriter?.WriteLine(" done.");
                     }
+
+                    else if (!targetFormatFound && targetFormat.StartsWith("CustomText:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
+                        {
+                            var arr = targetFormat.Split(':');
+                            if (arr.Length == 2)
+                            {
+                                foreach (var template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                                {
+                                    if (template.StartsWith(arr[1] + "Æ", StringComparison.Ordinal))
+                                    {
+                                        targetFormatFound = true;
+                                        var title = string.Empty;
+                                        if (!string.IsNullOrEmpty(fileName))
+                                        {
+                                            title = Path.GetFileNameWithoutExtension(fileName);
+                                        }
+
+                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ExportCustomText.GetFileExtension(template), outputFolder, overwrite, targetFileName);
+                                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                                        FileUtil.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, null, template), targetEncoding);
+                                        _stdOutWriter?.WriteLine(" done.");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    else if (!targetFormatFound && targetFormat == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+                    {
+                        var path = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(fileName));
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+
+                        if (binaryParagraphs.Count > 0)
+                        {
+                            targetFormatFound = true;
+                            for (var i = 0; i < binaryParagraphs.Count; i++)
+                            {
+                                var p = binaryParagraphs[i];
+                                var bmp = p.GetBitmap();
+                                if (bmp == null)
+                                {
+                                    continue;
+                                }
+
+                                if (preprocessingSettings != null)
+                                {
+                                    var newBmp = GetPreProcessedImage(bmp, preprocessingSettings);
+                                    bmp.Dispose();
+                                    bmp = newBmp;
+                                }
+
+                                // 0_00_01_042__0_00_03_919_01.png
+                                var imageFileName = $"{p.StartTimeCode.Hours}_{p.StartTimeCode.Minutes:00}_{p.StartTimeCode.Seconds:00}_{p.StartTimeCode.Milliseconds:000}__" +
+                                               $"{p.EndTimeCode.Hours}_{p.EndTimeCode.Minutes:00}_{p.EndTimeCode.Seconds:00}_{p.EndTimeCode.Milliseconds:000}_{(i + 1):00}.png";
+                                bmp.Save(Path.Combine(path, imageFileName), ImageFormat.Png);
+                                bmp.Dispose();
+                            }
+
+                            _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {path}...");
+                            _stdOutWriter?.WriteLine(" done.");
+                        }
+                    }
                 }
+
+                if (!targetFormatFound)
+                {
+                    _stdOutWriter?.WriteLine($"{count}: {fileName} - target format '{targetFormat}' not found!");
+                    errors++;
+                    return false;
+                }
+                converted++;
+                return success;
+            }
+            finally
+            {
+                Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+            }
+        }
+
+        private static Bitmap GetPreProcessedImage(Bitmap bmp, PreprocessingSettings preprocessingSettings)
+        {
+            var nb = new NikseBitmap(bmp);
+
+            if (preprocessingSettings != null && preprocessingSettings.CropTransparentColors)
+            {
+                nb.CropTransparentSidesAndBottom(2, true);
+                nb.CropTopTransparent(2);
+            }
+            nb.AddMargin(10);
+
+            if (preprocessingSettings != null && preprocessingSettings.InvertColors)
+            {
+                nb.InvertColors();
             }
 
-            if (!targetFormatFound)
+            if (preprocessingSettings != null && preprocessingSettings.ScalingPercent > 100)
             {
-                _stdOutWriter?.WriteLine($"{count}: {fileName} - target format '{targetFormat}' not found!");
-                errors++;
-                return false;
+                var bTemp = nb.GetBitmap();
+                var f = preprocessingSettings.ScalingPercent / 100.0;
+                var b = VobSubOcr.ResizeBitmap(bTemp, (int)Math.Round(bTemp.Width * f), (int)Math.Round(bTemp.Height * f));
+                bTemp.Dispose();
+                nb = new NikseBitmap(b);
             }
-            converted++;
-            return success;
-            //}
-            //finally
-            //{
-            //    Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            //}
+
+            if (preprocessingSettings != null && preprocessingSettings.InvertColors)
+            {
+                nb.MakeTwoColor(preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.Black, Color.White);
+            }
+            else
+            {
+                nb.MakeTwoColor(preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.White, Color.Black);
+            }
+
+            return nb.GetBitmap();
         }
 
         internal static void DeleteContains(Subtitle sub, string deleteContains)

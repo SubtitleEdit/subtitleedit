@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.CommandLineConvert;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -107,7 +108,8 @@ namespace Nikse.SubtitleEdit.Forms
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
         private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
         private Dictionary<string, List<IBinaryParagraphWithPosition>> _binaryParagraphLookup = new Dictionary<string, List<IBinaryParagraphWithPosition>>();
-        RemoveTextForHISettings _removeTextForHiSettings;
+        private RemoveTextForHISettings _removeTextForHiSettings;
+        private PreprocessingSettings _preprocessingSettings;
         private string _ocrEngine = "Tesseract";
 
         public BatchConvert(Icon icon)
@@ -1097,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelError.Visible = false;
             Refresh();
 
-              var sw = System.Diagnostics.Stopwatch.StartNew();
+            var sw = System.Diagnostics.Stopwatch.StartNew();
 
             if (buttonConvert.Text == LanguageSettings.Current.General.Cancel)
             {
@@ -1408,7 +1410,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
 
                                                             //TODO: fix
-                                                            vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList() , Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
+                                                            vobSubOcr.InitializeBatch(binaryParagraphs.Cast<IBinaryParagraph>().ToList(), Configuration.Settings.VobSubOcr, fileName, false, track.Language, _ocrEngine);
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -2604,7 +2606,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dir = Path.GetDirectoryName(p.FileName);
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, string.Empty, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, _cancellationTokenSource.Token);
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, string.Empty, GetCurrentEncoding(p.FileName), dir, string.Empty, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback, null, null, null, null, null, _preprocessingSettings, _cancellationTokenSource.Token);
                     if (success)
                     {
                         p.Item.SubItems[3].Text = LanguageSettings.Current.BatchConvert.Converted;
@@ -2668,6 +2670,13 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxEncoding.Enabled = true;
                 buttonBrowseEncoding.Visible = true;
             }
+            else if (ComboBoxSubtitleFormatText == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+            {
+                buttonStyles.Text = LanguageSettings.Current.BatchConvert.Settings;
+                buttonStyles.Visible = true;
+                comboBoxEncoding.Enabled = true;
+                buttonBrowseEncoding.Visible = true;
+            }
             else
             {
                 buttonStyles.Visible = false;
@@ -2722,6 +2731,48 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowExportCustomTextSettings();
             }
+            else if (ComboBoxSubtitleFormatText == LanguageSettings.Current.VobSubOcr.ImagesWithTimeCodesInFileName.Trim('.'))
+            {
+                var mp = MakeBitmapParameter();
+                var bmp = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                using (var form = new OcrPreprocessingSettings(bmp, true, _preprocessingSettings))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _preprocessingSettings = form.PreprocessingSettings;
+                    }
+                }
+            }
+        }
+
+        private ExportPngXml.MakeBitmapParameter MakeBitmapParameter()
+        {
+            return new ExportPngXml.MakeBitmapParameter
+            {
+                Type = ExportPngXml.ExportFormats.BluraySup,
+                SubtitleColor = Color.White,
+                SubtitleFontName = Font.Name,
+                SubtitleFontSize = 32,
+                SubtitleFontBold = true,
+                BorderColor = Color.Black,
+                BorderWidth = 2,
+                ScreenWidth = 1920,
+                ScreenHeight = 1080,
+                VideoResolution = "1920x1080",
+                FramesPerSeconds = 24,
+                BottomMargin = 50,
+                LeftMargin = 50,
+                RightMargin = 50,
+                Alignment = ContentAlignment.BottomCenter,
+                BackgroundColor = Color.Transparent,
+                SavDialogFileName = string.Empty,
+                ShadowColor = Color.FromArgb(50, 0, 0, 0),
+                ShadowWidth = 3,
+                ShadowAlpha = 50,
+                LineHeight = new Dictionary<string, int>(),
+                FullFrameBackgroundColor = Color.Transparent,
+                P = new Paragraph("Subtitle Edit", 0, 2000),
+            };
         }
 
         private void ShowExportCustomTextSettings()
