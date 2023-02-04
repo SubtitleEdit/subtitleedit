@@ -740,6 +740,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TimedTextItunesTopExtent { get; set; }
         public string TimedTextItunesBottomOrigin { get; set; }
         public string TimedTextItunesBottomExtent { get; set; }
+        public string TimedTextItunesTimeCodeFormat { get; set; }
 
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
@@ -823,6 +824,7 @@ $HorzAlign          =   Center
             TimedTextItunesTopExtent = "100% 15%";
             TimedTextItunesBottomOrigin = "0% 85%";
             TimedTextItunesBottomExtent = "100% 15%";
+            TimedTextItunesTimeCodeFormat = "Frames";
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
@@ -6581,6 +6583,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.TimedTextItunesBottomExtent = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("TimedTextItunesTimeCodeFormat");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedTextItunesTimeCodeFormat = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                 {
@@ -10647,6 +10655,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TimedTextItunesTopExtent", settings.SubtitleSettings.TimedTextItunesTopExtent);
                 textWriter.WriteElementString("TimedTextItunesBottomOrigin", settings.SubtitleSettings.TimedTextItunesBottomOrigin);
                 textWriter.WriteElementString("TimedTextItunesBottomExtent", settings.SubtitleSettings.TimedTextItunesBottomExtent);
+                textWriter.WriteElementString("TimedTextItunesTimeCodeFormat", settings.SubtitleSettings.TimedTextItunesTimeCodeFormat);
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
                 textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
