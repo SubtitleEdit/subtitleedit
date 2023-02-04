@@ -30609,12 +30609,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
                 var currentStyleName = p == null ? string.Empty : p.Extra;
+                var timerWaveformEnabled = timerWaveform.Enabled;
+                timerWaveform.Stop();
                 using (var assaStyles = new Assa.AssaStyles(_subtitle, format, this, currentStyleName))
                 {
                     if (assaStyles.ShowDialog(this) == DialogResult.OK)
                     {
                         ApplyAssaStyles(assaStyles);
                     }
+                }
+
+                if (timerWaveformEnabled)
+                {
+                    timerWaveform.Start();
                 }
             }
             else if (formatType == typeof(SubStationAlpha))
@@ -30670,14 +30677,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                CleanRemovedStyles(styleList);
+                CleanRemovedStyles(styleList, false);
                 SaveSubtitleListviewIndices();
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
             }
             else
             {
-                CleanRemovedStyles(styleList);
+                CleanRemovedStyles(styleList, true);
             }
         }
 
@@ -30704,26 +30711,58 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                CleanRemovedStyles(styleList);
+                CleanRemovedStyles(styleList, false);
                 SaveSubtitleListviewIndices();
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 RestoreSubtitleListviewIndices();
             }
             else
             {
-                CleanRemovedStyles(styleList);
+                CleanRemovedStyles(styleList, true);
             }
         }
 
-        private void CleanRemovedStyles(List<string> styleList)
+        private void CleanRemovedStyles(List<string> styleList, bool updateListView)
         {
+            var largeUpdate = false;
+            if (updateListView)
+            {
+                if (_subtitle.Paragraphs.Count > 1000)
+                {
+                    largeUpdate = true;
+                }
+                else
+                {
+                    SubtitleListview1.BeginUpdate();
+                }
+            }
+
             for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
                 if (p.Extra == null || !styleList.Any(s => s.Equals(p.Extra == "*Default" ? "Default" : p.Extra, StringComparison.OrdinalIgnoreCase)))
                 {
                     p.Extra = styleList[0];
-                    SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+
+                    if (updateListView && !largeUpdate)
+                    {
+                        SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+                    }
+                }
+            }
+
+            if (updateListView)
+            {
+                if (largeUpdate)
+                {
+                    SaveSubtitleListviewIndices();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+
+                }
+                else
+                {
+                    SubtitleListview1.EndUpdate();
                 }
             }
         }

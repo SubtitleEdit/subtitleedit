@@ -425,9 +425,7 @@ namespace Nikse.SubtitleEdit.Controls
             const double additionalSeconds = 15.0; // Helps when scrolling
             var startThresholdMilliseconds = (_startPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
             var endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
-
-            var lastTimeStampHash = -1;
-            var lastLastTimeStampHash = -2;
+            var displayableParagraphs = new List<Paragraph>();
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -438,24 +436,28 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _subtitle.Paragraphs.Add(p);
-
                 if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
                 {
-                    var timeStampHash = p.StartTime.TotalMilliseconds.GetHashCode() + p.EndTime.TotalMilliseconds.GetHashCode();
-                    if (timeStampHash == lastTimeStampHash && timeStampHash == lastLastTimeStampHash)
-                    {
-                        continue;
-                    }
-
-                    _displayableParagraphs.Add(p);
-                    if (_displayableParagraphs.Count > 200)
+                    displayableParagraphs.Add(p);
+                    if (displayableParagraphs.Count > 99)
                     {
                         break;
                     }
-
-                    lastLastTimeStampHash = lastTimeStampHash;
-                    lastTimeStampHash = timeStampHash;
                 }
+            }
+
+            displayableParagraphs = displayableParagraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+            var lastStartTime = -1d;
+            foreach (var p in displayableParagraphs)
+            {
+                if (displayableParagraphs.Count > 30 &&
+                    (p.Duration.TotalMilliseconds < 0.01 || p.StartTime.TotalMilliseconds - lastStartTime < 90))
+                {
+                    continue;
+                }
+
+                _displayableParagraphs.Add(p);
+                lastStartTime = p.StartTime.TotalMilliseconds;
             }
 
             var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
@@ -1123,9 +1125,9 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     // This try/catch is due to some characters crashing MeasureString, see https://github.com/SubtitleEdit/subtitleedit/issues/6108
                     text = "?";
-                    measureResult = new SizeF(5,5);
+                    measureResult = new SizeF(5, 5);
                 }
-                
+
                 while (text.Length > removeLength && graphics.MeasureString(text, font).Width > max)
                 {
                     text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
