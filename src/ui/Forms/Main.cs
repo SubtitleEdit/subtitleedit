@@ -597,8 +597,8 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnPause += AudioWaveform_OnPause;
                 audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveform_OnTimeChangedAndOffsetRest;
                 audioVisualizer.OnZoomedChanged += AudioWaveform_OnZoomedChanged;
-                audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
-                audioVisualizer.PasteAtVideoPosition += audioVisualizer_PasteAtVideoPosition;
+                audioVisualizer.OnInsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
+                audioVisualizer.OnPasteAtVideoPosition += audioVisualizer_PasteAtVideoPosition;
                 audioVisualizer.KeyDown += AudioVisualizer_KeyDown;
                 SetAudioVisualizerSettings();
                 if (Configuration.Settings.General.WaveformUpdateIntervalMs > 0 && Configuration.Settings.General.WaveformUpdateIntervalMs < 200)

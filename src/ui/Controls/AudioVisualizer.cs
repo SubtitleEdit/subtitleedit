@@ -113,8 +113,8 @@ namespace Nikse.SubtitleEdit.Controls
         public event ParagraphEventHandler OnDoubleClickNonParagraph;
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
-        public event EventHandler InsertAtVideoPosition;
-        public event EventHandler PasteAtVideoPosition;
+        public event EventHandler OnInsertAtVideoPosition;
+        public event EventHandler OnPasteAtVideoPosition;
 
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wavePeaks != null)
             {
                 var list = new List<WavePeak>();
-                for (int i = 0; i < _wavePeaks.Peaks.Count; i++)
+                for (var i = 0; i < _wavePeaks.Peaks.Count; i++)
                 {
                     if (i % 1001 != 0)
                     {
@@ -2199,17 +2199,17 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (e.KeyData == InsertAtVideoPositionShortcut)
             {
-                if (InsertAtVideoPosition != null)
+                if (OnInsertAtVideoPosition != null)
                 {
-                    InsertAtVideoPosition.Invoke(this, null);
+                    OnInsertAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
                 }
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+v = Paste from clipboard
             {
-                if (PasteAtVideoPosition != null)
+                if (OnPasteAtVideoPosition != null)
                 {
-                    PasteAtVideoPosition.Invoke(this, null);
+                    OnPasteAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
                 }
             }
