@@ -2753,6 +2753,7 @@ $HorzAlign          =   Center
     public class Settings
     {
         public string Version { get; set; }
+        public bool InitialLoad { get; set; }
         public CompareSettings Compare { get; set; }
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
@@ -2879,7 +2880,15 @@ $HorzAlign          =   Center
                 catch (Exception exception)
                 {
                     settings = new Settings();
+                    settings.InitialLoad = true;
                     SeLogger.Error(exception, "Failed to load " + settingsFileName);
+
+                    var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+                    if (Configuration.IsRunningOnWindows && File.Exists(ffmpegFullPath))
+                    {
+                        settings.General.FFmpegLocation = ffmpegFullPath;
+                        settings.General.UseFFmpegForWaveExtraction = true;
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))
@@ -2905,6 +2914,16 @@ $HorzAlign          =   Center
                     {
                         settings.General.FFmpegLocation = guessPath;
                     }
+                }
+            }
+            else
+            {
+                settings.InitialLoad = true;
+                var ffmpegFullPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+                if (Configuration.IsRunningOnWindows && File.Exists(ffmpegFullPath))
+                {
+                    settings.General.FFmpegLocation = ffmpegFullPath;
+                    settings.General.UseFFmpegForWaveExtraction = true;
                 }
             }
 
@@ -3327,7 +3346,7 @@ $HorzAlign          =   Center
             {
                 settings.General.TranslationAutoSuffixes = subNode.InnerText;
             }
-            
+
             subNode = node.SelectSingleNode("TranslationAutoSuffixDefault");
             if (subNode != null)
             {
@@ -3603,81 +3622,81 @@ $HorzAlign          =   Center
             {
                 settings.General.ContinuationPause = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleSuffix");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleSuffix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleSuffixApplyIfComma");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleSuffixApplyIfComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleSuffixAddSpace");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleSuffixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleSuffixReplaceComma");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleSuffixReplaceComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStylePrefix");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStylePrefix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStylePrefixAddSpace");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStylePrefixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleUseDifferentStyleGap");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleUseDifferentStyleGap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffix");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleGapSuffix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixApplyIfComma");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleGapSuffixApplyIfComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixAddSpace");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleGapSuffixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleGapSuffixReplaceComma");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleGapSuffixReplaceComma = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleGapPrefix");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleGapPrefix = Convert.ToString(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("CustomContinuationStyleGapPrefixAddSpace");
-            if (subNode != null) 
+            if (subNode != null)
             {
                 settings.General.CustomContinuationStyleGapPrefixAddSpace = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
@@ -5860,7 +5879,7 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ConvertColorsToDialogReBreakLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
-			}
+            }
 
             subNode = node.SelectSingleNode("ColumnPasteColumn");
             if (subNode != null)

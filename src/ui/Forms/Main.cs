@@ -21898,6 +21898,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenVideo(string fileName, int audioTrack)
         {
+            if (Configuration.Settings.InitialLoad && LibMpvDynamic.IsInstalled)
+            {
+                Configuration.Settings.General.VideoPlayer = "MPV";
+                Configuration.Settings.InitialLoad = false;
+            }
+
             if (!_resetVideo)
             {
                 return;
