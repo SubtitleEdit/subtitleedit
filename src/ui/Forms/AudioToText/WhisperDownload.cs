@@ -11,16 +11,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
     public sealed partial class WhisperDownload : Form
     {
         private const string DownloadUrlAvx2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-x64.zip";
-        private const string DownloadUrlSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-bin-x64.zip";
+        private const string DownloadUrlSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-x64.zip";
         private const string DownloadUrl32BitAvx2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
-        private const string DownloadUrl32BitSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-bin-Win32.zip";
+        private const string DownloadUrl32BitSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private static readonly string[] Sha512Hashes =
         {
             "a6a75a5d63b933c3529a500b7dd8b330530894b09461bb0a715dbedb31bf2e3493238e86af6d7cc64f3af196a6d61d96bb23853f98d21c8172d5d53d7aad33d9", // 64-bit OpenBLAS
-          //  "", // SSE2 64-bit
             "92f64f207c400c7c0f1fc27006bf2a1e4170fdc63d045dfdf0a0848b3d727f2763eccfb55e10b6e745e9d39892d24cb9b4c471594011d041458c1ff8722e1ffc", // 32-bit OpenBLAS
-          //  "", // SSE2 32-bit
         };
 
         private static readonly string[] OldSha512Hashes =
