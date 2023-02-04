@@ -234,6 +234,7 @@
             this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeFormat.FormattingEnabled = true;
             this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
+            "Frames",
             "Source",
             "Seconds",
             "Milliseconds",

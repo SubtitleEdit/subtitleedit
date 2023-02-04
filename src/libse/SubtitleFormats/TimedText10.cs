@@ -84,11 +84,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
+            return ConvertToTimeString(time, Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat);
+        }
+
+        internal static string ConvertToTimeString(TimeCode time, string timeCodeFormat)
+        {
+            timeCodeFormat = timeCodeFormat.Trim().ToLowerInvariant();
             if (timeCodeFormat == "source" && !string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource))
             {
                 timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource.Trim().ToLowerInvariant();
             }
+
             switch (timeCodeFormat)
             {
                 case "source":
