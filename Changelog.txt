@@ -1,5 +1,25 @@
 ﻿Subtitle Edit Changelog
 
+3.6.12 (xth March 2023)
+* NEW:
+   * Batch convert: Image based format to png with time code - thx Ninelpienel 
+* IMPROVED:
+   * Update French translation - thx Pierre
+   * Update Hungarian translation - thx Zityi
+   * Update Brazil translation - thx igorruckert
+   * Update Whisper cpp to v1.2.0
+   * "Multiple replace" apply button now changes main window - thx Sopor
+   * Set ITT default time code format to frames - thx chenlung 
+   * Try to handle larger ASSA files better - thx MMT
+* FIXED:
+   * Fix extra space after font in EBU STL - thx Stefan
+   * Fix Korean in installer - thx 슈니
+   * Fix Japanese in installer - thx homunet
+   * Fix for SSA style - thx Amstramgram
+   * Fix possible crash in batch convert w overwrite - thx chensimmons
+   * Fix issue with continuation style suffix "..." and comma - thx Edwin
+
+
 3.6.11 (30th January 2023)
 * NEW:
    * Add File - Close translated subtitle - thx zcraber/Leon 
