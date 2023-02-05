@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.12 (xth March 2023)
+3.6.12 (xth March 2023) BETA
 * NEW:
    * Batch convert: Image based format to png with time code - thx Ninelpienel 
 * IMPROVED:
