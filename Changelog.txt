@@ -10,7 +10,7 @@
    * Update Whisper cpp to v1.2.0
    * "Multiple replace" apply button now changes main window - thx Sopor
    * Set ITT default time code format to frames - thx chenlung 
-   * Try to handle larger ASSA files better - thx MMT
+   * Try to handle large ASSA files better - thx MMT
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix Korean in installer - thx 슈니
