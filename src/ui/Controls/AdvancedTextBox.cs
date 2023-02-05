@@ -264,7 +264,14 @@ namespace Nikse.SubtitleEdit.Controls
             var length = SelectionLength;
             formattingAction();
             SelectionStart = start;
+            if (SelectionStart < start)
+            {
+                SelectionStart = start + 1;
+            }
+
             SelectionLength = length;
+
+
             this.EndRichTextBoxUpdate();
         }
 
