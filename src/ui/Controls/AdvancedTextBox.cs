@@ -69,7 +69,6 @@ namespace Nikse.SubtitleEdit.Controls
             KeyPress += UiTextBox_KeyPress;
             KeyDown += UiTextBox_KeyDown;
             MouseDown += UiTextBox_MouseDown;
-
             TextChanged += TextChangedHighlight;
             HandleCreated += (sender, args) =>
             {
@@ -440,7 +439,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SetHtmlColor(string text, int htmlTagStart)
         {
-            int colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
+            var colorStart = text.IndexOf(" color=", htmlTagStart, StringComparison.OrdinalIgnoreCase);
             if (colorStart > 0)
             {
                 colorStart += " color=".Length;
@@ -531,9 +530,39 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private const int WM_PAINT = 0x0F;
+        private const int WM_LBUTTONDBLCLK = 0x0203;
+
         protected override void WndProc(ref Message m)
         {
-            base.WndProc(ref m);
+            if (m.Msg == WM_LBUTTONDBLCLK)
+            {
+                var text = Text;
+                var posStart = SelectionStart;
+                if (posStart >= 0 && posStart < text.Length && char.IsLetterOrDigit(text[posStart]))
+                {
+                    var posEnd = posStart;
+                    while (posStart > 0 && char.IsLetterOrDigit(text[posStart - 1]))
+                    {
+                        posStart--;
+                    }
+
+                    while (posEnd < text.Length && char.IsLetterOrDigit(text[posEnd]))
+                    {
+                        posEnd++;
+                    }
+
+                    var length = posEnd - posStart;
+                    if (length > 0)
+                    {
+                        SelectionStart = posStart;
+                        SelectionLength = length;
+                    }
+                }
+            }
+            else
+            {
+                base.WndProc(ref m);
+            }
 
             if (m.Msg == WM_PAINT && !Enabled && Configuration.Settings.General.UseDarkTheme)
             {
