@@ -551,6 +551,11 @@ namespace Nikse.SubtitleEdit.Controls
                         posEnd++;
                     }
 
+                    if (posEnd < text.Length && text[posEnd] == '\r')
+                    {
+                        posEnd++;
+                    }
+
                     var length = posEnd - posStart;
                     if (length > 0)
                     {
