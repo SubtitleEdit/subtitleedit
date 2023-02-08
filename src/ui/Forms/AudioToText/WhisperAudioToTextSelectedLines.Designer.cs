@@ -54,6 +54,7 @@
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.whisperPhpOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whisperConstMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
@@ -301,10 +302,11 @@
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.whisperPhpOriginalToolStripMenuItem,
             this.whisperCppCToolStripMenuItem,
+            this.whisperConstMeToolStripMenuItem,
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 76);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 120);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
@@ -319,6 +321,13 @@
             this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
             this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
+            // 
+            // whisperConstMeToolStripMenuItem
+            // 
+            this.whisperConstMeToolStripMenuItem.Name = "whisperConstMeToolStripMenuItem";
+            this.whisperConstMeToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.whisperConstMeToolStripMenuItem.Text = "Whisper Const-me (GPU)";
+            this.whisperConstMeToolStripMenuItem.Click += new System.EventHandler(this.whisperConstMeGPUToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -400,5 +409,6 @@
         private System.Windows.Forms.ToolStripMenuItem whisperCppCToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem whisperConstMeToolStripMenuItem;
     }
 }

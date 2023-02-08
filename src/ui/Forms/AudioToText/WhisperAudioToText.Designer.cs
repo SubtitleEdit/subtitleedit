@@ -387,7 +387,7 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 98);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 120);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
@@ -407,7 +407,7 @@
             // 
             this.whisperConstMeToolStripMenuItem.Name = "whisperConstMeToolStripMenuItem";
             this.whisperConstMeToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.whisperConstMeToolStripMenuItem.Text = "Whisper ConstMe (GPU)";
+            this.whisperConstMeToolStripMenuItem.Text = "Whisper Const-me (GPU)";
             this.whisperConstMeToolStripMenuItem.Click += new System.EventHandler(this.whisperConstMeToolStripMenuItem_Click);
             // 
             // toolStripSeparator1

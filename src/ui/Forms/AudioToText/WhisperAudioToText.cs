@@ -559,6 +559,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public static bool GetResultFromSrt(string waveFileName, out List<ResultText> resultTexts, ConcurrentBag<string> outputText, List<string> filesToDelete)
         {
             var srtFileName = waveFileName + ".srt";
+            if (!File.Exists(srtFileName) && waveFileName.EndsWith(".wav"))
+            {
+                srtFileName = waveFileName.Remove(waveFileName.Length - 4) + ".srt";
+            }
 
             var whisperFolder = WhisperHelper.GetWhisperFolder() ?? string.Empty;
             var vttFileName = Path.Combine(whisperFolder, Path.GetFileName(waveFileName) + ".vtt");
