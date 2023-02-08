@@ -198,6 +198,7 @@ Read more info (web)?</WhisperNotFound>
     <BatchMode>Batch mode</BatchMode>
     <KeepPartialTranscription>Keep partial transcription</KeepPartialTranscription>
     <TranslateToEnglish>Translate to English</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Max. chars per subtitle line</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>

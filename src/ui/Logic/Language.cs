@@ -344,6 +344,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XFilesSavedToVideoSourceFolder = "{0} files saved to video source folder",
                 KeepPartialTranscription = "Keep partial transcription",
                 TranslateToEnglish = "Translate to English",
+                MaxCharsPerSubtitle = "Max. chars per subtitle line",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments

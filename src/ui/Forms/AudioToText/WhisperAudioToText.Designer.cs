@@ -64,9 +64,12 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
+            this.numericUpDownCharsPerSub = new System.Windows.Forms.NumericUpDown();
+            this.labelCharsPerSub = new System.Windows.Forms.Label();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCharsPerSub)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -123,7 +126,7 @@
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLog.Size = new System.Drawing.Size(168, 288);
+            this.textBoxLog.Size = new System.Drawing.Size(168, 65);
             this.textBoxLog.TabIndex = 0;
             // 
             // labelInfo
@@ -384,7 +387,7 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 120);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 98);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
@@ -429,11 +432,44 @@
             this.checkBoxAutoAdjustTimings.Text = "Auto adjust timings";
             this.checkBoxAutoAdjustTimings.UseVisualStyleBackColor = true;
             // 
+            // numericUpDownCharsPerSub
+            // 
+            this.numericUpDownCharsPerSub.Location = new System.Drawing.Point(622, 148);
+            this.numericUpDownCharsPerSub.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDownCharsPerSub.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownCharsPerSub.Name = "numericUpDownCharsPerSub";
+            this.numericUpDownCharsPerSub.Size = new System.Drawing.Size(69, 20);
+            this.numericUpDownCharsPerSub.TabIndex = 23;
+            this.numericUpDownCharsPerSub.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // labelCharsPerSub
+            // 
+            this.labelCharsPerSub.AutoSize = true;
+            this.labelCharsPerSub.Location = new System.Drawing.Point(522, 150);
+            this.labelCharsPerSub.Name = "labelCharsPerSub";
+            this.labelCharsPerSub.Size = new System.Drawing.Size(94, 13);
+            this.labelCharsPerSub.TabIndex = 24;
+            this.labelCharsPerSub.Text = "Max chars/subtitle";
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 494);
+            this.Controls.Add(this.labelCharsPerSub);
+            this.Controls.Add(this.numericUpDownCharsPerSub);
             this.Controls.Add(this.labelElapsed);
             this.Controls.Add(this.checkBoxAutoAdjustTimings);
             this.Controls.Add(this.labelCpp);
@@ -467,6 +503,7 @@
             this.groupBoxModels.PerformLayout();
             this.groupBoxInputFiles.ResumeLayout(false);
             this.contextMenuStripWhisperAdvanced.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCharsPerSub)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -509,5 +546,7 @@
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoAdjustTimings;
         private System.Windows.Forms.ToolStripMenuItem whisperConstMeToolStripMenuItem;
+        private System.Windows.Forms.NumericUpDown numericUpDownCharsPerSub;
+        private System.Windows.Forms.Label labelCharsPerSub;
     }
 }
