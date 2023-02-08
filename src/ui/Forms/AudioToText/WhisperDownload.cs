@@ -60,14 +60,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " whisper.cpp";
             _cancellationTokenSource = new CancellationTokenSource();
             _whisperChoice = whisperChoice;
+            labelWhisperChoice.Text = _whisperChoice;
+            labelWhisperChoice.Left = Width - labelWhisperChoice.Width - 20;
         }
 
         private void WhisperDownload_Shown(object sender, EventArgs e)
         {
-            labelWhisperChoice.Visible = true;
-            labelWhisperChoice.Text = _whisperChoice;
-            labelWhisperChoice.Left = Width - labelWhisperChoice.Width - 20;
-
             var downloadUrl = IntPtr.Size * 8 == 32 ? DownloadUrl32Cpp : DownloadUrl64Cpp;
             if (_whisperChoice == WhisperChoice.ConstMe)
             {
