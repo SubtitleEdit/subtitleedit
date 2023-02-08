@@ -11,6 +11,7 @@
    * "Multiple replace" apply button now changes main window - thx Sopor
    * Set ITT default time code format to frames - thx chenlung 
    * Try to handle large ASSA files better - thx MMT
+   * Improve double-click-word-select in syntax color text box - thx Janusz/von Suppé
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix Korean in installer - thx 슈니
