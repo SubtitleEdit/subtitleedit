@@ -51,16 +51,16 @@
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
-            // labelAVX2
+            // labelWhisperChoice
             // 
             this.labelWhisperChoice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelWhisperChoice.AutoSize = true;
             this.labelWhisperChoice.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.labelWhisperChoice.Location = new System.Drawing.Point(274, 9);
             this.labelWhisperChoice.Name = "labelWhisperChoice";
-            this.labelWhisperChoice.Size = new System.Drawing.Size(34, 13);
+            this.labelWhisperChoice.Size = new System.Drawing.Size(28, 13);
             this.labelWhisperChoice.TabIndex = 30;
-            this.labelWhisperChoice.Text = "AVX2";
+            this.labelWhisperChoice.Text = "CPP";
             // 
             // WhisperDownload
             // 
