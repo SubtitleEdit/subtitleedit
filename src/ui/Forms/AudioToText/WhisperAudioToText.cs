@@ -1185,6 +1185,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             buttonGenerate.Focus();
             _initialWidth = Width;
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+            {
+                Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                whisperConstMeToolStripMenuItem_Click(null, null);
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+                {
+                    Init();
+                }
+            }
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
