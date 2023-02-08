@@ -8,12 +8,24 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
     {
         public static IWhisperModel GetWhisperModel()
         {
-            return Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ? (IWhisperModel)new WhisperCppModel() : new WhisperModel();
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+            {
+                return new WhisperCppModel();
+            }
+
+            return new WhisperModel();
         }
 
         public static string ModelExtension()
         {
-            return Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ? ".bin" : ".pt";
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
+                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+            {
+                return ".bin";
+            }
+
+            return ".pt";
         }
 
         public static string GetWebSiteUrl()
@@ -26,6 +38,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
             {
                 return "https://github.com/m-bain/whisperX";
+            }
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+            {
+                return "https://github.com/Const-me/Whisper";
             }
 
             return "https://github.com/openai/whisper";
@@ -89,6 +106,12 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                {
+                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", "ConstMe");
+                    return Directory.Exists(path) ? path : null;
+                }
+
                 var pythonFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     "AppData",
                     "Local",
@@ -142,6 +165,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return "whisperx";
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                {
+                    return "main";
+                }
+
                 return "whisper";
             }
 
@@ -162,6 +190,16 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     {
                         return f;
                     }
+                }
+                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                {
+                    var f = Path.Combine(whisperFolder, "main.exe");
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
+
+                    return null;
                 }
                 else
                 {
@@ -196,6 +234,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         public static string GetWhisperModelForCmdLine(string model)
         {
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp)
+            {
+                return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
+            }
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
                 return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
             }

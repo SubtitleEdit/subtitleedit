@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -15,6 +16,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private const string DownloadUrl32BitAvx2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
         private const string DownloadUrl32BitSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly string _whisperChoice;
+
         private static readonly string[] Sha512Hashes =
         {
             "a6a75a5d63b933c3529a500b7dd8b330530894b09461bb0a715dbedb31bf2e3493238e86af6d7cc64f3af196a6d61d96bb23853f98d21c8172d5d53d7aad33d9", // 64-bit OpenBLAS
@@ -37,7 +40,19 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             "2a9e10f746a1ebe05dffa86e9f66cd20848faa6e849f3300c2281051c1a17b0fc35c60dc435f07f5974aa1191000aaf2866a4f03a5fe35ecffd4ae0919778e63", // SSE2 32-bit
         };
 
-        public WhisperDownload()
+        private static readonly string[] Sha512HashesConstMe =
+        {
+            "76b9004121fb152cc11641ce4afb33de4e503d549dcfb4f1e17b5f2655d5bb8e912120b4b273937693014cdb6bbb242210b0572b4de767d7bd0d7e0c4144f3c8",
+        };
+
+        private static readonly string[] OldSha512HashesConstMe =
+        {
+        };
+
+        private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.7.0/cli.zip";
+
+
+        public WhisperDownload(string whisperChoice)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -46,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             labelDescription1.Text = LanguageSettings.Current.GetTesseractDictionaries.Download + " whisper.cpp";
             _cancellationTokenSource = new CancellationTokenSource();
+            _whisperChoice = whisperChoice;
         }
 
         private void WhisperDownload_Shown(object sender, EventArgs e)
@@ -57,6 +73,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (IntPtr.Size * 8 == 32)
             {
                 downloadUrl = avx2 ? DownloadUrl32BitAvx2 : DownloadUrl32BitSse2;
+            }
+
+            if (_whisperChoice == WhisperChoice.ConstMe)
+            {
+                downloadUrl = DownloadUrlConstMe;
             }
 
             try
@@ -104,16 +125,28 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             downloadStream.Position = 0;
             var hash = Utilities.GetSha512Hash(downloadStream.ToArray());
-            if (!Sha512Hashes.Contains(hash))
+            var hashes = _whisperChoice == WhisperChoice.ConstMe ? Sha512HashesConstMe : Sha512Hashes;
+            if (!hashes.Contains(hash))
             {
                 MessageBox.Show("Whisper SHA-512 hash does not match!");
                 return;
             }
 
             var folder = Path.Combine(Configuration.DataDirectory, "Whisper");
+
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
+            }
+
+            if (_whisperChoice == WhisperChoice.ConstMe)
+            {
+                folder = Path.Combine(folder, "ConstMe");
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
             }
 
             var skipFileNames = new[] { "command.exe", "stream.exe", "talk.exe", "bench.exe" };
@@ -135,9 +168,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             DialogResult = DialogResult.OK;
         }
 
-        public static bool IsOld(string fullPath)
+        public static bool IsOld(string fullPath, string whisperChoice)
         {
             var hash = Utilities.GetSha512Hash(FileUtil.ReadAllBytesShared(fullPath));
+
+            if (whisperChoice == WhisperChoice.ConstMe)
+            {
+                return OldSha512HashesConstMe.Contains(hash);
+            }
+
             return OldSha512Hashes.Contains(hash);
         }
     }

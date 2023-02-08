@@ -60,7 +60,7 @@
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.whisperPhpOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whisperCppCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.whisperXextraWADToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whisperConstMeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
@@ -380,43 +380,42 @@
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.whisperPhpOriginalToolStripMenuItem,
             this.whisperCppCToolStripMenuItem,
-            this.whisperXextraWADToolStripMenuItem,
+            this.whisperConstMeToolStripMenuItem,
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(231, 98);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 120);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
             this.whisperPhpOriginalToolStripMenuItem.Name = "whisperPhpOriginalToolStripMenuItem";
-            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.whisperPhpOriginalToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.whisperPhpOriginalToolStripMenuItem.Text = "Whisper OpenAI (Python)";
             this.whisperPhpOriginalToolStripMenuItem.Click += new System.EventHandler(this.whisperPhpOriginalToolStripMenuItem_Click);
             // 
             // whisperCppCToolStripMenuItem
             // 
             this.whisperCppCToolStripMenuItem.Name = "whisperCppCToolStripMenuItem";
-            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.whisperCppCToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.whisperCppCToolStripMenuItem.Text = "Whisper cpp (C++)";
             this.whisperCppCToolStripMenuItem.Click += new System.EventHandler(this.whisperCppCToolStripMenuItem_Click);
             // 
-            // whisperXextraWADToolStripMenuItem
+            // whisperConstMeToolStripMenuItem
             // 
-            this.whisperXextraWADToolStripMenuItem.Name = "whisperXextraWADToolStripMenuItem";
-            this.whisperXextraWADToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
-            this.whisperXextraWADToolStripMenuItem.Text = "WhisperX (Forced Alignment)";
-            this.whisperXextraWADToolStripMenuItem.Visible = false;
-            this.whisperXextraWADToolStripMenuItem.Click += new System.EventHandler(this.whisperXExtraWADToolStripMenuItem_Click);
+            this.whisperConstMeToolStripMenuItem.Name = "whisperConstMeToolStripMenuItem";
+            this.whisperConstMeToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.whisperConstMeToolStripMenuItem.Text = "Whisper ConstMe (GPU)";
+            this.whisperConstMeToolStripMenuItem.Click += new System.EventHandler(this.whisperConstMeToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(227, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(206, 6);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
@@ -509,6 +508,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoAdjustTimings;
-        private System.Windows.Forms.ToolStripMenuItem whisperXextraWADToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem whisperConstMeToolStripMenuItem;
     }
 }
