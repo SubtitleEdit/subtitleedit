@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
             whisperConstMeToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe;
             whisperConstMeToolStripMenuItem.Visible = Configuration.IsRunningOnWindows;
+
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
         }
 
