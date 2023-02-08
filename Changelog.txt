@@ -3,6 +3,7 @@
 3.6.12 (xth March 2023) BETA
 * NEW:
    * Batch convert: Image based format to png with time code - thx Ninelpienel 
+   * Add Whsper via GPU (ConstMe, windows only) - thx albino1/darnn/smith02ct
 * IMPROVED:
    * Update French translation - thx Pierre
    * Update Hungarian translation - thx Zityi
