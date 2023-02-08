@@ -34582,14 +34582,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fullPath = Path.Combine(Configuration.DataDirectory, "Whisper", "main.exe");
-            if (!File.Exists(fullPath) || WhisperDownload.IsOld(fullPath))
+            if (!File.Exists(fullPath) || WhisperDownload.IsOld(fullPath, WhisperChoice.Cpp))
             {
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     return false;
                 }
 
-                using (var form = new WhisperDownload())
+                using (var form = new WhisperDownload(WhisperChoice.Cpp))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK && File.Exists(fullPath))
                     {
@@ -34863,7 +34863,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper.cpp"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
-                            using (var downloadForm = new WhisperDownload())
+                            using (var downloadForm = new WhisperDownload(WhisperChoice.Cpp))
                             {
                                 if (form.ShowDialog(this) == DialogResult.OK)
                                 {
