@@ -81,6 +81,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             whisperCppCToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
             whisperPhpOriginalToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.OpenAI;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
+            whisperConstMeToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe;
+            whisperConstMeToolStripMenuItem.Visible = Configuration.IsRunningOnWindows;
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
         }
 
@@ -473,6 +475,38 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void labelCpp_Click(object sender, EventArgs e)
         {
             contextMenuStripWhisperAdvanced.Show(MousePosition);
+        }
+
+        private void whisperConstMeGPUToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var oldChoice = Configuration.Settings.Tools.WhisperChoice;
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.ConstMe;
+            var fileName = WhisperHelper.GetWhisperPathAndFileName();
+            if (!File.Exists(fileName) ||
+                WhisperDownload.IsOld(fileName, WhisperChoice.ConstMe))
+            {
+                Configuration.Settings.Tools.WhisperChoice = oldChoice;
+                if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.DownloadX, "whisper ConstMe (GPU)"), "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                {
+                    using (var downloadForm = new WhisperDownload(WhisperChoice.ConstMe))
+                    {
+                        if (downloadForm.ShowDialog(this) == DialogResult.OK)
+                        {
+                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.ConstMe;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            Init();
         }
     }
 }

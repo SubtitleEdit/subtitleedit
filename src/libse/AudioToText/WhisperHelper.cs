@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
                 {
-                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", "ConstMe");
+                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Const-me");
                     return Directory.Exists(path) ? path : null;
                 }
 

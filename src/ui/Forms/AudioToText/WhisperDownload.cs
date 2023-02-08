@@ -11,10 +11,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
     public sealed partial class WhisperDownload : Form
     {
-        private const string DownloadUrlAvx2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-x64.zip";
-        private const string DownloadUrlSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-x64.zip";
-        private const string DownloadUrl32BitAvx2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
-        private const string DownloadUrl32BitSse2 = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
+        private const string DownloadUrl64Cpp = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-x64.zip";
+        private const string DownloadUrl32Cpp = "https://github.com/ggerganov/whisper.cpp/releases/download/v1.2.0/whisper-blas-bin-Win32.zip";
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly string _whisperChoice;
 
@@ -66,15 +64,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void WhisperDownload_Shown(object sender, EventArgs e)
         {
-            var avx2 = CpuInfo.HasAvx2();
-            labelAVX2.Visible = avx2;
-            var downloadUrl = avx2 ? DownloadUrlAvx2 : DownloadUrlSse2;
+            labelWhisperChoice.Visible = true;
+            labelWhisperChoice.Text = _whisperChoice;
+            labelWhisperChoice.Left = Width - labelWhisperChoice.Width - 20;
 
-            if (IntPtr.Size * 8 == 32)
-            {
-                downloadUrl = avx2 ? DownloadUrl32BitAvx2 : DownloadUrl32BitSse2;
-            }
-
+            var downloadUrl = IntPtr.Size * 8 == 32 ? DownloadUrl32Cpp : DownloadUrl64Cpp;
             if (_whisperChoice == WhisperChoice.ConstMe)
             {
                 downloadUrl = DownloadUrlConstMe;
@@ -141,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (_whisperChoice == WhisperChoice.ConstMe)
             {
-                folder = Path.Combine(folder, "ConstMe");
+                folder = Path.Combine(folder, "Const-me");
 
                 if (!Directory.Exists(folder))
                 {

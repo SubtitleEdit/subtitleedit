@@ -61,27 +61,6 @@
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="iTin.Core, Version=2.0.0.4, Culture=neutral, PublicKeyToken=91c459d24f0559c7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="iTin.Core.Hardware.Common, Version=1.0.0.4, Culture=neutral, PublicKeyToken=55a914aaf3e07893, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Core.Hardware.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="iTin.Core.Hardware.CrossPlatform.Cpuid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=55a914aaf3e07893, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Core.Hardware.CrossPlatform.Cpuid.dll</HintPath>
-    </Reference>
-    <Reference Include="iTin.Core.Interop.CrossPlatform.Cpuid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1863a70dcfb63184, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Core.Interop.CrossPlatform.Cpuid.dll</HintPath>
-    </Reference>
-    <Reference Include="iTin.Core.Interop.Shared, Version=1.0.0.3, Culture=neutral, PublicKeyToken=1863a70dcfb63184, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Core.Interop.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="iTin.Hardware.Specification.Cpuid, Version=1.0.0.2, Culture=neutral, PublicKeyToken=4854c22d6845e07c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Hardware.Specification.Cpuid.dll</HintPath>
-    </Reference>
-    <Reference Include="iTin.Logging, Version=1.0.0.1, Culture=neutral, PublicKeyToken=1f353418c19ff38d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iCPUID.1.0.5\lib\net461\iTin.Logging.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Win32.Registry.5.0.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
@@ -1401,7 +1380,6 @@
     <Compile Include="Logic\CommandLineConvert\TsConvert.cs" />
     <Compile Include="Logic\CommandLineConvert\TsToBluRaySup.cs" />
     <Compile Include="Logic\CpsLineLength.cs" />
-    <Compile Include="Logic\CpuInfo.cs" />
     <Compile Include="Logic\CurrentLanguage.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FileTypeAssociations.cs" />
@@ -2452,8 +2430,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
     <Error Condition="!Exists('..\..\packages\Vosk.0.3.38\build\Vosk.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Vosk.0.3.38\build\Vosk.targets'))" />
-    <Error Condition="!Exists('..\..\packages\iCPUID.1.0.5\build\net461\iCPUID.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\iCPUID.1.0.5\build\net461\iCPUID.targets'))" />
   </Target>
   <Import Project="..\..\packages\Vosk.0.3.38\build\Vosk.targets" Condition="Exists('..\..\packages\Vosk.0.3.38\build\Vosk.targets')" />
-  <Import Project="..\..\packages\iCPUID.1.0.5\build\net461\iCPUID.targets" Condition="Exists('..\..\packages\iCPUID.1.0.5\build\net461\iCPUID.targets')" />
 </Project>
