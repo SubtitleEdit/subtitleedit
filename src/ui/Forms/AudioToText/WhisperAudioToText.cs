@@ -101,6 +101,18 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelElapsed.Text = string.Empty;
 
             Init();
+
+            var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
+            var language = WhisperLanguage.Languages.FirstOrDefault(p => p.Code == Configuration.Settings.Tools.WhisperLanguageCode);
+            if (language?.Code == "jp")
+            {
+                maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
+            }
+            else if (language?.Code == "cn")
+            {
+                maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
+            }
+            numericUpDownCharsPerSub.Value = maxChars;
         }
 
         private void Init()
@@ -122,6 +134,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             whisperConstMeToolStripMenuItem.Visible = Configuration.IsRunningOnWindows;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
+
+            numericUpDownCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
+            labelCharsPerSub.Left = numericUpDownCharsPerSub.Left - labelCharsPerSub.Width - 9;
+            labelCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
@@ -469,7 +485,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, OutputHandler);
+            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, (int)numericUpDownCharsPerSub.Value, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
             _startTicks = DateTime.UtcNow.Ticks;
@@ -831,7 +847,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
         }
 
-        public static Process GetWhisperProcess(string waveFileName, string model, string language, bool translate, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GetWhisperProcess(string waveFileName, string model, string language, bool translate, int maxCharsPerSub, DataReceivedEventHandler dataReceivedHandler = null)
         {
             // whisper --model tiny.en --language English --fp16 False a.wav
 
@@ -849,19 +865,9 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     translateToEnglish += "--print-progress ";
                 }
 
-                if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len"))
+                if (!Configuration.Settings.Tools.WhisperExtraSettings.Contains("--max-len") && maxCharsPerSub > 0)
                 {
-                    var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
-                    if (language == "jp")
-                    {
-                        maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsJp;
-                    }
-
-                    if (language == "cn")
-                    {
-                        maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
-                    }
-                    translateToEnglish += $"--max-len {maxChars} ";
+                    translateToEnglish += $"--max-len {maxCharsPerSub} ";
                 }
             }
 

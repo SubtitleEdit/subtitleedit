@@ -202,6 +202,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string BatchMode { get; set; }
             public string KeepPartialTranscription { get; set; }
             public string TranslateToEnglish { get; set; }
+            public string MaxCharsPerSubtitle { get; set; }
         }
 
         public class AssaAttachments

@@ -535,6 +535,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/TranslateToEnglish":
                     language.AudioToText.TranslateToEnglish = reader.Value;
                     break;
+                case "AudioToText/MaxCharsPerSubtitle":
+                    language.AudioToText.MaxCharsPerSubtitle = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
