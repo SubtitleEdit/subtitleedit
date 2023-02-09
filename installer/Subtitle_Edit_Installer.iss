@@ -17,13 +17,9 @@
 ;* You should have received a copy of the GNU General Public License
 ;* along with Subtitle Edit.  If not, see <https://www.gnu.org/licenses/>.
 
-; Requirements:
-; Inno Setup Unicode: https://jrsoftware.org/isdl.php
-
-
 ; preprocessor checks
-#if VER < EncodeVer(6,0,0)
-  #error Update your Inno Setup version (6.0.0 or newer)
+#if VER < EncodeVer(6,2,1)
+  #error Update your Inno Setup version (6.2.1 or newer)
 #endif
 
 #ifndef UNICODE
@@ -76,7 +72,7 @@
 #define keyMuiCache "Software\Classes\Local Settings\MuiCache"
 
 [Setup]
-AppID={#app_name}
+AppID=SubtitleEdit
 AppName={#app_name}
 AppVersion={#app_ver_full}
 AppVerName={#app_name} {#app_ver}
