@@ -496,15 +496,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
             {
-                Tesseract5Version = "4";
+                Tesseract5Version = "5";
                 checkBoxTesseractMusicOn.Checked = false;
                 checkBoxTesseractMusicOn.Visible = false;
                 checkBoxTesseractFallback.Checked = false;
                 checkBoxTesseractFallback.Visible = false;
 
-                if (Configuration.IsRunningOnLinux && Configuration.TesseractDataDirectory.EndsWith("/5/tessdata", StringComparison.Ordinal))
+                if (Configuration.IsRunningOnLinux && Configuration.TesseractDataDirectory.EndsWith("/4.00/tessdata", StringComparison.Ordinal))
                 {
-                    Tesseract5Version = "5";
+                    Tesseract5Version = "4";
                 }
             }
             else
