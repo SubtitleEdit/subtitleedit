@@ -581,6 +581,8 @@ namespace Nikse.SubtitleEdit.Forms
                     EnableOrDisableEditControls();
                 }
 
+                groupBoxEdit.BackColor = DefaultBackColor;
+
                 // Initialize events etc. for audio waveform
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveform_OnDoubleClickNonParagraph;
                 audioVisualizer.OnPositionSelected += AudioWaveform_OnPositionSelected;
