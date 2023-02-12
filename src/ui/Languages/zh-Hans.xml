@@ -197,6 +197,7 @@ Command line: {1} {2}
     <BatchMode>批处理模式</BatchMode>
     <KeepPartialTranscription>保留部分转录</KeepPartialTranscription>
     <TranslateToEnglish>翻译为英语</TranslateToEnglish>
+    <MaxCharsPerSubtitle>每行字幕的最大字符数</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
