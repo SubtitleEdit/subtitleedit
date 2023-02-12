@@ -13,6 +13,7 @@
    * Set ITT default time code format to frames - thx chenlung 
    * Try to handle large ASSA files better - thx MMT
    * Improve double-click-word-select in syntax color text box - thx Janusz/von Suppé
+   * Allow split to split to single subtitles - thx Kyth
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix Korean in installer - thx 슈니
@@ -20,6 +21,7 @@
    * Fix for SSA style - thx Amstramgram
    * Fix possible crash in batch convert w overwrite - thx chensimmons
    * Fix issue with continuation style suffix "..." and comma - thx Edwin
+   * Fix DCinemaSmpte2014 png export - thx MijBro
 
 
 3.6.11 (30th January 2023)

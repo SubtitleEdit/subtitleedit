@@ -101,10 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
-            if (numericUpDownParts.Maximum > _subtitle.Paragraphs.Count)
-            {
-                numericUpDownParts.Maximum = (int)Math.Round(_subtitle.Paragraphs.Count / 2.0);
-            }
+            numericUpDownParts.Maximum = _subtitle.Paragraphs.Count;
 
             if (!string.IsNullOrEmpty(_fileName))
             {
@@ -135,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (string.IsNullOrWhiteSpace(fileNameNoExt))
             {
                 fileNameNoExt = LanguageSettings.Current.SplitSubtitle.Untitled;
@@ -148,23 +145,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             listViewParts.Items.Clear();
-            int startNumber = 0;
+            var startNumber = 0;
             if (RadioButtonLines.Checked)
             {
-                int partSize = (int)(_subtitle.Paragraphs.Count / numericUpDownParts.Value);
-                for (int i = 0; i < numericUpDownParts.Value; i++)
+                var partSize = (int)(_subtitle.Paragraphs.Count / numericUpDownParts.Value);
+                for (var i = 0; i < numericUpDownParts.Value; i++)
                 {
-                    int noOfLines = partSize;
+                    var noOfLines = partSize;
                     if (i == numericUpDownParts.Value - 1)
                     {
                         noOfLines = (int)(_subtitle.Paragraphs.Count - (numericUpDownParts.Value - 1) * partSize);
                     }
 
                     var temp = new Subtitle { Header = _subtitle.Header };
-                    int size = 0;
-                    for (int number = 0; number < noOfLines; number++)
+                    var size = 0;
+                    for (var number = 0; number < noOfLines; number++)
                     {
-                        Paragraph p = _subtitle.Paragraphs[startNumber + number];
+                        var p = _subtitle.Paragraphs[startNumber + number];
                         temp.Paragraphs.Add(new Paragraph(p));
                         size += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
                     }
@@ -179,14 +176,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (radioButtonCharacters.Checked)
             {
-                int partSize = (int)(_totalNumberOfCharacters / numericUpDownParts.Value);
-                int nextLimit = partSize;
-                int currentSize = 0;
-                Subtitle temp = new Subtitle { Header = _subtitle.Header };
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                var partSize = (int)(_totalNumberOfCharacters / numericUpDownParts.Value);
+                var nextLimit = partSize;
+                var currentSize = 0;
+                var temp = new Subtitle { Header = _subtitle.Header };
+                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    Paragraph p = _subtitle.Paragraphs[i];
-                    int size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
+                    var p = _subtitle.Paragraphs[i];
+                    var size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
                     if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value - 1)
                     {
                         _parts.Add(temp);
@@ -216,12 +213,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var endMs = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds;
                 var partSize = (endMs - startMs) / (double)numericUpDownParts.Value;
                 var nextLimit = startMs + partSize;
-                int currentSize = 0;
+                var currentSize = 0;
                 var temp = new Subtitle { Header = _subtitle.Header };
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    Paragraph p = _subtitle.Paragraphs[i];
-                    int size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
+                    var p = _subtitle.Paragraphs[i];
+                    var size = HtmlUtil.RemoveHtmlTags(p.Text, true).Replace("\r\n", "\n") .Length;
                     if (p.StartTime.TotalMilliseconds > nextLimit - 10 && _parts.Count < numericUpDownParts.Value - 1)
                     {
                         _parts.Add(temp);
@@ -258,21 +255,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSplit_Click(object sender, EventArgs e)
         {
-            bool overwrite = false;
+            var overwrite = false;
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            var fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (string.IsNullOrWhiteSpace(fileNameNoExt))
             {
                 fileNameNoExt = LanguageSettings.Current.SplitSubtitle.Untitled;
             }
 
-            int number = 1;
+            var number = 1;
             try
             {
-                foreach (Subtitle sub in _parts)
+                foreach (var sub in _parts)
                 {
-                    string fileName = Path.Combine(textBoxOutputFolder.Text, fileNameNoExt + ".Part" + number + format.Extension);
-                    string allText = sub.ToText(format);
+                    var fileName = Path.Combine(textBoxOutputFolder.Text, fileNameNoExt + ".Part" + number + format.Extension);
+                    var allText = sub.ToText(format);
                     if (File.Exists(fileName) && !overwrite)
                     {
                         if (MessageBox.Show(LanguageSettings.Current.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)
@@ -389,6 +386,5 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(LanguageSettings.Current.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
             }
         }
-
     }
 }
