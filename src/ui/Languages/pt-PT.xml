@@ -139,7 +139,7 @@ Quer transferir e usar o FFmpeg</FfmpegNotFound>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>A extrair o áudio: {0}:{1:00} minutos</ExtractingMinutes>
     <WaveFileNotFound>Não foi possível encontrar o ficheiro de ondas extraído!
-É necessário o VLC media player 1.1.x ({0}-bit) ou superior para executar esta operação.
+É necessário o VLC media player 1.1.x ({0}-bits) ou superior para executar esta operação.
 
 Linha de comandos: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} não foi possível extrair os dados do áudio para o ficheiro wave!
@@ -199,6 +199,7 @@ Mais informação online?</WhisperNotFound>
     <BatchMode>Modo múltiplos ficheiros</BatchMode>
     <KeepPartialTranscription>Manter transcrição parcial</KeepPartialTranscription>
     <TranslateToEnglish>Traduzir para Inglês</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Máx. caracteres por linha de legenda</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
