@@ -7,7 +7,7 @@
 * IMPROVED:
    * Update French translation - thx Pierre
    * Update Hungarian translation - thx Zityi
-   * Update Brazil translation - thx igorruckert
+   * Update Brazilian Portuguese translation - thx igorruckert
    * Update Whisper cpp to v1.2.0
    * "Multiple replace" apply button now changes main window - thx Sopor
    * Set ITT default time code format to frames - thx chenlung 
