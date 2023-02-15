@@ -332,7 +332,7 @@ Read more info (web)?</WhisperNotFound>
     <FilterMoreThanTwoLines>More than two lines in one subtitle</FilterMoreThanTwoLines>
     <FilterContains>Text contains...</FilterContains>
     <FilterFileNameContains>File name contains...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Matroska (.mkv) language code contains...</MkvLanguageCodeContains>
+    <LanguageCodeContains>Language code contains...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>

@@ -218,6 +218,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool BatchConvertApplyDurationLimits { get; set; }
         public bool BatchConvertDeleteLines { get; set; }
         public bool BatchConvertAssaChangeRes { get; set; }
+        public bool BatchConvertSortBy { get; set; }
+        public string BatchConvertSortByChoice { get; set; }
         public bool BatchConvertOffsetTimeCodes { get; set; }
         public string BatchConvertLanguage { get; set; }
         public string BatchConvertFormat { get; set; }
@@ -5057,6 +5059,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertAssaChangeRes = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertSortBy");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertSortBy = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertSortByChoice");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertSortByChoice = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("BatchConvertChangeFrameRate");
@@ -10380,6 +10394,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertApplyDurationLimits", settings.Tools.BatchConvertApplyDurationLimits.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertDeleteLines", settings.Tools.BatchConvertDeleteLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertAssaChangeRes", settings.Tools.BatchConvertAssaChangeRes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertSortBy", settings.Tools.BatchConvertSortBy.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertSortByChoice", settings.Tools.BatchConvertSortByChoice);
                 textWriter.WriteElementString("BatchConvertChangeFrameRate", settings.Tools.BatchConvertChangeFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertOffsetTimeCodes", settings.Tools.BatchConvertOffsetTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
