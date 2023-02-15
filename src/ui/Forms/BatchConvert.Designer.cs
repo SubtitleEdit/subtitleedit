@@ -35,6 +35,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxSortBy = new System.Windows.Forms.GroupBox();
+            this.comboBoxSortBy = new System.Windows.Forms.ComboBox();
+            this.groupBoxMergeSameTimeCodes = new System.Windows.Forms.GroupBox();
+            this.checkBoxMergeSameTimeCodesReBreakLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxMergeSameTimeCodesMakeDialog = new System.Windows.Forms.CheckBox();
+            this.numericUpDownMergeSameTimeCodesMaxDifference = new System.Windows.Forms.NumericUpDown();
+            this.labelMergeSameTimeCodesMaxDifference = new System.Windows.Forms.Label();
+            this.groupBoxConvertColorsToDialog = new System.Windows.Forms.GroupBox();
+            this.checkBoxConvertColorsToDialogReBreakLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxConvertColorsToDialogAddNewLines = new System.Windows.Forms.CheckBox();
+            this.checkBoxConvertColorsToDialogRemoveColorTags = new System.Windows.Forms.CheckBox();
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -157,17 +168,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.labelError = new System.Windows.Forms.Label();			
-            this.groupBoxMergeSameTimeCodes = new System.Windows.Forms.GroupBox();
-            this.checkBoxMergeSameTimeCodesMakeDialog = new System.Windows.Forms.CheckBox();
-            this.numericUpDownMergeSameTimeCodesMaxDifference = new System.Windows.Forms.NumericUpDown();
-            this.labelMergeSameTimeCodesMaxDifference = new System.Windows.Forms.Label();
-            this.checkBoxMergeSameTimeCodesReBreakLines = new System.Windows.Forms.CheckBox();
-            this.groupBoxConvertColorsToDialog = new System.Windows.Forms.GroupBox();
-            this.checkBoxConvertColorsToDialogReBreakLines = new System.Windows.Forms.CheckBox();
-            this.checkBoxConvertColorsToDialogAddNewLines = new System.Windows.Forms.CheckBox();
-            this.checkBoxConvertColorsToDialogRemoveColorTags = new System.Windows.Forms.CheckBox();
+            this.labelError = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBoxSortBy.SuspendLayout();
+            this.groupBoxMergeSameTimeCodes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMergeSameTimeCodesMaxDifference)).BeginInit();
+            this.groupBoxConvertColorsToDialog.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxDeleteLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDeleteLast)).BeginInit();
@@ -198,9 +204,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
-            this.groupBoxMergeSameTimeCodes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMergeSameTimeCodesMaxDifference)).BeginInit();
-            this.groupBoxConvertColorsToDialog.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonConvert
@@ -231,6 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxSortBy);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeSameTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxConvertColorsToDialog);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
@@ -251,6 +255,133 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // groupBoxSortBy
+            // 
+            this.groupBoxSortBy.Controls.Add(this.comboBoxSortBy);
+            this.groupBoxSortBy.Location = new System.Drawing.Point(301, 11);
+            this.groupBoxSortBy.Name = "groupBoxSortBy";
+            this.groupBoxSortBy.Size = new System.Drawing.Size(268, 149);
+            this.groupBoxSortBy.TabIndex = 311;
+            this.groupBoxSortBy.TabStop = false;
+            this.groupBoxSortBy.Text = "Sort by";
+            this.groupBoxSortBy.Visible = false;
+            // 
+            // comboBoxSortBy
+            // 
+            this.comboBoxSortBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSortBy.FormattingEnabled = true;
+            this.comboBoxSortBy.Location = new System.Drawing.Point(8, 30);
+            this.comboBoxSortBy.Name = "comboBoxSortBy";
+            this.comboBoxSortBy.Size = new System.Drawing.Size(228, 21);
+            this.comboBoxSortBy.TabIndex = 0;
+            // 
+            // groupBoxMergeSameTimeCodes
+            // 
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.checkBoxMergeSameTimeCodesReBreakLines);
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.checkBoxMergeSameTimeCodesMakeDialog);
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.numericUpDownMergeSameTimeCodesMaxDifference);
+            this.groupBoxMergeSameTimeCodes.Controls.Add(this.labelMergeSameTimeCodesMaxDifference);
+            this.groupBoxMergeSameTimeCodes.Location = new System.Drawing.Point(308, 17);
+            this.groupBoxMergeSameTimeCodes.Name = "groupBoxMergeSameTimeCodes";
+            this.groupBoxMergeSameTimeCodes.Size = new System.Drawing.Size(268, 149);
+            this.groupBoxMergeSameTimeCodes.TabIndex = 310;
+            this.groupBoxMergeSameTimeCodes.TabStop = false;
+            this.groupBoxMergeSameTimeCodes.Text = "Merge lines with same time codes";
+            this.groupBoxMergeSameTimeCodes.Visible = false;
+            // 
+            // checkBoxMergeSameTimeCodesReBreakLines
+            // 
+            this.checkBoxMergeSameTimeCodesReBreakLines.AutoSize = true;
+            this.checkBoxMergeSameTimeCodesReBreakLines.Checked = true;
+            this.checkBoxMergeSameTimeCodesReBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMergeSameTimeCodesReBreakLines.Location = new System.Drawing.Point(15, 102);
+            this.checkBoxMergeSameTimeCodesReBreakLines.Name = "checkBoxMergeSameTimeCodesReBreakLines";
+            this.checkBoxMergeSameTimeCodesReBreakLines.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxMergeSameTimeCodesReBreakLines.TabIndex = 43;
+            this.checkBoxMergeSameTimeCodesReBreakLines.Text = "Re-break lines";
+            this.checkBoxMergeSameTimeCodesReBreakLines.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMergeSameTimeCodesMakeDialog
+            // 
+            this.checkBoxMergeSameTimeCodesMakeDialog.AutoSize = true;
+            this.checkBoxMergeSameTimeCodesMakeDialog.Checked = true;
+            this.checkBoxMergeSameTimeCodesMakeDialog.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMergeSameTimeCodesMakeDialog.Location = new System.Drawing.Point(15, 79);
+            this.checkBoxMergeSameTimeCodesMakeDialog.Name = "checkBoxMergeSameTimeCodesMakeDialog";
+            this.checkBoxMergeSameTimeCodesMakeDialog.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxMergeSameTimeCodesMakeDialog.TabIndex = 42;
+            this.checkBoxMergeSameTimeCodesMakeDialog.Text = "Make dialog";
+            this.checkBoxMergeSameTimeCodesMakeDialog.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownMergeSameTimeCodesMaxDifference
+            // 
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Location = new System.Drawing.Point(15, 41);
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Name = "numericUpDownMergeSameTimeCodesMaxDifference";
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMergeSameTimeCodesMaxDifference.TabIndex = 38;
+            this.numericUpDownMergeSameTimeCodesMaxDifference.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            // 
+            // labelMergeSameTimeCodesMaxDifference
+            // 
+            this.labelMergeSameTimeCodesMaxDifference.AutoSize = true;
+            this.labelMergeSameTimeCodesMaxDifference.Location = new System.Drawing.Point(12, 23);
+            this.labelMergeSameTimeCodesMaxDifference.Name = "labelMergeSameTimeCodesMaxDifference";
+            this.labelMergeSameTimeCodesMaxDifference.Size = new System.Drawing.Size(139, 13);
+            this.labelMergeSameTimeCodesMaxDifference.TabIndex = 40;
+            this.labelMergeSameTimeCodesMaxDifference.Text = "Max. milliseconds difference";
+            // 
+            // groupBoxConvertColorsToDialog
+            // 
+            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogReBreakLines);
+            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogAddNewLines);
+            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogRemoveColorTags);
+            this.groupBoxConvertColorsToDialog.Location = new System.Drawing.Point(305, 15);
+            this.groupBoxConvertColorsToDialog.Name = "groupBoxConvertColorsToDialog";
+            this.groupBoxConvertColorsToDialog.Size = new System.Drawing.Size(268, 149);
+            this.groupBoxConvertColorsToDialog.TabIndex = 310;
+            this.groupBoxConvertColorsToDialog.TabStop = false;
+            this.groupBoxConvertColorsToDialog.Text = "Convert colors to dialog";
+            this.groupBoxConvertColorsToDialog.Visible = false;
+            // 
+            // checkBoxConvertColorsToDialogReBreakLines
+            // 
+            this.checkBoxConvertColorsToDialogReBreakLines.AutoSize = true;
+            this.checkBoxConvertColorsToDialogReBreakLines.Location = new System.Drawing.Point(9, 69);
+            this.checkBoxConvertColorsToDialogReBreakLines.Name = "checkBoxConvertColorsToDialogReBreakLines";
+            this.checkBoxConvertColorsToDialogReBreakLines.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxConvertColorsToDialogReBreakLines.TabIndex = 6;
+            this.checkBoxConvertColorsToDialogReBreakLines.Text = "Re-break lines";
+            this.checkBoxConvertColorsToDialogReBreakLines.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxConvertColorsToDialogAddNewLines
+            // 
+            this.checkBoxConvertColorsToDialogAddNewLines.AutoSize = true;
+            this.checkBoxConvertColorsToDialogAddNewLines.Location = new System.Drawing.Point(9, 46);
+            this.checkBoxConvertColorsToDialogAddNewLines.Name = "checkBoxConvertColorsToDialogAddNewLines";
+            this.checkBoxConvertColorsToDialogAddNewLines.Size = new System.Drawing.Size(165, 17);
+            this.checkBoxConvertColorsToDialogAddNewLines.TabIndex = 5;
+            this.checkBoxConvertColorsToDialogAddNewLines.Text = "Place every dash on new line";
+            this.checkBoxConvertColorsToDialogAddNewLines.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxConvertColorsToDialogRemoveColorTags
+            // 
+            this.checkBoxConvertColorsToDialogRemoveColorTags.AutoSize = true;
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Location = new System.Drawing.Point(9, 23);
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Name = "checkBoxConvertColorsToDialogRemoveColorTags";
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxConvertColorsToDialogRemoveColorTags.TabIndex = 4;
+            this.checkBoxConvertColorsToDialogRemoveColorTags.Text = "Remove color tags";
+            this.checkBoxConvertColorsToDialogRemoveColorTags.UseVisualStyleBackColor = true;
             // 
             // listViewConvertOptions
             // 
@@ -1630,113 +1761,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.Size = new System.Drawing.Size(51, 13);
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
-			//
-			// groupBoxMergeSameTimeCodes
-            // 
-            this.groupBoxMergeSameTimeCodes.Controls.Add(this.checkBoxMergeSameTimeCodesReBreakLines);
-            this.groupBoxMergeSameTimeCodes.Controls.Add(this.checkBoxMergeSameTimeCodesMakeDialog);
-            this.groupBoxMergeSameTimeCodes.Controls.Add(this.numericUpDownMergeSameTimeCodesMaxDifference);
-            this.groupBoxMergeSameTimeCodes.Controls.Add(this.labelMergeSameTimeCodesMaxDifference);
-            this.groupBoxMergeSameTimeCodes.Location = new System.Drawing.Point(308, 17);
-            this.groupBoxMergeSameTimeCodes.Name = "groupBoxMergeSameTimeCodes";
-            this.groupBoxMergeSameTimeCodes.Size = new System.Drawing.Size(268, 149);
-            this.groupBoxMergeSameTimeCodes.TabIndex = 310;
-            this.groupBoxMergeSameTimeCodes.TabStop = false;
-            this.groupBoxMergeSameTimeCodes.Text = "Merge lines with same time codes";
-            this.groupBoxMergeSameTimeCodes.Visible = false;
-            // 
-            // checkBoxMergeSameTimeCodesMakeDialog
-            // 
-            this.checkBoxMergeSameTimeCodesMakeDialog.AutoSize = true;
-            this.checkBoxMergeSameTimeCodesMakeDialog.Checked = true;
-            this.checkBoxMergeSameTimeCodesMakeDialog.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMergeSameTimeCodesMakeDialog.Location = new System.Drawing.Point(15, 79);
-            this.checkBoxMergeSameTimeCodesMakeDialog.Name = "checkBoxMergeSameTimeCodesMakeDialog";
-            this.checkBoxMergeSameTimeCodesMakeDialog.Size = new System.Drawing.Size(84, 17);
-            this.checkBoxMergeSameTimeCodesMakeDialog.TabIndex = 42;
-            this.checkBoxMergeSameTimeCodesMakeDialog.Text = "Make dialog";
-            this.checkBoxMergeSameTimeCodesMakeDialog.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDownMergeSameTimeCodesMaxDifference
-            // 
-            this.numericUpDownMergeSameTimeCodesMaxDifference.Location = new System.Drawing.Point(15, 41);
-            this.numericUpDownMergeSameTimeCodesMaxDifference.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDownMergeSameTimeCodesMaxDifference.Name = "numericUpDownMergeSameTimeCodesMaxDifference";
-            this.numericUpDownMergeSameTimeCodesMaxDifference.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownMergeSameTimeCodesMaxDifference.TabIndex = 38;
-            this.numericUpDownMergeSameTimeCodesMaxDifference.Value = new decimal(new int[] {
-            250,
-            0,
-            0,
-            0});
-            // 
-            // labelMergeSameTimeCodesMaxDifference
-            // 
-            this.labelMergeSameTimeCodesMaxDifference.AutoSize = true;
-            this.labelMergeSameTimeCodesMaxDifference.Location = new System.Drawing.Point(12, 23);
-            this.labelMergeSameTimeCodesMaxDifference.Name = "labelMergeSameTimeCodesMaxDifference";
-            this.labelMergeSameTimeCodesMaxDifference.Size = new System.Drawing.Size(139, 13);
-            this.labelMergeSameTimeCodesMaxDifference.TabIndex = 40;
-            this.labelMergeSameTimeCodesMaxDifference.Text = "Max. milliseconds difference";
-            // 
-            // checkBoxMergeSameTimeCodesReBreakLines
-            // 
-            this.checkBoxMergeSameTimeCodesReBreakLines.AutoSize = true;
-            this.checkBoxMergeSameTimeCodesReBreakLines.Checked = true;
-            this.checkBoxMergeSameTimeCodesReBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMergeSameTimeCodesReBreakLines.Location = new System.Drawing.Point(15, 102);
-            this.checkBoxMergeSameTimeCodesReBreakLines.Name = "checkBoxMergeSameTimeCodesReBreakLines";
-            this.checkBoxMergeSameTimeCodesReBreakLines.Size = new System.Drawing.Size(94, 17);
-            this.checkBoxMergeSameTimeCodesReBreakLines.TabIndex = 43;
-            this.checkBoxMergeSameTimeCodesReBreakLines.Text = "Re-break lines";
-            this.checkBoxMergeSameTimeCodesReBreakLines.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxConvertColorsToDialog
-            // 
-            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogReBreakLines);
-            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogAddNewLines);
-            this.groupBoxConvertColorsToDialog.Controls.Add(this.checkBoxConvertColorsToDialogRemoveColorTags);
-            this.groupBoxConvertColorsToDialog.Location = new System.Drawing.Point(305, 15);
-            this.groupBoxConvertColorsToDialog.Name = "groupBoxConvertColorsToDialog";
-            this.groupBoxConvertColorsToDialog.Size = new System.Drawing.Size(268, 149);
-            this.groupBoxConvertColorsToDialog.TabIndex = 310;
-            this.groupBoxConvertColorsToDialog.TabStop = false;
-            this.groupBoxConvertColorsToDialog.Text = "Convert colors to dialog";
-            this.groupBoxConvertColorsToDialog.Visible = false;
-            // 
-            // checkBoxConvertColorsToDialogReBreakLines
-            // 
-            this.checkBoxConvertColorsToDialogReBreakLines.AutoSize = true;
-            this.checkBoxConvertColorsToDialogReBreakLines.Location = new System.Drawing.Point(9, 69);
-            this.checkBoxConvertColorsToDialogReBreakLines.Name = "checkBoxConvertColorsToDialogReBreakLines";
-            this.checkBoxConvertColorsToDialogReBreakLines.Size = new System.Drawing.Size(94, 17);
-            this.checkBoxConvertColorsToDialogReBreakLines.TabIndex = 6;
-            this.checkBoxConvertColorsToDialogReBreakLines.Text = "Re-break lines";
-            this.checkBoxConvertColorsToDialogReBreakLines.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxConvertColorsToDialogAddNewLines
-            // 
-            this.checkBoxConvertColorsToDialogAddNewLines.AutoSize = true;
-            this.checkBoxConvertColorsToDialogAddNewLines.Location = new System.Drawing.Point(9, 46);
-            this.checkBoxConvertColorsToDialogAddNewLines.Name = "checkBoxConvertColorsToDialogAddNewLines";
-            this.checkBoxConvertColorsToDialogAddNewLines.Size = new System.Drawing.Size(165, 17);
-            this.checkBoxConvertColorsToDialogAddNewLines.TabIndex = 5;
-            this.checkBoxConvertColorsToDialogAddNewLines.Text = "Place every dash on new line";
-            this.checkBoxConvertColorsToDialogAddNewLines.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxConvertColorsToDialogRemoveColorTags
-            // 
-            this.checkBoxConvertColorsToDialogRemoveColorTags.AutoSize = true;
-            this.checkBoxConvertColorsToDialogRemoveColorTags.Location = new System.Drawing.Point(9, 23);
-            this.checkBoxConvertColorsToDialogRemoveColorTags.Name = "checkBoxConvertColorsToDialogRemoveColorTags";
-            this.checkBoxConvertColorsToDialogRemoveColorTags.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxConvertColorsToDialogRemoveColorTags.TabIndex = 4;
-            this.checkBoxConvertColorsToDialogRemoveColorTags.Text = "Remove color tags";
-            this.checkBoxConvertColorsToDialogRemoveColorTags.UseVisualStyleBackColor = true;            
             // 
             // BatchConvert
             // 
@@ -1761,6 +1785,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.ResizeEnd += new System.EventHandler(this.BatchConvert_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxSortBy.ResumeLayout(false);
+            this.groupBoxMergeSameTimeCodes.ResumeLayout(false);
+            this.groupBoxMergeSameTimeCodes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMergeSameTimeCodesMaxDifference)).EndInit();
+            this.groupBoxConvertColorsToDialog.ResumeLayout(false);
+            this.groupBoxConvertColorsToDialog.PerformLayout();
             this.contextMenuStripOptions.ResumeLayout(false);
             this.groupBoxDeleteLines.ResumeLayout(false);
             this.groupBoxDeleteLines.PerformLayout();
@@ -1807,11 +1837,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
-            this.groupBoxMergeSameTimeCodes.ResumeLayout(false);
-            this.groupBoxMergeSameTimeCodes.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMergeSameTimeCodesMaxDifference)).EndInit();
-            this.groupBoxConvertColorsToDialog.ResumeLayout(false);
-            this.groupBoxConvertColorsToDialog.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1954,5 +1979,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogReBreakLines;
         private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogAddNewLines;
         private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogRemoveColorTags;
+        private System.Windows.Forms.GroupBox groupBoxSortBy;
+        private System.Windows.Forms.ComboBox comboBoxSortBy;
     }
 }

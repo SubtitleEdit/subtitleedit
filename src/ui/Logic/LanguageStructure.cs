@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string FilterMoreThanTwoLines { get; set; }
             public string FilterContains { get; set; }
             public string FilterFileNameContains { get; set; }
-            public string MkvLanguageCodeContains { get; set; }
+            public string LanguageCodeContains { get; set; }
             public string FixCommonErrorsErrorX { get; set; }
             public string MultipleReplaceErrorX { get; set; }
             public string AutoBalanceErrorX { get; set; }

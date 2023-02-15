@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -167,6 +168,11 @@ namespace Nikse.SubtitleEdit.Forms
             addFilesToolStripMenuItem.Text = l.AddFiles;
             groupBoxDeleteLines.Text = l.DeleteLines;
             groupBoxAssaChangeRes.Text = LanguageSettings.Current.AssaResolutionChanger.Title;
+            groupBoxSortBy.Text = LanguageSettings.Current.Main.Menu.Tools.SortBy;
+            comboBoxSortBy.Items.Clear();
+            comboBoxSortBy.Items.Add(LanguageSettings.Current.Main.Menu.Tools.Number);
+            comboBoxSortBy.Items.Add(LanguageSettings.Current.Main.Menu.Tools.StartTime);
+            comboBoxSortBy.Items.Add(LanguageSettings.Current.Main.Menu.Tools.EndTime);
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
@@ -299,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
             comboBoxFilter.Items[3] = l.FilterContains;
             comboBoxFilter.Items[4] = l.FilterFileNameContains;
-            comboBoxFilter.Items[5] = l.MkvLanguageCodeContains;
+            comboBoxFilter.Items[5] = l.LanguageCodeContains;
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
@@ -593,6 +599,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Checked = Configuration.Settings.Tools.BatchConvertAssaChangeRes,
                     Action = CommandLineConverter.BatchAction.AssaChangeRes,
                     Control = groupBoxAssaChangeRes
+                },
+                new FixActionItem
+                {
+                    Text =  LanguageSettings.Current.Main.Menu.Tools.SortBy,
+                    Checked = Configuration.Settings.Tools.BatchConvertSortBy,
+                    Action = CommandLineConverter.BatchAction.SortBy,
+                    Control = groupBoxSortBy
                 },
             };
             foreach (var fixItem in fixItems)
@@ -1883,6 +1896,23 @@ namespace Nikse.SubtitleEdit.Forms
                 sub = fixDurationLimits.Fix(sub);
             }
 
+            if (IsActionEnabled(CommandLineConverter.BatchAction.SortBy))
+            {
+                var sortBy = comboBoxSortBy.Text;
+                if (sortBy == LanguageSettings.Current.Main.Menu.Tools.Number)
+                {
+                    sub.Sort(SubtitleSortCriteria.Number);
+                }
+                else if (sortBy == LanguageSettings.Current.Main.Menu.Tools.StartTime)
+                {
+                    sub.Sort(SubtitleSortCriteria.StartTime);
+                }
+                else if (sortBy == LanguageSettings.Current.Main.Menu.Tools.EndTime)
+                {
+                    sub.Sort(SubtitleSortCriteria.EndTime);
+                }
+            }
+
             if (IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines))
             {
                 DeleteLines(sub);
@@ -3003,6 +3033,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertChangeFrameRate = IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate);
             Configuration.Settings.Tools.BatchConvertOffsetTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes);
             Configuration.Settings.Tools.BatchConvertApplyDurationLimits = IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits);
+            Configuration.Settings.Tools.BatchConvertSortBy = IsActionEnabled(CommandLineConverter.BatchAction.SortBy);
+            Configuration.Settings.Tools.BatchConvertSortByChoice = comboBoxSortBy.Text;
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
             Configuration.Settings.Tools.BatchConvertDeleteLines = IsActionEnabled(CommandLineConverter.BatchAction.DeleteLines);
