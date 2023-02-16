@@ -198,6 +198,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <BatchMode>Modo batch</BatchMode>
     <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
     <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Caratteri max per riga sottotitoli</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -331,7 +332,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <FilterMoreThanTwoLines>Più di due righe in un sottotitolo</FilterMoreThanTwoLines>
     <FilterContains>Testo contenente...</FilterContains>
     <FilterFileNameContains>Nome file contiene...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Il codice della lingua Matroska (.mkv) contiene...</MkvLanguageCodeContains>
+    <LanguageCodeContains>Il codice lingua contiene...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Correggi errori comuni: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Sostituzione multipla: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Errore bilanciamento automatico: {0}</AutoBalanceErrorX>
@@ -2519,7 +2520,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <VideoResetSpeedAndZoom>Ripristina velocità/zoom</VideoResetSpeedAndZoom>
     <MainToggleVideoControls>Attiva/disattiva i controlli video</MainToggleVideoControls>
     <VideoToggleContrast>Attiva/disattiva contrasto (solo mpv)</VideoToggleContrast>
-    <VideoAudioToText>Audio a testo</VideoAudioToText>
+    <AudioToTextX>Da audio a testo ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>Da audio a testo righe selezionate ({0})</AudioToTextSelectedLinesX>
     <VideoToggleBrightness>Attiva/disattiva luminosità (solo mpv)</VideoToggleBrightness>
     <CustomSearch1>Traduci, ricerca personalizzata 1</CustomSearch1>
     <CustomSearch2>Traduci, ricerca personalizzata 2</CustomSearch2>
@@ -2880,6 +2882,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <CopyXOfY>Copia {0} di {1}</CopyXOfY>
     <New>Nuovo</New>
     <Remove>Rimuovi</Remove>
+    <ReplaceWith>Sostituisci con...</ReplaceWith>
     <RemoveAll>Rimuovi tutto</RemoveAll>
     <ImportStyleFromFile>Importa stile da file...</ImportStyleFromFile>
     <ExportStyleToFile>Esporta stile... (lo stile verrà aggiunto se il file esiste)</ExportStyleToFile>
