@@ -194,6 +194,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BatchMode>일괄 모드</BatchMode>
     <KeepPartialTranscription>일부 전사 유지</KeepPartialTranscription>
     <TranslateToEnglish>영어로 번역</TranslateToEnglish>
+    <MaxCharsPerSubtitle>자막 줄당 최대 문자 수</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha 첨부파일</Title>
@@ -327,7 +328,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <FilterMoreThanTwoLines>한 자막 당 두 개 이상의 줄</FilterMoreThanTwoLines>
     <FilterContains>텍스트 포함...</FilterContains>
     <FilterFileNameContains>파일 이름 포함 ...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Matroska(.mkv) 언어코드 포함...</MkvLanguageCodeContains>
+    <LanguageCodeContains>다음 언어 코드 포함...</LanguageCodeContains>
     <FixCommonErrorsErrorX>일반적인 오류 수정: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
@@ -1895,7 +1896,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Calories>칼로리</Calories>
     <Ergs>에르그</Ergs>
     <ElectronVolts>전자-볼트</ElectronVolts>
-    <Btus>Btus</Btus>
+    <Btus>비티유</Btus>
     <Watts>와트</Watts>
     <Horsepower>마력</Horsepower>
     <Atmospheres>대기</Atmospheres>
