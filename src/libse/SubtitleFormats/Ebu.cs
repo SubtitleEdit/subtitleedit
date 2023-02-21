@@ -1814,56 +1814,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var lines = text.SplitToLines();
-
-            // fix multi font tags, e.g. a color in the middle of a line
-            for (var index = 0; index < lines.Count; index++)
-            {
-                var whiteTag = "<font color=\"White\">";
-                var line = lines[index];
-                var changed = false;
-                var count = Utilities.CountTagInText(line, "<font ");
-                if (count > 1)
-                {
-                    count = 0;
-                    var endTags = 0;
-                    var idx = line.IndexOf("<font ", StringComparison.Ordinal);
-                    while (idx > 0)
-                    {
-                        count++;
-                        var start = line.Substring(idx);
-                        if (count == 1 && start.StartsWith(whiteTag))
-                        {
-                            line = line.Remove(idx, whiteTag.Length);
-                            idx--;
-                            changed = true;
-                            lines[index] = line;
-                        }
-                        else if (count > 1 && start.StartsWith(whiteTag))
-                        {
-                            line = line.Remove(idx, whiteTag.Length).Insert(idx, "</font>");
-                            changed = true;
-                            lines[index] = line;
-                            endTags++;
-                            count--;
-                        }
-                        else if (count > 1 && count > endTags + 1 && !start.StartsWith(whiteTag))
-                        {
-                            line = line.Insert(idx, "</font>");
-                            changed = true;
-                            lines[index] = line;
-                            idx += "</font>".Length;
-                            endTags++;
-                        }
-                        idx = line.IndexOf("<font ", idx + 1, StringComparison.Ordinal);
-                    }
-                    if (changed)
-                    {
-                        text = string.Join(Environment.NewLine, lines);
-                        lines = text.SplitToLines();
-                    }
-                }
-            }
-
             var sb = new StringBuilder();
             foreach (var line in lines)
             {
