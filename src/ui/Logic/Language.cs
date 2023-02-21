@@ -496,7 +496,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FilterMoreThanTwoLines = "More than two lines in one subtitle",
                 FilterContains = "Text contains...",
                 FilterFileNameContains = "File name contains...",
-                LanguageCodeContains = "Matroska (.mkv) language code contains...",
+                LanguageCodeContains = "Language code (mkv/mp4) contains...",
                 FixCommonErrorsErrorX = "Fix common errors: {0}",
                 MultipleReplaceErrorX = "Multiple replace: {0}",
                 AutoBalanceErrorX = "Auto balance: {0}",
