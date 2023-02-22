@@ -1615,6 +1615,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (b == 0x8a) // Both - CR/LF
                     {
+                        AddMissingClosingTag(sb);
                         sb.AppendLine();
                     }
                     else if (b >= 0x8b && b <= 0x8e) // Both - Reserved for future use
@@ -1638,7 +1639,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     i++;
                 }
 
-                CloseFontTagIfNewColor(sb, string.Empty);
+                AddMissingClosingTag(sb);
                 tti.TextField = FixSpacesAndTags(sb.ToString());
 
                 if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out var rows))
@@ -1691,6 +1692,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 list.Add(tti);
             }
             return list;
+        }
+
+        private static void AddMissingClosingTag(StringBuilder sb)
+        {
+            var s = sb.ToString();
+            var startTags = Utilities.CountTagInText(s, "<font ");
+            var endTags = Utilities.CountTagInText(s, "</font>");
+            if (startTags > endTags)
+            {
+                sb.Append("</font>");
+            }
         }
 
         private static void CloseFontTagIfNewColor(StringBuilder sb, string tag)
@@ -1778,6 +1790,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     //case 0x0b:
                     //    return "<box>";
             }
+
             return null;
         }
 
