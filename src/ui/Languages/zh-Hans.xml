@@ -331,7 +331,7 @@ Command line: {1} {2}
     <FilterMoreThanTwoLines>单字幕包含有两行及以上</FilterMoreThanTwoLines>
     <FilterContains>文字内容包含...</FilterContains>
     <FilterFileNameContains>文件名包含...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Matroska (.mkv) 语言包含...</MkvLanguageCodeContains>
+    <MkvLanguageCodeContains>语言代码(mkv/mp4)包含...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
