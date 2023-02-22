@@ -33,7 +33,7 @@ namespace Test.Logic.SubtitleFormats
         {
             var target = new Ebu();
             var subtitle = new Subtitle();
-            var subText = "Gimme <font color=\"Red\">the</font> gun, <font color=\"Red\">Henry</font>.";
+            var subText = "Gimme <font color=\"Red\">the</font> gun, <font color=\"Red\">Henry.</font>";
             subtitle.Paragraphs.Add(new Paragraph(subText, 0, 999));
             var ms = new MemoryStream();
             Ebu.EbuUiHelper = new UiEbuSaveHelper();
