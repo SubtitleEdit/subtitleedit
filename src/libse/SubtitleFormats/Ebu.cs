@@ -631,12 +631,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (displayStandardCode != "0")
-                            {
-                                sb.Append(encoding.GetString(new byte[] { 0x07 })); // white
-                            }
-
                             i += "</font>".Length;
+
+                            if (displayStandardCode != "0" && line.Length > i + 1)
+                            {
+                                var part = line.Substring(i);
+                                if (part.StartsWith(" <font "))
+                                {
+                                    i++;
+                                }
+                                else if (part.StartsWith("<font "))
+                                {
+                                    // do nothing
+                                }
+                                else
+                                {
+                                    sb.Append(encoding.GetString(new byte[] { 0x07 })); // white
+                                }
+                            }
                         }
                         else
                         {
