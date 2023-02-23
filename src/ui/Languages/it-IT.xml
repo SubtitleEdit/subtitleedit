@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.11</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 27.01.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 22.02.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -332,7 +332,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <FilterMoreThanTwoLines>Più di due righe in un sottotitolo</FilterMoreThanTwoLines>
     <FilterContains>Testo contenente...</FilterContains>
     <FilterFileNameContains>Nome file contiene...</FilterFileNameContains>
-    <LanguageCodeContains>Il codice lingua contiene...</LanguageCodeContains>
+    <LanguageCodeContains>Il codice lingua (mkv/mp4) contiene...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Correggi errori comuni: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Sostituzione multipla: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Errore bilanciamento automatico: {0}</AutoBalanceErrorX>
