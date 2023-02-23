@@ -356,7 +356,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     var sbTwoChar = new StringBuilder();
-                    bool skipNext = false;
+                    var skipNext = false;
                     for (var index = 0; index < TextField.Length; index++)
                     {
                         var ch = TextField[index];
@@ -593,6 +593,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var lastColor = string.Empty;
                 var sb = new StringBuilder();
+                text = text.Replace(" </font>", "</font> ");
+                var lastWasEndColor = false;
+                var lastWasStartColor = false;
                 var list = text.SplitToLines();
                 for (var index = 0; index < list.Count; index++)
                 {
@@ -612,12 +615,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var newStart = line.Substring(i);
                         if (newStart.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
+                            lastWasStartColor = true;
                             var end = line.IndexOf('>', i);
                             if (end > 0)
                             {
                                 if (displayStandardCode != "0")
                                 {
                                     lastColor = GetColor(encoding, line, i);
+                                    if (sb.EndsWith(' '))
+                                    {
+                                        sb = new StringBuilder(sb.ToString().TrimEnd(' '));
+                                    }
+
                                     sb.Append(lastColor);
                                 }
 
@@ -628,6 +637,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             i += "</font>".Length;
                             lastColor = string.Empty;
+                            lastWasEndColor = true;
                         }
                         else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                         {
@@ -649,11 +659,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     sb.Append(encoding.GetString(new byte[] { 0x07 })); // white
                                 }
                             }
+
+                            lastWasEndColor = true;
+                            lastColor = string.Empty;
                         }
                         else
                         {
-                            sb.Append(line.Substring(i, 1));
+                            var nextCh = line.Substring(i, 1);
+                            if (nextCh == " " && lastWasEndColor)
+                            {
+                            }
+                            else if (nextCh == " " && lastWasStartColor)
+                            {
+                            }
+                            else
+                            {
+                                sb.Append(nextCh);
+                            }
+
                             i++;
+                            lastWasEndColor = false;
+                            lastWasStartColor = false;
                         }
                     }
                 }
