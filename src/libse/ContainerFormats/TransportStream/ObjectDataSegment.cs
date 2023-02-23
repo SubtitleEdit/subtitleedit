@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             if (dataType == PixelDecoding2Bit)
             {
-                int bitIndex = 0;
+                var bitIndex = 0;
                 while (index < start + length - 1 && index < buffer.Length && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
                 {
                     DrawPixels(cds, twoToFourBitColorLookup[pixelCode], runLength, ref x, ref y);
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
             else if (dataType == PixelDecoding4Bit)
             {
-                bool startHalf = false;
+                var startHalf = false;
                 while (index < start + length - 1 && index < buffer.Length && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
                 {
                     DrawPixels(cds, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y);
@@ -558,6 +558,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         private static int Next4Bits(byte[] buffer, ref int index, ref bool startHalf)
         {
+            if (index >= buffer.Length)
+            {
+                return 0;
+            }
+
             int result;
             if (startHalf)
             {
@@ -570,6 +575,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 startHalf = true;
                 result = buffer[index] >> 4;
             }
+
             return result;
         }
 
@@ -585,7 +591,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
             else
             {
-                int next1 = Next4Bits(buffer, ref index, ref startHalf);
+                var next1 = Next4Bits(buffer, ref index, ref startHalf);
                 if ((next1 & 0b00001000) == 0)
                 {
                     if (next1 != 0)
@@ -614,7 +620,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
                 else
                 {
-                    int next2 = Next4Bits(buffer, ref index, ref startHalf);
+                    var next2 = Next4Bits(buffer, ref index, ref startHalf);
                     if ((next1 & 0b00000100) == 0)
                     {
                         runLength = (next1 & 0b00000011) + 4; // 4-7
@@ -622,7 +628,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     }
                     else
                     {
-                        int next3 = Next4Bits(buffer, ref index, ref startHalf);
+                        var next3 = Next4Bits(buffer, ref index, ref startHalf);
                         if ((next1 & 0b00000001) == 0)
                         {
                             runLength = next2 + 9; // 9-24
@@ -636,6 +642,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     }
                 }
             }
+
             return true;
         }
 
