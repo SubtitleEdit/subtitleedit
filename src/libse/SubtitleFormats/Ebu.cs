@@ -1668,6 +1668,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (b >= 0xa1 && b <= 0xff) // Both - Character codes
                     {
                         var ch = GetCharacter(out var skipNext, header, buffer, i);
+                        if (sb.EndsWith('>') && sb.ToString().EndsWith("</font>"))
+                        {
+                            if (ch != " ")
+                            {
+                                sb.Append(' ');
+                            }
+                        }
+
                         sb.Append(ch);
                         if (skipNext)
                         {
@@ -1750,6 +1758,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
                 {
+                    if (sb.Length > 0 && !sb.EndsWith(' '))
+                    {
+                        sb.Append(' ');
+                    }
+
                     sb.Append(tag);
                 }
 
@@ -1761,6 +1774,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
                 {
+                    if (sb.Length > 0 && !sb.EndsWith(' '))
+                    {
+                        sb.Append(' ');
+                    }
+
                     sb.Append(tag);
                 }
 
@@ -1772,6 +1790,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
                 {
+                    if (sb.Length > 0 && !sb.EndsWith(' '))
+                    {
+                        sb.Append(' ');
+                    }
+
                     sb.Append(tag);
                 }
 
@@ -1794,11 +1817,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else
             {
-                sb.Append("</font>");
+                sb.Append("</font> ");
             }
 
             if (!string.IsNullOrEmpty(tag) && !tag.Contains("\"White\""))
             {
+                if (sb.Length > 0 && !sb.EndsWith(' '))
+                {
+                    sb.Append(' ');
+                }
+
                 sb.Append(tag);
             }
         }
