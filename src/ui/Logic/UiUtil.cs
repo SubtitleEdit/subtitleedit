@@ -685,6 +685,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixLargeFonts(Control mainCtrl, Control ctrl)
         {
+            if (mainCtrl == null || ctrl == null)
+            {
+                return;
+            }
+
             using (var graphics = mainCtrl.CreateGraphics())
             {
                 var textSize = graphics.MeasureString(ctrl.Text, ctrl.Font);
