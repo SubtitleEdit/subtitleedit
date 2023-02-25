@@ -137,12 +137,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (v == 1)
                                 {
                                     skipCount = 1;
-                                    continue;
                                 }
                                 else if (v == 2)
                                 {
                                     skipCount = 2;
-                                    continue;
                                 }
                                 else if (v == 5)
                                 {
