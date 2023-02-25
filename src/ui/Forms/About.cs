@@ -22,8 +22,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Text = _language.Title + " - " + (IntPtr.Size * 8) + "-bit";
             okButton.Text = _languageGeneral.Ok;
-            string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-            string revisionNumber = "0";
+            var versionInfo = Utilities.AssemblyVersion.Split('.');
+            var revisionNumber = "0";
             if (versionInfo.Length >= 4)
             {
                 revisionNumber = versionInfo[3];
@@ -43,9 +43,9 @@ namespace Nikse.SubtitleEdit.Forms
                 linkLabelGitBuildHash.Font = labelProduct.Font;
             }
 
-            string aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
-                               Environment.NewLine +
-                               _languageGeneral.TranslatedBy.Trim();
+            var aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
+                            Environment.NewLine +
+                            _languageGeneral.TranslatedBy.Trim();
             while (aboutText.Contains("\n ") || aboutText.Contains("\n\t"))
             {
                 aboutText = aboutText.Replace("\n ", "\n");
