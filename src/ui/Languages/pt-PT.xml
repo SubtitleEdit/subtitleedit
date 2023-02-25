@@ -333,7 +333,7 @@ Mais informação online?</WhisperNotFound>
     <FilterMoreThanTwoLines>Mais de duas linhas numa legenda</FilterMoreThanTwoLines>
     <FilterContains>O texto contém...</FilterContains>
     <FilterFileNameContains>O nome do ficheiro contém...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Código linguístico Matroska (.mkv) contém...</MkvLanguageCodeContains>
+    <MkvLanguageCodeContains>Código linguístico (mkv/mp4) contém...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Erros frequentes corrigidos: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Múltiplas substituições: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Ajuste automático: {0}</AutoBalanceErrorX>
