@@ -1420,12 +1420,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var list = new List<string>();
             try
             {
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+                var namespaceManager = new XmlNamespaceManager(xml.NameTable);
+                namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                var head = xml.DocumentElement.SelectSingleNode("ttml:head", namespaceManager);
+                foreach (XmlNode node in head.SelectNodes("//ttml:region", namespaceManager))
                 {
-                    bool top = false;
+                    var top = false;
                     foreach (XmlNode styleNode in node.ChildNodes)
                     {
                         top = GetIfTopAligned(styleNode);
@@ -1558,11 +1558,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     return true;
                 }
-                else if (yPos <= 25 && displayAlign == "before") // before = top align
+
+                if (yPos <= 25 && displayAlign == "before") // before = top align
                 {
                     return true;
                 }
             }
+            else if (displayAlign == "before") // before = top align
+            {
+                return true;
+            }
+
             return false;
         }
 
