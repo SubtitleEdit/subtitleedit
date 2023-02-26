@@ -477,7 +477,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (text.StartsWith("{\\an8}", StringComparison.Ordinal))
                 {
-                    var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+                    var topRegions = GetRegionsTopFromHeader(xml);
                     if (topRegions.Count == 1)
                     {
                         region = topRegions[0];
@@ -494,7 +494,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (text.StartsWith("{\\an2}", StringComparison.Ordinal) || !text.Contains("{\\an"))
                 {
-                    var bottomRegions = GetRegionsBottomFromHeader(xml.OuterXml);
+                    var bottomRegions = GetRegionsBottomFromHeader(xml);
                     if (bottomRegions.Count == 1)
                     {
                         region = bottomRegions[0];
@@ -819,7 +819,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // ignored
             }
 
-            var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+            var topRegions = GetRegionsTopFromHeader(xml);
             XmlNode lastDiv = null;
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
@@ -1415,13 +1415,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        public static List<string> GetRegionsTopFromHeader(string xmlAsString)
+        public static List<string> GetRegionsTopFromHeader(XmlDocument xml)
         {
             var list = new List<string>();
-            var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(xmlAsString);
                 var nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                 XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
@@ -1463,13 +1461,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        public static List<string> GetRegionsBottomFromHeader(string xmlAsString)
+        public static List<string> GetRegionsBottomFromHeader(XmlDocument xml)
         {
             var list = new List<string>();
-            var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(xmlAsString);
                 var nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                 XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
