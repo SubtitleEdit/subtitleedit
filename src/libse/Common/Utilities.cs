@@ -2886,8 +2886,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return fileName;
         }
-
-
+        
         public static string ReSplit(string text, int selectionStart)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
@@ -2976,6 +2975,127 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return hashString.ToString();
                 }
             }
+        }
+        
+        public static string ToggleSymbols(string tag, string text, string endTag = "")
+        {
+            string pre = string.Empty;
+            string post = string.Empty;
+            text = SplitStartTags(text, ref pre);
+            text = SplitEndTags(text, ref post);
+
+            if (text.Contains(tag))
+            {
+                if (string.IsNullOrEmpty(endTag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+                else
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+            }
+            else
+            {
+                if (tag == Configuration.Settings.Tools.MusicSymbol)
+                {
+                    if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+                    {
+                        text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
+                    }
+                    else
+                    {
+                        text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
+                    }
+                }
+                else
+                {
+                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, string.IsNullOrEmpty(endTag) ? tag : endTag, post);
+                }
+            }
+
+            return text;
+        }
+        
+        public static string SplitStartTags(string line, ref string pre)
+        {
+            var s = line;
+            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') > 0)
+            {
+                pre = s.Substring(0, s.IndexOf('}') + 1);
+                s = s.Remove(0, pre.Length);
+            }
+
+            bool updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (s.StartsWith(' '))
+                {
+                    pre += ' ';
+                    s = s.Remove(0, 1);
+                    updated = true;
+                }
+                else if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                         s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                         s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
+                {
+                    pre += s.Substring(0, 3);
+                    s = s.Remove(0, 3);
+                    updated = true;
+                }
+                else if (s.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+                {
+                    int endFont = s.IndexOf('>');
+                    if (endFont > 0)
+                    {
+                        pre += s.Substring(0, endFont + 1);
+                        s = s.Remove(0, endFont + 1);
+                        updated = true;
+                    }
+                }
+            }
+
+            return s;
+        }
+        
+        public static string SplitEndTags(string line, ref string post)
+        {
+            var s = line;
+            if (s.EndsWith("{\\r}", StringComparison.Ordinal))
+            {
+                post = s.Substring(s.Length - 4, 4);
+                s = s.Remove(s.Length - 4, 4);
+            }
+
+            bool updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (s.EndsWith(' '))
+                {
+                    post += ' ';
+                    s = s.Remove(s.Length - 1, 1);
+                    updated = true;
+                }
+                else if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                         s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                         s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
+                {
+                    post += s.Substring(s.Length - 4, 4);
+                    s = s.Remove(s.Length - 4, 4);
+                    updated = true;
+                }
+                else if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                {
+                    var endFontTag = "</font>";
+                    post += endFontTag;
+                    s = s.Remove(s.Length - endFontTag.Length, endFontTag.Length);
+                    updated = true;
+                }
+            }
+
+            return s;
         }
     }
 }

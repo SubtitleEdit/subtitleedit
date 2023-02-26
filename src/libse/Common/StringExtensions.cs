@@ -373,6 +373,44 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Contains(UnicodeControlChars);
         }
 
+        public static bool ContainsNonStandardNewLines(this string s)
+        {
+            if (Environment.NewLine == "\r\n")
+            {
+                int i = 0;
+                while (i < s.Length)
+                {
+                    var ch = s[i];
+                    if (ch == '\r')
+                    {
+                        if (i >= s.Length - 1 || s[i + 1] != '\n')
+                        {
+                            return true;
+                        }
+        
+                        i++;
+                    }
+                    else if (ch == '\n')
+                    {
+                        return true;
+                    }
+        
+                    i++;
+                }
+        
+                return false;
+            }
+            else if (Environment.NewLine == "\n")
+            {
+                return s.IndexOf('\r') >= 0;
+            }
+            else
+            {
+                s = s.Replace(Environment.NewLine, string.Empty);
+                return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
+            }
+        }
+        
         public static string RemoveControlCharacters(this string s)
         {
             int max = s.Length;
@@ -409,7 +447,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return true;
         }
-
 
         public static string RemoveControlCharactersButWhiteSpace(this string s)
         {
@@ -449,6 +486,46 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        public static string ToggleCasing(this string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.ToLower() == text.ToUpper())
+            {
+                return text;
+            }
+
+            var containsLowercase = false;
+            var containsUppercase = false;
+            for (var i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+                if (char.IsNumber(ch))
+                {
+                    continue;
+                }
+
+                if (!containsLowercase && char.IsLower(ch))
+                {
+                    containsLowercase = true;
+                }
+                else if (!containsUppercase && char.IsUpper(ch))
+                {
+                    containsUppercase = true;
+                }
+            }
+
+            if (containsUppercase && containsLowercase)
+            {
+                return text.ToUpperInvariant();
+            }
+
+            if (containsUppercase && !containsLowercase)
+            {
+                return text.ToLowerInvariant();
+            }
+
+            return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text);
+        }
+        
         public static string ToRtf(this string value)
         {
             return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + value.ToRtfPart() + @"\par" + Environment.NewLine + "}";
@@ -571,6 +648,71 @@ namespace Nikse.SubtitleEdit.Core.Common
                    twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E' ||
                    last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length - 3]) ||
                    last == '—' && s.Length > 2 && char.IsLetter(s[s.Length - 2]);
+        }
+        
+        public static string NormalizeUnicode(this string input, Encoding encoding)
+        {
+            const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
+            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
+
+            var text = input;
+
+            bool hasSingleMusicNode = true;
+            if (encoding.GetString(encoding.GetBytes("♪")) != "♪")
+            {
+                text = text.Replace('♪', '#');
+                hasSingleMusicNode = false;
+            }
+
+            if (encoding.GetString(encoding.GetBytes("♫")) != "♫")
+            {
+                text = text.Replace('♫', hasSingleMusicNode ? '♪' : '#');
+            }
+
+            if (encoding.GetString(encoding.GetBytes("©")) != "©")
+            {
+                text = text.Replace("©", "(Copyright)");
+            }
+
+            if (encoding.GetString(encoding.GetBytes("®")) != "®")
+            {
+                text = text.Replace("®", "(Registered Trademark)");
+            }
+
+            if (encoding.GetString(encoding.GetBytes("…")) != "…")
+            {
+                text = text.Replace("…", "...");
+            }
+
+            // Hyphens
+            return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
+                .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
+                .Replace('\u2012', defHyphen) // ‒ Figure dash (\u2012)
+                .Replace('\u2013', defHyphen) // – En dash (\u2013)
+                .Replace('\u2014', defHyphen) // — Em dash (\u2014)
+                .Replace('\u2015', defHyphen) // ― Horizontal bar (\u2015)
+
+                // Colons:
+                .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
+                .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
+                .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
+
+                // Others
+                .Replace("⇒", "=>")
+
+                // Spaces
+                .Replace('\u00A0', ' ') // No-Break Space
+                .Replace("\u200B", string.Empty) // Zero Width Space
+                .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
+
+                // Intellectual property
+                .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
+                .Replace("\u2120", "(Service Mark)") // ℠ service mark
+                .Replace("\u2122", "(Trademark)") // ™ trademark
+
+                // RTL/LTR markers
+                .Replace("\u202B", string.Empty) // &rlm;
+                .Replace("\u202A", string.Empty); // &lmr;
         }
     }
 }
