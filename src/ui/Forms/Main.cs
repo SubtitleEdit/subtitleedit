@@ -29694,12 +29694,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if ((DateTime.UtcNow.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
             {
-                if (index < 0 || index >= _subtitle.Paragraphs.Count)
+                var p = _subtitle.GetParagraphOrDefault(index);
+                if (p == null)
                 {
                     return;
                 }
 
-                string newText = _subtitle.Paragraphs[index].Text.TrimEnd();
+                string newText = p.Text.TrimEnd();
                 string oldText = _listViewTextUndoLast;
                 if (oldText == null)
                 {
@@ -29712,7 +29713,8 @@ namespace Nikse.SubtitleEdit.Forms
                     int hidx = _subtitle.HistoryItems.Count - 1;
                     if (hidx >= 0 && hidx < _subtitle.HistoryItems.Count)
                     {
-                        _subtitle.HistoryItems[hidx].Subtitle.Paragraphs[index].Text = _listViewTextUndoLast;
+                        var historyParagraph = _subtitle.HistoryItems[hidx].Subtitle.GetParagraphOrDefault(index);
+                        historyParagraph.Text = _listViewTextUndoLast;
                     }
 
                     _listViewTextUndoLast = newText;
