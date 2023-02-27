@@ -4893,7 +4893,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    allText = NormalizeUnicode(allText, currentEncoding);
+                    allText = allText.NormalizeUnicode(currentEncoding);
                 }
 
                 bool containsNegativeTime = false;
@@ -5119,7 +5119,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!isUnicode)
                 {
-                    allText = NormalizeUnicode(allText, currentEncoding);
+                    allText = allText.NormalizeUnicode(currentEncoding);
                 }
 
                 File.WriteAllText(_subtitleOriginalFileName, allText, currentEncoding);
@@ -5132,71 +5132,6 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName));
                 return DialogResult.Cancel;
             }
-        }
-
-        public string NormalizeUnicode(string input, Encoding encoding)
-        {
-            const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
-            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
-
-            var text = input;
-
-            bool hasSingleMusicNode = true;
-            if (encoding.GetString(encoding.GetBytes("♪")) != "♪")
-            {
-                text = text.Replace('♪', '#');
-                hasSingleMusicNode = false;
-            }
-
-            if (encoding.GetString(encoding.GetBytes("♫")) != "♫")
-            {
-                text = text.Replace('♫', hasSingleMusicNode ? '♪' : '#');
-            }
-
-            if (encoding.GetString(encoding.GetBytes("©")) != "©")
-            {
-                text = text.Replace("©", "(Copyright)");
-            }
-
-            if (encoding.GetString(encoding.GetBytes("®")) != "®")
-            {
-                text = text.Replace("®", "(Registered Trademark)");
-            }
-
-            if (encoding.GetString(encoding.GetBytes("…")) != "…")
-            {
-                text = text.Replace("…", "...");
-            }
-
-            // Hyphens
-            return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
-                .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
-                .Replace('\u2012', defHyphen) // ‒ Figure dash (\u2012)
-                .Replace('\u2013', defHyphen) // – En dash (\u2013)
-                .Replace('\u2014', defHyphen) // — Em dash (\u2014)
-                .Replace('\u2015', defHyphen) // ― Horizontal bar (\u2015)
-
-                // Colons:
-                .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
-                .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
-                .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
-
-                // Others
-                .Replace("⇒", "=>")
-
-                // Spaces
-                .Replace('\u00A0', ' ') // No-Break Space
-                .Replace("\u200B", string.Empty) // Zero Width Space
-                .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
-
-                // Intellectual property
-                .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
-                .Replace("\u2120", "(Service Mark)") // ℠ service mark
-                .Replace("\u2122", "(Trademark)") // ™ trademark
-
-                // RTL/LTR markers
-                .Replace("\u202B", string.Empty) // &rlm;
-                .Replace("\u202A", string.Empty); // &lmr;
         }
 
         private void NewToolStripMenuItemClick(object sender, EventArgs e)
@@ -10515,7 +10450,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // update _subtitle + listview
             string text = textBoxListViewText.Text.TrimEnd();
-            if (ContainsNonStandardNewLines(text))
+            if (text.ContainsNonStandardNewLines())
             {
                 var lines = text.SplitToLines();
                 text = string.Join(Environment.NewLine, lines);
@@ -10538,44 +10473,6 @@ namespace Nikse.SubtitleEdit.Forms
             StartUpdateListSyntaxColoring();
             FixVerticalScrollBars(textBoxListViewText);
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
-        }
-
-        private bool ContainsNonStandardNewLines(string s)
-        {
-            if (Environment.NewLine == "\r\n")
-            {
-                int i = 0;
-                while (i < s.Length)
-                {
-                    var ch = s[i];
-                    if (ch == '\r')
-                    {
-                        if (i >= s.Length - 1 || s[i + 1] != '\n')
-                        {
-                            return true;
-                        }
-
-                        i++;
-                    }
-                    else if (ch == '\n')
-                    {
-                        return true;
-                    }
-
-                    i++;
-                }
-
-                return false;
-            }
-            else if (Environment.NewLine == "\n")
-            {
-                return s.IndexOf('\r') >= 0;
-            }
-            else
-            {
-                s = s.Replace(Environment.NewLine, string.Empty);
-                return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
-            }
         }
 
         private void TextBoxListViewTextOriginalTextChanged(object sender, EventArgs e)
@@ -10606,7 +10503,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     string text = textBoxListViewTextOriginal.Text.TrimEnd();
-                    if (ContainsNonStandardNewLines(text))
+                    if (text.ContainsNonStandardNewLines())
                     {
                         var lines = text.SplitToLines();
                         text = string.Join(Environment.NewLine, lines);
@@ -10905,7 +10802,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int start = textBoxListViewText.SelectionStart;
                 int length = textBoxListViewText.SelectionLength;
-                var text = ToggleCasing(textBoxListViewText.SelectedText);
+                var text = textBoxListViewText.SelectedText.ToggleCasing();
                 textBoxListViewText.SelectedText = text;
                 textBoxListViewText.SelectionStart = start;
                 textBoxListViewText.SelectionLength = length;
@@ -11045,45 +10942,6 @@ namespace Nikse.SubtitleEdit.Forms
             return intellisenseListBox;
         }
 
-        private string ToggleCasing(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text) || text.ToLower() == text.ToUpper())
-            {
-                return text;
-            }
-
-            var containsLowercase = false;
-            var containsUppercase = false;
-            for (var i = 0; i < text.Length; i++)
-            {
-                var ch = text[i];
-                if (char.IsNumber(ch))
-                {
-                    continue;
-                }
-
-                if (!containsLowercase && char.IsLower(ch))
-                {
-                    containsLowercase = true;
-                }
-                else if (!containsUppercase && char.IsUpper(ch))
-                {
-                    containsUppercase = true;
-                }
-            }
-
-            if (containsUppercase && containsLowercase)
-            {
-                return text.ToUpperInvariant();
-            }
-
-            if (containsUppercase && !containsLowercase)
-            {
-                return text.ToLowerInvariant();
-            }
-
-            return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text);
-        }
 
         private void MoveFirstWordInNextUp(SETextBox tb)
         {
@@ -19676,7 +19534,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var line in lines)
                 {
                     var pre = string.Empty;
-                    var s = SplitStartTags(line, ref pre);
+                    var s = Utilities.SplitStartTags(line, ref pre);
                     sb.Append(pre).AppendLine(s.TrimStart('-').TrimStart());
                 }
 
@@ -19690,7 +19548,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var line in lines)
                     {
                         var pre = string.Empty;
-                        var s = SplitStartTags(line, ref pre);
+                        var s = Utilities.SplitStartTags(line, ref pre);
                         sb.Append(pre).Append("- ").AppendLine(s);
                     }
                 }
@@ -19719,7 +19577,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var line in lines)
                     {
                         var pre = string.Empty;
-                        var s = SplitStartTags(line, ref pre);
+                        var s = Utilities.SplitStartTags(line, ref pre);
                         sb.Append(pre).Append("- ").AppendLine(s);
                     }
                 }
@@ -19749,7 +19607,7 @@ namespace Nikse.SubtitleEdit.Forms
                             foreach (var line in lines)
                             {
                                 var pre = string.Empty;
-                                var s = SplitStartTags(line, ref pre);
+                                var s = Utilities.SplitStartTags(line, ref pre);
                                 if (!line.StartsWith('-'))
                                 {
                                     sb.Append(pre).Append("- ").AppendLine(s);
@@ -19793,7 +19651,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var line in lines)
                 {
                     var pre = string.Empty;
-                    var s = SplitStartTags(line, ref pre);
+                    var s = Utilities.SplitStartTags(line, ref pre);
                     sb.Append(pre).AppendLine(s.TrimStart('-').TrimStart());
                 }
 
@@ -19815,7 +19673,7 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (var line in lines)
                         {
                             var pre = string.Empty;
-                            var s = SplitStartTags(line, ref pre);
+                            var s = Utilities.SplitStartTags(line, ref pre);
                             sb.Append(pre).AppendLine(s.TrimStart('-').TrimStart());
                         }
 
@@ -19829,87 +19687,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-        }
-
-        private static string SplitStartTags(string line, ref string pre)
-        {
-            var s = line;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') > 0)
-            {
-                pre = s.Substring(0, s.IndexOf('}') + 1);
-                s = s.Remove(0, pre.Length);
-            }
-
-            bool updated = true;
-            while (updated)
-            {
-                updated = false;
-                if (s.StartsWith(' '))
-                {
-                    pre += ' ';
-                    s = s.Remove(0, 1);
-                    updated = true;
-                }
-                else if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
-                         s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
-                         s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
-                {
-                    pre += s.Substring(0, 3);
-                    s = s.Remove(0, 3);
-                    updated = true;
-                }
-                else if (s.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
-                {
-                    int endFont = s.IndexOf('>');
-                    if (endFont > 0)
-                    {
-                        pre += s.Substring(0, endFont + 1);
-                        s = s.Remove(0, endFont + 1);
-                        updated = true;
-                    }
-                }
-            }
-
-            return s;
-        }
-
-        private static string SplitEndTags(string line, ref string post)
-        {
-            var s = line;
-            if (s.EndsWith("{\\r}", StringComparison.Ordinal))
-            {
-                post = s.Substring(s.Length - 4, 4);
-                s = s.Remove(s.Length - 4, 4);
-            }
-
-            bool updated = true;
-            while (updated)
-            {
-                updated = false;
-                if (s.EndsWith(' '))
-                {
-                    post += ' ';
-                    s = s.Remove(s.Length - 1, 1);
-                    updated = true;
-                }
-                else if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
-                         s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
-                         s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
-                {
-                    post += s.Substring(s.Length - 4, 4);
-                    s = s.Remove(s.Length - 4, 4);
-                    updated = true;
-                }
-                else if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
-                {
-                    var endFontTag = "</font>";
-                    post += endFontTag;
-                    s = s.Remove(s.Length - endFontTag.Length, endFontTag.Length);
-                    updated = true;
-                }
-            }
-
-            return s;
         }
 
         private void SetTitle()
@@ -28309,7 +28086,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int start = textBoxListViewTextOriginal.SelectionStart;
                 int length = textBoxListViewTextOriginal.SelectionLength;
-                var text = ToggleCasing(textBoxListViewTextOriginal.SelectedText);
+                var text = textBoxListViewTextOriginal.SelectedText.ToggleCasing();
                 textBoxListViewTextOriginal.SelectedText = text;
                 textBoxListViewTextOriginal.SelectionStart = start;
                 textBoxListViewTextOriginal.SelectionLength = length;
@@ -30029,7 +29806,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 int selectionStart = tb.SelectionStart;
-                text = ToggleSymbols(tag, text, endTag);
+                text = Utilities.ToggleSymbols(tag, text, endTag);
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
                 tb.SelectionLength = text.Length;
@@ -30060,12 +29837,12 @@ namespace Nikse.SubtitleEdit.Forms
                             var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = ToggleSymbols(tag, original.Text, endTag);
+                                original.Text = Utilities.ToggleSymbols(tag, original.Text, endTag);
                                 SubtitleListview1.SetOriginalText(i, original.Text);
                             }
                         }
 
-                        _subtitle.Paragraphs[i].Text = ToggleSymbols(tag, _subtitle.Paragraphs[i].Text, endTag);
+                        _subtitle.Paragraphs[i].Text = Utilities.ToggleSymbols(tag, _subtitle.Paragraphs[i].Text, endTag);
                         SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                     }
 
@@ -30077,46 +29854,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 }
             }
-        }
-
-        private string ToggleSymbols(string tag, string text, string endTag = "")
-        {
-            string pre = string.Empty;
-            string post = string.Empty;
-            text = SplitStartTags(text, ref pre);
-            text = SplitEndTags(text, ref post);
-
-            if (text.Contains(tag))
-            {
-                if (string.IsNullOrEmpty(endTag))
-                {
-                    text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
-                }
-                else
-                {
-                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
-                }
-            }
-            else
-            {
-                if (tag == Configuration.Settings.Tools.MusicSymbol)
-                {
-                    if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                    {
-                        text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
-                    }
-                    else
-                    {
-                        text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
-                    }
-                }
-                else
-                {
-                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, string.IsNullOrEmpty(endTag) ? tag : endTag, post);
-                }
-            }
-
-            return text;
         }
 
         private void SuperscriptToolStripMenuItemClick(object sender, EventArgs e)
