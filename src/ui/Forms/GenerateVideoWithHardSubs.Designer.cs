@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.labelVideoBitrate = new System.Windows.Forms.Label();
             this.checkBoxBox = new System.Windows.Forms.CheckBox();
             this.labelPreviewPleaseWait = new System.Windows.Forms.Label();
             this.checkBoxAlignRight = new System.Windows.Forms.CheckBox();
@@ -91,7 +92,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelVideoBitrate = new System.Windows.Forms.Label();
+            this.groupBoxCut = new System.Windows.Forms.GroupBox();
+            this.checkBoxCut = new System.Windows.Forms.CheckBox();
+            this.labelCutFrom = new System.Windows.Forms.Label();
+            this.labelCutTo = new System.Windows.Forms.Label();
+            this.numericUpDownCutFromHours = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCutFromMinutes = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCutFromSeconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCutToSeconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCutToMinutes = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCutToHours = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
@@ -100,6 +110,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetFileSize)).BeginInit();
             this.contextMenuStripRes.SuspendLayout();
+            this.groupBoxCut.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutFromHours)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutFromMinutes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutFromSeconds)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutToSeconds)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutToMinutes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutToHours)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -112,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1.TabIndex = 22;
             this.progressBar1.Visible = false;
             // 
-            // buttonOK
+            // buttonGenerate
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -198,6 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.groupBoxCut);
             this.groupBoxSettings.Controls.Add(this.labelVideoBitrate);
             this.groupBoxSettings.Controls.Add(this.checkBoxBox);
             this.groupBoxSettings.Controls.Add(this.labelPreviewPleaseWait);
@@ -220,6 +238,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
+            // 
+            // labelVideoBitrate
+            // 
+            this.labelVideoBitrate.AutoSize = true;
+            this.labelVideoBitrate.Location = new System.Drawing.Point(193, 403);
+            this.labelVideoBitrate.Name = "labelVideoBitrate";
+            this.labelVideoBitrate.Size = new System.Drawing.Size(86, 13);
+            this.labelVideoBitrate.TabIndex = 14;
+            this.labelVideoBitrate.Text = "labelVideoBitrate";
             // 
             // checkBoxBox
             // 
@@ -522,7 +549,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.Controls.Add(this.comboBoxAudioSampleRate);
             this.groupBoxAudio.Location = new System.Drawing.Point(400, 165);
             this.groupBoxAudio.Name = "groupBoxAudio";
-            this.groupBoxAudio.Size = new System.Drawing.Size(421, 277);
+            this.groupBoxAudio.Size = new System.Drawing.Size(421, 197);
             this.groupBoxAudio.TabIndex = 10;
             this.groupBoxAudio.TabStop = false;
             this.groupBoxAudio.Text = "Audio";
@@ -820,14 +847,93 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
-            // labelVideoBitrate
+            // groupBoxCut
             // 
-            this.labelVideoBitrate.AutoSize = true;
-            this.labelVideoBitrate.Location = new System.Drawing.Point(193, 403);
-            this.labelVideoBitrate.Name = "labelVideoBitrate";
-            this.labelVideoBitrate.Size = new System.Drawing.Size(86, 13);
-            this.labelVideoBitrate.TabIndex = 14;
-            this.labelVideoBitrate.Text = "labelVideoBitrate";
+            this.groupBoxCut.Controls.Add(this.numericUpDownCutToSeconds);
+            this.groupBoxCut.Controls.Add(this.numericUpDownCutToMinutes);
+            this.groupBoxCut.Controls.Add(this.numericUpDownCutToHours);
+            this.groupBoxCut.Controls.Add(this.numericUpDownCutFromSeconds);
+            this.groupBoxCut.Controls.Add(this.numericUpDownCutFromMinutes);
+            this.groupBoxCut.Controls.Add(this.numericUpDownCutFromHours);
+            this.groupBoxCut.Controls.Add(this.labelCutTo);
+            this.groupBoxCut.Controls.Add(this.labelCutFrom);
+            this.groupBoxCut.Controls.Add(this.checkBoxCut);
+            this.groupBoxCut.Location = new System.Drawing.Point(400, 369);
+            this.groupBoxCut.Name = "groupBoxCut";
+            this.groupBoxCut.Size = new System.Drawing.Size(421, 115);
+            this.groupBoxCut.TabIndex = 15;
+            this.groupBoxCut.TabStop = false;
+            // 
+            // checkBoxCut
+            // 
+            this.checkBoxCut.AutoSize = true;
+            this.checkBoxCut.Location = new System.Drawing.Point(18, 36);
+            this.checkBoxCut.Name = "checkBoxCut";
+            this.checkBoxCut.Size = new System.Drawing.Size(42, 17);
+            this.checkBoxCut.TabIndex = 0;
+            this.checkBoxCut.Text = "Cut";
+            this.checkBoxCut.UseVisualStyleBackColor = true;
+            this.checkBoxCut.CheckedChanged += new System.EventHandler(this.checkBoxCut_CheckedChanged);
+            // 
+            // labelCutFrom
+            // 
+            this.labelCutFrom.AutoSize = true;
+            this.labelCutFrom.Location = new System.Drawing.Point(94, 15);
+            this.labelCutFrom.Name = "labelCutFrom";
+            this.labelCutFrom.Size = new System.Drawing.Size(30, 13);
+            this.labelCutFrom.TabIndex = 14;
+            this.labelCutFrom.Text = "From";
+            // 
+            // labelCutTo
+            // 
+            this.labelCutTo.AutoSize = true;
+            this.labelCutTo.Location = new System.Drawing.Point(255, 13);
+            this.labelCutTo.Name = "labelCutTo";
+            this.labelCutTo.Size = new System.Drawing.Size(20, 13);
+            this.labelCutTo.TabIndex = 16;
+            this.labelCutTo.Text = "To";
+            // 
+            // numericUpDownCutFromHours
+            // 
+            this.numericUpDownCutFromHours.Location = new System.Drawing.Point(97, 36);
+            this.numericUpDownCutFromHours.Name = "numericUpDownCutFromHours";
+            this.numericUpDownCutFromHours.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownCutFromHours.TabIndex = 17;
+            // 
+            // numericUpDownCutFromMinutes
+            // 
+            this.numericUpDownCutFromMinutes.Location = new System.Drawing.Point(133, 36);
+            this.numericUpDownCutFromMinutes.Name = "numericUpDownCutFromMinutes";
+            this.numericUpDownCutFromMinutes.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownCutFromMinutes.TabIndex = 18;
+            // 
+            // numericUpDownCutFromSeconds
+            // 
+            this.numericUpDownCutFromSeconds.Location = new System.Drawing.Point(169, 36);
+            this.numericUpDownCutFromSeconds.Name = "numericUpDownCutFromSeconds";
+            this.numericUpDownCutFromSeconds.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownCutFromSeconds.TabIndex = 19;
+            // 
+            // numericUpDownCutToSeconds
+            // 
+            this.numericUpDownCutToSeconds.Location = new System.Drawing.Point(327, 33);
+            this.numericUpDownCutToSeconds.Name = "numericUpDownCutToSeconds";
+            this.numericUpDownCutToSeconds.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownCutToSeconds.TabIndex = 22;
+            // 
+            // numericUpDownCutToMinutes
+            // 
+            this.numericUpDownCutToMinutes.Location = new System.Drawing.Point(291, 33);
+            this.numericUpDownCutToMinutes.Name = "numericUpDownCutToMinutes";
+            this.numericUpDownCutToMinutes.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownCutToMinutes.TabIndex = 21;
+            // 
+            // numericUpDownCutToHours
+            // 
+            this.numericUpDownCutToHours.Location = new System.Drawing.Point(255, 33);
+            this.numericUpDownCutToHours.Name = "numericUpDownCutToHours";
+            this.numericUpDownCutToHours.Size = new System.Drawing.Size(40, 20);
+            this.numericUpDownCutToHours.TabIndex = 20;
             // 
             // GenerateVideoWithHardSubs
             // 
@@ -866,6 +972,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxAudio.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetFileSize)).EndInit();
             this.contextMenuStripRes.ResumeLayout(false);
+            this.groupBoxCut.ResumeLayout(false);
+            this.groupBoxCut.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutFromHours)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutFromMinutes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutFromSeconds)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutToSeconds)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutToMinutes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCutToHours)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -935,5 +1049,15 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem x352ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x272ToolStripMenuItem;
         private System.Windows.Forms.Label labelVideoBitrate;
+        private System.Windows.Forms.GroupBox groupBoxCut;
+        private System.Windows.Forms.CheckBox checkBoxCut;
+        private System.Windows.Forms.Label labelCutTo;
+        private System.Windows.Forms.Label labelCutFrom;
+        private System.Windows.Forms.NumericUpDown numericUpDownCutToSeconds;
+        private System.Windows.Forms.NumericUpDown numericUpDownCutToMinutes;
+        private System.Windows.Forms.NumericUpDown numericUpDownCutToHours;
+        private System.Windows.Forms.NumericUpDown numericUpDownCutFromSeconds;
+        private System.Windows.Forms.NumericUpDown numericUpDownCutFromMinutes;
+        private System.Windows.Forms.NumericUpDown numericUpDownCutFromHours;
     }
 }
