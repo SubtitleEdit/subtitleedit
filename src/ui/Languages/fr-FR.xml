@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.11</Version>
-    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 23/01/23</TranslatedBy>
+    <TranslatedBy>Traduction de Pierre le Lidgeu. (Updated: 01/03/23</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -198,6 +198,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <BatchMode>Mode en "lot(s)"</BatchMode>
     <KeepPartialTranscription>Conserver la transcription partielle</KeepPartialTranscription>
     <TranslateToEnglish>Traduire en anglais</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Nb max de carac./ligne</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Annexes Advanced Sub Station Alpha</Title>
