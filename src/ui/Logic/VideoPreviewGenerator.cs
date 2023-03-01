@@ -109,7 +109,18 @@ namespace Nikse.SubtitleEdit.Logic
             var crfSettings = string.Empty;
             if (!string.IsNullOrEmpty(crf) && string.IsNullOrEmpty(pass))
             {
-                crfSettings = $" -crf {crf}";
+                if (videoEncoding == "h264_nvenc" || videoEncoding == "hevc_nvenc")
+                {
+                    crfSettings = $" -cq {crf}";
+                }
+                else if (videoEncoding == "h264_amf" || videoEncoding == "hevc_amf")
+                {
+                    crfSettings = $" -quality {crf}";
+                }
+                else
+                {
+                    crfSettings = $" -crf {crf}";
+                }
             }
 
             var tuneParameter = string.Empty;

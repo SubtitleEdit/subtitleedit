@@ -117,6 +117,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             linkLabelHelp.Left = Width - linkLabelHelp.Width - 30;
 
+            numericUpDownCutFromMinutes.Left = numericUpDownCutFromHours.Right + 1;
+            numericUpDownCutFromSeconds.Left = numericUpDownCutFromMinutes.Right + 1;
+
+            numericUpDownCutToMinutes.Left = numericUpDownCutToHours.Right + 1;
+            numericUpDownCutToSeconds.Left = numericUpDownCutToMinutes.Right + 1;
+
             _isAssa = !fontSize.HasValue;
             if (fontSize.HasValue)
             {
@@ -785,6 +791,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxCrf.Items.Add(string.Empty);
             labelTune.Visible = true;
             comboBoxTune.Visible = true;
+            labelCRF.Text = "CRF";
+            labelCrfHint.Text = string.Empty;
 
             FillPresets(comboBoxVideoEncoding.Text);
             FillTuneIn(comboBoxVideoEncoding.Text);
@@ -806,6 +814,34 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 comboBoxCrf.Text = "10";
+            }
+            else if (comboBoxVideoEncoding.Text == "h264_nvenc" ||
+                     comboBoxVideoEncoding.Text == "hevc_nvenc")
+            {
+                comboBoxCrf.Items.Clear();
+                comboBoxCrf.Items.Add(string.Empty);
+                for (var i = 0; i <= 51; i++)
+                {
+                    comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
+
+                labelCRF.Text = "CQ";
+                labelCrfHint.Text = "0=best quality, 51=best speed";
+                comboBoxCrf.Text = string.Empty;
+            }
+            else if (comboBoxVideoEncoding.Text == "h264_amf" ||
+                     comboBoxVideoEncoding.Text == "hevc_amf")
+            {
+                comboBoxCrf.Items.Clear();
+                comboBoxCrf.Items.Add(string.Empty);
+                for (var i = 0; i <= 10; i++)
+                {
+                    comboBoxCrf.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
+
+                labelCRF.Text = "Quality";
+                labelCrfHint.Text = "0=best quality, 10=best speed";
+                comboBoxCrf.Text = string.Empty;
             }
             else
             {
