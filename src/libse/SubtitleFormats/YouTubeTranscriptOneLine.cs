@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class YouTubeTranscriptOneLine : SubtitleFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d{1,3}:\d\d.+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesHours = new Regex(@"^\d{1,2}:\d{1,3}:\d\d$", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
@@ -27,6 +28,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
+            if (time.Hours > 0)
+            {
+                return $"{time.Hours}:{time.Minutes:00}:{time.Seconds:00}";
+            }
+
             return $"{time.Hours * 60 + time.Minutes}:{time.Seconds:00}";
         }
 
@@ -49,6 +55,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _errorCount++;
                     }
                 }
+                else if (RegexTimeCodesHours.IsMatch(line))
+                {
+                    var matchHours = RegexTimeCodesHours.Match(line);
+                    var text = line.Remove(0, matchHours.Length);
+                    var p = new Paragraph(DecodeTimeCodeHours(line.Substring(0, matchHours.Length)), new TimeCode(), text);
+                    subtitle.Paragraphs.Add(p);
+                    text = text.Trim().Trim(trimChars).Trim();
+                    if (text.Length > 0 && char.IsDigit(text[0]))
+                    {
+                        _errorCount++;
+                    }
+                }
                 else
                 {
                     _errorCount += 2;
@@ -59,6 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
+
             subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
             subtitle.Renumber();
         }
@@ -71,6 +90,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var seconds = parts[1];
 
             return new TimeCode(0, int.Parse(minutes), int.Parse(seconds), 0);
+        }
+
+        private static TimeCode DecodeTimeCodeHours(string s)
+        {
+            var parts = s.Split(':');
+
+            var hours = parts[0];
+            var minutes = parts[1];
+            var seconds = parts[2];
+
+            return new TimeCode(int.Parse(hours), int.Parse(minutes), int.Parse(seconds), 0);
         }
     }
 }
