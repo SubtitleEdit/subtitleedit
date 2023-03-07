@@ -138,6 +138,16 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             numericUpDownCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
             labelCharsPerSub.Left = numericUpDownCharsPerSub.Left - labelCharsPerSub.Width - 9;
             labelCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+            {
+                checkBoxTranslateToEnglish.Checked = false;
+                checkBoxTranslateToEnglish.Enabled = false;
+            }
+            else
+            {
+                checkBoxTranslateToEnglish.Enabled = true;
+            }
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
