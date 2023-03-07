@@ -248,7 +248,10 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public static string GetWhisperTranslateParameter()
         {
-            return Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ? "--translate " : "--task translate ";
+            return Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
+                   Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe
+                ? "--translate " 
+                : "--task translate ";
         }
     }
 }
