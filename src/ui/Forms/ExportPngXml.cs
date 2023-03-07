@@ -673,6 +673,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GetResolution(out var width, out var height);
 
+                if (!singleFile && !Directory.Exists(folderBrowserDialog1.SelectedPath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(folderBrowserDialog1.SelectedPath);
+                    }
+                    catch 
+                    {
+                        MessageBox.Show("Please select a valid folder");
+                        buttonExport.Enabled = true;
+                        return;
+                    }
+                }
+
                 _outputFileName = singleFile ? saveFileDialog1.FileName : folderBrowserDialog1.SelectedPath;
 
                 FileStream binarySubtitleFile = null;
