@@ -1775,6 +1775,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string Paste { get; set; }
                     public string Delete { get; set; }
                     public string SplitLineAtCursorPosition { get; set; }
+                    public string SplitLineAtCursorPositionAndAutoBr { get; set; }
                     public string SplitLineAtCursorAndWaveformPosition { get; set; }
                     public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
