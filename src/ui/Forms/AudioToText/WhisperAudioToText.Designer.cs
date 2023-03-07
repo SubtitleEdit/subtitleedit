@@ -387,7 +387,7 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 120);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 98);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
@@ -440,11 +440,6 @@
             0,
             0,
             0});
-            this.numericUpDownCharsPerSub.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.numericUpDownCharsPerSub.Name = "numericUpDownCharsPerSub";
             this.numericUpDownCharsPerSub.Size = new System.Drawing.Size(69, 20);
             this.numericUpDownCharsPerSub.TabIndex = 23;
@@ -453,6 +448,7 @@
             0,
             0,
             0});
+            this.numericUpDownCharsPerSub.ValueChanged += new System.EventHandler(this.numericUpDownCharsPerSub_ValueChanged);
             // 
             // labelCharsPerSub
             // 

@@ -1354,5 +1354,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             contextMenuStripWhisperAdvanced.Show(MousePosition);
         }
+
+        private void numericUpDownCharsPerSub_ValueChanged(object sender, EventArgs e)
+        {
+            labelCharsPerSub.Enabled = numericUpDownCharsPerSub.Value > 0;
+        }
     }
 }
