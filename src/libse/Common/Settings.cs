@@ -2438,6 +2438,7 @@ $HorzAlign          =   Center
         public string MainListViewSortByStyle { get; set; }
         public string MainListViewRemoveTimeCodes { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
+        public string MainTextBoxSplitAtCursorAndAutoBr { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
         public string MainTextBoxSplitSelectedLineBilingual { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
@@ -9304,6 +9305,12 @@ $HorzAlign          =   Center
                     shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndAutoBr");
+                if (subNode != null)
+                {
+                    shortcuts.MainTextBoxSplitAtCursorAndAutoBr = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPos");
                 if (subNode != null)
                 {
@@ -11260,6 +11267,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainVideoToggleControls", shortcuts.MainVideoToggleControls);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", shortcuts.MainTextBoxSplitAtCursor);
+            textWriter.WriteElementString("MainTextBoxSplitAtCursorAndAutoBr", shortcuts.MainTextBoxSplitAtCursorAndAutoBr);
             textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", shortcuts.MainTextBoxSplitSelectedLineBilingual);
             textWriter.WriteElementString("MainTextBoxMoveLastWordDown", shortcuts.MainTextBoxMoveLastWordDown);

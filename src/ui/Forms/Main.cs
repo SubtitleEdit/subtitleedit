@@ -10651,7 +10651,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainTextBoxSplitAtCursor == e.KeyData)
             {
-                ToolStripMenuItemSplitTextAtCursorClick(null, null);
+                SplitTextAtCursor(false);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainTextBoxSplitAtCursorAndAutoBr == e.KeyData)
+            {
+                SplitTextAtCursor(true);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPos == e.KeyData)
@@ -11108,7 +11113,7 @@ namespace Nikse.SubtitleEdit.Forms
             SplitSelectedParagraph(null, null);
         }
 
-        private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
+        private void SplitSelectedParagraph(double? splitSeconds, int? textIndex, bool autoBreak = false)
         {
             int maxSingleLineLength = Configuration.Settings.General.SubtitleLineMaximumLength;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
@@ -11337,6 +11342,12 @@ namespace Nikse.SubtitleEdit.Forms
                 FixSplitBoxTag(currentParagraph, newParagraph);
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
+                if (autoBreak)
+                {
+                    currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
+                    newParagraph.Text = Utilities.AutoBreakLine(newParagraph.Text);
+                }
+
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
                 {
                     var originalCurrent = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleOriginal.Paragraphs);
@@ -11522,7 +11533,13 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleOriginal.Renumber();
                         FixSplitItalicTagAndAssa(originalCurrent, originalNew);
                         FixSplitFontTag(originalCurrent, originalNew);
-                        FixSplitBoxTag(currentParagraph, newParagraph);
+                        FixSplitBoxTag(originalCurrent, originalNew);
+
+                        if (autoBreak)
+                        {
+                            originalCurrent.Text = Utilities.AutoBreakLine(originalCurrent.Text);
+                            originalNew.Text = Utilities.AutoBreakLine(originalNew.Text);
+                        }
                     }
                 }
 
@@ -28639,6 +28656,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSplitTextAtCursorClick(object sender, EventArgs e)
         {
+            SplitTextAtCursor(false);
+        }
+
+        private void SplitTextAtCursor(bool autoBreak)
+        {
             var tb = GetFocusedTextBox();
 
             int? pos = null;
@@ -28647,7 +28669,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pos = tb.SelectionStart;
             }
 
-            SplitSelectedParagraph(null, pos);
+            SplitSelectedParagraph(null, pos, autoBreak);
             tb.Focus();
             tb.SelectionStart = tb.Text.Length;
         }

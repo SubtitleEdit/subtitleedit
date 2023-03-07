@@ -1369,6 +1369,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <Paste>Paste</Paste>
         <Delete>Delete</Delete>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Split line at cursor position and auto-break</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>

@@ -103,6 +103,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralToggleMode { get; set; }
         public Keys MainGeneralTogglePreviewOnVideo { get; set; }
         public Keys MainTextBoxSplitAtCursor { get; set; }
+        public Keys MainTextBoxSplitAtCursorAndAutoBr { get; set; }
         public Keys MainTextBoxSplitAtCursorAndVideoPos { get; set; }
         public Keys MainTextBoxSplitSelectedLineBilingual { get; set; }
         public Keys MainTextBoxMoveLastWordDown { get; set; }
@@ -373,6 +374,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             MainListViewCopyPlainText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyPlainText);
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
+            MainTextBoxSplitAtCursorAndAutoBr = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndAutoBr);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             MainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
             MainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);

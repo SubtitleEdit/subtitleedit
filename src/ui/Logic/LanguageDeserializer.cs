@@ -4480,6 +4480,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/SplitLineAtCursorPosition":
                     language.Main.Menu.ContextMenu.SplitLineAtCursorPosition = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SplitLineAtCursorPositionAndAutoBr":
+                    language.Main.Menu.ContextMenu.SplitLineAtCursorPositionAndAutoBr = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/SplitLineAtCursorAndWaveformPosition":
                     language.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition = reader.Value;
                     break;
