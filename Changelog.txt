@@ -14,7 +14,10 @@
    * Update Korean translation - thx domddol
    * Update Italian translation - thx bovirus
    * Update Portuguese translation - thx hugok79
+   * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
+   * Update Russian translation - thx elfriob
    * Update Whisper cpp to v1.2.0
+   * Update yt-dlp to 2023.03.04
    * "Multiple replace" apply button now changes main window - thx Sopor
    * Set ITT default time code format to frames - thx chenlung 
    * Try to handle large ASSA files better - thx MMT
@@ -22,6 +25,8 @@
    * Allow split to split to single subtitles - thx Kyth
    * Improve top align detection in TTML - thx koewper
    * Optimize saving of TTML files
+   * Allow new syntax for yt transcript +1 hour - thx Vasudeo
+   * FcpXml now supports latest version - thx Dvid
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix Korean in installer - thx 슈니
