@@ -2007,8 +2007,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             imagesSavedCount++;
 
-            int timeBase = 25;
-            string ntsc = "FALSE";
+            var timeBase = 25;
+            var ntsc = "FALSE";
             if (comboBoxLanguage.SelectedItem.ToString().Equals("NTSC", StringComparison.Ordinal))
             {
                 ntsc = "TRUE";
@@ -2047,8 +2047,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int WriteBdnXmlParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount, MakeBitmapParameter param, int i, string path)
         {
-            string numberString = $"{i:0000}";
-            string fileName = Path.Combine(path, numberString + ".png");
+            var numberString = $"{i:0000}";
+            var fileName = Path.Combine(path, numberString + ".png");
 
             if (comboBoxImageFormat.Text == "Png 8-bit")
             {
@@ -2081,8 +2081,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
                           ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLowerInvariant() + "\">");
 
-            int x = (width - param.Bitmap.Width) / 2;
-            int y = height - (param.Bitmap.Height + param.BottomMargin);
+            var x = (width - param.Bitmap.Width) / 2;
+            var y = height - (param.Bitmap.Height + param.BottomMargin);
             switch (param.Alignment)
             {
                 case ContentAlignment.BottomLeft:
@@ -3785,7 +3785,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (parameter.BackgroundColor == Color.Transparent)
                 {
                     nbmp.CropTransparentSidesAndBottom(baseLinePadding, true);
-                    nbmp.CropTransparentSidesAndBottom(2, false);
+                    nbmp.CropTransparentSidesAndBottom(0, false);
                 }
                 else
                 {
