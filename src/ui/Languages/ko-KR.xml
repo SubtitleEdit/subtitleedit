@@ -328,7 +328,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <FilterMoreThanTwoLines>한 자막 당 두 개 이상의 줄</FilterMoreThanTwoLines>
     <FilterContains>텍스트 포함...</FilterContains>
     <FilterFileNameContains>파일 이름 포함 ...</FilterFileNameContains>
-    <LanguageCodeContains>다음 언어 코드 포함...</LanguageCodeContains>
+    <LanguageCodeContains>다음 언어 코드 포함(mkv/mp4)...</LanguageCodeContains>
     <FixCommonErrorsErrorX>일반적인 오류 수정: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
@@ -345,8 +345,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <DeleteFirstLines>첫번째 줄 삭제</DeleteFirstLines>
     <DeleteLastLines>마지막 줄 삭제</DeleteLastLines>
     <DeleteContaining>포함된 줄 삭제</DeleteContaining>
-    <MkvLanguageInOutputFileName>출력 파일 이름의 "언어"</MkvLanguageInOutputFileName>
-    <MkvLanguageInOutputFileNameX>출력 파일 이름의 Matroska(.mkv) "언어": {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageInOutputFileName>출력 파일 이름 내의 "언어"</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>출력 파일 이름 내의 Matroska(.mkv) "언어": {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>두 문자 언어 코드</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>세 문자 언어 코드</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>언어 코드 없음</MkvLanguageStyleEmpty>
@@ -1168,15 +1168,15 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <Compare>자막 비교(&amp;C)...</Compare>
         <Statistics>통계 자료(&amp;T)...</Statistics>
         <Plugins>플러그 인(&amp;P)...</Plugins>
-        <ImportSubtitleFromVideoFile>비디오 파일에서 자막...</ImportSubtitleFromVideoFile>
-        <ImportOcrFromDvd>DVD(VOB/IFO)에서 자막...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>OCR용 VobSub(sub/idx) 자막...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>OCR용 Blu-ray(.sup) 자막 파일...</ImportBluRaySupFile>
-        <ImportBluRaySupFileEdit>편집용 Blu-ray (.sup) 자막 파일...</ImportBluRaySupFileEdit>
-        <ImportSubtitleWithManualChosenEncoding>선택한 인코딩으로 자막 가져오기...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>일반 텍스트...</ImportText>
-        <ImportImages>이미지...</ImportImages>
-        <ImportTimecodes>타임코드...</ImportTimecodes>
+        <ImportSubtitleFromVideoFile>비디오(mkv,mp4) 파일에서...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>DVD(VOB/IFO) 파일에서...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>OCR용 VobSub(sub/idx) 파일에서...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>OCR용 Blu-ray(.sup) 파일에서...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>편집용 Blu-ray (.sup) 파일에서...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>선택한 인코딩으로...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>일반 텍스트에서...</ImportText>
+        <ImportImages>이미지에서...</ImportImages>
+        <ImportTimecodes>타임코드에서...</ImportTimecodes>
         <Import>가져오기</Import>
         <Export>내보내기</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
@@ -1219,7 +1219,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <FixRtlViaUnicodeControlCharacters>유니코드 제어 문자로 RTL 수정...</FixRtlViaUnicodeControlCharacters>
         <RemoveUnicodeControlCharacters>유니코드 제어 문자 제거 (선택한 줄)...</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>LTR 모드 (선택한 줄)...</ReverseRightToLeftStartEnd>
-        <ShowOriginalTextInAudioAndVideoPreview>오디오/비디오 미리 보기에 원본 텍스트 표시</ShowOriginalTextInAudioAndVideoPreview>
+        <ShowOriginalTextInAudioAndVideoPreview>파형/비디오 재생 시 원본 텍스트 표시</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>선택해서 바꾸기</ModifySelection>
         <InverseSelection>선택 반전</InverseSelection>
       </Edit>
@@ -1364,7 +1364,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <Copy>복사</Copy>
         <Paste>붙여넣기</Paste>
         <Delete>줄 삭제...</Delete>
-        <SplitLineAtCursorPosition>포인터 위치에서 줄 분할</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPosition>커서 위치에서 줄 분할</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>커서 위치에서 줄 분할 및 자동 줄바꿈</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>커서/비디오 위치에서 줄 분할</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>표시시간 자동 설정 (현재 줄)</AutoDurationCurrentLine>
         <SelectAll>모두 선택</SelectAll>
@@ -2892,7 +2893,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SetPreviewText>미리 보기 텍스트 설정...</SetPreviewText>
     <AddToFile>파일에 추가</AddToFile>
     <AddToStorage>저장소에 추가</AddToStorage>
-    <StyleStorage>저장소 스타일</StyleStorage>
+    <StyleStorage>스타일 저장소</StyleStorage>
     <StyleCurrentFile>현재 파일 스타일</StyleCurrentFile>
     <OverwriteX>{0}을 덮어쓰시겠습니까?</OverwriteX>
     <CategoryNote>※ 기본 카테고리(녹색) 스타일이 새 ASSA 파일에 적용됩니다</CategoryNote>
