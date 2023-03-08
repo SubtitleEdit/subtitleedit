@@ -88,7 +88,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _assStyle;
         private string _ssaStyle;
         private readonly RemoveTextForHI _removeTextForHearingImpaired;
-        private readonly ChangeCasing _changeCasing = new ChangeCasing();
         private readonly ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
         private bool _converting;
         private int _count;
@@ -280,6 +279,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxChangeCasing.Text = LanguageSettings.Current.ChangeCasing.ChangeCasingTo;
             radioButtonNormal.Text = LanguageSettings.Current.ChangeCasing.NormalCasing;
+            checkBoxFixNames.Text = LanguageSettings.Current.ChangeCasing.FixNamesCasing;
+            checkBoxOnlyAllUpper.Text = LanguageSettings.Current.ChangeCasing.OnlyChangeAllUppercaseLines;
             radioButtonFixOnlyNames.Text = LanguageSettings.Current.ChangeCasing.FixOnlyNamesCasing;
             radioButtonUppercase.Text = LanguageSettings.Current.ChangeCasing.AllUppercase;
             radioButtonLowercase.Text = LanguageSettings.Current.ChangeCasing.AllLowercase;
@@ -295,6 +296,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 radioButtonLowercase.Checked = true;
             }
+
+            checkBoxFixNames.Checked = Configuration.Settings.Tools.ChangeCasingNormalFixNames;
+            checkBoxOnlyAllUpper.Checked = Configuration.Settings.Tools.ChangeCasingNormalOnlyUppercase;
 
             _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings(new Subtitle()));
             _removeTextForHiSettings = _removeTextForHearingImpaired.Settings;
@@ -1994,9 +1998,23 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.RedoCasing))
             {
-                _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
-                _changeCasingNames.Initialize(sub);
-                _changeCasingNames.FixCasing();
+                if (!radioButtonFixOnlyNames.Checked)
+                {
+                    new FixCasing(LanguageAutoDetect.AutoDetectGoogleLanguage(sub))
+                    {
+                        FixNormal = radioButtonNormal.Checked,
+                        FixMakeUppercase = radioButtonUppercase.Checked,
+                        FixMakeLowercase = radioButtonLowercase.Checked,
+                        FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked
+                    }.Fix(sub);
+                }
+
+                if (radioButtonNormal.Checked && checkBoxFixNames.Checked ||
+                    radioButtonFixOnlyNames.Checked)
+                {
+                    _changeCasingNames.Initialize(sub);
+                    _changeCasingNames.FixCasing();
+                }
             }
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines))
@@ -2200,6 +2218,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
             }
+
+            Configuration.Settings.Tools.ChangeCasingNormalFixNames = checkBoxFixNames.Checked;
+            Configuration.Settings.Tools.ChangeCasingNormalOnlyUppercase = checkBoxOnlyAllUpper.Checked;
         }
 
         private Dictionary<CommandLineConverter.BatchAction, bool> _actionEnabledCache;
