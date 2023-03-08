@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Forms.ShotChanges
@@ -112,7 +113,6 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             | System.Windows.Forms.AnchorStyles.Right)));
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
-            this.audioVisualizer.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("audioVisualizer.Chapters")));
             this.audioVisualizer.ChaptersColor = System.Drawing.Color.Empty;
             this.audioVisualizer.ClosenessForBorderSelection = 15;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
@@ -375,7 +375,6 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             // 
             this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
             this.videoPlayerContainer1.CurrentPosition = 0D;
             this.videoPlayerContainer1.FontSizeFactor = 1F;
             this.videoPlayerContainer1.LastParagraph = null;

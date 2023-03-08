@@ -3701,7 +3701,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.ShotChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<MatroskaChapter>();
+                    audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
                 }
 
                 var oldSaveFormat = Configuration.Settings.General.LastSaveAsFormat;
@@ -3943,7 +3943,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = null;
                     audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.ShotChanges = new List<double>();
-                    audioVisualizer.Chapters = new List<MatroskaChapter>();
+                    audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
 
                     Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, VideoAudioTrackNumber, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                     Configuration.Settings.Save();
@@ -5195,7 +5195,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.ShotChanges = new List<double>();
-                audioVisualizer.Chapters = new List<MatroskaChapter>();
+                audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     mediaPlayer.PauseAndDisposePlayer();
@@ -17338,7 +17338,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.Chapters?.Count > 0 && e.KeyData == _shortcuts.VideoGoToPrevChapter)
+            else if (mediaPlayer.Chapters?.Length > 0 && e.KeyData == _shortcuts.VideoGoToPrevChapter)
             {
                 var cp = mediaPlayer.CurrentPosition - 0.01;
                 foreach (var chapter in mediaPlayer.Chapters.Reverse<MatroskaChapter>())
@@ -17352,7 +17352,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.Chapters?.Count > 0 && e.KeyData == _shortcuts.VideoGoToNextChapter)
+            else if (mediaPlayer.Chapters?.Length > 0 && e.KeyData == _shortcuts.VideoGoToNextChapter)
             {
                 var cp = mediaPlayer.CurrentPosition + 0.01;
                 foreach (var chapter in mediaPlayer.Chapters)
@@ -21729,7 +21729,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.ShotChanges = new List<double>();
-                audioVisualizer.Chapters = new List<MatroskaChapter>();
+                audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
 
                 if (Configuration.Settings.General.WaveformAutoGenWhenOpeningVideo)
                 {
@@ -25798,7 +25798,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (mediaPlayer.Chapters?.Count > 0)
+                if (mediaPlayer.Chapters?.Length > 0)
                 {
                     audioVisualizer.Chapters = mediaPlayer.Chapters;
                 }
@@ -25830,7 +25830,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WavePeaks = null;
                 audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.ShotChanges = new List<double>();
-                audioVisualizer.Chapters = new List<MatroskaChapter>();
+                audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
             }
 
             if (mediaPlayer.VideoPlayer is LibVlcDynamic && audioTrackNumber != -1)
@@ -27894,7 +27894,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.WavePeaks = null;
             audioVisualizer.SetSpectrogram(null);
             audioVisualizer.ShotChanges = new List<double>();
-            audioVisualizer.Chapters = new List<MatroskaChapter>();
+            audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
             trackBarWaveformPosition.Value = 0;
             timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
             timeUpDownVideoPositionAdjust.Enabled = false;
@@ -31797,11 +31797,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (chaps?.Count > 0)
             {
-                mediaPlayer.Chapters = chaps;
+                mediaPlayer.Chapters = chaps.ToArray();
 
                 if (audioVisualizer.WavePeaks != null)
                 {
-                    audioVisualizer.Chapters = chaps;
+                    audioVisualizer.Chapters = chaps.ToArray();
                 }
 
                 ShowStatus(string.Format(_language.XChaptersImported, chaps?.Count));
@@ -32686,7 +32686,7 @@ namespace Nikse.SubtitleEdit.Forms
                             audioVisualizer.WavePeaks = null;
                             audioVisualizer.SetSpectrogram(null);
                             audioVisualizer.ShotChanges = new List<double>();
-                            audioVisualizer.Chapters = new List<MatroskaChapter>();
+                            audioVisualizer.Chapters = Array.Empty<MatroskaChapter>();
                         }
 
                         if (!panelVideoPlayer.Visible)

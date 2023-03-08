@@ -28,6 +28,7 @@
    * Optimize saving of TTML files
    * Allow new syntax for yt transcript +1 hour - thx Vasudeo
    * FcpXml now supports latest version - thx Dvid
+   * Improve "Redo casing" in "Batch convert" - thx chschmit 
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix possible crash in batch convert w overwrite - thx chensimmons
