@@ -1342,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCutFrom_Click(object sender, EventArgs e)
         {
             var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutFromMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
-            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, timeSpan))
+            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, _videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetStartPosition))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
@@ -1356,7 +1356,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCutTo_Click(object sender, EventArgs e)
         {
             var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutToMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
-            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, timeSpan))
+            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, _videoInfo, timeSpan, LanguageSettings.Current.GenerateVideoWithBurnedInSubs.GetStartPosition))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

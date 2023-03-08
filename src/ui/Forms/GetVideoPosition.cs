@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
@@ -16,10 +17,11 @@ namespace Nikse.SubtitleEdit.Forms
         private double _stopPosition = -1.0;
         private readonly Subtitle _subtitle;
         private readonly string _videoFileName;
+        private VideoInfo _videoInfo;
         public string VideoFileName { get; private set; }
         public TimeSpan VideoPosition { get; private set; }
 
-        public GetVideoPosition(Subtitle subtitle, string videoFileName, TimeSpan timeSpan)
+        public GetVideoPosition(Subtitle subtitle, string videoFileName, VideoInfo videoInfo, TimeSpan timeSpan, string title)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -36,9 +38,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             _subtitle = subtitle;
             _videoFileName = videoFileName;
+            _videoInfo = videoInfo;
             VideoPosition = timeSpan;
             labelSubtitle.Text = string.Empty;
-            labelVideoFileName.Text = LanguageSettings.Current.General.NoVideoLoaded;
+            Text = title;
+
+            AutoSizeWindowRelativeToVideo();
+        }
+
+        private void AutoSizeWindowRelativeToVideo()
+        {
+            var aspectRatio = (double)_videoInfo.Height / _videoInfo.Width;
+            var newHeight = Width * aspectRatio + (Height - videoPlayerContainer1.Bottom + videoPlayerContainer1.Top);
+            Height = (int)newHeight + videoPlayerContainer1.ControlsHeight - 15;
         }
 
         private void OpenVideo(string fileName)
@@ -54,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            labelVideoFileName.Text = fileName;
+            Text += $" - {fileName}";
             VideoFileName = fileName;
             if (videoPlayerContainer1.VideoPlayer != null)
             {
@@ -63,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var videoInfo = UiUtil.GetVideoInfo(fileName);
-            UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+            UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, videoPlayerContainer1, VideoLoaded, VideoStartEnded);
         }
 
         private void VideoStartEnded(object sender, EventArgs e)
@@ -71,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             videoPlayerContainer1.Pause();
         }
 
-        private void VideoStartLoaded(object sender, EventArgs e)
+        private void VideoLoaded(object sender, EventArgs e)
         {
 
             videoPlayerContainer1.Pause();
@@ -83,6 +95,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             videoPlayerContainer1.VideoPlayer.CurrentPosition = VideoPosition.TotalSeconds;
+
+            videoPlayerContainer1.UpdatePlayerName();
+
             timer1.Start();
         }
 
@@ -237,7 +252,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
             {
                 OpenVideo(_videoFileName);
-                videoPlayerContainer1.SetSubtitleFont();
+                videoPlayerContainer1.ShowFullscreenButton = false;
+                AutoSizeWindowRelativeToVideo();
+                videoPlayerContainer1.SetVolumeAndPlayerNameFont();
             }
         }
     }

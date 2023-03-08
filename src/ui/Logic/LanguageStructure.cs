@@ -966,6 +966,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string Crf { get; set; }
             public string TuneFor { get; set; }
             public string AlignRight { get; set; }
+            public string GetStartPosition { get; set; }
+            public string GetEndPosition { get; set; }
         }
 
         public class GetDictionaries

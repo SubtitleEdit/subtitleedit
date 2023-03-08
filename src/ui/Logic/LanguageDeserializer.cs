@@ -2332,6 +2332,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/AlignRight":
                     language.GenerateVideoWithBurnedInSubs.AlignRight = reader.Value;
                     break;
+                case "GenerateVideoWithBurnedInSubs/GetStartPosition":
+                    language.GenerateVideoWithBurnedInSubs.GetStartPosition = reader.Value;
+                    break;
+                case "GenerateVideoWithBurnedInSubs/GetEndPosition":
+                    language.GenerateVideoWithBurnedInSubs.GetEndPosition = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;

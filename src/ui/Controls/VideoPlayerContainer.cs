@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -2007,7 +2006,7 @@ namespace Nikse.SubtitleEdit.Controls
             RefreshProgressBar();
         }
 
-        private bool IsMouseOverControl(Control control, Point cursorLocation)
+        private static bool IsMouseOverControl(Control control, Point cursorLocation)
         {
             if (control.ClientRectangle.Contains(cursorLocation))
             {
@@ -2015,6 +2014,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             return false;
+        }
+
+        public void SetVolumeAndPlayerNameFont()
+        {
+            _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
+            _labelVolume.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
+            _labelVolume.Top -= 2;
         }
     }
 }

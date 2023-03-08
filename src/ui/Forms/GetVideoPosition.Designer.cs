@@ -34,12 +34,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GetVideoPosition));
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.labelVideoFileName = new System.Windows.Forms.Label();
             this.buttonHalfASecondBack = new System.Windows.Forms.Button();
             this.buttonThreeSecondsBack = new System.Windows.Forms.Button();
             this.buttonThreeSecondsAhead = new System.Windows.Forms.Button();
@@ -53,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(750, 431);
+            this.buttonCancel.Location = new System.Drawing.Point(838, 574);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(86, 23);
             this.buttonCancel.TabIndex = 31;
@@ -65,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(658, 431);
+            this.buttonOK.Location = new System.Drawing.Point(746, 574);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(86, 23);
             this.buttonOK.TabIndex = 30;
@@ -82,20 +80,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // labelVideoFileName
-            // 
-            this.labelVideoFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelVideoFileName.AutoSize = true;
-            this.labelVideoFileName.Location = new System.Drawing.Point(12, -134);
-            this.labelVideoFileName.Name = "labelVideoFileName";
-            this.labelVideoFileName.Size = new System.Drawing.Size(98, 13);
-            this.labelVideoFileName.TabIndex = 21;
-            this.labelVideoFileName.Text = "labelVideoFileName";
-            // 
             // buttonHalfASecondBack
             // 
             this.buttonHalfASecondBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonHalfASecondBack.Location = new System.Drawing.Point(12, 417);
+            this.buttonHalfASecondBack.Location = new System.Drawing.Point(12, 560);
             this.buttonHalfASecondBack.Name = "buttonHalfASecondBack";
             this.buttonHalfASecondBack.Size = new System.Drawing.Size(77, 23);
             this.buttonHalfASecondBack.TabIndex = 20;
@@ -106,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonThreeSecondsBack
             // 
             this.buttonThreeSecondsBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonThreeSecondsBack.Location = new System.Drawing.Point(95, 417);
+            this.buttonThreeSecondsBack.Location = new System.Drawing.Point(95, 560);
             this.buttonThreeSecondsBack.Name = "buttonThreeSecondsBack";
             this.buttonThreeSecondsBack.Size = new System.Drawing.Size(77, 23);
             this.buttonThreeSecondsBack.TabIndex = 21;
@@ -117,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonThreeSecondsAhead
             // 
             this.buttonThreeSecondsAhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonThreeSecondsAhead.Location = new System.Drawing.Point(303, 417);
+            this.buttonThreeSecondsAhead.Location = new System.Drawing.Point(303, 560);
             this.buttonThreeSecondsAhead.Name = "buttonThreeSecondsAhead";
             this.buttonThreeSecondsAhead.Size = new System.Drawing.Size(77, 23);
             this.buttonThreeSecondsAhead.TabIndex = 23;
@@ -128,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonHalfASecondAhead
             // 
             this.buttonHalfASecondAhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonHalfASecondAhead.Location = new System.Drawing.Point(386, 417);
+            this.buttonHalfASecondAhead.Location = new System.Drawing.Point(386, 560);
             this.buttonHalfASecondAhead.Name = "buttonHalfASecondAhead";
             this.buttonHalfASecondAhead.Size = new System.Drawing.Size(77, 23);
             this.buttonHalfASecondAhead.TabIndex = 24;
@@ -139,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonVerify
             // 
             this.buttonVerify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonVerify.Location = new System.Drawing.Point(178, 417);
+            this.buttonVerify.Location = new System.Drawing.Point(178, 560);
             this.buttonVerify.Name = "buttonVerify";
             this.buttonVerify.Size = new System.Drawing.Size(119, 23);
             this.buttonVerify.TabIndex = 22;
@@ -154,28 +142,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelSubtitle.BackColor = System.Drawing.Color.Black;
             this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
-            this.labelSubtitle.Location = new System.Drawing.Point(12, 386);
+            this.labelSubtitle.Location = new System.Drawing.Point(12, 529);
             this.labelSubtitle.Name = "labelSubtitle";
-            this.labelSubtitle.Size = new System.Drawing.Size(827, 28);
+            this.labelSubtitle.Size = new System.Drawing.Size(915, 28);
             this.labelSubtitle.TabIndex = 27;
             this.labelSubtitle.Text = "labelSubtitle";
             this.labelSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // videoPlayerContainer1
             // 
-            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.Black;
+            this.videoPlayerContainer1.Chapters = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter[0];
             this.videoPlayerContainer1.CurrentPosition = 0D;
-            this.videoPlayerContainer1.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.videoPlayerContainer1.FontSizeFactor = 1F;
             this.videoPlayerContainer1.LastParagraph = null;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(12, -118);
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(12, 12);
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";
             this.videoPlayerContainer1.ShowFullscreenButton = true;
             this.videoPlayerContainer1.ShowMuteButton = true;
             this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(827, 505);
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(915, 518);
             this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 13;
             this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -189,14 +178,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(848, 466);
+            this.ClientSize = new System.Drawing.Size(936, 609);
             this.Controls.Add(this.labelSubtitle);
             this.Controls.Add(this.buttonVerify);
             this.Controls.Add(this.buttonHalfASecondBack);
             this.Controls.Add(this.buttonThreeSecondsBack);
             this.Controls.Add(this.buttonThreeSecondsAhead);
             this.Controls.Add(this.buttonHalfASecondAhead);
-            this.Controls.Add(this.labelVideoFileName);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.videoPlayerContainer1);
@@ -215,7 +203,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.Shown += new System.EventHandler(this.GetVideoPosition_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GetTime_KeyDown);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -226,7 +213,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label labelVideoFileName;
         private System.Windows.Forms.Button buttonHalfASecondBack;
         private System.Windows.Forms.Button buttonThreeSecondsBack;
         private System.Windows.Forms.Button buttonThreeSecondsAhead;
