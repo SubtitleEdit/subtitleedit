@@ -254,6 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
                 }
+
                 try
                 {
                     var encodingName = GetArgument(unconsumedArguments, "encoding:");
@@ -272,6 +273,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                  encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
                         {
                             targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                        }
+                        else if (encodingName.Equals("source", StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Source);
                         }
                         else
                         {
@@ -1257,6 +1262,23 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             if (string.IsNullOrWhiteSpace(preExt))
             {
                 preExt = string.Empty;
+            }
+
+            if (targetEncoding != null && targetEncoding.UseSourceEncoding)
+            {
+                if (File.Exists(fileName) && !IsImageBased(format))
+                {
+                    var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                    targetEncoding = new TextEncoding(encoding, null);
+                }
+                else
+                {
+                    targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                    if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+                    {
+                        targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                    }
+                }
             }
 
             var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
