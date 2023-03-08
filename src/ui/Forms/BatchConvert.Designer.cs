@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -169,6 +169,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
+            this.checkBoxFixNames = new System.Windows.Forms.CheckBox();
+            this.checkBoxOnlyAllUpper = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxSortBy.SuspendLayout();
             this.groupBoxMergeSameTimeCodes.SuspendLayout();
@@ -234,21 +236,21 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
+            this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSortBy);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeSameTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxConvertColorsToDialog);
-            this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxDeleteLines);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAssaChangeRes);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
@@ -571,14 +573,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode3;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -787,13 +789,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxChangeCasing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeCasing.Controls.Add(this.checkBoxOnlyAllUpper);
+            this.groupBoxChangeCasing.Controls.Add(this.checkBoxFixNames);
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonFixOnlyNames);
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonLowercase);
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonUppercase);
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
             this.groupBoxChangeCasing.Location = new System.Drawing.Point(308, 16);
             this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
-            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 125);
+            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 164);
             this.groupBoxChangeCasing.TabIndex = 308;
             this.groupBoxChangeCasing.TabStop = false;
             this.groupBoxChangeCasing.Text = "Change casing to";
@@ -801,7 +805,7 @@ namespace Nikse.SubtitleEdit.Forms
             // radioButtonFixOnlyNames
             // 
             this.radioButtonFixOnlyNames.AutoSize = true;
-            this.radioButtonFixOnlyNames.Location = new System.Drawing.Point(11, 43);
+            this.radioButtonFixOnlyNames.Location = new System.Drawing.Point(11, 85);
             this.radioButtonFixOnlyNames.Name = "radioButtonFixOnlyNames";
             this.radioButtonFixOnlyNames.Size = new System.Drawing.Size(263, 17);
             this.radioButtonFixOnlyNames.TabIndex = 6;
@@ -811,7 +815,7 @@ namespace Nikse.SubtitleEdit.Forms
             // radioButtonLowercase
             // 
             this.radioButtonLowercase.AutoSize = true;
-            this.radioButtonLowercase.Location = new System.Drawing.Point(11, 89);
+            this.radioButtonLowercase.Location = new System.Drawing.Point(11, 131);
             this.radioButtonLowercase.Name = "radioButtonLowercase";
             this.radioButtonLowercase.Size = new System.Drawing.Size(86, 17);
             this.radioButtonLowercase.TabIndex = 10;
@@ -821,7 +825,7 @@ namespace Nikse.SubtitleEdit.Forms
             // radioButtonUppercase
             // 
             this.radioButtonUppercase.AutoSize = true;
-            this.radioButtonUppercase.Location = new System.Drawing.Point(11, 66);
+            this.radioButtonUppercase.Location = new System.Drawing.Point(11, 108);
             this.radioButtonUppercase.Name = "radioButtonUppercase";
             this.radioButtonUppercase.Size = new System.Drawing.Size(112, 17);
             this.radioButtonUppercase.TabIndex = 8;
@@ -1762,6 +1766,26 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
             // 
+            // checkBoxFixNames
+            // 
+            this.checkBoxFixNames.AutoSize = true;
+            this.checkBoxFixNames.Location = new System.Drawing.Point(29, 39);
+            this.checkBoxFixNames.Name = "checkBoxFixNames";
+            this.checkBoxFixNames.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxFixNames.TabIndex = 11;
+            this.checkBoxFixNames.Text = "Fix names casing";
+            this.checkBoxFixNames.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOnlyAllUpper
+            // 
+            this.checkBoxOnlyAllUpper.AutoSize = true;
+            this.checkBoxOnlyAllUpper.Location = new System.Drawing.Point(29, 60);
+            this.checkBoxOnlyAllUpper.Name = "checkBoxOnlyAllUpper";
+            this.checkBoxOnlyAllUpper.Size = new System.Drawing.Size(182, 17);
+            this.checkBoxOnlyAllUpper.TabIndex = 12;
+            this.checkBoxOnlyAllUpper.Text = "Only change all upper case lines.";
+            this.checkBoxOnlyAllUpper.UseVisualStyleBackColor = true;
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -1981,5 +2005,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxConvertColorsToDialogRemoveColorTags;
         private System.Windows.Forms.GroupBox groupBoxSortBy;
         private System.Windows.Forms.ComboBox comboBoxSortBy;
+        private System.Windows.Forms.CheckBox checkBoxOnlyAllUpper;
+        private System.Windows.Forms.CheckBox checkBoxFixNames;
     }
 }
