@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.groupBoxCloudVision = new System.Windows.Forms.GroupBox();
+            this.checkBoxSeHandlesTextMerge = new System.Windows.Forms.CheckBox();
             this.checkBoxCloudVisionSendOriginalImages = new System.Windows.Forms.CheckBox();
             this.comboBoxCloudVisionLanguage = new System.Windows.Forms.ComboBox();
             this.labelCloudVisionLanguage = new System.Windows.Forms.Label();
@@ -177,7 +178,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.underlineToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.checkBoxSeHandlesTextMerge = new System.Windows.Forms.CheckBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxCloudVision.SuspendLayout();
@@ -502,11 +502,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxCloudVision);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxCloudVision);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -544,6 +544,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxCloudVision.TabIndex = 8;
             this.groupBoxCloudVision.TabStop = false;
             this.groupBoxCloudVision.Text = "Cloud Vision API";
+            // 
+            // checkBoxSeHandlesTextMerge
+            // 
+            this.checkBoxSeHandlesTextMerge.AutoSize = true;
+            this.checkBoxSeHandlesTextMerge.Location = new System.Drawing.Point(7, 105);
+            this.checkBoxSeHandlesTextMerge.Name = "checkBoxSeHandlesTextMerge";
+            this.checkBoxSeHandlesTextMerge.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxSeHandlesTextMerge.TabIndex = 5;
+            this.checkBoxSeHandlesTextMerge.Text = "SE handles text merge";
+            this.checkBoxSeHandlesTextMerge.UseVisualStyleBackColor = true;
+            this.checkBoxSeHandlesTextMerge.CheckedChanged += new System.EventHandler(this.checkBoxSeHandlesTextMerge_CheckedChanged);
             // 
             // checkBoxCloudVisionSendOriginalImages
             // 
@@ -796,7 +807,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(122, 17);
             this.numericUpDownNumberOfPixelsIsSpaceNOCR.Maximum = new decimal(new int[] {
-            50,
+            250,
             0,
             0,
             0});
@@ -2033,17 +2044,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // checkBoxSeHandlesTextMerge
-            // 
-            this.checkBoxSeHandlesTextMerge.AutoSize = true;
-            this.checkBoxSeHandlesTextMerge.Location = new System.Drawing.Point(7, 105);
-            this.checkBoxSeHandlesTextMerge.Name = "checkBoxSeHandlesTextMerge";
-            this.checkBoxSeHandlesTextMerge.Size = new System.Drawing.Size(134, 17);
-            this.checkBoxSeHandlesTextMerge.TabIndex = 5;
-            this.checkBoxSeHandlesTextMerge.Text = "SE handles text merge";
-            this.checkBoxSeHandlesTextMerge.UseVisualStyleBackColor = true;
-            this.checkBoxSeHandlesTextMerge.CheckedChanged += new System.EventHandler(this.checkBoxSeHandlesTextMerge_CheckedChanged);
             // 
             // VobSubOcr
             // 
