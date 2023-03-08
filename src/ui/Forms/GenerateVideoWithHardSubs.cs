@@ -471,6 +471,11 @@ namespace Nikse.SubtitleEdit.Forms
                 fileName += ".x264";
             }
 
+            if (checkBoxCut.Enabled)
+            {
+                fileName += $".{numericUpDownCutFromHours.Text}-{numericUpDownCutFromMinutes.Text}-{numericUpDownCutFromSeconds.Text}_{numericUpDownCutToHours.Text}-{numericUpDownCutToMinutes.Text}-{numericUpDownCutToSeconds.Text}";
+            }
+
             return fileName.Replace(".", "_") + ".mp4";
         }
 
