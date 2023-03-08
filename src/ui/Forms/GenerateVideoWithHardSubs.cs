@@ -1331,9 +1331,40 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownCutFromHours.Enabled = checkBoxCut.Checked;
             numericUpDownCutFromMinutes.Enabled = checkBoxCut.Checked;
             numericUpDownCutFromSeconds.Enabled = checkBoxCut.Checked;
+            buttonCutFrom.Enabled = checkBoxCut.Checked;
+
             numericUpDownCutToHours.Enabled = checkBoxCut.Checked;
             numericUpDownCutToMinutes.Enabled = checkBoxCut.Checked;
             numericUpDownCutToSeconds.Enabled = checkBoxCut.Checked;
+            buttonCutTo.Enabled = checkBoxCut.Checked;
+        }
+
+        private void buttonCutFrom_Click(object sender, EventArgs e)
+        {
+            var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutFromMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
+            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, timeSpan))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    numericUpDownCutFromHours.Value = form.VideoPosition.Hours;
+                    numericUpDownCutFromMinutes.Value = form.VideoPosition.Minutes;
+                    numericUpDownCutFromSeconds.Value = form.VideoPosition.Seconds;
+                }
+            }
+        }
+
+        private void buttonCutTo_Click(object sender, EventArgs e)
+        {
+            var timeSpan = new TimeSpan((int)numericUpDownCutFromHours.Value, (int)numericUpDownCutToMinutes.Value, (int)numericUpDownCutFromSeconds.Value);
+            using (var form = new GetVideoPosition(_assaSubtitle, _inputVideoFileName, timeSpan))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    numericUpDownCutToHours.Value = form.VideoPosition.Hours;
+                    numericUpDownCutToMinutes.Value = form.VideoPosition.Minutes;
+                    numericUpDownCutToSeconds.Value = form.VideoPosition.Seconds;
+                }
+            }
         }
     }
 }
