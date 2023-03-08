@@ -165,7 +165,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.Black;
-            this.videoPlayerContainer1.Chapters = ((System.Collections.Generic.List<Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaChapter>)(resources.GetObject("videoPlayerContainer1.Chapters")));
             this.videoPlayerContainer1.CurrentPosition = 0D;
             this.videoPlayerContainer1.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.videoPlayerContainer1.FontSizeFactor = 1F;
