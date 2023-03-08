@@ -8671,7 +8671,12 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
-                    var sub = new Subtitle(_subtitle, false);
+                    var sub = new Subtitle(_subtitle);
+                    sub.Paragraphs.Clear();
+                    foreach (var idx in SubtitleListview1.GetSelectedIndices())
+                    {
+                        sub.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[idx], false));
+                    }
                     var fontSize = PrepareBurn(sub);
 
                     using (var form = new GenerateVideoWithHardSubs(sub, _videoFileName, _videoInfo, fontSize, true))
