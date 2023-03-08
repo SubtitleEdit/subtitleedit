@@ -8580,52 +8580,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSelectedLines.DropDownItems.RemoveAt(0);
             }
 
-            var selectLinesBurnIn = new ToolStripMenuItem(_language.Menu.Video.GenerateVideoWithBurnedInSub);
-            UiUtil.FixFonts(selectLinesBurnIn);
-            selectLinesBurnIn.Tag = "(REMOVE)";
-            if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName) &&
-                _videoInfo != null && _videoInfo.Width > 0)
-            {
-                toolStripMenuItemSelectedLines.DropDownItems.Insert(0, selectLinesBurnIn);
-                selectLinesBurnIn.Click += (senderNew, eNew) =>
-                {
-                    if (VideoFileNameIsUrl)
-                    {
-                        MessageBox.Show(LanguageSettings.Current.General.OnlineVideoFeatureNotAvailable);
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
-                    {
-                        MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
-                        return;
-                    }
-
-                    if (!RequireFfmpegOk())
-                    {
-                        return;
-                    }
-
-                    var sub = new Subtitle(_subtitle, false);
-                    var fontSize = PrepareBurn(sub);
-
-                    using (var form = new GenerateVideoWithHardSubs(sub, _videoFileName, _videoInfo, fontSize, true))
-                    {
-                        var result = form.ShowDialog(this);
-                        if (result != DialogResult.OK)
-                        {
-                            return;
-                        }
-
-                        var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
-                        using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
-                        {
-                            f.ShowDialog(this);
-                        }
-                    }
-                };
-            }
-
             var selectLinesMultipleReplace = new ToolStripMenuItem(LanguageSettings.Current.Main.Menu.Edit.MultipleReplace);
             UiUtil.FixFonts(selectLinesMultipleReplace);
             selectLinesMultipleReplace.Tag = "(REMOVE)";
@@ -8689,6 +8643,53 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             };
+
+
+            var selectLinesBurnIn = new ToolStripMenuItem(_language.Menu.Video.GenerateVideoWithBurnedInSub);
+            UiUtil.FixFonts(selectLinesBurnIn);
+            selectLinesBurnIn.Tag = "(REMOVE)";
+            if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName) &&
+                _videoInfo != null && _videoInfo.Width > 0)
+            {
+                toolStripMenuItemSelectedLines.DropDownItems.Insert(0, selectLinesBurnIn);
+                selectLinesBurnIn.Click += (senderNew, eNew) =>
+                {
+                    if (VideoFileNameIsUrl)
+                    {
+                        MessageBox.Show(LanguageSettings.Current.General.OnlineVideoFeatureNotAvailable);
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(_videoFileName) || _videoInfo == null || _videoInfo.Width == 0 || _videoInfo.Height == 0)
+                    {
+                        MessageBox.Show(LanguageSettings.Current.General.NoVideoLoaded);
+                        return;
+                    }
+
+                    if (!RequireFfmpegOk())
+                    {
+                        return;
+                    }
+
+                    var sub = new Subtitle(_subtitle, false);
+                    var fontSize = PrepareBurn(sub);
+
+                    using (var form = new GenerateVideoWithHardSubs(sub, _videoFileName, _videoInfo, fontSize, true))
+                    {
+                        var result = form.ShowDialog(this);
+                        if (result != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
+                        using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                        {
+                            f.ShowDialog(this);
+                        }
+                    }
+                };
+            }
 
             if (SubtitleListview1.SelectedItems.Count > 0 && !string.IsNullOrEmpty(_videoFileName) && !VideoFileNameIsUrl)
             {
@@ -33972,12 +33973,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateVideoWithHardcodedSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
-            //{
-            //    MessageBox.Show(_language.NoSubtitlesFound);
-            //    return;
-            //}
-
             if (VideoFileNameIsUrl)
             {
                 MessageBox.Show(LanguageSettings.Current.General.OnlineVideoFeatureNotAvailable);
