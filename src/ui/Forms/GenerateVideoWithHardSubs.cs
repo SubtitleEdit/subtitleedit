@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
-        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize)
+        public GenerateVideoWithHardSubs(Subtitle assaSubtitle, string inputVideoFileName, VideoInfo videoInfo, int? fontSize, bool setStartEndCut)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -197,6 +197,28 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownCutToHours.Value = timeSpan.Hours;
                 numericUpDownCutToMinutes.Value = timeSpan.Minutes;
                 numericUpDownCutToSeconds.Value = timeSpan.Seconds;
+
+                if (setStartEndCut && assaSubtitle != null && assaSubtitle.Paragraphs.Count > 0 && 
+                    !assaSubtitle.Paragraphs.First().StartTime.IsMaxTime &&
+                    !assaSubtitle.Paragraphs.Last().EndTime.IsMaxTime)
+                {
+                    timeSpan = assaSubtitle.Paragraphs.First().StartTime.TimeSpan;
+                    numericUpDownCutFromHours.Value = timeSpan.Hours;
+                    numericUpDownCutFromMinutes.Value = timeSpan.Minutes;
+                    numericUpDownCutFromSeconds.Value = timeSpan.Seconds;
+
+                    timeSpan = assaSubtitle.Paragraphs.Last().EndTime.TimeSpan;
+                    if (timeSpan.Milliseconds > 0)
+                    {
+                        timeSpan = timeSpan.Add(TimeSpan.FromSeconds(1));
+                    }
+                    numericUpDownCutToHours.Value = timeSpan.Hours;
+                    numericUpDownCutToMinutes.Value = timeSpan.Minutes;
+                    numericUpDownCutToSeconds.Value = timeSpan.Seconds;
+
+                    checkBoxCut.Checked = true;
+                }
+
                 checkBoxCut_CheckedChanged(null, null);
             }
             else
