@@ -125,17 +125,8 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly ToolTip _currentPositionToolTip = new ToolTip();
         private int _lastCurrentPositionToolTipX;
         private int _lastCurrentPositionToolTipY;
-        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
 
-        public List<MatroskaChapter> Chapters
-        {
-            get => _chapters;
-            set
-            {
-                _chapters = value;
-                Invalidate(true);
-            }
-        }
+        public MatroskaChapter[] Chapters { get; set; } 
 
         public RightToLeft TextRightToLeft
         {
@@ -201,7 +192,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayerContainer()
         {
-            _chapters = new List<MatroskaChapter>();
+            Chapters = Array.Empty<MatroskaChapter>();
             FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
@@ -1532,23 +1523,23 @@ namespace Nikse.SubtitleEdit.Controls
             double cursorVideoPosition = CursorVideoPosition(mouseX);
             string toolTiptext = TimeCode.FromSeconds(cursorVideoPosition + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit).ToDisplayString();
 
-            if (_chapters?.Count > 0)
+            if (Chapters?.Length > 0)
             {
                 toolTiptext += " - ";
 
-                for (int index = 0; index < _chapters.Count; index++)
+                for (int index = 0; index < Chapters.Length; index++)
                 {
-                    var chapterTime = _chapters[index].StartTime;
-                    var nextChapterTime = index + 1 < _chapters.Count ? _chapters[index + 1].StartTime : Duration;
+                    var chapterTime = Chapters[index].StartTime;
+                    var nextChapterTime = index + 1 < Chapters.Length ? Chapters[index + 1].StartTime : Duration;
 
                     if (cursorVideoPosition >= chapterTime && cursorVideoPosition < nextChapterTime)
                     {
-                        if (_chapters[index].Nested)
+                        if (Chapters[index].Nested)
                         {
                             toolTiptext += "+ ";
                         }
 
-                        toolTiptext += _chapters[index].Name;
+                        toolTiptext += Chapters[index].Name;
                         break;
                     }
                 }
@@ -1563,12 +1554,12 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 int max = _pictureBoxProgressbarBackground.Width - 9;
                 int index = 0;
-                while (index < _chapters.Count)
+                while (index < Chapters.Length)
                 {
                     int pos;
                     try
                     {
-                        double time = _chapters[index++].StartTime;
+                        double time = Chapters[index++].StartTime;
                         pos = SecondsToXPosition(time) + mergin;
                     }
                     catch
@@ -1604,7 +1595,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxProgressbarBackgroundPaint(object sender, PaintEventArgs e)
         {
-            if (_chapters?.Count > 0)
+            if (Chapters?.Length > 0)
             {
                 DrawChapters(e.Graphics, 3, _pictureBoxProgressBar.Location.Y, _pictureBoxProgressBar.Location.Y + 3);
             }
@@ -1612,7 +1603,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxProgressBarPaint(object sender, PaintEventArgs e)
         {
-            if (_chapters?.Count > 0)
+            if (Chapters?.Length > 0)
             {
                 DrawChapters(e.Graphics, -1, 1, _pictureBoxProgressBar.Height);
             }
@@ -1997,7 +1988,7 @@ namespace Nikse.SubtitleEdit.Controls
             PanelPlayer.Hide();
             Pause();
             SubtitleText = string.Empty;
-            Chapters = new List<MatroskaChapter>();
+            Chapters = Array.Empty<MatroskaChapter>();
             MpvPreviewStyleHeader = null;
             var temp = VideoPlayer;
             VideoPlayer = null;

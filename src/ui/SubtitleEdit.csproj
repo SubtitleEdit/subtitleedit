@@ -1589,9 +1589,6 @@
     <EmbeddedResource Include="Forms\DownloadVosk.resx">
       <DependentUpon>DownloadVosk.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GetVideoPosition.resx">
-      <DependentUpon>GetVideoPosition.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\WordSplitDictionaryGenerator.resx">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
     </EmbeddedResource>

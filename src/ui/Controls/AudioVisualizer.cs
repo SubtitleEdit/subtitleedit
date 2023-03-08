@@ -198,9 +198,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private List<MatroskaChapter> _chapters = new List<MatroskaChapter>();
+        private MatroskaChapter[] _chapters = Array.Empty<MatroskaChapter>();
 
-        public List<MatroskaChapter> Chapters
+        public MatroskaChapter[] Chapters
         {
             get => _chapters;
             set
@@ -726,7 +726,7 @@ namespace Nikse.SubtitleEdit.Controls
                     try
                     {
                         var index = 0;
-                        while (index < _chapters.Count)
+                        while (index < _chapters.Length)
                         {
                             int pos;
                             try
@@ -746,7 +746,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 {
                                     string name;
                                     var x = pos + 3;
-                                    var y = index + 1 < _chapters.Count && Math.Abs(_chapters[index].StartTime - _chapters[index + 1].StartTime) < 0.01 ? Height / 2 - font.Height - 12 : Height / 2 - 12;
+                                    var y = index + 1 < _chapters.Length && Math.Abs(_chapters[index].StartTime - _chapters[index + 1].StartTime) < 0.01 ? Height / 2 - font.Height - 12 : Height / 2 - 12;
                                     using (var chapterTextBackBrush = new SolidBrush(ChaptersColor))
                                     {
                                         name = _chapters[index].Nested ? "+ " + _chapters[index].Name : _chapters[index].Name;
