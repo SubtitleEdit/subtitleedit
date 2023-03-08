@@ -879,6 +879,8 @@ Read more info (web)?</WhisperNotFound>
     <Crf>CRF</Crf>
     <TuneFor>Tune for</TuneFor>
     <AlignRight>Align right</AlignRight>
+    <GetStartPosition>Get start position</GetStartPosition>
+    <GetEndPosition>Get end position</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
