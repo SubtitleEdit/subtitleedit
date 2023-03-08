@@ -2,9 +2,10 @@
 
 3.6.12 (xth March 2023) BETA
 * NEW:
-   * Batch convert: Image based format to png with time code - thx Ninelpienel 
    * Add Whsper via GPU (ConstMe, windows only) - thx albino1/darnn/smith02ct
    * Allow video cut when exporting video with burned-in sub - thx Daniela
+   * Batch convert: Image based format to png with time code - thx Ninelpienel 
+   * Add new shortcut for split + auto-br - thx oep42
    * Add "Sort by" in "Batch convert" - thx Masina86
 * IMPROVED:
    * Update French translation - thx Pierre
@@ -29,12 +30,14 @@
    * FcpXml now supports latest version - thx Dvid
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
+   * Fix possible crash in batch convert w overwrite - thx chensimmons
+   * Fix issue with continuation style suffix "..." and comma - thx Edwin
    * Fix Korean in installer - thx 슈니
    * Fix Japanese in installer - thx homunet
    * Fix for SSA style - thx Amstramgram
-   * Fix possible crash in batch convert w overwrite - thx chensimmons
-   * Fix issue with continuation style suffix "..." and comma - thx Edwin
-   * Fix DCinemaSmpte2014 png export - thx MijBro
+   * Fix DCinemaSmpte2014 png export (was hidden) - thx MijBro
+   * Fix minor left/right cropping issue in image export - thx nissansz
+   * Fix possible crash after choosing folder in image export
 
 
 3.6.11 (30th January 2023)
