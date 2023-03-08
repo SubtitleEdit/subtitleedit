@@ -103,6 +103,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonCutFrom = new System.Windows.Forms.Button();
+            this.buttonCutTo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxCut.SuspendLayout();
@@ -242,6 +244,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxCut
             // 
+            this.groupBoxCut.Controls.Add(this.buttonCutTo);
+            this.groupBoxCut.Controls.Add(this.buttonCutFrom);
             this.groupBoxCut.Controls.Add(this.numericUpDownCutToSeconds);
             this.groupBoxCut.Controls.Add(this.numericUpDownCutToMinutes);
             this.groupBoxCut.Controls.Add(this.numericUpDownCutToHours);
@@ -978,6 +982,26 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
+            // buttonCutFrom
+            // 
+            this.buttonCutFrom.Location = new System.Drawing.Point(97, 62);
+            this.buttonCutFrom.Name = "buttonCutFrom";
+            this.buttonCutFrom.Size = new System.Drawing.Size(33, 23);
+            this.buttonCutFrom.TabIndex = 23;
+            this.buttonCutFrom.Text = "...";
+            this.buttonCutFrom.UseVisualStyleBackColor = true;
+            this.buttonCutFrom.Click += new System.EventHandler(this.buttonCutFrom_Click);
+            // 
+            // buttonCutTo
+            // 
+            this.buttonCutTo.Location = new System.Drawing.Point(255, 62);
+            this.buttonCutTo.Name = "buttonCutTo";
+            this.buttonCutTo.Size = new System.Drawing.Size(33, 23);
+            this.buttonCutTo.TabIndex = 24;
+            this.buttonCutTo.Text = "...";
+            this.buttonCutTo.UseVisualStyleBackColor = true;
+            this.buttonCutTo.Click += new System.EventHandler(this.buttonCutTo_Click);
+            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1103,5 +1127,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.NumericUpDown numericUpDownCutFromMinutes;
         private System.Windows.Forms.NumericUpDown numericUpDownCutFromHours;
         private System.Windows.Forms.Label labelCrfHint;
+        private System.Windows.Forms.Button buttonCutTo;
+        private System.Windows.Forms.Button buttonCutFrom;
     }
 }
