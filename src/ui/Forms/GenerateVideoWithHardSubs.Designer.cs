@@ -40,6 +40,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelProgress = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.groupBoxCut = new System.Windows.Forms.GroupBox();
+            this.buttonCutTo = new System.Windows.Forms.Button();
+            this.buttonCutFrom = new System.Windows.Forms.Button();
             this.numericUpDownCutToSeconds = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownCutToMinutes = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownCutToHours = new System.Windows.Forms.NumericUpDown();
@@ -103,8 +105,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buttonCutFrom = new System.Windows.Forms.Button();
-            this.buttonCutTo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxCut.SuspendLayout();
@@ -260,6 +260,26 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxCut.Size = new System.Drawing.Size(391, 115);
             this.groupBoxCut.TabIndex = 15;
             this.groupBoxCut.TabStop = false;
+            // 
+            // buttonCutTo
+            // 
+            this.buttonCutTo.Location = new System.Drawing.Point(255, 62);
+            this.buttonCutTo.Name = "buttonCutTo";
+            this.buttonCutTo.Size = new System.Drawing.Size(33, 23);
+            this.buttonCutTo.TabIndex = 24;
+            this.buttonCutTo.Text = "...";
+            this.buttonCutTo.UseVisualStyleBackColor = true;
+            this.buttonCutTo.Click += new System.EventHandler(this.buttonCutTo_Click);
+            // 
+            // buttonCutFrom
+            // 
+            this.buttonCutFrom.Location = new System.Drawing.Point(97, 62);
+            this.buttonCutFrom.Name = "buttonCutFrom";
+            this.buttonCutFrom.Size = new System.Drawing.Size(33, 23);
+            this.buttonCutFrom.TabIndex = 23;
+            this.buttonCutFrom.Text = "...";
+            this.buttonCutFrom.UseVisualStyleBackColor = true;
+            this.buttonCutFrom.Click += new System.EventHandler(this.buttonCutFrom_Click);
             // 
             // numericUpDownCutToSeconds
             // 
@@ -841,6 +861,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxLog.Location = new System.Drawing.Point(12, 13);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
             this.textBoxLog.Size = new System.Drawing.Size(188, 26);
             this.textBoxLog.TabIndex = 31;
             // 
@@ -982,34 +1003,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Text = "640x272";
             this.x272ToolStripMenuItem.Click += new System.EventHandler(this.ResolutionPickClick);
             // 
-            // buttonCutFrom
-            // 
-            this.buttonCutFrom.Location = new System.Drawing.Point(97, 62);
-            this.buttonCutFrom.Name = "buttonCutFrom";
-            this.buttonCutFrom.Size = new System.Drawing.Size(33, 23);
-            this.buttonCutFrom.TabIndex = 23;
-            this.buttonCutFrom.Text = "...";
-            this.buttonCutFrom.UseVisualStyleBackColor = true;
-            this.buttonCutFrom.Click += new System.EventHandler(this.buttonCutFrom_Click);
-            // 
-            // buttonCutTo
-            // 
-            this.buttonCutTo.Location = new System.Drawing.Point(255, 62);
-            this.buttonCutTo.Name = "buttonCutTo";
-            this.buttonCutTo.Size = new System.Drawing.Size(33, 23);
-            this.buttonCutTo.TabIndex = 24;
-            this.buttonCutTo.Text = "...";
-            this.buttonCutTo.UseVisualStyleBackColor = true;
-            this.buttonCutTo.Click += new System.EventHandler(this.buttonCutTo_Click);
-            // 
             // GenerateVideoWithHardSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(860, 605);
+            this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.labelPass);
             this.Controls.Add(this.labelInfo);
-            this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.linkLabelHelp);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.labelPleaseWait);
