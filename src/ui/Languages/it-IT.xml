@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.11</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 22.02.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 08.03.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -878,6 +878,8 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <Preset>Profilo</Preset>
     <Crf>CRF</Crf>
     <TuneFor>Sintonizzati per</TuneFor>
+    <GetStartPosition>Ottieni posizione iniziale</GetStartPosition>
+    <GetEndPosition>Ottieni posizione finale</GetEndPosition>
     <AlignRight>Allinea a destra</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
@@ -1369,6 +1371,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <Paste>Incolla</Paste>
         <Delete>Elimina</Delete>
         <SplitLineAtCursorPosition>Dividi la riga alla posizione del cursore</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Divisione linea alla posizione del cursore e interruzione automatica</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Linea divisa alla posizione cursore/video</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Durata automatica (riga attuale)</AutoDurationCurrentLine>
         <SelectAll>Seleziona tutto</SelectAll>
