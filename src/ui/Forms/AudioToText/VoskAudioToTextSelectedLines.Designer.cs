@@ -104,6 +104,7 @@
             this.textBoxLog.Location = new System.Drawing.Point(529, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxLog.Size = new System.Drawing.Size(168, 258);
             this.textBoxLog.TabIndex = 0;
@@ -244,7 +245,7 @@
             this.columnHeaderFileName.Text = "File name";
             this.columnHeaderFileName.Width = 455;
             // 
-            // AudioToTextSelectedLines
+            // VoskAudioToTextSelectedLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -262,7 +263,7 @@
             this.Controls.Add(this.textBoxLog);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(720, 450);
-            this.Name = "AudioToTextSelectedLines";
+            this.Name = "VoskAudioToTextSelectedLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

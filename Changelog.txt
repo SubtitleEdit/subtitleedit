@@ -29,6 +29,7 @@
    * Allow new syntax for yt transcript +1 hour - thx Vasudeo
    * FcpXml now supports latest version - thx Dvid
    * Improve "Redo casing" in "Batch convert" - thx chschmit 
+   * Allow larger max pixels is space for nOCR - thx Edgar-Galan
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix possible crash in batch convert w overwrite - thx chensimmons
@@ -39,6 +40,7 @@
    * Fix DCinemaSmpte2014 png export (was hidden) - thx MijBro
    * Fix minor left/right cropping issue in image export - thx nissansz
    * Fix possible crash after choosing folder in image export
+   * Fix italic/font issue with dfxp - thx IngunnHelge
 
 
 3.6.11 (30th January 2023)

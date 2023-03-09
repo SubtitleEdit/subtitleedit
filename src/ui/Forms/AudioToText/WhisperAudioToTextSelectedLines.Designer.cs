@@ -115,6 +115,7 @@
             this.textBoxLog.Location = new System.Drawing.Point(469, 9);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxLog.Size = new System.Drawing.Size(168, 258);
             this.textBoxLog.TabIndex = 0;
@@ -306,7 +307,7 @@
             this.toolStripSeparator1,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 120);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(210, 98);
             // 
             // whisperPhpOriginalToolStripMenuItem
             // 
