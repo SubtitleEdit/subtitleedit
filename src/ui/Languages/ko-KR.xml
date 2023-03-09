@@ -874,6 +874,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Crf>CRF</Crf>
     <TuneFor>튜닝</TuneFor>
     <AlignRight>오른쪽 정렬</AlignRight>
+    <GetStartPosition>시작 지점 얻기</GetStartPosition>
+    <GetEndPosition>끝 지점 얻기</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
