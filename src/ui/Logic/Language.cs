@@ -1827,7 +1827,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SmptTimeMode = "SMPTE timing (non integer frame rate)",
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
-                        GenerateVideoWithEmbeddedSub = "Generate video with burned-in subtitle...",
+                        GenerateVideoWithEmbeddedSub = "Generate video with embedded subtitles...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in subtitle...",
                         VideoAudioToTextX = "Audio to text ({0})...",
                         ImportChaptersFromVideo = "Import chapters from video",

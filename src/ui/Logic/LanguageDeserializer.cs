@@ -4270,6 +4270,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateVideoWithBurnedInSub":
                     language.Main.Menu.Video.GenerateVideoWithBurnedInSub = reader.Value;
                     break;
+                case "Main/Menu/Video/GenerateVideoWithEmbeddedSub":
+                    language.Main.Menu.Video.GenerateVideoWithEmbeddedSub = reader.Value;
+                    break;
                 case "Main/Menu/Video/VideoAudioToTextX":
                     language.Main.Menu.Video.VideoAudioToTextX = reader.Value;
                     break;
