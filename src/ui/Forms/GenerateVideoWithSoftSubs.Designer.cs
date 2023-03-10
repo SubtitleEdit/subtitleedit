@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(655, 570);
+            this.buttonGenerate.Location = new System.Drawing.Point(655, 404);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
             this.buttonGenerate.TabIndex = 4;
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(782, 570);
+            this.buttonCancel.Location = new System.Drawing.Point(782, 404);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelInputVideoFile);
             this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(845, 551);
+            this.groupBoxSettings.Size = new System.Drawing.Size(845, 385);
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             // 
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewSubtitles.HideSelection = false;
             this.listViewSubtitles.Location = new System.Drawing.Point(22, 98);
             this.listViewSubtitles.Name = "listViewSubtitles";
-            this.listViewSubtitles.Size = new System.Drawing.Size(719, 447);
+            this.listViewSubtitles.Size = new System.Drawing.Size(719, 281);
             this.listViewSubtitles.TabIndex = 25;
             this.listViewSubtitles.UseCompatibleStateImageBehavior = false;
             this.listViewSubtitles.View = System.Windows.Forms.View.Details;
@@ -441,19 +441,21 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(869, 605);
+            this.ClientSize = new System.Drawing.Size(869, 439);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxLog);
             this.KeyPreview = true;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(800, 450);
             this.Name = "GenerateVideoWithSoftSubs";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Generate video with soft subs";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenerateVideoWithHardSubs_FormClosing);
             this.Shown += new System.EventHandler(this.GenerateVideoWithHardSubs_Shown);
+            this.ResizeEnd += new System.EventHandler(this.GenerateVideoWithSoftSubs_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GenerateVideoWithSoftSubs_KeyDown);
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();

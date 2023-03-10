@@ -279,6 +279,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             //TODO: check number of audio + video tracks!
             var ffmpegInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
+            var videoTrackCount = ffmpegInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Video);
+            var audioTrackCount = ffmpegInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Audio);
 
             var isMp4 = inputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
 

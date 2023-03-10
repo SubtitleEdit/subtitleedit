@@ -393,6 +393,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateVideoWithHardSubs_Shown(object sender, EventArgs e)
         {
+            listViewSubtitles.AutoSizeLastColumn();
+
             if (!File.Exists(_inputVideoFileName))
             {
                 MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileNotFound, _inputVideoFileName));
@@ -478,7 +480,31 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var list = new List<int>();
+            foreach (int index in listViewSubtitles.SelectedIndices)
+            {
+                list.Add(index);
+            }
 
+            foreach (var index in list.OrderByDescending(p => p))
+            {
+                _softSubs.RemoveAt(index);
+                listViewSubtitles.Items.RemoveAt(index);
+            }
+
+            var newIndex = list.Min(p => p);
+            if (newIndex < listViewSubtitles.Items.Count)
+            {
+                listViewSubtitles.Items[newIndex].Selected = true;
+            }
+            else
+            {
+                newIndex--;
+                if (newIndex >= 0 && newIndex < listViewSubtitles.Items.Count)
+                {
+                    listViewSubtitles.Items[newIndex].Selected = true;
+                }
+            }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -542,6 +568,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonMoveSubDown_Click(object sender, EventArgs e)
         {
             MoveDown(listViewSubtitles);
+        }
+
+        private void GenerateVideoWithSoftSubs_ResizeEnd(object sender, EventArgs e)
+        {
+            listViewSubtitles.AutoSizeLastColumn();
         }
     }
 }
