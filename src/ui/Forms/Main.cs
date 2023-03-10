@@ -34632,5 +34632,28 @@ namespace Nikse.SubtitleEdit.Forms
             RestoreSubtitleListviewIndices();
             RefreshSelectedParagraph();
         }
+
+        private void generateVideoWithSoftcodedSubtitlesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!RequireFfmpegOk())
+            {
+                return;
+            }
+
+            using (var form = new GenerateVideoWithSoftSubs(_subtitle, _videoFileName, _videoInfo, false))
+            {
+                var result = form.ShowDialog(this);
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
+                using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.XGeneratedWithBurnedInSubsInX, Path.GetFileName(form.VideoFileName), encodingTime), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
+                {
+                    f.ShowDialog(this);
+                }
+            }
+        }
     }
 }
