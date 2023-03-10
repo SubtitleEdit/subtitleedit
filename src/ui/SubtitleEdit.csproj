@@ -333,6 +333,12 @@
     <Compile Include="Forms\DownloadVosk.Designer.cs">
       <DependentUpon>DownloadVosk.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GenerateVideoWithSoftSubs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GenerateVideoWithSoftSubs.Designer.cs">
+      <DependentUpon>GenerateVideoWithSoftSubs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\WordSplitDictionaryGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1463,6 +1469,7 @@
     <Compile Include="Logic\VideoPlayers\MpcHC\NativeMethods.cs" />
     <Compile Include="Logic\VideoPlayers\QuartsPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\VideoPlayer.cs" />
+    <Compile Include="Logic\VideoPreviewGeneratorSub.cs" />
     <Compile Include="Logic\VideoPreviewGenerator.cs" />
     <Compile Include="Logic\WindowsHelper.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
@@ -1588,6 +1595,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadVosk.resx">
       <DependentUpon>DownloadVosk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GenerateVideoWithSoftSubs.resx">
+      <DependentUpon>GenerateVideoWithSoftSubs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GetVideoPosition.resx">
       <DependentUpon>GetVideoPosition.cs</DependentUpon>

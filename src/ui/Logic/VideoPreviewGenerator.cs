@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -169,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd}-vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}".TrimStart(),
+                    Arguments = $"{cutStart}-i \"{inputVideoFileName}\"{cutEnd}-vf \"ass={Path.GetFileName(assaSubtitleFileName)}\",yadif,format=yuv420p -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart \"{outputVideoFileName}\"".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     WorkingDirectory = Path.GetDirectoryName(assaSubtitleFileName) ?? string.Empty,
@@ -265,6 +267,89 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             return ffmpegLocation;
+        }
+
+        public static Process GenerateSoftCodedVideoFile(string inputVideoFileName, List<VideoPreviewGeneratorSub> softSubs, string outputVideoFileName, DataReceivedEventHandler outputHandler)
+        {
+            var subsInput = string.Empty;
+            var subsMap = string.Empty;
+            var subsMeta = string.Empty;
+            var subsFormat = string.Empty;
+            var count = 0;
+
+            //TODO: check number of audio + video tracks!
+            var ffmpegInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
+
+            var isMp4 = inputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+
+            foreach (var softSub in softSubs)
+            {
+                count++;
+                subsInput += $" -i \"{softSub.FileName}\"";
+                subsMap += $" -map {count}";
+
+                if (!string.IsNullOrEmpty(softSub.Language))
+                {
+                    subsMeta += $" -metadata:s:s:{count} language={softSub.Language}";
+                }
+
+                if (isMp4)
+                {
+                    subsFormat = " -c:s mov_text";
+                }
+                else if (softSub.SubtitleFormat.GetType() == typeof(SubRip))
+                {
+                    subsFormat += $" -c:s:s:{count} srt";
+                }
+                else if (softSub.SubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    subsFormat += $" -c:s:s:{count} ass";
+                }
+                else if (softSub.SubtitleFormat.GetType() == typeof(WebVTT) ||
+                         softSub.SubtitleFormat.GetType() == typeof(WebVTTFileWithLineNumber))
+                {
+                    subsFormat += $" -c:s:s:{count} webvtt";
+                }
+            }
+
+            subsInput = " " + subsInput.Trim();
+            if (subsInput.Trim().Length == 0)
+            {
+                subsInput = string.Empty;
+            }
+
+            subsMap = " " + subsMap.Trim();
+            if (subsMap.Trim().Length == 0)
+            {
+                subsMap = string.Empty;
+            }
+
+            subsFormat = " " + subsFormat.Trim();
+            if (subsFormat.Trim().Length == 0)
+            {
+                subsFormat = string.Empty;
+            }
+
+            subsMeta = " " + subsMeta.Trim();
+            if (subsMeta.Trim().Length == 0)
+            {
+                subsMeta = string.Empty;
+            }
+
+            var processMakeVideo = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0:v -map 0:a{subsMap} -c:v copy -c:a copy{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+            processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
+            SetupDataReceiveHandler(outputHandler, processMakeVideo);
+            return processMakeVideo;
         }
     }
 }
