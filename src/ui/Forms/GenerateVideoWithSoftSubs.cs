@@ -355,11 +355,6 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxSettings.Enabled = true;
                 return;
             }
-
-            if (closeWindowAfterGenerateToolStripMenuItem.Checked)
-            {
-                DialogResult = DialogResult.OK;
-            }
         }
 
         private static string GetTargetVideoFilter()
@@ -381,8 +376,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
             fileName += ".embed";
-            fileName += defaultSaveInMatroskamkvToolStripMenuItem.Checked ? ".mkv" : ".mp4";
-            return fileName.Replace(".", "_");
+            fileName = fileName.Replace(".", "_");
+            fileName += Configuration.Settings.Tools.GenVideoEmbedOutputExt == ".mp4" ? ".mp4" : ".mkv";
+            return fileName;
         }
 
         private void RunEmbedding()
@@ -756,18 +752,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonToggleForced.Enabled = count > 0;
             buttonSetDefault.Enabled = count == 1;
             buttonSetLanguage.Enabled = count > 0;
-        }
-
-        private void defaultSaveInMatroskamkvToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            defaultSaveInMatroskamkvToolStripMenuItem.Checked = true;
-            defaultSaveInMp4ToolStripMenuItem.Checked = false;
-        }
-
-        private void defaultSaveInMp4ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            defaultSaveInMatroskamkvToolStripMenuItem.Checked = false;
-            defaultSaveInMp4ToolStripMenuItem.Checked = true;
         }
     }
 }

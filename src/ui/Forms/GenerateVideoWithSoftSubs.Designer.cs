@@ -78,14 +78,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStripForm = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.closeWindowAfterGenerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.defaultSaveInMatroskamkvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.defaultSaveInMp4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
-            this.contextMenuStripForm.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonGenerate
@@ -510,46 +505,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x272ToolStripMenuItem.Text = "640x272";
             // 
-            // contextMenuStripForm
-            // 
-            this.contextMenuStripForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeWindowAfterGenerateToolStripMenuItem,
-            this.defaultSaveInMatroskamkvToolStripMenuItem,
-            this.defaultSaveInMp4ToolStripMenuItem});
-            this.contextMenuStripForm.Name = "contextMenuStripForm";
-            this.contextMenuStripForm.Size = new System.Drawing.Size(238, 70);
-            // 
-            // closeWindowAfterGenerateToolStripMenuItem
-            // 
-            this.closeWindowAfterGenerateToolStripMenuItem.Checked = true;
-            this.closeWindowAfterGenerateToolStripMenuItem.CheckOnClick = true;
-            this.closeWindowAfterGenerateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.closeWindowAfterGenerateToolStripMenuItem.Name = "closeWindowAfterGenerateToolStripMenuItem";
-            this.closeWindowAfterGenerateToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.closeWindowAfterGenerateToolStripMenuItem.Text = "Close window after generate";
-            // 
-            // defaultSaveInMatroskamkvToolStripMenuItem
-            // 
-            this.defaultSaveInMatroskamkvToolStripMenuItem.Checked = true;
-            this.defaultSaveInMatroskamkvToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.defaultSaveInMatroskamkvToolStripMenuItem.Name = "defaultSaveInMatroskamkvToolStripMenuItem";
-            this.defaultSaveInMatroskamkvToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.defaultSaveInMatroskamkvToolStripMenuItem.Text = "Default save in Matroska (mkv)";
-            this.defaultSaveInMatroskamkvToolStripMenuItem.Click += new System.EventHandler(this.defaultSaveInMatroskamkvToolStripMenuItem_Click);
-            // 
-            // defaultSaveInMp4ToolStripMenuItem
-            // 
-            this.defaultSaveInMp4ToolStripMenuItem.Name = "defaultSaveInMp4ToolStripMenuItem";
-            this.defaultSaveInMp4ToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-            this.defaultSaveInMp4ToolStripMenuItem.Text = "Default save in mp4";
-            this.defaultSaveInMp4ToolStripMenuItem.Click += new System.EventHandler(this.defaultSaveInMp4ToolStripMenuItem_Click);
-            // 
             // GenerateVideoWithSoftSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 439);
-            this.ContextMenuStrip = this.contextMenuStripForm;
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
@@ -569,7 +529,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.PerformLayout();
             this.contextMenuSubtitles.ResumeLayout(false);
             this.contextMenuStripRes.ResumeLayout(false);
-            this.contextMenuStripForm.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -622,11 +581,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonSetDefault;
         private System.Windows.Forms.ToolStripMenuItem toggleForcedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleDefaultToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripForm;
-        private System.Windows.Forms.ToolStripMenuItem closeWindowAfterGenerateToolStripMenuItem;
         private System.Windows.Forms.Button buttonSetLanguage;
         private System.Windows.Forms.ToolStripMenuItem setLanguageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem defaultSaveInMatroskamkvToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem defaultSaveInMp4ToolStripMenuItem;
     }
 }
