@@ -171,9 +171,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         // ignored
                     }
                 }
-                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
-                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
 
+                try
+                {
+                    Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
             }
 
             var installerPath = GetInstallerPath();
