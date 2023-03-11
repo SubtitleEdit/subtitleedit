@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -10,9 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -36,9 +35,20 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             _videoInfo = videoInfo;
-            //TODO: Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Title;
             _subtitle = new Subtitle(subtitle);
             _inputVideoFileName = inputVideoFileName;
+
+            Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Title;
+            labelInputVideoFile.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile;
+
+            buttonAddSubtitles.Text = LanguageSettings.Current.DvdSubRip.Add; 
+            ButtonRemoveSubtitles.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
+            buttonClear.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
+            ButtonMoveSubUp.Text = LanguageSettings.Current.DvdSubRip.MoveUp; 
+            ButtonMoveSubDown.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            buttonToggleForced.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleForced;
+            buttonSetDefault.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
+            buttonSetLanguage.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SetLanguage;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
 
@@ -59,6 +69,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fileName = Path.Combine(dir, nameOnly);
                 AddListViewItem(fileName);
+
+                if (listViewSubtitles.Items.Count > 0)
+                {
+                    listViewSubtitles.Items[0].Selected = true;
+                    listViewSubtitles.Items[0].Focused = true;
+                }
             }
         }
 
@@ -245,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var saveDialog = new SaveFileDialog
             {
                 FileName = SuggestNewVideoFileName(),
-                Filter = "Matroska|*.mkv|WebM|*.webm|MP4|*.mp4",
+                Filter = GetTargetVideoFilter(), 
                 AddExtension = true
             })
             {
@@ -276,6 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
             _log.AppendLine("Target file name: " + VideoFileName);
 
             groupBoxSettings.Enabled = false;
+            buttonGenerate.Enabled = false;
 
             var stopWatch = Stopwatch.StartNew();
 
@@ -292,9 +309,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!File.Exists(VideoFileName) || new FileInfo(VideoFileName).Length == 0)
             {
-                SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log);
-                MessageBox.Show("Test");
-                //DialogResult = DialogResult.Cancel;
+                SeLogger.Error(Environment.NewLine + "Generate embedded video failed: " + Environment.NewLine + _log);
+                MessageBox.Show("Generate embedded video failed" + Environment.NewLine + 
+                                "For more info see the error log: " + SeLogger.ErrorFile);
+                buttonGenerate.Enabled = true;
+                groupBoxSettings.Enabled = true;
                 return;
             }
 
@@ -302,6 +321,21 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.OK;
             }
+        }
+
+        private static string GetTargetVideoFilter()
+        {
+            if (Configuration.Settings.Tools.GenVideoEmbedOutputExt == ".mp4")
+            {
+                return "MP4|*.mp4|Matroska|*.mkv|WebM|*.webm";
+            }
+
+            if (Configuration.Settings.Tools.GenVideoEmbedOutputExt == ".webm")
+            {
+                return "WebM|*.webm|Matroska|*.mkv|MP4|*.mp4";
+            }
+
+            return "Matroska|*.mkv|WebM|*.webm|MP4|*.mp4";
         }
 
         private string SuggestNewVideoFileName()
@@ -392,7 +426,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateVideoWithHardSubs_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //Configuration.Settings.Tools.GenVideoFontName = comboBoxSubtitleFont.Text;
+            if (!string.IsNullOrEmpty(VideoFileName))
+            {
+                Configuration.Settings.Tools.GenVideoEmbedOutputExt = Path.GetExtension(VideoFileName).ToLowerInvariant();
+            }
         }
 
         private void GenerateVideoWithHardSubs_Shown(object sender, EventArgs e)

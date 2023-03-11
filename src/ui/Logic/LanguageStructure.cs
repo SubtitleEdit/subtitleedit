@@ -970,6 +970,16 @@ namespace Nikse.SubtitleEdit.Logic
             public string GetEndPosition { get; set; }
         }
 
+        public class GenerateVideoWithEmbeddedSubs
+        {
+            public string Title { get; set; }
+            public string InputVideoFile { get; set; }
+            public string SetLanguage { get; set; }
+            public string ToggleForced { get; set; }
+            public string ToggleDefault { get; set; }
+            public string XGeneratedWithEmbeddedSubs { get; set; }
+        }
+
         public class GetDictionaries
         {
             public string Title { get; set; }
@@ -1677,7 +1687,7 @@ namespace Nikse.SubtitleEdit.Logic
                     public string GenerateTextFromVideo { get; set; }
                     public string GenerateBlankVideo { get; set; }
                     public string GenerateVideoWithBurnedInSub { get; set; }
-                    public string GenerateVideoWithEmbeddedSub { get; set; }
+                    public string GenerateVideoWithEmbeddedSubs { get; set; }
                     public string VideoAudioToTextX { get; set; }
                     public string ImportChaptersFromVideo { get; set; }
                     public string GenerateImportShotChanges { get; set; }

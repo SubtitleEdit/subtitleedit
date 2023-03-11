@@ -418,6 +418,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool GenVideoNonAssaBox { get; set; }
         public bool GenVideoNonAssaAlignRight { get; set; }
         public bool GenVideoNonAssaFixRtlUnicode { get; set; }
+
+        public string GenVideoEmbedOutputExt { get; set; }
+
+
         public bool VoskPostProcessing { get; set; }
         public string VoskModel { get; set; }
         public string WhisperChoice { get; set; }
@@ -6249,6 +6253,12 @@ $HorzAlign          =   Center
                 settings.Tools.GenVideoNonAssaFixRtlUnicode = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("GenVideoEmbedOutputExt");
+            if (subNode != null)
+            {
+                settings.Tools.GenVideoEmbedOutputExt = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("VoskPostProcessing");
             if (subNode != null)
             {
@@ -10612,6 +10622,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GenVideoNonAssaBox", settings.Tools.GenVideoNonAssaBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaAlignRight", settings.Tools.GenVideoNonAssaAlignRight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenVideoNonAssaFixRtlUnicode", settings.Tools.GenVideoNonAssaFixRtlUnicode.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenVideoEmbedOutputExt", settings.Tools.GenVideoEmbedOutputExt);
                 textWriter.WriteElementString("VoskPostProcessing", settings.Tools.VoskPostProcessing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VoskModel", settings.Tools.VoskModel);
                 textWriter.WriteElementString("WhisperChoice", settings.Tools.WhisperChoice);

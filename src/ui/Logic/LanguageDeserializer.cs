@@ -2338,6 +2338,24 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithBurnedInSubs/GetEndPosition":
                     language.GenerateVideoWithBurnedInSubs.GetEndPosition = reader.Value;
                     break;
+                case "GenerateVideoWithEmbeddedSubs/Title":
+                    language.GenerateVideoWithEmbeddedSubs.Title = reader.Value;
+                    break;
+                case "GenerateVideoWithEmbeddedSubs/InputVideoFile":
+                    language.GenerateVideoWithEmbeddedSubs.InputVideoFile = reader.Value;
+                    break;
+                case "GenerateVideoWithEmbeddedSubs/SetLanguage":
+                    language.GenerateVideoWithEmbeddedSubs.SetLanguage = reader.Value;
+                    break;
+                case "GenerateVideoWithEmbeddedSubs/ToggleForced":
+                    language.GenerateVideoWithEmbeddedSubs.ToggleForced = reader.Value;
+                    break;
+                case "GenerateVideoWithEmbeddedSubs/ToggleDefault":
+                    language.GenerateVideoWithEmbeddedSubs.ToggleDefault = reader.Value;
+                    break;
+                case "GenerateVideoWithEmbeddedSubs/XGeneratedWithEmbeddedSubs":
+                    language.GenerateVideoWithEmbeddedSubs.XGeneratedWithEmbeddedSubs = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
@@ -4270,8 +4288,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/GenerateVideoWithBurnedInSub":
                     language.Main.Menu.Video.GenerateVideoWithBurnedInSub = reader.Value;
                     break;
-                case "Main/Menu/Video/GenerateVideoWithEmbeddedSub":
-                    language.Main.Menu.Video.GenerateVideoWithEmbeddedSub = reader.Value;
+                case "Main/Menu/Video/GenerateVideoWithEmbeddedSubs":
+                    language.Main.Menu.Video.GenerateVideoWithEmbeddedSubs = reader.Value;
                     break;
                 case "Main/Menu/Video/VideoAudioToTextX":
                     language.Main.Menu.Video.VideoAudioToTextX = reader.Value;

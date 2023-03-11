@@ -882,6 +882,14 @@ Read more info (web)?</WhisperNotFound>
     <GetStartPosition>Get start position</GetStartPosition>
     <GetEndPosition>Get end position</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Generate video with embedded subtitles</Title>
+    <InputVideoFile>Input video file</InputVideoFile>
+    <SetLanguage>Set language...</SetLanguage>
+    <ToggleForced>Toggle forced</ToggleForced>
+    <ToggleDefault>Toggle default</ToggleDefault>
+    <XGeneratedWithEmbeddedSubs>"{0}" generated with embedded subtitles</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
@@ -1283,7 +1291,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in subtitle...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSub>Generate video with embedded subtitles...</GenerateVideoWithEmbeddedSub>
+        <GenerateVideoWithEmbeddedSubs>Generate video with embedded subtitles...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Audio to text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>

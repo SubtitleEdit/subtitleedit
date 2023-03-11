@@ -336,6 +336,10 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     subsFormat += $" -c:s:s:{count - 1} ass";
                 }
+                else if (softSub.SubtitleFormat.GetType() == typeof(SubStationAlpha))
+                {
+                    subsFormat += $" -c:s:s:{count - 1} ssa";
+                }
                 else if (softSub.SubtitleFormat.GetType() == typeof(WebVTT) ||
                          softSub.SubtitleFormat.GetType() == typeof(WebVTTFileWithLineNumber))
                 {
