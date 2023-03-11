@@ -276,17 +276,15 @@ namespace Nikse.SubtitleEdit.Logic
             var subsMeta = string.Empty;
             var subsFormat = string.Empty;
 
-            //TODO: check number of audio + video tracks!
             var ffmpegInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
-            var videoTrackCount = ffmpegInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Video);
             var audioTrackCount = ffmpegInfo.Tracks.Count(p => p.TrackType == FfmpegTrackType.Audio);
 
             var isMp4 = outputVideoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
 
-            var count = 0;
+            var count = 1;
+            var number = 0;
             foreach (var softSub in softSubs)
             {
-                count++;
                 subsInput += $" -i \"{softSub.FileName}\"";
                 subsMap += $" -map {count}";
 
@@ -296,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic
                     var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang);
                     if (lang.Length == 3)
                     {
-                        threeLetterCode = softSub.Language;
+                        threeLetterCode = lang;
                     }
 
                     var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
@@ -307,25 +305,25 @@ namespace Nikse.SubtitleEdit.Logic
 
                     if (!string.IsNullOrEmpty(threeLetterCode) && !string.IsNullOrEmpty(languageName))
                     {
-                        subsMeta += $" -metadata:s:s:{count - 1} language=\"{threeLetterCode}\"";
-                        subsMeta += $" -metadata:s:s:{count - 1} title=\"{languageName}\"";
+                        subsMeta += $" -metadata:s:s:{number} language=\"{threeLetterCode}\"";
+                        subsMeta += $" -metadata:s:s:{number} title=\"{languageName}\"";
                     }
                     else if (!string.IsNullOrEmpty(softSub.Language))
                     {
-                        subsMeta += $" -metadata:s:s:{count - 1} language=\"{softSub.Language}\"";
-                        subsMeta += $" -metadata:s:s:{count - 1} title=\"{softSub.Language}\"";
+                        subsMeta += $" -metadata:s:s:{number} language=\"{softSub.Language}\"";
+                        subsMeta += $" -metadata:s:s:{number} title=\"{softSub.Language}\"";
                     }
                 }
 
                 if (softSub.IsDefault)
                 {
-                    subsMeta += $" -disposition:s:s:{count - 1} default";
+                    subsMeta += $" -disposition:s:s:{number} default";
                 }
 
                 if (softSub.IsForced)
                 {
-                    subsMeta += $" -disposition:s:s:{count - 1} forced";
-                    subsMeta += $" -metadata:s:s:{count - 1} forced=1";
+                    subsMeta += $" -disposition:s:s:{number} forced";
+                    subsMeta += $" -metadata:s:s:{number} forced=1";
                 }
 
                 if (isMp4)
@@ -334,25 +332,28 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else if (softSub.SubtitleFormat == null && softSub.Format == "Blu-ray sup")
                 {
-                    subsFormat += $" -c:s:s:{count - 1} copy"; // should be "pgs" or "pgssub" or ?
+                    subsFormat += $" -c:s:s:{number} copy"; // should be "pgs" or "pgssub" or ?
                 }
                 else if (softSub.SubtitleFormat?.GetType() == typeof(SubRip))
                 {
-                    subsFormat += $" -c:s:s:{count - 1} srt";
+                    subsFormat += $" -c:s:s:{number} srt";
                 }
                 else if (softSub.SubtitleFormat?.GetType() == typeof(AdvancedSubStationAlpha))
                 {
-                    subsFormat += $" -c:s:s:{count - 1} ass";
+                    subsFormat += $" -c:s:s:{number} ass";
                 }
                 else if (softSub.SubtitleFormat?.GetType() == typeof(SubStationAlpha))
                 {
-                    subsFormat += $" -c:s:s:{count - 1} ssa";
+                    subsFormat += $" -c:s:s:{number} ssa";
                 }
                 else if (softSub.SubtitleFormat?.GetType() == typeof(WebVTT) ||
                          softSub.SubtitleFormat?.GetType() == typeof(WebVTTFileWithLineNumber))
                 {
-                    subsFormat += $" -c:s:s:{count - 1} webvtt";
+                    subsFormat += $" -c:s:s:{number} webvtt";
                 }
+
+                count++;
+                number++;
             }
 
             subsInput = " " + subsInput.Trim();
@@ -384,7 +385,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0:v -map 0:a{subsMap} -c:v copy -c:a copy{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
+                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0 -c copy{subsMap}{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 }
