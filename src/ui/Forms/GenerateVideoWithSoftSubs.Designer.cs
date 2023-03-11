@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ButtonMoveSubDown = new System.Windows.Forms.Button();
             this.ButtonMoveSubUp = new System.Windows.Forms.Button();
             this.buttonAddSubtitles = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelSubtitles = new System.Windows.Forms.Label();
             this.listViewSubtitles = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.ButtonMoveSubDown);
             this.groupBoxSettings.Controls.Add(this.ButtonMoveSubUp);
             this.groupBoxSettings.Controls.Add(this.buttonAddSubtitles);
-            this.groupBoxSettings.Controls.Add(this.label1);
+            this.groupBoxSettings.Controls.Add(this.labelSubtitles);
             this.groupBoxSettings.Controls.Add(this.listViewSubtitles);
             this.groupBoxSettings.Controls.Add(this.buttonOpenVideoFile);
             this.groupBoxSettings.Controls.Add(this.textBoxInputFileName);
@@ -234,14 +234,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAddSubtitles.UseVisualStyleBackColor = true;
             this.buttonAddSubtitles.Click += new System.EventHandler(this.buttonAddSubtitles_Click);
             // 
-            // label1
+            // labelSubtitles
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(19, 82);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 13);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Subtitles";
+            this.labelSubtitles.AutoSize = true;
+            this.labelSubtitles.Location = new System.Drawing.Point(19, 82);
+            this.labelSubtitles.Name = "labelSubtitles";
+            this.labelSubtitles.Size = new System.Drawing.Size(47, 13);
+            this.labelSubtitles.TabIndex = 26;
+            this.labelSubtitles.Text = "Subtitles";
             // 
             // listViewSubtitles
             // 
@@ -517,7 +517,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.defaultSaveInMatroskamkvToolStripMenuItem,
             this.defaultSaveInMp4ToolStripMenuItem});
             this.contextMenuStripForm.Name = "contextMenuStripForm";
-            this.contextMenuStripForm.Size = new System.Drawing.Size(238, 92);
+            this.contextMenuStripForm.Size = new System.Drawing.Size(238, 70);
             // 
             // closeWindowAfterGenerateToolStripMenuItem
             // 
@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem nTSC720x480ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x352ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem x272ToolStripMenuItem;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelSubtitles;
         private System.Windows.Forms.ListView listViewSubtitles;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
