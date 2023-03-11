@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.FixCommonErrors FixCommonErrors;
         public LanguageStructure.GenerateBlankVideo GenerateBlankVideo;
         public LanguageStructure.GenerateVideoWithBurnedInSubs GenerateVideoWithBurnedInSubs;
+        public LanguageStructure.GenerateVideoWithEmbeddedSubs GenerateVideoWithEmbeddedSubs;
         public LanguageStructure.GetDictionaries GetDictionaries;
         public LanguageStructure.GetTesseractDictionaries GetTesseractDictionaries;
         public LanguageStructure.GoogleTranslate GoogleTranslate;
@@ -1110,6 +1111,16 @@ namespace Nikse.SubtitleEdit.Logic
                 GetEndPosition = "Get end position",
             };
 
+            GenerateVideoWithEmbeddedSubs = new LanguageStructure.GenerateVideoWithEmbeddedSubs
+            {
+                Title = "Generate video with embedded subtitles",
+                InputVideoFile = "Input video file",
+                ToggleForced = "Toggle forced",
+                ToggleDefault = "Toggle default",
+                SetLanguage = "Set language...",
+                XGeneratedWithEmbeddedSubs = "\"{0}\" generated with embedded subtitles",
+            };
+
             GetDictionaries = new LanguageStructure.GetDictionaries
             {
                 Title = "Need dictionaries?",
@@ -1827,7 +1838,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SmptTimeMode = "SMPTE timing (non integer frame rate)",
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
-                        GenerateVideoWithEmbeddedSub = "Generate video with embedded subtitles...",
+                        GenerateVideoWithEmbeddedSubs = "Generate video with embedded subtitles...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in subtitle...",
                         VideoAudioToTextX = "Audio to text ({0})...",
                         ImportChaptersFromVideo = "Import chapters from video",
