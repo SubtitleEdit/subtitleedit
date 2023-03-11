@@ -2344,6 +2344,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithEmbeddedSubs/InputVideoFile":
                     language.GenerateVideoWithEmbeddedSubs.InputVideoFile = reader.Value;
                     break;
+                case "GenerateVideoWithEmbeddedSubs/SubtitlesX":
+                    language.GenerateVideoWithEmbeddedSubs.SubtitlesX = reader.Value;
+                    break;
                 case "GenerateVideoWithEmbeddedSubs/SetLanguage":
                     language.GenerateVideoWithEmbeddedSubs.SetLanguage = reader.Value;
                     break;
