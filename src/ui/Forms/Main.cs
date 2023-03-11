@@ -3141,6 +3141,28 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
+                    var rhozetHarmonicImage = new RhozetHarmonicImage();
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
+                    if (rhozetHarmonicImage.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, rhozetHarmonicImage, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
                     var fcpImage = new FinalCutProImage();
                     var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (fcpImage.IsMine(list, fileName))
