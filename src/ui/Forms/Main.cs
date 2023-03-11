@@ -21676,6 +21676,11 @@ namespace Nikse.SubtitleEdit.Forms
             closeVideoToolStripMenuItem.Enabled = true;
             toolStripMenuItemOpenKeepVideo.Enabled = true;
 
+            if (_videoInfo == null)
+            {
+                return;
+            }
+
             if (_videoInfo.VideoCodec != null)
             {
                 labelVideoInfo.Text = Path.GetFileName(fileName) + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();

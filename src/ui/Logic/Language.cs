@@ -1115,6 +1115,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Generate video with embedded subtitles",
                 InputVideoFile = "Input video file",
+                SubtitlesX = "Subtitles ({0})",
                 ToggleForced = "Toggle forced",
                 ToggleDefault = "Toggle default",
                 SetLanguage = "Set language...",

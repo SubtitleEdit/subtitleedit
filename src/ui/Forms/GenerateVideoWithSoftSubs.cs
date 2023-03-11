@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Title;
             labelInputVideoFile.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile;
-
+            labelSubtitles.Text = string.Empty;
             buttonAddSubtitles.Text = LanguageSettings.Current.DvdSubRip.Add; 
             ButtonRemoveSubtitles.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             buttonClear.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new ListViewItem
             {
                 Tag = sub.Tag,
-                Text = sub.Name,
+                Text = sub.SubtitleFormat != null ? sub.SubtitleFormat.Name : sub.Name,
             };
             item.SubItems.Add(GetDisplayLanguage(sub.Language));
             item.SubItems.Add(sub.IsDefault.ToString(CultureInfo.InvariantCulture));
@@ -156,6 +156,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewSubtitles.Items.Add(item);
 
             _softSubs.Add(sub);
+
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile, listViewSubtitles.Items.Count);
         }
 
         private static string GetDisplayLanguage(string language)
@@ -545,12 +547,15 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewSubtitles.Items[newIndex].Selected = true;
                 }
             }
+
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile, listViewSubtitles.Items.Count);
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
             listViewSubtitles.Items.Clear();
             _softSubs.Clear();
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile, listViewSubtitles.Items.Count);
         }
 
         private void MoveUp(ListView listView)
