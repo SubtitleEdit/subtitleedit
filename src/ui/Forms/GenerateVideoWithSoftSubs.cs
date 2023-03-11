@@ -1,7 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -21,14 +22,12 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Subtitle _subtitle;
         private VideoInfo _videoInfo;
         private string _inputVideoFileName;
-        private static readonly Regex FrameFinderRegex = new Regex(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
-        private long _processedFrames;
         private StringBuilder _log;
-        private List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
+        private readonly List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
-        public GenerateVideoWithSoftSubs(Subtitle subtitle, string inputVideoFileName, VideoInfo videoInfo, bool setStartEndCut)
+        public GenerateVideoWithSoftSubs(Subtitle subtitle, string inputVideoFileName, VideoInfo videoInfo)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -49,8 +48,14 @@ namespace Nikse.SubtitleEdit.Forms
             buttonToggleForced.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleForced;
             buttonSetDefault.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
             buttonSetLanguage.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SetLanguage;
+            columnHeader1Type.Text = LanguageSettings.Current.Main.Controls.SubtitleFormat;
+            columnHeader2Language.Text = LanguageSettings.Current.ChooseLanguage.Language;
+            columnHeader3Default.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Default;
+            columnHeader4Forced.Text = LanguageSettings.Current.ExportPngXml.Forced;
+            columnHeader5FileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);
 
             LoadVideo(inputVideoFileName);
             AddCurrentSubtitle();
@@ -116,8 +121,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     AddListViewItem(track);
                 }
-
-                return;
             }
         }
 
@@ -144,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem
             {
-                Tag = sub.Tag,
+                Tag = sub,
                 Text = sub.SubtitleFormat != null ? sub.SubtitleFormat.Name : sub.Format,
             };
             item.SubItems.Add(GetDisplayLanguage(sub.Language));
@@ -155,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _softSubs.Add(sub);
 
-            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile, listViewSubtitles.Items.Count);
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
 
         private static string GetDisplayLanguage(string language)
@@ -264,30 +267,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _log?.AppendLine(outLine.Data);
-
-            var match = FrameFinderRegex.Match(outLine.Data);
-            if (!match.Success)
-            {
-                return;
-            }
-
-            var arr = match.Value.Split('=');
-            if (arr.Length != 2)
-            {
-                return;
-            }
-
-            if (long.TryParse(arr[1].Trim(), out var f))
-            {
-                _processedFrames = f;
-            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (_softSubs.Count == 0)
             {
-                var res = MessageBox.Show("Generate video without any soft subs?", "", MessageBoxButtons.YesNoCancel);
+                var res = MessageBox.Show("Generate video without any embedded subs?", "", MessageBoxButtons.YesNoCancel);
                 if (res != DialogResult.OK)
                 {
                     return;
@@ -398,8 +384,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     process.Kill();
                 }
-
-                var v = (int)_processedFrames;
             }
         }
 
@@ -532,20 +516,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewSubtitles_DragDrop(object sender, DragEventArgs e)
         {
-            try
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (var fileName in fileNames)
             {
-                var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-                foreach (var fileName in fileNames)
+                if (!FileUtil.IsDirectory(fileName))
                 {
-                    if (!FileUtil.IsDirectory(fileName))
-                    {
-                        AddListViewItem(fileName);
-                    }
+                    AddListViewItem(fileName);
                 }
-            }
-            finally
-            {
-
             }
         }
 
@@ -582,14 +559,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile, listViewSubtitles.Items.Count);
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
             listViewSubtitles.Items.Clear();
             _softSubs.Clear();
-            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile, listViewSubtitles.Items.Count);
+            labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
 
         private void MoveUp(ListView listView)
@@ -752,6 +729,38 @@ namespace Nikse.SubtitleEdit.Forms
             buttonToggleForced.Enabled = count > 0;
             buttonSetDefault.Enabled = count == 1;
             buttonSetLanguage.Enabled = count > 0;
+        }
+
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selected = listViewSubtitles.SelectedItems;
+            if (selected.Count != 1)
+            {
+                return;
+            }
+
+            var softSub = _softSubs[selected[0].Index];
+            Subtitle subtitle = null;
+            List<IBinaryParagraphWithPosition> binSubtitles = null;
+            if (softSub.SubtitleFormat != null)
+            {
+                subtitle = Subtitle.Parse(softSub.FileName);
+            }
+            else if (softSub.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && softSub.Format == "Blu-ray sup")
+            {
+                var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(softSub.FileName, new StringBuilder());
+                binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
+            }
+
+            using (var cl = new SubtitleViewer(softSub.FileName, subtitle, binSubtitles))
+            {
+                cl.ShowDialog(this);
+            }
+        }
+
+        private void listViewSubtitles_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            viewToolStripMenuItem_Click(sender, e);
         }
     }
 }

@@ -1118,6 +1118,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitlesX = "Subtitles ({0})",
                 ToggleForced = "Toggle forced",
                 ToggleDefault = "Toggle default",
+                Default = "Default",
                 SetLanguage = "Set language...",
                 XGeneratedWithEmbeddedSubs = "\"{0}\" generated with embedded subtitles",
             };

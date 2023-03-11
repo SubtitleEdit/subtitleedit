@@ -44,11 +44,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAddSubtitles = new System.Windows.Forms.Button();
             this.labelSubtitles = new System.Windows.Forms.Label();
             this.listViewSubtitles = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1Type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2Language = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3Default = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4Forced = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5FileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuSubtitles = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -60,6 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toggleForcedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpenVideoFile = new System.Windows.Forms.Button();
             this.textBoxInputFileName = new System.Windows.Forms.TextBox();
             this.textBoxLog = new System.Windows.Forms.TextBox();
@@ -245,11 +247,11 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewSubtitles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5});
+            this.columnHeader1Type,
+            this.columnHeader2Language,
+            this.columnHeader3Default,
+            this.columnHeader4Forced,
+            this.columnHeader5FileName});
             this.listViewSubtitles.ContextMenuStrip = this.contextMenuSubtitles;
             this.listViewSubtitles.FullRowSelect = true;
             this.listViewSubtitles.HideSelection = false;
@@ -262,29 +264,30 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewSubtitles.SelectedIndexChanged += new System.EventHandler(this.listViewSubtitles_SelectedIndexChanged);
             this.listViewSubtitles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewSubtitles_DragDrop);
             this.listViewSubtitles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewSubtitles_DragEnter);
+            this.listViewSubtitles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewSubtitles_MouseDoubleClick);
             // 
-            // columnHeader1
+            // columnHeader1Type
             // 
-            this.columnHeader1.Text = "Type";
-            this.columnHeader1.Width = 120;
+            this.columnHeader1Type.Text = "Type";
+            this.columnHeader1Type.Width = 150;
             // 
-            // columnHeader2
+            // columnHeader2Language
             // 
-            this.columnHeader2.Text = "Language";
-            this.columnHeader2.Width = 150;
+            this.columnHeader2Language.Text = "Language";
+            this.columnHeader2Language.Width = 120;
             // 
-            // columnHeader3
+            // columnHeader3Default
             // 
-            this.columnHeader3.Text = "Default";
+            this.columnHeader3Default.Text = "Default";
             // 
-            // columnHeader4
+            // columnHeader4Forced
             // 
-            this.columnHeader4.Text = "Forced";
+            this.columnHeader4Forced.Text = "Forced";
             // 
-            // columnHeader5
+            // columnHeader5FileName
             // 
-            this.columnHeader5.Text = "File name";
-            this.columnHeader5.Width = 300;
+            this.columnHeader5FileName.Text = "File name";
+            this.columnHeader5FileName.Width = 300;
             // 
             // contextMenuSubtitles
             // 
@@ -298,13 +301,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStorageMoveDown,
             this.toggleForcedToolStripMenuItem,
             this.toggleDefaultToolStripMenuItem,
-            this.setLanguageToolStripMenuItem});
+            this.setLanguageToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.viewToolStripMenuItem});
             this.contextMenuSubtitles.Name = "contextMenuStrip1";
-            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 192);
+            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 220);
             // 
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.addToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.addToolStripMenuItem.Text = "Add...";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.buttonAddSubtitles_Click);
@@ -370,6 +376,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.setLanguageToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.setLanguageToolStripMenuItem.Text = "Set language...";
             this.setLanguageToolStripMenuItem.Click += new System.EventHandler(this.buttonSetLanguage_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(199, 6);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.viewToolStripMenuItem.Text = "View...";
+            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
             // 
             // buttonOpenVideoFile
             // 
@@ -557,11 +576,11 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem x272ToolStripMenuItem;
         private System.Windows.Forms.Label labelSubtitles;
         private System.Windows.Forms.ListView listViewSubtitles;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ColumnHeader columnHeader1Type;
+        private System.Windows.Forms.ColumnHeader columnHeader2Language;
+        private System.Windows.Forms.ColumnHeader columnHeader3Default;
+        private System.Windows.Forms.ColumnHeader columnHeader4Forced;
+        private System.Windows.Forms.ColumnHeader columnHeader5FileName;
         private System.Windows.Forms.Button buttonOpenVideoFile;
         private System.Windows.Forms.TextBox textBoxInputFileName;
         private System.Windows.Forms.Button buttonClear;
@@ -583,5 +602,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem toggleDefaultToolStripMenuItem;
         private System.Windows.Forms.Button buttonSetLanguage;
         private System.Windows.Forms.ToolStripMenuItem setLanguageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     }
 }
