@@ -191,6 +191,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <BatchMode>Batch-tilstand</BatchMode>
     <KeepPartialTranscription>Behold delvis transskription</KeepPartialTranscription>
     <TranslateToEnglish>Oversæt til engelsk</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Maks.  tegn pr. undertekstlinje</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerede Sub Station Alpha vedhæftede filer</Title>
@@ -325,7 +326,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Mere end to linjer i en undertekst</FilterMoreThanTwoLines>
     <FilterContains>Tekst indeholder...</FilterContains>
     <FilterFileNameContains>Filnavn indeholder...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Matroska (.mkv) sprogkode indeholder...</MkvLanguageCodeContains>
+    <LanguageCodeContains>Sprogkode (mkv/mp4) indeholder...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Fix almindelige fejl: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
@@ -872,7 +873,18 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Crf>CRF</Crf>
     <TuneFor>Indstil efter</TuneFor>
     <AlignRight>Juster til højre</AlignRight>
+    <GetStartPosition>Hent startposition</GetStartPosition>
+    <GetEndPosition>Hent slutposition</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Generer video med indlejrede undertekster</Title>
+    <InputVideoFile>Input videofil</InputVideoFile>
+    <SubtitlesX>Undertekster ({0})</SubtitlesX>
+    <SetLanguage>Indstil sprog...</SetLanguage>
+    <ToggleForced>Skift tvunget</ToggleForced>
+    <ToggleDefault>Skift standard</ToggleDefault>
+    <XGeneratedWithEmbeddedSubs>"{0}" genereret med indlejrede undertekster</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
     <DescriptionLine1>Subtitle Edit's stavekontrol er baseret på NHunspell, der</DescriptionLine1>
@@ -1273,6 +1285,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generer blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generer video med indbrændt sub...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Generer video med indlejrede undertekster...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Lyd til tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importer kapitler fra video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generer/importer sceneændringer...</GenerateImportShotChanges>
@@ -1361,6 +1374,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Bi
         <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
         <SplitLineAtCursorPosition>Split ved markør</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Split linje ved markørposition og auto-bryd</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
