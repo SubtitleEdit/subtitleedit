@@ -34,6 +34,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelInputVideoFile = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.buttonSetLanguage = new System.Windows.Forms.Button();
+            this.buttonSetDefault = new System.Windows.Forms.Button();
+            this.buttonToggleForced = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
             this.ButtonRemoveSubtitles = new System.Windows.Forms.Button();
             this.ButtonMoveSubDown = new System.Windows.Forms.Button();
@@ -54,6 +57,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemStorageMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStorageMoveDown = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleForcedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpenVideoFile = new System.Windows.Forms.Button();
             this.textBoxInputFileName = new System.Windows.Forms.TextBox();
             this.textBoxLog = new System.Windows.Forms.TextBox();
@@ -72,9 +77,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripForm = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.closeWindowAfterGenerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
+            this.contextMenuStripForm.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonGenerate
@@ -116,6 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.buttonSetLanguage);
+            this.groupBoxSettings.Controls.Add(this.buttonSetDefault);
+            this.groupBoxSettings.Controls.Add(this.buttonToggleForced);
             this.groupBoxSettings.Controls.Add(this.buttonClear);
             this.groupBoxSettings.Controls.Add(this.ButtonRemoveSubtitles);
             this.groupBoxSettings.Controls.Add(this.ButtonMoveSubDown);
@@ -132,12 +144,45 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             // 
+            // buttonSetLanguage
+            // 
+            this.buttonSetLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSetLanguage.Location = new System.Drawing.Point(717, 298);
+            this.buttonSetLanguage.Name = "buttonSetLanguage";
+            this.buttonSetLanguage.Size = new System.Drawing.Size(122, 23);
+            this.buttonSetLanguage.TabIndex = 35;
+            this.buttonSetLanguage.Text = "Set language...";
+            this.buttonSetLanguage.UseVisualStyleBackColor = true;
+            this.buttonSetLanguage.Click += new System.EventHandler(this.buttonSetLanguage_Click);
+            // 
+            // buttonSetDefault
+            // 
+            this.buttonSetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSetDefault.Location = new System.Drawing.Point(717, 269);
+            this.buttonSetDefault.Name = "buttonSetDefault";
+            this.buttonSetDefault.Size = new System.Drawing.Size(122, 23);
+            this.buttonSetDefault.TabIndex = 34;
+            this.buttonSetDefault.Text = "Toggle default";
+            this.buttonSetDefault.UseVisualStyleBackColor = true;
+            this.buttonSetDefault.Click += new System.EventHandler(this.buttonSetDefault_Click);
+            // 
+            // buttonToggleForced
+            // 
+            this.buttonToggleForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonToggleForced.Location = new System.Drawing.Point(717, 240);
+            this.buttonToggleForced.Name = "buttonToggleForced";
+            this.buttonToggleForced.Size = new System.Drawing.Size(122, 23);
+            this.buttonToggleForced.TabIndex = 33;
+            this.buttonToggleForced.Text = "Toggle forced";
+            this.buttonToggleForced.UseVisualStyleBackColor = true;
+            this.buttonToggleForced.Click += new System.EventHandler(this.buttonToggleForced_Click);
+            // 
             // buttonClear
             // 
             this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClear.Location = new System.Drawing.Point(747, 155);
+            this.buttonClear.Location = new System.Drawing.Point(717, 155);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(92, 23);
+            this.buttonClear.Size = new System.Drawing.Size(122, 23);
             this.buttonClear.TabIndex = 30;
             this.buttonClear.Text = "Remove all";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -146,9 +191,9 @@ namespace Nikse.SubtitleEdit.Forms
             // ButtonRemoveSubtitles
             // 
             this.ButtonRemoveSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonRemoveSubtitles.Location = new System.Drawing.Point(748, 127);
+            this.ButtonRemoveSubtitles.Location = new System.Drawing.Point(717, 127);
             this.ButtonRemoveSubtitles.Name = "ButtonRemoveSubtitles";
-            this.ButtonRemoveSubtitles.Size = new System.Drawing.Size(91, 23);
+            this.ButtonRemoveSubtitles.Size = new System.Drawing.Size(122, 23);
             this.ButtonRemoveSubtitles.TabIndex = 29;
             this.ButtonRemoveSubtitles.Text = "Remove";
             this.ButtonRemoveSubtitles.UseVisualStyleBackColor = true;
@@ -157,9 +202,9 @@ namespace Nikse.SubtitleEdit.Forms
             // ButtonMoveSubDown
             // 
             this.ButtonMoveSubDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonMoveSubDown.Location = new System.Drawing.Point(747, 211);
+            this.ButtonMoveSubDown.Location = new System.Drawing.Point(717, 211);
             this.ButtonMoveSubDown.Name = "ButtonMoveSubDown";
-            this.ButtonMoveSubDown.Size = new System.Drawing.Size(92, 23);
+            this.ButtonMoveSubDown.Size = new System.Drawing.Size(122, 23);
             this.ButtonMoveSubDown.TabIndex = 32;
             this.ButtonMoveSubDown.Text = "Move down";
             this.ButtonMoveSubDown.UseVisualStyleBackColor = true;
@@ -168,9 +213,9 @@ namespace Nikse.SubtitleEdit.Forms
             // ButtonMoveSubUp
             // 
             this.ButtonMoveSubUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonMoveSubUp.Location = new System.Drawing.Point(748, 183);
+            this.ButtonMoveSubUp.Location = new System.Drawing.Point(717, 183);
             this.ButtonMoveSubUp.Name = "ButtonMoveSubUp";
-            this.ButtonMoveSubUp.Size = new System.Drawing.Size(91, 23);
+            this.ButtonMoveSubUp.Size = new System.Drawing.Size(122, 23);
             this.ButtonMoveSubUp.TabIndex = 31;
             this.ButtonMoveSubUp.Text = "Move up";
             this.ButtonMoveSubUp.UseVisualStyleBackColor = true;
@@ -179,9 +224,9 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAddSubtitles
             // 
             this.buttonAddSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddSubtitles.Location = new System.Drawing.Point(748, 98);
+            this.buttonAddSubtitles.Location = new System.Drawing.Point(717, 98);
             this.buttonAddSubtitles.Name = "buttonAddSubtitles";
-            this.buttonAddSubtitles.Size = new System.Drawing.Size(91, 23);
+            this.buttonAddSubtitles.Size = new System.Drawing.Size(122, 23);
             this.buttonAddSubtitles.TabIndex = 28;
             this.buttonAddSubtitles.Text = "Add...";
             this.buttonAddSubtitles.UseVisualStyleBackColor = true;
@@ -213,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewSubtitles.HideSelection = false;
             this.listViewSubtitles.Location = new System.Drawing.Point(22, 98);
             this.listViewSubtitles.Name = "listViewSubtitles";
-            this.listViewSubtitles.Size = new System.Drawing.Size(719, 281);
+            this.listViewSubtitles.Size = new System.Drawing.Size(689, 281);
             this.listViewSubtitles.TabIndex = 25;
             this.listViewSubtitles.UseCompatibleStateImageBehavior = false;
             this.listViewSubtitles.View = System.Windows.Forms.View.Details;
@@ -252,9 +297,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStorageRemoveAll,
             this.toolStripSeparator2,
             this.toolStripMenuItemStorageMoveUp,
-            this.toolStripMenuItemStorageMoveDown});
+            this.toolStripMenuItemStorageMoveDown,
+            this.toggleForcedToolStripMenuItem,
+            this.toggleDefaultToolStripMenuItem,
+            this.setLanguageToolStripMenuItem});
             this.contextMenuSubtitles.Name = "contextMenuStrip1";
-            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 126);
+            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 192);
             // 
             // addToolStripMenuItem
             // 
@@ -302,6 +350,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStorageMoveDown.Size = new System.Drawing.Size(202, 22);
             this.toolStripMenuItemStorageMoveDown.Text = "Move down";
             this.toolStripMenuItemStorageMoveDown.Click += new System.EventHandler(this.ButtonMoveSubDown_Click);
+            // 
+            // toggleForcedToolStripMenuItem
+            // 
+            this.toggleForcedToolStripMenuItem.Name = "toggleForcedToolStripMenuItem";
+            this.toggleForcedToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.toggleForcedToolStripMenuItem.Text = "Toggle forced";
+            this.toggleForcedToolStripMenuItem.Click += new System.EventHandler(this.buttonToggleForced_Click);
+            // 
+            // toggleDefaultToolStripMenuItem
+            // 
+            this.toggleDefaultToolStripMenuItem.Name = "toggleDefaultToolStripMenuItem";
+            this.toggleDefaultToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.toggleDefaultToolStripMenuItem.Text = "Toggle default";
+            this.toggleDefaultToolStripMenuItem.DropDownOpening += new System.EventHandler(this.toggleDefaultToolStripMenuItem_DropDownOpening);
+            this.toggleDefaultToolStripMenuItem.Click += new System.EventHandler(this.buttonSetDefault_Click);
             // 
             // buttonOpenVideoFile
             // 
@@ -437,11 +500,35 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x272ToolStripMenuItem.Text = "640x272";
             // 
+            // contextMenuStripForm
+            // 
+            this.contextMenuStripForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeWindowAfterGenerateToolStripMenuItem});
+            this.contextMenuStripForm.Name = "contextMenuStripForm";
+            this.contextMenuStripForm.Size = new System.Drawing.Size(225, 26);
+            // 
+            // closeWindowAfterGenerateToolStripMenuItem
+            // 
+            this.closeWindowAfterGenerateToolStripMenuItem.Checked = true;
+            this.closeWindowAfterGenerateToolStripMenuItem.CheckOnClick = true;
+            this.closeWindowAfterGenerateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.closeWindowAfterGenerateToolStripMenuItem.Name = "closeWindowAfterGenerateToolStripMenuItem";
+            this.closeWindowAfterGenerateToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.closeWindowAfterGenerateToolStripMenuItem.Text = "Close window after generate";
+            // 
+            // setLanguageToolStripMenuItem
+            // 
+            this.setLanguageToolStripMenuItem.Name = "setLanguageToolStripMenuItem";
+            this.setLanguageToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.setLanguageToolStripMenuItem.Text = "Set language...";
+            this.setLanguageToolStripMenuItem.Click += new System.EventHandler(this.buttonSetLanguage_Click);
+            // 
             // GenerateVideoWithSoftSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 439);
+            this.ContextMenuStrip = this.contextMenuStripForm;
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
@@ -461,6 +548,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.PerformLayout();
             this.contextMenuSubtitles.ResumeLayout(false);
             this.contextMenuStripRes.ResumeLayout(false);
+            this.contextMenuStripForm.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -509,5 +597,13 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveUp;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStorageMoveDown;
+        private System.Windows.Forms.Button buttonToggleForced;
+        private System.Windows.Forms.Button buttonSetDefault;
+        private System.Windows.Forms.ToolStripMenuItem toggleForcedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleDefaultToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripForm;
+        private System.Windows.Forms.ToolStripMenuItem closeWindowAfterGenerateToolStripMenuItem;
+        private System.Windows.Forms.Button buttonSetLanguage;
+        private System.Windows.Forms.ToolStripMenuItem setLanguageToolStripMenuItem;
     }
 }
