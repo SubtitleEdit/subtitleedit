@@ -885,6 +885,7 @@ Read more info (web)?</WhisperNotFound>
   <GenerateVideoWithEmbeddedSubs>
     <Title>Generate video with embedded subtitles</Title>
     <InputVideoFile>Input video file</InputVideoFile>
+    <SubtitlesX>Subtitles ({0})</SubtitlesX>
     <SetLanguage>Set language...</SetLanguage>
     <ToggleForced>Toggle forced</ToggleForced>
     <ToggleDefault>Toggle default</ToggleDefault>
