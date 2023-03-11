@@ -41,10 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.Title;
             labelInputVideoFile.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.InputVideoFile;
             labelSubtitles.Text = string.Empty;
-            buttonAddSubtitles.Text = LanguageSettings.Current.DvdSubRip.Add; 
+            buttonAddSubtitles.Text = LanguageSettings.Current.DvdSubRip.Add;
             ButtonRemoveSubtitles.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
             buttonClear.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
-            ButtonMoveSubUp.Text = LanguageSettings.Current.DvdSubRip.MoveUp; 
+            ButtonMoveSubUp.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
             ButtonMoveSubDown.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
             buttonToggleForced.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleForced;
             buttonSetDefault.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
@@ -80,10 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadVideo(string inputVideoFileName)
         {
-            listViewSubtitles.Items.Clear();
-            _softSubs = new List<VideoPreviewGeneratorSub>();
-
-            if (!File.Exists(inputVideoFileName))
+            if (string.IsNullOrEmpty(inputVideoFileName) || !File.Exists(inputVideoFileName))
             {
                 return;
             }
@@ -95,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             textBoxInputFileName.Text = inputVideoFileName;
+            buttonGenerate.Enabled = true;
             _inputVideoFileName = inputVideoFileName;
             _videoInfo = videoInfo;
 
@@ -147,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new ListViewItem
             {
                 Tag = sub.Tag,
-                Text = sub.SubtitleFormat != null ? sub.SubtitleFormat.Name : sub.Name,
+                Text = sub.SubtitleFormat != null ? sub.SubtitleFormat.Name : sub.Format,
             };
             item.SubItems.Add(GetDisplayLanguage(sub.Language));
             item.SubItems.Add(sub.IsDefault.ToString(CultureInfo.InvariantCulture));
@@ -191,6 +189,28 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddListViewItem(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+            {
+                return;
+            }
+
+            if (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
+                FileUtil.IsBluRaySup(fileName))
+            {
+                AddListViewItem(new VideoPreviewGeneratorSub
+                {
+                    Name = Path.GetFileName(fileName),
+                    Language = "eng", //TODO: get from file name or sup
+                    Format = "Blu-ray sup",
+                    SubtitleFormat = null,
+                    IsNew = true,
+                    IsForced = false,
+                    IsDefault = false,
+                    FileName = fileName,
+                });
+                return;
+            }
+
             var subtitle = Subtitle.Parse(fileName);
             if (subtitle == null || subtitle.Paragraphs.Count == 0)
             {
@@ -263,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var saveDialog = new SaveFileDialog
             {
                 FileName = SuggestNewVideoFileName(),
-                Filter = GetTargetVideoFilter(), 
+                Filter = GetTargetVideoFilter(),
                 AddExtension = true
             })
             {
@@ -312,7 +332,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!File.Exists(VideoFileName) || new FileInfo(VideoFileName).Length == 0)
             {
                 SeLogger.Error(Environment.NewLine + "Generate embedded video failed: " + Environment.NewLine + _log);
-                MessageBox.Show("Generate embedded video failed" + Environment.NewLine + 
+                MessageBox.Show("Generate embedded video failed" + Environment.NewLine +
                                 "For more info see the error log: " + SeLogger.ErrorFile);
                 buttonGenerate.Enabled = true;
                 groupBoxSettings.Enabled = true;
@@ -441,13 +461,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!File.Exists(_inputVideoFileName))
             {
-                MessageBox.Show(string.Format(LanguageSettings.Current.Main.FileNotFound, _inputVideoFileName));
                 buttonGenerate.Enabled = false;
-                return;
+            }
+            else
+            {
+                buttonGenerate.Focus();
             }
 
             UiUtil.FixFonts(groupBoxSettings, 2000);
-            buttonGenerate.Focus();
         }
 
         private void buttonOpenVideoFile_Click(object sender, EventArgs e)
