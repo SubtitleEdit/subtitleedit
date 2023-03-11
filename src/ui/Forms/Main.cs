@@ -34668,7 +34668,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new GenerateVideoWithSoftSubs(_subtitle, _videoFileName, _videoInfo, false))
+            using (var form = new GenerateVideoWithSoftSubs(_subtitle, _videoFileName, _videoInfo))
             {
                 var result = form.ShowDialog(this);
                 if (result != DialogResult.OK)

@@ -2356,6 +2356,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateVideoWithEmbeddedSubs/ToggleDefault":
                     language.GenerateVideoWithEmbeddedSubs.ToggleDefault = reader.Value;
                     break;
+                case "GenerateVideoWithEmbeddedSubs/Default":
+                    language.GenerateVideoWithEmbeddedSubs.Default = reader.Value;
+                    break;
                 case "GenerateVideoWithEmbeddedSubs/XGeneratedWithEmbeddedSubs":
                     language.GenerateVideoWithEmbeddedSubs.XGeneratedWithEmbeddedSubs = reader.Value;
                     break;
