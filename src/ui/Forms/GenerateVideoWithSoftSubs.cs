@@ -96,13 +96,13 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             _videoInfo = videoInfo;
 
-            using (var m = new MatroskaFile(inputVideoFileName))
+            using (var matroska = new MatroskaFile(inputVideoFileName))
             {
-                if (m.IsValid)
+                if (matroska.IsValid)
                 {
-                    foreach (var track in m.GetTracks().Where(p => p.IsSubtitle))
+                    foreach (var track in matroska.GetTracks().Where(p => p.IsSubtitle))
                     {
-                        AddListViewItem(track);
+                        AddListViewItem(track, matroska);
                     }
 
                     return;
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(GetDisplayLanguage(sub.Language));
             item.SubItems.Add(sub.IsDefault.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(sub.IsForced.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(sub.FileName);
+            item.SubItems.Add(sub.IsNew ? sub.FileName : string.Empty);
             listViewSubtitles.Items.Add(item);
 
             _softSubs.Add(sub);
@@ -174,8 +174,23 @@ namespace Nikse.SubtitleEdit.Forms
             return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
         }
 
-        private void AddListViewItem(MatroskaTrackInfo track)
+        private void AddListViewItem(MatroskaTrackInfo track, MatroskaFile matroska)
         {
+            if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase) ||
+                track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase) ||
+                track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase) ||
+                track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                return; // not supported
+            }
+
+            var subtitle = new Subtitle();
+            var sub = matroska.GetSubtitle(track.TrackNumber, null);
+            var format = Utilities.LoadMatroskaTextSubtitle(track, matroska, sub, subtitle);
+
+            var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            File.WriteAllText(fileName, subtitle.ToText(format), Encoding.UTF8);
+
             AddListViewItem(new VideoPreviewGeneratorSub
             {
                 Name = track.CodecId,
@@ -184,6 +199,8 @@ namespace Nikse.SubtitleEdit.Forms
                 IsForced = track.IsForced,
                 IsDefault = track.IsDefault,
                 Tag = track,
+                SubtitleFormat = format,
+                FileName = fileName,
             });
         }
 

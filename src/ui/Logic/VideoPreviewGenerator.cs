@@ -292,20 +292,25 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (!string.IsNullOrEmpty(softSub.Language))
                 {
-                    var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(softSub.Language);
-                    if (softSub.Language.Length == 3)
+                    var lang = string.IsNullOrEmpty(softSub.Language) ? string.Empty : softSub.Language.ToLowerInvariant();
+                    var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang);
+                    if (lang.Length == 3)
                     {
                         threeLetterCode = softSub.Language;
                     }
 
-                    var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == softSub.Language)?.EnglishName;
+                    var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
+                    if (languageName == null)
+                    {
+                        languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.TwoLetterCode == lang || p.EnglishName.ToLowerInvariant() == lang)?.EnglishName;
+                    }
 
                     if (!string.IsNullOrEmpty(threeLetterCode) && !string.IsNullOrEmpty(languageName))
                     {
                         subsMeta += $" -metadata:s:s:{count - 1} language=\"{threeLetterCode}\"";
                         subsMeta += $" -metadata:s:s:{count - 1} title=\"{languageName}\"";
                     }
-                    else
+                    else if (!string.IsNullOrEmpty(softSub.Language))
                     {
                         subsMeta += $" -metadata:s:s:{count - 1} language=\"{softSub.Language}\"";
                         subsMeta += $" -metadata:s:s:{count - 1} title=\"{softSub.Language}\"";
