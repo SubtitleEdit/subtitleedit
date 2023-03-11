@@ -889,6 +889,7 @@ Read more info (web)?</WhisperNotFound>
     <SetLanguage>Set language...</SetLanguage>
     <ToggleForced>Toggle forced</ToggleForced>
     <ToggleDefault>Toggle default</ToggleDefault>
+    <Default>Default</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" generated with embedded subtitles</XGeneratedWithEmbeddedSubs>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
