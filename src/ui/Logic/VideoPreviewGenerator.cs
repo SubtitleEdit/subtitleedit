@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -328,20 +327,24 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     subsFormat = " -c:s mov_text";
                 }
-                else if (softSub.SubtitleFormat.GetType() == typeof(SubRip))
+                else if (softSub.SubtitleFormat == null && softSub.Format == "Blu-ray sup")
+                {
+                    subsFormat += $" -c:s:s:{count - 1} copy"; // should be "pgs" or "pgssub" or ?
+                }
+                else if (softSub.SubtitleFormat?.GetType() == typeof(SubRip))
                 {
                     subsFormat += $" -c:s:s:{count - 1} srt";
                 }
-                else if (softSub.SubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha))
+                else if (softSub.SubtitleFormat?.GetType() == typeof(AdvancedSubStationAlpha))
                 {
                     subsFormat += $" -c:s:s:{count - 1} ass";
                 }
-                else if (softSub.SubtitleFormat.GetType() == typeof(SubStationAlpha))
+                else if (softSub.SubtitleFormat?.GetType() == typeof(SubStationAlpha))
                 {
                     subsFormat += $" -c:s:s:{count - 1} ssa";
                 }
-                else if (softSub.SubtitleFormat.GetType() == typeof(WebVTT) ||
-                         softSub.SubtitleFormat.GetType() == typeof(WebVTTFileWithLineNumber))
+                else if (softSub.SubtitleFormat?.GetType() == typeof(WebVTT) ||
+                         softSub.SubtitleFormat?.GetType() == typeof(WebVTTFileWithLineNumber))
                 {
                     subsFormat += $" -c:s:s:{count - 1} webvtt";
                 }

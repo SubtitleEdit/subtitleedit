@@ -2,7 +2,8 @@
 
 3.6.12 (xth March 2023) BETA
 * NEW:
-   * Add Whsper via GPU (ConstMe, windows only) - thx albino1/darnn/smith02ct
+   * Add embedding of subtitles in video files - thx David
+   * Add Whisper via GPU (ConstMe, windows only) - thx albino1/darnn/smith02ct
    * Allow video cut when exporting video with burned-in sub - thx Daniela/David/Leon
    * Batch convert: Image based format to png with time code - thx Ninelpienel 
    * Add new shortcut for split + auto-br - thx oep42
