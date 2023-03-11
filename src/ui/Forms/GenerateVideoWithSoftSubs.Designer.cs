@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStorageMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleForcedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpenVideoFile = new System.Windows.Forms.Button();
             this.textBoxInputFileName = new System.Windows.Forms.TextBox();
             this.textBoxLog = new System.Windows.Forms.TextBox();
@@ -79,7 +80,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripForm = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.closeWindowAfterGenerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setLanguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultSaveInMatroskamkvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultSaveInMp4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
@@ -262,6 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewSubtitles.TabIndex = 25;
             this.listViewSubtitles.UseCompatibleStateImageBehavior = false;
             this.listViewSubtitles.View = System.Windows.Forms.View.Details;
+            this.listViewSubtitles.SelectedIndexChanged += new System.EventHandler(this.listViewSubtitles_SelectedIndexChanged);
             this.listViewSubtitles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewSubtitles_DragDrop);
             this.listViewSubtitles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewSubtitles_DragEnter);
             // 
@@ -365,6 +368,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toggleDefaultToolStripMenuItem.Text = "Toggle default";
             this.toggleDefaultToolStripMenuItem.DropDownOpening += new System.EventHandler(this.toggleDefaultToolStripMenuItem_DropDownOpening);
             this.toggleDefaultToolStripMenuItem.Click += new System.EventHandler(this.buttonSetDefault_Click);
+            // 
+            // setLanguageToolStripMenuItem
+            // 
+            this.setLanguageToolStripMenuItem.Name = "setLanguageToolStripMenuItem";
+            this.setLanguageToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.setLanguageToolStripMenuItem.Text = "Set language...";
+            this.setLanguageToolStripMenuItem.Click += new System.EventHandler(this.buttonSetLanguage_Click);
             // 
             // buttonOpenVideoFile
             // 
@@ -503,9 +513,11 @@ namespace Nikse.SubtitleEdit.Forms
             // contextMenuStripForm
             // 
             this.contextMenuStripForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.closeWindowAfterGenerateToolStripMenuItem});
+            this.closeWindowAfterGenerateToolStripMenuItem,
+            this.defaultSaveInMatroskamkvToolStripMenuItem,
+            this.defaultSaveInMp4ToolStripMenuItem});
             this.contextMenuStripForm.Name = "contextMenuStripForm";
-            this.contextMenuStripForm.Size = new System.Drawing.Size(225, 26);
+            this.contextMenuStripForm.Size = new System.Drawing.Size(238, 92);
             // 
             // closeWindowAfterGenerateToolStripMenuItem
             // 
@@ -513,15 +525,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.closeWindowAfterGenerateToolStripMenuItem.CheckOnClick = true;
             this.closeWindowAfterGenerateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.closeWindowAfterGenerateToolStripMenuItem.Name = "closeWindowAfterGenerateToolStripMenuItem";
-            this.closeWindowAfterGenerateToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.closeWindowAfterGenerateToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.closeWindowAfterGenerateToolStripMenuItem.Text = "Close window after generate";
             // 
-            // setLanguageToolStripMenuItem
+            // defaultSaveInMatroskamkvToolStripMenuItem
             // 
-            this.setLanguageToolStripMenuItem.Name = "setLanguageToolStripMenuItem";
-            this.setLanguageToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.setLanguageToolStripMenuItem.Text = "Set language...";
-            this.setLanguageToolStripMenuItem.Click += new System.EventHandler(this.buttonSetLanguage_Click);
+            this.defaultSaveInMatroskamkvToolStripMenuItem.Checked = true;
+            this.defaultSaveInMatroskamkvToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.defaultSaveInMatroskamkvToolStripMenuItem.Name = "defaultSaveInMatroskamkvToolStripMenuItem";
+            this.defaultSaveInMatroskamkvToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.defaultSaveInMatroskamkvToolStripMenuItem.Text = "Default save in Matroska (mkv)";
+            this.defaultSaveInMatroskamkvToolStripMenuItem.Click += new System.EventHandler(this.defaultSaveInMatroskamkvToolStripMenuItem_Click);
+            // 
+            // defaultSaveInMp4ToolStripMenuItem
+            // 
+            this.defaultSaveInMp4ToolStripMenuItem.Name = "defaultSaveInMp4ToolStripMenuItem";
+            this.defaultSaveInMp4ToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.defaultSaveInMp4ToolStripMenuItem.Text = "Default save in mp4";
+            this.defaultSaveInMp4ToolStripMenuItem.Click += new System.EventHandler(this.defaultSaveInMp4ToolStripMenuItem_Click);
             // 
             // GenerateVideoWithSoftSubs
             // 
@@ -605,5 +626,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem closeWindowAfterGenerateToolStripMenuItem;
         private System.Windows.Forms.Button buttonSetLanguage;
         private System.Windows.Forms.ToolStripMenuItem setLanguageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultSaveInMatroskamkvToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultSaveInMp4ToolStripMenuItem;
     }
 }

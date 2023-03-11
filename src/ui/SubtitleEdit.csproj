@@ -345,6 +345,12 @@
     <Compile Include="Forms\Ocr\WordSplitDictionaryGenerator.Designer.cs">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options\ChooseIsoLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options\ChooseIsoLanguage.Designer.cs">
+      <DependentUpon>ChooseIsoLanguage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Options\SettingsCustomContinuationStyle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1604,6 +1610,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\WordSplitDictionaryGenerator.resx">
       <DependentUpon>WordSplitDictionaryGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options\ChooseIsoLanguage.resx">
+      <DependentUpon>ChooseIsoLanguage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options\SettingsCustomContinuationStyle.resx">
       <DependentUpon>SettingsCustomContinuationStyle.cs</DependentUpon>
