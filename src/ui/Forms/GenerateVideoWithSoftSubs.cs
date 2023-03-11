@@ -133,13 +133,29 @@ namespace Nikse.SubtitleEdit.Forms
                 Tag = sub.Tag,
                 Text = sub.Name,
             };
-            item.SubItems.Add(sub.Language);
+            item.SubItems.Add(GetDisplayLanguage(sub.Language));
             item.SubItems.Add(sub.IsDefault.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(sub.IsForced.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(sub.FileName);
             listViewSubtitles.Items.Add(item);
 
             _softSubs.Add(sub);
+        }
+
+        private static string GetDisplayLanguage(string language)
+        {
+            if (string.IsNullOrWhiteSpace(language))
+            {
+                return "Undefined";
+            }
+
+            var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(language);
+            if (language.Length == 3)
+            {
+                threeLetterCode =language;
+            }
+
+            return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
         }
 
         private void AddListViewItem(MatroskaTrackInfo track)
@@ -282,7 +298,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            DialogResult = DialogResult.OK;
+            if (closeWindowAfterGenerateToolStripMenuItem.Checked)
+            {
+                DialogResult = DialogResult.OK;
+            }
         }
 
         private static string GetAssaFileName(string inputVideoFileName)
@@ -305,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
             fileName += ".embed";
-            return fileName.Replace(".", "_") + ".mp4";
+            return fileName.Replace(".", "_") + ".mkv";
         }
 
         private void RunEmbedding()
@@ -560,6 +579,30 @@ namespace Nikse.SubtitleEdit.Forms
             listView.Items.Insert(idx, item);
         }
 
+        private void MoveToTop(ListView listView)
+        {
+            if (listView.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var idx = listView.SelectedItems[0].Index;
+            if (idx == 0)
+            {
+                return;
+            }
+
+            var item = listView.SelectedItems[0];
+            listView.Items.RemoveAt(idx);
+
+            var style = _softSubs[idx];
+            _softSubs.RemoveAt(idx);
+            _softSubs.Insert(0, style);
+
+            idx = 0;
+            listView.Items.Insert(idx, item);
+        }
+
         private void ButtonMoveSubUp_Click(object sender, EventArgs e)
         {
             MoveUp(listViewSubtitles);
@@ -573,6 +616,54 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenerateVideoWithSoftSubs_ResizeEnd(object sender, EventArgs e)
         {
             listViewSubtitles.AutoSizeLastColumn();
+        }
+
+        private void buttonToggleForced_Click(object sender, EventArgs e)
+        {
+            if (listViewSubtitles.SelectedIndices.Count < 1)
+            {
+                return;
+            }
+
+            foreach (int index in listViewSubtitles.SelectedIndices)
+            {
+                _softSubs[index].IsForced = !_softSubs[index].IsForced;
+                listViewSubtitles.Items[index].SubItems[3].Text = _softSubs[index].IsForced.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        private void buttonSetDefault_Click(object sender, EventArgs e)
+        {
+            if (listViewSubtitles.SelectedIndices.Count != 1)
+            {
+                return;
+            }
+
+            var selectedIndex = listViewSubtitles.SelectedItems[0].Index;
+            if (_softSubs[selectedIndex].IsDefault)
+            {
+                _softSubs[selectedIndex].IsDefault = false;
+                listViewSubtitles.Items[selectedIndex].SubItems[2].Text = _softSubs[selectedIndex].IsDefault.ToString(CultureInfo.InvariantCulture);
+                return;
+            }
+
+            for (var index = 0; index < listViewSubtitles.Items.Count; index++)
+            {
+                _softSubs[index].IsDefault = index == selectedIndex;
+                listViewSubtitles.Items[index].SubItems[2].Text = _softSubs[index].IsDefault.ToString(CultureInfo.InvariantCulture);
+            }
+
+            MoveToTop(listViewSubtitles);
+        }
+
+        private void toggleDefaultToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            toggleDefaultToolStripMenuItem.Visible = listViewSubtitles.SelectedIndices.Count == 1;
+        }
+
+        private void buttonSetLanguage_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
