@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
             var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(language);
             if (language.Length == 3)
             {
-                threeLetterCode =language;
+                threeLetterCode = language;
             }
 
             return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
@@ -304,27 +304,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string GetAssaFileName(string inputVideoFileName)
-        {
-            var path = Path.GetDirectoryName(inputVideoFileName);
-            for (var i = 0; i < int.MaxValue; i++)
-            {
-                var guidLetters = Guid.NewGuid().ToString().RemoveChar('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-');
-                var fileName = Path.Combine(path, $"{guidLetters}.ass");
-                if (!File.Exists(fileName))
-                {
-                    return fileName;
-                }
-            }
-
-            return Path.Combine(path, "qwerty12.ass");
-        }
-
         private string SuggestNewVideoFileName()
         {
             var fileName = Path.GetFileNameWithoutExtension(_inputVideoFileName);
             fileName += ".embed";
-            return fileName.Replace(".", "_") + ".mkv";
+            fileName += defaultSaveInMatroskamkvToolStripMenuItem.Checked ? ".mkv" : ".mp4";
+            return fileName.Replace(".", "_");
         }
 
         private void RunEmbedding()
@@ -413,6 +398,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void GenerateVideoWithHardSubs_Shown(object sender, EventArgs e)
         {
             listViewSubtitles.AutoSizeLastColumn();
+            listViewSubtitles_SelectedIndexChanged(null, null);
 
             if (!File.Exists(_inputVideoFileName))
             {
@@ -421,9 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var targetFileSizeMb = (int)Math.Round(new FileInfo(_inputVideoFileName).Length / 1024.0 / 1024);
             UiUtil.FixFonts(groupBoxSettings, 2000);
-
             buttonGenerate.Focus();
         }
 
@@ -663,7 +647,47 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSetLanguage_Click(object sender, EventArgs e)
         {
+            if (listViewSubtitles.SelectedIndices.Count < 1)
+            {
+                return;
+            }
 
+            using (var cl = new Options.ChooseIsoLanguage())
+            {
+                if (cl.ShowDialog(this) == DialogResult.OK)
+                {
+                    foreach (int index in listViewSubtitles.SelectedIndices)
+                    {
+                        _softSubs[index].Language = cl.CultureName;
+                        listViewSubtitles.Items[index].SubItems[1].Text = GetDisplayLanguage(cl.CultureName);
+                    }
+                }
+            }
+        }
+
+        private void listViewSubtitles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var count = listViewSubtitles.SelectedItems.Count;
+
+            ButtonRemoveSubtitles.Enabled = count > 0;
+            buttonClear.Enabled = count > 0;
+            ButtonMoveSubUp.Enabled = count == 1;
+            ButtonMoveSubDown.Enabled = count == 1;
+            buttonToggleForced.Enabled = count > 0;
+            buttonSetDefault.Enabled = count == 1;
+            buttonSetLanguage.Enabled = count > 0;
+        }
+
+        private void defaultSaveInMatroskamkvToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            defaultSaveInMatroskamkvToolStripMenuItem.Checked = true;
+            defaultSaveInMp4ToolStripMenuItem.Checked = false;
+        }
+
+        private void defaultSaveInMp4ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            defaultSaveInMatroskamkvToolStripMenuItem.Checked = false;
+            defaultSaveInMp4ToolStripMenuItem.Checked = true;
         }
     }
 }
