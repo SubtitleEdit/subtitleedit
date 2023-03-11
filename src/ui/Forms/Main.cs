@@ -44,7 +44,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Forms.AudioToText;
-using static System.Windows.Forms.LinkLabel;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -34676,7 +34675,6 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var encodingTime = new TimeCode(form.MillisecondsEncoding).ToString();
                 using (var f = new ExportPngXmlDialogOpenFolder(string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.XGeneratedWithEmbeddedSubs, Path.GetFileName(form.VideoFileName)), Path.GetDirectoryName(form.VideoFileName), form.VideoFileName))
                 {
                     f.ShowDialog(this);

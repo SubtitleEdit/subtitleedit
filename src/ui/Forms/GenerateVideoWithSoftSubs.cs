@@ -341,6 +341,8 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxSettings.Enabled = true;
                 return;
             }
+
+            DialogResult = DialogResult.OK;
         }
 
         private static string GetTargetVideoFilter()
