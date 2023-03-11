@@ -978,6 +978,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string SetLanguage { get; set; }
             public string ToggleForced { get; set; }
             public string ToggleDefault { get; set; }
+            public string Default { get; set; }
             public string XGeneratedWithEmbeddedSubs { get; set; }
         }
 
