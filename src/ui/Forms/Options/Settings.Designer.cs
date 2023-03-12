@@ -415,6 +415,7 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
+            this.exportAsHtmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -1941,33 +1942,34 @@
             this.toolStripMenuItemShortcutsCollapse,
             this.toolStripSeparator1,
             this.importShortcutsToolStripMenuItem,
-            this.exportShortcutsToolStripMenuItem});
+            this.exportShortcutsToolStripMenuItem,
+            this.exportAsHtmlToolStripMenuItem});
             this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
-            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(120, 76);
+            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(181, 120);
             // 
             // toolStripMenuItemShortcutsCollapse
             // 
             this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
-            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(119, 22);
+            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
             this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(116, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // importShortcutsToolStripMenuItem
             // 
             this.importShortcutsToolStripMenuItem.Name = "importShortcutsToolStripMenuItem";
-            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.importShortcutsToolStripMenuItem.Text = "Import...";
             this.importShortcutsToolStripMenuItem.Click += new System.EventHandler(this.importShortcutsToolStripMenuItem_Click);
             // 
             // exportShortcutsToolStripMenuItem
             // 
             this.exportShortcutsToolStripMenuItem.Name = "exportShortcutsToolStripMenuItem";
-            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportShortcutsToolStripMenuItem.Text = "Export...";
             this.exportShortcutsToolStripMenuItem.Click += new System.EventHandler(this.exportShortcutsToolStripMenuItem_Click);
             // 
@@ -4983,12 +4985,20 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
+            // exportAsHtmlToolStripMenuItem
+            // 
+            this.exportAsHtmlToolStripMenuItem.Name = "exportAsHtmlToolStripMenuItem";
+            this.exportAsHtmlToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportAsHtmlToolStripMenuItem.Text = "Export as html...";
+            this.exportAsHtmlToolStripMenuItem.Click += new System.EventHandler(this.exportAsHtmlToolStripMenuItem_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFont);
@@ -4996,7 +5006,6 @@
             this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelFileTypeAssociations);
-            this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelSyntaxColoring);
@@ -5507,5 +5516,6 @@
         private System.Windows.Forms.ComboBox comboBoxTranslationAutoSuffix;
         private System.Windows.Forms.Label labelTranslationAutoSuffix;
         private System.Windows.Forms.CheckBox checkBoxUseWordSplitListAvoidPropercase;
+        private System.Windows.Forms.ToolStripMenuItem exportAsHtmlToolStripMenuItem;
     }
 }

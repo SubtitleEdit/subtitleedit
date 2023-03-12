@@ -3409,5 +3409,71 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
         }
+
+        private void exportAsHtmlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Html files|*.html";
+            saveFileDialog1.FileName = "SE_Shortcuts";
+            if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            var html = new StringBuilder();
+            html.AppendLine("<!DOCTYPE html>");
+            html.AppendLine("<html lang=\"en\">");
+            html.AppendLine("<head>");
+            html.AppendLine("  <title>Subtitle Edit shortcuts</title>");
+            html.AppendLine("  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">");
+            html.AppendLine("</head>");
+            html.AppendLine("<body>");
+            html.AppendLine("<h2>Subtitle Edit shortcuts</h2>");
+            html.AppendLine("<br />");
+            html.AppendLine("<table id=\"tableShortcuts\" class=\"table table-striped\">");
+            html.AppendLine("  <thead>");
+            html.AppendLine("    <tr>");
+            html.AppendLine("      <th>Control</th>");
+            html.AppendLine("      <th>Function</th>");
+            html.AppendLine("      <th>Shortcut</th>");
+            html.AppendLine("    </tr>");
+            html.AppendLine("  </thead>");
+            html.AppendLine("  <tbody>");
+            foreach (TreeNode node in treeViewShortcuts.Nodes)
+            {
+                html.AppendLine("      <tr>");
+                html.AppendLine($"        <td><b>{node.Text}</b></td>");
+                html.AppendLine("        <td></td>");
+                html.AppendLine("        <td></td>");
+                html.AppendLine("      </tr>");
+                foreach (TreeNode shortcutNode in node.Nodes)
+                {
+                    var indexOfBracket = shortcutNode.Text.IndexOf('[');
+                    var description = shortcutNode.Text;
+                    var shortcut = string.Empty;
+                    if (indexOfBracket >= 0)
+                    {
+                        shortcut = description.Substring(indexOfBracket).Trim(' ', '[', ']');
+                        if (shortcut == "None")
+                        {
+                            shortcut = string.Empty;
+                        }
+
+                        description = description.Substring(0,indexOfBracket).Trim(' ', '[');
+                    }
+
+                    html.AppendLine("      <tr>");
+                    html.AppendLine($"        <td>{node.Text}</td>");
+                    html.AppendLine($"        <td>{description}</td>");
+                    html.AppendLine($"        <td>{shortcut}</td>");
+                    html.AppendLine("      </tr>");
+                }
+            }
+
+            html.AppendLine("  </tbody>");
+            html.AppendLine("</body>");
+            html.AppendLine("</html>");
+
+            File.WriteAllText(saveFileDialog1.FileName, html.ToString());
+        }
     }
 }
