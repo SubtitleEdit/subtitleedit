@@ -284,6 +284,7 @@
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseWordSplitListAvoidPropercase = new System.Windows.Forms.CheckBox();
             this.checkBoxUseWordSplitList = new System.Windows.Forms.CheckBox();
             this.buttonFixContinuationStyleSettings = new System.Windows.Forms.Button();
             this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
@@ -414,7 +415,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBoxUseWordSplitListAvoidPropercase = new System.Windows.Forms.CheckBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -921,7 +921,7 @@
             // 
             this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(203, 242);
             this.numericUpDownMaxNumberOfLines.Maximum = new decimal(new int[] {
-            25,
+            999,
             0,
             0,
             0});
@@ -3609,6 +3609,16 @@
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
             // 
+            // checkBoxUseWordSplitListAvoidPropercase
+            // 
+            this.checkBoxUseWordSplitListAvoidPropercase.AutoSize = true;
+            this.checkBoxUseWordSplitListAvoidPropercase.Location = new System.Drawing.Point(34, 146);
+            this.checkBoxUseWordSplitListAvoidPropercase.Name = "checkBoxUseWordSplitListAvoidPropercase";
+            this.checkBoxUseWordSplitListAvoidPropercase.Size = new System.Drawing.Size(102, 17);
+            this.checkBoxUseWordSplitListAvoidPropercase.TabIndex = 35;
+            this.checkBoxUseWordSplitListAvoidPropercase.Text = "Skip propercase";
+            this.checkBoxUseWordSplitListAvoidPropercase.UseVisualStyleBackColor = true;
+            // 
             // checkBoxUseWordSplitList
             // 
             this.checkBoxUseWordSplitList.AutoSize = true;
@@ -4973,24 +4983,14 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // checkBoxUseWordSplitListAvoidPropercase
-            // 
-            this.checkBoxUseWordSplitListAvoidPropercase.AutoSize = true;
-            this.checkBoxUseWordSplitListAvoidPropercase.Location = new System.Drawing.Point(34, 146);
-            this.checkBoxUseWordSplitListAvoidPropercase.Name = "checkBoxUseWordSplitListAvoidPropercase";
-            this.checkBoxUseWordSplitListAvoidPropercase.Size = new System.Drawing.Size(102, 17);
-            this.checkBoxUseWordSplitListAvoidPropercase.TabIndex = 35;
-            this.checkBoxUseWordSplitListAvoidPropercase.Text = "Skip propercase";
-            this.checkBoxUseWordSplitListAvoidPropercase.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelNetwork);
