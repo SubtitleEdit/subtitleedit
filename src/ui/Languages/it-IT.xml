@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.11</Version>
-    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 08.03.2023</TranslatedBy>
+    <TranslatedBy>Tradotto da NAMP e bovirus - Data traduzione: 12.03.2023</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -882,6 +882,16 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <GetEndPosition>Ottieni posizione finale</GetEndPosition>
     <AlignRight>Allinea a destra</AlignRight>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Genera video con sottotitoli incorporati</Title>
+    <InputVideoFile>File video sorgente</InputVideoFile>
+    <SubtitlesX>Sottotitoli ({0})</SubtitlesX>
+    <SetLanguage>Imposta lingua...</SetLanguage>
+    <ToggleForced>Attiva/disattiva sottotitoli forzati</ToggleForced>
+    <ToggleDefault>Attiva/disattiva impostazione predefinita</ToggleDefault>
+    <Default>Predefinita</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}" generato con sottotitoli incorporati</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Aggiunta dizionari</Title>
     <DescriptionLine1>Il controllo ortografico di Subtitle Edit è basato sul motore NHunspell</DescriptionLine1>
@@ -1282,7 +1292,8 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <SmptTimeMode>Temporizzazione SMPTE (drop fotogramma)</SmptTimeMode>
         <GenerateTextFromVideo>Genera testo da video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Genera video vuoto...</GenerateBlankVideo>
-        <GenerateVideoWithBurnedInSub>Genera video con sub incorporati...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithBurnedInSub>Genera video con sottotitoli forzati...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Genera video con sottotitoli incorporati...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToText>Audio a testo...</VideoAudioToText>
         <ImportChaptersFromVideo>Importa capitoli dal video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Genera/importa modifiche alla scena...</GenerateImportShotChanges>
