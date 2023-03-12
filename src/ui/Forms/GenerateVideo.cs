@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelResolution.Text = LanguageSettings.Current.ExportPngXml.VideoResolution;
             labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            checkBoxAddTimeCode.Text = LanguageSettings.Current.ImportText.GenerateTimeCodes;
             progressBar1.Visible = false;
             labelPleaseWait.Visible = false;
             labelProgress.Text = string.Empty;
@@ -160,6 +161,12 @@ namespace Nikse.SubtitleEdit.Forms
                 File.Delete(VideoFileName);
             }
 
+            var addTimeColor = "white";
+            if (radioButtonCheckeredImage.Checked)
+            {
+                addTimeColor = "black";
+            }
+
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             var process = VideoPreviewGenerator.GenerateVideoFile(
@@ -171,7 +178,9 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonCheckeredImage.Checked,
                 decimal.Parse(comboBoxFrameRate.Text),
                 radioButtonImage.Checked ? _backgroundImage : null,
-                OutputHandler);
+                OutputHandler,
+                checkBoxAddTimeCode.Checked,
+                addTimeColor);
 
             process.Start();
             process.BeginOutputReadLine();

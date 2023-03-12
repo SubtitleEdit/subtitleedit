@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static Process GenerateVideoFile(string previewFileName, int seconds, int width, int height, Color color, bool checkered, decimal frameRate, Bitmap bitmap, DataReceivedEventHandler dataReceivedHandler = null)
+        public static Process GenerateVideoFile(string previewFileName, int seconds, int width, int height, Color color, bool checkered, decimal frameRate, Bitmap bitmap, DataReceivedEventHandler dataReceivedHandler = null, bool addTimeCode = false, string addTimeColor = "white")
         {
             Process processMakeVideo;
 
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var tempImageFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
                 var backgroundImage = ExportPngXml.ResizeBitmap(bitmap, width, height);
                 backgroundImage.Save(tempImageFileName, ImageFormat.Png);
-                processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, backgroundImage.Width, backgroundImage.Height, seconds, frameRate);
+                processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, backgroundImage.Width, backgroundImage.Height, seconds, frameRate, addTimeCode, addTimeColor);
             }
             else if (checkered)
             {
@@ -53,11 +53,11 @@ namespace Nikse.SubtitleEdit.Logic
                 var backgroundImage = TextDesigner.MakeBackgroundImage(width, height, rectangleSize, Configuration.Settings.General.UseDarkTheme);
                 var tempImageFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".png");
                 backgroundImage.Save(tempImageFileName, ImageFormat.Png);
-                processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, backgroundImage.Width, backgroundImage.Height, seconds, frameRate);
+                processMakeVideo = GetFFmpegProcess(tempImageFileName, previewFileName, backgroundImage.Width, backgroundImage.Height, seconds, frameRate, addTimeCode, addTimeColor);
             }
             else
             {
-                processMakeVideo = GetFFmpegProcess(color, previewFileName, width, height, seconds, frameRate);
+                processMakeVideo = GetFFmpegProcess(color, previewFileName, width, height, seconds, frameRate, addTimeCode, addTimeColor);
             }
 
             SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
@@ -183,34 +183,49 @@ namespace Nikse.SubtitleEdit.Logic
             return processMakeVideo;
         }
 
-        private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
+        private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
         {
+            var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor);
+
             return new Process
             {
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-t {seconds} -loop 1 -r {frameRate.ToString(CultureInfo.InvariantCulture)} -i \"{imageFileName}\" -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
+                    Arguments = $"-t {seconds} -loop 1 -r {frameRate.ToString(CultureInfo.InvariantCulture)} -i \"{imageFileName}\" -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight}{drawText} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
         }
 
-        private static Process GetFFmpegProcess(Color color, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate)
+        private static Process GetFFmpegProcess(Color color, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
         {
             var htmlColor = $"#{(color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2")).ToUpperInvariant()}";
+
+            var drawText = MakeDrawText(addTimeCode, frameRate, addTimeColor);
 
             return new Process
             {
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-t {seconds} -f lavfi -i color=c={htmlColor}:r={frameRate.ToString(CultureInfo.InvariantCulture)}:s={videoWidth}x{videoHeight} -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight} \"{outputFileName}\"",
+                    Arguments = $"-t {seconds} -f lavfi -i color=c={htmlColor}:r={frameRate.ToString(CultureInfo.InvariantCulture)}:s={videoWidth}x{videoHeight} -c:v libx264 -tune stillimage -shortest -s {videoWidth}x{videoHeight}{drawText} \"{outputFileName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
+        }
+
+        private static string MakeDrawText(bool addTimeCode, decimal frameRate, string addTimeColor)
+        {
+            var drawText = string.Empty;
+            if (addTimeCode)
+            {
+                drawText = $" -vf \"drawtext=timecode='00\\:00\\:00\\:00':r={frameRate.ToString(CultureInfo.InvariantCulture)}:x=10:y=10:fontsize=34:fontcolor={addTimeColor}\"";
+            }
+
+            return drawText;
         }
 
         public static string GetScreenShot(string inputFileName, string timeCode, string colorMatrix = "")
