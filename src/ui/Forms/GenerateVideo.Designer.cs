@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemResBrowse = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonVideoChooseStandardRes = new System.Windows.Forms.Button();
             this.buttonChooseDuration = new System.Windows.Forms.Button();
+            this.checkBoxAddTimeCode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             this.groupBoxBackground.SuspendLayout();
@@ -96,11 +97,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
-            // buttonOK
+            // buttonGenerate
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(549, 217);
+            this.buttonGenerate.Location = new System.Drawing.Point(549, 249);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
             this.buttonGenerate.TabIndex = 20;
@@ -113,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(676, 217);
+            this.buttonCancel.Location = new System.Drawing.Point(676, 249);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 21;
@@ -125,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 217);
+            this.progressBar1.Location = new System.Drawing.Point(12, 249);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(531, 10);
             this.progressBar1.TabIndex = 8;
@@ -227,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxBackground.Controls.Add(this.panelColor);
             this.groupBoxBackground.Location = new System.Drawing.Point(387, 12);
             this.groupBoxBackground.Name = "groupBoxBackground";
-            this.groupBoxBackground.Size = new System.Drawing.Size(366, 186);
+            this.groupBoxBackground.Size = new System.Drawing.Size(366, 162);
             this.groupBoxBackground.TabIndex = 7;
             this.groupBoxBackground.TabStop = false;
             this.groupBoxBackground.Text = "Background";
@@ -310,7 +311,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 197);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 229);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 7;
@@ -343,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 230);
+            this.labelProgress.Location = new System.Drawing.Point(12, 262);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(88, 13);
             this.labelProgress.TabIndex = 30;
@@ -495,12 +496,23 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonChooseDuration.UseVisualStyleBackColor = true;
             this.buttonChooseDuration.Click += new System.EventHandler(this.buttonChooseDuration_Click);
             // 
+            // checkBoxAddTimeCode
+            // 
+            this.checkBoxAddTimeCode.AutoSize = true;
+            this.checkBoxAddTimeCode.Location = new System.Drawing.Point(387, 181);
+            this.checkBoxAddTimeCode.Name = "checkBoxAddTimeCode";
+            this.checkBoxAddTimeCode.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxAddTimeCode.TabIndex = 31;
+            this.checkBoxAddTimeCode.Text = "Add time code";
+            this.checkBoxAddTimeCode.UseVisualStyleBackColor = true;
+            // 
             // GenerateVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(763, 252);
+            this.ClientSize = new System.Drawing.Size(763, 284);
+            this.Controls.Add(this.checkBoxAddTimeCode);
             this.Controls.Add(this.buttonChooseDuration);
             this.Controls.Add(this.buttonVideoChooseStandardRes);
             this.Controls.Add(this.labelProgress);
@@ -579,5 +591,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.RadioButton radioButtonImage;
         private System.Windows.Forms.Button buttonChooseDuration;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemResBrowse;
+        private System.Windows.Forms.CheckBox checkBoxAddTimeCode;
     }
 }
