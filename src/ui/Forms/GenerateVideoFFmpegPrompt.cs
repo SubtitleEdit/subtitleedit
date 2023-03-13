@@ -17,11 +17,11 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;
             textBox1.Text = parameters.Trim();
 
-            labelFFmpeg.Text = LanguageSettings.Current.GenerateBlankVideo.DurationInMinutes;
+          //TODO:  labelFFmpeg.Text = LanguageSettings.Current.GenerateBlankVideo.DurationInMinutes;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }
-
+        
         private void buttonOK_Click(object sender, EventArgs e)
         {
             Parameters = textBox1.Text;
