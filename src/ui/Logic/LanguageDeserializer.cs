@@ -2266,6 +2266,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "GenerateBlankVideo/Background":
                     language.GenerateBlankVideo.Background = reader.Value;
                     break;
+                case "GenerateBlankVideo/FfmpegParameters":
+                    language.GenerateBlankVideo.FfmpegParameters = reader.Value;
+                    break;
+                case "GenerateBlankVideo/GenerateWithFfmpegParametersPrompt":
+                    language.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt = reader.Value;
+                    break;
                 case "GenerateVideoWithBurnedInSubs/Title":
                     language.GenerateVideoWithBurnedInSubs.Title = reader.Value;
                     break;
@@ -7314,6 +7320,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ResetCustomContinuationStyleWarning":
                     language.Settings.ResetCustomContinuationStyleWarning = reader.Value;
+                    break;
+                case "Settings/ExportAsHtml":
+                    language.Settings.ExportAsHtml = reader.Value;
                     break;
                 case "SettingsMpv/DownloadMpv":
                     language.SettingsMpv.DownloadMpv = reader.Value;

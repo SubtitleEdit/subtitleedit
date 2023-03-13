@@ -855,6 +855,8 @@ Read more info (web)?</WhisperNotFound>
     <SolidColor>Solid color</SolidColor>
     <DurationInMinutes>Duration in minutes</DurationInMinutes>
     <Background>Background</Background>
+    <FfmpegParameters>Run FFmpeg with the following parameters:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generate - prompt FFmpeg parameters</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Generate video with burned-in subtitle</Title>
@@ -2662,6 +2664,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <PreviewPause>(pause)</PreviewPause>
     <CustomContinuationStyleNote>Note: The custom continuation style is shared across profiles.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>This will override the values in the dialog. Are you sure?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Export as HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download mpv lib</DownloadMpv>

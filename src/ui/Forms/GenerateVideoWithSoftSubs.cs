@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeader5FileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+            promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);
 
             LoadVideo(inputVideoFileName);

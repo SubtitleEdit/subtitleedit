@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSettings.Text = LanguageSettings.Current.Settings.Title;
             groupBoxVideo.Text = LanguageSettings.Current.Main.Menu.Video.Title;
             groupBoxAudio.Text = LanguageSettings.Current.GenerateVideoWithBurnedInSubs.Audio;
+            promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
 
             comboBoxVideoEncoding.Text = Configuration.Settings.Tools.GenVideoEncoding;
             comboBoxCrf.Text = Configuration.Settings.Tools.GenVideoCrf;
