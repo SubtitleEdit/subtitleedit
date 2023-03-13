@@ -3449,7 +3449,13 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 foreach (TreeNode shortcutNode in node.Nodes)
                 {
                     var indexOfBracket = shortcutNode.Text.IndexOf('[');
-                    var description = shortcutNode.Text;
+                    var description = shortcutNode.Text
+                        .Replace("&", "&amp;")
+                        .Replace("<", "&lt;")
+                        .Replace(">", "&gt;")
+                        .Replace("\"", "&quot;")
+                        .Replace("{", "&#123;")
+                        .Replace("}", "&#125;");
                     var shortcut = string.Empty;
                     if (indexOfBracket >= 0)
                     {
