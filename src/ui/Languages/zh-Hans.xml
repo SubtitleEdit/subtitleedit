@@ -331,7 +331,7 @@ Command line: {1} {2}
     <FilterMoreThanTwoLines>单字幕包含有两行及以上</FilterMoreThanTwoLines>
     <FilterContains>文字内容包含...</FilterContains>
     <FilterFileNameContains>文件名包含...</FilterFileNameContains>
-    <MkvLanguageCodeContains>语言代码(mkv/mp4)包含...</MkvLanguageCodeContains>
+    <LanguageCodeContains>语言代码 (mkv/mp4) 包含...</LanguageCodeContains>
     <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
@@ -878,7 +878,19 @@ Command line: {1} {2}
     <Crf>CRF</Crf>
     <TuneFor>视频类型</TuneFor>
     <AlignRight>右对齐</AlignRight>
+    <GetStartPosition>获取起始位置</GetStartPosition>
+    <GetEndPosition>获取结束位置</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>生成带有嵌入式字幕的视频</Title>
+    <InputVideoFile>输入视频文件</InputVideoFile>
+    <SubtitlesX>字幕 ({0})</SubtitlesX>
+    <SetLanguage>设置语言...</SetLanguage>
+    <ToggleForced>切换强制</ToggleForced>
+    <ToggleDefault>切换默认</ToggleDefault>
+    <Default>默认</Default>
+    <XGeneratedWithEmbeddedSubs>生成带有嵌入式字幕的"{0}"</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>获取更多词典</Title>
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，</DescriptionLine1>
@@ -1276,6 +1288,7 @@ Command line: {1} {2}
         <GenerateTextFromVideo>从视频生成文本...</GenerateTextFromVideo>
         <GenerateBlankVideo>生成空白视频...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>生成带有内嵌字幕的视频...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>生成带有嵌入式字幕的视频...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>语言识别 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>从视频中导入章节</ImportChaptersFromVideo>
         <GenerateImportShotChanges>生成/导入场景切换...</GenerateImportShotChanges>
@@ -1364,6 +1377,7 @@ Command line: {1} {2}
         <Paste>粘贴</Paste>
         <Delete>删除</Delete>
         <SplitLineAtCursorPosition>在光标处分割行</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>在光标处分割并自动换行</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
