@@ -31,6 +31,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.buttonGenerate = new System.Windows.Forms.Button();
+            this.contextMenuStripGenerate = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.promptParameterBeforeGenerateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelInputVideoFile = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
@@ -80,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
             this.contextMenuStripRes.SuspendLayout();
@@ -88,6 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonGenerate
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGenerate.ContextMenuStrip = this.contextMenuStripGenerate;
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGenerate.Location = new System.Drawing.Point(655, 404);
             this.buttonGenerate.Name = "buttonGenerate";
@@ -95,7 +99,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGenerate.TabIndex = 4;
             this.buttonGenerate.Text = "Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
-            this.buttonGenerate.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
+            // 
+            // contextMenuStripGenerate
+            // 
+            this.contextMenuStripGenerate.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.promptParameterBeforeGenerateToolStripMenuItem});
+            this.contextMenuStripGenerate.Name = "contextMenuStripGenerate";
+            this.contextMenuStripGenerate.Size = new System.Drawing.Size(290, 48);
+            // 
+            // promptParameterBeforeGenerateToolStripMenuItem
+            // 
+            this.promptParameterBeforeGenerateToolStripMenuItem.Name = "promptParameterBeforeGenerateToolStripMenuItem";
+            this.promptParameterBeforeGenerateToolStripMenuItem.Size = new System.Drawing.Size(289, 22);
+            this.promptParameterBeforeGenerateToolStripMenuItem.Text = "Prompt FFmpeg parameter and generate";
+            this.promptParameterBeforeGenerateToolStripMenuItem.Click += new System.EventHandler(this.promptParameterBeforeGenerateToolStripMenuItem_Click);
             // 
             // buttonCancel
             // 
@@ -544,6 +562,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Shown += new System.EventHandler(this.GenerateVideoWithHardSubs_Shown);
             this.ResizeEnd += new System.EventHandler(this.GenerateVideoWithSoftSubs_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GenerateVideoWithSoftSubs_KeyDown);
+            this.contextMenuStripGenerate.ResumeLayout(false);
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();
             this.contextMenuSubtitles.ResumeLayout(false);
@@ -604,5 +623,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem setLanguageToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripGenerate;
+        private System.Windows.Forms.ToolStripMenuItem promptParameterBeforeGenerateToolStripMenuItem;
     }
 }

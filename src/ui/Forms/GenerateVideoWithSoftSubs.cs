@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _inputVideoFileName;
         private StringBuilder _log;
         private readonly List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
+        private bool _promptFFmpegParameters;
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
@@ -269,7 +270,7 @@ namespace Nikse.SubtitleEdit.Forms
             _log?.AppendLine(outLine.Data);
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void buttonGenerate_Click(object sender, EventArgs e)
         {
             if (_softSubs.Count == 0)
             {
@@ -373,6 +374,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
+            if (!CheckForPromptParameters(process))
+            {
+                _abort = true;
+                return;
+            }
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -387,6 +393,27 @@ namespace Nikse.SubtitleEdit.Forms
                     process.Kill();
                 }
             }
+        }
+
+        private bool CheckForPromptParameters(Process process)
+        {
+            if (!_promptFFmpegParameters)
+            {
+                return true;
+            }
+
+            using (var form = new GenerateVideoFFmpegPrompt(Text, process.StartInfo.Arguments))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                _log.AppendLine("ffmpeg arguments custom: " + process.StartInfo.Arguments);
+                process.StartInfo.Arguments = form.Parameters;
+            }
+
+            return true;
         }
 
         private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName)
@@ -763,6 +790,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewSubtitles_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             viewToolStripMenuItem_Click(sender, e);
+        }
+
+        private void promptParameterBeforeGenerateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _promptFFmpegParameters = true;
+            buttonGenerate_Click(null, null);
         }
     }
 }
