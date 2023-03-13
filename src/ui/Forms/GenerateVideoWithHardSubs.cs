@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
         private long _totalFrames;
         private StringBuilder _log;
         private readonly bool _isAssa;
+        private readonly FfmpegMediaInfo _mediaInfo;
+        private bool _promptFFmpegParameters;
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
@@ -191,6 +193,9 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonGenerate);
             UiUtil.FixFonts(this, 2000);
 
+
+            _mediaInfo = FfmpegMediaInfo.Parse(inputVideoFileName);
+
             if (_videoInfo != null && _videoInfo.TotalSeconds > 0)
             {
                 var timeSpan = TimeSpan.FromSeconds((long)Math.Round(_videoInfo.TotalSeconds + 0.5));
@@ -198,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownCutToMinutes.Value = timeSpan.Minutes;
                 numericUpDownCutToSeconds.Value = timeSpan.Seconds;
 
-                if (setStartEndCut && assaSubtitle != null && assaSubtitle.Paragraphs.Count > 0 && 
+                if (setStartEndCut && assaSubtitle != null && assaSubtitle.Paragraphs.Count > 0 &&
                     !assaSubtitle.Paragraphs.First().StartTime.IsMaxTime &&
                     !assaSubtitle.Paragraphs.Last().EndTime.IsMaxTime)
                 {
@@ -263,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void buttonGenerate_Click(object sender, EventArgs e)
         {
             if (checkBoxCut.Checked)
             {
@@ -341,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (cutStart.TotalMilliseconds > 0.001)
                 {
                     var paragraphs = new List<Paragraph>();
-                    _assaSubtitle.AddTimeToAllParagraphs(- cutStart);
+                    _assaSubtitle.AddTimeToAllParagraphs(-cutStart);
                     foreach (var assaP in _assaSubtitle.Paragraphs)
                     {
                         if (assaP.StartTime.TotalMilliseconds > 0 && assaP.EndTime.TotalMilliseconds > 0)
@@ -411,7 +416,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (!File.Exists(VideoFileName) || new FileInfo(VideoFileName).Length == 0)
             {
                 SeLogger.Error(Environment.NewLine + "Generate hard subbed video failed: " + Environment.NewLine + _log);
-                DialogResult = DialogResult.Cancel;
+                MessageBox.Show("Generate embedded video failed" + Environment.NewLine +
+                                "For more info see the error log: " + SeLogger.ErrorFile);
+                buttonGenerate.Enabled = true;
+                numericUpDownFontSize.Enabled = oldFontSizeEnabled;
                 return;
             }
 
@@ -509,6 +517,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, 1, videoBitRate);
             _log.AppendLine("ffmpeg arguments pass 1: " + process.StartInfo.Arguments);
+            if (!CheckForPromptParameters(process, Text + " - Pass 1"))
+            {
+                _abort = true;
+                return;
+            }
+
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -534,6 +548,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelPass.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.PassX, "2");
             process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, 2, videoBitRate);
             _log.AppendLine("ffmpeg arguments pass 2: " + process.StartInfo.Arguments);
+            if (!CheckForPromptParameters(process, Text + " - Pass 2"))
+            {
+                _abort = true;
+                return;
+            }
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -616,6 +635,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var process = GetFfmpegProcess(_inputVideoFileName, VideoFileName, assaTempFileName, null);
             _log.AppendLine("ffmpeg arguments: " + process.StartInfo.Arguments);
+
+            if (!CheckForPromptParameters(process, Text))
+            {
+                _abort = true;
+                return;
+            }
+
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -635,6 +661,27 @@ namespace Nikse.SubtitleEdit.Forms
                 var v = (int)_processedFrames;
                 SetProgress(v);
             }
+        }
+
+        private bool CheckForPromptParameters(Process process, string title)
+        {
+            if (!_promptFFmpegParameters)
+            {
+                return true;
+            }
+
+            using (var form = new GenerateVideoFFmpegPrompt(title, process.StartInfo.Arguments))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                _log.AppendLine("ffmpeg arguments custom: " + process.StartInfo.Arguments);
+                process.StartInfo.Arguments = form.Parameters;
+            }
+
+            return true;
         }
 
         private Process GetFfmpegProcess(string inputVideoFileName, string outputVideoFileName, string assaTempFileName, int? passNumber = null, string twoPassBitRate = null, bool preview = false)
@@ -714,6 +761,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMakeStereo.Enabled = comboBoxAudioEnc.Text != "copy";
             comboBoxAudioSampleRate.Enabled = comboBoxAudioEnc.Text != "copy";
             labelAudioSampleRate.Enabled = comboBoxAudioEnc.Text != "copy";
+            comboBoxAudioBitRate.Enabled = comboBoxAudioEnc.Text != "copy";
+
+            numericUpDownTargetFileSize_ValueChanged(null, null);
         }
 
         private void GenerateVideoWithHardSubs_KeyDown(object sender, KeyEventArgs e)
@@ -1318,6 +1368,20 @@ namespace Nikse.SubtitleEdit.Forms
                 audioBitRate = int.Parse(comboBoxAudioBitRate.Text.RemoveChar('k').TrimEnd());
             }
 
+            labelVideoBitrate.Visible = true;
+            if (comboBoxAudioEnc.Text == "copy")
+            {
+                var audioTrack = _mediaInfo.Tracks.FirstOrDefault(p => p.TrackType == FfmpegTrackType.Audio);
+                if (audioTrack?.BitRate > 0)
+                {
+                    audioBitRate = audioTrack.BitRate / 1024;
+                }
+                else
+                {
+                    labelVideoBitrate.Visible = false;
+                }
+            }
+
             labelVideoBitrate.Left = numericUpDownTargetFileSize.Right + 5;
             labelVideoBitrate.Text = string.Format(LanguageSettings.Current.GenerateVideoWithBurnedInSubs.TotalBitRateX, $"{(videoBitRate + audioBitRate):#,###,##0}k");
             if (separateAudio)
@@ -1370,6 +1434,12 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownCutToSeconds.Value = form.VideoPosition.Seconds;
                 }
             }
+        }
+
+        private void promptParameterBeforeGenerateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _promptFFmpegParameters = true;
+            buttonGenerate_Click(null, null);
         }
     }
 }
