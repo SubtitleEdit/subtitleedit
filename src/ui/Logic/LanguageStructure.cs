@@ -940,6 +940,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string SolidColor { get; set; }
             public string DurationInMinutes { get; set; }
             public string Background { get; set; }
+            public string FfmpegParameters { get; set; }
+            public string GenerateWithFfmpegParametersPrompt { get; set; }
         }
 
         public class GenerateVideoWithBurnedInSubs
@@ -2846,6 +2848,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string PreviewPause { get; set; }
             public string CustomContinuationStyleNote { get; set; }
             public string ResetCustomContinuationStyleWarning { get; set; }
+            public string ExportAsHtml { get; set; }
         }
 
         public class SettingsMpv

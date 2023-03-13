@@ -1081,6 +1081,8 @@ namespace Nikse.SubtitleEdit.Logic
                 DurationInMinutes = "Duration in minutes",
                 SolidColor = "Solid color",
                 Background = "Background",
+                FfmpegParameters = "Run FFmpeg with the following parameters:",
+                GenerateWithFfmpegParametersPrompt = "Generate - prompt FFmpeg parameters",
             };
 
             GenerateVideoWithBurnedInSubs = new LanguageStructure.GenerateVideoWithBurnedInSubs
@@ -2997,6 +2999,7 @@ can edit in same subtitle file (collaboration)",
                 PreviewPause = "(pause)",
                 CustomContinuationStyleNote = "Note: The custom continuation style is shared across profiles.",
                 ResetCustomContinuationStyleWarning = "This will override the values in the dialog. Are you sure?",
+                ExportAsHtml = "Export as HTML...",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

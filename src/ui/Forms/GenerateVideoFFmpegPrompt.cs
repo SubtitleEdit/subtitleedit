@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;
             textBox1.Text = parameters.Trim();
 
-          //TODO:  labelFFmpeg.Text = LanguageSettings.Current.GenerateBlankVideo.DurationInMinutes;
+            labelFFmpeg.Text = LanguageSettings.Current.GenerateBlankVideo.FfmpegParameters;
             buttonOK.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
         }

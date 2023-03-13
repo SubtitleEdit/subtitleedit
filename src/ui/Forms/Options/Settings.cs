@@ -1024,6 +1024,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             toolStripMenuItemShortcutsCollapse.Text = LanguageSettings.Current.General.Collapse;
             importShortcutsToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Import;
             exportShortcutsToolStripMenuItem.Text = LanguageSettings.Current.MultipleReplace.Export;
+            exportAsHtmlToolStripMenuItem.Text = LanguageSettings.Current.Settings.ExportAsHtml;
             labelShortcutsSearch.Text = LanguageSettings.Current.General.Search;
             buttonShortcutsClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
             textBoxShortcutSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
@@ -3474,6 +3475,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             html.AppendLine("</html>");
 
             File.WriteAllText(saveFileDialog1.FileName, html.ToString());
+            UiUtil.OpenFolderFromFileName(saveFileDialog1.FileName);
         }
     }
 }
