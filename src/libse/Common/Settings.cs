@@ -2582,6 +2582,7 @@ $HorzAlign          =   Center
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
+            MainFileSaveAs = "Control+Alt+S";
             MainEditUndo = "Control+Z";
             MainEditRedo = "Control+Y";
             MainEditFind = "Control+F";
