@@ -186,6 +186,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewToggleDashes { get; set; }
         public Keys MainListViewToggleQuotes { get; set; }
         public Keys MainListViewToggleHiTags { get; set; }
+        public Keys MainListViewToggleCustomTags { get; set; }
         public Keys MainListViewToggleMusicSymbols { get; set; }
         public Keys MainListViewAutoDuration { get; set; }
         public Keys MainListViewAlignmentN1 { get; set; }
@@ -345,6 +346,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             MainListViewToggleQuotes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleQuotes);
             MainListViewToggleHiTags = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleHiTags);
+            MainListViewToggleCustomTags = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleCustomTags);
             MainListViewToggleMusicSymbols = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             MainListViewAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
             MainListViewAlignmentN1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN1);

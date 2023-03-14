@@ -143,6 +143,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.importShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportShortcutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportAsHtmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelShortcut = new System.Windows.Forms.Label();
             this.panelSyntaxColoring = new System.Windows.Forms.Panel();
             this.groupBoxListViewSyntaxColoring = new System.Windows.Forms.GroupBox();
@@ -415,7 +416,9 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.exportAsHtmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelShortcutCustomToggle = new System.Windows.Forms.Label();
+            this.comboBoxCustomToggleStart = new System.Windows.Forms.ComboBox();
+            this.comboBoxCustomToggleEnd = new System.Windows.Forms.ComboBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -1945,33 +1948,40 @@
             this.exportShortcutsToolStripMenuItem,
             this.exportAsHtmlToolStripMenuItem});
             this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
-            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(181, 120);
+            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(160, 98);
             // 
             // toolStripMenuItemShortcutsCollapse
             // 
             this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
-            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(159, 22);
             this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
             this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(156, 6);
             // 
             // importShortcutsToolStripMenuItem
             // 
             this.importShortcutsToolStripMenuItem.Name = "importShortcutsToolStripMenuItem";
-            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importShortcutsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.importShortcutsToolStripMenuItem.Text = "Import...";
             this.importShortcutsToolStripMenuItem.Click += new System.EventHandler(this.importShortcutsToolStripMenuItem_Click);
             // 
             // exportShortcutsToolStripMenuItem
             // 
             this.exportShortcutsToolStripMenuItem.Name = "exportShortcutsToolStripMenuItem";
-            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportShortcutsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exportShortcutsToolStripMenuItem.Text = "Export...";
             this.exportShortcutsToolStripMenuItem.Click += new System.EventHandler(this.exportShortcutsToolStripMenuItem_Click);
+            // 
+            // exportAsHtmlToolStripMenuItem
+            // 
+            this.exportAsHtmlToolStripMenuItem.Name = "exportAsHtmlToolStripMenuItem";
+            this.exportAsHtmlToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.exportAsHtmlToolStripMenuItem.Text = "Export as html...";
+            this.exportAsHtmlToolStripMenuItem.Click += new System.EventHandler(this.exportAsHtmlToolStripMenuItem_Click);
             // 
             // labelShortcut
             // 
@@ -3214,6 +3224,9 @@
             // 
             // groupBoxToolsMisc
             // 
+            this.groupBoxToolsMisc.Controls.Add(this.comboBoxCustomToggleEnd);
+            this.groupBoxToolsMisc.Controls.Add(this.comboBoxCustomToggleStart);
+            this.groupBoxToolsMisc.Controls.Add(this.labelShortcutCustomToggle);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxShortcutsAllowLetterOrNumberInTextBox);
             this.groupBoxToolsMisc.Controls.Add(this.comboBoxBDOpensIn);
             this.groupBoxToolsMisc.Controls.Add(this.labelBDOpensIn);
@@ -3227,7 +3240,7 @@
             // checkBoxShortcutsAllowLetterOrNumberInTextBox
             // 
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.AutoSize = true;
-            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Location = new System.Drawing.Point(8, 65);
+            this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Location = new System.Drawing.Point(6, 52);
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Name = "checkBoxShortcutsAllowLetterOrNumberInTextBox";
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.Size = new System.Drawing.Size(223, 17);
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.TabIndex = 61;
@@ -3241,7 +3254,7 @@
             this.comboBoxBDOpensIn.Items.AddRange(new object[] {
             "OCR",
             "BD SUP EDIIT"});
-            this.comboBoxBDOpensIn.Location = new System.Drawing.Point(158, 27);
+            this.comboBoxBDOpensIn.Location = new System.Drawing.Point(158, 25);
             this.comboBoxBDOpensIn.Name = "comboBoxBDOpensIn";
             this.comboBoxBDOpensIn.Size = new System.Drawing.Size(221, 21);
             this.comboBoxBDOpensIn.TabIndex = 1;
@@ -3249,7 +3262,7 @@
             // labelBDOpensIn
             // 
             this.labelBDOpensIn.AutoSize = true;
-            this.labelBDOpensIn.Location = new System.Drawing.Point(6, 29);
+            this.labelBDOpensIn.Location = new System.Drawing.Point(6, 27);
             this.labelBDOpensIn.Name = "labelBDOpensIn";
             this.labelBDOpensIn.Size = new System.Drawing.Size(146, 13);
             this.labelBDOpensIn.TabIndex = 0;
@@ -4985,12 +4998,38 @@
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
             // 
-            // exportAsHtmlToolStripMenuItem
+            // labelShortcutCustomToggle
             // 
-            this.exportAsHtmlToolStripMenuItem.Name = "exportAsHtmlToolStripMenuItem";
-            this.exportAsHtmlToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportAsHtmlToolStripMenuItem.Text = "Export as html...";
-            this.exportAsHtmlToolStripMenuItem.Click += new System.EventHandler(this.exportAsHtmlToolStripMenuItem_Click);
+            this.labelShortcutCustomToggle.AutoSize = true;
+            this.labelShortcutCustomToggle.Location = new System.Drawing.Point(6, 79);
+            this.labelShortcutCustomToggle.Name = "labelShortcutCustomToggle";
+            this.labelShortcutCustomToggle.Size = new System.Drawing.Size(169, 13);
+            this.labelShortcutCustomToggle.TabIndex = 62;
+            this.labelShortcutCustomToggle.Text = "Shortcut toggle custom  start/end";
+            // 
+            // comboBoxCustomToggleStart
+            // 
+            this.comboBoxCustomToggleStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCustomToggleStart.FormattingEnabled = true;
+            this.comboBoxCustomToggleStart.Items.AddRange(new object[] {
+            "(",
+            "♪"});
+            this.comboBoxCustomToggleStart.Location = new System.Drawing.Point(182, 76);
+            this.comboBoxCustomToggleStart.Name = "comboBoxCustomToggleStart";
+            this.comboBoxCustomToggleStart.Size = new System.Drawing.Size(42, 21);
+            this.comboBoxCustomToggleStart.TabIndex = 63;
+            // 
+            // comboBoxCustomToggleEnd
+            // 
+            this.comboBoxCustomToggleEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCustomToggleEnd.FormattingEnabled = true;
+            this.comboBoxCustomToggleEnd.Items.AddRange(new object[] {
+            ")",
+            "♪"});
+            this.comboBoxCustomToggleEnd.Location = new System.Drawing.Point(230, 76);
+            this.comboBoxCustomToggleEnd.Name = "comboBoxCustomToggleEnd";
+            this.comboBoxCustomToggleEnd.Size = new System.Drawing.Size(42, 21);
+            this.comboBoxCustomToggleEnd.TabIndex = 64;
             // 
             // Settings
             // 
@@ -4998,9 +5037,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelNetwork);
@@ -5517,5 +5556,8 @@
         private System.Windows.Forms.Label labelTranslationAutoSuffix;
         private System.Windows.Forms.CheckBox checkBoxUseWordSplitListAvoidPropercase;
         private System.Windows.Forms.ToolStripMenuItem exportAsHtmlToolStripMenuItem;
+        private System.Windows.Forms.ComboBox comboBoxCustomToggleEnd;
+        private System.Windows.Forms.ComboBox comboBoxCustomToggleStart;
+        private System.Windows.Forms.Label labelShortcutCustomToggle;
     }
 }

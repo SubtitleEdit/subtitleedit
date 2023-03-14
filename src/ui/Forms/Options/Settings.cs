@@ -107,17 +107,17 @@ namespace Nikse.SubtitleEdit.Forms.Options
             UiUtil.FixLargeFonts(this, buttonOK);
 
             _shortcutsBackgroundWorker = new BackgroundWorker();
+            Init();
+        }
+
+        public void Init()
+        {
             _shortcutsBackgroundWorker.DoWork += (sender, args) =>
             {
                 MakeShortcutsTreeView(LanguageSettings.Current.Settings);
             };
             _shortcutsBackgroundWorker.RunWorkerAsync();
 
-            Init();
-        }
-
-        public void Init()
-        {
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
@@ -771,6 +771,22 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxShortcutsAllowLetterOrNumberInTextBox.Text = language.ShortcutsAllowSingleLetterOrNumberInTextBox;
             checkBoxShortcutsAllowLetterOrNumberInTextBox.Checked = Configuration.Settings.General.AllowLetterShortcutsInTextBox;
 
+            labelShortcutCustomToggle.Text = language.ShortcutCustomToggle;
+            comboBoxCustomToggleStart.Left = labelShortcutCustomToggle.Right + 5;
+            comboBoxCustomToggleEnd.Left = comboBoxCustomToggleStart.Right + 5;
+            var customTags = Configuration.Settings.General.TagsInToggleCustomTags.Split('Æ');
+            switch (customTags.Length)
+            {
+                case 1:
+                    comboBoxCustomToggleStart.Text = customTags[0];
+                    comboBoxCustomToggleEnd.Text = customTags[0];
+                    break;
+                case 2:
+                    comboBoxCustomToggleStart.Text = customTags[0];
+                    comboBoxCustomToggleEnd.Text = customTags[1];
+                    break;
+            }
+
             groupBoxGoogleTranslate.Text = language.GoogleTranslate;
             labelGoogleTranslateApiKey.Text = language.GoogleTranslateApiKey;
             linkLabelGoogleTranslateSignUp.Text = language.HowToSignUp;
@@ -1255,6 +1271,9 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
         private void MakeShortcutsTreeView(LanguageStructure.Settings language)
         {
+            treeViewShortcuts.Nodes.Clear();
+            _newShortcuts.Clear();
+
             _shortcuts = new ShortcutNode("root");
 
             var generalNode = new ShortcutNode(LanguageSettings.Current.General.GeneralText);
@@ -1453,6 +1472,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewAndTextBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.Box, nameof(Configuration.Settings.Shortcuts.MainListViewBox), true);
             AddNode(listViewAndTextBoxNode, language.ToggleQuotes, nameof(Configuration.Settings.Shortcuts.MainListViewToggleQuotes), true);
             AddNode(listViewAndTextBoxNode, language.ToggleHiTags, nameof(Configuration.Settings.Shortcuts.MainListViewToggleHiTags), true);
+            AddNode(listViewAndTextBoxNode, language.ToggleCustomTags, nameof(Configuration.Settings.Shortcuts.MainListViewToggleCustomTags), false);
             AddNode(listViewAndTextBoxNode, LanguageSettings.Current.General.SplitLine.Replace("!", string.Empty), nameof(Configuration.Settings.Shortcuts.MainListViewSplit), true);
             AddNode(listViewAndTextBoxNode, language.ToggleMusicSymbols, nameof(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols), true);
             AddNode(listViewAndTextBoxNode, language.AlignmentN1, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN1));
@@ -2020,6 +2040,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             Configuration.Settings.Tools.BDOpenIn = comboBoxBDOpensIn.SelectedIndex == 0 ? "OCR" : "EDIT";
             Configuration.Settings.General.AllowLetterShortcutsInTextBox = checkBoxShortcutsAllowLetterOrNumberInTextBox.Checked;
+            Configuration.Settings.General.TagsInToggleCustomTags = comboBoxCustomToggleStart.Text + "Æ" + comboBoxCustomToggleEnd.Text;
 
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.OcrUseWordSplitList = checkBoxUseWordSplitList.Checked;
@@ -2949,6 +2970,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 Configuration.Settings.Reset();
                 Configuration.Settings.General.VideoPlayer = "MPV";
+                Configuration.Settings.Shortcuts = new Shortcuts();
                 Init();
             }
         }

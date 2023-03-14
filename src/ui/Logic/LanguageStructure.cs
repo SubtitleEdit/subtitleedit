@@ -2652,6 +2652,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string ToggleDialogDashes { get; set; }
             public string ToggleQuotes { get; set; }
             public string ToggleHiTags { get; set; }
+            public string ToggleCustomTags { get; set; }
             public string ToggleMusicSymbols { get; set; }
             public string Alignment { get; set; }
             public string AlignmentN1 { get; set; }
@@ -2834,6 +2835,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string BDOpensInOcr { get; set; }
             public string BDOpensInEdit { get; set; }
             public string ShortcutsAllowSingleLetterOrNumberInTextBox { get; set; }
+            public string ShortcutCustomToggle { get; set; }
             public string UpdateFileTypeAssociations { get; set; }
             public string FileTypeAssociationsUpdated { get; set; }
             public string CustomContinuationStyle { get; set; }
