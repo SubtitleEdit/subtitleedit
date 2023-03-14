@@ -16149,6 +16149,41 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainListViewToggleCustomTags == e.KeyData && InListView)
+            {
+                var tags = Configuration.Settings.General.TagsInToggleCustomTags.Split('Æ');
+                string openingTag;
+                string closingTag;
+                switch (tags.Length)
+                {
+                    case 1:
+                        openingTag = tags[0];
+                        closingTag = openingTag;
+                        break;
+                    case 2:
+                        openingTag = tags[0];
+                        closingTag = tags[1];
+                        break;
+                    default:
+                        openingTag = string.Empty;
+                        closingTag = string.Empty;
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(openingTag) && !string.IsNullOrEmpty(closingTag))
+                {
+                    if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
+                    {
+                        SurroundWithTag(openingTag, closingTag, true);
+                    }
+                    else
+                    {
+                        SurroundWithTag(openingTag, closingTag);
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && InListView)
             {
                 toolStripMenuItemRtlUnicodeControlChars_Click(null, null);

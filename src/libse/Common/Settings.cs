@@ -1424,6 +1424,7 @@ $HorzAlign          =   Center
         public bool AutoSave { get; set; }
         public string PreviewAssaText { get; set; }
         public string TagsInToggleHiTags { get; set; }
+        public string TagsInToggleCustomTags { get; set; }
         public bool ShowProgress { get; set; }
         public bool ShowNegativeDurationInfoOnSave { get; set; }
         public bool ShowFormatRequiresUtf8Warning { get; set; }
@@ -1619,6 +1620,7 @@ $HorzAlign          =   Center
             MeasurementConverterCategories = "Length;Kilometers;Meters";
             PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
             TagsInToggleHiTags = "[;]";
+            TagsInToggleCustomTags = "(Æ)";
             SubtitleTextBoxMaxHeight = 300;
             ShowBetaStuff = false;
             DebugTranslationSync = false;
@@ -2396,6 +2398,7 @@ $HorzAlign          =   Center
         public string MainListViewBox { get; set; }
         public string MainListViewToggleQuotes { get; set; }
         public string MainListViewToggleHiTags { get; set; }
+        public string MainListViewToggleCustomTags { get; set; }
         public string MainListViewSplit { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewToggleMusicSymbols { get; set; }
@@ -4265,6 +4268,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.TagsInToggleHiTags = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("TagsInToggleCustomTags");
+            if (subNode != null)
+            {
+                settings.General.TagsInToggleCustomTags = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ShowProgress");
@@ -8965,6 +8974,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewToggleHiTags = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewToggleCustomTags");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewToggleCustomTags = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewSplit");
                 if (subNode != null)
                 {
@@ -10282,6 +10297,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
                 textWriter.WriteElementString("TagsInToggleHiTags", settings.General.TagsInToggleHiTags);
+                textWriter.WriteElementString("TagsInToggleCustomTags", settings.General.TagsInToggleCustomTags);
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
@@ -11236,6 +11252,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewBox", shortcuts.MainListViewBox);
             textWriter.WriteElementString("MainListViewToggleQuotes", shortcuts.MainListViewToggleQuotes);
             textWriter.WriteElementString("MainListViewToggleHiTags", shortcuts.MainListViewToggleHiTags);
+            textWriter.WriteElementString("MainListViewToggleCustomTags", shortcuts.MainListViewToggleCustomTags);
             textWriter.WriteElementString("MainListViewSplit", shortcuts.MainListViewSplit);
             textWriter.WriteElementString("MainListViewToggleDashes", shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainListViewToggleMusicSymbols", shortcuts.MainListViewToggleMusicSymbols);
