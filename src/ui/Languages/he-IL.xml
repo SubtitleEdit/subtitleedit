@@ -1,0 +1,3201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="עברית">
+  <General>
+    <Title>עריכת כתוביות</Title>
+    <Version>3.6.11</Version>
+    <TranslatedBy>תורגם על ידי אלחנן</TranslatedBy>
+    <CultureName>he-IL</CultureName>
+    <HelpFile />
+    <Ok>&amp;בסדר</Ok>
+    <Cancel>לְבַטֵל</Cancel>
+    <Yes>כן</Yes>
+    <No>לא</No>
+    <Apply>להגיש מועמדות</Apply>
+    <ApplyTo>הגשת בקשה ל</ApplyTo>
+    <None>אף אחד</None>
+    <All>את כל</All>
+    <Preview>תצוגה מקדימה</Preview>
+    <ShowPreview>הצג תצוגה מקדימה</ShowPreview>
+    <HidePreview>הסתר תצוגה מקדימה</HidePreview>
+    <SubtitleFiles>קבצי כתוביות</SubtitleFiles>
+    <AllFiles>כל הקבצים</AllFiles>
+    <VideoFiles>קבצי וידאו</VideoFiles>
+    <Images>תמונות</Images>
+    <Fonts>גופנים</Fonts>
+    <AudioFiles>קבצי שמע</AudioFiles>
+    <OpenSubtitle>פתח כתוביות...</OpenSubtitle>
+    <OpenVideoFile>פתח קובץ וידאו...</OpenVideoFile>
+    <OpenVideoFileTitle>פתח קובץ וידאו...</OpenVideoFileTitle>
+    <NoVideoLoaded>לא נטען סרטון</NoVideoLoaded>
+    <OnlineVideoFeatureNotAvailable>התכונה אינה זמינה עבור וידאו מקוון</OnlineVideoFeatureNotAvailable>
+    <VideoInformation>מידע על סרטון</VideoInformation>
+    <StartTime>שעת התחלה</StartTime>
+    <EndTime>שעת סיום</EndTime>
+    <Duration>מֶשֶׁך</Duration>
+    <CharsPerSec>תווים/שנייה</CharsPerSec>
+    <WordsPerMin>מילים/דקה</WordsPerMin>
+    <Actor>שַׂחְקָן</Actor>
+    <Gap>פער</Gap>
+    <Region>אזור</Region>
+    <NumberSymbol>#</NumberSymbol>
+    <Number>מספר</Number>
+    <Text>טֶקסט</Text>
+    <HourMinutesSecondsDecimalSeparatorMilliseconds>שעה:דקה:שנייה{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
+    <HourMinutesSecondsFrames>שעה:דקה:שניה:מסגרות</HourMinutesSecondsFrames>
+    <XSeconds>{0:0.0##} seconds</XSeconds>
+    <Bold>נוֹעָז</Bold>
+    <Italic>נטוי</Italic>
+    <Underline>לָשִׂים דָגֵשׁ</Underline>
+    <Strikeout>פסילה</Strikeout>
+    <Visible>גלוי</Visible>
+    <FrameRate>קצב פריימים</FrameRate>
+    <Name>שֵׁם</Name>
+    <FileNameXAndSize>שם הקובץ: {0} ({1})</FileNameXAndSize>
+    <ResolutionX>רזולוציה: {0}</ResolutionX>
+    <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Total frames: {0:#,##0.##}</TotalFramesX>
+    <VideoEncodingX>קידוד וידאו: {0}</VideoEncodingX>
+    <SingleLineLengths>אורך שורה בודדת:</SingleLineLengths>
+    <TotalLengthX>אורך כולל: {0}</TotalLengthX>
+    <TotalLengthXSplitLine>אורך כולל: {0} (שורה מפוצלת!)</TotalLengthXSplitLine>
+    <SplitLine>קו מפוצל!</SplitLine>
+    <NotAvailable>לא</NotAvailable>
+    <Overlap>חֲפִיפָה</Overlap>
+    <OverlapPreviousLineX>Overlap prev line ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
+    <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
+    <Negative>שלילי</Negative>
+    <RegularExpressionIsNotValid>ביטוי רגולרי אינו תקף!</RegularExpressionIsNotValid>
+    <CurrentSubtitle>כתובית נוכחית</CurrentSubtitle>
+    <OriginalText>טקסט מקורי</OriginalText>
+    <OpenOriginalSubtitleFile>פתח את קובץ הכתוביות המקורי...</OpenOriginalSubtitleFile>
+    <PleaseWait>המתן בבקשה...</PleaseWait>
+    <SessionKey>מפתח הפעלה</SessionKey>
+    <SessionKeyGenerate>צור מפתח חדש</SessionKeyGenerate>
+    <UserName>שם משתמש</UserName>
+    <UserNameAlreadyInUse>שם משתמש כבר בשימוש</UserNameAlreadyInUse>
+    <WebServiceUrl>כתובת האתר של שירות האינטרנט</WebServiceUrl>
+    <IP>IP</IP>
+    <VideoWindowTitle>סרטון - {0}</VideoWindowTitle>
+    <AudioWindowTitle>אודיו - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>בקרות - {0}</ControlsWindowTitle>
+    <Advanced>מִתקַדֵם</Advanced>
+    <Style>סִגְנוֹן</Style>
+    <StyleLanguage>סגנון / שפה</StyleLanguage>
+    <Character>אופי</Character>
+    <Class>מעמד</Class>
+    <GeneralText>כללי</GeneralText>
+    <LineNumber>קַו#</LineNumber>
+    <Before>לפני</Before>
+    <After>לאחר</After>
+    <Size>גודל</Size>
+    <Search>לחפש</Search>
+    <DeleteCurrentLine>מחק את השורה הנוכחית</DeleteCurrentLine>
+    <Width>רוֹחַב</Width>
+    <Height>גוֹבַה</Height>
+    <Collapse>הִתמוֹטְטוּת</Collapse>
+    <ShortcutX>קיצור דרך: {0}</ShortcutX>
+    <ExampleX>דוגמה: {0}</ExampleX>
+    <Reset>אִתחוּל</Reset>
+    <Warning>אַזהָרָה</Warning>
+    <UseLargerFontForThisWindow>השתמש בגופן גדול יותר עבור חלון זה</UseLargerFontForThisWindow>
+  </General>
+  <About>
+    <Title>לגבי עריכת כתוביות</Title>
+    <AboutText1>Subtitle Edit is Free Software under the GNU Public License.
+You may distribute, modify and use it freely.
+
+C# source code is available on https://github.com/SubtitleEdit/subtitleedit
+
+Visit https://www.nikse.dk for the latest version.
+
+Suggestions are very welcome.
+
+Email: mailto:nikse.dk@gmail.com</AboutText1>
+  </About>
+  <AddToNames>
+    <Title>הוסף לרשימת השמות</Title>
+    <Description>הוסף לרשימת שמות/רעש (תלוי רישיות)</Description>
+  </AddToNames>
+  <AddToOcrReplaceList>
+    <Title>הוסף לרשימת החלפת OCR</Title>
+    <Description>הוסף זוג לרשימת החלפת OCR (תלוי רישיות)</Description>
+  </AddToOcrReplaceList>
+  <AddToUserDictionary>
+    <Title>הוסף למילון המשתמש</Title>
+    <Description>הוסף מילה למילון המשתמש (לא תלוי רישיות)</Description>
+  </AddToUserDictionary>
+  <AddWaveform>
+    <Title>יצירת נתוני צורת גל</Title>
+    <SourceVideoFile>קובץ וידאו מקור:</SourceVideoFile>
+    <GenerateWaveformData>יצירת נתוני צורת גל</GenerateWaveformData>
+    <PleaseWait>זה עשוי להימשך מספר דקות - אנא המתן</PleaseWait>
+    <FfmpegNotFound>Subtitle Edit needs FFmpeg for extracting audio data to generate waveform.
+
+Do you want to download and use FFmpeg?</FfmpegNotFound>
+    <GeneratingPeakFile>יוצר קובץ שיא...</GeneratingPeakFile>
+    <GeneratingSpectrogram>יוצר ספקטרוגרמה...</GeneratingSpectrogram>
+    <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
+    <ExtractingMinutes>חילוץ אודיו: {0}:{1:00} דקות</ExtractingMinutes>
+    <WaveFileNotFound>Could not find extracted wave file!
+This feature requires VLC media player 1.1.x or newer ({0}-bit).
+
+Command line: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+
+Command line: {1} {2}
+
+Note: Do check free disk space.</WaveFileMalformed>
+    <LowDiskSpace>שטח דיסק נמוך!</LowDiskSpace>
+    <FreeDiskSpace>{0} חינם</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>לא נמצאו רצועות שמע!  ליצור צורת גל ריקה?</NoAudioTracksFoundGenerateEmptyWaveform>
+  </AddWaveform>
+  <AddWaveformBatch>
+    <Title>יצירת נתוני צורת גל באצווה</Title>
+    <ExtractingAudio>מחלץ אודיו...</ExtractingAudio>
+    <Calculating>מחשב...</Calculating>
+    <Done>בוצע</Done>
+    <Error>שְׁגִיאָה</Error>
+  </AddWaveformBatch>
+  <AdjustDisplayDuration>
+    <Title>התאם את משכי הזמן</Title>
+    <AdjustVia>התאם דרך</AdjustVia>
+    <Seconds>שניות</Seconds>
+    <Percent>אָחוּז</Percent>
+    <Recalculate>חישוב מחדש</Recalculate>
+    <AddSeconds>הוסף שניות</AddSeconds>
+    <SetAsPercent>הגדר כאחוז מהמשך</SetAsPercent>
+    <Note>הערה: זמן התצוגה לא יחפוף את זמן ההתחלה של הטקסט הבא</Note>
+    <Fixed>תוקן</Fixed>
+    <Milliseconds>אלפיות שניות</Milliseconds>
+    <ExtendOnly>להאריך בלבד</ExtendOnly>
+  </AdjustDisplayDuration>
+  <ApplyDurationLimits>
+    <Title>החל מגבלות משך</Title>
+    <FixesAvailable>תיקונים זמינים: {0}</FixesAvailable>
+    <UnableToFix>לא ניתן לתקן: {0}</UnableToFix>
+  </ApplyDurationLimits>
+  <AudioToText>
+    <Title>אודיו לטקסט</Title>
+    <Info>צור טקסט מאודיו באמצעות זיהוי דיבור Vosk/Kaldi</Info>
+    <WhisperInfo>צור טקסט מאודיו באמצעות זיהוי דיבור Whisper</WhisperInfo>
+    <VoskWebsite>אתר Vosk</VoskWebsite>
+    <WhisperWebsite>אתר Whisper</WhisperWebsite>
+    <WhisperNotFound>Whisper not found.
+
+Read more info (web)?</WhisperNotFound>
+    <Models>דגמים</Models>
+    <LanguagesAndModels>שפות ומודלים</LanguagesAndModels>
+    <ChooseModel>בחר דגם</ChooseModel>
+    <ChooseLanguage>בחר שפה</ChooseLanguage>
+    <OpenModelsFolder>פתח את תיקיית המודלים</OpenModelsFolder>
+    <LoadingVoskModel>טוען מודל זיהוי דיבור של Vosk...</LoadingVoskModel>
+    <Transcribing>מתמלל אודיו לטקסט...</Transcribing>
+    <TranscribingXOfY>מתמלל אודיו לטקסט - קובץ {0} מתוך {1}...</TranscribingXOfY>
+    <XFilesSavedToVideoSourceFolder>{0} קבצים נשמרו בתיקיית מקור הווידאו</XFilesSavedToVideoSourceFolder>
+    <UsePostProcessing>השתמש בעיבוד שלאחר (מיזוג שורות, תיקון רישיות, סימני פיסוק ועוד)</UsePostProcessing>
+    <AutoAdjustTimings>התאמה אוטומטית של תזמונים</AutoAdjustTimings>
+    <BatchMode>מצב אצווה</BatchMode>
+    <KeepPartialTranscription>שמור על תמלול חלקי</KeepPartialTranscription>
+    <TranslateToEnglish>תרגם לאנגלית</TranslateToEnglish>
+    <MaxCharsPerSubtitle>מקסימום  תווים לכל שורת כתוביות</MaxCharsPerSubtitle>
+  </AudioToText>
+  <AssaAttachments>
+    <Title>מצורפים מתקדמים של תת תחנת אלפא</Title>
+    <AttachFiles>צרף קבצים...</AttachFiles>
+    <FontsAndImages>גופנים ותמונות</FontsAndImages>
+    <Graphics>גרָפִיקָה</Graphics>
+    <Font>גוֹפָן</Font>
+    <ImageName>שם תמונה ({0}x{1}):</ImageName>
+    <IconName>שם סמל:</IconName>
+    <FontName>שם גופן:</FontName>
+    <ImageResized>גודל התמונה שונה כך שיתאים לחלון הנוכחי</ImageResized>
+    <FilesSkippedX>קבצים שדילג עליהם: {0}</FilesSkippedX>
+    <RemoveOneAttachment>להסיר קובץ מצורף אחד?</RemoveOneAttachment>
+    <RemoveXAttachments>להסיר {0} קבצים מצורפים?</RemoveXAttachments>
+  </AssaAttachments>
+  <AssaOverrideTags>
+    <ApplyCustomTags>החל תגי ביטול מותאמים אישית</ApplyCustomTags>
+    <History>הִיסטוֹרִיָה</History>
+    <TagsToApply>תגים ליישום</TagsToApply>
+    <ApplyTo>הגשת בקשה ל</ApplyTo>
+    <SelectedLinesX>שורות שנבחרו: {0}</SelectedLinesX>
+    <AdvancedSelection>בחירה מתקדמת</AdvancedSelection>
+  </AssaOverrideTags>
+  <AssaProgressBarGenerator>
+    <Title>צור סרגל התקדמות</Title>
+    <Progressbar>סרגל התקדמות</Progressbar>
+    <Chapters>פרקים</Chapters>
+    <SplitterWidth>רוחב מפצל</SplitterWidth>
+    <SplitterHeight>גובה המפצל</SplitterHeight>
+    <XAdjustment>התאמה X</XAdjustment>
+    <YAdjustment>התאמה Y</YAdjustment>
+    <Position>עמדה</Position>
+    <TextAlignment>יישור טקסט</TextAlignment>
+    <SquareCorners>פינות מרובעות</SquareCorners>
+    <RoundedCorners>פינות מעוגלות</RoundedCorners>
+    <Top>חלק עליון</Top>
+    <Bottom>תַחתִית</Bottom>
+    <TakePosFromVideo>קח עמדת וידאו</TakePosFromVideo>
+  </AssaProgressBarGenerator>
+  <AssaResolutionChanger>
+    <Title>שנה את רזולוציית הסקריפט של ASSA</Title>
+    <SourceVideoRes>רזולוציית וידאו מקור</SourceVideoRes>
+    <TargetVideoRes>יעד רזולוציית וידאו</TargetVideoRes>
+    <ChangeResolutionMargins>שנה רזולוציה עבור השוליים</ChangeResolutionMargins>
+    <ChangeResolutionFontSize>שנה רזולוציה לגודל הגופן</ChangeResolutionFontSize>
+    <ChangeResolutionPositions>שנה רזולוציה למיקום</ChangeResolutionPositions>
+    <ChangeResolutionDrawing>שנה רזולוציה לציור</ChangeResolutionDrawing>
+    <SourceAndTargetEqual>רזולוציית המקור והיעד זהה - אין מה לעשות.</SourceAndTargetEqual>
+  </AssaResolutionChanger>
+  <ImageColorPicker>
+    <Title>בוחר צבעי תמונה</Title>
+    <CopyColorHex>העתק ללוח כצבע HEX {0}</CopyColorHex>
+    <CopyColorAssa>העתק ללוח כצבע ASSA {0}</CopyColorAssa>
+    <CopyColorRgb>העתק ללוח כצבע RGB {0}</CopyColorRgb>
+  </ImageColorPicker>
+  <AssaSetBackgroundBox>
+    <Title>צור תיבת רקע</Title>
+    <Padding>ריפוד</Padding>
+    <FillWidth>רוחב מילוי</FillWidth>
+    <Drawing>צִיוּר</Drawing>
+    <BoxColor>צבע הקופסה</BoxColor>
+    <Radius>רַדִיוּס</Radius>
+    <Step>שלב</Step>
+    <Spikes>קוצים</Spikes>
+    <Bubbles>בועות</Bubbles>
+    <Circle>מעגל</Circle>
+    <MarginX>MarginX</MarginX>
+    <MarginY>MarginY</MarginY>
+    <OnlyDrawing>רק ציור</OnlyDrawing>
+    <DrawingFile>קובץ ציור</DrawingFile>
+    <ColorPickerSetLastColor>הצבע האחרון של בוחר הצבעים הוא כעת: {0}</ColorPickerSetLastColor>
+  </AssaSetBackgroundBox>
+  <AssaSetPosition>
+    <SetPosition>קבע מיקום</SetPosition>
+    <VideoResolutionX>רזולוציית וידאו: {0}</VideoResolutionX>
+    <StyleAlignmentX>יישור סגנון: {0}</StyleAlignmentX>
+    <CurrentMousePositionX>מיקום העכבר: {0}</CurrentMousePositionX>
+    <CurrentTextPositionX>מיקום טקסט: {0}</CurrentTextPositionX>
+    <SetPosInfo>לחץ על הסרטון כדי לשנות את מצב ההגדרה/הזזה</SetPosInfo>
+    <Clipboard>לוח כתיבה</Clipboard>
+    <ResolutionMissing>PlayResX/PlayResY לא מוגדרים - להגדיר את הרזולוציה עכשיו?</ResolutionMissing>
+    <RotateXAxis>סובב את ציר {0}</RotateXAxis>
+    <DistortX>עיוות {0}</DistortX>
+  </AssaSetPosition>
+  <AutoBreakUnbreakLines>
+    <TitleAutoBreak>איזון אוטומטי של שורות נבחרות</TitleAutoBreak>
+    <TitleUnbreak>הסר מעברי שורות מהשורות שנבחרו</TitleUnbreak>
+    <LinesFoundX>נמצאו שורות: {0}</LinesFoundX>
+    <OnlyBreakLinesLongerThan>רק קווי שבירה ארוכים מ</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>רק ביטול השבירה של שורות ארוכות מ</OnlyUnbreakLinesLongerThan>
+  </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>המרת אצווה</Title>
+    <Input>קֶלֶט</Input>
+    <InputDescription>קבצי קלט (עיון או גרור ושחרר)</InputDescription>
+    <Status>סטָטוּס</Status>
+    <Output>תְפוּקָה</Output>
+    <SaveInSourceFolder>שמור בתיקיית קובץ המקור</SaveInSourceFolder>
+    <SaveInOutputFolder>שמור בתיקיית הפלט למטה</SaveInOutputFolder>
+    <OverwriteFiles>החלף קבצים</OverwriteFiles>
+    <Style>סִגְנוֹן...</Style>
+    <UseStyleFromSource>השתמש בסגנון מהמקור</UseStyleFromSource>
+    <ConvertOptions>המר אפשרויות</ConvertOptions>
+    <RemoveFormatting>הסר תגי עיצוב</RemoveFormatting>
+    <RemoveStyleActor>הסר שורות עם סגנון/שחקן</RemoveStyleActor>
+    <RemoveTextForHI>הסר טקסט עבור HI</RemoveTextForHI>
+    <ConvertColorsToDialog>המרת צבעים לדיאלוג</ConvertColorsToDialog>
+    <OverwriteOriginalFiles>החלף קבצים מקוריים (סיומת חדשה אם הפורמט משתנה)</OverwriteOriginalFiles>
+    <RedoCasing>בצע מחדש מעטפת</RedoCasing>
+    <Convert>להמיר</Convert>
+    <NothingToConvert>אין מה להמיר!</NothingToConvert>
+    <PleaseChooseOutputFolder>אנא בחר תיקיית פלט</PleaseChooseOutputFolder>
+    <NotConverted>נִכשָׁל</NotConverted>
+    <Converted>הומר</Converted>
+    <Settings>הגדרות</Settings>
+    <FixRtl>תקן את RTL</FixRtl>
+    <FixRtlAddUnicode>תקן RTL באמצעות תגי Unicode</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>הסר תגי RTL Unicode</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>התחלה/סיום של RTL הפוך</FixRtlReverseStartEnd>
+    <SplitLongLines>פיצול שורות ארוכות</SplitLongLines>
+    <AutoBalance>קווי איזון אוטומטי</AutoBalance>
+    <ScanFolder>סרוק תיקייה...</ScanFolder>
+    <Recursive>כלול תיקיות משנה</Recursive>
+    <BridgeGaps>גשר על פערים</BridgeGaps>
+    <PlainText>טקסט רגיל</PlainText>
+    <Ocr>OCR...</Ocr>
+    <AddFiles>הוסף קבצים...</AddFiles>
+    <Filter>לְסַנֵן</Filter>
+    <FilterSkipped>דילג על ידי מסנן</FilterSkipped>
+    <FilterSrtNoUtf8BOM>קבצי SubRip (.srt) ללא כותרת BOM UTF-8</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>יותר משתי שורות בכתובית אחת</FilterMoreThanTwoLines>
+    <FilterContains>הטקסט מכיל...</FilterContains>
+    <FilterFileNameContains>שם הקובץ מכיל...</FilterFileNameContains>
+    <LanguageCodeContains>קוד שפה (mkv/mp4) מכיל...</LanguageCodeContains>
+    <FixCommonErrorsErrorX>תקן שגיאות נפוצות: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>החלפה מרובה: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>יתרה אוטומטית: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>קודי זמן קיזוז</OffsetTimeCodes>
+    <TransportStreamSettings>הגדרות תחבורה זרם</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>ביטול מיקום X המקורי</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>תעקוף את מיקום ה-Y המקורי</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>תעקוף את גודל הסרטון המקורי</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>סיום שם הקובץ</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>הגדרות TS...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>הסר מעברי שורות</RemoveLineBreaks>
+    <DeleteLines>מחק שורות</DeleteLines>
+    <TryToUseSourceEncoding>נסה להשתמש בקידוד מקור</TryToUseSourceEncoding>
+    <DeleteFirstLines>מחק שורות ראשונות</DeleteFirstLines>
+    <DeleteLastLines>מחק את השורות האחרונות</DeleteLastLines>
+    <DeleteContaining>מחק שורות המכילות</DeleteContaining>
+    <MkvLanguageInOutputFileName>"שפה" בשם קובץ הפלט</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "שפה" בשם קובץ הפלט: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>קוד שפה בשתי אותיות</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>קוד שפה שלוש אותיות</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>אין קוד שפה</MkvLanguageStyleEmpty>
+  </BatchConvert>
+  <BinEdit>
+    <ImportImage>ייבא תמונה...</ImportImage>
+    <ExportImage>ייצא תמונה...</ExportImage>
+    <SetText>הגדר טקסט...</SetText>
+    <QuickOcr>טקסטים מהירים של OCR (לסקירה כללית בלבד)</QuickOcr>
+    <ResizeBitmaps>שנה את גודל התמונות...</ResizeBitmaps>
+    <ChangeBrightness>התאם את הבהירות...</ChangeBrightness>
+    <ChangeAlpha>התאם אלפא...</ChangeAlpha>
+    <ResizeBitmapsForSelectedLines>שנה את גודל התמונות עבור השורות שנבחרו...</ResizeBitmapsForSelectedLines>
+    <ChangeColorForSelectedLines>שנה צבע עבור קווים שנבחרו...</ChangeColorForSelectedLines>
+    <ChangeBrightnessForSelectedLines>התאם את הבהירות עבור קווים נבחרים...</ChangeBrightnessForSelectedLines>
+    <ChangeAlphaForSelectedLines>התאם אלפא עבור שורות נבחרות...</ChangeAlphaForSelectedLines>
+    <AlignSelectedLines>יישר קווים שנבחרו</AlignSelectedLines>
+    <CenterSelectedLines>מרכז קווים נבחרים (אופקי, שמור על מיקום אנכי)</CenterSelectedLines>
+    <TopAlignSelectedLines>יישור למעלה קווים שנבחרו (שמור על מיקום אופקי)</TopAlignSelectedLines>
+    <BottomAlignSelectedLines>יישור למטה קווים שנבחרו (שמור על מיקום אופקי)</BottomAlignSelectedLines>
+    <ToggleForcedSelectedLines>החלף "מאולץ" עבור שורות נבחרות</ToggleForcedSelectedLines>
+    <SelectForcedLines>בחר קווים מאולצים</SelectForcedLines>
+    <SizeXY>גודל: {0}x{1}</SizeXY>
+    <SetAspectRatio11>הגדר יחס רוחב-גובה של 1:1</SetAspectRatio11>
+    <ChangeBrightnessTitle>התאם את הבהירות</ChangeBrightnessTitle>
+    <BrightnessX>בהירות: {0}%</BrightnessX>
+    <ResizeTitle>שנה את גודל התמונות</ResizeTitle>
+    <ResizeX>שנה גודל: {0}%</ResizeX>
+    <ChangeAlphaTitle>התאם אלפא</ChangeAlphaTitle>
+    <AlphaX>אלפא: {0}%</AlphaX>
+  </BinEdit>
+  <Bookmarks>
+    <EditBookmark>ערוך סימניה</EditBookmark>
+    <AddBookmark>הוסף סימניה</AddBookmark>
+    <GoToBookmark>עבור לסימנייה</GoToBookmark>
+  </Bookmarks>
+  <ChangeCasing>
+    <Title>שנה מעטפת</Title>
+    <ChangeCasingTo>שנה את האותיות ל</ChangeCasingTo>
+    <NormalCasing>מעטפת רגילה.  משפטים מתחילים באות גדולה.</NormalCasing>
+    <FixNamesCasing>תקן רישיות בשמות (באמצעות Dictionaries
+ames.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>תקן רק רישיות בשמות (באמצעות Dictionaries
+ames.xml)</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>שנה רק את כל הקווים האותיות.</OnlyChangeAllUppercaseLines>
+    <AllUppercase>הכל באותיות רישיות</AllUppercase>
+    <AllLowercase>הכל באותיות קטנות</AllLowercase>
+  </ChangeCasing>
+  <ChangeCasingNames>
+    <Title>שינוי רישיות - שמות</Title>
+    <NamesFoundInSubtitleX>שמות שנמצאו בכתוביות: {0}</NamesFoundInSubtitleX>
+    <Enabled>מופעל</Enabled>
+    <Name>שֵׁם</Name>
+    <LinesFoundX>נמצאו שורות: {0}</LinesFoundX>
+  </ChangeCasingNames>
+  <ChangeFrameRate>
+    <Title>שנה קצב פריימים</Title>
+    <ConvertFrameRateOfSubtitle>המרת קצב פריימים של כתוביות</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>מקצב פריימים</FromFrameRate>
+    <ToFrameRate>לקצב פריימים</ToFrameRate>
+    <FrameRateNotCorrect>קצב הפריימים אינו נכון</FrameRateNotCorrect>
+    <FrameRateNotChanged>קצב הפריימים זהה - אין מה להמיר</FrameRateNotChanged>
+  </ChangeFrameRate>
+  <ChangeSpeedInPercent>
+    <Title>התאם את המהירות באחוזים</Title>
+    <TitleShort>התאם מהירות</TitleShort>
+    <Info>שנה את מהירות הכתוביות באחוזים</Info>
+    <Custom>המותאם אישית</Custom>
+    <ToDropFrame>להורדת מסגרת</ToDropFrame>
+    <FromDropFrame>ממסגרת ירידה</FromDropFrame>
+    <AllowOverlap>אפשר חפיפה</AllowOverlap>
+  </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>בדוק עדכונים</Title>
+    <CheckingForUpdates>מחפש עדכונים...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>בדיקת עדכונים נכשלה: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>אתה משתמש בגרסה האחרונה של עריכת כתוביות :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>גרסה חדשה זמינה!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>עבור לדף ההורדות</InstallUpdate>
+    <NoUpdates>אל תעדכן</NoUpdates>
+  </CheckForUpdates>
+  <ChooseAudioTrack>
+    <Title>בחר רצועת אודיו</Title>
+  </ChooseAudioTrack>
+  <ChooseEncoding>
+    <Title>בחר קידוד</Title>
+    <CodePage>דף קוד</CodePage>
+    <DisplayName>הצג שם</DisplayName>
+    <PleaseSelectAnEncoding>אנא בחר קידוד</PleaseSelectAnEncoding>
+  </ChooseEncoding>
+  <ChooseLanguage>
+    <Title>בחר שפה</Title>
+    <Language>שפה</Language>
+  </ChooseLanguage>
+  <ColorChooser>
+    <Title>בחרי צבע</Title>
+    <Red>אָדוֹם</Red>
+    <Green>ירוק</Green>
+    <Blue>כְּחוֹל</Blue>
+    <Alpha>אלפא</Alpha>
+  </ColorChooser>
+  <ColumnPaste>
+    <Title>הדבק עמודות</Title>
+    <ChooseColumn>בחר עמודה</ChooseColumn>
+    <OverwriteShiftCellsDown>החלף/הזז תאים למטה</OverwriteShiftCellsDown>
+    <Overwrite>החלף</Overwrite>
+    <ShiftCellsDown>הסט תאים למטה</ShiftCellsDown>
+    <TimeCodesOnly>קודי זמן בלבד</TimeCodesOnly>
+    <TextOnly>רק טקסט</TextOnly>
+    <OriginalTextOnly>טקסט מקורי בלבד</OriginalTextOnly>
+  </ColumnPaste>
+  <CompareSubtitles>
+    <Title>השווה כתוביות</Title>
+    <Reload>לִטעוֹן מִחָדָשׁ</Reload>
+    <PreviousDifference>&amp;הבדל קודם</PreviousDifference>
+    <NextDifference>&amp;ההבדל הבא</NextDifference>
+    <SubtitlesNotAlike>לכתוביות אין קווי דמיון</SubtitlesNotAlike>
+    <XNumberOfDifference>מספר הבדלים: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>מספר הבדלים: {0} ({1:0.##}% מהמילים השתנו)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>מספר הבדלים: {0} ({1:0.##}% מהאותיות השתנו)</XNumberOfDifferenceAndPercentLettersChanged>
+    <ShowOnlyDifferences>הצג רק הבדלים</ShowOnlyDifferences>
+    <IgnoreLineBreaks>התעלם מעברי שורות</IgnoreLineBreaks>
+    <IgnoreWhitespace>התעלם מרווח לבן</IgnoreWhitespace>
+    <IgnoreFormatting>התעלם מעיצוב</IgnoreFormatting>
+    <OnlyLookForDifferencesInText>חפש רק הבדלים בטקסט</OnlyLookForDifferencesInText>
+    <CannotCompareWithImageBasedSubtitles>לא ניתן להשוות עם כתוביות מבוססות תמונה</CannotCompareWithImageBasedSubtitles>
+  </CompareSubtitles>
+  <ConvertColorsToDialog>
+    <Title>המרת צבעים לדיאלוג</Title>
+    <RemoveColorTags>הסר תגי צבע</RemoveColorTags>
+    <AddNewLines>הצב כל מקף בשורה חדשה</AddNewLines>
+    <ReBreakLines>שוברים שורות</ReBreakLines>
+  </ConvertColorsToDialog>
+  <DCinemaProperties>
+    <Title>מאפייני D-Cinema (אינטראופ)</Title>
+    <TitleSmpte>מאפייני D-Cinema (SMPTE)</TitleSmpte>
+    <SubtitleId>מזהה כתוביות</SubtitleId>
+    <GenerateId>צור מזהה</GenerateId>
+    <MovieTitle>שם הסרט</MovieTitle>
+    <ReelNumber>מספר סליל</ReelNumber>
+    <Language>שפה</Language>
+    <IssueDate>תאריך הוצאה</IssueDate>
+    <EditRate>ערוך שיעור</EditRate>
+    <TimeCodeRate>קצב קוד זמן</TimeCodeRate>
+    <StartTime>שעת התחלה</StartTime>
+    <Font>גוֹפָן</Font>
+    <FontId>תְעוּדַת זֶהוּת</FontId>
+    <FontUri>URI</FontUri>
+    <FontColor>צֶבַע</FontColor>
+    <FontEffect>השפעה</FontEffect>
+    <FontEffectColor>צבע אפקט</FontEffectColor>
+    <FontSize>גודל</FontSize>
+    <TopBottomMargin>שוליים עליון/תחתון</TopBottomMargin>
+    <FadeUpTime>זמן דעיכה</FadeUpTime>
+    <FadeDownTime>זמן דעיכה</FadeDownTime>
+    <ZPosition>מיקום Z</ZPosition>
+    <ZPositionHelp>מספרים חיוביים מרחיקים טקסט, מספרים שליליים מקרבים את הטקסט, אם מיקום z הוא אפס אז הוא דו-ממדי</ZPositionHelp>
+    <ChooseColor>בחרי צבע...</ChooseColor>
+    <Generate>לִיצוֹר</Generate>
+    <GenerateNewIdOnSave>צור מזהה חדש בשמירה</GenerateNewIdOnSave>
+  </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>גשר על פערים קטנים בין כתוביות</Title>
+    <GapsBridgedX>מספר הפערים הקטנים שגושרו: {0}</GapsBridgedX>
+    <GapToNext>הפער אל הבא בשניות</GapToNext>
+    <GapToNextFrames>הרווח הבא במסגרות</GapToNextFrames>
+    <BridgeGapsSmallerThanXPart1>גשר פערים קטנים מ</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>אלפיות השנייה</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>גשר פערים קטנים מ</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>מסגרות</BridgeGapsSmallerThanXPart2Frames>
+    <MinMillisecondsBetweenLines>מינימום  אלפיות שניות בין שורות</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>מינימום  מסגרות בין שורות</MinFramesBetweenLines>
+    <ProlongEndTime>הטקסט הקודם לוקח את כל זמן הפער</ProlongEndTime>
+    <DivideEven>טקסטים מחלקים את זמן הפער</DivideEven>
+  </DurationsBridgeGaps>
+  <DvdSubRip>
+    <Title>העתק כתוביות מ-IFO/VOBs (DVD)</Title>
+    <DvdGroupTitle>קבצי DVD/מידע</DvdGroupTitle>
+    <IfoFile>קובץ IFO</IfoFile>
+    <IfoFiles>קבצי IFO</IfoFiles>
+    <VobFiles>קבצי VOB</VobFiles>
+    <Add>לְהוֹסִיף...</Add>
+    <Remove>לְהַסִיר</Remove>
+    <Clear>ברור</Clear>
+    <MoveUp>לזוז למעלה</MoveUp>
+    <MoveDown>לרדת</MoveDown>
+    <Languages>שפות</Languages>
+    <PalNtsc>PAL/NTSC</PalNtsc>
+    <Pal>PAL (25fps)</Pal>
+    <Ntsc>NTSC (29.97fps)</Ntsc>
+    <StartRipping>תתחיל לקרוע</StartRipping>
+    <Abort>לְהַפִּיל</Abort>
+    <AbortedByUser>בוטל ע"י המשתמש</AbortedByUser>
+    <ReadingSubtitleData>קורא נתוני כתוביות...</ReadingSubtitleData>
+    <RippingVobFileXofYZ>העתקת קובץ vob {1} מתוך {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>סוג IFO הוא '{0}' ולא 'DVDVIDEO-VTS'.{1}נסה קובץ אחר מאשר {2}</WrongIfoType>
+  </DvdSubRip>
+  <DvdSubRipChooseLanguage>
+    <Title>בחר שפה</Title>
+    <ChooseLanguageStreamId>בחר שפה (מזהה זרם)</ChooseLanguageStreamId>
+    <UnknownLanguage>שפה לא ידועה</UnknownLanguage>
+    <SubtitleImageXofYAndWidthXHeight>תמונת כתובית {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>תמונת כתובית</SubtitleImage>
+  </DvdSubRipChooseLanguage>
+  <EbuSaveOptions>
+    <Title>אפשרויות שמירה של EBU</Title>
+    <GeneralSubtitleInformation>מידע כללי על כתוביות</GeneralSubtitleInformation>
+    <CodePageNumber>מספר עמוד קוד</CodePageNumber>
+    <DiskFormatCode>קוד פורמט דיסק</DiskFormatCode>
+    <DisplayStandardCode>הצג קוד סטנדרטי</DisplayStandardCode>
+    <ColorRequiresTeletext>צבעים דורשים טלטקסט!</ColorRequiresTeletext>
+    <AlignmentRequiresTeletext>יישור דורש טלטקסט!</AlignmentRequiresTeletext>
+    <TeletextCharsShouldBe38>'מספר תווים לכל שורה' עבור טלטקסט צריך להיות 38!</TeletextCharsShouldBe38>
+    <CharacterCodeTable>טבלת תווים</CharacterCodeTable>
+    <LanguageCode>קוד שפה</LanguageCode>
+    <OriginalProgramTitle>כותרת התוכנית המקורית</OriginalProgramTitle>
+    <OriginalEpisodeTitle>שם הפרק המקורי</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>כותרת התוכנית המתורגמת</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>כותרת הפרק המתורגמת</TranslatedEpisodeTitle>
+    <TranslatorsName>שם המתרגם</TranslatorsName>
+    <SubtitleListReferenceCode>קוד הפניה לרשימת כתוביות</SubtitleListReferenceCode>
+    <CountryOfOrigin>ארץ מוצא</CountryOfOrigin>
+    <TimeCodeStatus>מצב קוד זמן</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>קוד זמן: תחילת התוכנית</TimeCodeStartOfProgramme>
+    <RevisionNumber>מספר גרסה</RevisionNumber>
+    <MaxNoOfDisplayableChars>מקסימום מספר תווים בכל שורה</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>מקסימום מספר שורות</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>מספר רצף דיסק</DiskSequenceNumber>
+    <TotalNumberOfDisks>מספר סה"כ של דיסקים</TotalNumberOfDisks>
+    <Import>יְבוּא...</Import>
+    <TextAndTimingInformation>מידע על טקסט ותזמון</TextAndTimingInformation>
+    <JustificationCode>קוד הצדקה</JustificationCode>
+    <VerticalPosition>מיקום אנכי</VerticalPosition>
+    <MarginTop>שוליים למעלה (עבור כתוביות מיושרות למעלה)</MarginTop>
+    <MarginBottom>שוליים תחתונים (עבור כתוביות מיושרות למטה)</MarginBottom>
+    <NewLineRows>מספר השורות שנוספו על ידי שורה חדשה</NewLineRows>
+    <Teletext>טלטקסט</Teletext>
+    <UseBox>השתמש בתיבה מסביב לטקסט</UseBox>
+    <DoubleHeight>השתמש בגובה כפול עבור טקסט</DoubleHeight>
+    <Errors>שגיאות</Errors>
+    <ErrorsX>שגיאות: {0}</ErrorsX>
+    <MaxLengthError>קו {0} חורג מהאורך המקסימלי ({1}) ב-{2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>מצגת ללא שינוי</TextUnchangedPresentation>
+    <TextLeftJustifiedText>טקסט מוצדק משמאל</TextLeftJustifiedText>
+    <TextCenteredText>טקסט ממורכז</TextCenteredText>
+    <TextRightJustifiedText>טקסט מוצדק נכון</TextRightJustifiedText>
+    <UseBoxForOneNewLine>סמן את 'השתמש בתיבה סביב טקסט' עבור שורה חדשה אחת בלבד</UseBoxForOneNewLine>
+  </EbuSaveOptions>
+  <EffectKaraoke>
+    <Title>אפקט קריוקי</Title>
+    <ChooseColor>בחרי צבע:</ChooseColor>
+    <TotalSeconds>סך שניות:</TotalSeconds>
+    <EndDelayInSeconds>עיכוב סיום בשניות:</EndDelayInSeconds>
+  </EffectKaraoke>
+  <EffectTypewriter>
+    <Title>אפקט מכונת כתיבה</Title>
+    <TotalSeconds>סך שניות:</TotalSeconds>
+    <EndDelayInSeconds>עיכוב סיום בשניות:</EndDelayInSeconds>
+  </EffectTypewriter>
+  <ExportCustomText>
+    <Title>ייצוא פורמט טקסט מותאם אישית</Title>
+    <Formats>פורמטים</Formats>
+    <New>חָדָשׁ</New>
+    <Edit>לַעֲרוֹך</Edit>
+    <Delete>לִמְחוֹק</Delete>
+    <SaveAs>שמור כ...</SaveAs>
+    <SaveSubtitleAs>שמור כתובית בשם...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>כתוביות מיוצאות בפורמט מותאם אישית אל: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>תבנית פורמט טקסט מותאם אישית</Title>
+    <Template>תבנית</Template>
+    <Header>כּוֹתֶרֶת</Header>
+    <TextLine>שורת טקסט (פיסקה)</TextLine>
+    <TimeCode>קוד זמן</TimeCode>
+    <NewLine>שורה חדשה</NewLine>
+    <Footer>כותרת תחתונה</Footer>
+    <FileExtension>סיומת קובץ</FileExtension>
+    <DoNotModify>[אל תשנה]</DoNotModify>
+  </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>ייצוא Final Cut Pro XML מתקדם</Title>
+    <FontName>שם גופן</FontName>
+    <FontSize>גודל גופן</FontSize>
+    <FontFace>סוג גופן</FontFace>
+    <FontFaceRegular>רגיל</FontFaceRegular>
+    <Alignment>יישור</Alignment>
+    <Baseline>קו בסיס</Baseline>
+  </ExportFcpXmlAdvanced>
+  <ExportPngXml>
+    <Title>ייצוא BDN XML/PNG</Title>
+    <ImageSettings>הגדרות תמונה</ImageSettings>
+    <FontFamily>משפחת גופן</FontFamily>
+    <FontSize>גודל גופן</FontSize>
+    <FontColor>צבע גופן</FontColor>
+    <BorderColor>צבע גבול</BorderColor>
+    <BorderWidth>רוחב גבול</BorderWidth>
+    <BorderStyle>סגנון גבול</BorderStyle>
+    <BorderStyleOneBox>קופסה אחת</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>קופסה לכל שורה</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>רגיל, רוחב={0}</BorderStyleNormalWidthX>
+    <ShadowColor>צבע צל</ShadowColor>
+    <ShadowWidth>רוחב צל</ShadowWidth>
+    <Transparency>אלפא</Transparency>
+    <ImageFormat>פורמט תמונה</ImageFormat>
+    <FullFrameImage>תמונת מסגרת מלאה</FullFrameImage>
+    <SimpleRendering>עיבוד פשוט</SimpleRendering>
+    <AntiAliasingWithTransparency>אנטי-aliasing עם שקיפות</AntiAliasingWithTransparency>
+    <Text3D>תלת מימד</Text3D>
+    <ImagePrefix>קידומת תמונה</ImagePrefix>
+    <SideBySide3D>חצי זה לצד זה</SideBySide3D>
+    <HalfTopBottom3D>חצי עליון/תחתון</HalfTopBottom3D>
+    <Depth>עוֹמֶק</Depth>
+    <ExportAllLines>ייצא את כל השורות...</ExportAllLines>
+    <XImagesSavedInY>{0:#,##0} images saved in {1}</XImagesSavedInY>
+    <VideoResolution>מילון וידאו</VideoResolution>
+    <Align>יישר</Align>
+    <Left>שמאלה</Left>
+    <Right>ימין</Right>
+    <Center>מֶרְכָּז</Center>
+    <CenterLeftJustify>מרכז, מצד שמאל</CenterLeftJustify>
+    <CenterLeftJustifyDialogs>מרכז, תיבת יישור שמאלה</CenterLeftJustifyDialogs>
+    <CenterTopJustify>מרכז, למעלה להצדיק</CenterTopJustify>
+    <CenterRightJustify>מרכז, נכון להצדיק</CenterRightJustify>
+    <BottomMargin>שוליים תחתונים</BottomMargin>
+    <LeftRightMargin>שוליים שמאלי/ימני</LeftRightMargin>
+    <SaveBluRaySupAs>בחר שם קובץ Blu-ray sup</SaveBluRaySupAs>
+    <SaveVobSubAs>בחר שם קובץ VobSub</SaveVobSubAs>
+    <SaveFabImageScriptAs>בחר שם קובץ סקריפט תמונה FAB</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>בחר שם קובץ DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>בחר את שם הקובץ Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>בחר את שם הקובץ Digital Cinema SMPTE 2014</SaveDigitalCinemaSmpte2014>
+    <SavePremiereEdlAs>בחר שם קובץ Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>בחר שם קובץ xml Final Cut Pro</SaveFcpAs>
+    <SaveDostAs>בחר שם קובץ DoStudio dost</SaveDostAs>
+    <SomeLinesWereTooLongX>Some lines were too long:
+{0}</SomeLinesWereTooLongX>
+    <LineHeight>גובה קו</LineHeight>
+    <BoxSingleLine>קופסה - קו בודד</BoxSingleLine>
+    <BoxMultiLine>קופסה - רב קו</BoxMultiLine>
+    <Forced>כָּפוּי</Forced>
+    <ChooseBackgroundColor>בחר צבע רקע</ChooseBackgroundColor>
+    <SaveImageAs>שמור תמונה כ...</SaveImageAs>
+    <FcpUseFullPathUrl>השתמש ב-URL של נתיב תמונה מלא ב-FCP xml</FcpUseFullPathUrl>
+  </ExportPngXml>
+  <ExportText>
+    <Title>ייצוא טקסט</Title>
+    <Preview>תצוגה מקדימה</Preview>
+    <ExportOptions>אפשרויות ייצוא</ExportOptions>
+    <FormatText>עיצוב טקסט</FormatText>
+    <None>אף אחד</None>
+    <MergeAllLines>מיזוג כל השורות</MergeAllLines>
+    <UnbreakLines>פתח קווים</UnbreakLines>
+    <RemoveStyling>הסר סטיילינג</RemoveStyling>
+    <ShowLineNumbers>הצג מספרי שורות</ShowLineNumbers>
+    <AddNewLineAfterLineNumber>הוסף שורה חדשה אחרי מספר שורה</AddNewLineAfterLineNumber>
+    <ShowTimeCode>הצג קוד זמן</ShowTimeCode>
+    <AddNewLineAfterTimeCode>הוסף שורה חדשה אחרי קוד זמן</AddNewLineAfterTimeCode>
+    <AddNewLineAfterTexts>הוסף שורה חדשה אחרי טקסט</AddNewLineAfterTexts>
+    <AddNewLineBetweenSubtitles>הוסף שורה חדשה בין הכתוביות</AddNewLineBetweenSubtitles>
+    <TimeCodeFormat>פורמט קוד זמן</TimeCodeFormat>
+    <Srt>.srt</Srt>
+    <Milliseconds>אלפיות שניות</Milliseconds>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
+    <TimeCodeSeparator>מפריד קוד זמן</TimeCodeSeparator>
+  </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>צור זמן כטקסט</Title>
+    <OpenVideoFile>בחר קובץ וידאו לחילוץ מידע על תאריך/שעה</OpenVideoFile>
+    <StartFrom>התחל מ</StartFrom>
+    <DateTimeFormat>פורמט תאריך/שעה</DateTimeFormat>
+    <Example>דוגמא</Example>
+    <GenerateSubtitle>&amp;צור כתוביות</GenerateSubtitle>
+  </ExtractDateTimeInfo>
+  <FindDialog>
+    <Title>למצוא</Title>
+    <Find>&amp;למצוא</Find>
+    <Normal>&amp;נוֹרמָלִי</Normal>
+    <CaseSensitive>&amp;רגיש לאותיות רישיות</CaseSensitive>
+    <RegularExpression>הבעה רגילה</RegularExpression>
+    <WholeWord>&amp;כל העולם</WholeWord>
+    <Count>לספור</Count>
+    <XNumberOfMatches>{0:#,##0} matches</XNumberOfMatches>
+    <OneMatch>התאמה אחת</OneMatch>
+  </FindDialog>
+  <FindSubtitleLine>
+    <Title>מצא שורת כתוביות</Title>
+    <Find>&amp;למצוא</Find>
+    <FindNext>מצא &amp;הבא</FindNext>
+  </FindSubtitleLine>
+  <FixCommonErrors>
+    <Title>תקן שגיאות נפוצות</Title>
+    <Step1>שלב 1/2 - בחר אילו שגיאות לתקן</Step1>
+    <WhatToFix>מה לתקן</WhatToFix>
+    <Example>דוגמא</Example>
+    <SelectAll>בחר הכל</SelectAll>
+    <InverseSelection>בחירה הפוך</InverseSelection>
+    <Back>&lt; &amp;חזרה</Back>
+    <Next>&amp;הבא &gt;</Next>
+    <Step2>שלב 2/2 - אימות תיקונים</Step2>
+    <Fixes>תיקונים</Fixes>
+    <Log>עֵץ</Log>
+    <Function>פוּנקצִיָה</Function>
+    <RemovedEmptyLine>הסר שורה ריקה</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>הסר את השורה הריקה למעלה</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>הסר שורה ריקה בתחתית</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>הסר שורה ריקה באמצע</RemovedEmptyLineInMiddle>
+    <RemovedEmptyLinesUnsedLineBreaks>הסר שורות ריקות/מעברי שורות שאינם בשימוש</RemovedEmptyLinesUnsedLineBreaks>
+    <FixOverlappingDisplayTimes>תקן זמני תצוגה חופפים</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>תקן זמני תצוגה קצרים</FixShortDisplayTimes>
+    <FixLongDisplayTimes>תקן זמני תצוגה ארוכים</FixLongDisplayTimes>
+    <FixShortGaps>תקן פערים קצרים</FixShortGaps>
+    <FixInvalidItalicTags>תקן תגיות נטוי לא חוקיות</FixInvalidItalicTags>
+    <RemoveUnneededSpaces>הסר רווחים מיותרים</RemoveUnneededSpaces>
+    <RemoveUnneededPeriods>הסר מחזורים מיותרים</RemoveUnneededPeriods>
+    <FixCommas>תקן פסיקים</FixCommas>
+    <FixMissingSpaces>תקן רווחים חסרים</FixMissingSpaces>
+    <BreakLongLines>לשבור תורים ארוכים</BreakLongLines>
+    <RemoveLineBreaks>הסר מעברי שורות בטקסטים קצרים עם משפט אחד בלבד</RemoveLineBreaks>
+    <RemoveLineBreaksAll>הסר מעברי שורות בטקסטים קצרים (הכל למעט דיאלוגים)</RemoveLineBreaksAll>
+    <FixUppercaseIInsideLowercaseWords>תקן 'i' רישיות בתוך מילים קטנות (שגיאת OCR)</FixUppercaseIInsideLowercaseWords>
+    <FixDoubleApostrophes>תקן תווי אפוסתרפיה כפולים ('') לציטוט בודד (")</FixDoubleApostrophes>
+    <AddPeriods>הוסף נקודה אחרי שורות כאשר השורה הבאה מתחילה באות גדולה</AddPeriods>
+    <StartWithUppercaseLetterAfterParagraph>התחל באות גדולה אחרי פסקה</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>התחל באות גדולה אחרי נקודה בתוך הפסקה</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>התחל באות גדולה אחרי נקודתיים/נקודה-פסיק</StartWithUppercaseLetterAfterColon>
+    <FixLowercaseIToUppercaseI>תקן לבד באותיות קטנות 'i' ל-'I' (אנגלית)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>תקן שגיאות OCR נפוצות (באמצעות רשימת החלפת OCR)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>שגיאות OCR נפוצות שתוקנו (נעשה שימוש בקובץ OcrReplaceList): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>הסר רווח בין מספרים</RemoveSpaceBetweenNumber>
+    <BreakDialogsOnOneLine>פיצול דיאלוגים בשורה אחת</BreakDialogsOnOneLine>
+    <RemoveDialogFirstInNonDialogs>הסר מקף התחלה בשורה הראשונה עבור לא דיאלוגים</RemoveDialogFirstInNonDialogs>
+    <NormalizeStrings>נרמל מיתרים</NormalizeStrings>
+    <FixTurkishAnsi>תקן אותיות ANSI טורקיות (איסלנדיות) ל-Unicode</FixTurkishAnsi>
+    <FixDanishLetterI>תקן את האות הדנית 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>תקן סימני שאלה וסימני קריאה הפוכים בספרדית</FixSpanishInvertedQuestionAndExclamationMarks>
+    <AddMissingQuote>הוסף ציטוט חסר (")</AddMissingQuote>
+    <AddMissingQuotes>הוסף מרכאות חסרות (")</AddMissingQuotes>
+    <RemoveHyphensSingleLine>הסר מקפי דו-שיח בשורות בודדות</RemoveHyphensSingleLine>
+    <FixHyphensInDialogs>תקן מקף בתיבת דו-שיח באמצעות סגנון: {0}</FixHyphensInDialogs>
+    <AddMissingQuotesExample>"מה שלומך? -&gt; "מה שלומך?"</AddMissingQuotesExample>
+    <XMissingQuotesAdded>ציטוטים חסרים נוספו: {0}</XMissingQuotesAdded>
+    <Fix3PlusLine>תקן כתוביות עם יותר משתי שורות</Fix3PlusLine>
+    <Fix3PlusLines>תקן כתוביות עם יותר משתי שורות</Fix3PlusLines>
+    <Analysing>מנתח...</Analysing>
+    <NothingToFix>אין מה לתקן :)</NothingToFix>
+    <FixesFoundX>נמצאו תיקונים: {0}</FixesFoundX>
+    <XFixesApplied>תיקונים שהוחלו: {0}</XFixesApplied>
+    <NothingFixableBut>שום דבר לא ניתן לתיקון אוטומטי.  הכתובית מכילה שגיאות - ראה יומן לפרטים</NothingFixableBut>
+    <XFixedBut>{0} בעיות תוקנו אך הכתובית עדיין מכילה שגיאות - ראה יומן לפרטים</XFixedBut>
+    <XCouldBeFixedBut>ניתן לתקן {0} בעיות, אך הכתובית עדיין תכיל שגיאות - ראה יומן לפרטים</XCouldBeFixedBut>
+    <FixFirstLetterToUppercaseAfterParagraph>תקן את האות הראשונה לאותיות גדולות אחרי הפסקה</FixFirstLetterToUppercaseAfterParagraph>
+    <MergeShortLine>מיזוג שורה קצרה (משפט בודד)</MergeShortLine>
+    <MergeShortLineAll>מיזוג שורה קצרה (הכל למעט דיאלוגים)</MergeShortLineAll>
+    <BreakLongLine>לשבור תור ארוך</BreakLongLine>
+    <FixLongDisplayTime>תקן זמן תצוגה ארוך</FixLongDisplayTime>
+    <FixInvalidItalicTag>תקן תג נטוי לא חוקי</FixInvalidItalicTag>
+    <FixShortDisplayTime>תקן זמן תצוגה קצר</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>תקן זמן תצוגה חופף</FixOverlappingDisplayTime>
+    <FixShortGap>תקן פער קצר</FixShortGap>
+    <FixInvalidItalicTagsExample>&lt;i&gt;מה אכפת לי.&lt;i&gt; -&gt; &lt;i&gt;מה אכפת לי.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>היי אתה שם.  -&gt; היי אתה, שם.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>היי אתה!.  -&gt; היי אתה!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>היי אתה.  -&gt; היי.  אתה.</FixMissingSpacesExample>
+    <FixUppercaseIInsideLowercaseWordsExample>כדור הארץ מתאים.  -&gt; כדור הארץ שטוח.</FixUppercaseIInsideLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>מה אכפת לי.  -&gt; מה אכפת לי.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>מספר טקסט {0}: שעת ההתחלה מאוחרת משעת הסיום: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>לא ניתן לתקן את מספר הטקסט {0}: שעת ההתחלה מאוחרת משעת הסיום: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0} תוקן ל: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>לא ניתן לתקן את מספר הטקסט {0}: {1}</UnableToFixTextXY>
+    <UnneededSpace>מקום מיותר</UnneededSpace>
+    <UnneededPeriod>תקופה מיותרת</UnneededPeriod>
+    <FixMissingSpace>תקן שטח חסר</FixMissingSpace>
+    <FixUppercaseIInsideLowercaseWord>תקן 'i' רישיות בתוך מילה קטנה</FixUppercaseIInsideLowercaseWord>
+    <FixMissingPeriodAtEndOfLine>הוסף נקודה חסרה בסוף השורה</FixMissingPeriodAtEndOfLine>
+    <RefreshFixes>רענן תיקונים זמינים</RefreshFixes>
+    <ApplyFixes>הו&amp;הפעל את התיקונים שנבחרו</ApplyFixes>
+    <AutoBreak>אוטומטי &amp;br</AutoBreak>
+    <Unbreak>&amp;בטל שבירה</Unbreak>
+    <FixDoubleDash>תקן '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>הסר '&gt;&gt;'</FixDoubleGreaterThan>
+    <FixEllipsesStart>הסר '...' מוביל</FixEllipsesStart>
+    <FixMissingOpenBracket>תיקון חסר [ בתור</FixMissingOpenBracket>
+    <FixMusicNotation>החלף סמלי מוזיקה (למשל âTª) בסמל מועדף</FixMusicNotation>
+    <FixDoubleDashExample>'וואו-- אממ כן!'  -&gt; 'וואו... אממ כן!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; רוברט: יופי אחי!'  -&gt; 'רוברט: יופי אחי!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'...ואז אנחנו' -&gt; 'ואז אנחנו'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'מצקשוק] תיזהר!'  -&gt; '[נקש] תיזהר!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª חלומות מתוקים הם' -&gt; '♫ חלומות מתוקים הם'</FixMusicNotationExample>
+    <NumberOfImportantLogMessages>{0} הודעות יומן חשובות!</NumberOfImportantLogMessages>
+    <FixedOkXY>תוקן ואישור - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>אל תעשה -&gt; אל תעשה</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>היי ג'ון!  - היי אידה!  -&gt; היי ג'ון!
+- היי אידה!</FixDialogsOneLineExample>
+    <RemoveDialogFirstInNonDialogsExample>- מה שלומך?  -&gt; מה שלומך?</RemoveDialogFirstInNonDialogsExample>
+    <SelectDefault>בחר ברירת מחדל</SelectDefault>
+    <SetDefault>הגדר את התיקונים הנוכחיים כברירת מחדל</SetDefault>
+    <FixContinuationStyleX>תקן סגנון המשך: {0}</FixContinuationStyleX>
+    <FixUnnecessaryLeadingDots>הסר נקודות מובילות מיותרות</FixUnnecessaryLeadingDots>
+  </FixCommonErrors>
+  <GenerateBlankVideo>
+    <Title>צור קובץ וידאו ריק</Title>
+    <CheckeredImage>תמונה משובצת</CheckeredImage>
+    <SolidColor>צבע אחיד</SolidColor>
+    <DurationInMinutes>משך דקות</DurationInMinutes>
+    <Background>רקע כללי</Background>
+    <FfmpegParameters>הפעל את FFmpeg עם הפרמטרים הבאים:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generate - הנחה את פרמטרי FFmpeg</GenerateWithFfmpegParametersPrompt>
+  </GenerateBlankVideo>
+  <GenerateVideoWithBurnedInSubs>
+    <Title>צור וידאו עם כתוביות צרובות</Title>
+    <InfoAssaOff>הערה: תמיכה בעיצוב מתקדם של תחנת משנה אלפא.</InfoAssaOff>
+    <InfoAssaOn>הערה: ייעשה שימוש בסטיילינג מתקדם של תחנת משנה אלפא :)</InfoAssaOn>
+    <XGeneratedWithBurnedInSubsInX>"{0}" נוצר עם כתוביות צרובות ב-{1}.</XGeneratedWithBurnedInSubsInX>
+    <TimeRemainingMinutes>זמן שנותר: {0} דקות</TimeRemainingMinutes>
+    <TimeRemainingSeconds>זמן שנותר: {0} שניות</TimeRemainingSeconds>
+    <TimeRemainingAFewSeconds>זמן שנותר: מספר שניות</TimeRemainingAFewSeconds>
+    <TimeRemainingMinutesAndSeconds>זמן שנותר: {0} דקות ו-{1} שניות</TimeRemainingMinutesAndSeconds>
+    <TargetFileName>שם קובץ יעד: {0}</TargetFileName>
+    <TargetFileSize>גודל קובץ יעד (דורש קידוד 2 מעברים)</TargetFileSize>
+    <FileSizeMb>גודל הקובץ ב-MB</FileSizeMb>
+    <PassX>עבר {0}</PassX>
+    <Encoding>הַצפָּנָה</Encoding>
+    <BitRate>קצב סיביות</BitRate>
+    <TotalBitRateX>קצב סיביות כולל: {0}</TotalBitRateX>
+    <SampleRate>קצב דגימה</SampleRate>
+    <Audio>שֶׁמַע</Audio>
+    <Stereo>סטריאו</Stereo>
+    <Preset>מוגדר מראש</Preset>
+    <Crf>CRF</Crf>
+    <TuneFor>כוונן עבור</TuneFor>
+    <AlignRight>ליישור מימין</AlignRight>
+    <GetStartPosition>קבל עמדת התחלה</GetStartPosition>
+    <GetEndPosition>קבל עמדת קצה</GetEndPosition>
+  </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>צור וידאו עם כתוביות מוטבעות</Title>
+    <InputVideoFile>קלט קובץ וידאו</InputVideoFile>
+    <SubtitlesX>כתוביות ({0})</SubtitlesX>
+    <SetLanguage>הגדר שפה...</SetLanguage>
+    <ToggleForced>החלף מאולץ</ToggleForced>
+    <ToggleDefault>החלף את ברירת המחדל</ToggleDefault>
+    <Default>בְּרִירַת מֶחדָל</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}" נוצר עם כתוביות מוטבעות</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
+  <GetDictionaries>
+    <Title>צריך מילונים?</Title>
+    <DescriptionLine1>בדיקת האיות של עריכת כתוביות מבוססת על מנוע NHunspell אשר</DescriptionLine1>
+    <DescriptionLine2>משתמש במילוני בדיקת האיות מ-LibreOffice.</DescriptionLine2>
+    <ChooseLanguageAndClickDownload>בחר את השפה שלך ולחץ על הורד</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>פתח את התיקיה 'מילונים'</OpenDictionariesFolder>
+    <Download>הורד</Download>
+    <XDownloaded>{0} הורד והותקן</XDownloaded>
+  </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>צריך מילונים?</Title>
+    <DescriptionLine1>קבל מילוני Tesseract OCR מהאינטרנט</DescriptionLine1>
+    <DownloadFailed>הורדה נכשלה!</DownloadFailed>
+    <GetDictionariesHere>קבל מילונים כאן:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>בחר את השפה שלך ולחץ על הורד</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>פתח את התיקיה 'מילונים'</OpenDictionariesFolder>
+    <Download>הורד</Download>
+    <XDownloaded>{0} הורד והותקן</XDownloaded>
+  </GetTesseractDictionaries>
+  <GoogleTranslate>
+    <Title>לתרגם</Title>
+    <From>מ:</From>
+    <To>ל:</To>
+    <Translate>לתרגם</Translate>
+    <PleaseWait>אנא המתן... זה עשוי להימשך זמן מה</PleaseWait>
+    <PoweredByGoogleTranslate>מופעל על ידי Google translate</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>מופעל על ידי Microsoft translate</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
+
+Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>
+    <GoogleNoApiKeyWarning>Trying to translate without API key... (slow and limited data). 
+To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleNoApiKeyWarning>
+    <Service>שֵׁרוּת:</Service>
+    <LineMergeHandling>מיזוג שורות:</LineMergeHandling>
+    <ProcessorMergeNext>מיזוג מקסימום שתי שורות</ProcessorMergeNext>
+    <ProcessorSentence>מיזוג משפטים</ProcessorSentence>
+    <ProcessorSingle>אין מיזוג</ProcessorSingle>
+    <AutoTranslateViaCopyPaste>תרגום אוטומטי באמצעות העתק-הדבק</AutoTranslateViaCopyPaste>
+    <CopyPasteMaxSize>גודל בלוק מקסימלי</CopyPasteMaxSize>
+    <AutoCopyToClipboard>העתק אוטומטי ללוח</AutoCopyToClipboard>
+    <AutoCopyLineSeparator>מפריד שורות</AutoCopyLineSeparator>
+    <TranslateBlockXOfY>תרגם בלוק {0} מתוך {1}</TranslateBlockXOfY>
+    <TranslateBlockInfo>עבור אל מתרגם והדבק טקסט, העתק את התוצאה חזרה ללוח ולחץ על הכפתור למטה</TranslateBlockInfo>
+    <TranslateBlockGetFromClipboard>Get translated text from clipboard
+(Ctrl + V)</TranslateBlockGetFromClipboard>
+    <TranslateBlockCopySourceText>העתק לוח טקסט מקור</TranslateBlockCopySourceText>
+    <TranslateBlockClipboardError1>הלוח מכיל טקסט מקור!</TranslateBlockClipboardError1>
+    <TranslateBlockClipboardError2>עבור אל מתרגם ותרגם, ולאחר מכן העתק את התוצאות ללוח ולחץ שוב על כפתור זה.</TranslateBlockClipboardError2>
+  </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>גוגל נגד מיקרוסופט לתרגם</Title>
+    <From>מ:</From>
+    <To>ל:</To>
+    <Translate>לתרגם</Translate>
+    <SourceText>טקסט מקור</SourceText>
+    <GoogleTranslate>גוגל תרגום</GoogleTranslate>
+    <MicrosoftTranslate>Bing Microsoft מתרגם</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
+  <GoToLine>
+    <Title>עבור למספר כתוביות</Title>
+    <XIsNotAValidNumber>{0} אינו מספר חוקי</XIsNotAValidNumber>
+  </GoToLine>
+  <ImportImages>
+    <Title>ייבוא ​​תמונות</Title>
+    <ImageFiles>קבצי תמונה</ImageFiles>
+    <Input>קֶלֶט</Input>
+    <InputDescription>בחר קבצי קלט (עיון או גרור ושחרר)</InputDescription>
+    <Remove>לְהַסִיר</Remove>
+    <RemoveAll>להסיר את כל</RemoveAll>
+  </ImportImages>
+  <ImportShotChanges>
+    <Title>צור/יבא שינויים בצילום</Title>
+    <OpenTextFile>פתח קובץ טקסט...</OpenTextFile>
+    <Generate>צור שינויים בצילום</Generate>
+    <Import>ייבוא ​​שינויים בצילום</Import>
+    <TextFiles>קבצי טקסט</TextFiles>
+    <TimeCodes>קודי זמן</TimeCodes>
+    <Frames>מסגרות</Frames>
+    <Seconds>שניות</Seconds>
+    <Milliseconds>אלפיות שניות</Milliseconds>
+    <GetShotChangesWithFfmpeg>צור שינויים בצילום עם FFmpeg</GetShotChangesWithFfmpeg>
+    <Sensitivity>רְגִישׁוּת</Sensitivity>
+    <SensitivityDescription>ערך נמוך יותר נותן יותר שינויים בזריקה</SensitivityDescription>
+    <NoShotChangesFound>לא נמצאו שינויים בצילום.</NoShotChangesFound>
+  </ImportShotChanges>
+  <ImportText>
+    <Title>ייבוא ​​טקסט רגיל</Title>
+    <OneSubtitleIsOneFile>מספר קבצים - קובץ אחד הוא כתובית אחת</OneSubtitleIsOneFile>
+    <OpenTextFile>פתח קובץ טקסט...</OpenTextFile>
+    <OpenTextFiles>פתח קבצי טקסט...</OpenTextFiles>
+    <ImportOptions>אפשרויות ייבוא</ImportOptions>
+    <Splitting>פְּצִיחָה</Splitting>
+    <AutoSplitText>פיצול אוטומטי של טקסט</AutoSplitText>
+    <OneLineIsOneSubtitle>שורה אחת היא כתובית אחת</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>שתי שורות הן כתובית אחת</TwoLinesAreOneSubtitle>
+    <LineBreak>שובר שורה</LineBreak>
+    <SplitAtBlankLines>פיצול בשורות ריקות</SplitAtBlankLines>
+    <MergeShortLines>מיזוג שורות קצרות עם המשך</MergeShortLines>
+    <RemoveEmptyLines>הסר שורות ריקות</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>הסר שורות ללא אותיות</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>צור קודי זמן</GenerateTimeCodes>
+    <TakeTimeFromCurrentFile>קח זמן מהקובץ הנוכחי</TakeTimeFromCurrentFile>
+    <TakeTimeFromFileName>קח זמן מהשם הקובץ</TakeTimeFromFileName>
+    <GapBetweenSubtitles>פער בין כתוביות (מילישניות)</GapBetweenSubtitles>
+    <Auto>אוטומטי</Auto>
+    <Fixed>תוקן</Fixed>
+    <Refresh>&amp;לְרַעֲנֵן</Refresh>
+    <TextFiles>קבצי טקסט</TextFiles>
+    <PreviewLinesModifiedX>תצוגה מקדימה - כתוביות השתנו: {0}</PreviewLinesModifiedX>
+    <TimeCodes>קודי זמן</TimeCodes>
+    <SplitAtEndChars>פיצול תווים בסוף</SplitAtEndChars>
+  </ImportText>
+  <Interjections>
+    <Title>קריאות ביניים</Title>
+  </Interjections>
+  <JoinSubtitles>
+    <Title>הצטרף לכתוביות</Title>
+    <Information>הוסף כתוביות כדי להצטרף (נתמך גם בירידה)</Information>
+    <NumberOfLines>#שורות</NumberOfLines>
+    <StartTime>שעת התחלה</StartTime>
+    <EndTime>שעת סיום</EndTime>
+    <FileName>שם קובץ</FileName>
+    <Join>לְהִצְטַרֵף</Join>
+    <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>לקבצים יש כבר קודי זמן נכונים</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>הוסף זמן סיום של הקובץ הקודם</AppendTimeCodes>
+    <AddMs>הוסף אלפיות שניות אחרי כל קובץ</AddMs>
+  </JoinSubtitles>
+  <LanguageNames>
+    <NotSpecified>לא מוגדר</NotSpecified>
+    <UnknownCodeX>לא ידוע ({0})</UnknownCodeX>
+    <aaName>רחוק</aaName>
+    <abName>אבחזיה</abName>
+    <afName>אפריקאנס</afName>
+    <amName>אמהרית</amName>
+    <arName>עֲרָבִית</arName>
+    <asName>אסאמים</asName>
+    <ayName>אימרה</ayName>
+    <azName>אזרבייג'נית</azName>
+    <baName>בשקיר</baName>
+    <beName>בלארוסית</beName>
+    <bgName>בולגרית</bgName>
+    <bhName>ביהארי</bhName>
+    <biName>ביסלמה</biName>
+    <bnName>בנגלית</bnName>
+    <boName>טיבטי</boName>
+    <brName>ברטון</brName>
+    <caName>קטלאנית</caName>
+    <coName>קורסיקאי</coName>
+    <csName>צ'כית</csName>
+    <cyName>וולשית</cyName>
+    <daName>דַנִי</daName>
+    <deName>גֶרמָנִיָת</deName>
+    <dzName>דזונגקה</dzName>
+    <elName>יווני</elName>
+    <enName>אנגלית</enName>
+    <eoName>אֶסְפֵּרַנְטוֹ</eoName>
+    <esName>ספרדית</esName>
+    <etName>אסטונית</etName>
+    <euName>באסקית</euName>
+    <faName>פַּרסִית</faName>
+    <fiName>פִינִית</fiName>
+    <fjName>פיג'ינית</fjName>
+    <foName>פארואי</foName>
+    <frName>צָרְפָתִית</frName>
+    <fyName>מערב פריזית</fyName>
+    <gaName>אִירִית</gaName>
+    <gdName>גאלית סקוטית</gdName>
+    <glName>גליציאנית</glName>
+    <gnName>גוארני</gnName>
+    <guName>גוג'ראטי</guName>
+    <haName>האוסה</haName>
+    <heName>עִברִית</heName>
+    <hiName>הינדי</hiName>
+    <hrName>קרואטית</hrName>
+    <huName>הוּנגָרִי</huName>
+    <hyName>אַרְמֶנִי</hyName>
+    <iaName>אינטרלינגואה</iaName>
+    <idName>אינדונזית</idName>
+    <ieName>לשון בין</ieName>
+    <ikName>אינופיאק</ikName>
+    <isName>איסלנדית</isName>
+    <itName>אִיטַלְקִית</itName>
+    <iuName>אינוקטיטוט</iuName>
+    <jaName>יַפָּנִית</jaName>
+    <jvName>ג'אוואנית</jvName>
+    <kaName>גרוזינית</kaName>
+    <kkName>קזחית</kkName>
+    <klName>קלאליסוט</klName>
+    <kmName>חמר</kmName>
+    <knName>קנאדה</knName>
+    <koName>קוריאנית</koName>
+    <ksName>קשמירי</ksName>
+    <kuName>כּוּרדִי</kuName>
+    <kyName>קירגיזית</kyName>
+    <laName>לָטִינִית</laName>
+    <lbName>לוקסמבורג</lbName>
+    <lnName>לינגלה</lnName>
+    <loName>לאו</loName>
+    <ltName>ליטאית</ltName>
+    <lvName>לטבית</lvName>
+    <mgName>מלגזית</mgName>
+    <miName>מאורי</miName>
+    <mkName>מקדונית</mkName>
+    <mlName>מלאיאלאם</mlName>
+    <mnName>מוֹנגוֹלִי</mnName>
+    <moName>מולדבית</moName>
+    <mrName>מראטי</mrName>
+    <msName>מלאית</msName>
+    <mtName>מלטזית</mtName>
+    <myName>בורמזי</myName>
+    <naName>נאורו</naName>
+    <neName>נפאלית</neName>
+    <nlName>הוֹלַנדִי</nlName>
+    <noName>נורבגית</noName>
+    <ocName>אוקסיטנית</ocName>
+    <omName>אורומו</omName>
+    <orName>אוריה</orName>
+    <paName>פנג'בי</paName>
+    <plName>פולני</plName>
+    <psName>פשטו</psName>
+    <ptName>פורטוגזית</ptName>
+    <quName>קצ'ואה</quName>
+    <rmName>רומאנש</rmName>
+    <rnName>רונדי</rnName>
+    <roName>רומנית</roName>
+    <ruName>רוּסִי</ruName>
+    <rwName>קיניארואנדה</rwName>
+    <saName>סנסקריט</saName>
+    <sdName>סינדהי</sdName>
+    <sgName>סנגו</sgName>
+    <shName>סרבו-קרואטית</shName>
+    <siName>סינהאלה</siName>
+    <skName>סלובקית</skName>
+    <slName>סלובנית</slName>
+    <smName>סמואנית</smName>
+    <snName>שונה</snName>
+    <soName>סומלי</soName>
+    <sqName>אלבני</sqName>
+    <srName>סרבית</srName>
+    <ssName>סוואטי</ssName>
+    <stName>דרום סוטו</stName>
+    <suName>סונדני</suName>
+    <svName>שוודית</svName>
+    <swName>סוואהילית</swName>
+    <taName>טמילית</taName>
+    <teName>טלוגו</teName>
+    <tgName>טג'יקית</tgName>
+    <thName>תאילנדית</thName>
+    <tiName>טיגריניה</tiName>
+    <tkName>טורקמנית</tkName>
+    <tlName>טאגלוג</tlName>
+    <tnName>צואנה</tnName>
+    <toName>טונגנית</toName>
+    <trName>טורקי</trName>
+    <tsName>צונגה</tsName>
+    <ttName>טטרית</ttName>
+    <twName>טווי</twName>
+    <ugName>אויגורי</ugName>
+    <ukName>אוקראינית</ukName>
+    <urName>אורדו</urName>
+    <uzName>אוזבקית</uzName>
+    <viName>וייטנאמית</viName>
+    <voName>Volapuk</voName>
+    <woName>וולף</woName>
+    <xhName>Xhosa</xhName>
+    <yiName>אִידִישׁ</yiName>
+    <yoName>יורובה</yoName>
+    <zaName>ג'ואנג</zaName>
+    <zhName>סִינִית</zhName>
+    <zuName>זולו</zuName>
+  </LanguageNames>
+  <Main>
+    <Menu>
+      <File>
+        <Title>&amp;קוֹבֶץ</Title>
+        <New>&amp;חָדָשׁ</New>
+        <Open>&amp;לִפְתוֹחַ...</Open>
+        <OpenKeepVideo>פתח (שמור סרטון)...</OpenKeepVideo>
+        <Reopen>&amp;פתח מחדש</Reopen>
+        <Save>&amp;להציל</Save>
+        <SaveAs>שמור כ...</SaveAs>
+        <RestoreAutoBackup>שחזר גיבוי אוטומטי...</RestoreAutoBackup>
+        <FormatXProperties>{0} נכסים...</FormatXProperties>
+        <OpenOriginal>פתח את הכתובית המקורית (מצב מתרגם)...</OpenOriginal>
+        <SaveOriginal>שמור כתובית מקורית</SaveOriginal>
+        <CloseOriginal>סגור את הכתובית המקורית</CloseOriginal>
+        <CloseTranslation>סגור כתובית מתורגמת</CloseTranslation>
+        <OpenContainingFolder>פתח תיקייה המכילה</OpenContainingFolder>
+        <Compare>&amp;לְהַשְׁווֹת...</Compare>
+        <Statistics>סטָטִיסטִיקָה...</Statistics>
+        <Plugins>&amp;תוספים...</Plugins>
+        <ImportSubtitleFromVideoFile>כתובית מקובץ וידאו...</ImportSubtitleFromVideoFile>
+        <ImportOcrFromDvd>כתוביות מ-VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>כתובית VobSub (sub/idx) עבור OCR...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>קובץ כתוביות Blu-ray (.sup) עבור OCR...</ImportBluRaySupFile>
+        <ImportBluRaySupFileEdit>קובץ כתוביות Blu-ray (.sup) לעריכה...</ImportBluRaySupFileEdit>
+        <ImportSubtitleWithManualChosenEncoding>כתובית עם קידוד שנבחר ידנית...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>טקסט רגיל...</ImportText>
+        <ImportImages>תמונות...</ImportImages>
+        <ImportTimecodes>קודי זמן...</ImportTimecodes>
+        <Import>יְבוּא</Import>
+        <Export>יְצוּא</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>תמיכה בבלו ריי...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU STL...</ExportEbu>
+        <ExportPac>PAC (מסך אלקטרוניקה)...</ExportPac>
+        <ExportPlainText>טקסט רגיל...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>סקריפט תמונה של Adobe Encore FAB...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>צמד קבצי ATS קוריאני...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>AVID STL...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>כתוביות בע"מ...</ExportCaptionsInc>
+        <ExportCheetahCap>צ'יטה CAP...</ExportCheetahCap>
+        <ExportUltech130>כיתוב Ultech...</ExportUltech130>
+        <ExportCustomTextFormat>ייצוא פורמט טקסט מותאם אישית...</ExportCustomTextFormat>
+        <Exit>יְצִיאָה</Exit>
+      </File>
+      <Edit>
+        <Title>לַעֲרוֹך</Title>
+        <Undo>לבטל</Undo>
+        <Redo>לַעֲשׂוֹת שׁוּב</Redo>
+        <ShowUndoHistory>הצג היסטוריה (לביטול)</ShowUndoHistory>
+        <InsertUnicodeSymbol>הכנס סמל Unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>הכנס תווי בקרה של Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>סימון משמאל לימין (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>סימן מימין לשמאל (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>התחלת הטבעה משמאל לימין (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>התחלת הטבעה מימין לשמאל (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>התחלה של עקיפה משמאל לימין (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>התחלה של עקיפה מימין לשמאל (RLO)</InsertUnicodeControlCharactersRLO>
+        <Find>&amp;למצוא</Find>
+        <FindNext>מצא &amp;הבא</FindNext>
+        <Replace>&amp;החלף</Replace>
+        <MultipleReplace>&amp;החלפה מרובה...</MultipleReplace>
+        <GoToSubtitleNumber>&amp;עבור למספר כתוביות...</GoToSubtitleNumber>
+        <RightToLeftMode>מצב מימין לשמאל</RightToLeftMode>
+        <FixRtlViaUnicodeControlCharacters>תקן RTL באמצעות תווי בקרה של Unicode (עבור שורות נבחרות)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>הסר תווי בקרה של Unicode (משורות נבחרות)</RemoveUnicodeControlCharacters>
+        <ReverseRightToLeftStartEnd>התחלה/סיום של RTL הפוך (עבור קווים נבחרים)</ReverseRightToLeftStartEnd>
+        <ShowOriginalTextInAudioAndVideoPreview>הצג טקסט מקורי בתצוגות מקדימות של אודיו/וידאו</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>שנה בחירה...</ModifySelection>
+        <InverseSelection>בחירה הפוך</InverseSelection>
+      </Edit>
+      <Tools>
+        <Title>כלים</Title>
+        <AdjustDisplayDuration>&amp;שנה משכי זמן...</AdjustDisplayDuration>
+        <ApplyDurationLimits>החל מגבלות משך...</ApplyDurationLimits>
+        <SubtitlesBridgeGaps>לגשר על פערים בין כתוביות...</SubtitlesBridgeGaps>
+        <FixCommonErrors>&amp;תקן שגיאות נפוצות...</FixCommonErrors>
+        <StartNumberingFrom>מספור מחדש...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>הסר טקסט ללקויי שמיעה...</RemoveTextForHearingImpaired>
+        <ConvertColorsToDialog>המרת צבעים לדיאלוג...</ConvertColorsToDialog>
+        <ChangeCasing>שנה רישיות...</ChangeCasing>
+        <ChangeFrameRate>שנה קצב פריימים...</ChangeFrameRate>
+        <ChangeSpeedInPercent>מהירות שונה (אחוז)...</ChangeSpeedInPercent>
+        <MergeShortLines>מיזוג שורות קצרות...</MergeShortLines>
+        <MergeDuplicateText>מיזוג שורות עם אותו טקסט...</MergeDuplicateText>
+        <MergeSameTimeCodes>מיזוג שורות עם קודי זמן זהים...</MergeSameTimeCodes>
+        <SplitLongLines>לשבור/לפצל תורים ארוכים...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>החל פער מינימלי בין כתוביות...</MinimumDisplayTimeBetweenParagraphs>
+        <SortBy>מיין לפי</SortBy>
+        <Number>מספר</Number>
+        <StartTime>שעת התחלה</StartTime>
+        <EndTime>שעת סיום</EndTime>
+        <Duration>מֶשֶׁך</Duration>
+        <ListErrors>רשימת שגיאות...</ListErrors>
+        <NetflixQualityCheck>בדיקת איכות נטפליקס...</NetflixQualityCheck>
+        <TextAlphabetically>טקסט - בסדר אלפביתי</TextAlphabetically>
+        <TextSingleLineMaximumLength>טקסט - שורה אחת מקסימום.  אורך</TextSingleLineMaximumLength>
+        <TextTotalLength>טקסט - אורך כולל</TextTotalLength>
+        <TextNumberOfLines>טקסט - מספר שורות</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>טקסט - מספר תווים/שנייה</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>טקסט - מילים לדקה (wpm)</WordsPerMinute>
+        <Style>סִגְנוֹן</Style>
+        <Ascending>עולה</Ascending>
+        <Descending>יורד</Descending>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>צור תרגום ריק חדש מהכתובית הנוכחית</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>המרת אצווה...</BatchConvert>
+        <GenerateTimeAsText>צור זמן כטקסט...</GenerateTimeAsText>
+        <MeasurementConverter>ממיר מדידה...</MeasurementConverter>
+        <SplitSubtitle>פיצול כתוביות...</SplitSubtitle>
+        <AppendSubtitle>הוסף כותרת משנה...</AppendSubtitle>
+        <JoinSubtitles>הצטרף לכתוביות...</JoinSubtitles>
+      </Tools>
+      <Video>
+        <Title>וִידֵאוֹ</Title>
+        <OpenVideo>פתח קובץ וידאו...</OpenVideo>
+        <OpenVideoFromUrl>פתח סרטון מ-URL...</OpenVideoFromUrl>
+        <OpenDvd>פתח את ה-DVD...</OpenDvd>
+        <ChooseAudioTrack>בחר רצועת אודיו</ChooseAudioTrack>
+        <CloseVideo>סגור קובץ וידאו</CloseVideo>
+        <OpenSecondSubtitle>פתח את קובץ הכתוביות השני...</OpenSecondSubtitle>
+        <SetVideoOffset>הגדר היסט וידאו...</SetVideoOffset>
+        <SmptTimeMode>תזמון SMPTE (קצב פריימים לא שלם)</SmptTimeMode>
+        <GenerateTextFromVideo>צור טקסט מסרטון...</GenerateTextFromVideo>
+        <GenerateBlankVideo>צור סרטון ריק...</GenerateBlankVideo>
+        <GenerateVideoWithBurnedInSub>צור וידאו עם תת צרוב...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>צור וידאו עם כתוביות מוטבעות...</GenerateVideoWithEmbeddedSubs>
+        <VideoAudioToTextX>אודיו לטקסט ({0})...</VideoAudioToTextX>
+        <ImportChaptersFromVideo>ייבוא ​​פרקים מתוך וידאו</ImportChaptersFromVideo>
+        <GenerateImportShotChanges>צור/יבא שינויים בצילום...</GenerateImportShotChanges>
+        <RemoveOrExportShotChanges>הסר/ייצא שינויים בצילום...</RemoveOrExportShotChanges>
+        <WaveformBatchGenerate>יצירת צורות גל באצווה...</WaveformBatchGenerate>
+        <ShowHideVideo>הצג/הסתר סרטון</ShowHideVideo>
+        <ShowHideWaveform>הצג/הסתר צורת גל</ShowHideWaveform>
+        <ShowHideWaveformAndSpectrogram>הצג/הסתיר צורת גל וספקטרוגרמה</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>בטל את עגינה של בקרות וידאו</UnDockVideoControls>
+        <ReDockVideoControls>עגן מחדש את בקרות הווידאו</ReDockVideoControls>
+      </Video>
+      <SpellCheck>
+        <Title>בדיקת איות</Title>
+        <SpellCheck>&amp;בדיקת איות...</SpellCheck>
+        <SpellCheckFromCurrentLine>בדיקת איות מהשורה הנוכחית...</SpellCheckFromCurrentLine>
+        <FindDoubleWords>מצא מילים כפולות</FindDoubleWords>
+        <FindDoubleLines>מצא קווים כפולים</FindDoubleLines>
+        <GetDictionaries>קבל מילונים...</GetDictionaries>
+        <AddToNameList>הוסף מילה לרשימת השמות</AddToNameList>
+      </SpellCheck>
+      <Synchronization>
+        <Title>סִנכְּרוּן</Title>
+        <AdjustAllTimes>התאם את כל הזמנים (הצג מוקדם/מאוחר יותר)...</AdjustAllTimes>
+        <VisualSync>&amp;סנכרון חזותי...</VisualSync>
+        <PointSync>סנכרון נקודות...</PointSync>
+        <PointSyncViaOtherSubtitle>סנכרון נקודות באמצעות כתובית אחרת...</PointSyncViaOtherSubtitle>
+      </Synchronization>
+      <AutoTranslate>
+        <Title>תרגום אוטומטי</Title>
+        <AutoTranslate>תרגום אוטומטי...</AutoTranslate>
+        <AutoTranslateViaCopyPaste>תרגום אוטומטי באמצעות העתק-הדבק...</AutoTranslateViaCopyPaste>
+      </AutoTranslate>
+      <Options>
+        <Title>אפשרויות</Title>
+        <Settings>&amp;הגדרות...</Settings>
+        <WordLists>רשימות מילים...</WordLists>
+        <ChooseLanguage>&amp;בחר שפה...</ChooseLanguage>
+      </Options>
+      <Networking>
+        <Title>רשת</Title>
+        <StartNewSession>התחל הפעלה חדשה</StartNewSession>
+        <JoinSession>הצטרף למפגש</JoinSession>
+        <ShowSessionInfoAndLog>הצג פרטי הפעלה ויומן</ShowSessionInfoAndLog>
+        <Chat>לְשׂוֹחֵחַ</Chat>
+        <LeaveSession>עזוב את הפגישה</LeaveSession>
+      </Networking>
+      <Help>
+        <CheckForUpdates>בדוק עדכונים...</CheckForUpdates>
+        <Title>עֶזרָה</Title>
+        <Help>&amp;עֶזרָה</Help>
+        <About>&amp;על אודות</About>
+      </Help>
+      <ToolBar>
+        <New>חָדָשׁ</New>
+        <Open>לִפְתוֹחַ</Open>
+        <Save>להציל</Save>
+        <SaveAs>שמור כ</SaveAs>
+        <Find>למצוא</Find>
+        <Replace>החלף</Replace>
+        <FixCommonErrors>תקן שגיאות נפוצות</FixCommonErrors>
+        <RemoveTextForHi>הסר טקסט ללקויי שמיעה</RemoveTextForHi>
+        <VisualSync>סנכרון ויזואלי</VisualSync>
+        <SpellCheck>בדיקת איות</SpellCheck>
+        <NetflixQualityCheck>בדיקת איכות נטפליקס</NetflixQualityCheck>
+        <Settings>הגדרות</Settings>
+        <Help>עֶזרָה</Help>
+        <ShowHideWaveform>הצג/הסתר צורת גל</ShowHideWaveform>
+        <ShowHideVideo>הצג/הסתר סרטון</ShowHideVideo>
+        <AssaDraw>מתקדם תת תחנת אלפא ציור</AssaDraw>
+      </ToolBar>
+      <ContextMenu>
+        <SizeAllColumnsToFit>גודל כל העמודות כך שיתאימו</SizeAllColumnsToFit>
+        <SetStyle>קבע סגנון</SetStyle>
+        <SetActor>שחקן תפאורה</SetActor>
+        <AssaTools>כלי ASSA</AssaTools>
+        <SubStationAlphaStyles>סגנונות Sub Station Alpha...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>סגנונות אלפא משנה מתקדמים...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>טקסט מתוזמן - הגדר אזור</TimedTextSetRegion>
+        <TimedTextSetStyle>טקסט מתוזמן - קבע סגנון</TimedTextSetStyle>
+        <TimedTextStyles>סגנונות טקסט מתוזמן...</TimedTextStyles>
+        <TimedTextSetLanguage>טקסט מתוזמן - הגדר שפה</TimedTextSetLanguage>
+        <SamiSetStyle>סמי - מעמד קבע</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - דמות סט</NuendoSetStyle>
+        <Cut>גזירה</Cut>
+        <Copy>עותק</Copy>
+        <Paste>לְהַדבִּיק</Paste>
+        <Delete>לִמְחוֹק</Delete>
+        <SplitLineAtCursorPosition>קו מפוצל במיקום הסמן</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>קו מפוצל במיקום הסמן ושבירה אוטומטית</SplitLineAtCursorPositionAndAutoBr>
+        <SplitLineAtCursorAndWaveformPosition>קו מפוצל במיקום הסמן/סרטון</SplitLineAtCursorAndWaveformPosition>
+        <AutoDurationCurrentLine>משך אוטומטי (שורה נוכחית)</AutoDurationCurrentLine>
+        <SelectAll>בחר הכל</SelectAll>
+        <InsertFirstLine>הכנס קו</InsertFirstLine>
+        <InsertBefore>הכנס לפני</InsertBefore>
+        <InsertAfter>הכנס אחרי</InsertAfter>
+        <InsertSubtitleAfter>הוסף כתובית אחרי שורה זו...</InsertSubtitleAfter>
+        <CopyToClipboard>העתק כטקסט ללוח</CopyToClipboard>
+        <Column>טור</Column>
+        <ColumnDeleteText>מחק טקסט</ColumnDeleteText>
+        <ColumnDeleteTextAndShiftCellsUp>מחק טקסט והעבר תאים למעלה</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>הוסף טקסט ריק והסט תאים למטה</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>הוסף טקסט מכתובית...</ColumnInsertTextFromSubtitle>
+        <ColumnImportTextAndShiftCellsDown>ייבא טקסט והזז תאים למטה</ColumnImportTextAndShiftCellsDown>
+        <ColumnPasteFromClipboard>הדבק מהלוח...</ColumnPasteFromClipboard>
+        <ColumnTextUp>טקסט למעלה</ColumnTextUp>
+        <ColumnTextDown>טקסט למטה</ColumnTextDown>
+        <ColumnCopyOriginalTextToCurrent>העתק טקסט מהמקור לעדכני</ColumnCopyOriginalTextToCurrent>
+        <OcrSelectedLines>קווים שנבחרו ב-OCR</OcrSelectedLines>
+        <Split>לְפַצֵל</Split>
+        <MergeSelectedLines>מיזוג שורות נבחרות</MergeSelectedLines>
+        <MergeSelectedLinesAsDialog>מיזוג שורות נבחרות כדיאלוג</MergeSelectedLinesAsDialog>
+        <MergeWithLineBefore>מיזוג עם קו לפני</MergeWithLineBefore>
+        <MergeWithLineAfter>מיזוג עם שורה אחרי</MergeWithLineAfter>
+        <ExtendToLineBefore>הארך לקו לפני</ExtendToLineBefore>
+        <ExtendToLineAfter>הארך לקו שאחרי</ExtendToLineAfter>
+        <RemoveFormatting>הסר את העיצוב</RemoveFormatting>
+        <RemoveFormattingAll>הסר את כל העיצוב</RemoveFormattingAll>
+        <RemoveFormattingBold>הסר מודגש</RemoveFormattingBold>
+        <RemoveFormattingItalic>הסר נטוי</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>הסר קו תחתון</RemoveFormattingUnderline>
+        <RemoveFormattingColor>הסר צבע</RemoveFormattingColor>
+        <RemoveFormattingFontName>הסר את שם הגופן</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>הסר יישור</RemoveFormattingAlignment>
+        <Underline>לָשִׂים דָגֵשׁ</Underline>
+        <Box>קופסא</Box>
+        <Color>צֶבַע...</Color>
+        <FontName>שם גופן...</FontName>
+        <Superscript>כתב-על</Superscript>
+        <Subscript>מנוי</Subscript>
+        <Alignment>יישור...</Alignment>
+        <AutoBalanceSelectedLines>איזון אוטומטי של שורות נבחרות...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>הסר מעברי שורות מהשורות שנבחרו...</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>אפקט מכונת כתיבה...</TypewriterEffect>
+        <KaraokeEffect>אפקט קריוקי...</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>הצג שורות נבחרות מוקדם יותר/מאוחר יותר...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>סנכרון חזותי של שורות נבחרות...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>גוגל/מיקרוסופט מתרגמים שורה מקורית</GoogleAndMicrosoftTranslateSelectedLine>
+        <SelectedLines>שורות נבחרות</SelectedLines>
+        <TranslateSelectedLines>תרגם שורות נבחרות...</TranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>התאם את משכי הזמן עבור השורות שנבחרו...</AdjustDisplayDurationForSelectedLines>
+        <ApplyDurationLimitsForSelectedLines>החל מגבלות משך עבור שורות נבחרות...</ApplyDurationLimitsForSelectedLines>
+        <ApplyCustomOverrideTag>החל תגי דריסה מותאמים אישית...</ApplyCustomOverrideTag>
+        <SetPosition>קבע מיקום...</SetPosition>
+        <GenerateProgressBar>צור סרגל התקדמות...</GenerateProgressBar>
+        <AssaResolutionChanger>שנה את רזולוציית הסקריפט של ASSA...</AssaResolutionChanger>
+        <AssaGenerateBackgroundBox>צור תיבת רקע...</AssaGenerateBackgroundBox>
+        <ImageColorPicker>בוחר צבעי תמונה...</ImageColorPicker>
+        <FixCommonErrorsInSelectedLines>תקן שגיאות נפוצות בשורות שנבחרו...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>שנה רישיות עבור קווים נבחרים...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>שמור שורות נבחרות כ...</SaveSelectedLines>
+        <WebVTTSetNewVoice>הגדר קול חדש...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>הסר קולות</WebVTTRemoveVoices>
+        <NewActor>שחקן חדש...</NewActor>
+        <RemoveActors>הסר שחקנים</RemoveActors>
+        <EditBookmark>ערוך סימניה...</EditBookmark>
+        <RemoveBookmark>הסר את הסימניה</RemoveBookmark>
+        <GoToSourceView>עבור לתצוגת מקור</GoToSourceView>
+        <GoToListView>עבור לתצוגת רשימה</GoToListView>
+        <ExtractAudio>חלץ אודיו...</ExtractAudio>
+      </ContextMenu>
+    </Menu>
+    <Controls>
+      <SubtitleFormat>פוּרמָט</SubtitleFormat>
+      <FileEncoding>הַצפָּנָה</FileEncoding>
+      <UndoChangesInEditPanel>בטל שינויים בלוח העריכה</UndoChangesInEditPanel>
+      <Previous>&lt; הקודם</Previous>
+      <Next>הבא &gt;</Next>
+      <AutoBreak>אוטומטי &amp;br</AutoBreak>
+      <Unbreak>לשחרר</Unbreak>
+    </Controls>
+    <VideoControls>
+      <Translate>לתרגם</Translate>
+      <CreateAndAdjust>צור/התאם</CreateAndAdjust>
+      <Create>לִיצוֹר</Create>
+      <Adjust>לְהַתְאִים</Adjust>
+      <SelectCurrentElementWhilePlaying>בחר כתובית נוכחית תוך כדי משחק</SelectCurrentElementWhilePlaying>
+      <AutoRepeat>חזרה אוטומטית</AutoRepeat>
+      <AutoRepeatOn>חזרה אוטומטית פועלת</AutoRepeatOn>
+      <AutoRepeatCount>ספירת חזרות (פעמים)</AutoRepeatCount>
+      <AutoContinue>המשך אוטומטי</AutoContinue>
+      <AutoContinueOn>המשך אוטומטי</AutoContinueOn>
+      <DelayInSeconds>עיכוב (שניות)</DelayInSeconds>
+      <OriginalText>טקסט מקורי</OriginalText>
+      <Previous>&lt;קודם&amp;קודם</Previous>
+      <Stop>&amp;תפסיק</Stop>
+      <PlayCurrent>&amp;הפעל נוכחי</PlayCurrent>
+      <Next>&amp;הבא &gt;</Next>
+      <Playing>משחק...</Playing>
+      <RepeatingLastTime>חוזר... פעם אחרונה</RepeatingLastTime>
+      <RepeatingXTimesLeft>חוזר... נותרו {0} פעמים</RepeatingXTimesLeft>
+      <AutoContinueInOneSecond>המשך אוטומטי בשנייה אחת</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>המשך אוטומטי בעוד {0} שניות</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>עדיין מקליד... המשך אוטומטי הופסק</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>&amp;הוסף כתובית חדשה במיקום הווידאו</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>הוסף כתובית חדשה במיקום הווידאו (ללא מיקוד בתיבת טקסט)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
+      <Auto>אוטומטי</Auto>
+      <PlayFromJustBeforeText>הפעל מרגע לפני &amp;טקסט</PlayFromJustBeforeText>
+      <PlayFromBeginning>הפעל מתחילת הסרטון</PlayFromBeginning>
+      <Pause>הַפסָקָה</Pause>
+      <GoToSubtitlePositionAndPause>עבור למיקום המשנה והשהה</GoToSubtitlePositionAndPause>
+      <SetStartTime>הגדר &amp;זמן התחלה</SetStartTime>
+      <SetEndTimeAndGoToNext>הגדר &amp;סיום &amp;&amp;עבור אל הבא</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>מותאם באמצעות שעת סיום {0}</AdjustedViaEndTime>
+      <SetEndTime>הגדר זמן e&amp;nd</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>הגדר התחלה וקיזז את השאר</SetStartTimeAndOffsetTheRest>
+      <SearchTextOnline>חפש טקסט באינטרנט</SearchTextOnline>
+      <GoogleTranslate>גוגל תרגום</GoogleTranslate>
+      <AutoTranslate>תרגום אוטומטי</AutoTranslate>
+      <GoogleIt>חפש את זה בגוגל</GoogleIt>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+      <VideoPosition>מיקום וידאו:</VideoPosition>
+      <TranslateTip>טיפ: השתמש ב-&lt;alt+חץ למעלה/למטה&gt; כדי לעבור לכתובית הקודמת/הבאה</TranslateTip>
+      <BeforeChangingTimeInWaveformX>לפני שינוי הזמן בצורת גל: {0}</BeforeChangingTimeInWaveformX>
+      <NewTextInsertAtX>טקסט חדש הוכנס ב-{0}</NewTextInsertAtX>
+      <Center>מֶרְכָּז</Center>
+      <PlayRate>קצב משחק (מהירות)</PlayRate>
+    </VideoControls>
+    <SaveChangesToUntitled>האם לשמור את השינויים ללא שם?</SaveChangesToUntitled>
+    <SaveChangesToX>האם לשמור שינויים ב-{0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>האם לשמור שינויים במקור ללא כותרת?</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>האם לשמור שינויים ב-{0} המקורי?</SaveChangesToOriginalX>
+    <SaveSubtitleAs>שמור כתובית בשם...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>שמור כתובית מקורית כ...</SaveOriginalSubtitleAs>
+    <CannotSaveEmptySubtitle>לא ניתן לשמור כתובית ריקה</CannotSaveEmptySubtitle>
+    <NoSubtitleLoaded>לא נטען כתוביות</NoSubtitleLoaded>
+    <VisualSyncSelectedLines>סנכרון חזותי - קווים נבחרים</VisualSyncSelectedLines>
+    <VisualSyncTitle>סנכרון ויזואלי</VisualSyncTitle>
+    <BeforeVisualSync>לפני סנכרון ויזואלי</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>סנכרון חזותי מבוצע בקווים נבחרים</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>בוצע סנכרון חזותי</VisualSyncPerformed>
+    <FileXIsLargerThan10MB>הקובץ גדול מ-10 MB: {0}</FileXIsLargerThan10MB>
+    <ContinueAnyway>המשך בכל זאת?</ContinueAnyway>
+    <BeforeLoadOf>לפני טעינה של {0}</BeforeLoadOf>
+    <LoadedSubtitleX>כתוביות נטען {0}</LoadedSubtitleX>
+    <LoadedEmptyOrShort>כתובית ריקה או קצרה מאוד נטענה {0}</LoadedEmptyOrShort>
+    <FileIsEmptyOrShort>הקובץ ריק או קצר מאוד!</FileIsEmptyOrShort>
+    <FileNotFound>הקובץ לא נמצא: {0}</FileNotFound>
+    <SavedSubtitleX>כתובית שמורה {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>כתובית מקורית שמורה {0}</SavedOriginalSubtitleX>
+    <FileOnDiskModified>הקובץ בדיסק שונה</FileOnDiskModified>
+    <OverwriteModifiedFile>להחליף את הקובץ {0} ששונה ב-{1} {2}{3} עם הקובץ הנוכחי שנטען מהדיסק ב-{4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Cannot save {0}
+
+File is read-only!</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>Unable to save subtitle file {0}
+Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>יש להשתמש בקידוד UTF-8 בעת שמירת {0} קבצים!</FormatXShouldUseUft8>
+    <BeforeNew>לפני חדש</BeforeNew>
+    <New>חָדָשׁ</New>
+    <BeforeConvertingToX>לפני ההמרה ל-{0}</BeforeConvertingToX>
+    <ConvertedToX>הומר ל-{0}</ConvertedToX>
+    <BeforeShowEarlier>לפני הופעה מוקדמת יותר</BeforeShowEarlier>
+    <BeforeShowLater>לפני ההצגה מאוחר יותר</BeforeShowLater>
+    <LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
+    <OpenVideoFile>פתח קובץ וידאו...</OpenVideoFile>
+    <NewFrameRateUsedToCalculateTimeCodes>קצב פריימים חדש ({0}) שימש לחישוב קודי זמן התחלה/סיום</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>קצב פריימים חדש ({0}) שימש לחישוב מספרי התחלה/סיום</NewFrameRateUsedToCalculateFrameNumbers>
+    <FindContinue>The search item was not found.
+Would you like to start from the top of the document and search one more time?</FindContinue>
+    <FindContinueTitle>האם להמשיך למצוא?</FindContinueTitle>
+    <ReplaceContinueNotFound>The search item was not found.
+Would you like to start from the top of the document and continue search and replace?</ReplaceContinueNotFound>
+    <ReplaceXContinue>The search item was replaced {0} time(s).
+Would you like to start from the top of the document and continue search and replace?</ReplaceXContinue>
+    <ReplaceContinueTitle>האם להמשיך עם 'החלפה'?</ReplaceContinueTitle>
+    <SearchingForXFromLineY>מחפש '{0}' ממספר שורה {1}...</SearchingForXFromLineY>
+    <XFoundAtLineNumberY>'{0}' נמצא בשורה מספר {1}</XFoundAtLineNumberY>
+    <XNotFound>'{0}' לא נמצא</XNotFound>
+    <BeforeReplace>לפני החלפה: {0}</BeforeReplace>
+    <MatchFoundX>נמצאה התאמה: {0}</MatchFoundX>
+    <NoMatchFoundX>לא נמצאה התאמה: {0}</NoMatchFoundX>
+    <FoundNothingToReplace>לא מצאתי מה להחליף</FoundNothingToReplace>
+    <ReplaceCountX>Replace count: {0:#,##0}</ReplaceCountX>
+    <NoXFoundAtLineY>נמצאה התאמה בשורה {0}: {1}</NoXFoundAtLineY>
+    <OneReplacementMade>בוצעה החלפה אחת.</OneReplacementMade>
+    <BeforeChangesMadeInSourceView>לפני שבוצעו שינויים בתצוגת מקור</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>לא ניתן לנתח טקסט תצוגת מקור!</UnableToParseSourceView>
+    <GoToLineNumberX>עבור אל שורה מספר {0}</GoToLineNumberX>
+    <CreateAdjustChangesApplied>צור/שנה שורות שהוחלו</CreateAdjustChangesApplied>
+    <SelectedLines>שורות נבחרות</SelectedLines>
+    <BeforeDisplayTimeAdjustment>לפני התאמת זמן התצוגה</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>זמן תצוגה מותאם: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>זמני תצוגה מותאמים: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>זמן התחלה מותאם: {0}</StarTimeAdjustedX>
+    <BeforeCommonErrorFixes>לפני תיקוני שגיאות נפוצות</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>שגיאות נפוצות מתוקנות בשורות נבחרות</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>שגיאות נפוצות תוקנו</CommonErrorsFixed>
+    <BeforeRenumbering>לפני מספור מחדש</BeforeRenumbering>
+    <RenumberedStartingFromX>ממוספר מחדש החל מ: {0}</RenumberedStartingFromX>
+    <BeforeRemovalOfTextingForHearingImpaired>לפני הסרת הודעות טקסט ללקויי שמיעה</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>הוסר הודעות טקסט ללקויי שמיעה: שורה אחת</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>הוסר הודעות טקסט ללקויי שמיעה: {0} שורות</TextingForHearingImpairedRemovedXLines>
+    <SubtitleSplitted>כתובית פוצלה</SubtitleSplitted>
+    <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should already be in sync with video file.
+
+Continue?</SubtitleAppendPrompt>
+    <SubtitleAppendPromptTitle>הוסף כותרת משנה</SubtitleAppendPromptTitle>
+    <OpenSubtitleToAppend>פתח את הכתובית להוספה...</OpenSubtitleToAppend>
+    <AppendViaVisualSyncTitle>סנכרון חזותי - הוסף חלק שני של כתובית</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>האם להוסיף את הכתובית המסונכרנת הזו?</AppendSynchronizedSubtitlePrompt>
+    <BeforeAppend>לפני לצרף</BeforeAppend>
+    <SubtitleAppendedX>כתובית צורפה: {0}</SubtitleAppendedX>
+    <SubtitleNotAppended>כתובית לא צורפה!</SubtitleNotAppended>
+    <GoogleTranslate>גוגל תרגום</GoogleTranslate>
+    <MicrosoftTranslate>Bing Microsoft מתרגם</MicrosoftTranslate>
+    <BeforeGoogleTranslation>לפני תרגום גוגל</BeforeGoogleTranslation>
+    <SelectedLinesTranslated>שורות נבחרות תורגמו</SelectedLinesTranslated>
+    <SubtitleTranslated>כתוביות מתורגמות</SubtitleTranslated>
+    <TranslateSwedishToDanish>תרגם כתוביות שוודית שנטענות כעת לדנית</TranslateSwedishToDanish>
+    <TranslateSwedishToDanishWarning>תרגם כתוביות שוודית (האם אתה בטוח שזה שוודית?) שנטען כעת לדנית?</TranslateSwedishToDanishWarning>
+    <TranslatingViaNikseDkMt>תרגום דרך www.nikse.dk/mt...</TranslatingViaNikseDkMt>
+    <BeforeSwedishToDanishTranslation>לפני תרגום שוודית לדנית</BeforeSwedishToDanishTranslation>
+    <TranslationFromSwedishToDanishComplete>תרגום משוודית לדנית הושלם</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>תרגום משוודית לדנית נכשל</TranslationFromSwedishToDanishFailed>
+    <UndoPerformed>בוצע ביטול</UndoPerformed>
+    <RedoPerformed>Redo ביצע</RedoPerformed>
+    <NothingToUndo>אין מה לבטל</NothingToUndo>
+    <InvalidLanguageNameX>שם שפה לא חוקי: {0}</InvalidLanguageNameX>
+    <DoNotDisplayMessageAgain>אל תציג הודעה זו שוב</DoNotDisplayMessageAgain>
+    <NumberOfCorrectedWords>מספר המילים שתוקנו: {0}</NumberOfCorrectedWords>
+    <NumberOfSkippedWords>מספר המילים שדילג עליהן: {0}</NumberOfSkippedWords>
+    <NumberOfCorrectWords>מספר המילים הנכונות: {0}</NumberOfCorrectWords>
+    <NumberOfWordsAddedToDictionary>מספר המילים שנוספו למילון: {0}</NumberOfWordsAddedToDictionary>
+    <NumberOfNameHits>מספר התאמות של שם: {0}</NumberOfNameHits>
+    <SpellCheck>בדיקת איות</SpellCheck>
+    <BeforeSpellCheck>לפני בדיקת איות</BeforeSpellCheck>
+    <SpellCheckChangedXToY>בדיקת איות: שינה את '{0}' ל-'{1}'</SpellCheckChangedXToY>
+    <BeforeAddingTagX>לפני הוספת תג &lt;{0}&gt;</BeforeAddingTagX>
+    <TagXAdded>התג {0} נוסף</TagXAdded>
+    <LineXOfY>שורה {0} מתוך {1}</LineXOfY>
+    <XLinesSavedAsY>{0} שורות נשמרו כ-{1}</XLinesSavedAsY>
+    <XLinesDeleted>{0} שורות נמחקו</XLinesDeleted>
+    <BeforeDeletingXLines>Before deleting {0:#,##0} lines</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>Delete {0:#,##0} lines?</DeleteXLinesPrompt>
+    <OneLineDeleted>השורה נמחקה</OneLineDeleted>
+    <BeforeDeletingOneLine>לפני מחיקת שורה אחת</BeforeDeletingOneLine>
+    <DeleteOneLinePrompt>למחוק שורה אחת?</DeleteOneLinePrompt>
+    <BeforeInsertLine>לפני הכנסת קו</BeforeInsertLine>
+    <LineInserted>קו הוכנס</LineInserted>
+    <BeforeLineUpdatedInListView>לפני השורה עודכנה בתצוגת רשימה</BeforeLineUpdatedInListView>
+    <BeforeSplitLine>לפני קו מפוצל</BeforeSplitLine>
+    <LineSplitted>הקו היה מפוצל</LineSplitted>
+    <BeforeMergeLines>לפני מיזוג קווים</BeforeMergeLines>
+    <LinesMerged>קווים אוחדו</LinesMerged>
+    <MergeSentences>מיזוג משפטים...</MergeSentences>
+    <MergeSentencesXLines>מיזוג משפטים - שורות מוזגו: {0}</MergeSentencesXLines>
+    <BeforeSettingColor>לפני הגדרת צבע</BeforeSettingColor>
+    <BeforeSettingFontName>לפני הגדרת שם הגופן</BeforeSettingFontName>
+    <BeforeTypeWriterEffect>לפני אפקט מכונת כתיבה</BeforeTypeWriterEffect>
+    <BeforeKaraokeEffect>לפני אפקט קריוקי</BeforeKaraokeEffect>
+    <BeforeImportingDvdSubtitle>לפני ייבוא ​​כתוביות מ-DVD</BeforeImportingDvdSubtitle>
+    <OpenSubtitleVideoFile>פתח כתוביות מקובץ וידאו...</OpenSubtitleVideoFile>
+    <VideoFiles>קבצי וידאו</VideoFiles>
+    <NoSubtitlesFound>לא נמצאו כתוביות</NoSubtitlesFound>
+    <NotAValidMatroskaFileX>זה אינו קובץ Matroska חוקי: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>קובץ Blu-ray sup אינו מכיל כתוביות או מכיל שגיאות - נסה לבצע דה-מקס שוב.</BlurayNotSubtitlesFound>
+    <ImportingChapters>מייבא פרקים...</ImportingChapters>
+    <XChaptersImported>{0} פרקים יובאו</XChaptersImported>
+    <ParsingMatroskaFile>ניתוח קובץ Matroska.  המתן בבקשה...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>ניתוח קובץ Transport Stream.  המתן בבקשה...</ParsingTransportStreamFile>
+    <BeforeImportFromMatroskaFile>לפני ייבוא ​​כתוביות מקובץ Matroska</BeforeImportFromMatroskaFile>
+    <SubtitleImportedFromMatroskaFile>כתובית מיובאת מקובץ Matroska</SubtitleImportedFromMatroskaFile>
+    <DropFileXNotAccepted>שחרור הקובץ '{0}' לא התקבל - הקובץ גדול מדי</DropFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>שחרור הקובץ '{0}' לא התקבל - הקובץ גדול מדי עבור כתובית</DropSubtitleFileXNotAccepted>
+    <DropOnlyOneFile>אתה יכול להוריד רק קובץ אחד</DropOnlyOneFile>
+    <OpenAnsiSubtitle>פתח כתוביות...</OpenAnsiSubtitle>
+    <BeforeChangeCasing>לפני החלפת מארז</BeforeChangeCasing>
+    <CasingCompleteMessageNoNames>מספר השורות עם רישיות שהשתנו: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageOnlyNames>מספר השורות עם רישיות שמות שהשתנו: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>מספר השורות עם רישיות שהשתנו: {0}/{1}, רישיות שונה עבור שמות: {2}</CasingCompleteMessage>
+    <BeforeChangeFrameRate>לפני שינוי קצב הפריימים</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>לפני התאם מהירות באחוזים</BeforeAdjustSpeedInPercent>
+    <FrameRateChangedFromXToY>קצב הפריימים השתנה מ-{0} ל-{1}</FrameRateChangedFromXToY>
+    <IdxFileNotFoundWarning>{0} לא נמצא!  לייבא קובץ VobSub בכל זאת?</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>כותרת לא חוקית קובץ VobSub: {0}</InvalidVobSubHeader>
+    <OpenVobSubFile>פתח את כתובית VobSub (sub/idx)...</OpenVobSubFile>
+    <VobSubFiles>קבצי כתוביות של VobSub</VobSubFiles>
+    <OpenBluRaySupFile>פתח את קובץ Blu-ray .sup...</OpenBluRaySupFile>
+    <BluRaySupFiles>קבצי Blu-ray .sup</BluRaySupFiles>
+    <BeforeImportingVobSubFile>לפני ייבוא ​​כתוביות VobSub</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>לפני ייבוא ​​קובץ Blu-ray sup</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>לפני ייבוא ​​קובץ BDN xml</BeforeImportingBdnXml>
+    <BeforeShowSelectedLinesEarlierLater>לפני הצג שורות נבחרות מוקדם יותר/מאוחר יותר</BeforeShowSelectedLinesEarlierLater>
+    <ShowAllLinesXSecondsLinesEarlier>Show all lines {0:0.0##} seconds earlier</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Show all lines {0:0.0##} seconds later</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Show selected lines {0:0.0##} seconds earlier</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Show selected lines {0:0.0##} seconds later</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Show selection and forward {0:0.0##} seconds earlier</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Show selection and forward {0:0.0##} seconds later</ShowSelectionAndForwardXSecondsLinesLater>
+    <DoubleWordsViaRegEx>מילים כפולות באמצעות ביטוי רגולרי {0}</DoubleWordsViaRegEx>
+    <BeforeSortX>לפני המיון: {0}</BeforeSortX>
+    <SortedByX>ממוין לפי: {0}</SortedByX>
+    <BeforeAutoBalanceSelectedLines>לפני איזון אוטומטי קווים נבחרים</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>מספר שורות מאוזנות אוטומטיות: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>לפני הסרת מעברי שורות מהשורות שנבחרו</BeforeRemoveLineBreaksInSelectedLines>
+    <NumberOfWithRemovedLineBreakX>מספר השורות עם מעבר שורה שהוסר: {0}</NumberOfWithRemovedLineBreakX>
+    <BeforeMultipleReplace>לפני החלפה מרובה</BeforeMultipleReplace>
+    <NumberOfLinesReplacedX>מספר השורות שהטקסט הוחלף: {0}</NumberOfLinesReplacedX>
+    <NameXAddedToNameList>השם '{0}' נוסף לרשימת השמות</NameXAddedToNameList>
+    <NameXNotAddedToNameList>השם '{0}' לא נוסף לרשימת השמות</NameXNotAddedToNameList>
+    <WordXAddedToUserDic>המילה '{0}' נוספה למילון המשתמש</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>המילה '{0}' לא נוספה למילון המשתמש</WordXNotAddedToUserDic>
+    <OcrReplacePairXAdded>צמד הרשימות החלפת OCR '{0} -&gt; {1}' נוסף לרשימת החלפת OCR</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>צמד הרשימות החלפת OCR '{0} -&gt; {1}' לא התווסף לרשימת החלפת OCR</OcrReplacePairXNotAdded>
+    <XLinesSelected>נבחרו {0} שורות</XLinesSelected>
+    <UnicodeMusicSymbolsAnsiWarning>כתובית מכילה תווי Unicode.  שמירה באמצעות קידוד קובץ ANSI תאבד את אלה.  להמשיך לחסוך?</UnicodeMusicSymbolsAnsiWarning>
+    <NegativeTimeWarning>כותרת המשנה מכילה קודי זמן שליליים.  להמשיך לחסוך?</NegativeTimeWarning>
+    <BeforeMergeShortLines>לפני מיזוג שורות קצרות</BeforeMergeShortLines>
+    <MergedShortLinesX>מספר שורות שמוזגו: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>לפני פיצול תורים ארוכים</BeforeSplitLongLines>
+    <LongLinesSplitX>מספר שורות מפוצלות: {0}</LongLinesSplitX>
+    <BeforeDurationsBridgeGap>לפני לגשר על פערים קטנים</BeforeDurationsBridgeGap>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>לפני הגדר זמן תצוגה מינימלי בין כתוביות</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>מספר שורות עם זמן תצוגה מינימלי בין שינוי כתוביות: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeImportText>לפני ייבוא ​​טקסט רגיל</BeforeImportText>
+    <TextImported>טקסט מיובא</TextImported>
+    <BeforePointSynchronization>לפני סנכרון נקודה</BeforePointSynchronization>
+    <PointSynchronizationDone>סנכרון נקודות נעשה</PointSynchronizationDone>
+    <BeforeTimeCodeImport>לפני ייבוא ​​של קודי זמן</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>קודי זמן שיובאו מ-{0}: {1}</TimeCodeImportedFromXY>
+    <BeforeInsertSubtitleAtVideoPosition>לפני הוספת כתובית במיקום הווידאו</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>לפני הגדירו זמן התחלה וקיזזו את השאר</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>לפני שעת סיום קבעו וקיזזו את השאר</BeforeSetEndTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>לפני הגדרת שעת סיום במיקום וידאו וחישוב אוטומטי של התחלה</BeforeSetEndAndVideoPosition>
+    <ContinueWithCurrentSpellCheck>האם להמשיך עם בדיקת האיות הנוכחית?</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>Chars/sec: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>קבל קצב פריימים מקובץ וידאו</GetFrameRateFromVideoFile>
+    <NetworkMessage>הודעה חדשה: {0} ({1}): {2}</NetworkMessage>
+    <NetworkUpdate>שורה עודכנה: {0} ({1}): אינדקס={2}, טקסט={3}</NetworkUpdate>
+    <NetworkInsert>שורה נוספה: {0} ({1}): אינדקס={2}, טקסט={3}</NetworkInsert>
+    <NetworkDelete>שורה נמחקה: {0} ({1}): אינדקס={2}</NetworkDelete>
+    <NetworkNewUser>משתמש חדש: {0} ({1})</NetworkNewUser>
+    <NetworkByeUser>ביי {0} ({1})</NetworkByeUser>
+    <NetworkUnableToConnectToServer>לא ניתן להתחבר לשרת: {0}</NetworkUnableToConnectToServer>
+    <UserAndAction>משתמש/פעולה</UserAndAction>
+    <NetworkMode>מצב רשת</NetworkMode>
+    <XStartedSessionYAtZ>{0}: התחילה הפעלה {1} בשעה {2}</XStartedSessionYAtZ>
+    <OpenOtherSubtitle>פתח כתובית אחרת</OpenOtherSubtitle>
+    <BeforeToggleDialogDashes>לפני החלפת מקפים של דו-שיח</BeforeToggleDialogDashes>
+    <ExportPlainTextAs>ייצא טקסט רגיל בשם</ExportPlainTextAs>
+    <TextFiles>קבצי טקסט</TextFiles>
+    <SubtitleExported>כתובית מיוצאת</SubtitleExported>
+    <LineNumberXErrorReadingFromSourceLineY>שורה {0} - קריאת שגיאה: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>שורה {0} - שגיאה בקריאת קוד זמן: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>שורה {0} - מספר כתוביות צפוי: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>שורה {0}: צפויה שורה ריקה, אך נמצא מספר ({1}) ואחריו קוד זמן.</LineNumberXExpectedEmptyLine>
+    <BeforeGuessingTimeCodes>לפני ניחוש קודי זמן</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>לפני משך אוטומטי עבור שורות נבחרות</BeforeAutoDuration>
+    <BeforeColumnPaste>לפני הדבקת עמודות</BeforeColumnPaste>
+    <BeforeColumnDelete>לפני מחיקת העמודה</BeforeColumnDelete>
+    <BeforeColumnImportText>לפני ייבוא ​​טקסט של עמודות</BeforeColumnImportText>
+    <BeforeColumnShiftCellsDown>לפני הזזת תאים למטה</BeforeColumnShiftCellsDown>
+    <BeforeX>לפני: {0}</BeforeX>
+    <LinesUpdatedX>שורות עודכנו: {0}</LinesUpdatedX>
+    <ErrorLoadingPluginXErrorY>שגיאה בטעינת הפלאגין: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>לפני הפעלת הפלאגין: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>לא ניתן לקרוא תוצאת כתוביות מהפלאגין!</UnableToReadPluginResult>
+    <UnableToCreateBackupDirectory>לא ניתן ליצור תיקיית גיבוי {0}: {1}</UnableToCreateBackupDirectory>
+    <BeforeDisplaySubtitleJoin>לפני הצטרפות כתוביות</BeforeDisplaySubtitleJoin>
+    <SubtitlesJoined>הצטרפו כתוביות</SubtitlesJoined>
+    <StatusLog>יומן סטטוס</StatusLog>
+    <XShotChangesImported>{0} שינויים בצילום יובאו</XShotChangesImported>
+    <PluginXExecuted>הפלאגין '{0}' הופעל.</PluginXExecuted>
+    <NotAValidXSubFile>לא קובץ XSub חוקי!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>לפני מיזוג שורות עם אותו טקסט</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>לכתוביות עם קודי זמן יש מספר שונה של שורות ({0}) מהכתובית הנוכחית ({1}) - להמשיך בכל זאת?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>מנתח זרם הובלה - נא המתן...</ParsingTransportStream>
+    <XPercentCompleted>{0}% הושלמו</XPercentCompleted>
+    <NextX>הבא: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Insert subtitle at waveform position will cause overlap!
+
+Continue anyway?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>כתובית מכילה משך שלילי בשורות: {0}</SubtitleContainsNegativeDurationsX>
+    <SetPlayRateX>הגדר את קצב הנגינה (מהירות) ל-{0}%</SetPlayRateX>
+    <ErrorLoadIdx>לא ניתן לקרוא/לערוך קבצי .idx.  קבצי Idx הם חלק מצמד קבצי idx/sub (נקרא גם VobSub), ועריכת כתוביות יכולה לפתוח את קובץ ה-.sub.</ErrorLoadIdx>
+    <ErrorLoadRar>נראה שהקובץ הזה הוא קובץ .rar דחוס.  עריכת כתוביות לא יכולה לפתוח קבצים דחוסים.</ErrorLoadRar>
+    <ErrorLoadZip>נראה שהקובץ הזה הוא קובץ .zip דחוס.  עריכת כתוביות לא יכולה לפתוח קבצים דחוסים.</ErrorLoadZip>
+    <ErrorLoad7Zip>נראה שהקובץ הזה הוא קובץ 7-Zip דחוס.  עריכת כתוביות לא יכולה לפתוח קבצים דחוסים.</ErrorLoad7Zip>
+    <ErrorLoadPng>נראה שהקובץ הזה הוא קובץ תמונה PNG.  עריכת כתוביות לא יכולה לפתוח קובצי PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>נראה שהקובץ הזה הוא קובץ תמונה JPG.  עריכת כתוביות לא יכולה לפתוח קובצי JPG.</ErrorLoadJpg>
+    <ErrorLoadSrr>נראה שהקובץ הזה הוא קובץ .srr של ReScene - לא קובץ כתוביות.</ErrorLoadSrr>
+    <ErrorLoadTorrent>נראה שהקובץ הזה הוא קובץ ביטורנט - לא קובץ כתוביות.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Sorry, this file contains only binary zeroes!
+
+If you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>שחרור תיקיות אינו נתמך כאן.</ErrorDirectoryDropNotAllowed>
+    <NoSupportEncryptedVobSub>תוכן VobSub מוצפן אינו נתמך.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>קבצי Blu-ray sup אינם נתמכים כאן.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>קבצי DVD sup אינם נתמכים כאן.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>קבצי VobSub אינם נתמכים כאן.</NoSupportHereVobSub>
+    <NoSupportHereDivx>קבצי DivX אינם נתמכים כאן.</NoSupportHereDivx>
+    <NoChapters>לא נמצאו פרקים בסרטון.</NoChapters>
+    <VideoFromUrlRequirements>Opening video from URL requires mpv and youtube-dl.
+
+Download and continue?</VideoFromUrlRequirements>
+    <Url>כתובת אתר</Url>
+    <Errors>שגיאות</Errors>
+    <ShowVideoControls>הצג פקדי וידאו</ShowVideoControls>
+    <HideVideoControls>הסתר פקדי וידאו</HideVideoControls>
+    <GeneratingWaveformInBackground>יוצר צורת גל ברקע...</GeneratingWaveformInBackground>
+    <AutoBackupSaved>הגיבוי האוטומטי נשמר</AutoBackupSaved>
+    <UsingOnlyFrontCenterChannel>משתמש רק בערוץ השמע המרכזי הקדמי</UsingOnlyFrontCenterChannel>
+    <BeforeConvertingColorsToDialog>לפני המרת צבעים לדיאלוג</BeforeConvertingColorsToDialog>
+    <ConvertedColorsToDialog>המירו צבעים לדיאלוג</ConvertedColorsToDialog>
+    <PleaseInstallVideoPlayer>נא להתקין נגן וידאו</PleaseInstallVideoPlayer>
+    <UnableToPlayMediaFile>SE לא הצליחה להפעיל את קובץ הווידאו/אודיו (או שהקובץ אינו קובץ וידאו/אודיו חוקי).</UnableToPlayMediaFile>
+    <SubtitleEditNeedsVideoPlayer>עריכת כתוביות זקוקה לנגן וידאו.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>כדי להשתמש בנגן הווידאו המומלץ "mpv" לחץ על הכפתור למטה.</UseRecommendMpv>
+    <DownloadAndUseMpv>הורד והשתמש ב-"mpv" כנגן וידאו</DownloadAndUseMpv>
+  </Main>
+  <MatroskaSubtitleChooser>
+    <Title>בחר כתובית מקובץ Matroska</Title>
+    <TitleMp4>בחר כתוביות מקובץ MP4</TitleMp4>
+    <PleaseChoose>נמצאה יותר מכתובית אחת - נא לבחור</PleaseChoose>
+    <TrackXLanguageYTypeZ>רצועה {0} - שפה: {1} - סוג: {2}</TrackXLanguageYTypeZ>
+  </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>ממיר מדידה</Title>
+    <ConvertFrom>המר מ</ConvertFrom>
+    <ConvertTo>להמיר ל</ConvertTo>
+    <CopyToClipboard>העתק ללוח</CopyToClipboard>
+    <CloseOnInsert>סגור בהכנס</CloseOnInsert>
+    <Insert>לְהַכנִיס</Insert>
+    <Length>אורך</Length>
+    <Mass>מסה</Mass>
+    <Volume>כרך</Volume>
+    <Area>אֵזוֹר</Area>
+    <Time>זְמַן</Time>
+    <Temperature>טֶמפֶּרָטוּרָה</Temperature>
+    <Velocity>מְהִירוּת</Velocity>
+    <Force>כּוֹחַ</Force>
+    <Energy>אֵנֶרְגִיָה</Energy>
+    <Power>כּוֹחַ</Power>
+    <Pressure>לַחַץ</Pressure>
+    <Kilometers>קילומטרים</Kilometers>
+    <Meters>מטרים</Meters>
+    <Centimeters>סנטימטרים</Centimeters>
+    <Millimeters>מילימטרים</Millimeters>
+    <Micrometers>מיקרומטרים</Micrometers>
+    <Nanometers>ננומטרים</Nanometers>
+    <Angstroms>אנגסטרום</Angstroms>
+    <MilesTerrestial>מיילים (ארצי)</MilesTerrestial>
+    <MilesNautical>מיילים (ימי)</MilesNautical>
+    <Yards>יארדים</Yards>
+    <Feet>רגליים</Feet>
+    <Inches>אינץ</Inches>
+    <Chains>שרשראות</Chains>
+    <Fathoms>אבות</Fathoms>
+    <Hands>ידיים</Hands>
+    <Rods>מוטות</Rods>
+    <Spans>משתרעים</Spans>
+    <LongTonnes>טונות ארוכות</LongTonnes>
+    <ShortTonnes>טונות קצרות</ShortTonnes>
+    <Tonnes>טונות</Tonnes>
+    <Kilos>קילוגרמים</Kilos>
+    <Grams>גרם</Grams>
+    <Milligrams>מיליגרם</Milligrams>
+    <Micrograms>מיקרוגרם</Micrograms>
+    <Pounds>פאונד</Pounds>
+    <Ounces>אונקיות</Ounces>
+    <Carats>קראט</Carats>
+    <Drams>דרמים</Drams>
+    <Grains>דגנים</Grains>
+    <Stones>אבנים</Stones>
+    <CubicKilometers>קילומטרים מעוקבים</CubicKilometers>
+    <CubicMeters>מטר מעוקב</CubicMeters>
+    <Litres>ליטר</Litres>
+    <CubicCentimeters>סנטימטר מעוקב</CubicCentimeters>
+    <CubicMillimeters>מילימטר מעוקב</CubicMillimeters>
+    <CubicMiles>מייל מעוקב</CubicMiles>
+    <CubicYards>מטרים מעוקבים</CubicYards>
+    <CubicFTs>רגל מעוקב</CubicFTs>
+    <CubicInches>אינץ' מעוקב</CubicInches>
+    <OilBarrels>חביות שמן</OilBarrels>
+    <GallonUS>גלון (ארה"ב)</GallonUS>
+    <QuartsUS>Quarts (ארה"ב)</QuartsUS>
+    <PintsUS>פיינט (ארה"ב)</PintsUS>
+    <FluidOuncesUS>אונקיות נוזל (ארה"ב)</FluidOuncesUS>
+    <Bushels>בושלים</Bushels>
+    <Pecks>פיקס</Pecks>
+    <GallonsUK>גלונים (בריטניה)</GallonsUK>
+    <QuartsUK>Quarts (בריטניה)</QuartsUK>
+    <PintsUK>פיינט (בריטניה)</PintsUK>
+    <FluidOuncesUK>אונקיות נוזל (בריטניה)</FluidOuncesUK>
+    <SquareKilometers>קילומטרים רבועים</SquareKilometers>
+    <SquareMeters>מ"ר</SquareMeters>
+    <SquareCentimeters>סנטימטר מרובע</SquareCentimeters>
+    <SquareMillimeters>מילימטרים ריבועיים</SquareMillimeters>
+    <SquareMiles>קילומטרים רבועים</SquareMiles>
+    <SquareYards>מטרים רבועים</SquareYards>
+    <SquareFTs>רגל רבוע</SquareFTs>
+    <SquareInches>אינצ'ים ריבועיים</SquareInches>
+    <Hectares>הקטרים</Hectares>
+    <Acres>דונם</Acres>
+    <Ares>ארס</Ares>
+    <Hours>שעה (ות</Hours>
+    <Minutes>דקות</Minutes>
+    <Seconds>שניות</Seconds>
+    <Milliseconds>אלפיות שניות</Milliseconds>
+    <Microseconds>מיקרו-שניות</Microseconds>
+    <Fahrenheit>פרנהייט</Fahrenheit>
+    <Celsius>צֶלסִיוּס</Celsius>
+    <Kelvin>קלווין</Kelvin>
+    <KilometersPerHour>קילומטרים/שעה</KilometersPerHour>
+    <MetersPerSecond>מטרים/שניות</MetersPerSecond>
+    <MilesPerHour>מיילים/שעה</MilesPerHour>
+    <YardsPerMinute>יארד/דקה</YardsPerMinute>
+    <FTsPerSecond>רגל/שנייה</FTsPerSecond>
+    <Knots>קשרים</Knots>
+    <PoundsForce>פאונד-כוח</PoundsForce>
+    <Newtons>ניוטון</Newtons>
+    <KilosForce>קילוס-כוח</KilosForce>
+    <Jouls>ג'אולים</Jouls>
+    <Calories>קלוריות</Calories>
+    <Ergs>ארג</Ergs>
+    <ElectronVolts>אלקטרונים-וולט</ElectronVolts>
+    <Btus>Btus</Btus>
+    <Watts>וואטס</Watts>
+    <Horsepower>כוח סוס</Horsepower>
+    <Atmospheres>אטמוספירות</Atmospheres>
+    <Bars>סורגים</Bars>
+    <Pascals>פסקל</Pascals>
+    <MillimetersOfMercury>מילימטרים של מרקורי</MillimetersOfMercury>
+    <PoundPerSquareInch>כוח פאונד לאינץ' מרובע</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>כוח קילוגרם לסנטימטר רבוע</KilogramPerSquareCentimeter>
+    <KiloPascals>קילופסקל</KiloPascals>
+  </MeasurementConverter>
+  <MergeDoubleLines>
+    <Title>מיזוג שורות עם אותו טקסט</Title>
+    <MaxMillisecondsBetweenLines>מקסימום  אלפיות שניות בין שורות</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>כלול קווים הגדלים</IncludeIncrementing>
+  </MergeDoubleLines>
+  <MergedShortLines>
+    <Title>מיזוג שורות קצרות</Title>
+    <MaximumCharacters>מקסימום תווים בפסקה אחת</MaximumCharacters>
+    <MaximumMillisecondsBetween>מקסימום אלפיות שניות בין שורות</MaximumMillisecondsBetween>
+    <NumberOfMergesX>מספר מיזוגים: {0}</NumberOfMergesX>
+    <MergedText>טקסט מוזג</MergedText>
+    <OnlyMergeContinuationLines>רק למזג קווי המשך</OnlyMergeContinuationLines>
+  </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>מיזוג שורות עם קודי זמן זהים</Title>
+    <MaxDifferenceMilliseconds>מקסימום  הבדל של אלפיות שניות</MaxDifferenceMilliseconds>
+    <MakeDialog>צור דו-שיח</MakeDialog>
+    <ReBreakLines>שוברים שורות</ReBreakLines>
+    <NumberOfMergesX>מספר מיזוגים: {0}</NumberOfMergesX>
+    <MergedText>טקסט מוזג</MergedText>
+  </MergeTextWithSameTimeCodes>
+  <ModifySelection>
+    <Title>שנה בחירה</Title>
+    <Rule>כְּלָל</Rule>
+    <CaseSensitive>רגיש לאותיות גדולות</CaseSensitive>
+    <DoWithMatches>מה לעשות עם גפרורים</DoWithMatches>
+    <MakeNewSelection>בצע בחירה חדשה</MakeNewSelection>
+    <AddToCurrentSelection>הוסף לבחירה הנוכחית</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>הפחת מהבחירה הנוכחית</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>מצטלבים עם הבחירה הנוכחית</IntersectWithCurrentSelection>
+    <MatchingLinesX>Matching lines: {0:#,##0}</MatchingLinesX>
+    <Contains>מכיל</Contains>
+    <StartsWith>מתחיל עם</StartsWith>
+    <EndsWith>מסתיים עם</EndsWith>
+    <NoContains>לא מכיל</NoContains>
+    <RegEx>הבעה רגילה</RegEx>
+    <OddLines>שורות עם מספר מוזר</OddLines>
+    <EvenLines>קווים זוגיים</EvenLines>
+    <DurationLessThan>משך פחות מ</DurationLessThan>
+    <DurationGreaterThan>משך זמן גדול מ</DurationGreaterThan>
+    <ExactlyOneLine>שורה אחת בדיוק</ExactlyOneLine>
+    <ExactlyTwoLines>שתי שורות בדיוק</ExactlyTwoLines>
+    <MoreThanTwoLines>יותר משתי שורות</MoreThanTwoLines>
+    <Bookmarked>סימניה</Bookmarked>
+    <BlankLines>קווים ריקים</BlankLines>
+  </ModifySelection>
+  <MultipleReplace>
+    <Title>החלפה מרובה</Title>
+    <FindWhat>למצוא מה</FindWhat>
+    <ReplaceWith>להחליף ב</ReplaceWith>
+    <Normal>נוֹרמָלִי</Normal>
+    <CaseSensitive>רגיש לאותיות גדולות</CaseSensitive>
+    <RegularExpression>הבעה רגילה</RegularExpression>
+    <Description>תיאור</Description>
+    <LinesFoundX>נמצאו שורות: {0}</LinesFoundX>
+    <Remove>לְהַסִיר</Remove>
+    <Add>&amp;לְהוֹסִיף</Add>
+    <Update>&amp;עדכון</Update>
+    <Enabled>מופעל</Enabled>
+    <SearchType>סוג חיפוש</SearchType>
+    <RemoveAll>להסיר את כל</RemoveAll>
+    <Import>יְבוּא...</Import>
+    <Export>יְצוּא...</Export>
+    <ImportRulesTitle>יבוא כללים החלפים מ...</ImportRulesTitle>
+    <ExportRulesTitle>ייצא כלל(ים) החלפה ל...</ExportRulesTitle>
+    <ChooseGroupsToImport>בחר קבוצות לייבוא</ChooseGroupsToImport>
+    <ChooseGroupsToExport>בחר קבוצות לייצוא</ChooseGroupsToExport>
+    <Rules>מצא והחלף כללים</Rules>
+    <MoveToTop>העבר למעלה</MoveToTop>
+    <MoveToBottom>עברו למטה</MoveToBottom>
+    <MoveSelectedRulesToGroup>העבר את הכללים שנבחרו לקבוצה</MoveSelectedRulesToGroup>
+    <Groups>קבוצות</Groups>
+    <RulesForGroupX>כללים עבור הקבוצה "{0}"</RulesForGroupX>
+    <GroupName>שם קבוצה</GroupName>
+    <RenameGroup>שנה את שם הקבוצה...</RenameGroup>
+    <NewGroup>קבוצה חדשה...</NewGroup>
+    <NothingToImport>אין מה לייבא</NothingToImport>
+    <RuleInfo>מידע על כללים</RuleInfo>
+  </MultipleReplace>
+  <NetworkChat>
+    <Title>לְשׂוֹחֵחַ</Title>
+    <Send>לִשְׁלוֹחַ</Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>הצטרף לסשן רשת</Title>
+    <Information>הצטרף לסשן קיים שבו אנשים מרובים יכולים
+לערוך באותו קובץ כתוביות (שיתוף פעולה)</Information>
+    <Join>לְהִצְטַרֵף</Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>מידע ויומן הפעלה ברשת</Title>
+    <Log>עֵץ:</Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>התחל הפעלת רשת</Title>
+    <ConnectionTo>מתחבר אל {0}...</ConnectionTo>
+    <Information>התחל הפעלה חדשה שבה אנשים מרובים יכולים
+לערוך באותו קובץ כתוביות (שיתוף פעולה)</Information>
+    <Start>הַתחָלָה</Start>
+  </NetworkStart>
+  <OpenVideoDvd>
+    <Title>פתח DVD דרך VLC</Title>
+    <OpenDvdFrom>פתח DVD מ...</OpenDvdFrom>
+    <Disc>דיסק</Disc>
+    <Folder>תיקיה</Folder>
+    <ChooseDrive>בחר כונן</ChooseDrive>
+    <ChooseFolder>בחר תיקיה</ChooseFolder>
+  </OpenVideoDvd>
+  <PluginsGet>
+    <Title>תוספים</Title>
+    <InstalledPlugins>תוספים מותקנים</InstalledPlugins>
+    <GetPlugins>קבל תוספים</GetPlugins>
+    <Description>תיאור</Description>
+    <Version>גִרְסָה</Version>
+    <Date>תַאֲרִיך</Date>
+    <Type>סוּג</Type>
+    <OpenPluginsFolder>פתח את תיקיית 'תוספים'</OpenPluginsFolder>
+    <GetPluginsInfo1>יש להוריד תוספים של עריכת כתוביות לתיקיית 'פלאגינים'</GetPluginsInfo1>
+    <GetPluginsInfo2>בחר תוסף ולחץ על 'הורד'</GetPluginsInfo2>
+    <PluginXDownloaded>הורד את הפלאגין {0}</PluginXDownloaded>
+    <Download>&amp;הורד</Download>
+    <Remove>&amp;לְהַסִיר</Remove>
+    <UpdateAllX>עדכן הכל ({0})</UpdateAllX>
+    <UnableToDownloadPluginListX>לא ניתן להוריד את רשימת התקעים: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>נדרשת גרסה חדשה יותר של עריכת כתוביות!</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[עדכון זמין!]</UpdateAvailable>
+    <UpdateAll>עדכן הכל</UpdateAll>
+    <XPluginsUpdated>{0} פלאגין עודכנו</XPluginsUpdated>
+  </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>גבול מילים (b)</WordBoundary>
+    <NonWordBoundary>גבול לא מילים (B)</NonWordBoundary>
+    <NewLine>שורה חדשה (r
+)</NewLine>
+    <NewLineShort>שורה חדשה (
+)</NewLineShort>
+    <AnyDigit>כל ספרה (d)</AnyDigit>
+    <NonDigit>ללא ספרה (D)</NonDigit>
+    <AnyCharacter>כל תו (.)</AnyCharacter>
+    <AnyWhitespace>כל רווח לבן (s)</AnyWhitespace>
+    <NonSpaceCharacter>תו ללא רווח (S)</NonSpaceCharacter>
+    <ZeroOrMore>אפס או יותר (*)</ZeroOrMore>
+    <OneOrMore>אחד או יותר (+)</OneOrMore>
+    <InCharacterGroup>בקבוצת אופי ([מבחן])</InCharacterGroup>
+    <NotInCharacterGroup>לא בקבוצת תווים ([^מבחן])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
+  <RemoveTextFromHearImpaired>
+    <Title>הסר טקסט ללקויי שמיעה</Title>
+    <RemoveTextConditions>הסר תנאי טקסט</RemoveTextConditions>
+    <RemoveTextBetween>הסר טקסט בין</RemoveTextBetween>
+    <SquareBrackets>'[' ו-']'</SquareBrackets>
+    <Brackets>'{' ו-'}'</Brackets>
+    <Parentheses>'(' ו')'</Parentheses>
+    <QuestionMarks>'?'  ו'?'</QuestionMarks>
+    <And>ו</And>
+    <RemoveTextBeforeColon>הסר טקסט לפני נקודתיים (':')</RemoveTextBeforeColon>
+    <OnlyIfTextIsUppercase>רק אם הטקסט הוא רישיות</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>רק אם בשורה נפרדת</OnlyIfInSeparateLine>
+    <LinesFoundX>נמצאו שורות: {0}</LinesFoundX>
+    <RemoveTextIfContains>הסר טקסט אם הוא מכיל:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>הסר קו אם באותיות רישיות</RemoveTextIfAllUppercase>
+    <RemoveInterjections>הסר מילות ביניים (שש, הממ וכו')</RemoveInterjections>
+    <EditInterjections>לַעֲרוֹך...</EditInterjections>
+    <Apply>להגיש מועמדות</Apply>
+  </RemoveTextFromHearImpaired>
+  <ReplaceDialog>
+    <Title>החלף</Title>
+    <FindWhat>למצוא מה:</FindWhat>
+    <Normal>&amp;נוֹרמָלִי</Normal>
+    <CaseSensitive>&amp;רגיש לאותיות רישיות</CaseSensitive>
+    <RegularExpression>הבעה רגילה</RegularExpression>
+    <ReplaceWith>להחליף ב</ReplaceWith>
+    <Find>&amp;למצוא</Find>
+    <Replace>&amp;החלף</Replace>
+    <ReplaceAll>החלף הכל</ReplaceAll>
+  </ReplaceDialog>
+  <RestoreAutoBackup>
+    <Title>שחזר גיבוי אוטומטי</Title>
+    <Information>פתח את הגיבוי השמור אוטומטית</Information>
+    <DateAndTime>תאריך ושעה</DateAndTime>
+    <FileName>שם קובץ</FileName>
+    <Extension>סיומת</Extension>
+    <NoBackedUpFilesFound>לא נמצאו קבצי גיבוי!</NoBackedUpFilesFound>
+  </RestoreAutoBackup>
+  <SeekSilence>
+    <Title>חפש שקט</Title>
+    <SearchDirection>כיוון חיפוש</SearchDirection>
+    <Forward>קָדִימָה</Forward>
+    <Back>חזור</Back>
+    <LengthInSeconds>שתיקה חייבת להיות לפחות (שניות)</LengthInSeconds>
+    <MaxVolume>עוצמת הקול חייבת להיות מתחת</MaxVolume>
+  </SeekSilence>
+  <SetMinimumDisplayTimeBetweenParagraphs>
+    <Title>החל פער מינימלי בין כתוביות</Title>
+    <PreviewLinesModifiedX>תצוגה מקדימה - כתוביות השתנו: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>הצג רק קווים שהשתנו</ShowOnlyModifiedLines>
+    <MinimumMillisecondsBetweenParagraphs>מינימום אלפיות שניות בין שורות</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>מידע על קצב פריימים</FrameInfo>
+    <Frames>מסגרות</Frames>
+    <XFrameYisZMilliseconds>{0} פריימים ב-{1} fps הוא {2} אלפיות שניות</XFrameYisZMilliseconds>
+  </SetMinimumDisplayTimeBetweenParagraphs>
+  <SetSyncPoint>
+    <Title>הגדר נקודת סנכרון עבור קו {0}</Title>
+    <SyncPointTimeCode>סנכרון קוד זמן של נקודת זמן</SyncPointTimeCode>
+    <ThreeSecondsBack>&lt;&lt; 3 שניות</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ שניות</HalfASecondBack>
+    <HalfASecondForward>½ שניות &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 שניות &gt;&gt;</ThreeSecondsForward>
+  </SetSyncPoint>
+  <Settings>
+    <Title>הגדרות</Title>
+    <General>כללי</General>
+    <SubtitleFormats>פורמטים של כתוביות</SubtitleFormats>
+    <Toolbar>סרגל כלים</Toolbar>
+    <VideoPlayer>נגן וידאו</VideoPlayer>
+    <WaveformAndSpectrogram>צורת גל/ספקטרוגרם</WaveformAndSpectrogram>
+    <Tools>כלים</Tools>
+    <WordLists>רשימות מילים</WordLists>
+    <SsaStyle>סגנון ASS/SSA</SsaStyle>
+    <Network>רֶשֶׁת</Network>
+    <FileTypeAssociations>שיוך סוגי קבצים</FileTypeAssociations>
+    <Rules>כללים</Rules>
+    <ShowToolBarButtons>הצג את לחצני סרגל הכלים</ShowToolBarButtons>
+    <New>חָדָשׁ</New>
+    <Open>לִפְתוֹחַ</Open>
+    <Save>להציל</Save>
+    <SaveAs>שמור כ</SaveAs>
+    <Find>למצוא</Find>
+    <Replace>החלף</Replace>
+    <VisualSync>סנכרון ויזואלי</VisualSync>
+    <BurnIn>נולד ב</BurnIn>
+    <SpellCheck>בדיקת איות</SpellCheck>
+    <NetflixQualityCheck>בדיקת איכות נטפליקס</NetflixQualityCheck>
+    <SettingsName>הגדרות</SettingsName>
+    <ToggleBookmarks>החלף את הסימניות</ToggleBookmarks>
+    <ToggleBookmarksWithComment>החלף סימניות - הוסף תגובה</ToggleBookmarksWithComment>
+    <ClearBookmarks>נקה סימניות</ClearBookmarks>
+    <ExportBookmarks>ייצוא סימניות...</ExportBookmarks>
+    <GoToBookmark>עבור לסימנייה...</GoToBookmark>
+    <GoToPreviousBookmark>עבור לסימנייה הקודמת</GoToPreviousBookmark>
+    <GoToNextBookmark>עבור לסימנייה הבאה</GoToNextBookmark>
+    <ChooseProfile>בחר פרופיל</ChooseProfile>
+    <OpenDataFolder>פתח את תיקיית עריכת הנתונים של כתוביות</OpenDataFolder>
+    <DuplicateLine>שכפול שורה</DuplicateLine>
+    <ToggleView>החלף תצוגת רשימה/מקור</ToggleView>
+    <ToggleMode>החלף מצב תרגום/יצירה/התאמה</ToggleMode>
+    <TogglePreviewOnVideo>החלף את התצוגה המקדימה בסרטון</TogglePreviewOnVideo>
+    <Help>עֶזרָה</Help>
+    <FontInUi>גופן ממשק משתמש</FontInUi>
+    <Appearance>מראה חיצוני</Appearance>
+    <ShowFrameRate>הצג קצב פריימים בסרגל הכלים</ShowFrameRate>
+    <DefaultFrameRate>קצב ברירת המחדל של פריימים</DefaultFrameRate>
+    <DefaultFileEncoding>קידוד קובץ ברירת מחדל</DefaultFileEncoding>
+    <AutoDetectAnsiEncoding>זיהוי אוטומטי של קידוד ANSI</AutoDetectAnsiEncoding>
+    <Profile>פּרוֹפִיל</Profile>
+    <Profiles>פרופילים</Profiles>
+    <ImportProfiles>ייבוא ​​פרופילים</ImportProfiles>
+    <ExportProfiles>ייצוא פרופילים</ExportProfiles>
+    <SubtitleLineMaximumLength>קו בודד מקסימום.  אורך</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>תווים/שנייה אופטימליים</OptimalCharactersPerSecond>
+    <MaximumCharactersPerSecond>מקסימום  תווים/שנייה</MaximumCharactersPerSecond>
+    <MaximumWordsPerMinute>מקסימום  מילים/דקה</MaximumWordsPerMinute>
+    <AutoWrapWhileTyping>גלישה אוטומטית בזמן ההקלדה</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>מינימום  משך, אלפיות שניות</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>מקסימום  משך, אלפיות שניות</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>מינימום  פער בין כתוביות ב-ms</MinimumGapMilliseconds>
+    <MaximumLines>מקסימום  מספר שורות</MaximumLines>
+    <SubtitleFont>גופן כתוביות</SubtitleFont>
+    <SubtitleFontSize>גודל גופן כתוביות</SubtitleFontSize>
+    <SubtitleBold>נוֹעָז</SubtitleBold>
+    <VideoAutoOpen>פתיחה אוטומטית של קובץ וידאו בעת פתיחת כתוביות</VideoAutoOpen>
+    <AllowVolumeBoost>אפשר הגברת עוצמת הקול</AllowVolumeBoost>
+    <SubtitleCenter>מֶרְכָּז</SubtitleCenter>
+    <SubtitleFontColor>צבע גופן כתוביות</SubtitleFontColor>
+    <SubtitleBackgroundColor>צבע רקע של כתוביות</SubtitleBackgroundColor>
+    <SpellChecker>בודק איות</SpellChecker>
+    <RememberRecentFiles>הצג קבצים אחרונים (לפתיחה מחדש)</RememberRecentFiles>
+    <StartWithLastFileLoaded>התחל עם הקובץ האחרון שנטען</StartWithLastFileLoaded>
+    <RememberSelectedLine>זכור את השורה שנבחרה</RememberSelectedLine>
+    <RememberPositionAndSize>זכור את מיקום וגודל החלון הראשי</RememberPositionAndSize>
+    <StartInSourceView>התחל בתצוגת מקור</StartInSourceView>
+    <RemoveBlankLinesWhenOpening>הסר שורות ריקות בעת פתיחת כתובית</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLines>הסר שורות ריקות</RemoveBlankLines>
+    <ApplyAssaOverrideTags>החל תגי ביטול ASSA על הבחירה</ApplyAssaOverrideTags>
+    <SetAssaPosition>קבע/קבל את עמדת ASSA</SetAssaPosition>
+    <SetAssaResolution>הגדר רזולוציית ASSA (PlayResX/PlayResY)</SetAssaResolution>
+    <SetAssaBgBox>הגדר את תיבת הרקע של ASSA</SetAssaBgBox>
+    <TakeAutoBackup>קח גיבוי אוטומטי עכשיו</TakeAutoBackup>
+    <ShowLineBreaksAs>הצג מעברי שורות בתצוגת רשימה בתור</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"שמור בשם..." משתמש בשם הקובץ מ</SaveAsFileNameFrom>
+    <MainListViewDoubleClickAction>לחיצה כפולה על השורה בתצוגת רשימת החלון הראשי תהיה</MainListViewDoubleClickAction>
+    <MainListViewColumnsInfo>בחר עמודות תצוגת רשימה גלויות</MainListViewColumnsInfo>
+    <MainListViewNothing>שום דבר</MainListViewNothing>
+    <MainListViewVideoGoToPositionAndPause>עבור למצב וידאו והשהה</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>עבור למיקום הווידאו והפעל</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlayCurrentAndPause>עבור למיקום הווידאו, הפעל נוכחי והשהה</MainListViewVideoGoToPositionAndPlayCurrentAndPause>
+    <MainListViewEditText>עבור אל תיבת טקסט עריכה</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>עבור למצב וידאו - 1 שניות והשהה</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>עבור למצב וידאו - 0.5 שניות והשהה</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>עבור למצב וידאו - 1 שניות ושחק</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>עבור אל תיבת הטקסט והשהה במיקום הווידאו</MainListViewEditTextAndPause>
+    <VideoFileName>שם קובץ וידאו</VideoFileName>
+    <ExistingFileName>שם קובץ קיים</ExistingFileName>
+    <AutoBackup>גיבוי אוטומטי</AutoBackup>
+    <AutoBackupEveryMinute>כל דקה</AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>כל דקה 5</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>כל דקה 15</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>מחק אחרי</AutoBackupDeleteAfter>
+    <TranslationAutoSuffix>סיומת אוטומטית של שם קובץ תרגום</TranslationAutoSuffix>
+    <AutoBackupDeleteAfterOneMonth>1 חודש</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterXMonths>{0} חודשים</AutoBackupDeleteAfterXMonths>
+    <CheckForUpdates>בדוק עדכונים</CheckForUpdates>
+    <AutoSave>שמירה אוטומטית</AutoSave>
+    <AllowEditOfOriginalSubtitle>אפשר עריכה של כתובית מקורית</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>בקש למחוק שורות</PromptDeleteLines>
+    <TimeCodeMode>מצב קוד זמן</TimeCodeMode>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>התנהגות מפוצלת</SplitBehavior>
+    <SplitBehaviorPrevious>הוסף רווח משמאל לנקודת הפיצול (פוקוס ימינה)</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>הוסף רווח במרכז נקודת הפיצול (מיקוד שמאלה)</SplitBehaviorHalf>
+    <SplitBehaviorNext>הוסף פער מימין לנקודת הפיצול (פוקוס שמאלה)</SplitBehaviorNext>
+    <VideoEngine>מנוע וידאו</VideoEngine>
+    <DirectShow>DirectShow</DirectShow>
+    <DirectShowDescription>quartz.dll בתיקיית system32</DirectShowDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>נגן מדיה קלאסי - קולנוע ביתי</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - נגן מדיה חינם, קוד פתוח וחוצה פלטפורמות</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv מטפל בטקסט תצוגה מקדימה</MpvHandlesPreviewText>
+    <VlcMediaPlayer>נגן מדיה VLC</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll מנגן המדיה VLC 1.1.0 או חדש יותר</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>נתיב VLC (דרוש רק אם אתה משתמש בגרסה הניידת של VLC)</VlcBrowseToLabel>
+    <ShowStopButton>הצג כפתור עצירה</ShowStopButton>
+    <ShowMuteButton>הצג לחצן השתקה</ShowMuteButton>
+    <ShowFullscreenButton>הצג כפתור מסך מלא</ShowFullscreenButton>
+    <PreviewFontName>שם גופן לתצוגה מקדימה של כתוביות</PreviewFontName>
+    <PreviewFontSize>גודל גופן תצוגה מקדימה של כתוביות</PreviewFontSize>
+    <MainWindowVideoControls>פקדי וידאו של החלון הראשי</MainWindowVideoControls>
+    <CustomSearchTextAndUrl>טקסט חיפוש מותאם אישית וכתובת אתר</CustomSearchTextAndUrl>
+    <WaveformAppearance>מראה צורת גל</WaveformAppearance>
+    <WaveformGridColor>צבע רשת</WaveformGridColor>
+    <WaveformShowGridLines>הצג קווי רשת</WaveformShowGridLines>
+    <WaveformShowCps>הצג תווים/שנייה</WaveformShowCps>
+    <WaveformShowWpm>הצג מילים/דקות</WaveformShowWpm>
+    <ReverseMouseWheelScrollDirection>הפוך את כיוון הגלילה של גלגל העכבר</ReverseMouseWheelScrollDirection>
+    <WaveformAllowOverlap>אפשר חפיפה (בעת הזזה/שינוי גודל)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>הגדר את מיקום הווידאו בעת הזזת התחלה/סיום</WaveformSetVideoPosMoveStartEnd>
+    <WaveformFocusMouseEnter>הגדר את הפוקוס על אנטר העכבר</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>הגדר גם את המיקוד של תצוגת רשימה בכניסה עכבר בתצוגת רשימה</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>לחיצה אחת לבחירת כתוביות</WaveformSingleClickSelect>
+    <WaveformSnapToShotChanges>שינויי הצמד לצילום (החזק את Shift כדי לעקוף)</WaveformSnapToShotChanges>
+    <WaveformAutoGen>יצירה אוטומטית של צורת גל בעת פתיחת וידאו</WaveformAutoGen>
+    <WaveformBorderHitMs1>הפגיעה בסמן הגבול חייבת להיות בפנים</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>אלפיות השנייה</WaveformBorderHitMs2>
+    <WaveformColor>צֶבַע</WaveformColor>
+    <WaveformSelectedColor>צבע נבחר</WaveformSelectedColor>
+    <WaveformBackgroundColor>צבע אחורי</WaveformBackgroundColor>
+    <WaveformCursorColor>צבע הסמן</WaveformCursorColor>
+    <WaveformTextColor>צבע טקסט</WaveformTextColor>
+    <WaveformTextFontSize>גודל גופן טקסט</WaveformTextFontSize>
+    <WaveformAndSpectrogramsFolderEmpty>ריקות את התיקיות 'ספקטרוגרמות' ו'צורות גל'</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>התיקיות 'Waveforms' ו-'Spectrograms' מכילות {0} קבצים ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>ספקטרוגרם</Spectrogram>
+    <GenerateSpectrogram>יצירת ספקטרוגרמה</GenerateSpectrogram>
+    <SpectrogramAppearance>מראה ספקטרוגרמה</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>שיפוע צבע אחד</SpectrogramOneColorGradient>
+    <SpectrogramClassic>קלַאסִי</SpectrogramClassic>
+    <WaveformUseFFmpeg>השתמש ב-FFmpeg לחילוץ גלים</WaveformUseFFmpeg>
+    <WaveformUseCenterChannelOnly>השתמש בערוץ מרכזי קדמי בלבד (עבור 5.1/7.1)</WaveformUseCenterChannelOnly>
+    <DownloadX>הורד את {0}</DownloadX>
+    <WaveformFFmpegPath>נתיב ל-FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>דפדף אל FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformBrowseToVLC>דפדף ל-VLC נייד</WaveformBrowseToVLC>
+    <SubStationAlphaStyle>(מתקדם) Sub Station בסגנון אלפא</SubStationAlphaStyle>
+    <ChooseColor>בחרי צבע</ChooseColor>
+    <SsaOutline>מתווה</SsaOutline>
+    <SsaShadow>צֵל</SsaShadow>
+    <SsaOpaqueBox>קופסה אטומה</SsaOpaqueBox>
+    <Testing123>בודק 123...</Testing123>
+    <Language>שפה</Language>
+    <NamesIgnoreLists>שמות/רשימת התעלמות (תלוי רישיות)</NamesIgnoreLists>
+    <AddName>הוסף שם</AddName>
+    <AddWord>הוסף מילה</AddWord>
+    <Remove>לְהַסִיר</Remove>
+    <AddPair>הוסף זוג</AddPair>
+    <UserWordList>רשימת מילים של משתמש</UserWordList>
+    <OcrFixList>רשימת תיקוני OCR</OcrFixList>
+    <Location>מקום</Location>
+    <UseOnlineNames>השתמש בקובץ xml שמות מקוונים</UseOnlineNames>
+    <WordAddedX>נוספה מילה: {0}</WordAddedX>
+    <WordAlreadyExists>המילה כבר קיימת!</WordAlreadyExists>
+    <WordNotFound>המילה לא נמצאה</WordNotFound>
+    <RemoveX>להסיר את {0}?</RemoveX>
+    <CannotUpdateNamesOnline>לא ניתן לעדכן את names.xml באינטרנט!</CannotUpdateNamesOnline>
+    <ProxyServerSettings>הגדרות שרת פרוקסי</ProxyServerSettings>
+    <ProxyAddress>כתובת פרוקסי</ProxyAddress>
+    <ProxyAuthentication>אימות</ProxyAuthentication>
+    <ProxyUserName>שם משתמש</ProxyUserName>
+    <ProxyPassword>סיסמה</ProxyPassword>
+    <ProxyDomain>תְחוּם</ProxyDomain>
+    <ProxyAuthType>סוג אישור</ProxyAuthType>
+    <ProxyUseDefaultCredentials>השתמש באישורי ברירת מחדל</ProxyUseDefaultCredentials>
+    <NetworkSessionSettings>הגדרות הפעלה ברשת</NetworkSessionSettings>
+    <NetworkSessionNewSound>הפעל קובץ קול כאשר הודעה חדשה מגיעה</NetworkSessionNewSound>
+    <PlayXSecondsAndBack>הפעל X שניות ובחזרה, X הוא</PlayXSecondsAndBack>
+    <StartSceneIndex>פסקת סצינת התחלה היא</StartSceneIndex>
+    <EndSceneIndex>פסקת סצינת הסיום היא</EndSceneIndex>
+    <FirstPlusX>ראשון + {0}</FirstPlusX>
+    <LastMinusX>אחרון - {0}</LastMinusX>
+    <FixCommonerrors>תקן שגיאות נפוצות</FixCommonerrors>
+    <RemoveTextForHi>הסר טקסט עבור HI</RemoveTextForHi>
+    <MergeLinesShorterThan>ביטול כתוביות קצר יותר מ</MergeLinesShorterThan>
+    <DialogStyle>סגנון דיאלוג</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>מקפים את שני הקווים עם רווח</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>מקפים את שני הקווים ללא רווח</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>מקפים קו שני עם רווח</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>מקפים קו שני ללא רווח</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>סגנון המשך</ContinuationStyle>
+    <ContinuationStyleNone>אף אחד</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>אין, נקודות להפסקות (בהמשך בלבד)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>אין, נקודות להפסקות</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingEllipsis>אין, אליפסה להפסקות (באיחור בלבד)</ContinuationStyleNoneTrailingEllipsis>
+    <ContinuationStyleNoneLeadingTrailingEllipsis>אין, אליפסה להפסקות</ContinuationStyleNoneLeadingTrailingEllipsis>
+    <ContinuationStyleOnlyTrailingDots>נקודות (נגרר בלבד)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>נקודות</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingEllipsis>אליפסיס (נגרר בלבד)</ContinuationStyleOnlyTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingEllipsis>הַשׁמָטָה</ContinuationStyleLeadingTrailingEllipsis>
+    <ContinuationStyleLeadingTrailingDash>לזנק</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>מקף, אבל נקודות להפסקות</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleCustom>המותאם אישית</ContinuationStyleCustom>
+    <CpsLineLengthStyle>Cps/אורך שורה</CpsLineLengthStyle>
+    <CpsLineLengthStyleCalcAll>סופר את כל התווים</CpsLineLengthStyleCalcAll>
+    <CpsLineLengthStyleCalcNoSpaceCpsOnly>סופר הכל פרט לרווח, cps בלבד</CpsLineLengthStyleCalcNoSpaceCpsOnly>
+    <CpsLineLengthStyleCalcNoSpace>ספור הכל מלבד החלל</CpsLineLengthStyleCalcNoSpace>
+    <CpsLineLengthStyleCalcCjk>CJK 1, לטינית 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, לטינית 0.5, רווח 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacritics>התעלם מהדיאקריטיות בערבית</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
+    <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>התעלם מהדיאקריטיות/רווח בערבית</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuation>אין רווח או סימני פיסוק ()[]-:;,.!?</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
+    <CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>ללא רווח או סימני פיסוק, cps בלבד</CpsLineLengthStyleCalcNoSpaceOrPunctuationCpsOnly>
+    <MusicSymbol>סמל מוזיקה</MusicSymbol>
+    <MusicSymbolsReplace>סמלי מוזיקה להחלפה (מופרדים בפסיק)</MusicSymbolsReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>תקן שגיאות OCR נפוצות - השתמש גם בכללים מקודדים</FixCommonOcrErrorsUseHardcodedRules>
+    <UseWordSplitList>השתמש ברשימת פיצול מילים (OCR + FCE)</UseWordSplitList>
+    <AvoidPropercase>הימנע מהאותיות הנכונות</AvoidPropercase>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>תקן זמן תצוגה קצר - אפשר הזזת זמן התחלה</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>דלג על שלב ראשון (בחר חוקי תיקון)</FixCommonErrorsSkipStepOne>
+    <DefaultFormat>פורמט ברירת מחדל</DefaultFormat>
+    <DefaultSaveAsFormat>ברירת המחדל של שמירה כפורמט</DefaultSaveAsFormat>
+    <DefaultSaveAsFormatAuto>- אוטומטי -</DefaultSaveAsFormatAuto>
+    <Favorites>מועדפים</Favorites>
+    <FavoriteFormats>פורמטים מועדפים</FavoriteFormats>
+    <FavoriteSubtitleFormatsNote>הערה: פורמטים מועדפים יוצגו תחילה בעת בחירת פורמט, פורמט ברירת המחדל תמיד יוצג ראשון</FavoriteSubtitleFormatsNote>
+    <Shortcuts>קיצורי דרך</Shortcuts>
+    <Shortcut>קיצור</Shortcut>
+    <Control>לִשְׁלוֹט</Control>
+    <Alt>Alt</Alt>
+    <Shift>מִשׁמֶרֶת</Shift>
+    <Key>מַפְתֵחַ</Key>
+    <ListViewAndTextBox>תצוגת רשימה ותיבת טקסט</ListViewAndTextBox>
+    <ListView>תצוגת רשימה</ListView>
+    <TextBox>תיבת טקסט</TextBox>
+    <UseSyntaxColoring>השתמש בצביעה תחבירית</UseSyntaxColoring>
+    <HtmlColor>צבע HTML</HtmlColor>
+    <AssaColor>צבע ASSA</AssaColor>
+    <DarkTheme>ערכת נושא כהה</DarkTheme>
+    <DarkThemeEnabled>השתמש בערכת נושא כהה</DarkThemeEnabled>
+    <DarkThemeShowGridViewLines>הצג קווי רשת של תצוגת רשימה</DarkThemeShowGridViewLines>
+    <UpdateShortcut>עדכון</UpdateShortcut>
+    <FoucsSetVideoPosition>פוקוס מוגדר מיקום וידאו</FoucsSetVideoPosition>
+    <ToggleDockUndockOfVideoControls>החלף מצב עגינה/ביטול עגינה של פקדי וידאו</ToggleDockUndockOfVideoControls>
+    <CreateSetEndAddNewAndGoToNew>קבע סוף, הוסף חדש ועבור לחדש</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStart>התאם דרך עמדת קצה</AdjustViaEndAutoStart>
+    <AdjustViaEndAutoStartAndGoToNext>התאם דרך מיקום הקצה ועבור לשלב הבא</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndMinusGapAndStartNextHere>הגדר סוף מינוס פער, עבור אל הבא והתחל את הבא כאן</AdjustSetEndMinusGapAndStartNextHere>
+    <AdjustSetEndTimeAndGoToNext>קבע את הסוף ועבור אל הבא</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>קבע סוף והשהייה</AdjustSetEndTimeAndPause>
+    <AdjustSetStartAutoDurationAndGoToNext>הגדר התחלה, משך אוטומטי ועבור לשלב הבא</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>קבע את הסוף, ההתחלה הבאה ועבור להמשך</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>מקש למטה=קבע התחלה, מקש למעלה=הגדר סוף ועבור לשלב הבא</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSetStartAndEndOfPrevious>הגדר את ההתחלה והסוף של הקודם (מינוס פער מינימלי)</AdjustSetStartAndEndOfPrevious>
+    <AdjustSetStartAndEndOfPreviousAndGoToNext>הגדר את ההתחלה ואת הסוף של הקודם ועבור אל הבא (מינוס פער דקות)</AdjustSetStartAndEndOfPreviousAndGoToNext>
+    <AdjustSelected100MsForward>הזז את הקווים שנבחרו 100 אלפיות השנייה קדימה</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>הזז את השורות שנבחרו 100 אלפיות השנייה אחורה</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>העבר את ההתחלה {0} שניות אחורה</AdjustStartXMsBack>
+    <AdjustStartXMsForward>העבר את ההתחלה {0} אלפיות השנייה קדימה</AdjustStartXMsForward>
+    <AdjustEndXMsBack>העבר סוף {0} שניות אחורה</AdjustEndXMsBack>
+    <AdjustEndXMsForward>העבר את סוף {0} אלפיות השנייה קדימה</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>הזז התחלה פריים אחד אחורה</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>העבר את ההתחלה מסגרת אחת קדימה</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>הזז קצה 1 מסגרת אחורה</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>הזז קצה 1 מסגרת קדימה</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>הזז התחלה פריים אחד אחורה (שמור על הרווח לקודם אם קרוב)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>הזז התחלה פריים אחד קדימה (שמור על הפער לקודם אם קרוב)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>הזז קצה מסגרת 1 אחורה (שמור על הרווח הבא אם קרוב)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>הזז קצה מסגרת 1 קדימה (שמור על הרווח הבא אם קרוב)</AdjustEndOneFrameForwardKeepGapNext>
+    <AdjustSetStartTimeKeepDuration>הגדר זמן התחלה, שמור את משך הזמן</AdjustSetStartTimeKeepDuration>
+    <AdjustVideoSetStartForAppropriateLine>הגדר התחלה לקו המתאים</AdjustVideoSetStartForAppropriateLine>
+    <AdjustVideoSetEndForAppropriateLine>הגדר את הקצה לקו המתאים</AdjustVideoSetEndForAppropriateLine>
+    <AdjustSetStartAndOffsetTheWholeSubtitle>הגדר זמן התחלה, קיזוז את כל הכתוביות</AdjustSetStartAndOffsetTheWholeSubtitle>
+    <AdjustSetEndAndOffsetTheRest>קבע סוף, תקזז את השאר</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>קבע את הסוף, קיזז את השאר ועבור לשלב הבא</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustSnapStartToNextShotChange>הצמד שורות נבחרות מתחילות לשינוי הצילום הבא</AdjustSnapStartToNextShotChange>
+    <AdjustSnapStartToNextShotChangeWithGap>הצמד שורות נבחרות מתחילות לשינוי הצילום הבא עם דקות.  פער</AdjustSnapStartToNextShotChangeWithGap>
+    <AdjustSnapEndToPreviousShotChange>הצמד את סוף הקווים שנבחרו לשינוי הצילום הקודם</AdjustSnapEndToPreviousShotChange>
+    <AdjustSnapEndToPreviousShotChangeWithGap>הצמד את הקווים שנבחרו לשינוי הצילום הקודם עם מינימום.  פער</AdjustSnapEndToPreviousShotChangeWithGap>
+    <AdjustExtendToNextShotChange>הרחבת שורות נבחרות לשינוי הצילום הבא (או הכתובית הבאה)</AdjustExtendToNextShotChange>
+    <AdjustExtendToNextShotChangeWithGap>הרחב את השורות שנבחרו לשינוי הצילום הבא עם דקות.  פער (או כותרת המשנה הבאה)</AdjustExtendToNextShotChangeWithGap>
+    <AdjustExtendToPreviousShotChange>הרחבת שורות נבחרות לשינוי צילום קודם (או כתובית קודמת)</AdjustExtendToPreviousShotChange>
+    <AdjustExtendToPreviousShotChangeWithGap>הרחב את השורות שנבחרו לשינוי הצילום הקודם עם דקות.  פער (או כתובית קודמת)</AdjustExtendToPreviousShotChangeWithGap>
+    <AdjustExtendToNextSubtitle>הרחב את השורות שנבחרו לכתוביות הבאות</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>הרחב את השורות שנבחרו לכתובית הקודמת</AdjustExtendToPreviousSubtitle>
+    <AdjustExtendCurrentSubtitle>הארך את השורה הנוכחית לכתובית הבאה או משך הזמן המרבי</AdjustExtendCurrentSubtitle>
+    <AdjustExtendPreviousLineEndToCurrentStart>הארך את סוף השורה הקודמת להתחלה הנוכחית</AdjustExtendPreviousLineEndToCurrentStart>
+    <AdjustExtendNextLineStartToCurrentEnd>הארך את ההתחלה של השורה הבאה לסוף הנוכחי</AdjustExtendNextLineStartToCurrentEnd>
+    <RecalculateDurationOfCurrentSubtitle>חשב מחדש את משך הכתובית הנוכחית</RecalculateDurationOfCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>חשב מחדש את משך הכתובית הנוכחית (בהתבסס על מהירות קריאה אופטימלית)</RecalculateDurationOfCurrentSubtitleByOptimalReadingSpeed>
+    <RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>חשב מחדש את משך הכתובית הנוכחית (בהתבסס על מהירות קריאה מינימלית)</RecalculateDurationOfCurrentSubtitleByMinReadingSpeed>
+    <MainCreateStartDownEndUp>הוסף כתובית חדשה בלחיצה על מקש, הגדר את שעת הסיום בלחיצה על המקשים</MainCreateStartDownEndUp>
+    <MergeDialog>תיבת דו-שיח של מיזוג (הוסף מקפים)</MergeDialog>
+    <MergeDialogWithNext>מיזוג דו-שיח עם הבא (הוסף מקפים)</MergeDialogWithNext>
+    <MergeDialogWithPrevious>מיזוג דו-שיח עם הקודם (הוסף מקפים)</MergeDialogWithPrevious>
+    <AutoBalanceSelectedLines>איזון אוטומטי של שורות נבחרות</AutoBalanceSelectedLines>
+    <GoToNext>עבור לשורה הבאה</GoToNext>
+    <GoToNextPlayTranslate>עבור לשורה הבאה (ושחק ב'מצב תרגום')</GoToNextPlayTranslate>
+    <GoToNextCursorAtEnd>עבור לשורה הבאה והגדר את הסמן בסוף</GoToNextCursorAtEnd>
+    <GoToPrevious>עבור לשורה הקודמת</GoToPrevious>
+    <GoToPreviousPlayTranslate>עבור לשורה הקודמת (ושחק ב'מצב תרגום')</GoToPreviousPlayTranslate>
+    <GoToCurrentSubtitleStart>עבור לתחילת השורה הנוכחית</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>עבור לסוף הקו הנוכחי</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>עבור לשורה הקודמת והגדר את מיקום הווידאו</GoToPreviousSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>עבור לשורה הבאה והגדר את מיקום הווידאו</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>עבור לשורה הקודמת ושחק</GoToPrevSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>עבור לשורה הבאה ושחק</GoToNextSubtitleAndPlay>
+    <GoToPreviousSubtitleAndFocusWaveform>עבור לשורה הקודמת והתמקד בצורת גל</GoToPreviousSubtitleAndFocusWaveform>
+    <GoToNextSubtitleAndFocusWaveform>עבור לשורה הבאה ומקד את צורת הגל</GoToNextSubtitleAndFocusWaveform>
+    <ToggleFocus>החלף מיקוד בין תצוגת רשימה לתיבת כתוביות</ToggleFocus>
+    <ToggleFocusWaveform>החלף מיקוד בין תצוגת רשימה וצורת גל/ספקטרוגרם</ToggleFocusWaveform>
+    <ToggleFocusWaveformTextBox>החלף מיקוד בין תיבת טקסט לצורת גל/ספקטרוגרם</ToggleFocusWaveformTextBox>
+    <ToggleDialogDashes>החלף מקפי דו-שיח</ToggleDialogDashes>
+    <ToggleQuotes>החלף ציטוטים</ToggleQuotes>
+    <ToggleHiTags>החלף את תגי HI</ToggleHiTags>
+    <ToggleCustomTags>החלף תגים מותאמים אישית</ToggleCustomTags>
+    <ToggleMusicSymbols>החלף סמלי מוזיקה</ToggleMusicSymbols>
+    <Alignment>יישור (שורות נבחרות)</Alignment>
+    <AlignmentN1>יישור למטה משמאל - {an1}</AlignmentN1>
+    <AlignmentN2>יישור למרכז התחתון - {an2}</AlignmentN2>
+    <AlignmentN3>יישור ימין למטה - {an3}</AlignmentN3>
+    <AlignmentN4>יישור באמצע שמאל - {an4}</AlignmentN4>
+    <AlignmentN5>יישור מרכז אמצע - {an5}</AlignmentN5>
+    <AlignmentN6>יישור באמצע ימין - {an6}</AlignmentN6>
+    <AlignmentN7>יישור שמאל למעלה - {an7}</AlignmentN7>
+    <AlignmentN8>יישור למרכז העליון - {an8}</AlignmentN8>
+    <AlignmentN9>יישור למעלה מימין - {an9}</AlignmentN9>
+    <ColorX>צבע {0} ({1})</ColorX>
+    <CopyTextOnly>העתק טקסט רק ללוח (שורות נבחרות)</CopyTextOnly>
+    <CopyPlainText>העתק טקסט רגיל ללוח (שורות נבחרות)</CopyPlainText>
+    <CopyTextOnlyFromOriginalToCurrent>העתק טקסט מהמקור לעדכני</CopyTextOnlyFromOriginalToCurrent>
+    <AutoDurationSelectedLines>משך אוטומטי (שורות נבחרות)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>תקן RTL באמצעות תווי בקרה של Unicode</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>הסר תווי בקרה של Unicode</RemoveRTLUnicodeChars>
+    <ReverseStartAndEndingForRtl>התחלה/סיום של RTL הפוך</ReverseStartAndEndingForRtl>
+    <VerticalZoom>זום-אין אנכי</VerticalZoom>
+    <VerticalZoomOut>זום אאוט אנכי</VerticalZoomOut>
+    <WaveformSeekSilenceForward>חפש שקט קדימה</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>חפש את השקט בחזרה</WaveformSeekSilenceBack>
+    <WaveformAddTextHere>הוסף טקסט כאן (לבחירה חדשה)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>הוסף טקסט כאן (לבחירה חדשה מהלוח)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>הגדר את הנוכחי כבחירה חדשה</SetParagraphAsSelection>
+    <WaveformPlayNewSelection>שחק בחירה</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>הפעל את סוף הבחירה</WaveformPlayNewSelectionEnd>
+    <WaveformPlayFirstSelectedSubtitle>הפעל את הכתובית הראשונה שנבחרה</WaveformPlayFirstSelectedSubtitle>
+    <WaveformGoToPreviousShotChange>עבור לשינוי הצילום הקודם</WaveformGoToPreviousShotChange>
+    <WaveformGoToNextShotChange>עבור לשינוי הצילום הבא</WaveformGoToNextShotChange>
+    <WaveformToggleShotChange>החלף שינוי צילום</WaveformToggleShotChange>
+    <WaveformRemoveOrExportShotChanges>הסר/ייצא שינויים בצילום</WaveformRemoveOrExportShotChanges>
+    <WaveformGuessStart>התנעה אוטומטית באמצעות שינוי עוצמת הקול/צילום</WaveformGuessStart>
+    <GoBack1Frame>מסגרת אחת מאחור</GoBack1Frame>
+    <GoForward1Frame>מסגרת אחת קדימה</GoForward1Frame>
+    <GoBack1FrameWithPlay>פריים אחד אחורה (עם משחק)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>פריים אחד קדימה (עם משחק)</GoForward1FrameWithPlay>
+    <GoBack100Milliseconds>100 אלפיות השנייה אחורה</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 אלפיות השנייה קדימה</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 אלפיות השנייה אחורה</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 אלפיות השנייה קדימה</GoForward500Milliseconds>
+    <GoBack1Second>שנייה אחת אחורה</GoBack1Second>
+    <GoForward1Second>שנייה אחת קדימה</GoForward1Second>
+    <GoBack5Seconds>חמש שניות אחורה</GoBack5Seconds>
+    <GoForward5Seconds>חמש שניות קדימה</GoForward5Seconds>
+    <GoBackXSSeconds>זמן נבחר קטן אחורה</GoBackXSSeconds>
+    <GoForwardXSSeconds>זמן נבחר קטן קדימה</GoForwardXSSeconds>
+    <GoBackXLSeconds>זמן נבחר גדול אחורה</GoBackXLSeconds>
+    <GoForwardXLSeconds>זמן נבחר גדול קדימה</GoForwardXLSeconds>
+    <GoBack3Second>שלוש שניות אחורה</GoBack3Second>
+    <GoToStartCurrent>הגדר את מיקום הווידאו לתחילת הכתובית הנוכחית</GoToStartCurrent>
+    <ToggleStartEndCurrent>החלף את מיקום הווידאו בין התחלה/סוף של הכתובית הנוכחית</ToggleStartEndCurrent>
+    <PlaySelectedLines>הפעל שורות נבחרות</PlaySelectedLines>
+    <LoopSelectedLines>גלגל קווים שנבחרו</LoopSelectedLines>
+    <WaveformGoToPrevSubtitle>עבור לכתובית הקודמת (ממיקום הסרטון)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>עבור לכתובית הבאה (ממיקום הסרטון)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevChapter>עבור לפרק הקודם</WaveformGoToPrevChapter>
+    <WaveformGoToNextChapter>עבור לפרק הבא</WaveformGoToNextChapter>
+    <WaveformSelectNextSubtitle>בחר את הכתובית הבאה (ממיקום הווידאו, שמור את מיקום הווידאו)</WaveformSelectNextSubtitle>
+    <TogglePlayPause>החלף הפעלה/השהיה</TogglePlayPause>
+    <Pause>הַפסָקָה</Pause>
+    <Fullscreen>מסך מלא</Fullscreen>
+    <Play150Speed>קצב משחק פי 1.5 מהירות</Play150Speed>
+    <Play200Speed>קצב משחק פי 2.0 מהירות</Play200Speed>
+    <PlayRateSlower>קצב הנגינה איטי יותר (מהירות)</PlayRateSlower>
+    <PlayRateFaster>קצב נגינה מהיר יותר (מהירות)</PlayRateFaster>
+    <PlayRateToggle>החלפת קצב הפעלה (מהירות) (0.5x, 1x, 1.5x, 2x)</PlayRateToggle>
+    <VideoResetSpeedAndZoom>אפס את קצב הנגינה (מהירות) וזום צורת הגל</VideoResetSpeedAndZoom>
+    <MainToggleVideoControls>החלף את פקדי הווידאו</MainToggleVideoControls>
+    <VideoToggleContrast>החלף ניגודיות (MPV בלבד)</VideoToggleContrast>
+    <AudioToTextX>אודיו לטקסט ({0})</AudioToTextX>
+    <AudioToTextSelectedLinesX>אודיו לטקסט שורות שנבחרו ({0})</AudioToTextSelectedLinesX>
+    <VideoToggleBrightness>החלפת בהירות (MPV בלבד)</VideoToggleBrightness>
+    <CustomSearch1>תרגם, חיפוש מותאם אישית 1</CustomSearch1>
+    <CustomSearch2>תרגם, חיפוש מותאם אישית 2</CustomSearch2>
+    <CustomSearch3>תרגם, חיפוש מותאם אישית 3</CustomSearch3>
+    <CustomSearch4>תרגם, חיפוש מותאם אישית 4</CustomSearch4>
+    <CustomSearch5>תרגם, חיפוש מותאם אישית 5</CustomSearch5>
+    <SyntaxColoring>צביעת תחביר</SyntaxColoring>
+    <ListViewSyntaxColoring>צביעה תחביר תצוגת רשימה</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>משך הצבע אם קצר מדי</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>משך צבע אם ארוך מדי</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>טקסט צבעוני אם ארוך מדי</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>צבע טקסט אם רחב מדי (פיקסלים)</SyntaxColorTextIfTooWide>
+    <SyntaxColorTextMoreThanMaxLines>צבע טקסט אם יותר מ-{0} שורות</SyntaxColorTextMoreThanMaxLines>
+    <SyntaxColorOverlap>קוד זמן צבע חופף</SyntaxColorOverlap>
+    <SyntaxColorGap>פער צבעים אם קצר מדי</SyntaxColorGap>
+    <SyntaxErrorColor>צבע שגיאה</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>הגדרות...</SyntaxLineWidthSettings>
+    <LineWidthSettings>הגדרות רוחב קו</LineWidthSettings>
+    <MaximumLineWidth>רוחב קו מקסימלי:</MaximumLineWidth>
+    <Pixels>פיקסלים</Pixels>
+    <MeasureFont>גופן מדידה:</MeasureFont>
+    <GoToFirstSelectedLine>עבור אל השורה הראשונה שנבחרה</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>עבור לשורה הריקה הבאה</GoToNextEmptyLine>
+    <MergeSelectedLines>מיזוג שורות נבחרות</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>מיזוג שורות נבחרות ושבירה אוטומטית</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>מיזוג שורות נבחרות ובטל את השבירה</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>מיזוג קווים נבחרים ושחרר ללא רווח (CJK)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesOnlyFirstText>מיזוג שורות נבחרות, השאר רק טקסט ראשון שאינו ריק</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>מיזוג שורות נבחרות דו-לשוניות</MergeSelectedLinesBilingual>
+    <MergeWithPreviousBilingual>מיזוג עם דו-לשוני קודם</MergeWithPreviousBilingual>
+    <MergeWithNextBilingual>התמזג עם הדו-לשוני הבא</MergeWithNextBilingual>
+    <SplitSelectedLineBilingual>פיצול השורה שנבחרה דו-לשונית</SplitSelectedLineBilingual>
+    <ToggleTranslationMode>החלף מצב מתרגם</ToggleTranslationMode>
+    <SwitchOriginalAndTranslation>החלף מקור ותרגום</SwitchOriginalAndTranslation>
+    <SwitchOriginalAndTranslationTextBoxes>החלף תיבות טקסט מקור ותרגום/עמודות תצוגת רשימה</SwitchOriginalAndTranslationTextBoxes>
+    <MergeOriginalAndTranslation>מיזוג מקור ותרגום</MergeOriginalAndTranslation>
+    <MergeWithNext>מיזוג עם הבא</MergeWithNext>
+    <MergeWithPreviousAndUnbreak>התמזג עם הקודם והפסק</MergeWithPreviousAndUnbreak>
+    <MergeWithNextAndUnbreak>התמזג עם הבא והפסק</MergeWithNextAndUnbreak>
+    <MergeWithPreviousAndBreak>מיזוג עם הקודם והפסקה אוטומטית</MergeWithPreviousAndBreak>
+    <MergeWithNextAndBreak>מיזוג עם הבא ושבירה אוטומטית</MergeWithNextAndBreak>
+    <MergeWithPrevious>מיזוג עם הקודם</MergeWithPrevious>
+    <ShortcutIsAlreadyDefinedX>קיצור דרך כבר הוגדר: {0}</ShortcutIsAlreadyDefinedX>
+    <ToggleTranslationAndOriginalInPreviews>החלף בין תרגום ומקור בתצוגה מקדימה של וידאו/אודיו</ToggleTranslationAndOriginalInPreviews>
+    <ListViewColumnDelete>עמודה, מחק טקסט</ListViewColumnDelete>
+    <ListViewColumnDeleteAndShiftUp>עמודה, מחק טקסט והעבר למעלה</ListViewColumnDeleteAndShiftUp>
+    <ListViewColumnInsert>עמודה, הוסף טקסט</ListViewColumnInsert>
+    <ListViewColumnPaste>עמודה, הדבק</ListViewColumnPaste>
+    <ListViewColumnTextUp>עמודה, טקסט למעלה</ListViewColumnTextUp>
+    <ListViewColumnTextDown>עמודה, טקסט למטה</ListViewColumnTextDown>
+    <ListViewGoToNextError>עבור לשגיאה הבאה</ListViewGoToNextError>
+    <ListViewListErrors>רשימת שגיאות</ListViewListErrors>
+    <ListViewListSortByX>מיין לפי {0}</ListViewListSortByX>
+    <ShowStyleManager>מנהל סגנונות תצוגה</ShowStyleManager>
+    <MainTextBoxMoveLastWordDown>העבר את המילה האחרונה לכתובית הבאה</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>אחזר את המילה הראשונה מהכתובית הבאה</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>העבר את המילה הראשונה מהשורה הבאה (כתובית נוכחית)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFromCursorToNext>העבר טקסט אחרי מיקום הסמן לכתובית הבאה ועבור לכתובית הבאה</MainTextBoxMoveFromCursorToNext>
+    <MainTextBoxMoveLastWordDownCurrent>העבר את המילה האחרונה מהשורה הראשונה למטה (כתובית נוכחית)</MainTextBoxMoveLastWordDownCurrent>
+    <MainTextBoxSelectionToLower>בחירה באותיות קטנות</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>בחירה באותיות רישיות</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToggleCasing>החלף רישיות של בחירה (אותיות רישיות/רישיות/קטנות)</MainTextBoxSelectionToggleCasing>
+    <MainTextBoxSelectionToRuby>בחירה לרובי (יפנית)</MainTextBoxSelectionToRuby>
+    <MainTextBoxToggleAutoDuration>החלף משך אוטומטי</MainTextBoxToggleAutoDuration>
+    <MainTextBoxAutoBreak>הפסקת טקסט אוטומטית</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>שבר ברווח הראשון ממיקום הסמן</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>שבר ברווח הראשון ממיקום הסמן ועבור לשלב הבא</MainTextBoxAutoBreakFromPosAndGoToNext>
+    <MainTextBoxDictate>הכתיב (מקש למטה=התחל הקלטה, מקש למעלה=סיים הקלטה)</MainTextBoxDictate>
+    <MainTextBoxUnbreak>בטל את פריצת הטקסט</MainTextBoxUnbreak>
+    <MainTextBoxUnbreakNoSpace>הפסק ללא רווח (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxAssaIntellisense>הצג את עוזר התגים של ASSA</MainTextBoxAssaIntellisense>
+    <MainTextBoxAssaRemoveTag>הסר תג ASSA בסמן</MainTextBoxAssaRemoveTag>
+    <MainFileSaveAll>שמור הכל</MainFileSaveAll>
+    <Miscellaneous>שונות</Miscellaneous>
+    <CpsIncludesSpace>תווים/שנייה (CPS) כולל רווחים</CpsIncludesSpace>
+    <UseDoNotBreakAfterList>השתמש ברשימת אל-שבור-אחרי</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>הפסקה מוקדמת לסיום המשפט (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>שבר לפי רוחב פיקסל</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>מעדיף תחתית כבדה</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>הפסקה מוקדמת עבור מקף דו-שיח</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>הפסקה מוקדמת עבור פסיק</BreakEarlyForComma>
+    <GoogleTranslate>גוגל תרגום</GoogleTranslate>
+    <GoogleTranslateApiKey>מפתח API</GoogleTranslateApiKey>
+    <MicrosoftBingTranslator>מתרגם של מיקרוסופט</MicrosoftBingTranslator>
+    <HowToSignUp>איך נרשמים</HowToSignUp>
+    <MicrosoftTranslateApiKey>מַפְתֵחַ</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>נקודת קצה אסימון</MicrosoftTranslateTokenEndpoint>
+    <FontNote>Note: These font settings are for the Subtitle Edit UI only.
+Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
+"Advanced Sub Station Alpha" or via export to image-based formats.</FontNote>
+    <RestoreDefaultSettings>שחזר הגדרות ברירת מחדל</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>All settings will be restored to default values
+
+Continue?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>הסר קודי זמן</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>ערוך הגדרות לתיקון סגנון המשך...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>הגדרות לתיקון סגנון המשך</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>זיהוי ובטל את הסימון של כותרות בודדות בכתב יד (לדוגמה: ללא כניסה)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>זהה ובטל את הסימון של כותרות בודדות, או מילים נטויות</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>זהה ובטל את הסימון של כותרות בודדות, או מילים, באותיות קטנות</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>הסתר משפטי המשך לא סבירים</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>התעלם ממילים בין סמלי מוזיקה</IgnoreLyrics>
+    <ContinuationPause>סף השהייה:</ContinuationPause>
+    <Milliseconds>גברת</Milliseconds>
+    <EditCustomContinuationStyle>ערוך סגנון המשך מותאם אישית...</EditCustomContinuationStyle>
+    <MinFrameGap>מינימום  פער במסגרות</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} פריימים בקצב פריימים של {1} נותן {2} אלפיות שניות.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>האם להשתמש באלפיות "{0}" כפער מינימלי חדש?</UseXAsNewGap>
+    <BDOpensIn>BD sup/bdn-xml נפתח ב</BDOpensIn>
+    <BDOpensInOcr>OCR</BDOpensInOcr>
+    <BDOpensInEdit>לַעֲרוֹך</BDOpensInEdit>
+    <ShortcutsAllowSingleLetterOrNumberInTextBox>קיצורי דרך: אפשר אות/מספר בודד בתיבת הטקסט</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>החלפת קיצור דרך התחלה/סיום מותאמים אישית</ShortcutCustomToggle>
+    <UpdateFileTypeAssociations>עדכן את שיוך סוגי הקבצים</UpdateFileTypeAssociations>
+    <FileTypeAssociationsUpdated>שיוך סוגי קבצים עודכנו</FileTypeAssociationsUpdated>
+    <CustomContinuationStyle>ערוך סגנון המשך מותאם אישית</CustomContinuationStyle>
+    <LoadStyle>סגנון טעינה...</LoadStyle>
+    <Suffix>סִיוֹמֶת:</Suffix>
+    <AddSuffixForComma>עבד אם מסתיים בפסיק</AddSuffixForComma>
+    <AddSpace>הוסף מקום</AddSpace>
+    <RemoveComma>הסר פסיק</RemoveComma>
+    <Prefix>קידומת:</Prefix>
+    <DifferentStyleGap>השתמש בסגנון שונה עבור פערים ארוכים יותר מאשר</DifferentStyleGap>
+    <Preview>תצוגה מקדימה</Preview>
+    <PreviewPause>(הַפסָקָה)</PreviewPause>
+    <CustomContinuationStyleNote>הערה: סגנון ההמשך המותאם אישית משותף בין הפרופילים.</CustomContinuationStyleNote>
+    <ResetCustomContinuationStyleWarning>זה יעקוף את הערכים בתיבת הדו-שיח.  האם אתה בטוח?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>ייצוא כ-HTML...</ExportAsHtml>
+  </Settings>
+  <SettingsMpv>
+    <DownloadMpv>הורד mpv lib</DownloadMpv>
+    <DownloadMpvFailed>לא ניתן להוריד mpv - אנא נסה שוב מאוחר יותר!</DownloadMpvFailed>
+    <DownloadMpvOk>ה-mpv lib הורד והוא מוכן לשימוש.</DownloadMpvOk>
+  </SettingsMpv>
+  <SettingsFfmpeg>
+    <XDownloadFailed>לא ניתן להוריד את {0} - אנא נסה שוב מאוחר יותר!</XDownloadFailed>
+    <XDownloadOk>הורד {0} והוא מוכן לשימוש.</XDownloadOk>
+  </SettingsFfmpeg>
+  <SetVideoOffset>
+    <Title>הגדר היסט וידאו</Title>
+    <Description>הגדר היסט וידאו (כתוביות לא אמורות לעקוב אחר זמן וידאו אמיתי, אלא למשל +10 שעות)</Description>
+    <RelativeToCurrentVideoPosition>יחסית למיקום הווידאו הנוכחי</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>שמור על קודי זמן קיימים (אל תוסיף קיזוז וידאו)</KeepTimeCodes>
+    <Reset>אִתחוּל</Reset>
+  </SetVideoOffset>
+  <ShowEarlierLater>
+    <Title>הצג שורות נבחרות מוקדם יותר/מאוחר יותר</Title>
+    <TitleAll>הצג את כל השורות מוקדם יותר/מאוחר יותר</TitleAll>
+    <ShowEarlier>הצג &amp;קודם לכן</ShowEarlier>
+    <ShowLater>הצג &amp;מאוחר יותר</ShowLater>
+    <TotalAdjustmentX>התאמה כוללת: {0}</TotalAdjustmentX>
+    <AllLines>&amp;כל הקווים</AllLines>
+    <SelectedLinesOnly>&amp;שורות נבחרות בלבד</SelectedLinesOnly>
+    <SelectedLinesAndForward>השורות שנבחרו ושורות הבאות</SelectedLinesAndForward>
+  </ShowEarlierLater>
+  <ShowHistory>
+    <Title>היסטוריה (לביטול)</Title>
+    <SelectRollbackPoint>בחר זמן/תיאור להחזרה</SelectRollbackPoint>
+    <Time>זְמַן</Time>
+    <Description>תיאור</Description>
+    <CompareHistoryItems>השווה פריטי היסטוריה</CompareHistoryItems>
+    <CompareWithCurrent>השווה עם הנוכחי</CompareWithCurrent>
+    <Rollback>גלגל לאחור</Rollback>
+  </ShowHistory>
+  <SpellCheck>
+    <Title>בדיקת איות</Title>
+    <FullText>טקסט מלא</FullText>
+    <WordNotFound>המילה לא נמצאה</WordNotFound>
+    <Language>שפה</Language>
+    <Change>שינוי</Change>
+    <ChangeAll>שנה הכל</ChangeAll>
+    <SkipOnce>דלג על &amp;אחת</SkipOnce>
+    <SkipAll>&amp;דלג על הכל</SkipAll>
+    <AddToUserDictionary>הוסף למילון המשתמש</AddToUserDictionary>
+    <AddToNamesAndIgnoreList>הוסף לרשימת שמות/רעש (תלוי רישיות)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>הוסף זוג לרשימת החלפת OCR</AddToOcrReplaceList>
+    <Abort>לְהַפִּיל</Abort>
+    <Use>להשתמש</Use>
+    <UseAlways>&amp;השתמש תמיד</UseAlways>
+    <Suggestions>הצעות</Suggestions>
+    <SpellCheckProgress>בדיקת איות [{0}] - {1}</SpellCheckProgress>
+    <EditWholeText>ערוך טקסט שלם</EditWholeText>
+    <EditWordOnly>ערוך מילה בלבד</EditWordOnly>
+    <AddXToNames>הוסף '{0}' לרשימת השמות</AddXToNames>
+    <AddXToUserDictionary>הוסף '{0}' למילון המשתמש</AddXToUserDictionary>
+    <AutoFixNames>תיקון אוטומטי של שמות שבהם רק רישיות שונה</AutoFixNames>
+    <AutoFixNamesViaSuggestions>תקן גם שמות באמצעות 'הצעות לבדיקת איות'</AutoFixNamesViaSuggestions>
+    <CheckOneLetterWords>בקש מילים לא ידועות באות אחת</CheckOneLetterWords>
+    <TreatINQuoteAsING>התייחס למילה שסיימת " in' " כאל " ing " (אנגלית בלבד)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>זכור את רשימת "השתמש תמיד".</RememberUseAlwaysList>
+    <LiveSpellCheck>בדיקת איות בזמן אמת</LiveSpellCheck>
+    <LiveSpellCheckLanguage>בדיקת איות בזמן אמת - עבודה עם שפה [{0}]</LiveSpellCheckLanguage>
+    <NoDictionaryForLiveSpellCheck>בדיקת איות בזמן אמת - אין לך מילונים לשפה זו [{0}]</NoDictionaryForLiveSpellCheck>
+    <ImageText>טקסט תמונה</ImageText>
+    <SpellCheckCompleted>בדיקת האיות הושלמה</SpellCheckCompleted>
+    <SpellCheckAborted>בדיקת האיות בוטלה</SpellCheckAborted>
+    <SpacesNotAllowed>אסור רווחים במילה אחת!</SpacesNotAllowed>
+    <UndoX>בטל: "{0}"</UndoX>
+    <OpenImageBasedSourceFile>פתח קובץ מקור מבוסס תמונה...</OpenImageBasedSourceFile>
+  </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>תו לא חוקי {0} נמצא בעמודה {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>נמצא רווח לבן לא חוקי בעמודה {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>ראה את הדוח המלא כאן: {0}.</ReportPrompt>
+    <OpenReportInFolder>פתח את הדוח בתיקייה</OpenReportInFolder>
+    <FoundXIssues>Netflix quality check found {0:#,##0} issues.</FoundXIssues>
+    <CheckOk>בדיקת איכות נטפליקס בסדר :)</CheckOk>
+    <MaximumXCharsPerSecond>מקסימום {0} תווים בשנייה (כולל רווחים לבנים)</MaximumXCharsPerSecond>
+    <MaximumLineLength>אורך קו מקסימלי ({0})</MaximumLineLength>
+    <MinimumDuration>משך מינימום: 5/6 שניות (833 אלפיות השנייה)</MinimumDuration>
+  </NetflixQualityCheck>
+  <Split>
+    <Title>לְפַצֵל</Title>
+    <SplitOptions>אפשרויות פיצול</SplitOptions>
+    <Lines>שורות</Lines>
+    <Characters>דמויות</Characters>
+    <NumberOfEqualParts>מספר חלקים שווים</NumberOfEqualParts>
+    <SubtitleInfo>מידע על כתוביות</SubtitleInfo>
+    <NumberOfLinesX>Number of lines: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Number of characters: {0:#,###,###}</NumberOfCharactersX>
+    <Output>תְפוּקָה</Output>
+    <FileName>שם קובץ</FileName>
+    <OutputFolder>תיקיית פלט</OutputFolder>
+    <DoSplit>לְפַצֵל</DoSplit>
+    <Basic>בסיסי</Basic>
+  </Split>
+  <SplitLongLines>
+    <Title>לשבור/לפצל תורים ארוכים</Title>
+    <SingleLineMaximumLength>אורך מקסימלי של קו בודד</SingleLineMaximumLength>
+    <LineMaximumLength>אורך קו מקסימלי</LineMaximumLength>
+    <LineContinuationBeginEndStrings>מחרוזות התחלה/סיום של המשך שורה</LineContinuationBeginEndStrings>
+    <NumberOfSplits>מספר הפסקות/פיצולים: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>אורך השורה היחידה הארוכה ביותר הוא {0} בקו {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>אורך השורה הכולל הארוך ביותר הוא {0} בשורה {1}</LongestLineIsXAtY>
+  </SplitLongLines>
+  <SplitSubtitle>
+    <Title>פיצול כתוביות</Title>
+    <Description1>הזן את אורך החלק הראשון של הסרטון או עיין</Description1>
+    <Description2>וקבל אורך מקובץ וידאו:</Description2>
+    <Split>&amp;לְפַצֵל</Split>
+    <Done>&amp;בוצע</Done>
+    <NothingToSplit>אין מה לפצל!</NothingToSplit>
+    <SavePartOneAs>שמור חלק 1 בתור...</SavePartOneAs>
+    <SavePartTwoAs>שמור את חלק 2 בתור...</SavePartTwoAs>
+    <Part1>חלק 1</Part1>
+    <Part2>חלק 2</Part2>
+    <UnableToSaveFileX>לא ניתן לשמור את {0}</UnableToSaveFileX>
+    <OverwriteExistingFiles>להחליף קבצים קיימים?</OverwriteExistingFiles>
+    <FolderNotFoundX>התיקיה לא נמצאה: {0}</FolderNotFoundX>
+    <Untitled>ללא כותרת</Untitled>
+  </SplitSubtitle>
+  <StartNumberingFrom>
+    <Title>מספור מחדש</Title>
+    <StartFromNumber>התחל ממספר:</StartFromNumber>
+    <PleaseEnterAValidNumber>אופס, נא להזין מספר חוקי</PleaseEnterAValidNumber>
+  </StartNumberingFrom>
+  <Statistics>
+    <Title>סטָטִיסטִיקָה</Title>
+    <TitleWithFileName>סטטיסטיקה - {0}</TitleWithFileName>
+    <GeneralStatistics>סטטיסטיקה כללית</GeneralStatistics>
+    <MostUsed>הכי משומש...</MostUsed>
+    <MostUsedLines>קווים משומשים ביותר</MostUsedLines>
+    <MostUsedWords>המילים הכי בשימוש</MostUsedWords>
+    <NothingFound>שום דבר לא נמצא</NothingFound>
+    <NumberOfLinesX>Number of subtitle lines: {0:#,##0}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>מספר התווים כ-{0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Total duration of all subtitles: {0:#,##0}</TotalDuration>
+    <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
+    <TotalWords>Total words in subtitle: {0:#,##0}</TotalWords>
+    <NumberOfItalicTags>Number of italic tags: {0:#,##0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Number of bold tags: {0:#,##0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Number of underline tags: {0:#,##0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Number of font tags: {0:#,##0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Number of alignment tags: {0:#,##0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>אורך כתוביות - מינימום: {0}</LineLengthMinimum>
+    <LineLengthMaximum>אורך כתוביות - מקסימום: {0}</LineLengthMaximum>
+    <LineLengthAverage>אורך כתוביות - ממוצע: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.0}</LinesPerSubtitleAverage>
+    <SingleLineLengthMinimum>אורך שורה בודדת - מינימום: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>אורך שורה בודדת - מקסימום: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>אורך שורה בודדת - ממוצע: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>רוחב קו בודד - מינימום: {0} פיקסלים</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>רוחב קו בודד - מקסימום: {0} פיקסלים</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>רוחב קו בודד - ממוצע: {0} פיקסלים</SingleLineWidthAverage>
+    <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
+    <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>
+    <DurationAverage>Duration - average: {0:0.000} seconds</DurationAverage>
+    <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
+    <GapMinimum>Gap - minimum: {0:#,##0} ms</GapMinimum>
+    <GapMaximum>Gap - maximum: {0:#,##0} ms</GapMaximum>
+    <GapAverage>Gap - average: {0:#,##0.##} ms</GapAverage>
+    <Export>יְצוּא...</Export>
+  </Statistics>
+  <SubStationAlphaProperties>
+    <Title>מאפיינים מתקדמים של Sub Station Alpha</Title>
+    <TitleSubstationAlpha>מאפייני Sub Station Alpha</TitleSubstationAlpha>
+    <Script>תַסרִיט</Script>
+    <ScriptTitle>כותרת</ScriptTitle>
+    <OriginalScript>תסריט מקורי</OriginalScript>
+    <Translation>תִרגוּם</Translation>
+    <Editing>עֲרִיכָה</Editing>
+    <Timing>תִזמוּן</Timing>
+    <SyncPoint>נקודת סנכרון</SyncPoint>
+    <UpdatedBy>עודכן על ידי</UpdatedBy>
+    <UpdateDetails>עדכן פרטים</UpdateDetails>
+    <Resolution>פתרון הבעיה</Resolution>
+    <VideoResolution>רזולוציית וידאו</VideoResolution>
+    <FromCurrentVideo>מתוך הסרטון הנוכחי</FromCurrentVideo>
+    <Options>אפשרויות</Options>
+    <WrapStyle>סגנון גלישה</WrapStyle>
+    <Collision>הִתנַגְשׁוּת</Collision>
+    <ScaleBorderAndShadow>גבול וצל בקנה מידה</ScaleBorderAndShadow>
+    <WrapStyle0>0: עטיפה חכמה, הקו העליון רחב יותר</WrapStyle0>
+    <WrapStyle1>1: גלישת מילה בסוף השורה, הפסקות N בלבד</WrapStyle1>
+    <WrapStyle2>2: אין גלישת מילה, גם
+וגם N הפסקה</WrapStyle2>
+    <WrapStyle3>3: עטיפה חכמה, שורה תחתונה רחבה יותר</WrapStyle3>
+  </SubStationAlphaProperties>
+  <SubStationAlphaStyles>
+    <Title>סגנונות אלפא תת תחנה מתקדמים</Title>
+    <TitleSubstationAlpha>סגנונות Sub Station Alpha</TitleSubstationAlpha>
+    <Styles>סגנונות</Styles>
+    <Properties>נכסים</Properties>
+    <Name>שֵׁם</Name>
+    <Font>גוֹפָן</Font>
+    <FontName>שם גופן</FontName>
+    <FontSize>גודל גופן</FontSize>
+    <UseCount>בשימוש</UseCount>
+    <Primary>יְסוֹדִי</Primary>
+    <Secondary>מִשׁנִי</Secondary>
+    <Tertiary>שלישי</Tertiary>
+    <Outline>מתווה</Outline>
+    <Shadow>צֵל</Shadow>
+    <Back>חזור</Back>
+    <Alignment>יישור</Alignment>
+    <TopLeft>שמאלי עליון</TopLeft>
+    <TopCenter>למעלה/מרכז</TopCenter>
+    <TopRight>למעלה מימין</TopRight>
+    <MiddleLeft>אמצעי/שמאל</MiddleLeft>
+    <MiddleCenter>אמצע/מרכז</MiddleCenter>
+    <MiddleRight>אמצעי/ימין</MiddleRight>
+    <BottomLeft>שמאל תחתון</BottomLeft>
+    <BottomCenter>תחתון/מרכז</BottomCenter>
+    <BottomRight>למטה מימין</BottomRight>
+    <Colors>צבעים</Colors>
+    <Margins>שוליים</Margins>
+    <MarginLeft>שוליים שמאלה</MarginLeft>
+    <MarginRight>שוליים ימינה</MarginRight>
+    <MarginVertical>שוליים אנכיים</MarginVertical>
+    <Vertical>אֲנָכִי</Vertical>
+    <Border>גבול</Border>
+    <PlusShadow>+ צל</PlusShadow>
+    <OpaqueBox>קופסה אטומה</OpaqueBox>
+    <Import>יְבוּא...</Import>
+    <Export>יְצוּא...</Export>
+    <Copy>עותק</Copy>
+    <CopyOfY>עותק של {0}</CopyOfY>
+    <CopyXOfY>עותק {0} מתוך {1}</CopyXOfY>
+    <New>חָדָשׁ</New>
+    <Remove>לְהַסִיר</Remove>
+    <ReplaceWith>להחליף ב...</ReplaceWith>
+    <RemoveAll>להסיר את כל</RemoveAll>
+    <ImportStyleFromFile>יבא סגנון מקובץ...</ImportStyleFromFile>
+    <ExportStyleToFile>ייצא סגנון לקובץ... (יוסיף סגנון אם הקובץ כבר קיים)</ExportStyleToFile>
+    <ChooseStyle>בחר סגנון לייבא</ChooseStyle>
+    <StyleAlreadyExits>סגנון כבר קיים: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>סגנון '{0}' יוצא לקובץ '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>סגנון '{0}' מיובא מהקובץ '{1}'</StyleXImportedFromFileY>
+    <SetPreviewText>הגדר טקסט תצוגה מקדימה...</SetPreviewText>
+    <AddToFile>הוסף לקובץ</AddToFile>
+    <AddToStorage>הוסף לאחסון</AddToStorage>
+    <StyleStorage>אחסון בסגנון</StyleStorage>
+    <StyleCurrentFile>סגנונות בקובץ הנוכחי</StyleCurrentFile>
+    <OverwriteX>להחליף את {0}?</OverwriteX>
+    <CategoryNote>הערה: הסגנונות בקטגוריית ברירת המחדל (בצבע ירוק) יחולו על קבצי ASSA חדשים</CategoryNote>
+    <CategoriesManage>לנהל</CategoriesManage>
+    <MoveToCategory>העבר סגנונות נבחרים לקטגוריה...</MoveToCategory>
+    <ScaleX>ScaleX</ScaleX>
+    <ScaleY>ScaleY</ScaleY>
+    <Spacing>מרווחים</Spacing>
+    <Angle>זָוִית</Angle>
+    <BoxPerLine>תיבה לכל שורה (השתמש בצבע מתאר)</BoxPerLine>
+    <BoxMultiLine>קופסה אחת (השתמש בצבע צל)</BoxMultiLine>
+    <DuplicateStyleNames>שמות סגנון כפולים: {0}</DuplicateStyleNames>
+  </SubStationAlphaStyles>
+  <SubStationAlphaStylesCategoriesManager>
+    <Category>קטגוריה</Category>
+    <Categories>קטגוריות</Categories>
+    <CategoryName>שם קטגוריה</CategoryName>
+    <CategoryDelete>האם אתה בטוח שברצונך למחוק את הקטגוריה/הקטגוריות שנבחרו?</CategoryDelete>
+    <NewCategory>קטגוריה חדשה</NewCategory>
+    <CategoryRename>שנה את שם הקטגוריה</CategoryRename>
+    <CategorySetDefault>נקבע כברירת מחדל</CategorySetDefault>
+    <NumberOfStyles>מספר סגנונות</NumberOfStyles>
+    <CategoryDefault>בְּרִירַת מֶחדָל</CategoryDefault>
+    <ChooseCategories>בחר קטגוריות ל-{0}</ChooseCategories>
+    <ImportCategoriesTitle>ייבוא ​​קטגוריות מ...</ImportCategoriesTitle>
+    <ExportCategoriesTitle>ייצא קטגוריות ל...</ExportCategoriesTitle>
+  </SubStationAlphaStylesCategoriesManager>
+  <PointSync>
+    <Title>סנכרון נקודות</Title>
+    <TitleViaOtherSubtitle>סנכרון נקודות באמצעות כתובית אחרת</TitleViaOtherSubtitle>
+    <SyncHelp>הגדר לפחות שתי נקודות סנכרון כדי לבצע סנכרון גס</SyncHelp>
+    <SetSyncPoint>הגדר נקודת סנכרון</SetSyncPoint>
+    <RemoveSyncPoint>הסר את נקודת הסנכרון</RemoveSyncPoint>
+    <SyncPointsX>נקודות סנכרון: {0}</SyncPointsX>
+    <Info>נקודת סנכרון אחת תתאים את המיקום, שתיים או יותר נקודות סנכרון יתאימו את המיקום והמהירות</Info>
+    <ApplySync>להגיש מועמדות</ApplySync>
+  </PointSync>
+  <TimedTextSmpteTiming>
+    <Title>תזמון SMPTE</Title>
+    <UseSmpteTiming>האם להשתמש בתזמון SMPTE עבור כתוביות נוכחיות?</UseSmpteTiming>
+    <SmpteTimingInfo>הערה: ניתן לשנות את תזמון SMPTE מאוחר יותר ב"תפריט וידאו"</SmpteTimingInfo>
+    <YesAlways>כן, תמיד עבור תעריפי פריימים שאינם מספר שלם</YesAlways>
+    <NoNever>לעולם לא</NoNever>
+  </TimedTextSmpteTiming>
+  <TransportStreamSubtitleChooser>
+    <Title>בוחר כתוביות של זרם תחבורה - {0}</Title>
+    <PidLineImage>תמונות - מזהה מנות תחבורה (PID) = {0}, שפה = {1}, מספר כתוביות = {2}</PidLineImage>
+    <PidLineTeletext>טלטקסט - מזהה מנות תחבורה (PID) = {1}, עמוד {0}, שפה = {2}, מספר כתוביות = {3}</PidLineTeletext>
+    <SubLine>{0}: {1} -&gt; {2}, {3} תמונות</SubLine>
+  </TransportStreamSubtitleChooser>
+  <UnknownSubtitle>
+    <Title>סוג כתוביות לא ידוע</Title>
+    <Message>אם אתה רוצה שזה יתוקן, אנא שלח דוא"ל לכתובת mailto:niksedk@gmail.com ולכלול עותק של הכתובית.</Message>
+    <ImportAsPlainText>ייבא כטקסט רגיל...</ImportAsPlainText>
+  </UnknownSubtitle>
+  <VisualSync>
+    <Title>סנכרון ויזואלי</Title>
+    <StartScene>התחלה של סצנה</StartScene>
+    <EndScene>סצנת סיום</EndScene>
+    <Synchronize>סינכרון</Synchronize>
+    <HalfASecondBack>&lt; ½ שניות</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 שניות</ThreeSecondsBack>
+    <PlayXSecondsAndBack>הפעל {0} שניות ובחזרה</PlayXSecondsAndBack>
+    <FindText>מצא טקסט</FindText>
+    <GoToSubPosition>עבור ל-sub pos</GoToSubPosition>
+    <KeepChangesTitle>לשמור שינויים?</KeepChangesTitle>
+    <KeepChangesMessage>Changes have been made to subtitle in 'Visual sync'.
+
+Keep changes?</KeepChangesMessage>
+    <SynchronizationDone>הסנכרון הסתיים!</SynchronizationDone>
+    <StartSceneMustComeBeforeEndScene>סצנת ההתחלה חייבת לבוא לפני סצנת הסיום!</StartSceneMustComeBeforeEndScene>
+    <Tip>טיפ: השתמש במקשי &lt;ctrl+חץ שמאלה/ימינה&gt; כדי לנוע 100 אלפיות השנייה אחורה/קדימה</Tip>
+  </VisualSync>
+  <VobSubEditCharacters>
+    <Title>ערוך מסד נתונים להשוואת תמונות</Title>
+    <ChooseCharacter>בחר תווים</ChooseCharacter>
+    <ImageCompareFiles>השוואת תמונות</ImageCompareFiles>
+    <CurrentCompareImage>תמונת השוואה נוכחית</CurrentCompareImage>
+    <TextAssociatedWithImage>טקסט המשויך לתמונה</TextAssociatedWithImage>
+    <IsItalic>הוא &amp;נטוי</IsItalic>
+    <Update>&amp;עדכון</Update>
+    <Delete>&amp;לִמְחוֹק</Delete>
+    <ImageDoubleSize>תמונה בגודל כפול</ImageDoubleSize>
+    <ImageFileNotFound>קובץ התמונה לא נמצא</ImageFileNotFound>
+    <Image>תמונה</Image>
+  </VobSubEditCharacters>
+  <VobSubOcr>
+    <Title>ייבוא/OCR כתובית VobSub (sub/idx).</Title>
+    <TitleBluRay>ייבוא/OCR כתוביות Blu-ray (.sup).</TitleBluRay>
+    <OcrMethod>שיטת OCR</OcrMethod>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
+    <OcrViaImageCompare>השוואת תמונה בינארית</OcrViaImageCompare>
+    <OcrViaModi>Microsoft Office Document Imaging (MODI).  דורש Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR באמצעות nOCR</OcrViaNOCR>
+    <OcrViaCloudVision>OCR באמצעות Google Cloud Vision API</OcrViaCloudVision>
+    <TesseractEngineMode>מצב מנוע</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Tesseract מקורי בלבד (יכול לזהות נטוי)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>רשתות עצביות LSTM בלבד</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>ברירת מחדל, על סמך מה שזמין</TesseractEngineModeDefault>
+    <Language>שפה</Language>
+    <ImageDatabase>מסד נתונים של תמונות</ImageDatabase>
+    <NoOfPixelsIsSpace>מספר פיקסלים הוא שטח</NoOfPixelsIsSpace>
+    <MaxErrorPercent>מקסימום  שְׁגִיאָה%</MaxErrorPercent>
+    <New>חָדָשׁ</New>
+    <Edit>לַעֲרוֹך</Edit>
+    <StartOcr>התחל OCR</StartOcr>
+    <StartOcrFrom>התחל OCR ממספר כתוביות:</StartOcrFrom>
+    <LoadingVobSubImages>טוען תמונות VobSub...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>טוען מסד נתונים להשוואת תמונות...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>המרת מסד נתונים להשוואת תמונות לפורמט חדש (images.db/images.xml)...</ConvertingImageCompareDatabase>
+    <SubtitleImage>תמונת כתובית</SubtitleImage>
+    <SubtitleText>טקסט כתובית</SubtitleText>
+    <UnableToCreateCharacterDatabaseFolder>לא ניתן ליצור 'תיקיית מסד נתונים של תווים': {0}</UnableToCreateCharacterDatabaseFolder>
+    <SubtitleImageXofY>תמונת כתובית {0} מתוך {1}</SubtitleImageXofY>
+    <ImagePalette>פלטת תמונות</ImagePalette>
+    <UseCustomColors>השתמש בצבעים מותאמים אישית</UseCustomColors>
+    <Transparent>שָׁקוּף</Transparent>
+    <TransparentMinAlpha>מינימום  ערך אלפא (0=שקוף, 255=גלוי לחלוטין)</TransparentMinAlpha>
+    <TransportStream>זרם תחבורה</TransportStream>
+    <TransportStreamGrayscale>גווני אפור</TransportStreamGrayscale>
+    <TransportStreamGetColor>השתמש בצבע (ייתכן פיצול קווים)</TransportStreamGetColor>
+    <PromptForUnknownWords>הנחיה למילים לא ידועות</PromptForUnknownWords>
+    <TryToGuessUnknownWords>נסו לנחש מילים לא ידועות</TryToGuessUnknownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>שבר אוטומטי של פסקה אם יותר משתי שורות</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AllFixes>כל התיקונים</AllFixes>
+    <GuessesUsed>ניחושים השתמשו</GuessesUsed>
+    <UnknownWords>מילים לא ידועות</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} דרך 'OCRFixReplaceList/WordSplitList' בשורה: {2}</UnknownWordToGuessInLine>
+    <OcrAutoCorrectionSpellChecking>תיקון אוטומטי של OCR / בדיקת איות</OcrAutoCorrectionSpellChecking>
+    <FixOcrErrors>תקן שגיאות OCR</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>יבא טקסט עם קודי זמן תואמים...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>ייבא קודי זמן חדשים</ImportNewTimeCodes>
+    <SaveSubtitleImageAs>שמור תמונת כתובית כ...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAsBdnXml>שמור את כל התמונות (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>שמור את כל התמונות עם אינדקס HTML...</SaveAllSubtitleImagesWithHtml>
+    <XImagesSavedInY>{0} תמונות נשמרו ב-{1}</XImagesSavedInY>
+    <DictionaryX>מילון: {0}</DictionaryX>
+    <RightToLeft>מימין לשמאל</RightToLeft>
+    <ShowOnlyForcedSubtitles>הצג רק כתוביות מאולצות</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>השתמש בקודי זמן מקובץ .idx</UseTimeCodesFromIdx>
+    <NoMatch>&lt;אין התאמה&gt;</NoMatch>
+    <AutoTransparentBackground>רקע שקוף אוטומטי</AutoTransparentBackground>
+    <CaptureTopAlign>לכידת יישור עליון</CaptureTopAlign>
+    <InspectCompareMatchesForCurrentImage>בדוק השווה התאמות לתמונה הנוכחית...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>ערוך את התמונה האחרונה השווה תוספות...</EditLastAdditions>
+    <SetItalicAngle>הגדר זווית נטוי...</SetItalicAngle>
+    <ItalicAngle>זווית נטוי</ItalicAngle>
+    <DiscardTitle>למחוק שינויים שבוצעו ב-OCR?</DiscardTitle>
+    <DiscardText>האם ברצונך למחוק שינויים שבוצעו בהפעלת OCR הנוכחית?</DiscardText>
+    <MinLineSplitHeight>מינימום  גובה קו (פיצול)</MinLineSplitHeight>
+    <FallbackToX>חזרה ל-{0}</FallbackToX>
+    <ImagePreProcessing>עיבוד מקדים של תמונה...</ImagePreProcessing>
+    <EditImageDb>ערוך תמונה db</EditImageDb>
+    <OcrTraining>אימון OCR...</OcrTraining>
+    <SubtitleTrainingFile>קובץ כתוביות להדרכה</SubtitleTrainingFile>
+    <LetterCombinations>שילובי אותיות שעשויים להיות מפוצלים כתמונה אחת</LetterCombinations>
+    <TrainingOptions>אפשרויות אימון</TrainingOptions>
+    <NumberOfSegments>מספר קטעים לכל אות</NumberOfSegments>
+    <AlsoTrainItalic>הרכבת גם נטוי</AlsoTrainItalic>
+    <AlsoTrainBold>גם אימון נועז</AlsoTrainBold>
+    <StartTraining>תתחיל להתאמן</StartTraining>
+    <NowTraining>Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known</NowTraining>
+    <ImagesWithTimeCodesInFileName>תמונות עם קודי זמן בשם הקובץ...</ImagesWithTimeCodesInFileName>
+    <CloudVisionApi>Google Cloud Vision API</CloudVisionApi>
+    <ApiKey>מפתח API</ApiKey>
+    <SendOriginalImages>שלח תמונות מקוריות</SendOriginalImages>
+    <SeHandlesTextMerge>SE מטפל במיזוג טקסט</SeHandlesTextMerge>
+  </VobSubOcr>
+  <VobSubOcrCharacter>
+    <Title>OCR - תמונה ידנית לטקסט</Title>
+    <ShrinkSelection>כווץ את הבחירה</ShrinkSelection>
+    <ExpandSelection>הרחב את הבחירה</ExpandSelection>
+    <SubtitleImage>תמונת כתובית</SubtitleImage>
+    <Characters>דמויות)</Characters>
+    <CharactersAsText>תווים כטקסט</CharactersAsText>
+    <Italic>&amp;נטוי</Italic>
+    <Abort>&amp;לְהַפִּיל</Abort>
+    <Skip>&amp;לדלג</Skip>
+    <UseOnce>&amp;השתמש פעם אחת</UseOnce>
+    <Nordic>נורדי</Nordic>
+    <Spanish>ספרדית</Spanish>
+    <German>גֶרמָנִיָת</German>
+    <AutoSubmitOnFirstChar>הגשה אוטומטית ב-&amp;charth הראשון</AutoSubmitOnFirstChar>
+    <EditLastX>ערוך אחרון: {0}</EditLastX>
+  </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>בדוק השווה התאמות לתמונה הנוכחית</Title>
+    <InspectItems>בדוק פריטים</InspectItems>
+    <AddBetterMatch>הוסף התאמה טובה יותר</AddBetterMatch>
+    <Add>לְהוֹסִיף</Add>
+  </VobSubOcrCharacterInspect>
+  <VobSubOcrNewFolder>
+    <Title>תיקייה חדשה</Title>
+    <Message>שם תיקיית מסד הנתונים החדשה של תווים</Message>
+  </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicAngle>
+    <Title>הגדר זווית נטוי</Title>
+    <Description>התאם את הערך עד שסגנון הטקסט יהיה רגיל ולא נטוי.  שימו לב שהתמונה המקורית צריכה להיות נטוי.</Description>
+  </VobSubOcrSetItalicAngle>
+  <OcrPreprocessing>
+    <Title>עיבוד מקדים של תמונות OCR</Title>
+    <Colors>צבעים</Colors>
+    <AdjustAlpha>התאם את הערך עד שהטקסט מוצג בבירור (בדרך כלל ערכים בין 200 ל-300)</AdjustAlpha>
+    <OriginalImage>תמונה מקורית</OriginalImage>
+    <PostImage>תמונה לאחר עיבוד מקדים</PostImage>
+    <BinaryThreshold>סף השוואת תמונה בינארית</BinaryThreshold>
+    <InvertColors>הפוך צבעים</InvertColors>
+    <YellowToWhite>צהוב עד לבן</YellowToWhite>
+    <ColorToWhite>צבע ללבן</ColorToWhite>
+    <ColorToRemove>צבע להסרה</ColorToRemove>
+    <Cropping>חיתוך</Cropping>
+    <CropTransparentColors>חיתוך צבעים שקופים</CropTransparentColors>
+  </OcrPreprocessing>
+  <Watermark>
+    <Title>סימן מים</Title>
+    <WatermarkX>סימן מים: {0}</WatermarkX>
+    <GenerateWatermarkTitle>צור סימן מים</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>מורחים על כל הכתוביות</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>רק בקו הנוכחי: {0}</CurrentLineOnlyX>
+    <Generate>לִיצוֹר</Generate>
+    <Remove>לְהַסִיר</Remove>
+    <BeforeWatermark>לפני סימן מים</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>סימן מים פועל רק עם קידוד קבצי Unicode.</ErrorUnicodeEncodingOnly>
+  </Watermark>
+  <Waveform>
+    <AddWaveformAndSpectrogram>הוסף צורת גל/ספקטרוגרם</AddWaveformAndSpectrogram>
+    <ClickToAddWaveform>לחץ כדי להוסיף צורת גל</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>לחץ כדי להוסיף צורת גל/ספקטרוגרם</ClickToAddWaveformAndSpectrogram>
+    <Seconds>שניות</Seconds>
+    <ZoomIn>לְהִתְמַקֵד</ZoomIn>
+    <ZoomOut>להקטין את התצוגה</ZoomOut>
+    <AddParagraphHere>הוסף טקסט כאן</AddParagraphHere>
+    <AddParagraphHereAndPasteText>הוסף טקסט מהלוח כאן</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>הגדר את הנוכחי כבחירה חדשה</SetParagraphAsSelection>
+    <FocusTextBox>תיבת טקסט פוקוס</FocusTextBox>
+    <GoToPrevious>עבור אל הכתובית הקודמת</GoToPrevious>
+    <GoToNext>עבור אל הכתובית הבאה</GoToNext>
+    <DeleteParagraph>מחק טקסט</DeleteParagraph>
+    <Split>לְפַצֵל</Split>
+    <SplitAtCursor>פיצול בסמן</SplitAtCursor>
+    <MergeWithPrevious>מיזוג עם הקודם</MergeWithPrevious>
+    <MergeWithNext>מיזוג עם הבא</MergeWithNext>
+    <ExtendToPrevious>הארך לקודם</ExtendToPrevious>
+    <ExtendToNext>הארך לבא</ExtendToNext>
+    <PlaySelection>שחק בחירה</PlaySelection>
+    <ShowWaveformAndSpectrogram>הצג צורת גל וספקטרוגרמה</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>הצג צורת גל בלבד</ShowWaveformOnly>
+    <ShowSpectrogramOnly>הצג ספקטרוגרמה בלבד</ShowSpectrogramOnly>
+    <AddShotChange>הוסף שינוי זריקה</AddShotChange>
+    <RemoveShotChange>הסר שינוי זריקה</RemoveShotChange>
+    <RemoveShotChangesFromSelection>הסר שינויי צילום מהבחירה</RemoveShotChangesFromSelection>
+    <GuessTimeCodes>נחשו קודי זמן...</GuessTimeCodes>
+    <SeekSilence>חפש שקט...</SeekSilence>
+    <InsertSubtitleHere>הוסף כתובית כאן...</InsertSubtitleHere>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>WPM: {0:0.00}</WordsMinX>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
+    <Title>נחשו קודי זמן</Title>
+    <StartFrom>התחל מ</StartFrom>
+    <CurrentVideoPosition>מיקום וידאו נוכחי</CurrentVideoPosition>
+    <Beginning>התחלה</Beginning>
+    <DeleteLines>מחק שורות</DeleteLines>
+    <FromCurrentVideoPosition>ממיקום הווידאו הנוכחי</FromCurrentVideoPosition>
+    <DetectOptions>זיהוי אפשרויות</DetectOptions>
+    <ScanBlocksOfMs>סרוק בלוקים של אלפיות שניות</ScanBlocksOfMs>
+    <BlockAverageVolMin1>הנפח הממוצע של הבלוק חייב להיות מעל</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% מסך הנפח הממוצע</BlockAverageVolMin2>
+    <BlockAverageVolMax1>הנפח הממוצע של הבלוק חייב להיות מתחת</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% מהנפח המקסימלי הכולל</BlockAverageVolMax2>
+    <SplitLongLinesAt1>פיצול כתוביות ארוכות ב</SplitLongLinesAt1>
+    <SplitLongLinesAt2>אלפיות השנייה</SplitLongLinesAt2>
+    <Other>אַחֵר</Other>
+  </WaveformGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - הגדר קול חדש</Title>
+    <VoiceName>שם הקול</VoiceName>
+  </WebVttNewVoice>
+</Language>
