@@ -855,6 +855,8 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <SolidColor>Tinta unita</SolidColor>
     <DurationInMinutes>Durata in minuti</DurationInMinutes>
     <Background>Sfondo</Background>
+    <FfmpegParameters>Esegui FFmpeg con i seguenti parametri:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Genera: richiedi i parametri FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Genera video con sottotitoli incorporati</Title>
@@ -2462,7 +2464,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ToggleFocusWaveformTextBox>Cambia messa a fuoco tra casella di testo e forma d'onda/spettrogramma</ToggleFocusWaveformTextBox>
     <ToggleDialogDashes>Attiva/disattiva trattini di dialogo</ToggleDialogDashes>
     <ToggleQuotes>Attiva/disattiva virgolette</ToggleQuotes>
-    <ToggleHiTags>Cambia le etichette per problemi di udito</ToggleHiTags>
+    <ToggleHiTags>Modifica le etichette per problemi di udito</ToggleHiTags>
+    <ToggleCustomTags>Attiva/disattiva tag personalizzati</ToggleCustomTags>
     <ToggleMusicSymbols>Attiva/Disattiva i simboli musicali</ToggleMusicSymbols>
     <Alignment>Allinea (righe selezionate)</Alignment>
     <AlignmentN1>Allinea in basso a sinistra - {\an1}</AlignmentN1>
@@ -2648,6 +2651,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Modifica</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Scorciatoie: consenti nella casella testo una singola lettera/numero</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Scorciatoia alterna inizio/fine personalizzato</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Aggiorna associazioni tipi di file</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Aggiornate le associazioni dei tipi di file</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Modifica stile continuazione personalizzato</CustomContinuationStyle>
@@ -2662,6 +2666,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <PreviewPause>(pausa)</PreviewPause>
     <CustomContinuationStyleNote>Nota: lo stile continuazione personalizzato è condiviso tra i profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Questo sovrascriverà i valori nella finestra di dialogo. Sei sicuro?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Esporta come HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Download lib mpv</DownloadMpv>
