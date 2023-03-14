@@ -175,6 +175,73 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
             }
         }
 
+        public class ImageFileParagraph : IBinaryParagraphWithPosition
+        {
+            private readonly Paragraph _p;
+            private readonly string _dir;
+            private readonly int _width;
+            private readonly int _height;
+
+            public ImageFileParagraph(Paragraph p, string fileName, int width, int height)
+            {
+                _p = p;
+                _dir = Path.GetDirectoryName(fileName);
+                _width = width;
+                _height = height;
+            }
+
+            public bool IsForced => false;
+
+            public TimeCode StartTimeCode => _p.StartTime;
+
+            public TimeCode EndTimeCode => _p.EndTime;
+
+            public Bitmap GetBitmap()
+            {
+                var fullPath = Path.Combine(_dir, _p.Text);
+                if (File.Exists(fullPath))
+                {
+                    return new Bitmap(fullPath);
+                }
+
+                return new Bitmap(1, 1);
+            }
+
+            public Position GetPosition()
+            {
+                if (string.IsNullOrEmpty(_p.Extra))
+                {
+                    return new Position(1, 1);
+                }
+
+                var coords = _p.Extra.Split(',');
+                if (coords.Length == 2)
+                {
+                    return new Position(int.Parse(coords[0]), int.Parse(coords[1]));
+                }
+
+                return new Position(1, 1);
+            }
+
+            public Size GetScreenSize()
+            {
+                return new Size(_width, _height);
+            }
+
+            public static Size GetResolution(string fileName)
+            {
+                var width = 1920;
+                var height = 1080;
+                return new Size(width, height);
+            }
+
+
+            public static decimal GetFrameRate(string fileName)
+            {
+                return 25.0m;
+            }
+        }
+
         private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToNextSubtitlePlayTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitlePlayTranslate);
@@ -410,6 +477,24 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     }
                     FillListView(_subtitle);
                 }
+                else
+                {
+                    var rhozetHarmonicImages = new RhozetHarmonicImage();
+                    if (rhozetHarmonicImages.IsMine(list, fileName))
+                    {
+                        _subtitle = new Subtitle();
+                        rhozetHarmonicImages.LoadSubtitle(_subtitle, list, fileName);
+                        _binSubtitles = new List<IBinaryParagraphWithPosition>();
+                        _extra = new List<Extra>();
+                        foreach (var p in _subtitle.Paragraphs)
+                        {
+                            IBinaryParagraphWithPosition bp = new ImageFileParagraph(p, fileName, 1920, 1024);
+                            _binSubtitles.Add(bp);
+                            _extra.Add(new Extra { IsForced = bp.IsForced, X = bp.GetPosition().Left, Y = bp.GetPosition().Top });
+                        }
+                        FillListView(_subtitle);
+                    }
+                }
             }
             else if (ext == ".ttml")
             {
@@ -422,9 +507,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                     _binSubtitles = new List<IBinaryParagraphWithPosition>();
                     _extra = new List<Extra>();
                     var sub = new Subtitle();
-                    //var res = BdnXmlParagraph.GetResolution(fileName);
-                    //SetResolution(res);
-                    //SetFrameRate(BdnXmlParagraph.GetFrameRate(fileName));
                     foreach (var p in rawSub.Paragraphs)
                     {
                         var x = new TimedTextBase64Image.Base64PngImage()
