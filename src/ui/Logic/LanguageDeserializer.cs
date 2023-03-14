@@ -6736,6 +6736,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ToggleHiTags":
                     language.Settings.ToggleHiTags = reader.Value;
                     break;
+                case "Settings/ToggleCustomTags":
+                    language.Settings.ToggleCustomTags = reader.Value;
+                    break;
                 case "Settings/ToggleMusicSymbols":
                     language.Settings.ToggleMusicSymbols = reader.Value;
                     break;
@@ -7278,6 +7281,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ShortcutsAllowSingleLetterOrNumberInTextBox":
                     language.Settings.ShortcutsAllowSingleLetterOrNumberInTextBox = reader.Value;
+                    break;
+                case "Settings/ShortcutCustomToggle":
+                    language.Settings.ShortcutCustomToggle = reader.Value;
                     break;
                 case "Settings/UpdateFileTypeAssociations":
                     language.Settings.UpdateFileTypeAssociations = reader.Value;
