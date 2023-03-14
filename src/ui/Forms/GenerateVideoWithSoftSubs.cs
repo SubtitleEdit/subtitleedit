@@ -103,6 +103,8 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             _videoInfo = videoInfo;
 
+            listViewSubtitles.BeginUpdate();
+
             using (var matroska = new MatroskaFile(inputVideoFileName))
             {
                 if (matroska.IsValid)
@@ -124,6 +126,8 @@ namespace Nikse.SubtitleEdit.Forms
                     AddListViewItem(track);
                 }
             }
+
+            listViewSubtitles.EndUpdate();
         }
 
         private void AddListViewItem(Trak track)
@@ -211,7 +215,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddListViewItem(string fileName)
         {
-            listViewSubtitles.BeginUpdate();
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
             {
                 return;
@@ -251,7 +254,6 @@ namespace Nikse.SubtitleEdit.Forms
                 IsDefault = false,
                 FileName = fileName,
             });
-            listViewSubtitles.EndUpdate();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
