@@ -211,6 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddListViewItem(string fileName)
         {
+            listViewSubtitles.BeginUpdate();
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
             {
                 return;
@@ -250,6 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
                 IsDefault = false,
                 FileName = fileName,
             });
+            listViewSubtitles.EndUpdate();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -594,7 +596,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
+            listViewSubtitles.BeginUpdate();
             listViewSubtitles.Items.Clear();
+            listViewSubtitles.EndUpdate();
             _softSubs.Clear();
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
@@ -635,6 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            listView.BeginUpdate();
             var item = listView.SelectedItems[0];
             listView.Items.RemoveAt(idx);
 
@@ -644,6 +649,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             idx++;
             listView.Items.Insert(idx, item);
+            listView.EndUpdate();
         }
 
         private void MoveToTop(ListView listView)
@@ -659,6 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            listView.BeginUpdate();
             var item = listView.SelectedItems[0];
             listView.Items.RemoveAt(idx);
 
@@ -668,6 +675,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             idx = 0;
             listView.Items.Insert(idx, item);
+            listView.EndUpdate();
         }
 
         private void ButtonMoveSubUp_Click(object sender, EventArgs e)
