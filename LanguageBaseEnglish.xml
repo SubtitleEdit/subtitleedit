@@ -2465,6 +2465,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleQuotes>Toggle quotes</ToggleQuotes>
     <ToggleHiTags>Toggle HI tags</ToggleHiTags>
+    <ToggleCustomTags>Toggle custom tags</ToggleCustomTags>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
     <AlignmentN1>Alignment bottom left - {\an1}</AlignmentN1>
@@ -2650,6 +2651,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edit</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Shortcuts: Allow single letter/number in text box</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Shortcut toggle custom start/end</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Update file type associations</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>File type associations updated</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Edit custom continuation style</CustomContinuationStyle>

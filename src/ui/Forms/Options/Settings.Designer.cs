@@ -252,6 +252,9 @@
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.panelTools = new System.Windows.Forms.Panel();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.comboBoxCustomToggleEnd = new System.Windows.Forms.ComboBox();
+            this.comboBoxCustomToggleStart = new System.Windows.Forms.ComboBox();
+            this.labelShortcutCustomToggle = new System.Windows.Forms.Label();
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox = new System.Windows.Forms.CheckBox();
             this.comboBoxBDOpensIn = new System.Windows.Forms.ComboBox();
             this.labelBDOpensIn = new System.Windows.Forms.Label();
@@ -416,9 +419,6 @@
             this.labelUpdateFileTypeAssociationsStatus = new System.Windows.Forms.Label();
             this.imageListFileTypeAssociations = new System.Windows.Forms.ImageList(this.components);
             this.toolTipDialogStylePreview = new System.Windows.Forms.ToolTip(this.components);
-            this.labelShortcutCustomToggle = new System.Windows.Forms.Label();
-            this.comboBoxCustomToggleStart = new System.Windows.Forms.ComboBox();
-            this.comboBoxCustomToggleEnd = new System.Windows.Forms.ComboBox();
             this.panelGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
@@ -3237,6 +3237,37 @@
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
             // 
+            // comboBoxCustomToggleEnd
+            // 
+            this.comboBoxCustomToggleEnd.FormattingEnabled = true;
+            this.comboBoxCustomToggleEnd.Items.AddRange(new object[] {
+            ")",
+            "♪"});
+            this.comboBoxCustomToggleEnd.Location = new System.Drawing.Point(230, 76);
+            this.comboBoxCustomToggleEnd.Name = "comboBoxCustomToggleEnd";
+            this.comboBoxCustomToggleEnd.Size = new System.Drawing.Size(42, 21);
+            this.comboBoxCustomToggleEnd.TabIndex = 64;
+            // 
+            // comboBoxCustomToggleStart
+            // 
+            this.comboBoxCustomToggleStart.FormattingEnabled = true;
+            this.comboBoxCustomToggleStart.Items.AddRange(new object[] {
+            "(",
+            "♪"});
+            this.comboBoxCustomToggleStart.Location = new System.Drawing.Point(182, 76);
+            this.comboBoxCustomToggleStart.Name = "comboBoxCustomToggleStart";
+            this.comboBoxCustomToggleStart.Size = new System.Drawing.Size(42, 21);
+            this.comboBoxCustomToggleStart.TabIndex = 63;
+            // 
+            // labelShortcutCustomToggle
+            // 
+            this.labelShortcutCustomToggle.AutoSize = true;
+            this.labelShortcutCustomToggle.Location = new System.Drawing.Point(6, 79);
+            this.labelShortcutCustomToggle.Name = "labelShortcutCustomToggle";
+            this.labelShortcutCustomToggle.Size = new System.Drawing.Size(169, 13);
+            this.labelShortcutCustomToggle.TabIndex = 62;
+            this.labelShortcutCustomToggle.Text = "Shortcut toggle custom  start/end";
+            // 
             // checkBoxShortcutsAllowLetterOrNumberInTextBox
             // 
             this.checkBoxShortcutsAllowLetterOrNumberInTextBox.AutoSize = true;
@@ -4997,39 +5028,6 @@
             this.toolTipDialogStylePreview.AutoPopDelay = 60000;
             this.toolTipDialogStylePreview.InitialDelay = 500;
             this.toolTipDialogStylePreview.ReshowDelay = 100;
-            // 
-            // labelShortcutCustomToggle
-            // 
-            this.labelShortcutCustomToggle.AutoSize = true;
-            this.labelShortcutCustomToggle.Location = new System.Drawing.Point(6, 79);
-            this.labelShortcutCustomToggle.Name = "labelShortcutCustomToggle";
-            this.labelShortcutCustomToggle.Size = new System.Drawing.Size(169, 13);
-            this.labelShortcutCustomToggle.TabIndex = 62;
-            this.labelShortcutCustomToggle.Text = "Shortcut toggle custom  start/end";
-            // 
-            // comboBoxCustomToggleStart
-            // 
-            this.comboBoxCustomToggleStart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCustomToggleStart.FormattingEnabled = true;
-            this.comboBoxCustomToggleStart.Items.AddRange(new object[] {
-            "(",
-            "♪"});
-            this.comboBoxCustomToggleStart.Location = new System.Drawing.Point(182, 76);
-            this.comboBoxCustomToggleStart.Name = "comboBoxCustomToggleStart";
-            this.comboBoxCustomToggleStart.Size = new System.Drawing.Size(42, 21);
-            this.comboBoxCustomToggleStart.TabIndex = 63;
-            // 
-            // comboBoxCustomToggleEnd
-            // 
-            this.comboBoxCustomToggleEnd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCustomToggleEnd.FormattingEnabled = true;
-            this.comboBoxCustomToggleEnd.Items.AddRange(new object[] {
-            ")",
-            "♪"});
-            this.comboBoxCustomToggleEnd.Location = new System.Drawing.Point(230, 76);
-            this.comboBoxCustomToggleEnd.Name = "comboBoxCustomToggleEnd";
-            this.comboBoxCustomToggleEnd.Size = new System.Drawing.Size(42, 21);
-            this.comboBoxCustomToggleEnd.TabIndex = 64;
             // 
             // Settings
             // 
