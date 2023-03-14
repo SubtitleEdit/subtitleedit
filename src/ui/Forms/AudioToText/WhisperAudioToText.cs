@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonBatchMode.Text = LanguageSettings.Current.AudioToText.BatchMode;
             groupBoxInputFiles.Text = LanguageSettings.Current.BatchConvert.Input;
             linkLabeWhisperWebSite.Text = LanguageSettings.Current.AudioToText.WhisperWebsite;
-
+            labelCharsPerSub.Text = LanguageSettings.Current.AudioToText.MaxCharsPerSubtitle;
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
