@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
@@ -2523,6 +2523,8 @@ stesso file di sottotitolo (collaborazione)</Information>
     <LoopSelectedLines>Loop linee selezionate</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Vai al sottotitolo precedente (dalla posizione del video)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Vai al sottotitolo successivo (dalla posizione del video)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Vai al timecode precedente (dalla posizione del video)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Vai al timecode successivo (dalla posizione del video)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Vai al capitolo precedente</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Vai al capitolo successivo</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Seleziona il sottotitolo successivo (dalla posizione del video, mantieni la pos video)</WaveformSelectNextSubtitle>
