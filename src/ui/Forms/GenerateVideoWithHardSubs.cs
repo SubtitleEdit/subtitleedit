@@ -761,7 +761,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxMakeStereo.Enabled = comboBoxAudioEnc.Text != "copy";
             comboBoxAudioSampleRate.Enabled = comboBoxAudioEnc.Text != "copy";
-            labelAudioSampleRate.Enabled = comboBoxAudioEnc.Text != "copy";
             comboBoxAudioBitRate.Enabled = comboBoxAudioEnc.Text != "copy";
 
             numericUpDownTargetFileSize_ValueChanged(null, null);
