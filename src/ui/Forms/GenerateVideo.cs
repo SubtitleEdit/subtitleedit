@@ -108,7 +108,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (videoInfo != null && videoInfo.Success && videoInfo.TotalSeconds > 0)
             {
-                numericUpDownDurationMinutes.Value = (decimal)(videoInfo.TotalSeconds / 60.0);
+                var target = (decimal)(videoInfo.TotalSeconds / 60.0);
+                if (target >= numericUpDownDurationMinutes.Minimum &&
+                    target <= numericUpDownDurationMinutes.Maximum)
+                {
+                    numericUpDownDurationMinutes.Value = target;
+                }
             }
         }
 
