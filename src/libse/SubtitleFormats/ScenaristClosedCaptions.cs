@@ -1138,9 +1138,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = HtmlUtil.RemoveHtmlTags(text);
                 if (text != null && !string.IsNullOrEmpty(text))
                 {
-                    if (text.Length < 28)
+                    if (text.Length < 25)
                     {
-                        if (x < 3)
+                        if (x < 2)
                         {
                             leftAlign = true;
                         }
