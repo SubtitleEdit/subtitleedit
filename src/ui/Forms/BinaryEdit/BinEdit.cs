@@ -526,7 +526,6 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                                 _extra.Add(new Extra { IsForced = x.IsForced, X = x.GetPosition().Left, Y = x.GetPosition().Top });
                             }
                         }
-
                     }
 
                     _subtitle = new Subtitle(sub);

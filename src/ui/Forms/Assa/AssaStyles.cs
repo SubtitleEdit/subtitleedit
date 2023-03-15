@@ -1836,7 +1836,8 @@ namespace Nikse.SubtitleEdit.Forms.Assa
                 _lastFormWindowState = WindowState;
                 return;
             }
-            else if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
+
+            if (WindowState == FormWindowState.Normal && _lastFormWindowState == FormWindowState.Maximized)
             {
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25), () =>
                 {

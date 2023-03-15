@@ -2523,6 +2523,8 @@ can edit in same subtitle file (collaboration)</Information>
     <LoopSelectedLines>Loop selected lines</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Go to previous time code (from video position)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Go to next time code (from video position)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Go to previous chapter</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Go to next chapter</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Select next subtitle (from video position, keep video pos)</WaveformSelectNextSubtitle>

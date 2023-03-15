@@ -2711,6 +2711,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             public string WaveformGoToPrevSubtitle { get; set; }
             public string WaveformGoToNextSubtitle { get; set; }
+            public string WaveformGoToPrevTimeCode { get; set; }
+            public string WaveformGoToNextTimeCode { get; set; }
             public string WaveformGoToPrevChapter { get; set; }
             public string WaveformGoToNextChapter { get; set; }
             public string WaveformSelectNextSubtitle { get; set; }
