@@ -6910,6 +6910,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformGoToNextSubtitle":
                     language.Settings.WaveformGoToNextSubtitle = reader.Value;
                     break;
+                case "Settings/WaveformGoToPrevTimeCode":
+                    language.Settings.WaveformGoToPrevTimeCode = reader.Value;
+                    break;
+                case "Settings/WaveformGoToNextTimeCode":
+                    language.Settings.WaveformGoToNextTimeCode = reader.Value;
+                    break;
                 case "Settings/WaveformGoToPrevChapter":
                     language.Settings.WaveformGoToPrevChapter = reader.Value;
                     break;

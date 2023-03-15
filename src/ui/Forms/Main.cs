@@ -17379,6 +17379,16 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSubtitle(mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.VideoGoToPrevTimeCode)
+            {
+                GoToNearestTimeCode(mediaPlayer.CurrentPosition * TimeCode.BaseUnit, false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.VideoGoToNextTimeCode)
+            {
+                GoToNearestTimeCode(mediaPlayer.CurrentPosition * TimeCode.BaseUnit, true);
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.VideoSelectNextSubtitle)
             {
                 var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
@@ -18619,6 +18629,67 @@ namespace Nikse.SubtitleEdit.Forms
 
                     break;
                 }
+            }
+        }
+
+        private void GoToNearestTimeCode(double currentPosition, bool forward)
+        {
+            var paragraphsStart = forward
+                ? _subtitle.Paragraphs.Where(p => p.StartTime.TotalMilliseconds > currentPosition)
+                : _subtitle.Paragraphs.Where(p => p.StartTime.TotalMilliseconds < currentPosition);
+
+            var paragraphsEnd = forward
+                ? _subtitle.Paragraphs.Where(p => p.EndTime.TotalMilliseconds > currentPosition)
+                : _subtitle.Paragraphs.Where(p => p.EndTime.TotalMilliseconds < currentPosition);
+
+            var closestStart = paragraphsStart
+                .Select(p => new { Paragraph = p, Distance = Math.Abs(p.StartTime.TotalMilliseconds - currentPosition) })
+                .OrderBy(p => p.Distance)
+                .FirstOrDefault().Paragraph;
+
+            var closestEnd = paragraphsEnd
+                .Select(p => new { Paragraph = p, Distance = Math.Abs(p.EndTime.TotalMilliseconds - currentPosition) })
+                .OrderBy(p => p.Distance)
+                .FirstOrDefault().Paragraph;
+
+            Paragraph found = null;
+            double foundSeconds = 0d;
+
+            if (closestStart != null && (closestEnd == null || Math.Abs(closestStart.StartTime.TotalMilliseconds - currentPosition) <
+                Math.Abs(closestEnd.EndTime.TotalMilliseconds - currentPosition)))
+            {
+                if (closestStart.StartTime.IsMaxTime)
+                {
+                    return;
+                }
+
+                found = closestStart;
+                foundSeconds = closestStart.StartTime.TotalSeconds;
+            }
+            else if (closestEnd != null && (closestStart == null || Math.Abs(closestStart.StartTime.TotalMilliseconds - currentPosition) >
+                         Math.Abs(closestEnd.EndTime.TotalMilliseconds - currentPosition)))
+            {
+                if (closestEnd.EndTime.IsMaxTime)
+                {
+                    return;
+                }
+
+                found = closestEnd;
+                foundSeconds = closestEnd.EndTime.TotalSeconds;
+            }
+
+            if (found == null)
+            {
+                return;
+            }
+
+            mediaPlayer.CurrentPosition = foundSeconds;
+            SelectListViewIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(found));
+
+            Application.DoEvents();
+            if (audioVisualizer.WavePeaks != null && foundSeconds < audioVisualizer.StartPositionSeconds + 0.15)
+            {
+                audioVisualizer.StartPositionSeconds -= 0.15;
             }
         }
 

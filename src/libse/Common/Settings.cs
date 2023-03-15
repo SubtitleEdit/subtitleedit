@@ -2366,6 +2366,8 @@ $HorzAlign          =   Center
         public string MainVideoLoopSelectedLines { get; set; }
         public string MainVideoGoToPrevSubtitle { get; set; }
         public string MainVideoGoToNextSubtitle { get; set; }
+        public string MainVideoGoToPrevTimeCode { get; set; }
+        public string MainVideoGoToNextTimeCode { get; set; }
         public string MainVideoGoToPrevChapter { get; set; }
         public string MainVideoGoToNextChapter { get; set; }
         public string MainVideoSelectNextSubtitle { get; set; }
@@ -8818,6 +8820,18 @@ $HorzAlign          =   Center
                     shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoGoToPrevTimeCode");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToPrevTimeCode = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoGoToNextTimeCode");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideoGoToNextTimeCode = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoGoToPrevChapter");
                 if (subNode != null)
                 {
@@ -11226,6 +11240,8 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoLoopSelectedLines", shortcuts.MainVideoLoopSelectedLines);
             textWriter.WriteElementString("MainVideoGoToPrevSubtitle", shortcuts.MainVideoGoToPrevSubtitle);
             textWriter.WriteElementString("MainVideoGoToNextSubtitle", shortcuts.MainVideoGoToNextSubtitle);
+            textWriter.WriteElementString("MainVideoGoToPrevTimeCode", shortcuts.MainVideoGoToPrevTimeCode);
+            textWriter.WriteElementString("MainVideoGoToNextTimeCode", shortcuts.MainVideoGoToNextTimeCode);
             textWriter.WriteElementString("MainVideoGoToPrevChapter", shortcuts.MainVideoGoToPrevChapter);
             textWriter.WriteElementString("MainVideoGoToNextChapter", shortcuts.MainVideoGoToNextChapter);
             textWriter.WriteElementString("MainVideoSelectNextSubtitle", shortcuts.MainVideoSelectNextSubtitle);

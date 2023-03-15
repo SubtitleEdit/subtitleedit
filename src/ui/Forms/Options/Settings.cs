@@ -1432,6 +1432,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(videoNode, language.LoopSelectedLines, nameof(Configuration.Settings.Shortcuts.MainVideoLoopSelectedLines));
             AddNode(videoNode, language.WaveformGoToPrevSubtitle, nameof(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle));
             AddNode(videoNode, language.WaveformGoToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle));
+            AddNode(videoNode, language.WaveformGoToPrevTimeCode, nameof(Configuration.Settings.Shortcuts.MainVideoGoToPrevTimeCode));
+            AddNode(videoNode, language.WaveformGoToNextTimeCode, nameof(Configuration.Settings.Shortcuts.MainVideoGoToNextTimeCode));
             AddNode(videoNode, language.WaveformGoToPrevChapter, nameof(Configuration.Settings.Shortcuts.MainVideoGoToPrevChapter));
             AddNode(videoNode, language.WaveformGoToNextChapter, nameof(Configuration.Settings.Shortcuts.MainVideoGoToNextChapter));
             AddNode(videoNode, language.WaveformSelectNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainVideoSelectNextSubtitle));
