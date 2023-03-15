@@ -2451,6 +2451,7 @@ Command line: {1} {2}
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleQuotes>切换引号</ToggleQuotes>
     <ToggleHiTags>切换HI标签</ToggleHiTags>
+    <ToggleCustomTags>切换自定义标签</ToggleCustomTags>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
     <AlignmentN1>左下对齐 - {\an1}</AlignmentN1>
@@ -2508,6 +2509,8 @@ Command line: {1} {2}
     <LoopSelectedLines>循环播放选定的行</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>转到上一条字幕（从当前视频位置起）</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>转到下一条字幕（从当前视频位置起）</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>转到上一个时间码（从当前视频位置起）</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>转到下一个时间码（从当前视频位置起）</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>转到上一章节</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>转到下一章节</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>选择下一行字幕 (从当前视频位置起, 保持视频位置不变)</WaveformSelectNextSubtitle>
