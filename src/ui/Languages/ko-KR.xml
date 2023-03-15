@@ -850,6 +850,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <SolidColor>단색</SolidColor>
     <DurationInMinutes>지속시간(분)</DurationInMinutes>
     <Background>배경</Background>
+    <FfmpegParameters>다음 매개변수를 사용하여 FFmpeg를 실행:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>생성 - 프롬프트 FFmpeg 매개 변수</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>자막 입혀진 비디오 파일 생성</Title>
@@ -877,6 +879,16 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GetStartPosition>시작 지점 얻기</GetStartPosition>
     <GetEndPosition>끝 지점 얻기</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>자막이 내장된 비디오 파일 생성</Title>
+    <InputVideoFile>비디오 파일</InputVideoFile>
+    <SubtitlesX>자막 ({0})</SubtitlesX>
+    <SetLanguage>언어 설정...</SetLanguage>
+    <ToggleForced>적용값</ToggleForced>
+    <ToggleDefault>기본값</ToggleDefault>
+    <Default>기본</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}"에 자막을 내장했습니다!</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
     <DescriptionLine1>Subtitle Edit 맞춤법 검사는 LibreOffice의 맞춤법 검사용 엔진인</DescriptionLine1>
@@ -1278,7 +1290,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
         <SmptTimeMode>SMPTE 타이밍 (비 정수 프레임 속도)</SmptTimeMode>
         <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateBlankVideo>빈 비디오 생성...</GenerateBlankVideo>
-        <GenerateVideoWithBurnedInSub>자막 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithBurnedInSub>자막이 입혀진 비디오 파일 생성...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>자막이 내장된 비디오 파일 생성...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>오디오를 텍스트로 ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>비디오에서 챕터 가져오기</ImportChaptersFromVideo>
         <GenerateImportShotChanges>장면 전환 생성/가져오기...</GenerateImportShotChanges>
@@ -2451,6 +2464,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <ToggleQuotes>따옴표 전환</ToggleQuotes>
     <ToggleHiTags>HI 태그 전환</ToggleHiTags>
+    <ToggleCustomTags>사용자 지정 태그</ToggleCustomTags>
     <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
@@ -2508,6 +2522,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <LoopSelectedLines>선택한 줄 반복</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>이전 자막으로 이동 (비디오 위치에서)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>이전 타임코드로 이동(비디오 위치에서)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>다음 타임코드로 이동(비디오 위치에서)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>이전 챕터로 이동</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>다음 챕터로 이동</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>다음 자막 선택 (비디오 위치에서, 비디오 위치를 유지)</WaveformSelectNextSubtitle>
@@ -2636,6 +2652,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>편집</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>단축키: 텍스트 상자에 단일 문자/숫자 허용</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>사용자 지정 시작/끝 단축키 전환</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>지금 적용</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>선택한 파일 확장자가 연결 되었습니다!</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>사용자 지정 연속 스타일 편집</CustomContinuationStyle>
@@ -2650,6 +2667,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <PreviewPause>(일시 중지)</PreviewPause>
     <CustomContinuationStyleNote> 참고: 사용자 지정 연속 스타일은 프로필 간에 공유됩니다.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>이렇게 하면 대화 상자의 값이 무시됩니다. 확실합니까?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>HTML로 내보내기...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>mpv lib 다운로드</DownloadMpv>
