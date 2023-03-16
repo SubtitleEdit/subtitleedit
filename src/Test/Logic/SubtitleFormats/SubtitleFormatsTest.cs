@@ -858,6 +858,16 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.IsTrue(text.Contains("<Font Italic=\"yes\" Color=\"FFFF0000\">Red</Font>"));
         }
 
+        [TestMethod]
+        public void DcinemaSmpteColorAndItalicNoSpaceBeforeAndAfterFont()
+        {
+            var target = new DCinemaSmpte2010();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\"><i>Red</i></font>", 1000, 5000));
+            var text = target.ToText(subtitle, "title");
+            Assert.IsTrue(text.Contains("><Font Italic=\"yes\" Color=\"FFFF0000\">Red</Font><"));
+        }
+
         #endregion DCinema smpte (.xml)
 
         #region DCinema interop (.xml)

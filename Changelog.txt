@@ -9,6 +9,8 @@
    * Add new shortcut for split + auto-br - thx oep42
    * Add "Sort by" in "Batch convert" - thx Masina86
    * Add image format RhozetHarmonic (only read) - thx Arianna
+   * Add "Toggle custom surround text with" shortcut - thx HadiSparrow
+   * Add "Go to next/previous time code from video position" shortcuts - thx faon-92
 * IMPROVED:
    * Update French translation - thx Pierre
    * Update Hungarian translation - thx Zityi
@@ -43,6 +45,9 @@
    * Fix minor left/right cropping issue in image export - thx nissansz
    * Fix possible crash after choosing folder in image export
    * Fix italic/font issue with DFXP - thx IngunnHelge
+   * Fix for image export baseline - thx Matt
+   * Fix cash in "Generate blank video"
+   * Fix too many {\an1} in SCC
 
 
 3.6.11 (30th January 2023)
