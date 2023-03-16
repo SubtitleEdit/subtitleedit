@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.11</Version>
-    <TranslatedBy>Последен превод на български 22.02.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 16.03.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -344,8 +344,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <DeleteFirstLines>Изтрийте първите редове</DeleteFirstLines>
     <DeleteLastLines>Изтрийте последните редове</DeleteLastLines>
     <DeleteContaining>Изтрийте редовете, съдържащи</DeleteContaining>
-    <MkvLanguageInOutputFileName>„Език“ в името на изходния файл</MkvLanguageInOutputFileName>
-    <MkvLanguageInOutputFileNameX>Matroska (.mkv) „Език“ в името на изходния файл: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageInOutputFileName>"Език" в името на изходния файл</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Език" в името на изходния файл: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Код на две букви на езика</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Трибуквен код на езика</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Няма езиков код</MkvLanguageStyleEmpty>
@@ -851,12 +851,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <SolidColor>Плътен цвят</SolidColor>
     <DurationInMinutes>Продължителност в минути</DurationInMinutes>
     <Background>Заден план</Background>
+    <FfmpegParameters>Стартиране на FFmpeg с параметри:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Генериране с FFmpeg параметри</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Генериране на видео със записани субтитри</Title>
     <InfoAssaOff>Забележка: Поддържа се Advanced SubStation Alpha (ASS) стил [Разширен SubStation Alpha (SSA)].</InfoAssaOff>
     <InfoAssaOn>Забележка: Ще се използва стилът Advanced SubStation Alpha :)</InfoAssaOn>
-    <XGeneratedWithBurnedInSubsInX>„{0}“, генериран с вписани субтитри в {1}.</XGeneratedWithBurnedInSubsInX>
+    <XGeneratedWithBurnedInSubsInX>"{0}", генериран с вписани субтитри в {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Оставащо време: {0} минути</TimeRemainingMinutes>
     <TimeRemainingSeconds>Оставащо време: {0} секунди</TimeRemainingSeconds>
     <TimeRemainingAFewSeconds>Оставащо време: Няколко секунди</TimeRemainingAFewSeconds>
@@ -875,7 +877,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <Crf>CRF</Crf>
     <TuneFor>Настройка за</TuneFor>
     <AlignRight>Подравняване вдясно</AlignRight>
+    <GetStartPosition>Заемане на начална позиция</GetStartPosition>
+    <GetEndPosition>Заемане на крайна позиция</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Генериране на видео с вградени субтитри</Title>
+    <InputVideoFile>Входен видео файл</InputVideoFile>
+    <SubtitlesX>Субтитри ({0})</SubtitlesX>
+    <SetLanguage>Задаване на език...</SetLanguage>
+    <ToggleForced>Принудително превключване</ToggleForced>
+    <ToggleDefault>Превключване по подразбиране</ToggleDefault>
+    <Default>По подразбиране</Default>
+    <XGeneratedWithEmbeddedSubs>"{0}" е генериран с вградени субтитри</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
     <DescriptionLine1>Проверката на правопис в Subtitle Edit е базирана на обработчика NHunspell,</DescriptionLine1>
@@ -1278,6 +1292,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateTextFromVideo>Генериране на текст от видео...</GenerateTextFromVideo>
         <GenerateBlankVideo>Генериране на празно видео...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео със записани субтитри...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Генериране на видео с вградени субтитри...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Аудио към текст ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Импорт на глави от видео</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Създаване/импортиране на промените в сцената...</GenerateImportShotChanges>
@@ -1366,6 +1381,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Paste>Вмъкване</Paste>
         <Delete>Изтриване на ред (-ове)</Delete>
         <SplitLineAtCursorPosition>Разделяне на реда в позицията на курсора</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Разделяне на реда в позицията на курсора и авт. прекъсване</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Разделяне на реда по курсора/видео позиция</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Авт. продължителност</AutoDurationCurrentLine>
         <SelectAll>Избери всичко</SelectAll>
@@ -1644,7 +1660,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeImportFromMatroskaFile>Преди внасянето на субтитри от файла Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Субтитрите са внесени от файла Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Пуснатия файл '{0}' не е приет – файлът е твърде голям</DropFileXNotAccepted>
-    <DropSubtitleFileXNotAccepted>Пуснатия файл „{0}“ не е приет - файлът е твърде голям за субтитри</DropSubtitleFileXNotAccepted>
+    <DropSubtitleFileXNotAccepted>Пуснатия файл "{0}" не е приет - файлът е твърде голям за субтитри</DropSubtitleFileXNotAccepted>
     <DropOnlyOneFile>Можете да пускате само един файл</DropOnlyOneFile>
     <OpenAnsiSubtitle>Отваряне на субтитри...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Преди промяна големината на буквите</BeforeChangeCasing>
@@ -2451,6 +2467,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleQuotes>Превключване на кавички</ToggleQuotes>
     <ToggleHiTags>Превключване на HI тагове</ToggleHiTags>
+    <ToggleCustomTags>Превключване на персонализирани тагове</ToggleCustomTags>
     <ToggleMusicSymbols>Превключване на музикални символи</ToggleMusicSymbols>
     <Alignment>Подравняване (редовете в момента)</Alignment>
     <AlignmentN1>Подравняване Долу-Ляво - {\an1}</AlignmentN1>
@@ -2508,6 +2525,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <LoopSelectedLines>Контур на избраните редове</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Преминаване на предишния субтитър (от видео позицията)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Преминаване на следващия субтитър (от видео позицията)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Преминаване на предишния времеви код (от видео позицията)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Преминаване на следващия времеви код (от видео позицията)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Преминаване на предишната глава</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Преминаване на следващата глава</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Избор на следващия субтитър (от видео позицията, запазване на видео поз.)</WaveformSelectNextSubtitle>
@@ -2637,6 +2656,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BDOpensInOcr>OCR (разпознаване на текст)</BDOpensInOcr>
     <BDOpensInEdit>Редактиране</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Преки пътища: Разрешава единична буква/цифра в текстовото поле</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Превключване на пряк път по избор начало/край</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Обнови асоциациите типове файлове</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Асоциациите на типовете файлове са актуализирани</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Редактиране на персонализиран стил на продължение</CustomContinuationStyle>
@@ -2651,6 +2671,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <PreviewPause>(пауза)</PreviewPause>
     <CustomContinuationStyleNote>Забележка: Персонализираният стил на продължение се споделя между профилите.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Това ще замени стойностите в диалоговия прозорец.  Сигурни ли сте?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Експортиране като HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Изтегляне на mpv</DownloadMpv>
