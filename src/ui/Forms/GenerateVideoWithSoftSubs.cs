@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);
+            labelNotSupported.Text = string.Empty;
 
             LoadVideo(inputVideoFileName);
             AddCurrentSubtitle();
@@ -103,17 +104,18 @@ namespace Nikse.SubtitleEdit.Forms
             _inputVideoFileName = inputVideoFileName;
             _videoInfo = videoInfo;
 
-            listViewSubtitles.BeginUpdate();
 
             using (var matroska = new MatroskaFile(inputVideoFileName))
             {
                 if (matroska.IsValid)
                 {
+                    listViewSubtitles.BeginUpdate();
                     foreach (var track in matroska.GetTracks().Where(p => p.IsSubtitle))
                     {
                         AddListViewItem(track, matroska);
                     }
 
+                    listViewSubtitles.EndUpdate();
                     return;
                 }
             }
@@ -121,13 +123,14 @@ namespace Nikse.SubtitleEdit.Forms
             var mp4Parser = new MP4Parser(inputVideoFileName);
             if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
             {
+                listViewSubtitles.BeginUpdate();
                 foreach (var track in mp4Parser.GetSubtitleTracks())
                 {
                     AddListViewItem(track);
                 }
-            }
 
-            listViewSubtitles.EndUpdate();
+                listViewSubtitles.EndUpdate();
+            }
         }
 
         private void AddListViewItem(Trak track)
@@ -190,6 +193,15 @@ namespace Nikse.SubtitleEdit.Forms
                 track.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase) ||
                 track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
             {
+                if (string.IsNullOrEmpty(labelNotSupported.Text))
+                {
+                    labelNotSupported.Text = $"Not supported: {track.CodecId}";
+                }
+                else
+                {
+                    labelNotSupported.Text += $", {track.CodecId}";
+                }
+
                 return; // not supported
             }
 
@@ -598,9 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            listViewSubtitles.BeginUpdate();
             listViewSubtitles.Items.Clear();
-            listViewSubtitles.EndUpdate();
             _softSubs.Clear();
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, listViewSubtitles.Items.Count);
         }
