@@ -575,11 +575,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         internal static string FixDcsTextSameLine(string xml)
         {
-            var index = xml.IndexOf("<dcst:Text", StringComparison.Ordinal);
+            var index = xml.IndexOf("<Text", StringComparison.Ordinal);
             var endIndex = 1;
             while (index > 0 && endIndex > 0)
             {
-                endIndex = xml.IndexOf("</dcst:Text>", index, StringComparison.Ordinal);
+                endIndex = xml.IndexOf("</Text>", index, StringComparison.Ordinal);
                 if (endIndex > 0)
                 {
                     var part = xml.Substring(index, endIndex - index);
@@ -593,9 +593,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         part = part.Replace("> <", "><");
                     }
                     xml = xml.Remove(index, endIndex - index).Insert(index, part);
-                    index = xml.IndexOf("<dcst:Text", endIndex, StringComparison.Ordinal);
+                    index = xml.IndexOf("<Text", endIndex, StringComparison.Ordinal);
                 }
             }
+
+            xml = xml
+                .Replace("\n<Font>", "<Font>")
+                .Replace("\r<Font>", "<Font>")
+                .Replace("\n<Font>", "<Font>")
+                .Replace("\r<Font>", "<Font>")
+
+                .Replace("</Font>\r", "</Font>")
+                .Replace("</Font>\n", "</Font>")
+                .Replace("</Font>\r", "</Font>")
+                .Replace("</Font>\n", "</Font>")
+                
+                .Replace("</Font> </Text>", "</Font></Text>")
+                ;
 
             return xml;
         }
