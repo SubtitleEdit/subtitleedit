@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -255,9 +256,15 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            fileName = GetKnownFileNameOrConvertToSrt(fileName, subtitle);
+            if (fileName != subtitle.FileName)
+            {
+                subtitle = Subtitle.Parse(fileName);
+            }
+
             AddListViewItem(new VideoPreviewGeneratorSub
             {
-                Name = Path.GetFileName(fileName),
+                Name = Path.GetFileName(fileName), 
                 Language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle),
                 Format = subtitle.OriginalFormat.FriendlyName,
                 SubtitleFormat = subtitle.OriginalFormat,
@@ -266,6 +273,29 @@ namespace Nikse.SubtitleEdit.Forms
                 IsDefault = false,
                 FileName = fileName,
             });
+        }
+
+        private static string GetKnownFileNameOrConvertToSrt(string fileName, Subtitle subtitle)
+        {
+            if (subtitle.OriginalFormat.Name == new SubRip().Name ||
+                subtitle.OriginalFormat.Name == new AdvancedSubStationAlpha().Name ||
+                subtitle.OriginalFormat.Name == new SubStationAlpha().Name ||
+                subtitle.OriginalFormat.Name == new WebVTT().Name ||
+                subtitle.OriginalFormat.Name == new WebVTTFileWithLineNumber().Name)
+            {
+                return fileName;
+            }
+
+            var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(dir);
+
+            var nameOnly = string.IsNullOrEmpty(subtitle.FileName)
+                ? "Untitled.srt"
+                : Path.GetFileName(subtitle.FileName);
+
+            fileName = Path.Combine(dir, nameOnly + new SubRip().Extension);
+            File.WriteAllText(fileName, new SubRip().ToText(subtitle, string.Empty));
+            return fileName;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -292,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_softSubs.Count == 0)
             {
                 var res = MessageBox.Show("Generate video without any embedded subs?", "", MessageBoxButtons.YesNoCancel);
-                if (res != DialogResult.OK)
+                if (res != DialogResult.Yes)
                 {
                     return;
                 }
@@ -396,19 +426,28 @@ namespace Nikse.SubtitleEdit.Forms
                 _abort = true;
                 return;
             }
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
 
-            while (!process.HasExited)
+            try
             {
-                Application.DoEvents();
-                WindowsHelper.PreventStandBy();
-                System.Threading.Thread.Sleep(100);
-                if (_abort)
+                Cursor = Cursors.WaitCursor;
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+
+                while (!process.HasExited)
                 {
-                    process.Kill();
+                    Application.DoEvents();
+                    WindowsHelper.PreventStandBy();
+                    System.Threading.Thread.Sleep(100);
+                    if (_abort)
+                    {
+                        process.Kill();
+                    }
                 }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
@@ -537,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.Title = LanguageSettings.Current.General.OpenSubtitle;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+                openFileDialog1.Filter = GetOpenSubtitleDialogFilter();
                 openFileDialog1.FileName = string.Empty;
                 openFileDialog1.Multiselect = true;
                 if (openFileDialog1.ShowDialog() != DialogResult.OK)
@@ -550,6 +589,49 @@ namespace Nikse.SubtitleEdit.Forms
                     AddListViewItem(fileName);
                 }
             }
+        }
+
+        private static string GetOpenSubtitleDialogFilter()
+        {
+            var sb = new StringBuilder();
+            sb.Append(LanguageSettings.Current.General.SubtitleFiles + "|");
+            foreach (var s in SubtitleFormat.AllSubtitleFormats.Concat(SubtitleFormat.GetTextOtherFormats()))
+            {
+                UiUtil.AddExtension(sb, s.Extension);
+                foreach (var ext in s.AlternateExtensions)
+                {
+                    UiUtil.AddExtension(sb, ext);
+                }
+            }
+
+            UiUtil.AddExtension(sb, new Pac().Extension);
+            UiUtil.AddExtension(sb, new Cavena890().Extension);
+            UiUtil.AddExtension(sb, new Spt().Extension);
+            UiUtil.AddExtension(sb, new Sptx().Extension);
+            UiUtil.AddExtension(sb, new Wsb().Extension);
+            UiUtil.AddExtension(sb, new CheetahCaption().Extension);
+            UiUtil.AddExtension(sb, ".chk");
+            UiUtil.AddExtension(sb, new CaptionsInc().Extension);
+            UiUtil.AddExtension(sb, new Ultech130().Extension);
+            UiUtil.AddExtension(sb, new ELRStudioClosedCaption().Extension);
+            UiUtil.AddExtension(sb, ".uld"); // Ultech drop frame
+            UiUtil.AddExtension(sb, new SonicScenaristBitmaps().Extension);
+            UiUtil.AddExtension(sb, ".mks");
+            UiUtil.AddExtension(sb, ".mxf");
+            UiUtil.AddExtension(sb, ".sup");
+            UiUtil.AddExtension(sb, new FinalDraftTemplate2().Extension);
+            UiUtil.AddExtension(sb, new Ayato().Extension);
+            UiUtil.AddExtension(sb, new PacUnicode().Extension);
+            UiUtil.AddExtension(sb, new WinCaps32().Extension);
+            UiUtil.AddExtension(sb, new IsmtDfxp().Extension);
+            UiUtil.AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
+            UiUtil.AddExtension(sb, ".cdg"); // karaoke
+            UiUtil.AddExtension(sb, ".pns"); // karaoke
+
+            sb.Append('|');
+            sb.Append(LanguageSettings.Current.General.AllFiles);
+            sb.Append("|*.*");
+            return sb.ToString();
         }
 
         private void listViewSubtitles_DragEnter(object sender, DragEventArgs e)
@@ -715,7 +797,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (int index in listViewSubtitles.SelectedIndices)
             {
                 _softSubs[index].IsForced = !_softSubs[index].IsForced;
-                listViewSubtitles.Items[index].SubItems[3].Text = _softSubs[index].IsForced.ToString(CultureInfo.InvariantCulture);
+                listViewSubtitles.Items[index].SubItems[4].Text = _softSubs[index].IsForced.ToString(CultureInfo.InvariantCulture);
             }
         }
 
@@ -730,14 +812,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (_softSubs[selectedIndex].IsDefault)
             {
                 _softSubs[selectedIndex].IsDefault = false;
-                listViewSubtitles.Items[selectedIndex].SubItems[2].Text = _softSubs[selectedIndex].IsDefault.ToString(CultureInfo.InvariantCulture);
+                listViewSubtitles.Items[selectedIndex].SubItems[3].Text = _softSubs[selectedIndex].IsDefault.ToString(CultureInfo.InvariantCulture);
                 return;
             }
 
             for (var index = 0; index < listViewSubtitles.Items.Count; index++)
             {
                 _softSubs[index].IsDefault = index == selectedIndex;
-                listViewSubtitles.Items[index].SubItems[2].Text = _softSubs[index].IsDefault.ToString(CultureInfo.InvariantCulture);
+                listViewSubtitles.Items[index].SubItems[3].Text = _softSubs[index].IsDefault.ToString(CultureInfo.InvariantCulture);
             }
 
             MoveToTop(listViewSubtitles);
@@ -762,7 +844,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in listViewSubtitles.SelectedIndices)
                     {
                         _softSubs[index].Language = cl.CultureName;
-                        listViewSubtitles.Items[index].SubItems[1].Text = GetDisplayLanguage(cl.CultureName);
+                        listViewSubtitles.Items[index].SubItems[2].Text = GetDisplayLanguage(cl.CultureName);
                     }
                 }
             }
