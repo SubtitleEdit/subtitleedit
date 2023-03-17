@@ -400,7 +400,7 @@ namespace Nikse.SubtitleEdit.Logic
                 StartInfo =
                 {
                     FileName = GetFfmpegLocation(),
-                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0 -c copy{subsMap}{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
+                    Arguments = $"-i \"{inputVideoFileName}\"{subsInput} -map 0 -c copy -map -0:s{subsMap}{subsFormat}{subsMeta} \"{outputVideoFileName}\"".TrimStart(),
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 }
