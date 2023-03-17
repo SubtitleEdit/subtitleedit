@@ -40,14 +40,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private static readonly string[] Sha512HashesConstMe =
         {
-            "76b9004121fb152cc11641ce4afb33de4e503d549dcfb4f1e17b5f2655d5bb8e912120b4b273937693014cdb6bbb242210b0572b4de767d7bd0d7e0c4144f3c8",
+            "18e5aab30946e27d7ee88a11d88c4582be980fe4e6a86db85609d81067778b0014a9de5bed6c82176aa6f3ba7b4e0c8f13b3c1b91f6883529161fa54f2a00e7e",
         };
 
         private static readonly string[] OldSha512HashesConstMe =
         {
+            "76b9004121fb152cc11641ce4afb33de4e503d549dcfb4f1e17b5f2655d5bb8e912120b4b273937693014cdb6bbb242210b0572b4de767d7bd0d7e0c4144f3c8",
         };
 
-        private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.7.0/cli.zip";
+        private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.9.0/cli.zip";
 
 
         public WhisperDownload(string whisperChoice)
