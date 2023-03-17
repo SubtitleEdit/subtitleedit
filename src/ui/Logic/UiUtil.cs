@@ -1095,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Logic
             return c == UnicodeCategory.SpaceSeparator || c == UnicodeCategory.Control || c == UnicodeCategory.LineSeparator || c == UnicodeCategory.ParagraphSeparator;
         }
 
-        private static void AddExtension(StringBuilder sb, string extension)
+        public static void AddExtension(StringBuilder sb, string extension)
         {
             if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
             {
