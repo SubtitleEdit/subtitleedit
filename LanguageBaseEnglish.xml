@@ -885,7 +885,7 @@ Read more info (web)?</WhisperNotFound>
     <GetEndPosition>Get end position</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
-    <Title>Generate video with embedded subtitles</Title>
+    <Title>Generate video with added/removed embedded subtitles</Title>
     <InputVideoFile>Input video file</InputVideoFile>
     <SubtitlesX>Subtitles ({0})</SubtitlesX>
     <SetLanguage>Set language...</SetLanguage>
@@ -1295,7 +1295,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Generate blank video...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Generate video with burned-in subtitle...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>Generate video with embedded subtitles...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>Generate video with added/removed embedded subtitles...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Audio to text ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Import chapters from video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generate/import shot changes...</GenerateImportShotChanges>

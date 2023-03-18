@@ -29698,7 +29698,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (hidx >= 0 && hidx < _subtitle.HistoryItems.Count)
                     {
                         var historyParagraph = _subtitle.HistoryItems[hidx].Subtitle.GetParagraphOrDefault(index);
-                        historyParagraph.Text = _listViewTextUndoLast;
+                        if (historyParagraph != null)
+                        {
+                            historyParagraph.Text = _listViewTextUndoLast;
+                        }
                     }
 
                     _listViewTextUndoLast = newText;
