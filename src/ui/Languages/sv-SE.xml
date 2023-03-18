@@ -855,6 +855,8 @@ Läs mer information (webb)?</WhisperNotFound>
     <SolidColor>Enfärgade</SolidColor>
     <DurationInMinutes>Varaktighet i minuter</DurationInMinutes>
     <Background>Bakgrund</Background>
+    <FfmpegParameters>Kör FFmpeg med följande parametrar:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generera - prompt FFmpeg-parametrar</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Skapa video med inbränd undertext</Title>
@@ -889,6 +891,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <SetLanguage>Ställ in språk...</SetLanguage>
     <ToggleForced>Växla tvingad</ToggleForced>
     <ToggleDefault>Växla standard</ToggleDefault>
+    <Default>Standard</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" genereras med inbäddade undertexter</XGeneratedWithEmbeddedSubs>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
@@ -2461,6 +2464,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <ToggleDialogDashes>Växla dialogstreck</ToggleDialogDashes>
     <ToggleQuotes>Växla citat</ToggleQuotes>
     <ToggleHiTags>Växla HI-taggar</ToggleHiTags>
+    <ToggleCustomTags>Växla anpassade taggar</ToggleCustomTags>
     <ToggleMusicSymbols>Växla musiksymboler</ToggleMusicSymbols>
     <Alignment>Justering (markerade rader)</Alignment>
     <AlignmentN1>Justering längst ner till vänster - {\an1}</AlignmentN1>
@@ -2518,6 +2522,8 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <LoopSelectedLines>Slinga valda linjer</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Gå till föregående undertext (från videoposition)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå till nästa undertext (från videoposition)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Gå till föregående tidskod (från videoposition)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Gå till nästa tidskod (från videoposition)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Gå till föregående kapitel</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Gå till nästa kapitel</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Välj nästa undertext (från videoposition, behåll videoposition)</WaveformSelectNextSubtitle>
@@ -2646,6 +2652,7 @@ Fortsätt?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Redigera</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Genvägar: Tillåt en bokstav/siffra i textrutan</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Genväg växla anpassad start/slut</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Uppdatera filtypsassociationer</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Filtypsassociationer uppdaterade</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Redigera anpassad fortsättningsstil</CustomContinuationStyle>
@@ -2660,6 +2667,7 @@ Fortsätt?</RestoreDefaultSettingsMsg>
     <PreviewPause>(paus)</PreviewPause>
     <CustomContinuationStyleNote>Obs! Den anpassade fortsättningsstilen delas mellan profiler.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Detta åsidosätter värdena i dialogrutan. Är du säker?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Exportera som HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Ladda ner mpv lib</DownloadMpv>

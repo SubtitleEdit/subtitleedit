@@ -849,6 +849,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SolidColor>Farve</SolidColor>
     <DurationInMinutes>Varighed i minutter</DurationInMinutes>
     <Background>Baggrund</Background>
+    <FfmpegParameters>Kør FFmpeg med følgende parametre:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generer - prompt FFmpeg-parametre</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Generer video med indbrændt subtil</Title>
@@ -883,6 +885,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetLanguage>Indstil sprog...</SetLanguage>
     <ToggleForced>Skift tvunget</ToggleForced>
     <ToggleDefault>Skift standard</ToggleDefault>
+    <Default>Standard</Default>
     <XGeneratedWithEmbeddedSubs>"{0}" genereret med indlejrede undertekster</XGeneratedWithEmbeddedSubs>
   </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
@@ -2452,6 +2455,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <ToggleQuotes>Skift gåseøjne</ToggleQuotes>
     <ToggleHiTags>Skift HI-tags</ToggleHiTags>
+    <ToggleCustomTags>Skift tilpassede tags</ToggleCustomTags>
     <ToggleMusicSymbols>Skift musik symboler</ToggleMusicSymbols>
     <Alignment>Justering (valgte linier)</Alignment>
     <AlignmentN1>Justering bund venstre left - {\an1}</AlignmentN1>
@@ -2509,6 +2513,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <LoopSelectedLines>Loop valgt linjer</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Gå til forrige tidskode (fra videoposition)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Gå til næste tidskode (fra videoposition)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Gå til forrige kapitel</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Gå til næste kapitel</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Vælg næste undertekst (fra videoposition, behold videopos)</WaveformSelectNextSubtitle>
@@ -2637,6 +2643,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Rediger</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Genveje: Tillad enkelt bogstav/tal i tekstfeltet</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Genvejsskift tilpasset start/slut</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Opdater filtypetilknytninger</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Filtypetilknytninger opdateret</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Rediger tilpasset fortsættelsesstil</CustomContinuationStyle>
@@ -2651,6 +2658,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <PreviewPause>(pause)</PreviewPause>
     <CustomContinuationStyleNote>Bemærk: Den tilpassede fortsættelsesstil deles på tværs af profiler.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Dette vil overskrive i dialogen.  Er du sikker?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Eksporter som HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Hent MPV lib</DownloadMpv>
