@@ -198,6 +198,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <BatchMode>Tryb wsadowy</BatchMode>
     <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
     <TranslateToEnglish>Przetłumacz na angielski</TranslateToEnglish>
+    <MaxCharsPerSubtitle>Max. znaków na linię napisów</MaxCharsPerSubtitle>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -331,7 +332,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
     <FilterContains>Tekst zawiera...</FilterContains>
     <FilterFileNameContains>Nazwa pliku zawiera...</FilterFileNameContains>
-    <MkvLanguageCodeContains>Kod języka Matroska (.mkv) zawiera...</MkvLanguageCodeContains>
+    <LanguageCodeContains>Kod języka (mkv/mp4) zawiera...</LanguageCodeContains>
     <FixCommonErrorsErrorX>Poprawiono najczęstsze błędy: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Wielokrotne zastępowanie: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
@@ -854,6 +855,8 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <SolidColor>Jednolity kolor</SolidColor>
     <DurationInMinutes>Czas trwania w minutach</DurationInMinutes>
     <Background>Tło</Background>
+    <FfmpegParameters>Uruchom FFmpeg z następującymi parametrami:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>Generuj - podpowiedz parametry FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Wygeneruj wideo z wtopionymi napisami</Title>
@@ -878,7 +881,19 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <Crf>CRF</Crf>
     <TuneFor>Dostrój do</TuneFor>
     <AlignRight>Wyrównaj do prawej</AlignRight>
+    <GetStartPosition>Pobierz pozycję początkową</GetStartPosition>
+    <GetEndPosition>Pobierz pozycję zakończenia</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
+  <GenerateVideoWithEmbeddedSubs>
+    <Title>Generuj wideo z osadzonymi napisami</Title>
+    <InputVideoFile>Wejściowy plik wideo</InputVideoFile>
+    <SubtitlesX>Napisy ({0})</SubtitlesX>
+    <SetLanguage>Ustaw język...</SetLanguage>
+    <ToggleForced>Przeł. wymuszone</ToggleForced>
+    <ToggleDefault>Przełącz domyślne</ToggleDefault>
+    <Default>Domyślne</Default>
+    <XGeneratedWithEmbeddedSubs>Wygenerowano "{0}" z osadzonymi napisami</XGeneratedWithEmbeddedSubs>
+  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>Potrzebujesz słowników?</Title>
     <DescriptionLine1>Sprawdzanie pisowni w Subtitle Edit oparte jest na silniku NHunspell,</DescriptionLine1>
@@ -1167,7 +1182,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
         <CloseOriginal>Zamknij oryginalne napisy</CloseOriginal>
         <CloseTranslation>Zamknij przetłumaczone napisy</CloseTranslation>
-        <OpenContainingFolder>Otwórz folder z zawartością</OpenContainingFolder>
+        <OpenContainingFolder>Otwórz folder zawierający wideo</OpenContainingFolder>
         <Compare>&amp;Porównaj...</Compare>
         <Statistics>S&amp;tatystyki...</Statistics>
         <Plugins>&amp;Wtyczki...</Plugins>
@@ -1280,6 +1295,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <GenerateTextFromVideo>Wygeneruj tekst z wideo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
+        <GenerateVideoWithEmbeddedSubs>Wygeneruj wideo z osadzonymi napisami...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Audio na tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generuj/importuj zmiany kadru...</GenerateImportShotChanges>
@@ -1368,6 +1384,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <Paste>Wklej</Paste>
         <Delete>Usuń</Delete>
         <SplitLineAtCursorPosition>Podziel linię w pozycji kursora</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPositionAndAutoBr>Podziel linię w pozycji kursora i automatycznie przełam linię</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>Podziel linię w pozycji kursora/wideo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automatyczny czas trwania (bieżąca linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
@@ -2448,6 +2465,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleQuotes>Przełącz cudzysłowy</ToggleQuotes>
     <ToggleHiTags>Przełącz tagi dla osób niedosłyszących</ToggleHiTags>
+    <ToggleCustomTags>Przełącz tagi niestandardowe</ToggleCustomTags>
     <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (wybrane linie)</Alignment>
     <AlignmentN1>Wyrównanie - u dołu po lewej - {\an1}</AlignmentN1>
@@ -2505,6 +2523,8 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <LoopSelectedLines>Zapętlaj wybrane linie</LoopSelectedLines>
     <WaveformGoToPrevSubtitle>Przejdź do poprzedniej linii napisów (z pozycji wideo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Przejdź do następnej linii napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
+    <WaveformGoToPrevTimeCode>Przejdź do poprzedniego kodu czasowego (z pozycji wideo)</WaveformGoToPrevTimeCode>
+    <WaveformGoToNextTimeCode>Przejdź do następnego kodu czasowego (z pozycji wideo)</WaveformGoToNextTimeCode>
     <WaveformGoToPrevChapter>Przejdź do poprzedniego rozdziału</WaveformGoToPrevChapter>
     <WaveformGoToNextChapter>Przejdź do następnego rozdziału</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>Wybierz następny napis (z pozycji wideo, zachowaj pozycję wideo)</WaveformSelectNextSubtitle>
@@ -2633,6 +2653,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>Edycja</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Skróty: Zezwalaj na pojedyncze litery/cyfry w polu tekstowym</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>Skrót przełącza niestandardowy początek/koniec</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Zaktualizuj skojarzenia typów plików</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Zaktualizowano skojarzenia typów plików</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Edytuj niestandardowy styl kontynuacji</CustomContinuationStyle>
@@ -2647,6 +2668,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <PreviewPause>(pauza)</PreviewPause>
     <CustomContinuationStyleNote>Uwaga: Niestandardowy styl kontynuacji jest wspólny dla wszystkich profili.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>Zastąpi to wartości w oknie dialogowym. Jesteś pewny?</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>Eksportuj jako HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>Pobierz bibliotekę mpv</DownloadMpv>
