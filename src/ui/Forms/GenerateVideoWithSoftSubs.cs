@@ -909,5 +909,10 @@ namespace Nikse.SubtitleEdit.Forms
             _promptFFmpegParameters = true;
             buttonGenerate_Click(null, null);
         }
+
+        private void toolStripMenuItemStorageRemoveAll_Click(object sender, EventArgs e)
+        {
+            buttonClear_Click(null, null);
+        }
     }
 }
