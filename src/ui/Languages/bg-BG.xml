@@ -881,7 +881,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GetEndPosition>Заемане на крайна позиция</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
-    <Title>Генериране на видео с вградени субтитри</Title>
+    <Title>Генериране на видео с добавени/премахнати вградени субтитри</Title>
     <InputVideoFile>Входен видео файл</InputVideoFile>
     <SubtitlesX>Субтитри ({0})</SubtitlesX>
     <SetLanguage>Задаване на език...</SetLanguage>
@@ -1292,7 +1292,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <GenerateTextFromVideo>Генериране на текст от видео...</GenerateTextFromVideo>
         <GenerateBlankVideo>Генериране на празно видео...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Генериране на видео със записани субтитри...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>Генериране на видео с вградени субтитри...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>Генериране на видео с добавени/премахнати вградени субтитри...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Аудио към текст ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Импорт на глави от видео</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Създаване/импортиране на промените в сцената...</GenerateImportShotChanges>
