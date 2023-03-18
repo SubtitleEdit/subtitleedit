@@ -26,6 +26,11 @@ namespace Nikse.SubtitleEdit.Forms
         private StringBuilder _log;
         private readonly List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
         private bool _promptFFmpegParameters;
+
+        private const int IndexLanguage = 1;
+        private const int IndexDefault = 2;
+        private const int IndexForced = 3;
+
         public string VideoFileName { get; private set; }
         public long MillisecondsEncoding { get; private set; }
 
@@ -797,7 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (int index in listViewSubtitles.SelectedIndices)
             {
                 _softSubs[index].IsForced = !_softSubs[index].IsForced;
-                listViewSubtitles.Items[index].SubItems[4].Text = _softSubs[index].IsForced.ToString(CultureInfo.InvariantCulture);
+                listViewSubtitles.Items[index].SubItems[IndexForced].Text = _softSubs[index].IsForced.ToString(CultureInfo.InvariantCulture);
             }
         }
 
@@ -812,14 +817,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (_softSubs[selectedIndex].IsDefault)
             {
                 _softSubs[selectedIndex].IsDefault = false;
-                listViewSubtitles.Items[selectedIndex].SubItems[3].Text = _softSubs[selectedIndex].IsDefault.ToString(CultureInfo.InvariantCulture);
+                listViewSubtitles.Items[selectedIndex].SubItems[IndexDefault].Text = _softSubs[selectedIndex].IsDefault.ToString(CultureInfo.InvariantCulture);
                 return;
             }
 
             for (var index = 0; index < listViewSubtitles.Items.Count; index++)
             {
                 _softSubs[index].IsDefault = index == selectedIndex;
-                listViewSubtitles.Items[index].SubItems[3].Text = _softSubs[index].IsDefault.ToString(CultureInfo.InvariantCulture);
+                listViewSubtitles.Items[index].SubItems[IndexDefault].Text = _softSubs[index].IsDefault.ToString(CultureInfo.InvariantCulture);
             }
 
             MoveToTop(listViewSubtitles);
@@ -844,7 +849,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in listViewSubtitles.SelectedIndices)
                     {
                         _softSubs[index].Language = cl.CultureName;
-                        listViewSubtitles.Items[index].SubItems[2].Text = GetDisplayLanguage(cl.CultureName);
+                        listViewSubtitles.Items[index].SubItems[IndexLanguage].Text = GetDisplayLanguage(cl.CultureName);
                     }
                 }
             }

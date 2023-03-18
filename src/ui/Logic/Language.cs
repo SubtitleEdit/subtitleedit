@@ -1115,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             GenerateVideoWithEmbeddedSubs = new LanguageStructure.GenerateVideoWithEmbeddedSubs
             {
-                Title = "Generate video with embedded subtitles",
+                Title = "Generate video with added/removed embedded subtitles",
                 InputVideoFile = "Input video file",
                 SubtitlesX = "Subtitles ({0})",
                 ToggleForced = "Toggle forced",
@@ -1842,7 +1842,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SmptTimeMode = "SMPTE timing (non integer frame rate)",
                         GenerateTextFromVideo = "Generate text from video...",
                         GenerateBlankVideo = "Generate blank video...",
-                        GenerateVideoWithEmbeddedSubs = "Generate video with embedded subtitles...",
+                        GenerateVideoWithEmbeddedSubs = "Generate video with added/removed embedded subtitles...",
                         GenerateVideoWithBurnedInSub = "Generate video with burned-in subtitle...",
                         VideoAudioToTextX = "Audio to text ({0})...",
                         ImportChaptersFromVideo = "Import chapters from video",
