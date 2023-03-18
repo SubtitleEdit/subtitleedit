@@ -18635,47 +18635,47 @@ namespace Nikse.SubtitleEdit.Forms
         private void GoToNearestTimeCode(double currentPosition, bool forward)
         {
             var paragraphsStart = forward
-                ? _subtitle.Paragraphs.Where(p => p.StartTime.TotalMilliseconds > currentPosition)
-                : _subtitle.Paragraphs.Where(p => p.StartTime.TotalMilliseconds < currentPosition);
+                ? _subtitle.Paragraphs.Where(p => p.StartTime.TotalMilliseconds > currentPosition + 1)
+                : _subtitle.Paragraphs.Where(p => p.StartTime.TotalMilliseconds < currentPosition - 1);
 
             var paragraphsEnd = forward
-                ? _subtitle.Paragraphs.Where(p => p.EndTime.TotalMilliseconds > currentPosition)
-                : _subtitle.Paragraphs.Where(p => p.EndTime.TotalMilliseconds < currentPosition);
+                ? _subtitle.Paragraphs.Where(p => p.EndTime.TotalMilliseconds > currentPosition + 1)
+                : _subtitle.Paragraphs.Where(p => p.EndTime.TotalMilliseconds < currentPosition - 1);
 
             var closestStart = paragraphsStart
                 .Select(p => new { Paragraph = p, Distance = Math.Abs(p.StartTime.TotalMilliseconds - currentPosition) })
                 .OrderBy(p => p.Distance)
-                .FirstOrDefault().Paragraph;
+                .FirstOrDefault();
 
             var closestEnd = paragraphsEnd
                 .Select(p => new { Paragraph = p, Distance = Math.Abs(p.EndTime.TotalMilliseconds - currentPosition) })
                 .OrderBy(p => p.Distance)
-                .FirstOrDefault().Paragraph;
+                .FirstOrDefault();
 
             Paragraph found = null;
             double foundSeconds = 0d;
 
-            if (closestStart != null && (closestEnd == null || Math.Abs(closestStart.StartTime.TotalMilliseconds - currentPosition) <
-                Math.Abs(closestEnd.EndTime.TotalMilliseconds - currentPosition)))
+            if (closestStart != null && (closestEnd == null || Math.Abs(closestStart.Paragraph.StartTime.TotalMilliseconds - currentPosition) <
+                Math.Abs(closestEnd.Paragraph.EndTime.TotalMilliseconds - currentPosition)))
             {
-                if (closestStart.StartTime.IsMaxTime)
+                if (closestStart.Paragraph.StartTime.IsMaxTime)
                 {
                     return;
                 }
 
-                found = closestStart;
-                foundSeconds = closestStart.StartTime.TotalSeconds;
+                found = closestStart.Paragraph;
+                foundSeconds = closestStart.Paragraph.StartTime.TotalSeconds;
             }
-            else if (closestEnd != null && (closestStart == null || Math.Abs(closestStart.StartTime.TotalMilliseconds - currentPosition) >
-                         Math.Abs(closestEnd.EndTime.TotalMilliseconds - currentPosition)))
+            else if (closestEnd != null && (closestStart == null || Math.Abs(closestStart.Paragraph.StartTime.TotalMilliseconds - currentPosition) >
+                         Math.Abs(closestEnd.Paragraph.EndTime.TotalMilliseconds - currentPosition)))
             {
-                if (closestEnd.EndTime.IsMaxTime)
+                if (closestEnd.Paragraph.EndTime.IsMaxTime)
                 {
                     return;
                 }
 
-                found = closestEnd;
-                foundSeconds = closestEnd.EndTime.TotalSeconds;
+                found = closestEnd.Paragraph;
+                foundSeconds = closestEnd.Paragraph.EndTime.TotalSeconds;
             }
 
             if (found == null)
