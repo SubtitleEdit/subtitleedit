@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelInputVideoFile = new System.Windows.Forms.Label();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.labelNotSupported = new System.Windows.Forms.Label();
             this.buttonSetLanguage = new System.Windows.Forms.Button();
             this.buttonSetDefault = new System.Windows.Forms.Button();
             this.buttonToggleForced = new System.Windows.Forms.Button();
@@ -82,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.nTSC720x480ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x352ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.x272ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelNotSupported = new System.Windows.Forms.Label();
+            this.labelPleaseWait = new System.Windows.Forms.Label();
             this.contextMenuStripGenerate.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.contextMenuSubtitles.SuspendLayout();
@@ -162,6 +163,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Size = new System.Drawing.Size(901, 422);
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
+            // 
+            // labelNotSupported
+            // 
+            this.labelNotSupported.AutoSize = true;
+            this.labelNotSupported.ForeColor = System.Drawing.Color.Red;
+            this.labelNotSupported.Location = new System.Drawing.Point(19, 67);
+            this.labelNotSupported.Name = "labelNotSupported";
+            this.labelNotSupported.Size = new System.Drawing.Size(95, 13);
+            this.labelNotSupported.TabIndex = 36;
+            this.labelNotSupported.Text = "labelNotSupported";
             // 
             // buttonSetLanguage
             // 
@@ -544,21 +555,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.x272ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.x272ToolStripMenuItem.Text = "640x272";
             // 
-            // labelNotSupported
+            // labelPleaseWait
             // 
-            this.labelNotSupported.AutoSize = true;
-            this.labelNotSupported.ForeColor = System.Drawing.Color.Red;
-            this.labelNotSupported.Location = new System.Drawing.Point(19, 67);
-            this.labelNotSupported.Name = "labelNotSupported";
-            this.labelNotSupported.Size = new System.Drawing.Size(95, 13);
-            this.labelNotSupported.TabIndex = 36;
-            this.labelNotSupported.Text = "labelNotSupported";
+            this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelPleaseWait.AutoSize = true;
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 438);
+            this.labelPleaseWait.Name = "labelPleaseWait";
+            this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
+            this.labelPleaseWait.TabIndex = 32;
+            this.labelPleaseWait.Text = "Please wait...";
             // 
             // GenerateVideoWithSoftSubs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 476);
+            this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.buttonCancel);
@@ -638,5 +650,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStripGenerate;
         private System.Windows.Forms.ToolStripMenuItem promptParameterBeforeGenerateToolStripMenuItem;
         private System.Windows.Forms.Label labelNotSupported;
+        private System.Windows.Forms.Label labelPleaseWait;
     }
 }
