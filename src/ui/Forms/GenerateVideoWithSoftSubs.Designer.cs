@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.viewToolStripMenuItem});
             this.contextMenuSubtitles.Name = "contextMenuStrip1";
-            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 220);
+            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 242);
             // 
             // addToolStripMenuItem
             // 
@@ -364,6 +364,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemStorageRemoveAll.Name = "toolStripMenuItemStorageRemoveAll";
             this.toolStripMenuItemStorageRemoveAll.Size = new System.Drawing.Size(202, 22);
             this.toolStripMenuItemStorageRemoveAll.Text = "Remove all";
+            this.toolStripMenuItemStorageRemoveAll.Click += new System.EventHandler(this.toolStripMenuItemStorageRemoveAll_Click);
             // 
             // toolStripSeparator2
             // 
