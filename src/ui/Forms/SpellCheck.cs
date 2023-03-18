@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
             Configuration.Settings.Save();
             _languageName = LanguageString;
-            string dictionary = Utilities.DictionaryFolder + _languageName;
+            var dictionary = Utilities.DictionaryFolder + _languageName;
             LoadDictionaries(Utilities.DictionaryFolder, dictionary, _languageName);
             _wordsIndex--;
             PrepareNextWord();

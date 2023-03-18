@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);
             labelNotSupported.Text = string.Empty;
+            labelPleaseWait.Text = string.Empty;
 
             LoadVideo(inputVideoFileName);
             AddCurrentSubtitle();
@@ -434,6 +435,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             {
+                labelNotSupported.Text = string.Empty;
+                labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
                 Cursor = Cursors.WaitCursor;
                 process.Start();
                 process.BeginOutputReadLine();
@@ -453,6 +456,7 @@ namespace Nikse.SubtitleEdit.Forms
             finally
             {
                 Cursor = Cursors.Default;
+                labelPleaseWait.Text = string.Empty;
             }
         }
 
