@@ -947,6 +947,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
         {
+            TaskbarList.SetProgressState(_parentForm.Handle, TaskbarButtonProgressFlags.NoProgress);
+
             if (comboBoxModels.SelectedItem is WhisperModel model)
             {
                 Configuration.Settings.Tools.WhisperModel = model.Name;
@@ -1097,6 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             progressBar1.Value = p;
+            TaskbarList.SetProgressValue(_parentForm.Handle, p, 100);
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
