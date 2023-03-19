@@ -11,7 +11,7 @@
    * Add image format RhozetHarmonic (only read) - thx Arianna
    * Add "Toggle custom surround text with" shortcut - thx HadiSparrow
    * Add "Go to next/previous time code from video position" shortcuts - thx faon-92
-   * Add option to change search engine in "Spell check" - thx Keddyan :)
+   * Add option to change search engine in "Spell check" - thx Keddyan
 * IMPROVED:
    * Update French translation - thx Pierre
    * Update Hungarian translation - thx Zityi
@@ -22,6 +22,7 @@
    * Update Portuguese translation - thx hugok79
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
    * Update Russian translation - thx elfriob
+   * Update Polish translation - thx admas
    * Update Whisper CPP to v1.2.0
    * Update yt-dlp to 2023.03.04
    * "Multiple replace" apply button now changes main window - convert Sopor
