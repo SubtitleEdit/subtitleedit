@@ -885,7 +885,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <AlignRight>Allinea a destra</AlignRight>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
-    <Title>Genera video con sottotitoli incorporati</Title>
+    <Title>Genera video con sottotitoli incorporati aggiunti/rimossi</Title>
     <InputVideoFile>File video sorgente</InputVideoFile>
     <SubtitlesX>Sottotitoli ({0})</SubtitlesX>
     <SetLanguage>Imposta lingua...</SetLanguage>
@@ -1295,7 +1295,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
         <GenerateTextFromVideo>Genera testo da video...</GenerateTextFromVideo>
         <GenerateBlankVideo>Genera video vuoto...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Genera video con sottotitoli forzati...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>Genera video con sottotitoli incorporati...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>Genera video con sottotitoli incorporati aggiunti/rimossi...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToText>Audio a testo...</VideoAudioToText>
         <ImportChaptersFromVideo>Importa capitoli dal video</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Genera/importa modifiche alla scena...</GenerateImportShotChanges>
