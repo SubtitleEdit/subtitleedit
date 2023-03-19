@@ -148,7 +148,147 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 useLargerFontForThisWindowToolStripMenuItem_Click(null, null);
             }
+
+            SetSearchEngine();
         }
+
+        private void SetSearchEngine()
+        {
+            contextMenuStripSearchEngine.Items.Add(
+                new ToolStripMenuItem(
+                    "Google",
+                    null,
+                    SearchEngineGoogle)
+                {
+                    Tag = "Google"
+                });
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchText1) &&
+                !string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchUrl1))
+            {
+                contextMenuStripSearchEngine.Items.Add(
+                new ToolStripMenuItem(
+                    Configuration.Settings.VideoControls.CustomSearchText1,
+                    null,
+                    SearchEngineCustom1)
+                {
+                    Tag = Configuration.Settings.VideoControls.CustomSearchText1
+                });
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchText2) &&
+                !string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchUrl2))
+            {
+                contextMenuStripSearchEngine.Items.Add(
+                    new ToolStripMenuItem(
+                        Configuration.Settings.VideoControls.CustomSearchText2,
+                        null,
+                        SearchEngineCustom2)
+                    {
+                        Tag = Configuration.Settings.VideoControls.CustomSearchText2
+                    });
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchText3) &&
+                !string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchUrl3))
+            {
+                contextMenuStripSearchEngine.Items.Add(
+                    new ToolStripMenuItem(
+                        Configuration.Settings.VideoControls.CustomSearchText3,
+                        null,
+                        SearchEngineCustom3)
+                    {
+                        Tag = Configuration.Settings.VideoControls.CustomSearchText3
+                    });
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchText4) &&
+                !string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchUrl4))
+            {
+                contextMenuStripSearchEngine.Items.Add(
+                    new ToolStripMenuItem(
+                        Configuration.Settings.VideoControls.CustomSearchText4,
+                        null,
+                        SearchEngineCustom4)
+                    {
+                        Tag = Configuration.Settings.VideoControls.CustomSearchText4
+                    });
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchText5) &&
+                !string.IsNullOrEmpty(Configuration.Settings.VideoControls.CustomSearchUrl5))
+            {
+                contextMenuStripSearchEngine.Items.Add(
+                    new ToolStripMenuItem(
+                        Configuration.Settings.VideoControls.CustomSearchText5,
+                        null,
+                        SearchEngineCustom5)
+                    {
+                        Tag = Configuration.Settings.VideoControls.CustomSearchText5
+                    });
+            }
+
+            if (Configuration.Settings.Tools.SpellCheckSearchEngine == "Google")
+            {
+                SearchEngineGoogle(null, null);
+            }
+            else if (!string.IsNullOrEmpty(Configuration.Settings.Tools.SpellCheckSearchEngine) &&
+                  (Configuration.Settings.VideoControls.CustomSearchText1 +
+                   Configuration.Settings.VideoControls.CustomSearchText2 +
+                   Configuration.Settings.VideoControls.CustomSearchText3 +
+                   Configuration.Settings.VideoControls.CustomSearchText4 +
+                   Configuration.Settings.VideoControls.CustomSearchText5
+                  ).Contains(Configuration.Settings.Tools.SpellCheckSearchEngine))
+            {
+                buttonGoogleIt.Text = Configuration.Settings.Tools.SpellCheckSearchEngine;
+            }
+        }
+
+        private void SearchEngineGoogle(object sender, EventArgs e)
+        {
+            Configuration.Settings.Tools.SpellCheckSearchEngine = "Google";
+            buttonGoogleIt.Text = LanguageSettings.Current.Main.VideoControls.GoogleIt;
+            foreach (ToolStripMenuItem item in contextMenuStripSearchEngine.Items)
+            {
+                item.Checked = (string)item.Tag == Configuration.Settings.Tools.SpellCheckSearchEngine;
+            }
+        }
+
+        private void SearchEngineCustom1(object sender, EventArgs e)
+        {
+            SearchEngineCustom(Configuration.Settings.VideoControls.CustomSearchText1, Configuration.Settings.VideoControls.CustomSearchUrl1);
+        }
+
+        private void SearchEngineCustom2(object sender, EventArgs e)
+        {
+            SearchEngineCustom(Configuration.Settings.VideoControls.CustomSearchText2, Configuration.Settings.VideoControls.CustomSearchUrl2);
+        }
+
+        private void SearchEngineCustom3(object sender, EventArgs e)
+        {
+            SearchEngineCustom(Configuration.Settings.VideoControls.CustomSearchText3, Configuration.Settings.VideoControls.CustomSearchUrl3);
+        }
+
+        private void SearchEngineCustom4(object sender, EventArgs e)
+        {
+            SearchEngineCustom(Configuration.Settings.VideoControls.CustomSearchText4, Configuration.Settings.VideoControls.CustomSearchUrl4);
+        }
+
+        private void SearchEngineCustom5(object sender, EventArgs e)
+        {
+            SearchEngineCustom(Configuration.Settings.VideoControls.CustomSearchText5, Configuration.Settings.VideoControls.CustomSearchUrl5);
+        }
+
+        private void SearchEngineCustom(string text, string url)
+        {
+            Configuration.Settings.Tools.SpellCheckSearchEngine = text;
+            buttonGoogleIt.Text = text;
+            foreach (ToolStripMenuItem item in contextMenuStripSearchEngine.Items)
+            {
+                item.Checked = (string)item.Tag == Configuration.Settings.Tools.SpellCheckSearchEngine;
+            }
+        }
+
 
         private void LoadImageSub(string fileName)
         {
@@ -1601,10 +1741,42 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            string text = textBoxWord.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(text))
+            var q = textBoxWord.Text.Trim();
+            if (string.IsNullOrWhiteSpace(q))
             {
-                UiUtil.OpenUrl("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                return;
+            }
+
+            var url = "https://www.google.com/search?q={0}";
+
+            if (Configuration.Settings.VideoControls.CustomSearchText1 == buttonGoogleIt.Text)
+            {
+                url = Configuration.Settings.VideoControls.CustomSearchUrl1;
+            }
+            else if (Configuration.Settings.VideoControls.CustomSearchText2 == buttonGoogleIt.Text)
+            {
+                url = Configuration.Settings.VideoControls.CustomSearchUrl2;
+            }
+            else if (Configuration.Settings.VideoControls.CustomSearchText3 == buttonGoogleIt.Text)
+            {
+                url = Configuration.Settings.VideoControls.CustomSearchUrl3;
+            }
+            else if (Configuration.Settings.VideoControls.CustomSearchText4 == buttonGoogleIt.Text)
+            {
+                url = Configuration.Settings.VideoControls.CustomSearchUrl4;
+            }
+            else if (Configuration.Settings.VideoControls.CustomSearchText5 == buttonGoogleIt.Text)
+            {
+                url = Configuration.Settings.VideoControls.CustomSearchUrl5;
+            }
+
+            try
+            {
+                UiUtil.OpenUrl(string.Format(url, q));
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Invalid search url: " + exception.Message);
             }
         }
 
