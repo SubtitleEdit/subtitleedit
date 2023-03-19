@@ -11,6 +11,7 @@
    * Add image format RhozetHarmonic (only read) - thx Arianna
    * Add "Toggle custom surround text with" shortcut - thx HadiSparrow
    * Add "Go to next/previous time code from video position" shortcuts - thx faon-92
+   * Add option to change search engine in "Spell check" - thx Keddyan :)
 * IMPROVED:
    * Update French translation - thx Pierre
    * Update Hungarian translation - thx Zityi

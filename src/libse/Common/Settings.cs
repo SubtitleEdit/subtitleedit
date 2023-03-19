@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool SpellCheckAutoChangeNameCasing { get; set; }
         public bool SpellCheckUseLargerFont { get; set; }
         public bool SpellCheckAutoChangeNamesUseSuggestions { get; set; }
+        public string SpellCheckSearchEngine { get; set; }
         public bool CheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
         public bool RememberUseAlwaysList { get; set; }
@@ -2066,6 +2067,8 @@ $HorzAlign          =   Center
             CustomSearchUrl1 = "https://www.thefreedictionary.com/{0}";
             CustomSearchText2 = "Wikipedia";
             CustomSearchUrl2 = "https://en.wikipedia.org/wiki?search={0}";
+            CustomSearchText3 = "DuckDuckGo";
+            CustomSearchUrl3 = "https://duckduckgo.com/?q={0}";
 
             LastActiveTab = "Translate";
             WaveformDrawGrid = true;
@@ -4539,6 +4542,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.SpellCheckAutoChangeNamesUseSuggestions = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("SpellCheckSearchEngine");
+            if (subNode != null)
+            {
+                settings.Tools.SpellCheckSearchEngine = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("SpellCheckOneLetterWords");
@@ -10367,6 +10376,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SpellCheckAutoChangeNameCasing", settings.Tools.SpellCheckAutoChangeNameCasing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckUseLargerFont", settings.Tools.SpellCheckUseLargerFont.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckAutoChangeNamesUseSuggestions", settings.Tools.SpellCheckAutoChangeNamesUseSuggestions.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SpellCheckSearchEngine", settings.Tools.SpellCheckSearchEngine);
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RememberUseAlwaysList", settings.Tools.RememberUseAlwaysList.ToString(CultureInfo.InvariantCulture));
