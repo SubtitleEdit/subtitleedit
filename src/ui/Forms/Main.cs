@@ -2960,6 +2960,19 @@ namespace Nikse.SubtitleEdit.Forms
                 if (f.IsMine(null, fileName))
                 {
                     f.LoadSubtitle(_subtitle, null, fileName);
+
+                    if (_subtitle.OriginalFormat?.Name == new TimedTextBase64Image().Name)
+                    {
+                        ImportAndInlineBase64(_subtitle, _loading, fileName);
+                        return;
+                    }
+
+                    if (_subtitle.OriginalFormat?.Name == new TimedTextImage().Name)
+                    {
+                        ImportAndOcrDost(fileName, _subtitle);
+                        return;
+                    }
+
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     SetEncoding(Configuration.Settings.General.DefaultEncoding);
                     encoding = GetCurrentEncoding();
@@ -4299,6 +4312,35 @@ namespace Nikse.SubtitleEdit.Forms
                 var sub = new Subtitle();
                 format.LoadSubtitle(sub, list, fileName);
                 sub.FileName = fileName;
+                formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, false);
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingBdnXml);
+                    FileNew();
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    UpdateSourceView();
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, GetCurrentSubtitleFormat().Extension);
+                    SetTitle();
+                    _converted = true;
+                }
+            }
+        }
+
+        private void ImportAndOcrDost(string fileName, Subtitle sub)
+        {
+            using (var formSubOcr = new VobSubOcr())
+            {
                 formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, false);
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
