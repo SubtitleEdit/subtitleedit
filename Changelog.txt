@@ -2,7 +2,7 @@
 
 3.6.12 (xth March 2023) BETA
 * NEW:
-   * Add embedding of subtitles in video files - thx David
+   * Add remove/add of embedding subtitles in video files - thx David
    * Add Whisper via GPU (ConstMe, windows only) - thx albino1/darnn/smith02ct
    * Allow video cut when exporting video with burned-in sub - thx Daniela/David/Leon
    * Batch convert: Image-based format to PNG with time code - thx Ninelpienel 
@@ -110,7 +110,8 @@
    * Fix Find/Find-next in OCR window - thx dokax
    * Fix issue with online text search in translation mode - thx domddol	
    * Allow curly brackets in ASSA styles - thx Ahmad
-   * A few fixes for "Remove text for HI" - thx Zezslav	
+   * A few fixes for "Remove text for HI" - thx Zezslav
+   * Fix for interjections on separate line - thx williameyelash
 
 
 3.6.10 (21st November 2022)
