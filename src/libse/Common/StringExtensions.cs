@@ -170,6 +170,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             var lines = new List<string>();
             var start = 0;
             var i = 0;
+
+            if (s.Length < max)
+            {
+                max = s.Length;
+            }
+
             while (i < max)
             {
                 var ch = s[i];
@@ -199,6 +205,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (ch == '\n' || ch == '\u2028')
                 {
+                    if (start >= s.Length || i - start < 0 || i - start >= s.Length)
+                    {
+                    }
+
                     lines.Add(s.Substring(start, i - start));
                     i++;
                     start = i;
