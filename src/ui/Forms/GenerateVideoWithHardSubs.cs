@@ -1151,12 +1151,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxTargetFileSize.Checked)
             {
                 comboBoxAudioEnc.Text = "aac";
-                labelAudioBitRate.Enabled = true;
                 comboBoxAudioBitRate.Enabled = true;
             }
             else
             {
-                labelAudioBitRate.Enabled = false;
                 comboBoxAudioBitRate.Enabled = false;
             }
 
