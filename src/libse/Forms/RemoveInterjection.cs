@@ -500,7 +500,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var oldLines = oldText.SplitToLines();
                     var newLines = text.SplitToLines();
                     if (oldLines.Count == 2 && newLines.Count == 1 &&
-                        (oldLines[0] == newLines[0] || oldLines[1] == newLines[0]))
+                        (oldLines[0].TrimStart(' ', '-') == newLines[0] || oldLines[1].TrimStart(' ', '-') == newLines[0]))
                     {
                         return text;
                     }

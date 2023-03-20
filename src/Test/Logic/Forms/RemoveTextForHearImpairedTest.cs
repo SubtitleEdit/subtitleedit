@@ -2109,8 +2109,8 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionsAllDualOhOnlySeparateLine()
         {
-            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- Oh, what?" + Environment.NewLine + "- Oh.", onlyInSeparatedLine: true));
-            Assert.AreEqual("Oh, what?", actual);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("- I bet it hurt when they cut it off." + Environment.NewLine + "- Ugh!", onlyInSeparatedLine: true));
+            Assert.AreEqual("I bet it hurt when they cut it off.", actual);
         }
 
         [TestMethod]
