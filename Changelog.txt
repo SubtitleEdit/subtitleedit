@@ -12,6 +12,7 @@
    * Add "Toggle custom surround text with" shortcut - thx HadiSparrow
    * Add "Go to next/previous time code from video position" shortcuts - thx faon-92
    * Add option to change search engine in "Spell check" - thx Keddyan
+   * Add reading of TTML images from ISMT - thx azrie
 * IMPROVED:
    * Update French translation - thx Pierre
    * Update Hungarian translation - thx Zityi

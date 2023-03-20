@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static int MaximumHistoryItems => 100;
 
-        public SubtitleFormat OriginalFormat { get; private set; }
+        public SubtitleFormat OriginalFormat { get; set; }
         public Encoding OriginalEncoding { get; private set; }
 
         public List<HistoryItem> HistoryItems { get; }
@@ -101,17 +101,39 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs.Find(p => p.Id == id);
         }
 
-        public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format)
+        public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format, SubtitleFormat format2 = null, SubtitleFormat format3 = null)
         {
             Paragraphs.Clear();
+
             if (format != null && format.IsMine(lines, fileName))
             {
                 format.LoadSubtitle(this, lines, fileName);
                 OriginalFormat = format;
                 return format;
             }
+
+            if (format2 != null && format2.IsMine(lines, fileName))
+            {
+                format2.LoadSubtitle(this, lines, fileName);
+                OriginalFormat = format2;
+                return format2;
+            }
+
+            if (format3 != null && format3.IsMine(lines, fileName))
+            {
+                format3.LoadSubtitle(this, lines, fileName);
+                OriginalFormat = format3;
+                return format3;
+            }
+
             foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats)
             {
+                var name = subtitleFormat.Name;
+                if (format?.Name == name || format2?.Name == name || format3?.Name == name)
+                {
+                    continue;
+                }
+
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
@@ -119,6 +141,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return subtitleFormat;
                 }
             }
+
             return null;
         }
 
