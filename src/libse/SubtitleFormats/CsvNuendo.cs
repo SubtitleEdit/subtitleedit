@@ -24,10 +24,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var fine = 0;
             var errors = 0;
             var sb = new StringBuilder();
-            foreach (var line in lines)
+            for (var index = 0; index < lines.Count; index++)
             {
+                var line = lines[index];
+                if (index == 0 && line.StartsWith("<tt xmlns"))
+                {
+                    return false;
+                }
+
                 sb.Append(line);
-                if (line.IndexOf(':') > 0 && 
+                if (line.IndexOf(':') > 0 &&
                     (CsvLine.IsMatch(line) ||
                      CsvLineNoQuotes.IsMatch(line) ||
                      CsvLineAllQuotes.IsMatch(line) ||
