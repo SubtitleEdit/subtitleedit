@@ -13793,7 +13793,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetSelectedTextColor(string color)
         {
             var tb = GetFocusedTextBox();
-            bool allSelected = false;
+            bool allSelected;
             string text = tb.SelectedText;
             if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
             {
@@ -13844,28 +13844,38 @@ namespace Nikse.SubtitleEdit.Forms
             string s = text;
             if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
             {
-                int end = s.IndexOf('>');
-                if (end > 0)
+                if (s.EndsWith("</font>", StringComparison.Ordinal) &&
+                    s.StartsWith($"<font color=\"{color}\">", StringComparison.Ordinal))
                 {
-                    string f = s.Substring(0, end);
-                    if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                    var start = $"<font color=\"{color}\">";
+                    text = s.Substring(start.Length, s.Length - start.Length - "</font>".Length);
+                    done = true;
+                }
+                else
+                {
+                    int end = s.IndexOf('>');
+                    if (end > 0)
                     {
-                        var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
-                        s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                        text = s;
-                        done = true;
-                    }
-                    else if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
-                    {
-                        int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                        string f = s.Substring(0, end);
+                        if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                         {
-                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
+                            var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
+                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                            text = s;
+                            done = true;
                         }
+                        else if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                            {
+                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
+                            }
 
-                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                        text = s;
-                        done = true;
+                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                            text = s;
+                            done = true;
+                        }
                     }
                 }
             }
