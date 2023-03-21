@@ -24,6 +24,7 @@
    * Update Spanish translations (es-ES/ex-MX/es-AR) - thx paconaranjo
    * Update Russian translation - thx elfriob
    * Update Polish translation - thx admas
+   * Update Greek translation - thx PMitsakis
    * Update Whisper CPP to v1.2.0
    * Update yt-dlp to 2023.03.04
    * "Multiple replace" apply button now changes main window - convert Sopor
