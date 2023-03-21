@@ -584,17 +584,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 outputText?.Add($"Loading result from {vttFileName}{Environment.NewLine}");
             }
 
-            for (var i = 0; i < sub.Paragraphs.Count - 1; i++)
-            {
-                var p = sub.Paragraphs[i];
-                var next = sub.Paragraphs[i + 1];
-                if (!next.Text.StartsWith(" ") && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
-                {
-                    p.Text += next.Text;
-                    next.Text = string.Empty;
-                }
-            }
-
             sub.RemoveEmptyLines();
 
             var results = new List<ResultText>();
