@@ -27,7 +27,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                if (index == 0 && line.StartsWith("<tt xmlns"))
+                if (index == 0 && 
+                    (line.StartsWith("<tt xmlns", StringComparison.Ordinal) ||
+                     line.StartsWith("<?xml version", StringComparison.Ordinal)))
                 {
                     return false;
                 }
