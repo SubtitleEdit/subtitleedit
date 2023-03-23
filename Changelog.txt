@@ -52,6 +52,7 @@
    * Fix for image export baseline - thx Matt
    * Fix cash in "Generate blank video"
    * Fix too many {\an1} in SCC
+   * Fix for "Compare" with ignore formatting+linebreaks - thx Omair
 
 
 3.6.11 (30th January 2023)
