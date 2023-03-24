@@ -1562,7 +1562,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const byte boxingOff = 0x85;
 
             var list = new List<EbuTextTimingInformation>();
-            int index = startOfTextAndTimingBlock;
+            var index = startOfTextAndTimingBlock;
             while (index + ttiSize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation
@@ -1737,6 +1737,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index += ttiSize;
                 list.Add(tti);
             }
+
             return list;
         }
 
@@ -1887,27 +1888,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("<font color=\"White\">", string.Empty);
             }
 
-            while (text.Contains(Environment.NewLine + Environment.NewLine))
-            {
-                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            }
-
             var lines = text.SplitToLines();
             var sb = new StringBuilder();
             foreach (var line in lines)
             {
-                var s = line;
-                var count = Utilities.CountTagInText(s, "<font ");
-                if (HtmlUtil.RemoveHtmlTags(s).Length > 0)
+                sb.Append(line);
+                var count = Utilities.CountTagInText(line, "<font ");
+                if (count == 1 && !line.Contains("</font>"))
                 {
-                    sb.Append(s);
-                    if (count == 1 && !s.Contains("</font>"))
-                    {
-                        sb.Append("</font>");
-                    }
-
-                    sb.AppendLine();
+                    sb.Append("</font>");
                 }
+
+                if (Configuration.Settings.SubtitleSettings.EbuStlRemoveEmptyLines &&
+                    HtmlUtil.RemoveHtmlTags(line).Length == 0)
+                {
+                    continue;
+                }
+
+                sb.AppendLine();
             }
 
             text = sb.ToString().TrimEnd();

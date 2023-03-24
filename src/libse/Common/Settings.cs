@@ -727,6 +727,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int EbuStlMarginTop { get; set; }
         public int EbuStlMarginBottom { get; set; }
         public int EbuStlNewLineRows { get; set; }
+        public bool EbuStlRemoveEmptyLines { get; set; }
         public int PacVerticalTop { get; set; }
         public int PacVerticalCenter { get; set; }
         public int PacVerticalBottom { get; set; }
@@ -6711,6 +6712,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.EbuStlNewLineRows = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
+                subNode = node.SelectSingleNode("EbuStlRemoveEmptyLines");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.EbuStlRemoveEmptyLines = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("PacVerticalTop");
                 if (subNode != null)
                 {
@@ -10775,6 +10782,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("EbuStlMarginTop", settings.SubtitleSettings.EbuStlMarginTop.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("EbuStlRemoveEmptyLines", settings.SubtitleSettings.EbuStlRemoveEmptyLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PacVerticalTop", settings.SubtitleSettings.PacVerticalTop.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PacVerticalCenter", settings.SubtitleSettings.PacVerticalCenter.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PacVerticalBottom", settings.SubtitleSettings.PacVerticalBottom.ToString(CultureInfo.InvariantCulture));
