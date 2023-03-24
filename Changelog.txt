@@ -38,6 +38,7 @@
    * FCP XML now supports latest version - thx Dvid
    * Improve "Redo casing" in "Batch convert" - thx chschmit 
    * Allow larger "Max pixels is space" for nOCR - thx Edgar-Galan
+   * Allow blank lines inside text for EBU STL - thx Birgitte
 * FIXED:
    * Fix extra space after font in EBU STL - thx Stefan
    * Fix possible crash in batch convert w overwrite - thx chensimmons
@@ -52,7 +53,7 @@
    * Fix for image export baseline - thx Matt
    * Fix cash in "Generate blank video"
    * Fix too many {\an1} in SCC
-   * Fix for "Compare" with ignore formatting+linebreaks - thx Omair
+   * Fix for "Compare" with ignore formatting+line-breaks - thx Omair
 
 
 3.6.11 (30th January 2023)
