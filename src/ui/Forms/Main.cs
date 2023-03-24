@@ -8774,13 +8774,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var audioToTextVosk = new ToolStripMenuItem(string.Format(LanguageSettings.Current.Main.Menu.Video.VideoAudioToTextX, "Vosk/Kaldi"));
                 UiUtil.FixFonts(audioToTextVosk);
                 audio.DropDownItems.Insert(0, audioClip);
+                audio.DropDownItems.Insert(0, audioToTextVosk);
 
                 if (WhisperHelper.IsWhisperInstalled())
                 {
                     audio.DropDownItems.Insert(0, audioToTextWhisper);
                 }
-
-                audio.DropDownItems.Insert(0, audioToTextVosk);
 
                 audioClip.Click += (senderNew, eNew) =>
                 {

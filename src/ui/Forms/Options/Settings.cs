@@ -687,7 +687,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 {
                     radioButtonVideoPlayerMPV.Enabled = true;
                     radioButtonVideoPlayerMPV.Checked = !(gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && isLibVlcInstalled);
-                    labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputLinux;
+                    ShowMpvVideoOutput();
                 }
                 textBoxVlcPath.Visible = false;
                 labelVlcPath.Visible = false;
@@ -1163,6 +1163,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelUpdateFileTypeAssociationsStatus.Text = string.Empty;
 
             checkBoxDarkThemeEnabled_CheckedChanged(null, null);
+        }
+
+        private void ShowMpvVideoOutput()
+        {
+            if (!Configuration.IsRunningOnLinux || string.IsNullOrEmpty(Configuration.Settings.General.MpvVideoOutputLinux))
+            {
+                labelMpvSettings.Text = string.Empty;
+            }
+            else
+            {
+                labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputLinux;
+            }
         }
 
         private void SetDialogStyle(DialogType dialogStyle)
@@ -2746,7 +2758,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
             }
 
-            labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputWindows;
+            ShowMpvVideoOutput();
         }
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

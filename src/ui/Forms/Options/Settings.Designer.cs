@@ -2543,10 +2543,10 @@
             // checkBoxMpvHandlesPreviewText
             // 
             this.checkBoxMpvHandlesPreviewText.AutoSize = true;
-            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 114);
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(164, 43);
             this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
             this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
-            this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
+            this.checkBoxMpvHandlesPreviewText.TabIndex = 3;
             this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
             this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
             this.checkBoxMpvHandlesPreviewText.CheckedChanged += new System.EventHandler(this.checkBoxMpvHandlesPreviewText_CheckedChanged);
@@ -2556,7 +2556,7 @@
             this.labelMpvSettings.AutoSize = true;
             this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
-            this.labelMpvSettings.Location = new System.Drawing.Point(709, 93);
+            this.labelMpvSettings.Location = new System.Drawing.Point(709, 26);
             this.labelMpvSettings.Name = "labelMpvSettings";
             this.labelMpvSettings.Size = new System.Drawing.Size(40, 13);
             this.labelMpvSettings.TabIndex = 30;
@@ -2564,19 +2564,20 @@
             // 
             // buttonMpvSettings
             // 
-            this.buttonMpvSettings.Location = new System.Drawing.Point(510, 89);
+            this.buttonMpvSettings.Location = new System.Drawing.Point(510, 22);
             this.buttonMpvSettings.Name = "buttonMpvSettings";
             this.buttonMpvSettings.Size = new System.Drawing.Size(179, 23);
-            this.buttonMpvSettings.TabIndex = 29;
+            this.buttonMpvSettings.TabIndex = 2;
             this.buttonMpvSettings.Text = "Download mpv dll";
             this.buttonMpvSettings.UseVisualStyleBackColor = true;
             this.buttonMpvSettings.Click += new System.EventHandler(this.buttonMpvSettings_Click);
             // 
             // labelPlatform
             // 
+            this.labelPlatform.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPlatform.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPlatform.ForeColor = System.Drawing.Color.Gray;
-            this.labelPlatform.Location = new System.Drawing.Point(724, 13);
+            this.labelPlatform.Location = new System.Drawing.Point(766, 13);
             this.labelPlatform.Name = "labelPlatform";
             this.labelPlatform.Size = new System.Drawing.Size(83, 11);
             this.labelPlatform.TabIndex = 27;
@@ -2585,27 +2586,27 @@
             // 
             // buttonVlcPathBrowse
             // 
-            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 45);
+            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(779, 105);
             this.buttonVlcPathBrowse.Name = "buttonVlcPathBrowse";
             this.buttonVlcPathBrowse.Size = new System.Drawing.Size(29, 21);
-            this.buttonVlcPathBrowse.TabIndex = 26;
+            this.buttonVlcPathBrowse.TabIndex = 7;
             this.buttonVlcPathBrowse.Text = "...";
             this.buttonVlcPathBrowse.UseVisualStyleBackColor = true;
             this.buttonVlcPathBrowse.Click += new System.EventHandler(this.buttonVlcPathBrowse_Click);
             // 
             // textBoxVlcPath
             // 
-            this.textBoxVlcPath.Location = new System.Drawing.Point(410, 45);
+            this.textBoxVlcPath.Location = new System.Drawing.Point(411, 105);
             this.textBoxVlcPath.MaxLength = 1000;
             this.textBoxVlcPath.Name = "textBoxVlcPath";
             this.textBoxVlcPath.Size = new System.Drawing.Size(362, 21);
-            this.textBoxVlcPath.TabIndex = 25;
+            this.textBoxVlcPath.TabIndex = 6;
             this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
             // labelVlcPath
             // 
             this.labelVlcPath.AutoSize = true;
-            this.labelVlcPath.Location = new System.Drawing.Point(410, 29);
+            this.labelVlcPath.Location = new System.Drawing.Point(414, 89);
             this.labelVlcPath.Name = "labelVlcPath";
             this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
             this.labelVlcPath.TabIndex = 24;
@@ -2616,7 +2617,7 @@
             this.labelVideoPlayerVLC.AutoSize = true;
             this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerVLC.ForeColor = System.Drawing.Color.Gray;
-            this.labelVideoPlayerVLC.Location = new System.Drawing.Point(167, 49);
+            this.labelVideoPlayerVLC.Location = new System.Drawing.Point(164, 109);
             this.labelVideoPlayerVLC.Name = "labelVideoPlayerVLC";
             this.labelVideoPlayerVLC.Size = new System.Drawing.Size(237, 13);
             this.labelVideoPlayerVLC.TabIndex = 13;
@@ -2625,10 +2626,10 @@
             // radioButtonVideoPlayerVLC
             // 
             this.radioButtonVideoPlayerVLC.AutoSize = true;
-            this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(10, 46);
+            this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(9, 106);
             this.radioButtonVideoPlayerVLC.Name = "radioButtonVideoPlayerVLC";
             this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(43, 17);
-            this.radioButtonVideoPlayerVLC.TabIndex = 4;
+            this.radioButtonVideoPlayerVLC.TabIndex = 5;
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
             this.radioButtonVideoPlayerVLC.UseVisualStyleBackColor = true;
@@ -2638,7 +2639,7 @@
             this.labelVideoPlayerMPlayer.AutoSize = true;
             this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerMPlayer.ForeColor = System.Drawing.Color.Gray;
-            this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 93);
+            this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(164, 26);
             this.labelVideoPlayerMPlayer.Name = "labelVideoPlayerMPlayer";
             this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(337, 13);
             this.labelVideoPlayerMPlayer.TabIndex = 11;
@@ -2649,7 +2650,7 @@
             this.labelDirectShowDescription.AutoSize = true;
             this.labelDirectShowDescription.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDirectShowDescription.ForeColor = System.Drawing.Color.Gray;
-            this.labelDirectShowDescription.Location = new System.Drawing.Point(167, 26);
+            this.labelDirectShowDescription.Location = new System.Drawing.Point(164, 75);
             this.labelDirectShowDescription.Name = "labelDirectShowDescription";
             this.labelDirectShowDescription.Size = new System.Drawing.Size(114, 13);
             this.labelDirectShowDescription.TabIndex = 10;
@@ -2660,7 +2661,7 @@
             this.labelMpcHcDescription.AutoSize = true;
             this.labelMpcHcDescription.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpcHcDescription.ForeColor = System.Drawing.Color.Gray;
-            this.labelMpcHcDescription.Location = new System.Drawing.Point(167, 70);
+            this.labelMpcHcDescription.Location = new System.Drawing.Point(164, 138);
             this.labelMpcHcDescription.Name = "labelMpcHcDescription";
             this.labelMpcHcDescription.Size = new System.Drawing.Size(178, 13);
             this.labelMpcHcDescription.TabIndex = 9;
@@ -2669,10 +2670,11 @@
             // radioButtonVideoPlayerMPV
             // 
             this.radioButtonVideoPlayerMPV.AutoSize = true;
-            this.radioButtonVideoPlayerMPV.Location = new System.Drawing.Point(10, 89);
+            this.radioButtonVideoPlayerMPV.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonVideoPlayerMPV.Location = new System.Drawing.Point(9, 22);
             this.radioButtonVideoPlayerMPV.Name = "radioButtonVideoPlayerMPV";
-            this.radioButtonVideoPlayerMPV.Size = new System.Drawing.Size(45, 17);
-            this.radioButtonVideoPlayerMPV.TabIndex = 28;
+            this.radioButtonVideoPlayerMPV.Size = new System.Drawing.Size(50, 17);
+            this.radioButtonVideoPlayerMPV.TabIndex = 1;
             this.radioButtonVideoPlayerMPV.TabStop = true;
             this.radioButtonVideoPlayerMPV.Text = "mpv";
             this.radioButtonVideoPlayerMPV.UseVisualStyleBackColor = true;
@@ -2681,10 +2683,10 @@
             // radioButtonVideoPlayerDirectShow
             // 
             this.radioButtonVideoPlayerDirectShow.AutoSize = true;
-            this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(10, 23);
+            this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(9, 72);
             this.radioButtonVideoPlayerDirectShow.Name = "radioButtonVideoPlayerDirectShow";
             this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(82, 17);
-            this.radioButtonVideoPlayerDirectShow.TabIndex = 1;
+            this.radioButtonVideoPlayerDirectShow.TabIndex = 4;
             this.radioButtonVideoPlayerDirectShow.TabStop = true;
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
             this.radioButtonVideoPlayerDirectShow.UseVisualStyleBackColor = true;
@@ -2692,10 +2694,10 @@
             // radioButtonVideoPlayerMpcHc
             // 
             this.radioButtonVideoPlayerMpcHc.AutoSize = true;
-            this.radioButtonVideoPlayerMpcHc.Location = new System.Drawing.Point(10, 66);
+            this.radioButtonVideoPlayerMpcHc.Location = new System.Drawing.Point(9, 135);
             this.radioButtonVideoPlayerMpcHc.Name = "radioButtonVideoPlayerMpcHc";
             this.radioButtonVideoPlayerMpcHc.Size = new System.Drawing.Size(64, 17);
-            this.radioButtonVideoPlayerMpcHc.TabIndex = 27;
+            this.radioButtonVideoPlayerMpcHc.TabIndex = 8;
             this.radioButtonVideoPlayerMpcHc.TabStop = true;
             this.radioButtonVideoPlayerMpcHc.Text = "MPC-HC";
             this.radioButtonVideoPlayerMpcHc.UseVisualStyleBackColor = true;
@@ -5035,6 +5037,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelGeneral);
@@ -5044,7 +5047,6 @@
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSubtitleFormats);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelSyntaxColoring);
             this.Controls.Add(this.listBoxSection);
             this.Controls.Add(this.buttonReset);
