@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerate.ContextMenuStrip = this.contextMenuStripGenerate;
             this.buttonGenerate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerate.Location = new System.Drawing.Point(711, 441);
+            this.buttonGenerate.Location = new System.Drawing.Point(746, 441);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(121, 23);
             this.buttonGenerate.TabIndex = 4;
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(838, 441);
+            this.buttonCancel.Location = new System.Drawing.Point(873, 441);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxSettings.Controls.Add(this.labelInputVideoFile);
             this.groupBoxSettings.Location = new System.Drawing.Point(12, 13);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(901, 422);
+            this.groupBoxSettings.Size = new System.Drawing.Size(936, 422);
             this.groupBoxSettings.TabIndex = 0;
             this.groupBoxSettings.TabStop = false;
             // 
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSetLanguage
             // 
             this.buttonSetLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSetLanguage.Location = new System.Drawing.Point(773, 311);
+            this.buttonSetLanguage.Location = new System.Drawing.Point(808, 311);
             this.buttonSetLanguage.Name = "buttonSetLanguage";
             this.buttonSetLanguage.Size = new System.Drawing.Size(122, 23);
             this.buttonSetLanguage.TabIndex = 35;
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSetDefault
             // 
             this.buttonSetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSetDefault.Location = new System.Drawing.Point(773, 282);
+            this.buttonSetDefault.Location = new System.Drawing.Point(808, 282);
             this.buttonSetDefault.Name = "buttonSetDefault";
             this.buttonSetDefault.Size = new System.Drawing.Size(122, 23);
             this.buttonSetDefault.TabIndex = 34;
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonToggleForced
             // 
             this.buttonToggleForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonToggleForced.Location = new System.Drawing.Point(773, 253);
+            this.buttonToggleForced.Location = new System.Drawing.Point(808, 253);
             this.buttonToggleForced.Name = "buttonToggleForced";
             this.buttonToggleForced.Size = new System.Drawing.Size(122, 23);
             this.buttonToggleForced.TabIndex = 33;
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonClear
             // 
             this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClear.Location = new System.Drawing.Point(773, 168);
+            this.buttonClear.Location = new System.Drawing.Point(808, 168);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(122, 23);
             this.buttonClear.TabIndex = 30;
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
             // ButtonRemoveSubtitles
             // 
             this.ButtonRemoveSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonRemoveSubtitles.Location = new System.Drawing.Point(773, 140);
+            this.ButtonRemoveSubtitles.Location = new System.Drawing.Point(808, 140);
             this.ButtonRemoveSubtitles.Name = "ButtonRemoveSubtitles";
             this.ButtonRemoveSubtitles.Size = new System.Drawing.Size(122, 23);
             this.ButtonRemoveSubtitles.TabIndex = 29;
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             // ButtonMoveSubDown
             // 
             this.ButtonMoveSubDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonMoveSubDown.Location = new System.Drawing.Point(773, 224);
+            this.ButtonMoveSubDown.Location = new System.Drawing.Point(808, 224);
             this.ButtonMoveSubDown.Name = "ButtonMoveSubDown";
             this.ButtonMoveSubDown.Size = new System.Drawing.Size(122, 23);
             this.ButtonMoveSubDown.TabIndex = 32;
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
             // ButtonMoveSubUp
             // 
             this.ButtonMoveSubUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonMoveSubUp.Location = new System.Drawing.Point(773, 196);
+            this.ButtonMoveSubUp.Location = new System.Drawing.Point(808, 196);
             this.ButtonMoveSubUp.Name = "ButtonMoveSubUp";
             this.ButtonMoveSubUp.Size = new System.Drawing.Size(122, 23);
             this.ButtonMoveSubUp.TabIndex = 31;
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAddSubtitles
             // 
             this.buttonAddSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddSubtitles.Location = new System.Drawing.Point(773, 111);
+            this.buttonAddSubtitles.Location = new System.Drawing.Point(808, 111);
             this.buttonAddSubtitles.Name = "buttonAddSubtitles";
             this.buttonAddSubtitles.Size = new System.Drawing.Size(122, 23);
             this.buttonAddSubtitles.TabIndex = 28;
@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewSubtitles.HideSelection = false;
             this.listViewSubtitles.Location = new System.Drawing.Point(22, 111);
             this.listViewSubtitles.Name = "listViewSubtitles";
-            this.listViewSubtitles.Size = new System.Drawing.Size(745, 305);
+            this.listViewSubtitles.Size = new System.Drawing.Size(780, 305);
             this.listViewSubtitles.TabIndex = 25;
             this.listViewSubtitles.UseCompatibleStateImageBehavior = false;
             this.listViewSubtitles.View = System.Windows.Forms.View.Details;
@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator3,
             this.viewToolStripMenuItem});
             this.contextMenuSubtitles.Name = "contextMenuStrip1";
-            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 242);
+            this.contextMenuSubtitles.Size = new System.Drawing.Size(203, 220);
             // 
             // addToolStripMenuItem
             // 
@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonOpenVideoFile
             // 
             this.buttonOpenVideoFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenVideoFile.Location = new System.Drawing.Point(853, 44);
+            this.buttonOpenVideoFile.Location = new System.Drawing.Point(888, 44);
             this.buttonOpenVideoFile.Name = "buttonOpenVideoFile";
             this.buttonOpenVideoFile.Size = new System.Drawing.Size(33, 23);
             this.buttonOpenVideoFile.TabIndex = 24;
@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxInputFileName.Location = new System.Drawing.Point(22, 44);
             this.textBoxInputFileName.Name = "textBoxInputFileName";
             this.textBoxInputFileName.ReadOnly = true;
-            this.textBoxInputFileName.Size = new System.Drawing.Size(825, 20);
+            this.textBoxInputFileName.Size = new System.Drawing.Size(860, 20);
             this.textBoxInputFileName.TabIndex = 16;
             // 
             // textBoxLog
@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(925, 476);
+            this.ClientSize = new System.Drawing.Size(960, 476);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.buttonGenerate);
