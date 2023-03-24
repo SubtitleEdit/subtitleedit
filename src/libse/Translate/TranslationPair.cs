@@ -11,11 +11,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
         public TranslationPair(string name, string code)
         {
-            Name = name;
+            Name = name ?? string.Empty;
             Code = code;
         }
 
-        public override string ToString() => Name.CapitalizeFirstLetter();
+        public override string ToString() => Name.ToLowerInvariant().Replace('_', ' ').CapitalizeFirstLetter();
 
         public bool Equals(TranslationPair other) => other != null && Code.Equals(other.Code);
 
