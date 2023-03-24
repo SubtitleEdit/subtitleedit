@@ -1595,6 +1595,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var closed = header.DisplayStandardCode != "0";
                 var max = i + 112;
                 var sb = new StringBuilder();
+                var lastWasNewLine = false;
                 while (i < max)
                 {
                     var b = buffer[i];
@@ -1653,8 +1654,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (b == 0x8a) // Both - CR/LF
                     {
-                        AddMissingClosingTag(sb);
-                        sb.AppendLine();
+                        if (!lastWasNewLine)
+                        {
+                            AddMissingClosingTag(sb);
+                            sb.AppendLine();
+                            lastWasNewLine = true;
+                            i++;
+                            continue;
+                        }
                     }
                     else if (b >= 0x8b && b <= 0x8e) // Both - Reserved for future use
                     {
@@ -1682,6 +1689,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             i++;
                         }
                     }
+
+                    lastWasNewLine = false;
                     i++;
                 }
 
