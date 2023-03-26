@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español (España)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.6.11</Version>
+    <Version>3.6.12</Version>
     <TranslatedBy>Traducido por m2s y paconaranjo</TranslatedBy>
     <CultureName>es-ES</CultureName>
     <HelpFile>https://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
