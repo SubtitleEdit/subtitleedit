@@ -100,6 +100,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             listViewInputFiles.Visible = false;
             labelElapsed.Text = string.Empty;
 
+            comboBoxCharsPerSub.BeginUpdate();
+            comboBoxCharsPerSub.Items.Add(LanguageSettings.Current.General.None);
+            for (var i= 1; i<99; i++)
+            {
+                comboBoxCharsPerSub.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+            }
+            comboBoxCharsPerSub.EndUpdate();
+
             Init();
 
             var maxChars = (int)Math.Round(Configuration.Settings.General.SubtitleLineMaximumLength * 1.8, MidpointRounding.AwayFromZero);
@@ -112,7 +120,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
             }
-            numericUpDownCharsPerSub.Value = maxChars;
+
+            comboBoxCharsPerSub.Text = maxChars.ToString(CultureInfo.InvariantCulture);
         }
 
         private void Init()
@@ -135,8 +144,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
 
-            numericUpDownCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
-            labelCharsPerSub.Left = numericUpDownCharsPerSub.Left - labelCharsPerSub.Width - 9;
+            comboBoxCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
+            labelCharsPerSub.Left = comboBoxCharsPerSub.Left - labelCharsPerSub.Width - 9;
             labelCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
         }
 
@@ -485,7 +494,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelProgress.Refresh();
             Application.DoEvents();
             _resultList = new List<ResultText>();
-            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, (int)numericUpDownCharsPerSub.Value, OutputHandler);
+            var process = GetWhisperProcess(waveFileName, model.Name, _languageCode, checkBoxTranslateToEnglish.Checked, comboBoxCharsPerSub.SelectedIndex, OutputHandler);
             var sw = Stopwatch.StartNew();
             _outputText.Add($"Calling whisper ({Configuration.Settings.Tools.WhisperChoice}) with : {process.StartInfo.FileName} {process.StartInfo.Arguments}{Environment.NewLine}");
             _startTicks = DateTime.UtcNow.Ticks;
@@ -1345,11 +1354,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         private void labelCpp_Click(object sender, EventArgs e)
         {
             contextMenuStripWhisperAdvanced.Show(MousePosition);
-        }
-
-        private void numericUpDownCharsPerSub_ValueChanged(object sender, EventArgs e)
-        {
-            labelCharsPerSub.Enabled = numericUpDownCharsPerSub.Value > 0;
         }
     }
 }
