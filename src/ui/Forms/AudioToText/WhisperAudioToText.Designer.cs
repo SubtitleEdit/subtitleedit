@@ -64,12 +64,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
-            this.numericUpDownCharsPerSub = new System.Windows.Forms.NumericUpDown();
             this.labelCharsPerSub = new System.Windows.Forms.Label();
+            this.comboBoxCharsPerSub = new System.Windows.Forms.ComboBox();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCharsPerSub)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -433,24 +432,6 @@
             this.checkBoxAutoAdjustTimings.Text = "Auto adjust timings";
             this.checkBoxAutoAdjustTimings.UseVisualStyleBackColor = true;
             // 
-            // numericUpDownCharsPerSub
-            // 
-            this.numericUpDownCharsPerSub.Location = new System.Drawing.Point(622, 148);
-            this.numericUpDownCharsPerSub.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.numericUpDownCharsPerSub.Name = "numericUpDownCharsPerSub";
-            this.numericUpDownCharsPerSub.Size = new System.Drawing.Size(69, 20);
-            this.numericUpDownCharsPerSub.TabIndex = 23;
-            this.numericUpDownCharsPerSub.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownCharsPerSub.ValueChanged += new System.EventHandler(this.numericUpDownCharsPerSub_ValueChanged);
-            // 
             // labelCharsPerSub
             // 
             this.labelCharsPerSub.AutoSize = true;
@@ -460,13 +441,22 @@
             this.labelCharsPerSub.TabIndex = 24;
             this.labelCharsPerSub.Text = "Max chars/subtitle";
             // 
+            // comboBoxCharsPerSub
+            // 
+            this.comboBoxCharsPerSub.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCharsPerSub.FormattingEnabled = true;
+            this.comboBoxCharsPerSub.Location = new System.Drawing.Point(618, 147);
+            this.comboBoxCharsPerSub.Name = "comboBoxCharsPerSub";
+            this.comboBoxCharsPerSub.Size = new System.Drawing.Size(79, 21);
+            this.comboBoxCharsPerSub.TabIndex = 25;
+            // 
             // WhisperAudioToText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 494);
+            this.Controls.Add(this.comboBoxCharsPerSub);
             this.Controls.Add(this.labelCharsPerSub);
-            this.Controls.Add(this.numericUpDownCharsPerSub);
             this.Controls.Add(this.labelElapsed);
             this.Controls.Add(this.checkBoxAutoAdjustTimings);
             this.Controls.Add(this.labelCpp);
@@ -500,7 +490,6 @@
             this.groupBoxModels.PerformLayout();
             this.groupBoxInputFiles.ResumeLayout(false);
             this.contextMenuStripWhisperAdvanced.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCharsPerSub)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -543,7 +532,7 @@
         private System.Windows.Forms.ToolStripMenuItem removeTemporaryFilesToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoAdjustTimings;
         private System.Windows.Forms.ToolStripMenuItem whisperConstMeToolStripMenuItem;
-        private System.Windows.Forms.NumericUpDown numericUpDownCharsPerSub;
         private System.Windows.Forms.Label labelCharsPerSub;
+        private System.Windows.Forms.ComboBox comboBoxCharsPerSub;
     }
 }
