@@ -861,8 +861,8 @@ Mais informação online?</WhisperNotFound>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Gerar vídeo com legenda embutida</Title>
-    <InfoAssaOff>Nota: suporta o estilo de Advanced Substation Alpha.</InfoAssaOff>
-    <InfoAssaOn>Nota: o estilo de Advanced Substation Alpha será usado :)</InfoAssaOn>
+    <InfoAssaOff>Nota: suporta o estilo de Advanced SubStation Alpha.</InfoAssaOff>
+    <InfoAssaOn>Nota: o estilo de Advanced SubStation Alpha será usado :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>"{0}" gerado com legenda embutida em {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Tempo restante: {0} minutos</TimeRemainingMinutes>
     <TimeRemainingSeconds>Tempo restante: {0} segundos</TimeRemainingSeconds>
@@ -886,7 +886,7 @@ Mais informação online?</WhisperNotFound>
     <GetEndPosition>Posição final</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
-    <Title>Gerar vídeo com legendas embutidas</Title>
+    <Title>Gerar vídeo com legendas embutidas adicionadas/removidas</Title>
     <InputVideoFile>Ficheiro de vídeo de entrada</InputVideoFile>
     <SubtitlesX>Legendas ({0})</SubtitlesX>
     <SetLanguage>Definir idioma...</SetLanguage>
@@ -1296,7 +1296,7 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
         <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Gerar vídeo em branco...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Gerar vídeo com a legenda gravada...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>Gerar vídeo com legendas embutidas...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>Gerar vídeo com legendas embutidas adicionadas/removidas...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Áudio para texto ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importar capítulos do vídeo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Gerar/importar mudanças de cena...</GenerateImportShotChanges>
