@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.12 (xth March 2023) BETA
+3.6.12 (26th March 2023)
 * NEW:
    * Add/remove embedded subtitles to/from video files - thx David
    * Add Whisper via GPU (Const-me, Windows-only) - thx albino1/darnn/smith02ct
