@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private StringBuilder _log;
         private readonly List<VideoPreviewGeneratorSub> _softSubs = new List<VideoPreviewGeneratorSub>();
         private bool _promptFFmpegParameters;
+        private readonly List<string> _cleanUpFolders = new List<string>();
 
         private const int IndexLanguage = 1;
         private const int IndexDefault = 2;
@@ -77,12 +78,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 Directory.CreateDirectory(dir);
+                _cleanUpFolders.Add(dir);
 
+                var targetFormat = _subtitle.OriginalFormat ?? new SubRip();
                 var nameOnly = string.IsNullOrEmpty(_subtitle.FileName)
-                    ? "Untitled.srt"
+                    ? "Untitled" + targetFormat.Extension
                     : _subtitle.FileName;
 
                 var fileName = Path.Combine(dir, nameOnly);
+                File.WriteAllText(fileName, targetFormat.ToText(_subtitle, string.Empty));
+                fileName = GetKnownFileNameOrConvertToSrtOrUtf8(fileName, _subtitle);
+
                 AddListViewItem(fileName);
 
                 if (listViewSubtitles.Items.Count > 0)
@@ -262,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            fileName = GetKnownFileNameOrConvertToSrt(fileName, subtitle);
+            fileName = GetKnownFileNameOrConvertToSrtOrUtf8(fileName, subtitle);
             if (fileName != subtitle.FileName)
             {
                 subtitle = Subtitle.Parse(fileName);
@@ -281,26 +287,35 @@ namespace Nikse.SubtitleEdit.Forms
             });
         }
 
-        private static string GetKnownFileNameOrConvertToSrt(string fileName, Subtitle subtitle)
+        private string GetKnownFileNameOrConvertToSrtOrUtf8(string fileName, Subtitle subtitle)
         {
-            if (subtitle.OriginalFormat.Name == new SubRip().Name ||
+            SubtitleFormat targetFormat = new SubRip();
+
+            if (subtitle.OriginalFormat != null && (
+                subtitle.OriginalFormat.Name == new SubRip().Name ||
                 subtitle.OriginalFormat.Name == new AdvancedSubStationAlpha().Name ||
                 subtitle.OriginalFormat.Name == new SubStationAlpha().Name ||
                 subtitle.OriginalFormat.Name == new WebVTT().Name ||
-                subtitle.OriginalFormat.Name == new WebVTTFileWithLineNumber().Name)
+                subtitle.OriginalFormat.Name == new WebVTTFileWithLineNumber().Name))
             {
-                return fileName;
+                if (subtitle.OriginalEncoding?.EncodingName == Encoding.UTF8.EncodingName)
+                {
+                    return fileName;
+                }
+
+                targetFormat = subtitle.OriginalFormat;
             }
 
             var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(dir);
+            _cleanUpFolders.Add(dir);
 
             var nameOnly = string.IsNullOrEmpty(subtitle.FileName)
-                ? "Untitled.srt"
-                : Path.GetFileName(subtitle.FileName);
+                ? "Untitled"
+                : Path.GetFileNameWithoutExtension(subtitle.FileName);
 
-            fileName = Path.Combine(dir, nameOnly + new SubRip().Extension);
-            File.WriteAllText(fileName, new SubRip().ToText(subtitle, string.Empty));
+            fileName = Path.Combine(dir, nameOnly.Trim() + targetFormat.Extension);
+            File.WriteAllText(fileName, targetFormat.ToText(subtitle, string.Empty));
             return fileName;
         }
 
@@ -542,6 +557,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(VideoFileName))
             {
                 Configuration.Settings.Tools.GenVideoEmbedOutputExt = Path.GetExtension(VideoFileName).ToLowerInvariant();
+            }
+
+            foreach (var cleanUpFolder in _cleanUpFolders)
+            {
+                try
+                {
+                    Directory.Delete(cleanUpFolder, true);
+                }
+                catch 
+                {
+                    // ignore
+                }   
             }
         }
 
