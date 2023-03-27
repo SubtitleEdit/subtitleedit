@@ -2426,6 +2426,7 @@ $HorzAlign          =   Center
         public string MainListViewColor6 { get; set; }
         public string MainListViewColor7 { get; set; }
         public string MainListViewColor8 { get; set; }
+        public string MainListViewColorChoose { get; set; }
         public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyPlainText { get; set; }
@@ -9142,6 +9143,12 @@ $HorzAlign          =   Center
                     shortcuts.MainListViewColor8 = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewColorChoose");
+                if (subNode != null)
+                {
+                    shortcuts.MainListViewColorChoose = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainRemoveFormatting");
                 if (subNode != null)
                 {
@@ -11308,6 +11315,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainListViewColor6", shortcuts.MainListViewColor6);
             textWriter.WriteElementString("MainListViewColor7", shortcuts.MainListViewColor7);
             textWriter.WriteElementString("MainListViewColor8", shortcuts.MainListViewColor8);
+            textWriter.WriteElementString("MainListViewColorChoose", shortcuts.MainListViewColorChoose);
             textWriter.WriteElementString("MainRemoveFormatting", shortcuts.MainRemoveFormatting);
             textWriter.WriteElementString("MainListViewCopyText", shortcuts.MainListViewCopyText);
             textWriter.WriteElementString("MainListViewCopyPlainText", shortcuts.MainListViewCopyPlainText);
