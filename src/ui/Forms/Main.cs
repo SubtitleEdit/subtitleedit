@@ -25049,6 +25049,8 @@ namespace Nikse.SubtitleEdit.Forms
             colorPickerToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralColorPicker);
             toolStripMenuItemAutoBreakLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAutoBalanceSelectedLines);
             generateBackgroundBoxToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSetAssaBgBox);
+            colorToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColorChoose);
+            colorToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColorChoose);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             audioVisualizer.Move100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsLeft);

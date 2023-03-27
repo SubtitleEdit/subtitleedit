@@ -1506,6 +1506,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "6", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color6)), nameof(Configuration.Settings.Shortcuts.MainListViewColor6));
             AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "7", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color7)), nameof(Configuration.Settings.Shortcuts.MainListViewColor7));
             AddNode(listViewAndTextBoxNode, string.Format(language.ColorX, "8", ColorTranslator.ToHtml(Configuration.Settings.Tools.Color8)), nameof(Configuration.Settings.Shortcuts.MainListViewColor8));
+            AddNode(listViewAndTextBoxNode, LanguageSettings.Current.DCinemaProperties.FontColor, nameof(Configuration.Settings.Shortcuts.MainListViewColorChoose), true);
             AddNode(listViewAndTextBoxNode, LanguageSettings.Current.Main.Menu.ContextMenu.RemoveFormattingAll, nameof(Configuration.Settings.Shortcuts.MainRemoveFormatting), true);
             AddNode(listViewAndTextBoxNode, language.RemoveTimeCodes, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes));
             AddNode(listViewAndTextBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
