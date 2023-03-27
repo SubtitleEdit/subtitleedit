@@ -73,17 +73,20 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             try
             {
-                var location = Configuration.Settings.Tools.WhisperLocation;
-                if (!string.IsNullOrEmpty(location))
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.OpenAI)
                 {
-                    if (location.EndsWith("whisper.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                    var location = Configuration.Settings.Tools.WhisperLocation;
+                    if (!string.IsNullOrEmpty(location))
                     {
-                        return Path.GetDirectoryName(location);
-                    }
+                        if (location.EndsWith("whisper.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                        {
+                            return Path.GetDirectoryName(location);
+                        }
 
-                    if (Directory.Exists(location) && File.Exists(Path.Combine(location, "whisper.exe")))
-                    {
-                        return location;
+                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, "whisper.exe")))
+                        {
+                            return location;
+                        }
                     }
                 }
 
@@ -95,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperXLocation))
                 {
-                    if (Configuration.Settings.Tools.WhisperXLocation.EndsWith("whisperx.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                    if (Configuration.Settings.Tools.WhisperXLocation.EndsWith("whisperx.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Configuration.Settings.Tools.WhisperXLocation))
                     {
                         return Path.GetDirectoryName(Configuration.Settings.Tools.WhisperXLocation);
                     }
