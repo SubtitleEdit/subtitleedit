@@ -1399,6 +1399,7 @@ $HorzAlign          =   Center
         public bool MpvLogging { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public Color MpvPreviewTextPrimaryColor { get; set; }
+        public Color MpvPreviewTextOutlineColor { get; set; }
         public decimal MpvPreviewTextOutlineWidth { get; set; }
         public decimal MpvPreviewTextShadowWidth { get; set; }
         public bool MpvPreviewTextOpaqueBox { get; set; }
@@ -1580,6 +1581,7 @@ $HorzAlign          =   Center
             MpvVideoOutputLinux = "x11"; // could also be e.g. "x11";
             MpvHandlesPreviewText = true;
             MpvPreviewTextPrimaryColor = Color.White;
+            MpvPreviewTextOutlineColor = Color.Black;
             MpvPreviewTextOutlineWidth = 1;
             MpvPreviewTextShadowWidth = 1;
             MpvPreviewTextOpaqueBox = false;
@@ -4126,6 +4128,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvPreviewTextPrimaryColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextOutlineColor");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextOutlineColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
@@ -10308,6 +10316,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvLogging", settings.General.MpvLogging.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
+                textWriter.WriteElementString("MpvPreviewTextOutlineColor", ToHtml(settings.General.MpvPreviewTextOutlineColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
