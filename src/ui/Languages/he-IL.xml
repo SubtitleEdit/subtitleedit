@@ -5,15 +5,16 @@
     <Version>3.6.12</Version>
     <TranslatedBy>תורגם על ידי אלחנן</TranslatedBy>
     <CultureName>he-IL</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <Ok>&amp;בסדר</Ok>
-    <Cancel>לְבַטֵל</Cancel>
+    <Cancel>ביטול</Cancel>
     <Yes>כן</Yes>
     <No>לא</No>
     <Apply>להגיש מועמדות</Apply>
     <ApplyTo>הגשת בקשה ל</ApplyTo>
     <None>אף אחד</None>
-    <All>את כל</All>
+    <All>הכל</All>
     <Preview>תצוגה מקדימה</Preview>
     <ShowPreview>הצג תצוגה מקדימה</ShowPreview>
     <HidePreview>הסתר תצוגה מקדימה</HidePreview>
@@ -42,17 +43,17 @@
     <Text>טֶקסט</Text>
     <HourMinutesSecondsDecimalSeparatorMilliseconds>שעה:דקה:שנייה{0}ms</HourMinutesSecondsDecimalSeparatorMilliseconds>
     <HourMinutesSecondsFrames>שעה:דקה:שניה:מסגרות</HourMinutesSecondsFrames>
-    <XSeconds>{0:0.0##} seconds</XSeconds>
-    <Bold>נוֹעָז</Bold>
+    <XSeconds>{0:0.0##} שניות</XSeconds>
+    <Bold>מודגש</Bold>
     <Italic>נטוי</Italic>
-    <Underline>לָשִׂים דָגֵשׁ</Underline>
+    <Underline>קו תחתון</Underline>
     <Strikeout>פסילה</Strikeout>
     <Visible>גלוי</Visible>
     <FrameRate>קצב פריימים</FrameRate>
     <Name>שֵׁם</Name>
     <FileNameXAndSize>שם הקובץ: {0} ({1})</FileNameXAndSize>
     <ResolutionX>רזולוציה: {0}</ResolutionX>
-    <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
+    <FrameRateX>קצב רענון: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total frames: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>קידוד וידאו: {0}</VideoEncodingX>
     <SingleLineLengths>אורך שורה בודדת:</SingleLineLengths>
@@ -87,13 +88,13 @@
     <GeneralText>כללי</GeneralText>
     <LineNumber>קַו#</LineNumber>
     <Before>לפני</Before>
-    <After>לאחר</After>
+    <After>אחרי</After>
     <Size>גודל</Size>
-    <Search>לחפש</Search>
+    <Search>חיפוש</Search>
     <DeleteCurrentLine>מחק את השורה הנוכחית</DeleteCurrentLine>
     <Width>רוֹחַב</Width>
     <Height>גוֹבַה</Height>
-    <Collapse>הִתמוֹטְטוּת</Collapse>
+    <Collapse>קריסה</Collapse>
     <ShortcutX>קיצור דרך: {0}</ShortcutX>
     <ExampleX>דוגמה: {0}</ExampleX>
     <Reset>אִתחוּל</Reset>
@@ -102,16 +103,16 @@
   </General>
   <About>
     <Title>לגבי עריכת כתוביות</Title>
-    <AboutText1>Subtitle Edit is Free Software under the GNU Public License.
-You may distribute, modify and use it freely.
+    <AboutText1>Subtitle Edit היא תוכנה חופשית תחת רשיון GNU ציבורי.
+אתה רשאי להפיץ, לשנות ולהשתמש בו באופן חופשי.
 
-C# source code is available on https://github.com/SubtitleEdit/subtitleedit
+C# קוד המקור זמין באתר https://github.com/SubtitleEdit/subtitleedit
 
-Visit https://www.nikse.dk for the latest version.
+בדוק ב- https://www.nikse.dk את הגירסא האחרונה.
 
-Suggestions are very welcome.
+הצעות יתקבלו בברכה.
 
-Email: mailto:nikse.dk@gmail.com</AboutText1>
+כתובת המייל: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>הוסף לרשימת השמות</Title>
@@ -130,15 +131,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>קובץ וידאו מקור:</SourceVideoFile>
     <GenerateWaveformData>יצירת נתוני צורת גל</GenerateWaveformData>
     <PleaseWait>זה עשוי להימשך מספר דקות - אנא המתן</PleaseWait>
-    <FfmpegNotFound>Subtitle Edit needs FFmpeg for extracting audio data to generate waveform.
+    <FfmpegNotFound>Subtitle Edit צריכה FFmpeg לחלץ נתוני אודיו כדי ליצור צורת גל.
 
-Do you want to download and use FFmpeg?</FfmpegNotFound>
+אתה רוצה להוריד ולהשתמש ב- FFmpeg?</FfmpegNotFound>
     <GeneratingPeakFile>יוצר קובץ שיא...</GeneratingPeakFile>
     <GeneratingSpectrogram>יוצר ספקטרוגרמה...</GeneratingSpectrogram>
-    <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
+    <ExtractingSeconds>חילוץ אודיו: {0:0.0} שניות</ExtractingSeconds>
     <ExtractingMinutes>חילוץ אודיו: {0}:{1:00} דקות</ExtractingMinutes>
-    <WaveFileNotFound>Could not find extracted wave file!
-This feature requires VLC media player 1.1.x or newer ({0}-bit).
+    <WaveFileNotFound>לא ניתן היה למצוא קובץ wave שחולץ!
+תכונה זו דורשת נגן מדיה VLC 1.1.x ומעלה ({0}-bit).
 
 Command line: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} was unable to extract audio data to wave file!
@@ -181,9 +182,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <WhisperInfo>צור טקסט מאודיו באמצעות זיהוי דיבור Whisper</WhisperInfo>
     <VoskWebsite>אתר Vosk</VoskWebsite>
     <WhisperWebsite>אתר Whisper</WhisperWebsite>
-    <WhisperNotFound>Whisper not found.
+    <WhisperNotFound>Whisper לא נמצא.
 
-Read more info (web)?</WhisperNotFound>
+קרא עוד מידע (web)?</WhisperNotFound>
     <Models>דגמים</Models>
     <LanguagesAndModels>שפות ומודלים</LanguagesAndModels>
     <ChooseModel>בחר דגם</ChooseModel>
@@ -274,7 +275,7 @@ Read more info (web)?</WhisperNotFound>
   <AssaSetPosition>
     <SetPosition>קבע מיקום</SetPosition>
     <VideoResolutionX>רזולוציית וידאו: {0}</VideoResolutionX>
-    <StyleAlignmentX>יישור סגנון: {0}</StyleAlignmentX>
+    <StyleAlignmentX>סגנון יישור: {0}</StyleAlignmentX>
     <CurrentMousePositionX>מיקום העכבר: {0}</CurrentMousePositionX>
     <CurrentTextPositionX>מיקום טקסט: {0}</CurrentTextPositionX>
     <SetPosInfo>לחץ על הסרטון כדי לשנות את מצב ההגדרה/הזזה</SetPosInfo>
@@ -326,13 +327,13 @@ Read more info (web)?</WhisperNotFound>
     <PlainText>טקסט רגיל</PlainText>
     <Ocr>OCR...</Ocr>
     <AddFiles>הוסף קבצים...</AddFiles>
-    <Filter>לְסַנֵן</Filter>
-    <FilterSkipped>דילג על ידי מסנן</FilterSkipped>
+    <Filter>סינון</Filter>
+    <FilterSkipped>דילוג על ידי מסנן</FilterSkipped>
     <FilterSrtNoUtf8BOM>קבצי SubRip (.srt) ללא כותרת BOM UTF-8</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>יותר משתי שורות בכתובית אחת</FilterMoreThanTwoLines>
     <FilterContains>הטקסט מכיל...</FilterContains>
     <FilterFileNameContains>שם הקובץ מכיל...</FilterFileNameContains>
-    <LanguageCodeContains>קוד שפה (mkv/mp4) מכיל...</LanguageCodeContains>
+    <MkvLanguageCodeContains>קוד השפה Matroska (.mkv) מכיל...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>תקן שגיאות נפוצות: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>החלפה מרובה: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>יתרה אוטומטית: {0}</AutoBalanceErrorX>
@@ -446,10 +447,10 @@ ames.xml)</FixOnlyNamesCasing>
     <Language>שפה</Language>
   </ChooseLanguage>
   <ColorChooser>
-    <Title>בחרי צבע</Title>
+    <Title>בחר צבע</Title>
     <Red>אָדוֹם</Red>
     <Green>ירוק</Green>
-    <Blue>כְּחוֹל</Blue>
+    <Blue>כַּחוֹל</Blue>
     <Alpha>אלפא</Alpha>
   </ColorChooser>
   <ColumnPaste>
@@ -508,8 +509,8 @@ ames.xml)</FixOnlyNamesCasing>
     <FadeDownTime>זמן דעיכה</FadeDownTime>
     <ZPosition>מיקום Z</ZPosition>
     <ZPositionHelp>מספרים חיוביים מרחיקים טקסט, מספרים שליליים מקרבים את הטקסט, אם מיקום z הוא אפס אז הוא דו-ממדי</ZPositionHelp>
-    <ChooseColor>בחרי צבע...</ChooseColor>
-    <Generate>לִיצוֹר</Generate>
+    <ChooseColor>בחר צבע...</ChooseColor>
+    <Generate>צור</Generate>
     <GenerateNewIdOnSave>צור מזהה חדש בשמירה</GenerateNewIdOnSave>
   </DCinemaProperties>
   <DurationsBridgeGaps>
@@ -532,11 +533,11 @@ ames.xml)</FixOnlyNamesCasing>
     <IfoFile>קובץ IFO</IfoFile>
     <IfoFiles>קבצי IFO</IfoFiles>
     <VobFiles>קבצי VOB</VobFiles>
-    <Add>לְהוֹסִיף...</Add>
-    <Remove>לְהַסִיר</Remove>
-    <Clear>ברור</Clear>
-    <MoveUp>לזוז למעלה</MoveUp>
-    <MoveDown>לרדת</MoveDown>
+    <Add>הוסף...</Add>
+    <Remove>הסר</Remove>
+    <Clear>ניקוי</Clear>
+    <MoveUp>למעלה</MoveUp>
+    <MoveDown>למטה</MoveDown>
     <Languages>שפות</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
@@ -544,7 +545,7 @@ ames.xml)</FixOnlyNamesCasing>
     <StartRipping>תתחיל לקרוע</StartRipping>
     <Abort>לְהַפִּיל</Abort>
     <AbortedByUser>בוטל ע"י המשתמש</AbortedByUser>
-    <ReadingSubtitleData>קורא נתוני כתוביות...</ReadingSubtitleData>
+    <ReadingSubtitleData>קריאת נתוני כתוביות...</ReadingSubtitleData>
     <RippingVobFileXofYZ>העתקת קובץ vob {1} מתוך {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>סוג IFO הוא '{0}' ולא 'DVDVIDEO-VTS'.{1}נסה קובץ אחר מאשר {2}</WrongIfoType>
   </DvdSubRip>
@@ -594,9 +595,9 @@ ames.xml)</FixOnlyNamesCasing>
     <ErrorsX>שגיאות: {0}</ErrorsX>
     <MaxLengthError>קו {0} חורג מהאורך המקסימלי ({1}) ב-{2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>מצגת ללא שינוי</TextUnchangedPresentation>
-    <TextLeftJustifiedText>טקסט מוצדק משמאל</TextLeftJustifiedText>
+    <TextLeftJustifiedText>כיוון טקסט משמאל</TextLeftJustifiedText>
     <TextCenteredText>טקסט ממורכז</TextCenteredText>
-    <TextRightJustifiedText>טקסט מוצדק נכון</TextRightJustifiedText>
+    <TextRightJustifiedText>כיוון טקסט מימין</TextRightJustifiedText>
     <UseBoxForOneNewLine>סמן את 'השתמש בתיבה סביב טקסט' עבור שורה חדשה אחת בלבד</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -614,9 +615,9 @@ ames.xml)</FixOnlyNamesCasing>
     <Title>ייצוא פורמט טקסט מותאם אישית</Title>
     <Formats>פורמטים</Formats>
     <New>חָדָשׁ</New>
-    <Edit>לַעֲרוֹך</Edit>
-    <Delete>לִמְחוֹק</Delete>
-    <SaveAs>שמור כ...</SaveAs>
+    <Edit>עריכה</Edit>
+    <Delete>מחיקה</Delete>
+    <SaveAs>שמור בשם...</SaveAs>
     <SaveSubtitleAs>שמור כתובית בשם...</SaveSubtitleAs>
     <SubtitleExportedInCustomFormatToX>כתוביות מיוצאות בפורמט מותאם אישית אל: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
@@ -665,7 +666,7 @@ ames.xml)</FixOnlyNamesCasing>
     <HalfTopBottom3D>חצי עליון/תחתון</HalfTopBottom3D>
     <Depth>עוֹמֶק</Depth>
     <ExportAllLines>ייצא את כל השורות...</ExportAllLines>
-    <XImagesSavedInY>{0:#,##0} images saved in {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0:#,##0} קובץ נשמר ב- {1}</XImagesSavedInY>
     <VideoResolution>מילון וידאו</VideoResolution>
     <Align>יישר</Align>
     <Left>שמאלה</Left>
@@ -673,8 +674,8 @@ ames.xml)</FixOnlyNamesCasing>
     <Center>מֶרְכָּז</Center>
     <CenterLeftJustify>מרכז, מצד שמאל</CenterLeftJustify>
     <CenterLeftJustifyDialogs>מרכז, תיבת יישור שמאלה</CenterLeftJustifyDialogs>
-    <CenterTopJustify>מרכז, למעלה להצדיק</CenterTopJustify>
-    <CenterRightJustify>מרכז, נכון להצדיק</CenterRightJustify>
+    <CenterTopJustify>להצמיד למרכז למעלה</CenterTopJustify>
+    <CenterRightJustify>להצמיד למרכז ימינה</CenterRightJustify>
     <BottomMargin>שוליים תחתונים</BottomMargin>
     <LeftRightMargin>שוליים שמאלי/ימני</LeftRightMargin>
     <SaveBluRaySupAs>בחר שם קובץ Blu-ray sup</SaveBluRaySupAs>
@@ -747,7 +748,7 @@ ames.xml)</FixOnlyNamesCasing>
     <WhatToFix>מה לתקן</WhatToFix>
     <Example>דוגמא</Example>
     <SelectAll>בחר הכל</SelectAll>
-    <InverseSelection>בחירה הפוך</InverseSelection>
+    <InverseSelection>בחירה הפוכה</InverseSelection>
     <Back>&lt; &amp;חזרה</Back>
     <Next>&amp;הבא &gt;</Next>
     <Step2>שלב 2/2 - אימות תיקונים</Step2>
@@ -783,7 +784,7 @@ ames.xml)</FixOnlyNamesCasing>
     <RemoveSpaceBetweenNumber>הסר רווח בין מספרים</RemoveSpaceBetweenNumber>
     <BreakDialogsOnOneLine>פיצול דיאלוגים בשורה אחת</BreakDialogsOnOneLine>
     <RemoveDialogFirstInNonDialogs>הסר מקף התחלה בשורה הראשונה עבור לא דיאלוגים</RemoveDialogFirstInNonDialogs>
-    <NormalizeStrings>נרמל מיתרים</NormalizeStrings>
+    <NormalizeStrings>נרמל מחרוזות</NormalizeStrings>
     <FixTurkishAnsi>תקן אותיות ANSI טורקיות (איסלנדיות) ל-Unicode</FixTurkishAnsi>
     <FixDanishLetterI>תקן את האות הדנית 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>תקן סימני שאלה וסימני קריאה הפוכים בספרדית</FixSpanishInvertedQuestionAndExclamationMarks>
@@ -821,8 +822,8 @@ ames.xml)</FixOnlyNamesCasing>
     <UnableToFixStartTimeLaterThanEndTime>לא ניתן לתקן את מספר הטקסט {0}: שעת ההתחלה מאוחרת משעת הסיום: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} תוקן ל: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>לא ניתן לתקן את מספר הטקסט {0}: {1}</UnableToFixTextXY>
-    <UnneededSpace>מקום מיותר</UnneededSpace>
-    <UnneededPeriod>תקופה מיותרת</UnneededPeriod>
+    <UnneededSpace>רווח מיותר</UnneededSpace>
+    <UnneededPeriod>זמן מיותר</UnneededPeriod>
     <FixMissingSpace>תקן שטח חסר</FixMissingSpace>
     <FixUppercaseIInsideLowercaseWord>תקן 'i' רישיות בתוך מילה קטנה</FixUppercaseIInsideLowercaseWord>
     <FixMissingPeriodAtEndOfLine>הוסף נקודה חסרה בסוף השורה</FixMissingPeriodAtEndOfLine>
@@ -858,8 +859,6 @@ ames.xml)</FixOnlyNamesCasing>
     <SolidColor>צבע אחיד</SolidColor>
     <DurationInMinutes>משך דקות</DurationInMinutes>
     <Background>רקע כללי</Background>
-    <FfmpegParameters>הפעל את FFmpeg עם הפרמטרים הבאים:</FfmpegParameters>
-    <GenerateWithFfmpegParametersPrompt>Generate - הנחה את פרמטרי FFmpeg</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>צור וידאו עם כתוביות צרובות</Title>
@@ -884,19 +883,7 @@ ames.xml)</FixOnlyNamesCasing>
     <Crf>CRF</Crf>
     <TuneFor>כוונן עבור</TuneFor>
     <AlignRight>ליישור מימין</AlignRight>
-    <GetStartPosition>קבל עמדת התחלה</GetStartPosition>
-    <GetEndPosition>קבל עמדת קצה</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
-  <GenerateVideoWithEmbeddedSubs>
-    <Title>צור וידאו עם כתוביות מוטבעות</Title>
-    <InputVideoFile>קלט קובץ וידאו</InputVideoFile>
-    <SubtitlesX>כתוביות ({0})</SubtitlesX>
-    <SetLanguage>הגדר שפה...</SetLanguage>
-    <ToggleForced>החלף מאולץ</ToggleForced>
-    <ToggleDefault>החלף את ברירת המחדל</ToggleDefault>
-    <Default>בְּרִירַת מֶחדָל</Default>
-    <XGeneratedWithEmbeddedSubs>"{0}" נוצר עם כתוביות מוטבעות</XGeneratedWithEmbeddedSubs>
-  </GenerateVideoWithEmbeddedSubs>
   <GetDictionaries>
     <Title>צריך מילונים?</Title>
     <DescriptionLine1>בדיקת האיות של עריכת כתוביות מבוססת על מנוע NHunspell אשר</DescriptionLine1>
@@ -988,7 +975,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <OpenTextFile>פתח קובץ טקסט...</OpenTextFile>
     <OpenTextFiles>פתח קבצי טקסט...</OpenTextFiles>
     <ImportOptions>אפשרויות ייבוא</ImportOptions>
-    <Splitting>פְּצִיחָה</Splitting>
+    <Splitting>פיצול</Splitting>
     <AutoSplitText>פיצול אוטומטי של טקסט</AutoSplitText>
     <OneLineIsOneSubtitle>שורה אחת היא כתובית אחת</OneLineIsOneSubtitle>
     <TwoLinesAreOneSubtitle>שתי שורות הן כתובית אחת</TwoLinesAreOneSubtitle>
@@ -1003,7 +990,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <GapBetweenSubtitles>פער בין כתוביות (מילישניות)</GapBetweenSubtitles>
     <Auto>אוטומטי</Auto>
     <Fixed>תוקן</Fixed>
-    <Refresh>&amp;לְרַעֲנֵן</Refresh>
+    <Refresh>&amp;רענון</Refresh>
     <TextFiles>קבצי טקסט</TextFiles>
     <PreviewLinesModifiedX>תצוגה מקדימה - כתוביות השתנו: {0}</PreviewLinesModifiedX>
     <TimeCodes>קודי זמן</TimeCodes>
@@ -1019,8 +1006,8 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <StartTime>שעת התחלה</StartTime>
     <EndTime>שעת סיום</EndTime>
     <FileName>שם קובץ</FileName>
-    <Join>לְהִצְטַרֵף</Join>
-    <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
+    <Join>הצטרף</Join>
+    <TotalNumberOfLinesX>מספר סופי של שורות: {0:#,###,###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>לקבצים יש כבר קודי זמן נכונים</AlreadyCorrectTimeCodes>
     <AppendTimeCodes>הוסף זמן סיום של הקובץ הקודם</AppendTimeCodes>
     <AddMs>הוסף אלפיות שניות אחרי כל קובץ</AddMs>
@@ -1030,25 +1017,25 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <UnknownCodeX>לא ידוע ({0})</UnknownCodeX>
     <aaName>רחוק</aaName>
     <abName>אבחזיה</abName>
-    <afName>אפריקאנס</afName>
+    <afName>אפריקנית</afName>
     <amName>אמהרית</amName>
     <arName>עֲרָבִית</arName>
-    <asName>אסאמים</asName>
+    <asName>אסאמית</asName>
     <ayName>אימרה</ayName>
     <azName>אזרבייג'נית</azName>
     <baName>בשקיר</baName>
     <beName>בלארוסית</beName>
     <bgName>בולגרית</bgName>
-    <bhName>ביהארי</bhName>
+    <bhName>ביהארית</bhName>
     <biName>ביסלמה</biName>
     <bnName>בנגלית</bnName>
-    <boName>טיבטי</boName>
+    <boName>טיבטית</boName>
     <brName>ברטון</brName>
     <caName>קטלאנית</caName>
-    <coName>קורסיקאי</coName>
+    <coName>קורסיקאית</coName>
     <csName>צ'כית</csName>
     <cyName>וולשית</cyName>
-    <daName>דַנִי</daName>
+    <daName>דַנִית</daName>
     <deName>גֶרמָנִיָת</deName>
     <dzName>דזונגקה</dzName>
     <elName>יווני</elName>
@@ -1072,8 +1059,8 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <heName>עִברִית</heName>
     <hiName>הינדי</hiName>
     <hrName>קרואטית</hrName>
-    <huName>הוּנגָרִי</huName>
-    <hyName>אַרְמֶנִי</hyName>
+    <huName>הוּנגָרִית</huName>
+    <hyName>אַרְמֶנִית</hyName>
     <iaName>אינטרלינגואה</iaName>
     <idName>אינדונזית</idName>
     <ieName>לשון בין</ieName>
@@ -1087,10 +1074,10 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <kkName>קזחית</kkName>
     <klName>קלאליסוט</klName>
     <kmName>חמר</kmName>
-    <knName>קנאדה</knName>
+    <knName>קנדית</knName>
     <koName>קוריאנית</koName>
-    <ksName>קשמירי</ksName>
-    <kuName>כּוּרדִי</kuName>
+    <ksName>קשמירית</ksName>
+    <kuName>כּוּרדִית</kuName>
     <kyName>קירגיזית</kyName>
     <laName>לָטִינִית</laName>
     <lbName>לוקסמבורג</lbName>
@@ -1099,31 +1086,31 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <ltName>ליטאית</ltName>
     <lvName>לטבית</lvName>
     <mgName>מלגזית</mgName>
-    <miName>מאורי</miName>
+    <miName>מאורית</miName>
     <mkName>מקדונית</mkName>
     <mlName>מלאיאלאם</mlName>
-    <mnName>מוֹנגוֹלִי</mnName>
+    <mnName>מוֹנגוֹלִית</mnName>
     <moName>מולדבית</moName>
-    <mrName>מראטי</mrName>
+    <mrName>מראטית</mrName>
     <msName>מלאית</msName>
     <mtName>מלטזית</mtName>
-    <myName>בורמזי</myName>
+    <myName>בורמזית</myName>
     <naName>נאורו</naName>
     <neName>נפאלית</neName>
-    <nlName>הוֹלַנדִי</nlName>
+    <nlName>הוֹלַנדִית</nlName>
     <noName>נורבגית</noName>
     <ocName>אוקסיטנית</ocName>
     <omName>אורומו</omName>
     <orName>אוריה</orName>
     <paName>פנג'בי</paName>
-    <plName>פולני</plName>
+    <plName>פולנית</plName>
     <psName>פשטו</psName>
     <ptName>פורטוגזית</ptName>
     <quName>קצ'ואה</quName>
     <rmName>רומאנש</rmName>
     <rnName>רונדי</rnName>
     <roName>רומנית</roName>
-    <ruName>רוּסִי</ruName>
+    <ruName>רוּסִית</ruName>
     <rwName>קיניארואנדה</rwName>
     <saName>סנסקריט</saName>
     <sdName>סינדהי</sdName>
@@ -1134,12 +1121,12 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <slName>סלובנית</slName>
     <smName>סמואנית</smName>
     <snName>שונה</snName>
-    <soName>סומלי</soName>
-    <sqName>אלבני</sqName>
+    <soName>סומלית</soName>
+    <sqName>אלבנית</sqName>
     <srName>סרבית</srName>
-    <ssName>סוואטי</ssName>
+    <ssName>סוואטית</ssName>
     <stName>דרום סוטו</stName>
-    <suName>סונדני</suName>
+    <suName>סודנית</suName>
     <svName>שוודית</svName>
     <swName>סוואהילית</swName>
     <taName>טמילית</taName>
@@ -1155,7 +1142,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <tsName>צונגה</tsName>
     <ttName>טטרית</ttName>
     <twName>טווי</twName>
-    <ugName>אויגורי</ugName>
+    <ugName>אויגורית</ugName>
     <ukName>אוקראינית</ukName>
     <urName>אורדו</urName>
     <uzName>אוזבקית</uzName>
@@ -1174,11 +1161,11 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <File>
         <Title>&amp;קוֹבֶץ</Title>
         <New>&amp;חָדָשׁ</New>
-        <Open>&amp;לִפְתוֹחַ...</Open>
+        <Open>&amp;פתח...</Open>
         <OpenKeepVideo>פתח (שמור סרטון)...</OpenKeepVideo>
-        <Reopen>&amp;פתח מחדש</Reopen>
-        <Save>&amp;להציל</Save>
-        <SaveAs>שמור כ...</SaveAs>
+        <Reopen>&amp;פתח שוב</Reopen>
+        <Save>&amp;שמור</Save>
+        <SaveAs>שמור בשם...</SaveAs>
         <RestoreAutoBackup>שחזר גיבוי אוטומטי...</RestoreAutoBackup>
         <FormatXProperties>{0} נכסים...</FormatXProperties>
         <OpenOriginal>פתח את הכתובית המקורית (מצב מתרגם)...</OpenOriginal>
@@ -1186,7 +1173,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <CloseOriginal>סגור את הכתובית המקורית</CloseOriginal>
         <CloseTranslation>סגור כתובית מתורגמת</CloseTranslation>
         <OpenContainingFolder>פתח תיקייה המכילה</OpenContainingFolder>
-        <Compare>&amp;לְהַשְׁווֹת...</Compare>
+        <Compare>&amp;השוואה...</Compare>
         <Statistics>סטָטִיסטִיקָה...</Statistics>
         <Plugins>&amp;תוספים...</Plugins>
         <ImportSubtitleFromVideoFile>כתובית מקובץ וידאו...</ImportSubtitleFromVideoFile>
@@ -1198,7 +1185,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <ImportText>טקסט רגיל...</ImportText>
         <ImportImages>תמונות...</ImportImages>
         <ImportTimecodes>קודי זמן...</ImportTimecodes>
-        <Import>יְבוּא</Import>
+        <Import>יבוא</Import>
         <Export>יְצוּא</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>תמיכה בבלו ריי...</ExportBluRaySup>
@@ -1219,9 +1206,9 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <Exit>יְצִיאָה</Exit>
       </File>
       <Edit>
-        <Title>לַעֲרוֹך</Title>
-        <Undo>לבטל</Undo>
-        <Redo>לַעֲשׂוֹת שׁוּב</Redo>
+        <Title>עריכה</Title>
+        <Undo>ביטול</Undo>
+        <Redo>בצע שוב</Redo>
         <ShowUndoHistory>הצג היסטוריה (לביטול)</ShowUndoHistory>
         <InsertUnicodeSymbol>הכנס סמל Unicode</InsertUnicodeSymbol>
         <InsertUnicodeControlCharacters>הכנס תווי בקרה של Unicode</InsertUnicodeControlCharacters>
@@ -1231,7 +1218,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <InsertUnicodeControlCharactersRLE>התחלת הטבעה מימין לשמאל (RLE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>התחלה של עקיפה משמאל לימין (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>התחלה של עקיפה מימין לשמאל (RLO)</InsertUnicodeControlCharactersRLO>
-        <Find>&amp;למצוא</Find>
+        <Find>&amp;מצא</Find>
         <FindNext>מצא &amp;הבא</FindNext>
         <Replace>&amp;החלף</Replace>
         <MultipleReplace>&amp;החלפה מרובה...</MultipleReplace>
@@ -1298,7 +1285,6 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <GenerateTextFromVideo>צור טקסט מסרטון...</GenerateTextFromVideo>
         <GenerateBlankVideo>צור סרטון ריק...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>צור וידאו עם תת צרוב...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>צור וידאו עם כתוביות מוטבעות...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>אודיו לטקסט ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>ייבוא ​​פרקים מתוך וידאו</ImportChaptersFromVideo>
         <GenerateImportShotChanges>צור/יבא שינויים בצילום...</GenerateImportShotChanges>
@@ -1353,10 +1339,10 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       </Help>
       <ToolBar>
         <New>חָדָשׁ</New>
-        <Open>לִפְתוֹחַ</Open>
-        <Save>להציל</Save>
-        <SaveAs>שמור כ</SaveAs>
-        <Find>למצוא</Find>
+        <Open>פתח</Open>
+        <Save>שמור</Save>
+        <SaveAs>שמור בשם</SaveAs>
+        <Find>מצא</Find>
         <Replace>החלף</Replace>
         <FixCommonErrors>תקן שגיאות נפוצות</FixCommonErrors>
         <RemoveTextForHi>הסר טקסט ללקויי שמיעה</RemoveTextForHi>
@@ -1382,12 +1368,11 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <TimedTextSetLanguage>טקסט מתוזמן - הגדר שפה</TimedTextSetLanguage>
         <SamiSetStyle>סמי - מעמד קבע</SamiSetStyle>
         <NuendoSetStyle>Nuendo - דמות סט</NuendoSetStyle>
-        <Cut>גזירה</Cut>
-        <Copy>עותק</Copy>
-        <Paste>לְהַדבִּיק</Paste>
-        <Delete>לִמְחוֹק</Delete>
+        <Cut>גזור</Cut>
+        <Copy>העתק</Copy>
+        <Paste>הדבק</Paste>
+        <Delete>מחק</Delete>
         <SplitLineAtCursorPosition>קו מפוצל במיקום הסמן</SplitLineAtCursorPosition>
-        <SplitLineAtCursorPositionAndAutoBr>קו מפוצל במיקום הסמן ושבירה אוטומטית</SplitLineAtCursorPositionAndAutoBr>
         <SplitLineAtCursorAndWaveformPosition>קו מפוצל במיקום הסמן/סרטון</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>משך אוטומטי (שורה נוכחית)</AutoDurationCurrentLine>
         <SelectAll>בחר הכל</SelectAll>
@@ -1407,7 +1392,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <ColumnTextDown>טקסט למטה</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>העתק טקסט מהמקור לעדכני</ColumnCopyOriginalTextToCurrent>
         <OcrSelectedLines>קווים שנבחרו ב-OCR</OcrSelectedLines>
-        <Split>לְפַצֵל</Split>
+        <Split>פיצול</Split>
         <MergeSelectedLines>מיזוג שורות נבחרות</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>מיזוג שורות נבחרות כדיאלוג</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>מיזוג עם קו לפני</MergeWithLineBefore>
@@ -1422,7 +1407,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
         <RemoveFormattingColor>הסר צבע</RemoveFormattingColor>
         <RemoveFormattingFontName>הסר את שם הגופן</RemoveFormattingFontName>
         <RemoveFormattingAlignment>הסר יישור</RemoveFormattingAlignment>
-        <Underline>לָשִׂים דָגֵשׁ</Underline>
+        <Underline>קו תחתון</Underline>
         <Box>קופסא</Box>
         <Color>צֶבַע...</Color>
         <FontName>שם גופן...</FontName>
@@ -1461,8 +1446,8 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       </ContextMenu>
     </Menu>
     <Controls>
-      <SubtitleFormat>פוּרמָט</SubtitleFormat>
-      <FileEncoding>הַצפָּנָה</FileEncoding>
+      <SubtitleFormat>פורמָט</SubtitleFormat>
+      <FileEncoding>קידוד</FileEncoding>
       <UndoChangesInEditPanel>בטל שינויים בלוח העריכה</UndoChangesInEditPanel>
       <Previous>&lt; הקודם</Previous>
       <Next>הבא &gt;</Next>
@@ -1472,9 +1457,9 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <VideoControls>
       <Translate>לתרגם</Translate>
       <CreateAndAdjust>צור/התאם</CreateAndAdjust>
-      <Create>לִיצוֹר</Create>
-      <Adjust>לְהַתְאִים</Adjust>
-      <SelectCurrentElementWhilePlaying>בחר כתובית נוכחית תוך כדי משחק</SelectCurrentElementWhilePlaying>
+      <Create>צור</Create>
+      <Adjust>התאמה</Adjust>
+      <SelectCurrentElementWhilePlaying>בחר כתובית נוכחית תוך כדי נגינה</SelectCurrentElementWhilePlaying>
       <AutoRepeat>חזרה אוטומטית</AutoRepeat>
       <AutoRepeatOn>חזרה אוטומטית פועלת</AutoRepeatOn>
       <AutoRepeatCount>ספירת חזרות (פעמים)</AutoRepeatCount>
@@ -1483,10 +1468,10 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <DelayInSeconds>עיכוב (שניות)</DelayInSeconds>
       <OriginalText>טקסט מקורי</OriginalText>
       <Previous>&lt;קודם&amp;קודם</Previous>
-      <Stop>&amp;תפסיק</Stop>
+      <Stop>&amp;עצירה</Stop>
       <PlayCurrent>&amp;הפעל נוכחי</PlayCurrent>
       <Next>&amp;הבא &gt;</Next>
-      <Playing>משחק...</Playing>
+      <Playing>מנגן...</Playing>
       <RepeatingLastTime>חוזר... פעם אחרונה</RepeatingLastTime>
       <RepeatingXTimesLeft>חוזר... נותרו {0} פעמים</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>המשך אוטומטי בשנייה אחת</AutoContinueInOneSecond>
@@ -1497,7 +1482,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <Auto>אוטומטי</Auto>
       <PlayFromJustBeforeText>הפעל מרגע לפני &amp;טקסט</PlayFromJustBeforeText>
       <PlayFromBeginning>הפעל מתחילת הסרטון</PlayFromBeginning>
-      <Pause>הַפסָקָה</Pause>
+      <Pause>עצור</Pause>
       <GoToSubtitlePositionAndPause>עבור למיקום המשנה והשהה</GoToSubtitlePositionAndPause>
       <SetStartTime>הגדר &amp;זמן התחלה</SetStartTime>
       <SetEndTimeAndGoToNext>הגדר &amp;סיום &amp;&amp;עבור אל הבא</SetEndTimeAndGoToNext>
@@ -1541,11 +1526,11 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <SavedOriginalSubtitleX>כתובית מקורית שמורה {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>הקובץ בדיסק שונה</FileOnDiskModified>
     <OverwriteModifiedFile>להחליף את הקובץ {0} ששונה ב-{1} {2}{3} עם הקובץ הנוכחי שנטען מהדיסק ב-{4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Cannot save {0}
+    <FileXIsReadOnly>לא ניתן לשמור {0}
 
-File is read-only!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>Unable to save subtitle file {0}
-Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
+הקובץ לקריאה בלבד!</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>לא ניתן לשמור את הקובץ {0}
+הכתובית נראית ריקה - נסה לשמור שנית אם אינך עובד על כתובית מאומתת!</UnableToSaveSubtitleX>
     <FormatXShouldUseUft8>יש להשתמש בקידוד UTF-8 בעת שמירת {0} קבצים!</FormatXShouldUseUft8>
     <BeforeNew>לפני חדש</BeforeNew>
     <New>חָדָשׁ</New>
@@ -1557,12 +1542,12 @@ Subtitle seems to be empty - try to re-save if you're working on a valid subtitl
     <OpenVideoFile>פתח קובץ וידאו...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>קצב פריימים חדש ({0}) שימש לחישוב קודי זמן התחלה/סיום</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>קצב פריימים חדש ({0}) שימש לחישוב מספרי התחלה/סיום</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>The search item was not found.
-Would you like to start from the top of the document and search one more time?</FindContinue>
-    <FindContinueTitle>האם להמשיך למצוא?</FindContinueTitle>
-    <ReplaceContinueNotFound>The search item was not found.
+    <FindContinue>הקובץ המבוקש לא נמצא.
+האם אתה רוצה להתחיל לחפש שנית מתחילת המסמך?</FindContinue>
+    <FindContinueTitle>האם להמשיך לחפש?</FindContinueTitle>
+    <ReplaceContinueNotFound>הקובץ המבוקש לא נמצא.
 Would you like to start from the top of the document and continue search and replace?</ReplaceContinueNotFound>
-    <ReplaceXContinue>The search item was replaced {0} time(s).
+    <ReplaceXContinue>אובייקט החיפוש הוחלף {0} time(s).
 Would you like to start from the top of the document and continue search and replace?</ReplaceXContinue>
     <ReplaceContinueTitle>האם להמשיך עם 'החלפה'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>מחפש '{0}' ממספר שורה {1}...</SearchingForXFromLineY>
@@ -1572,7 +1557,7 @@ Would you like to start from the top of the document and continue search and rep
     <MatchFoundX>נמצאה התאמה: {0}</MatchFoundX>
     <NoMatchFoundX>לא נמצאה התאמה: {0}</NoMatchFoundX>
     <FoundNothingToReplace>לא מצאתי מה להחליף</FoundNothingToReplace>
-    <ReplaceCountX>Replace count: {0:#,##0}</ReplaceCountX>
+    <ReplaceCountX>ספירת החלפה: {0:#,##0}</ReplaceCountX>
     <NoXFoundAtLineY>נמצאה התאמה בשורה {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>בוצעה החלפה אחת.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>לפני שבוצעו שינויים בתצוגת מקור</BeforeChangesMadeInSourceView>
@@ -1595,7 +1580,7 @@ Would you like to start from the top of the document and continue search and rep
     <SubtitleSplitted>כתובית פוצלה</SubtitleSplitted>
     <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should already be in sync with video file.
 
-Continue?</SubtitleAppendPrompt>
+להמשיך?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>הוסף כותרת משנה</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>פתח את הכתובית להוספה...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>סנכרון חזותי - הוסף חלק שני של כתובית</AppendViaVisualSyncTitle>
@@ -1604,7 +1589,7 @@ Continue?</SubtitleAppendPrompt>
     <SubtitleAppendedX>כתובית צורפה: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>כתובית לא צורפה!</SubtitleNotAppended>
     <GoogleTranslate>גוגל תרגום</GoogleTranslate>
-    <MicrosoftTranslate>Bing Microsoft מתרגם</MicrosoftTranslate>
+    <MicrosoftTranslate>Bing מייקרוסופט מתרגם</MicrosoftTranslate>
     <BeforeGoogleTranslation>לפני תרגום גוגל</BeforeGoogleTranslation>
     <SelectedLinesTranslated>שורות נבחרות תורגמו</SelectedLinesTranslated>
     <SubtitleTranslated>כתוביות מתורגמות</SubtitleTranslated>
@@ -1615,12 +1600,12 @@ Continue?</SubtitleAppendPrompt>
     <TranslationFromSwedishToDanishComplete>תרגום משוודית לדנית הושלם</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>תרגום משוודית לדנית נכשל</TranslationFromSwedishToDanishFailed>
     <UndoPerformed>בוצע ביטול</UndoPerformed>
-    <RedoPerformed>Redo ביצע</RedoPerformed>
+    <RedoPerformed>בצע שנית</RedoPerformed>
     <NothingToUndo>אין מה לבטל</NothingToUndo>
     <InvalidLanguageNameX>שם שפה לא חוקי: {0}</InvalidLanguageNameX>
     <DoNotDisplayMessageAgain>אל תציג הודעה זו שוב</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>מספר המילים שתוקנו: {0}</NumberOfCorrectedWords>
-    <NumberOfSkippedWords>מספר המילים שדילג עליהן: {0}</NumberOfSkippedWords>
+    <NumberOfSkippedWords>מספר המילים שדולגו: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>מספר המילים הנכונות: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>מספר המילים שנוספו למילון: {0}</NumberOfWordsAddedToDictionary>
     <NumberOfNameHits>מספר התאמות של שם: {0}</NumberOfNameHits>
@@ -1632,8 +1617,8 @@ Continue?</SubtitleAppendPrompt>
     <LineXOfY>שורה {0} מתוך {1}</LineXOfY>
     <XLinesSavedAsY>{0} שורות נשמרו כ-{1}</XLinesSavedAsY>
     <XLinesDeleted>{0} שורות נמחקו</XLinesDeleted>
-    <BeforeDeletingXLines>Before deleting {0:#,##0} lines</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Delete {0:#,##0} lines?</DeleteXLinesPrompt>
+    <BeforeDeletingXLines>לפני מחיקה {0:#,##0} שורות</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>למחוק {0:#,##0} שורות?</DeleteXLinesPrompt>
     <OneLineDeleted>השורה נמחקה</OneLineDeleted>
     <BeforeDeletingOneLine>לפני מחיקת שורה אחת</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>למחוק שורה אחת?</DeleteOneLinePrompt>
@@ -1656,7 +1641,7 @@ Continue?</SubtitleAppendPrompt>
     <NoSubtitlesFound>לא נמצאו כתוביות</NoSubtitlesFound>
     <NotAValidMatroskaFileX>זה אינו קובץ Matroska חוקי: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>קובץ Blu-ray sup אינו מכיל כתוביות או מכיל שגיאות - נסה לבצע דה-מקס שוב.</BlurayNotSubtitlesFound>
-    <ImportingChapters>מייבא פרקים...</ImportingChapters>
+    <ImportingChapters>ייבוא פרקים...</ImportingChapters>
     <XChaptersImported>{0} פרקים יובאו</XChaptersImported>
     <ParsingMatroskaFile>ניתוח קובץ Matroska.  המתן בבקשה...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>ניתוח קובץ Transport Stream.  המתן בבקשה...</ParsingTransportStreamFile>
@@ -1794,7 +1779,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoChapters>לא נמצאו פרקים בסרטון.</NoChapters>
     <VideoFromUrlRequirements>Opening video from URL requires mpv and youtube-dl.
 
-Download and continue?</VideoFromUrlRequirements>
+הורד והמשך?</VideoFromUrlRequirements>
     <Url>כתובת אתר</Url>
     <Errors>שגיאות</Errors>
     <ShowVideoControls>הצג פקדי וידאו</ShowVideoControls>
@@ -1822,7 +1807,7 @@ Download and continue?</VideoFromUrlRequirements>
     <ConvertTo>להמיר ל</ConvertTo>
     <CopyToClipboard>העתק ללוח</CopyToClipboard>
     <CloseOnInsert>סגור בהכנס</CloseOnInsert>
-    <Insert>לְהַכנִיס</Insert>
+    <Insert>הכנס</Insert>
     <Length>אורך</Length>
     <Mass>מסה</Mass>
     <Volume>כרך</Volume>
@@ -1982,10 +1967,10 @@ Download and continue?</VideoFromUrlRequirements>
     <RegularExpression>הבעה רגילה</RegularExpression>
     <Description>תיאור</Description>
     <LinesFoundX>נמצאו שורות: {0}</LinesFoundX>
-    <Remove>לְהַסִיר</Remove>
-    <Add>&amp;לְהוֹסִיף</Add>
+    <Remove>הסר</Remove>
+    <Add>&amp;הוסף</Add>
     <Update>&amp;עדכון</Update>
-    <Enabled>מופעל</Enabled>
+    <Enabled>אַפשֵר</Enabled>
     <SearchType>סוג חיפוש</SearchType>
     <RemoveAll>להסיר את כל</RemoveAll>
     <Import>יְבוּא...</Import>
@@ -2008,7 +1993,7 @@ Download and continue?</VideoFromUrlRequirements>
   </MultipleReplace>
   <NetworkChat>
     <Title>לְשׂוֹחֵחַ</Title>
-    <Send>לִשְׁלוֹחַ</Send>
+    <Send>שלח</Send>
   </NetworkChat>
   <NetworkJoin>
     <Title>הצטרף לסשן רשת</Title>
@@ -2151,13 +2136,13 @@ Download and continue?</VideoFromUrlRequirements>
     <Rules>כללים</Rules>
     <ShowToolBarButtons>הצג את לחצני סרגל הכלים</ShowToolBarButtons>
     <New>חָדָשׁ</New>
-    <Open>לִפְתוֹחַ</Open>
-    <Save>להציל</Save>
+    <Open>פתח</Open>
+    <Save>שמור</Save>
     <SaveAs>שמור כ</SaveAs>
-    <Find>למצוא</Find>
+    <Find>מצא</Find>
     <Replace>החלף</Replace>
     <VisualSync>סנכרון ויזואלי</VisualSync>
-    <BurnIn>נולד ב</BurnIn>
+    <BurnIn>נוצר ב</BurnIn>
     <SpellCheck>בדיקת איות</SpellCheck>
     <NetflixQualityCheck>בדיקת איכות נטפליקס</NetflixQualityCheck>
     <SettingsName>הגדרות</SettingsName>
@@ -2382,11 +2367,11 @@ Download and continue?</VideoFromUrlRequirements>
     <FavoriteFormats>פורמטים מועדפים</FavoriteFormats>
     <FavoriteSubtitleFormatsNote>הערה: פורמטים מועדפים יוצגו תחילה בעת בחירת פורמט, פורמט ברירת המחדל תמיד יוצג ראשון</FavoriteSubtitleFormatsNote>
     <Shortcuts>קיצורי דרך</Shortcuts>
-    <Shortcut>קיצור</Shortcut>
-    <Control>לִשְׁלוֹט</Control>
+    <Shortcut>קיצור דרך</Shortcut>
+    <Control>ctrl</Control>
     <Alt>Alt</Alt>
-    <Shift>מִשׁמֶרֶת</Shift>
-    <Key>מַפְתֵחַ</Key>
+    <Shift>shift</Shift>
+    <Key>מקש</Key>
     <ListViewAndTextBox>תצוגת רשימה ותיבת טקסט</ListViewAndTextBox>
     <ListView>תצוגת רשימה</ListView>
     <TextBox>תיבת טקסט</TextBox>
@@ -2470,7 +2455,6 @@ Download and continue?</VideoFromUrlRequirements>
     <ToggleDialogDashes>החלף מקפי דו-שיח</ToggleDialogDashes>
     <ToggleQuotes>החלף ציטוטים</ToggleQuotes>
     <ToggleHiTags>החלף את תגי HI</ToggleHiTags>
-    <ToggleCustomTags>החלף תגים מותאמים אישית</ToggleCustomTags>
     <ToggleMusicSymbols>החלף סמלי מוזיקה</ToggleMusicSymbols>
     <Alignment>יישור (שורות נבחרות)</Alignment>
     <AlignmentN1>יישור למטה משמאל - {an1}</AlignmentN1>
@@ -2532,7 +2516,7 @@ Download and continue?</VideoFromUrlRequirements>
     <WaveformGoToNextChapter>עבור לפרק הבא</WaveformGoToNextChapter>
     <WaveformSelectNextSubtitle>בחר את הכתובית הבאה (ממיקום הווידאו, שמור את מיקום הווידאו)</WaveformSelectNextSubtitle>
     <TogglePlayPause>החלף הפעלה/השהיה</TogglePlayPause>
-    <Pause>הַפסָקָה</Pause>
+    <Pause>השהיה</Pause>
     <Fullscreen>מסך מלא</Fullscreen>
     <Play150Speed>קצב משחק פי 1.5 מהירות</Play150Speed>
     <Play200Speed>קצב משחק פי 2.0 מהירות</Play200Speed>
@@ -2629,15 +2613,15 @@ Download and continue?</VideoFromUrlRequirements>
     <GoogleTranslateApiKey>מפתח API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>מתרגם של מיקרוסופט</MicrosoftBingTranslator>
     <HowToSignUp>איך נרשמים</HowToSignUp>
-    <MicrosoftTranslateApiKey>מַפְתֵחַ</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateApiKey>מפתח api</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>נקודת קצה אסימון</MicrosoftTranslateTokenEndpoint>
     <FontNote>Note: These font settings are for the Subtitle Edit UI only.
 Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
 "Advanced Sub Station Alpha" or via export to image-based formats.</FontNote>
     <RestoreDefaultSettings>שחזר הגדרות ברירת מחדל</RestoreDefaultSettings>
-    <RestoreDefaultSettingsMsg>All settings will be restored to default values
+    <RestoreDefaultSettingsMsg>כל ההגדרות שוחזרו לערכי ברירת המחדל
 
-Continue?</RestoreDefaultSettingsMsg>
+להמשיך?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>הסר קודי זמן</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>ערוך הגדרות לתיקון סגנון המשך...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>הגדרות לתיקון סגנון המשך</FixContinuationStyleSettings>
@@ -2656,7 +2640,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>לַעֲרוֹך</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>קיצורי דרך: אפשר אות/מספר בודד בתיבת הטקסט</ShortcutsAllowSingleLetterOrNumberInTextBox>
-    <ShortcutCustomToggle>החלפת קיצור דרך התחלה/סיום מותאמים אישית</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>עדכן את שיוך סוגי הקבצים</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>שיוך סוגי קבצים עודכנו</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>ערוך סגנון המשך מותאם אישית</CustomContinuationStyle>
@@ -2671,7 +2654,6 @@ Continue?</RestoreDefaultSettingsMsg>
     <PreviewPause>(הַפסָקָה)</PreviewPause>
     <CustomContinuationStyleNote>הערה: סגנון ההמשך המותאם אישית משותף בין הפרופילים.</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>זה יעקוף את הערכים בתיבת הדו-שיח.  האם אתה בטוח?</ResetCustomContinuationStyleWarning>
-    <ExportAsHtml>ייצוא כ-HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>הורד mpv lib</DownloadMpv>
@@ -2762,9 +2744,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <Characters>דמויות</Characters>
     <NumberOfEqualParts>מספר חלקים שווים</NumberOfEqualParts>
     <SubtitleInfo>מידע על כתוביות</SubtitleInfo>
-    <NumberOfLinesX>Number of lines: {0:#,###}</NumberOfLinesX>
-    <NumberOfCharactersX>Number of characters: {0:#,###,###}</NumberOfCharactersX>
-    <Output>תְפוּקָה</Output>
+    <NumberOfLinesX>מספר השורות: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>מספר הפרקים: {0:#,###,###}</NumberOfCharactersX>
+    <Output>פלט</Output>
     <FileName>שם קובץ</FileName>
     <OutputFolder>תיקיית פלט</OutputFolder>
     <DoSplit>לְפַצֵל</DoSplit>
@@ -2808,15 +2790,15 @@ Continue?</RestoreDefaultSettingsMsg>
     <MostUsedLines>קווים משומשים ביותר</MostUsedLines>
     <MostUsedWords>המילים הכי בשימוש</MostUsedWords>
     <NothingFound>שום דבר לא נמצא</NothingFound>
-    <NumberOfLinesX>Number of subtitle lines: {0:#,##0}</NumberOfLinesX>
+    <NumberOfLinesX>מספר שורות הכתובית: {0:#,##0}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>מספר התווים כ-{0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <NumberOfCharactersInTextOnly>מספר הפרקים בטקסט בלבד: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalDuration>Total duration of all subtitles: {0:#,##0}</TotalDuration>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
-    <TotalWords>Total words in subtitle: {0:#,##0}</TotalWords>
+    <TotalWords>מספר המילים בכתובית: {0:#,##0}</TotalWords>
     <NumberOfItalicTags>Number of italic tags: {0:#,##0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Number of bold tags: {0:#,##0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Number of underline tags: {0:#,##0}</NumberOfUnderlineTags>
+    <NumberOfBoldTags>מספר התוים המודגשים: {0:#,##0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>מספר התוים המסומנים בקו תחתון: {0:#,##0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Number of font tags: {0:#,##0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Number of alignment tags: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>אורך כתוביות - מינימום: {0}</LineLengthMinimum>
@@ -2906,7 +2888,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <CopyOfY>עותק של {0}</CopyOfY>
     <CopyXOfY>עותק {0} מתוך {1}</CopyXOfY>
     <New>חָדָשׁ</New>
-    <Remove>לְהַסִיר</Remove>
+    <Remove>הסרה</Remove>
     <ReplaceWith>להחליף ב...</ReplaceWith>
     <RemoveAll>להסיר את כל</RemoveAll>
     <ImportStyleFromFile>יבא סגנון מקובץ...</ImportStyleFromFile>
