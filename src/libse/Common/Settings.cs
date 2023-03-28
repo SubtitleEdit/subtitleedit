@@ -10083,7 +10083,7 @@ $HorzAlign          =   Center
             }
         }
 
-        public static void CustomSerialize(string fileName, Settings settings)
+        public static string CustomSerialize(Settings settings)
         {
             var xws = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
             var sb = new StringBuilder();
@@ -10135,6 +10135,7 @@ $HorzAlign          =   Center
                     textWriter.WriteString(item.FileName);
                     textWriter.WriteEndElement();
                 }
+
                 textWriter.WriteEndElement();
                 textWriter.WriteEndElement();
 
@@ -10159,6 +10160,7 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("ContinuationStyle", profile.ContinuationStyle.ToString());
                     textWriter.WriteEndElement();
                 }
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteElementString("CurrentProfile", settings.General.CurrentProfile);
@@ -10386,6 +10388,7 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("Hint", template.Hint);
                     textWriter.WriteEndElement();
                 }
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
@@ -10716,8 +10719,10 @@ $HorzAlign          =   Center
                         var text = settings.Tools.FindHistory[index];
                         textWriter.WriteElementString("Text", text);
                     }
+
                     textWriter.WriteEndElement();
                 }
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("SubtitleSettings", string.Empty);
@@ -10756,9 +10761,11 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("Angle", style.Angle.ToString(CultureInfo.InvariantCulture));
                             textWriter.WriteEndElement();
                         }
+
                         textWriter.WriteEndElement();
                     }
                 }
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("AssaApplyOverrideTags", string.Empty);
@@ -10766,6 +10773,7 @@ $HorzAlign          =   Center
                 {
                     textWriter.WriteElementString("Tag", tag);
                 }
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteElementString("AssaResolutionAutoNew", settings.SubtitleSettings.AssaResolutionAutoNew.ToString(CultureInfo.InvariantCulture));
@@ -11008,9 +11016,11 @@ $HorzAlign          =   Center
                             textWriter.WriteElementString("Description", item.Description);
                             textWriter.WriteEndElement();
                         }
+
                         textWriter.WriteEndElement();
                     }
                 }
+
                 textWriter.WriteEndElement();
 
                 WriteShortcuts(settings.Shortcuts, textWriter);
@@ -11047,14 +11057,19 @@ $HorzAlign          =   Center
                 textWriter.WriteEndDocument();
                 textWriter.Flush();
 
-                try
-                {
-                    File.WriteAllText(fileName, sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
-                }
-                catch
-                {
-                    // ignored
-                }
+                return sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
+            }
+        }
+
+        public static void CustomSerialize(string fileName, Settings settings)
+        {
+            try
+            {
+                File.WriteAllText(fileName, CustomSerialize(settings), Encoding.UTF8);
+            }
+            catch
+            {
+                // ignored
             }
         }
 

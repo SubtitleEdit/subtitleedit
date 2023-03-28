@@ -99,6 +99,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
+        private readonly string _oldSettings;
+
         public Settings()
         {
             UiUtil.PreInitialize(this);
@@ -108,6 +110,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             _shortcutsBackgroundWorker = new BackgroundWorker();
             Init();
+
+            _oldSettings = Core.Common.Settings.CustomSerialize(Configuration.Settings);
         }
 
         public void Init()
@@ -2130,6 +2134,12 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 }
             }
 
+            if (_oldSettings == Core.Common.Settings.CustomSerialize(Configuration.Settings))
+            {
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
             Configuration.Settings.Save();
         }
 
@@ -3502,7 +3512,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
                             shortcut = string.Empty;
                         }
 
-                        description = description.Substring(0,indexOfBracket).Trim(' ', '[');
+                        description = description.Substring(0, indexOfBracket).Trim(' ', '[');
                     }
 
                     html.AppendLine("      <tr>");

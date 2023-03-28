@@ -1813,7 +1813,11 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                if (ColumnIndexText >= 0)
+                if (ColumnIndexText == 0)
+                {
+                    item.Text = text;
+                }
+                else if (ColumnIndexText > 0 && ColumnIndexText < item.SubItems.Count)
                 {
                     item.SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
