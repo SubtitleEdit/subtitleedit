@@ -5,8 +5,7 @@
     <Version>3.6.12</Version>
     <TranslatedBy>תורגם על ידי אלחנן</TranslatedBy>
     <CultureName>he-IL</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;בסדר</Ok>
     <Cancel>ביטול</Cancel>
     <Yes>כן</Yes>
