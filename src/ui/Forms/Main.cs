@@ -29746,13 +29746,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_listViewTextUndoLast != newText)
                 {
+                    MakeHistoryForUndo(_languageGeneral.Text + ": " + _listViewTextUndoLast.TrimEnd() + " -> " + newText, false);
+
                     int hidx = _subtitle.HistoryItems.Count - 1;
                     if (hidx >= 0 && hidx < _subtitle.HistoryItems.Count)
                     {
                         var historyParagraph = _subtitle.HistoryItems[hidx].Subtitle.GetParagraphOrDefault(index);
                         if (historyParagraph != null)
                         {
-                            MakeHistoryForUndo(_languageGeneral.Text + ": " + _listViewTextUndoLast.TrimEnd() + " -> " + newText, false);
                             historyParagraph.Text = _listViewTextUndoLast;
                         }
                     }
