@@ -4,6 +4,7 @@
 * NEW:
    * Add shortcut for text "color picker" - thx rRobis
    * Add new subtitle format "nVivo transcript" - thx Ashin
+   * Add more mpv preview settings in UI
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran

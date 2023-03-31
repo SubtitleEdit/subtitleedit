@@ -615,7 +615,7 @@
             this.buttonTranslationAutoSuffix.Location = new System.Drawing.Point(692, 420);
             this.buttonTranslationAutoSuffix.Name = "buttonTranslationAutoSuffix";
             this.buttonTranslationAutoSuffix.Size = new System.Drawing.Size(28, 23);
-            this.buttonTranslationAutoSuffix.TabIndex = 66;
+            this.buttonTranslationAutoSuffix.TabIndex = 26;
             this.buttonTranslationAutoSuffix.Text = "...";
             this.buttonTranslationAutoSuffix.UseVisualStyleBackColor = true;
             this.buttonTranslationAutoSuffix.Click += new System.EventHandler(this.buttonTranslationAutoSuffix_Click);
@@ -632,7 +632,7 @@
             this.comboBoxTranslationAutoSuffix.Location = new System.Drawing.Point(562, 421);
             this.comboBoxTranslationAutoSuffix.Name = "comboBoxTranslationAutoSuffix";
             this.comboBoxTranslationAutoSuffix.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTranslationAutoSuffix.TabIndex = 33;
+            this.comboBoxTranslationAutoSuffix.TabIndex = 25;
             // 
             // labelTranslationAutoSuffix
             // 
@@ -678,7 +678,7 @@
             this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(441, 386);
             this.comboBoxSaveAsFileNameFrom.Name = "comboBoxSaveAsFileNameFrom";
             this.comboBoxSaveAsFileNameFrom.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxSaveAsFileNameFrom.TabIndex = 25;
+            this.comboBoxSaveAsFileNameFrom.TabIndex = 24;
             // 
             // labelSaveAsFileNameFrom
             // 
@@ -2548,7 +2548,7 @@
             this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(660, 17);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 9;
+            this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 7;
             this.checkBoxVideoPlayerPreviewFontBold.Text = "Bold";
             this.checkBoxVideoPlayerPreviewFontBold.UseVisualStyleBackColor = true;
             // 
@@ -2630,7 +2630,7 @@
             this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 40);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(70, 21);
-            this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 8;
+            this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 7;
             // 
             // checkBoxVideoPlayerShowStopButton
             // 
@@ -3039,7 +3039,7 @@
             this.checkBoxWaveformAutoGen.Location = new System.Drawing.Point(262, 186);
             this.checkBoxWaveformAutoGen.Name = "checkBoxWaveformAutoGen";
             this.checkBoxWaveformAutoGen.Size = new System.Drawing.Size(220, 17);
-            this.checkBoxWaveformAutoGen.TabIndex = 35;
+            this.checkBoxWaveformAutoGen.TabIndex = 27;
             this.checkBoxWaveformAutoGen.Text = "Auto gen waveform when opening video";
             this.checkBoxWaveformAutoGen.UseVisualStyleBackColor = true;
             // 
@@ -3363,7 +3363,7 @@
             this.groupBoxToolsMisc.Location = new System.Drawing.Point(418, 180);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
             this.groupBoxToolsMisc.Size = new System.Drawing.Size(434, 109);
-            this.groupBoxToolsMisc.TabIndex = 33;
+            this.groupBoxToolsMisc.TabIndex = 6;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
             // 
@@ -3791,7 +3791,7 @@
             this.checkBoxUseWordSplitListAvoidPropercase.Location = new System.Drawing.Point(34, 146);
             this.checkBoxUseWordSplitListAvoidPropercase.Name = "checkBoxUseWordSplitListAvoidPropercase";
             this.checkBoxUseWordSplitListAvoidPropercase.Size = new System.Drawing.Size(102, 17);
-            this.checkBoxUseWordSplitListAvoidPropercase.TabIndex = 35;
+            this.checkBoxUseWordSplitListAvoidPropercase.TabIndex = 4;
             this.checkBoxUseWordSplitListAvoidPropercase.Text = "Skip propercase";
             this.checkBoxUseWordSplitListAvoidPropercase.UseVisualStyleBackColor = true;
             // 
@@ -3810,7 +3810,7 @@
             this.buttonFixContinuationStyleSettings.Location = new System.Drawing.Point(16, 220);
             this.buttonFixContinuationStyleSettings.Name = "buttonFixContinuationStyleSettings";
             this.buttonFixContinuationStyleSettings.Size = new System.Drawing.Size(271, 23);
-            this.buttonFixContinuationStyleSettings.TabIndex = 6;
+            this.buttonFixContinuationStyleSettings.TabIndex = 7;
             this.buttonFixContinuationStyleSettings.Text = "Edit settings for fixing continuation style...";
             this.buttonFixContinuationStyleSettings.UseVisualStyleBackColor = true;
             this.buttonFixContinuationStyleSettings.Click += new System.EventHandler(this.buttonFixContinuationStyleSettings_Click);
@@ -3821,7 +3821,7 @@
             this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 193);
             this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
             this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxFceSkipStep1.TabIndex = 5;
+            this.checkBoxFceSkipStep1.TabIndex = 6;
             this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
             this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
             // 
@@ -3831,7 +3831,7 @@
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Location = new System.Drawing.Point(15, 170);
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Name = "checkBoxFixShortDisplayTimesAllowMoveStartTime";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Size = new System.Drawing.Size(252, 17);
-            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 4;
+            this.checkBoxFixShortDisplayTimesAllowMoveStartTime.TabIndex = 5;
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = "Fix short display time - allow move of start time";
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime.UseVisualStyleBackColor = true;
             // 
@@ -4000,7 +4000,7 @@
             this.checkBoxShowFrameRate.Location = new System.Drawing.Point(16, 20);
             this.checkBoxShowFrameRate.Name = "checkBoxShowFrameRate";
             this.checkBoxShowFrameRate.Size = new System.Drawing.Size(154, 17);
-            this.checkBoxShowFrameRate.TabIndex = 34;
+            this.checkBoxShowFrameRate.TabIndex = 47;
             this.checkBoxShowFrameRate.Text = "Show frame rate in toolbar";
             this.checkBoxShowFrameRate.UseVisualStyleBackColor = true;
             // 
@@ -4110,7 +4110,7 @@
             this.checkBoxTBBurnIn.Location = new System.Drawing.Point(259, 198);
             this.checkBoxTBBurnIn.Name = "checkBoxTBBurnIn";
             this.checkBoxTBBurnIn.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxTBBurnIn.TabIndex = 43;
+            this.checkBoxTBBurnIn.TabIndex = 20;
             this.checkBoxTBBurnIn.Text = "Visible";
             this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
             // 
@@ -4218,7 +4218,7 @@
             this.checkBoxHelp.Location = new System.Drawing.Point(563, 195);
             this.checkBoxHelp.Name = "checkBoxHelp";
             this.checkBoxHelp.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxHelp.TabIndex = 22;
+            this.checkBoxHelp.TabIndex = 23;
             this.checkBoxHelp.Text = "Visible";
             this.checkBoxHelp.UseVisualStyleBackColor = true;
             // 
@@ -4245,7 +4245,7 @@
             this.checkBoxSettings.Location = new System.Drawing.Point(462, 195);
             this.checkBoxSettings.Name = "checkBoxSettings";
             this.checkBoxSettings.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxSettings.TabIndex = 21;
+            this.checkBoxSettings.TabIndex = 22;
             this.checkBoxSettings.Text = "Visible";
             this.checkBoxSettings.UseVisualStyleBackColor = true;
             // 
@@ -4272,7 +4272,7 @@
             this.checkBoxSpellCheck.Location = new System.Drawing.Point(362, 195);
             this.checkBoxSpellCheck.Name = "checkBoxSpellCheck";
             this.checkBoxSpellCheck.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxSpellCheck.TabIndex = 20;
+            this.checkBoxSpellCheck.TabIndex = 21;
             this.checkBoxSpellCheck.Text = "Visible";
             this.checkBoxSpellCheck.UseVisualStyleBackColor = true;
             // 
@@ -5165,14 +5165,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelTools);
-            this.Controls.Add(this.panelShortcuts);
-            this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelFont);
-            this.Controls.Add(this.panelToolBar);
-            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelWaveform);
+            this.Controls.Add(this.panelVideoPlayer);
+            this.Controls.Add(this.panelGeneral);
+            this.Controls.Add(this.panelToolBar);
+            this.Controls.Add(this.panelShortcuts);
+            this.Controls.Add(this.panelFont);
+            this.Controls.Add(this.panelNetwork);
             this.Controls.Add(this.panelFileTypeAssociations);
             this.Controls.Add(this.panelSubtitleFormats);
             this.Controls.Add(this.panelSyntaxColoring);
