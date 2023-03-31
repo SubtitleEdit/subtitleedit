@@ -1400,9 +1400,11 @@ $HorzAlign          =   Center
         public bool MpvHandlesPreviewText { get; set; }
         public Color MpvPreviewTextPrimaryColor { get; set; }
         public Color MpvPreviewTextOutlineColor { get; set; }
+        public Color MpvPreviewTextBackgroundColor { get; set; }
         public decimal MpvPreviewTextOutlineWidth { get; set; }
         public decimal MpvPreviewTextShadowWidth { get; set; }
         public bool MpvPreviewTextOpaqueBox { get; set; }
+        public bool MpvPreviewTextOpaqueBoxMultiLine { get; set; }
         public string MpvPreviewTextAlignment { get; set; }
         public int MpvPreviewTextMarginVertical { get; set; }
         public string MpcHcLocation { get; set; }
@@ -1582,8 +1584,10 @@ $HorzAlign          =   Center
             MpvHandlesPreviewText = true;
             MpvPreviewTextPrimaryColor = Color.White;
             MpvPreviewTextOutlineColor = Color.Black;
+            MpvPreviewTextBackgroundColor = Color.Black;
             MpvPreviewTextOutlineWidth = 1;
             MpvPreviewTextShadowWidth = 1;
+            MpvPreviewTextOpaqueBox = false;
             MpvPreviewTextOpaqueBox = false;
             MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
@@ -4136,6 +4140,12 @@ $HorzAlign          =   Center
                 settings.General.MpvPreviewTextOutlineColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
             }
 
+            subNode = node.SelectSingleNode("MpvPreviewTextBackgroundColor");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextBackgroundColor = ColorTranslator.FromHtml(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
             if (subNode != null)
             {
@@ -4152,6 +4162,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvPreviewTextOpaqueBox = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("MpvPreviewTextOpaqueBoxMultiLine");
+            if (subNode != null)
+            {
+                settings.General.MpvPreviewTextOpaqueBoxMultiLine = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextAlignment");
@@ -10319,9 +10335,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextPrimaryColor", ColorTranslator.ToHtml(settings.General.MpvPreviewTextPrimaryColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineColor", ToHtml(settings.General.MpvPreviewTextOutlineColor));
+                textWriter.WriteElementString("MpvPreviewTextBackgroundColor", ToHtml(settings.General.MpvPreviewTextBackgroundColor));
                 textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextOpaqueBoxMultiLine", settings.General.MpvPreviewTextOpaqueBoxMultiLine.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextAlignment", settings.General.MpvPreviewTextAlignment);
                 textWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
