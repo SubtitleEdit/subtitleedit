@@ -1404,7 +1404,7 @@ $HorzAlign          =   Center
         public decimal MpvPreviewTextOutlineWidth { get; set; }
         public decimal MpvPreviewTextShadowWidth { get; set; }
         public bool MpvPreviewTextOpaqueBox { get; set; }
-        public bool MpvPreviewTextOpaqueBoxMultiLine { get; set; }
+        public string MpvPreviewTextOpaqueBoxStyle { get; set; }
         public string MpvPreviewTextAlignment { get; set; }
         public int MpvPreviewTextMarginVertical { get; set; }
         public string MpcHcLocation { get; set; }
@@ -1588,7 +1588,7 @@ $HorzAlign          =   Center
             MpvPreviewTextOutlineWidth = 1;
             MpvPreviewTextShadowWidth = 1;
             MpvPreviewTextOpaqueBox = false;
-            MpvPreviewTextOpaqueBox = false;
+            MpvPreviewTextOpaqueBoxStyle = "1";
             MpvPreviewTextAlignment = "2";
             MpvPreviewTextMarginVertical = 10;
             FFmpegSceneThreshold = "0.4"; // threshold for generating shot changes - 0.2 is sensitive (more shot changes), 0.6 is less sensitive (fewer shot changes)
@@ -4149,13 +4149,13 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("MpvPreviewTextOutlineWidth");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextOutlineWidth = Convert.ToDecimal(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextOutlineWidth = Convert.ToDecimal(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextShadowWidth");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextShadowWidth = Convert.ToDecimal(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextShadowWidth = Convert.ToDecimal(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextOpaqueBox");
@@ -4164,10 +4164,10 @@ $HorzAlign          =   Center
                 settings.General.MpvPreviewTextOpaqueBox = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
-            subNode = node.SelectSingleNode("MpvPreviewTextOpaqueBoxMultiLine");
+            subNode = node.SelectSingleNode("MpvPreviewTextOpaqueBoxStyle");
             if (subNode != null)
             {
-                settings.General.MpvPreviewTextOpaqueBoxMultiLine = Convert.ToBoolean(subNode.InnerText.Trim());
+                settings.General.MpvPreviewTextOpaqueBoxStyle = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("MpvPreviewTextAlignment");
@@ -5623,7 +5623,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("ImportTextGap");
             if (subNode != null)
             {
-                settings.Tools.ImportTextGap = Convert.ToDecimal(subNode.InnerText);
+                settings.Tools.ImportTextGap = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ImportTextAutoSplitNumberOfLines");
@@ -5647,7 +5647,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("ImportTextFixedDuration");
             if (subNode != null)
             {
-                settings.Tools.ImportTextFixedDuration = Convert.ToDecimal(subNode.InnerText);
+                settings.Tools.ImportTextFixedDuration = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
@@ -10339,7 +10339,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MpvPreviewTextOutlineWidth", settings.General.MpvPreviewTextOutlineWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextShadowWidth", settings.General.MpvPreviewTextShadowWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpvPreviewTextOpaqueBox", settings.General.MpvPreviewTextOpaqueBox.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MpvPreviewTextOpaqueBoxMultiLine", settings.General.MpvPreviewTextOpaqueBoxMultiLine.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MpvPreviewTextOpaqueBoxStyle", settings.General.MpvPreviewTextOpaqueBoxStyle);
                 textWriter.WriteElementString("MpvPreviewTextAlignment", settings.General.MpvPreviewTextAlignment);
                 textWriter.WriteElementString("MpvPreviewTextMarginVertical", settings.General.MpvPreviewTextMarginVertical.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);

@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Background = gs.MpvPreviewTextBackgroundColor,
                 OutlineWidth = gs.MpvPreviewTextOutlineWidth,
                 ShadowWidth = gs.MpvPreviewTextShadowWidth,
-                BorderStyle = gs.MpvPreviewTextOpaqueBox ? gs.MpvPreviewTextOpaqueBoxMultiLine ? "4" : "3" : "1",
+                BorderStyle = gs.MpvPreviewTextOpaqueBoxStyle,
                 Alignment = gs.MpvPreviewTextAlignment,
                 MarginVertical = gs.MpvPreviewTextMarginVertical
             };

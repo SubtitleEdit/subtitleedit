@@ -154,6 +154,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             comboBoxFrameRate.Items.Add(59.94.ToString(CultureInfo.CurrentCulture));
             comboBoxFrameRate.Items.Add(60.00.ToString(CultureInfo.CurrentCulture));
 
+            comboBoxOpaqueBoxStyle.Items.Clear();
+            comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxPerLine);
+            comboBoxOpaqueBoxStyle.Items.Add(LanguageSettings.Current.SubStationAlphaStyles.BoxMultiLine);
+            comboBoxOpaqueBoxStyle.SelectedIndex = 0;
+
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
             comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentCulture);
 
@@ -251,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
 
-            int videoPlayerPreviewFontSizeIndex = gs.VideoPlayerPreviewFontSize - int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString());
+            var videoPlayerPreviewFontSizeIndex = gs.VideoPlayerPreviewFontSize - int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString());
             if (videoPlayerPreviewFontSizeIndex >= 0 && videoPlayerPreviewFontSizeIndex < comboBoxlVideoPlayerPreviewFontSize.Items.Count)
             {
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = videoPlayerPreviewFontSizeIndex;
@@ -261,9 +266,23 @@ namespace Nikse.SubtitleEdit.Forms.Options
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             }
 
+            numericUpDownMpvOutline.Value = gs.MpvPreviewTextOutlineWidth;
+            numericUpDownMpvShadowWidth.Value = gs.MpvPreviewTextShadowWidth;
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
-            checkBoxMpvPreviewOpaqueBox.Checked = gs.MpvPreviewTextOpaqueBox;
-            panelVideoPlayerPreviewFontColor.BackColor = gs.MpvPreviewTextPrimaryColor;
+            radioButtonMpvOpaqueBox.Checked = gs.MpvPreviewTextOpaqueBox;
+            radioButtonMpvOutline.Checked = !gs.MpvPreviewTextOpaqueBox;
+            if (gs.MpvPreviewTextOpaqueBox && gs.MpvPreviewTextOpaqueBoxStyle == "3")
+            {
+                comboBoxOpaqueBoxStyle.SelectedIndex = 0;
+            }
+            else if (gs.MpvPreviewTextOpaqueBox)
+            {
+                comboBoxOpaqueBoxStyle.SelectedIndex = 1;
+            }
+
+            panelMpvPrimaryColor.BackColor = gs.MpvPreviewTextPrimaryColor;
+            panelMpvOutlineColor.BackColor = gs.MpvPreviewTextOutlineColor;
+            panelMpvBackColor.BackColor = gs.MpvPreviewTextBackgroundColor;
 
             checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
             checkBoxAllowVolumeBoost.Checked = gs.AllowVolumeBoost;
@@ -604,6 +623,11 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelMpvSettings.Left = buttonMpvSettings.Left + buttonMpvSettings.Width + 5;
             checkBoxMpvHandlesPreviewText.Text = language.MpvHandlesPreviewText;
 
+            groupBoxMpvBorder.Text = LanguageSettings.Current.SubStationAlphaStyles.Border;
+            labelMpvShadow.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
+            radioButtonMpvOutline.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
+            radioButtonMpvOpaqueBox.Text = LanguageSettings.Current.SubStationAlphaStyles.OpaqueBox;
+
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
             gs.VlcLocation = textBoxVlcPath.Text;
@@ -614,16 +638,18 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             labelVideoPlayerPreviewFontName.Text = language.PreviewFontName;
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
-            labelVideoPlayerPreviewFontColor.Text = language.SubtitleFontColor;
+            buttonMpvPrimaryColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Primary;
+            buttonMpvOutlineColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Outline;
+            buttonMpvBackColor.Text = LanguageSettings.Current.SubStationAlphaStyles.Shadow;
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
-            checkBoxMpvPreviewOpaqueBox.Text = language.SsaOpaqueBox;
             var left = labelVideoPlayerPreviewFontName.Left + 5 +
-                        Math.Max(labelVideoPlayerPreviewFontName.Width, Math.Max(labelVideoPlayerPreviewFontSize.Width, labelVideoPlayerPreviewFontColor.Width));
+                        Math.Max(labelVideoPlayerPreviewFontName.Width, labelVideoPlayerPreviewFontSize.Width);
             comboBoxVideoPlayerPreviewFontName.Left = left;
             comboBoxlVideoPlayerPreviewFontSize.Left = left;
-            checkBoxVideoPlayerPreviewFontBold.Left = left;
-            checkBoxMpvPreviewOpaqueBox.Left = left;
-            panelVideoPlayerPreviewFontColor.Left = left;
+            panelMpvPrimaryColor.Left = buttonMpvPrimaryColor.Right + 5;
+            panelMpvOutlineColor.Left = buttonMpvOutlineColor.Right + 5;
+            panelMpvBackColor.Left = buttonMpvBackColor.Right + 5;
+            checkBoxVideoPlayerPreviewFontBold.Left = comboBoxVideoPlayerPreviewFontName.Right + 6;
 
             checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
             checkBoxAllowVolumeBoost.Text = language.AllowVolumeBoost;
@@ -1958,10 +1984,31 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.VideoPlayerPreviewFontName = comboBoxVideoPlayerPreviewFontName.SelectedItem.ToString();
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
-            gs.MpvPreviewTextPrimaryColor = panelVideoPlayerPreviewFontColor.BackColor;
+            gs.MpvPreviewTextPrimaryColor = panelMpvPrimaryColor.BackColor;
+            gs.MpvPreviewTextOutlineColor = panelMpvOutlineColor.BackColor;
+            gs.MpvPreviewTextBackgroundColor = panelMpvBackColor.BackColor;
+
             gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
             gs.AllowVolumeBoost = checkBoxAllowVolumeBoost.Checked;
-            gs.MpvPreviewTextOpaqueBox = checkBoxMpvPreviewOpaqueBox.Checked;
+            gs.MpvPreviewTextOpaqueBox = radioButtonMpvOpaqueBox.Checked;
+            gs.MpvPreviewTextOutlineWidth = numericUpDownMpvOutline.Value;
+            gs.MpvPreviewTextShadowWidth = numericUpDownMpvShadowWidth.Value;
+
+            if (radioButtonMpvOpaqueBox.Checked)
+            {
+                if (comboBoxOpaqueBoxStyle.SelectedIndex == 0)
+                {
+                    gs.MpvPreviewTextOpaqueBoxStyle = "3";
+                }
+                else
+                {
+                    gs.MpvPreviewTextOpaqueBoxStyle = "4";
+                }
+            }
+            else
+            {
+                gs.MpvPreviewTextOpaqueBoxStyle = "1";
+            }
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
             Configuration.Settings.VideoControls.CustomSearchText2 = comboBoxCustomSearch2.Text;
@@ -2824,16 +2871,25 @@ namespace Nikse.SubtitleEdit.Forms.Options
         private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
-            checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
-            panelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
-            labelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            groupBoxMpvBorder.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            buttonMpvPrimaryColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelMpvPrimaryColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            buttonMpvOutlineColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelMpvOutlineColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            buttonMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void checkBoxMpvHandlesPreviewText_CheckedChanged(object sender, EventArgs e)
         {
-            checkBoxMpvPreviewOpaqueBox.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
-            panelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
-            labelVideoPlayerPreviewFontColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+            groupBoxMpvBorder.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            buttonMpvPrimaryColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelMpvPrimaryColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            buttonMpvOutlineColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelMpvOutlineColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            buttonMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
+            panelMpvBackColor.Visible = radioButtonVideoPlayerMPV.Checked && checkBoxMpvHandlesPreviewText.Checked;
         }
 
         private void buttonClearShortcut_Click(object sender, EventArgs e)
@@ -3152,15 +3208,6 @@ namespace Nikse.SubtitleEdit.Forms.Options
         {
             // avoid flickering when losing focus
             listBoxSection.Update();
-        }
-
-        private void panelVideoPlayerPreviewFontColor_Click(object sender, EventArgs e)
-        {
-            colorDialogSSAStyle.Color = panelVideoPlayerPreviewFontColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
-            {
-                panelVideoPlayerPreviewFontColor.BackColor = colorDialogSSAStyle.Color;
-            }
         }
 
         private void checkBoxDarkThemeEnabled_CheckedChanged(object sender, EventArgs e)
@@ -3529,6 +3576,33 @@ namespace Nikse.SubtitleEdit.Forms.Options
 
             File.WriteAllText(saveFileDialog1.FileName, html.ToString());
             UiUtil.OpenFolderFromFileName(saveFileDialog1.FileName);
+        }
+
+        private void buttonMpvPrimaryColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelMpvPrimaryColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelMpvPrimaryColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonMpvOutlineColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelMpvOutlineColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelMpvOutlineColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonMpvBackColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelMpvBackColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelMpvBackColor.BackColor = colorDialogSSAStyle.Color;
+            }
         }
     }
 }

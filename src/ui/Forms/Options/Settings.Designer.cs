@@ -176,8 +176,19 @@
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
-            this.labelVideoPlayerPreviewFontColor = new System.Windows.Forms.Label();
-            this.panelVideoPlayerPreviewFontColor = new System.Windows.Forms.Panel();
+            this.panelMpvBackColor = new System.Windows.Forms.Panel();
+            this.buttonMpvBackColor = new System.Windows.Forms.Button();
+            this.panelMpvOutlineColor = new System.Windows.Forms.Panel();
+            this.buttonMpvOutlineColor = new System.Windows.Forms.Button();
+            this.panelMpvPrimaryColor = new System.Windows.Forms.Panel();
+            this.buttonMpvPrimaryColor = new System.Windows.Forms.Button();
+            this.groupBoxMpvBorder = new System.Windows.Forms.GroupBox();
+            this.comboBoxOpaqueBoxStyle = new System.Windows.Forms.ComboBox();
+            this.radioButtonMpvOpaqueBox = new System.Windows.Forms.RadioButton();
+            this.radioButtonMpvOutline = new System.Windows.Forms.RadioButton();
+            this.numericUpDownMpvShadowWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMpvOutline = new System.Windows.Forms.NumericUpDown();
+            this.labelMpvShadow = new System.Windows.Forms.Label();
             this.checkBoxAllowVolumeBoost = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoAutoOpen = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
@@ -185,7 +196,6 @@
             this.checkBoxVideoPlayerShowMuteButton = new System.Windows.Forms.CheckBox();
             this.labelVideoPlayerPreviewFontName = new System.Windows.Forms.Label();
             this.comboBoxVideoPlayerPreviewFontName = new System.Windows.Forms.ComboBox();
-            this.checkBoxMpvPreviewOpaqueBox = new System.Windows.Forms.CheckBox();
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
@@ -442,6 +452,9 @@
             this.panelVideoPlayer.SuspendLayout();
             this.groupBoxMainWindowVideoControls.SuspendLayout();
             this.groupBoxVideoPlayerDefault.SuspendLayout();
+            this.groupBoxMpvBorder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvShadowWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvOutline)).BeginInit();
             this.groupBoxVideoEngine.SuspendLayout();
             this.panelWaveform.SuspendLayout();
             this.groupBoxFfmpeg.SuspendLayout();
@@ -2157,9 +2170,9 @@
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl1);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch1);
-            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 313);
+            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 323);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 207);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 197);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -2347,8 +2360,13 @@
             // 
             this.groupBoxVideoPlayerDefault.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontColor);
-            this.groupBoxVideoPlayerDefault.Controls.Add(this.panelVideoPlayerPreviewFontColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.panelMpvBackColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.buttonMpvBackColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.panelMpvOutlineColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.buttonMpvOutlineColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.panelMpvPrimaryColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.buttonMpvPrimaryColor);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.groupBoxMpvBorder);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxAllowVolumeBoost);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoAutoOpen);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerPreviewFontBold);
@@ -2356,33 +2374,153 @@
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowMuteButton);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontName);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxVideoPlayerPreviewFontName);
-            this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxMpvPreviewOpaqueBox);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
             this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 160);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
-            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 147);
+            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 160);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
             // 
-            // labelVideoPlayerPreviewFontColor
+            // panelMpvBackColor
             // 
-            this.labelVideoPlayerPreviewFontColor.AutoSize = true;
-            this.labelVideoPlayerPreviewFontColor.Location = new System.Drawing.Point(331, 111);
-            this.labelVideoPlayerPreviewFontColor.Name = "labelVideoPlayerPreviewFontColor";
-            this.labelVideoPlayerPreviewFontColor.Size = new System.Drawing.Size(133, 13);
-            this.labelVideoPlayerPreviewFontColor.TabIndex = 12;
-            this.labelVideoPlayerPreviewFontColor.Text = "Subtitle preview font color";
+            this.panelMpvBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMpvBackColor.Location = new System.Drawing.Point(399, 125);
+            this.panelMpvBackColor.Name = "panelMpvBackColor";
+            this.panelMpvBackColor.Size = new System.Drawing.Size(21, 20);
+            this.panelMpvBackColor.TabIndex = 19;
+            this.panelMpvBackColor.Click += new System.EventHandler(this.buttonMpvBackColor_Click);
             // 
-            // panelVideoPlayerPreviewFontColor
+            // buttonMpvBackColor
             // 
-            this.panelVideoPlayerPreviewFontColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelVideoPlayerPreviewFontColor.Location = new System.Drawing.Point(471, 107);
-            this.panelVideoPlayerPreviewFontColor.Name = "panelVideoPlayerPreviewFontColor";
-            this.panelVideoPlayerPreviewFontColor.Size = new System.Drawing.Size(21, 20);
-            this.panelVideoPlayerPreviewFontColor.TabIndex = 11;
-            this.panelVideoPlayerPreviewFontColor.Click += new System.EventHandler(this.panelVideoPlayerPreviewFontColor_Click);
+            this.buttonMpvBackColor.Location = new System.Drawing.Point(325, 124);
+            this.buttonMpvBackColor.Name = "buttonMpvBackColor";
+            this.buttonMpvBackColor.Size = new System.Drawing.Size(69, 23);
+            this.buttonMpvBackColor.TabIndex = 18;
+            this.buttonMpvBackColor.Text = "Shadow";
+            this.buttonMpvBackColor.UseVisualStyleBackColor = true;
+            this.buttonMpvBackColor.Click += new System.EventHandler(this.buttonMpvBackColor_Click);
+            // 
+            // panelMpvOutlineColor
+            // 
+            this.panelMpvOutlineColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMpvOutlineColor.Location = new System.Drawing.Point(387, 96);
+            this.panelMpvOutlineColor.Name = "panelMpvOutlineColor";
+            this.panelMpvOutlineColor.Size = new System.Drawing.Size(21, 20);
+            this.panelMpvOutlineColor.TabIndex = 17;
+            this.panelMpvOutlineColor.Click += new System.EventHandler(this.buttonMpvOutlineColor_Click);
+            // 
+            // buttonMpvOutlineColor
+            // 
+            this.buttonMpvOutlineColor.Location = new System.Drawing.Point(325, 95);
+            this.buttonMpvOutlineColor.Name = "buttonMpvOutlineColor";
+            this.buttonMpvOutlineColor.Size = new System.Drawing.Size(58, 23);
+            this.buttonMpvOutlineColor.TabIndex = 16;
+            this.buttonMpvOutlineColor.Text = "Outline";
+            this.buttonMpvOutlineColor.UseVisualStyleBackColor = true;
+            this.buttonMpvOutlineColor.Click += new System.EventHandler(this.buttonMpvOutlineColor_Click);
+            // 
+            // panelMpvPrimaryColor
+            // 
+            this.panelMpvPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMpvPrimaryColor.Location = new System.Drawing.Point(403, 67);
+            this.panelMpvPrimaryColor.Name = "panelMpvPrimaryColor";
+            this.panelMpvPrimaryColor.Size = new System.Drawing.Size(21, 20);
+            this.panelMpvPrimaryColor.TabIndex = 15;
+            this.panelMpvPrimaryColor.Click += new System.EventHandler(this.buttonMpvPrimaryColor_Click);
+            // 
+            // buttonMpvPrimaryColor
+            // 
+            this.buttonMpvPrimaryColor.Location = new System.Drawing.Point(325, 66);
+            this.buttonMpvPrimaryColor.Name = "buttonMpvPrimaryColor";
+            this.buttonMpvPrimaryColor.Size = new System.Drawing.Size(72, 23);
+            this.buttonMpvPrimaryColor.TabIndex = 14;
+            this.buttonMpvPrimaryColor.Text = "&Primary";
+            this.buttonMpvPrimaryColor.UseVisualStyleBackColor = true;
+            this.buttonMpvPrimaryColor.Click += new System.EventHandler(this.buttonMpvPrimaryColor_Click);
+            // 
+            // groupBoxMpvBorder
+            // 
+            this.groupBoxMpvBorder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMpvBorder.Controls.Add(this.comboBoxOpaqueBoxStyle);
+            this.groupBoxMpvBorder.Controls.Add(this.radioButtonMpvOpaqueBox);
+            this.groupBoxMpvBorder.Controls.Add(this.radioButtonMpvOutline);
+            this.groupBoxMpvBorder.Controls.Add(this.numericUpDownMpvShadowWidth);
+            this.groupBoxMpvBorder.Controls.Add(this.numericUpDownMpvOutline);
+            this.groupBoxMpvBorder.Controls.Add(this.labelMpvShadow);
+            this.groupBoxMpvBorder.Location = new System.Drawing.Point(547, 45);
+            this.groupBoxMpvBorder.Name = "groupBoxMpvBorder";
+            this.groupBoxMpvBorder.Size = new System.Drawing.Size(285, 105);
+            this.groupBoxMpvBorder.TabIndex = 13;
+            this.groupBoxMpvBorder.TabStop = false;
+            this.groupBoxMpvBorder.Text = "Border";
+            // 
+            // comboBoxOpaqueBoxStyle
+            // 
+            this.comboBoxOpaqueBoxStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOpaqueBoxStyle.DropDownWidth = 300;
+            this.comboBoxOpaqueBoxStyle.FormattingEnabled = true;
+            this.comboBoxOpaqueBoxStyle.Location = new System.Drawing.Point(35, 69);
+            this.comboBoxOpaqueBoxStyle.Name = "comboBoxOpaqueBoxStyle";
+            this.comboBoxOpaqueBoxStyle.Size = new System.Drawing.Size(212, 21);
+            this.comboBoxOpaqueBoxStyle.TabIndex = 5;
+            // 
+            // radioButtonMpvOpaqueBox
+            // 
+            this.radioButtonMpvOpaqueBox.AutoSize = true;
+            this.radioButtonMpvOpaqueBox.Location = new System.Drawing.Point(12, 50);
+            this.radioButtonMpvOpaqueBox.Name = "radioButtonMpvOpaqueBox";
+            this.radioButtonMpvOpaqueBox.Size = new System.Drawing.Size(84, 17);
+            this.radioButtonMpvOpaqueBox.TabIndex = 4;
+            this.radioButtonMpvOpaqueBox.Text = "Opaque bo&x";
+            this.radioButtonMpvOpaqueBox.UseVisualStyleBackColor = false;
+            // 
+            // radioButtonMpvOutline
+            // 
+            this.radioButtonMpvOutline.AutoSize = true;
+            this.radioButtonMpvOutline.Location = new System.Drawing.Point(12, 24);
+            this.radioButtonMpvOutline.Name = "radioButtonMpvOutline";
+            this.radioButtonMpvOutline.Size = new System.Drawing.Size(59, 17);
+            this.radioButtonMpvOutline.TabIndex = 0;
+            this.radioButtonMpvOutline.Text = "Outline";
+            this.radioButtonMpvOutline.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownMpvShadowWidth
+            // 
+            this.numericUpDownMpvShadowWidth.DecimalPlaces = 1;
+            this.numericUpDownMpvShadowWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMpvShadowWidth.Location = new System.Drawing.Point(134, 24);
+            this.numericUpDownMpvShadowWidth.Name = "numericUpDownMpvShadowWidth";
+            this.numericUpDownMpvShadowWidth.Size = new System.Drawing.Size(52, 21);
+            this.numericUpDownMpvShadowWidth.TabIndex = 2;
+            // 
+            // numericUpDownMpvOutline
+            // 
+            this.numericUpDownMpvOutline.DecimalPlaces = 1;
+            this.numericUpDownMpvOutline.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMpvOutline.Location = new System.Drawing.Point(76, 24);
+            this.numericUpDownMpvOutline.Name = "numericUpDownMpvOutline";
+            this.numericUpDownMpvOutline.Size = new System.Drawing.Size(52, 21);
+            this.numericUpDownMpvOutline.TabIndex = 1;
+            // 
+            // labelMpvShadow
+            // 
+            this.labelMpvShadow.AutoSize = true;
+            this.labelMpvShadow.Location = new System.Drawing.Point(134, 11);
+            this.labelMpvShadow.Name = "labelMpvShadow";
+            this.labelMpvShadow.Size = new System.Drawing.Size(45, 13);
+            this.labelMpvShadow.TabIndex = 2;
+            this.labelMpvShadow.Text = "Shadow";
             // 
             // checkBoxAllowVolumeBoost
             // 
@@ -2407,7 +2545,7 @@
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(471, 67);
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(660, 17);
             this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
             this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 9;
@@ -2437,35 +2575,25 @@
             // labelVideoPlayerPreviewFontName
             // 
             this.labelVideoPlayerPreviewFontName.AutoSize = true;
-            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(331, 16);
+            this.labelVideoPlayerPreviewFontName.Location = new System.Drawing.Point(324, 16);
             this.labelVideoPlayerPreviewFontName.Name = "labelVideoPlayerPreviewFontName";
-            this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(128, 13);
+            this.labelVideoPlayerPreviewFontName.Size = new System.Drawing.Size(136, 13);
             this.labelVideoPlayerPreviewFontName.TabIndex = 5;
-            this.labelVideoPlayerPreviewFontName.Text = "Subtitle preview font size";
+            this.labelVideoPlayerPreviewFontName.Text = "Subtitle preview font name";
             // 
             // comboBoxVideoPlayerPreviewFontName
             // 
             this.comboBoxVideoPlayerPreviewFontName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerPreviewFontName.FormattingEnabled = true;
-            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(471, 13);
+            this.comboBoxVideoPlayerPreviewFontName.Location = new System.Drawing.Point(465, 13);
             this.comboBoxVideoPlayerPreviewFontName.Name = "comboBoxVideoPlayerPreviewFontName";
             this.comboBoxVideoPlayerPreviewFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxVideoPlayerPreviewFontName.TabIndex = 6;
             // 
-            // checkBoxMpvPreviewOpaqueBox
-            // 
-            this.checkBoxMpvPreviewOpaqueBox.AutoSize = true;
-            this.checkBoxMpvPreviewOpaqueBox.Location = new System.Drawing.Point(471, 87);
-            this.checkBoxMpvPreviewOpaqueBox.Name = "checkBoxMpvPreviewOpaqueBox";
-            this.checkBoxMpvPreviewOpaqueBox.Size = new System.Drawing.Size(85, 17);
-            this.checkBoxMpvPreviewOpaqueBox.TabIndex = 10;
-            this.checkBoxMpvPreviewOpaqueBox.Text = "Opaque box";
-            this.checkBoxMpvPreviewOpaqueBox.UseVisualStyleBackColor = true;
-            // 
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(331, 43);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(324, 43);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 7;
@@ -2499,9 +2627,9 @@
             "28",
             "29",
             "30"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(471, 40);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 40);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
-            this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(70, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 8;
             // 
             // checkBoxVideoPlayerShowStopButton
@@ -5094,6 +5222,10 @@
             this.groupBoxMainWindowVideoControls.PerformLayout();
             this.groupBoxVideoPlayerDefault.ResumeLayout(false);
             this.groupBoxVideoPlayerDefault.PerformLayout();
+            this.groupBoxMpvBorder.ResumeLayout(false);
+            this.groupBoxMpvBorder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvShadowWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMpvOutline)).EndInit();
             this.groupBoxVideoEngine.ResumeLayout(false);
             this.groupBoxVideoEngine.PerformLayout();
             this.panelWaveform.ResumeLayout(false);
@@ -5298,7 +5430,6 @@
         private System.Windows.Forms.ComboBox comboBoxVideoPlayerPreviewFontName;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
         private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
-        private System.Windows.Forms.CheckBox checkBoxMpvPreviewOpaqueBox;
         private System.Windows.Forms.GroupBox groupBoxShortcuts;
         private System.Windows.Forms.Button buttonUpdateShortcut;
         private System.Windows.Forms.TreeView treeViewShortcuts;
@@ -5520,8 +5651,6 @@
         private System.Windows.Forms.ToolStripMenuItem moveToBottomToolStripMenuItem;
         private System.Windows.Forms.Panel panelShortcuts;
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
-        private System.Windows.Forms.Label labelVideoPlayerPreviewFontColor;
-        private System.Windows.Forms.Panel panelVideoPlayerPreviewFontColor;
         private System.Windows.Forms.CheckBox checkBoxDarkThemeShowListViewGridLines;
         private System.Windows.Forms.GroupBox groupBoxFontInUI;
         private System.Windows.Forms.GroupBox groupBoxToolsMisc;
@@ -5559,5 +5688,18 @@
         private System.Windows.Forms.ComboBox comboBoxCustomToggleEnd;
         private System.Windows.Forms.ComboBox comboBoxCustomToggleStart;
         private System.Windows.Forms.Label labelShortcutCustomToggle;
+        private System.Windows.Forms.GroupBox groupBoxMpvBorder;
+        private System.Windows.Forms.ComboBox comboBoxOpaqueBoxStyle;
+        private System.Windows.Forms.RadioButton radioButtonMpvOpaqueBox;
+        private System.Windows.Forms.RadioButton radioButtonMpvOutline;
+        private System.Windows.Forms.NumericUpDown numericUpDownMpvShadowWidth;
+        private System.Windows.Forms.NumericUpDown numericUpDownMpvOutline;
+        private System.Windows.Forms.Label labelMpvShadow;
+        private System.Windows.Forms.Panel panelMpvBackColor;
+        private System.Windows.Forms.Button buttonMpvBackColor;
+        private System.Windows.Forms.Panel panelMpvOutlineColor;
+        private System.Windows.Forms.Button buttonMpvOutlineColor;
+        private System.Windows.Forms.Panel panelMpvPrimaryColor;
+        private System.Windows.Forms.Button buttonMpvPrimaryColor;
     }
 }
