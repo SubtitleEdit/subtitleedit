@@ -412,9 +412,10 @@ namespace Nikse.SubtitleEdit.Controls
                 Bold = gs.VideoPlayerPreviewFontBold,
                 Primary = gs.MpvPreviewTextPrimaryColor,
                 Outline = gs.MpvPreviewTextOutlineColor,
+                Background = gs.MpvPreviewTextBackgroundColor,
                 OutlineWidth = gs.MpvPreviewTextOutlineWidth,
                 ShadowWidth = gs.MpvPreviewTextShadowWidth,
-                BorderStyle = gs.MpvPreviewTextOpaqueBox ? "3" : "1",
+                BorderStyle = gs.MpvPreviewTextOpaqueBox ? gs.MpvPreviewTextOpaqueBoxMultiLine ? "4" : "3" : "1",
                 Alignment = gs.MpvPreviewTextAlignment,
                 MarginVertical = gs.MpvPreviewTextMarginVertical
             };
