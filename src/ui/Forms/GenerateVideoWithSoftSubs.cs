@@ -196,6 +196,11 @@ namespace Nikse.SubtitleEdit.Forms
                 threeLetterCode = language;
             }
 
+            if (language.IndexOf('-') == 2)
+            {
+                threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(language.Substring(0, 2));
+            }
+
             return Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
         }
 
@@ -276,7 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             AddListViewItem(new VideoPreviewGeneratorSub
             {
-                Name = Path.GetFileName(fileName), 
+                Name = Path.GetFileName(fileName),
                 Language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle),
                 Format = subtitle.OriginalFormat.FriendlyName,
                 SubtitleFormat = subtitle.OriginalFormat,
@@ -565,10 +570,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Directory.Delete(cleanUpFolder, true);
                 }
-                catch 
+                catch
                 {
                     // ignore
-                }   
+                }
             }
         }
 
