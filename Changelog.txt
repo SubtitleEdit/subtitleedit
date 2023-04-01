@@ -8,6 +8,7 @@
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
+   * Update Finnish translation - thx Teijo S
 * FIXED:
    * Fix "Add embedded subtitles" with ANSI encoding - thx Cyberyoda1411
    * Fix running Whisper CPP/Const-me after setting folder for Whisper OpenAI - thx rsmith02ct
