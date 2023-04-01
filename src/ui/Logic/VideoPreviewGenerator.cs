@@ -311,6 +311,10 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         threeLetterCode = lang;
                     }
+                    else if (lang.IndexOf('-') == 2)
+                    {
+                        threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.Substring(0, 2));
+                    }
 
                     var languageName = Iso639Dash2LanguageCode.List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode)?.EnglishName;
                     if (languageName == null)
