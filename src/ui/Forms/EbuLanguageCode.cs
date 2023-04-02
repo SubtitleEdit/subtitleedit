@@ -132,7 +132,9 @@ namespace Nikse.SubtitleEdit.Forms
             new LanguageItem("47", "Uzbek"),
             new LanguageItem("46", "Vietnamese"),
             new LanguageItem("45", "Zulu"),
-        };
+        }
+        .OrderBy(p => p.Language)
+        .ToList();
 
         public static string GetLanguageFromCode(string code)
         {
@@ -152,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
 
             listBoxLanguages.Items.Clear();
-            int i = 0;
+            var i = 0;
             foreach (var language in Languages)
             {
                 listBoxLanguages.Items.Add(language);
