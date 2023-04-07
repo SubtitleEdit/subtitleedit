@@ -248,12 +248,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelCount.Text = string.Empty;
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
-
         private void FindDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
             _findAndReplaceMethods.FindDialogClose();
