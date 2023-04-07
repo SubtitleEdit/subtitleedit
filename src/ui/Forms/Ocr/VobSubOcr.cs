@@ -9827,13 +9827,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        public void FindDialogFindPrevious()
+        public void FindDialogFindPrevious(string findText)
         {
             if (_findHelper == null)
             {
                 return;
             }
 
+            _findHelper.FindText = findText;
+            _findHelper.FindTextLength = findText.Length;
             _findHelper.InProgress = true;
             var tb = textBoxCurrentText;
 

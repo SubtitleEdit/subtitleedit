@@ -271,12 +271,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonNormal.Checked)
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFindPrevious();
+                _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
             else if (radioButtonCaseSensitive.Checked)
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFindPrevious();
+                _findAndReplaceMethods.FindDialogFindPrevious(FindText);
             }
             else if (radioButtonRegEx.Checked)
             {
@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
                     DialogResult = DialogResult.OK;
-                    _findAndReplaceMethods.FindDialogFindPrevious();
+                    _findAndReplaceMethods.FindDialogFindPrevious(FindText);
                 }
                 catch (Exception exception)
                 {

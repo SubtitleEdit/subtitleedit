@@ -725,7 +725,8 @@ Read more info (web)?</WhisperNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Find</Title>
-    <Find>&amp;Find</Find>
+    <FindNext>&amp;Find next</FindNext>
+    <FindPrevious>Find &amp;previous</FindPrevious>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Case sensitive</CaseSensitive>
     <RegularExpression>Regular e&amp;xpression</RegularExpression>
