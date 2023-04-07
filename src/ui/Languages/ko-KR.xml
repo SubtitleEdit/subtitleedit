@@ -720,7 +720,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>찾기</Title>
-    <Find>찾기</Find>
+    <FindNext>다음 찾기(&amp;F)</FindNext>
+    <FindPrevious>이전 찾기(&amp;P)</FindPrevious>
     <Normal>일반(&amp;N)</Normal>
     <CaseSensitive>대/소문자 구분(&amp;C)</CaseSensitive>
     <RegularExpression>정규 표현식(&amp;X)</RegularExpression>
