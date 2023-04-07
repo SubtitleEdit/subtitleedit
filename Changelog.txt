@@ -5,6 +5,7 @@
    * Add shortcut for text "color picker" - thx rRobis
    * Add new subtitle format "nVivo transcript" - thx Ashin
    * Add more mpv preview settings in UI
+   * Add cmd convert param "/teletextonlypage:<number>" - thx dystopia2017
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
@@ -20,6 +21,7 @@
    * Fix undo/redo for text
    * Fix reading "DCinema Interop" with only bold - thx Chris
    * Fix crash in import of SSA styles - thx librafrog
+   * Fix possible crash reading .ts files - thx hepalin
 
 
 3.6.12 (26th March 2023)
