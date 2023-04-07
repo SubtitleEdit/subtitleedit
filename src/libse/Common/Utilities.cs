@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexNumberSpacePeriod = new Regex(@"(\d) (\.)", RegexOptions.Compiled);
 
-        public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".mts", ".avs", ".mxf" };
+        public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".tts", ".m2ts", ".mts", ".avs", ".mxf" };
         public static string[] AudioFileExtensions { get; } = { ".mp3", ".wav", ".wma", ".ogg", ".mpa", ".m4a", ".ape", ".aiff", ".flac", ".aac", ".ac3", ".eac3", ".mka" };
 
         public static bool IsInteger(string s)
@@ -1731,10 +1731,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static Color GetColorFromAssa(string text, Color defaultColor)
         {
-            var start = text.IndexOf(@"\c");
+            var start = text.IndexOf(@"\c", StringComparison.Ordinal);
             if (start < 0)
             {
-                start = text.IndexOf(@"\1c");
+                start = text.IndexOf(@"\1c", StringComparison.Ordinal);
             }
 
             if (start < 0 || text.Substring(start).StartsWith(@"\clip", StringComparison.Ordinal))
@@ -1987,7 +1987,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         if (match.Index > 4)
                         {
                             var before = text.Substring(match.Index - 4, 4);
-                            if (int.TryParse(before.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out  var n) && n > 999)
+                            if (int.TryParse(before.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var n) && n > 999)
                             {
                                 skip = false;
                             }
@@ -2886,7 +2886,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return fileName;
         }
-        
+
         public static string ReSplit(string text, int selectionStart)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
@@ -2976,7 +2976,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
         }
-        
+
         public static string ToggleSymbols(string tag, string text, string endTag = "")
         {
             string pre = string.Empty;
@@ -3016,7 +3016,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return text;
         }
-        
+
         public static string SplitStartTags(string line, ref string pre)
         {
             var s = line;
@@ -3058,7 +3058,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return s;
         }
-        
+
         public static string SplitEndTags(string line, ref string post)
         {
             var s = line;
