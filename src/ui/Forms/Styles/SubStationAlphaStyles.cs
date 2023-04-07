@@ -1095,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private static string GetSsaColorString(Color c)
         {
-            return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString(); ;
+            return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
@@ -1141,19 +1141,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void RemoveStyleFromHeader(string name)
         {
             _currentFileStyles.Remove(_currentFileStyles.Find(p => p.Name == name));
-        }
-
-        private void ReplaceStyleInHeader(SsaStyle style)
-        {
-            var hit = _currentFileStyles.Find(p => p.Name == style.Name);
-            if (hit == null)
-            {
-                return;
-            }
-
-            var index = _currentFileStyles.IndexOf(hit);
-            _currentFileStyles.RemoveAt(index);
-            _currentFileStyles.Insert(index, style);
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -1237,7 +1224,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (ListViewItem selectedItem in listViewStyles.SelectedItems)
             {
                 var name = selectedItem.Text;
-                
+
                 var currentStyle = _currentFileStyles.FirstOrDefault(p => p.Name == name);
                 if (currentStyle != null)
                 {
@@ -1518,11 +1505,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         }
 
         private void listViewStyles_ClientSizeChanged(object sender, EventArgs e)
-        {
-            SetLastColumnWidth();
-        }
-
-        private void listViewStorage_ClientSizeChanged(object sender, EventArgs e)
         {
             SetLastColumnWidth();
         }
