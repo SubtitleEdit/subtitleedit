@@ -6721,7 +6721,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ListViewReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
         {
-            _makeHistoryPaused = true;
             if (_findHelper == null)
             {
                 _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
