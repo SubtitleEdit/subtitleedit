@@ -1416,6 +1416,7 @@
     <Compile Include="Logic\FileTypeAssociations.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\FontHelper.cs" />
+    <Compile Include="Logic\IFindAndReplace.cs" />
     <Compile Include="Logic\IReloadSubtitle.cs" />
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\LanguageDeserializer.cs" />

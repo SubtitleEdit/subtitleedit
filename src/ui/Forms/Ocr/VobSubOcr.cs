@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     using LogItem = OcrFixEngine.LogItem;
 
-    public sealed partial class VobSubOcr : PositionAndSizeForm, IBinaryParagraphList
+    public sealed partial class VobSubOcr : PositionAndSizeForm, IBinaryParagraphList, IFindAndReplace
     {
         private static readonly Color _listViewGreen = Configuration.Settings.General.UseDarkTheme ? Color.Green : Color.LightGreen;
         private static readonly Color _listViewYellow = Configuration.Settings.General.UseDarkTheme ? Color.FromArgb(218, 135, 32) : Color.Yellow;
@@ -376,6 +376,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly int _ocrMethodCloudVision = -1;
 
         private FindReplaceDialogHelper _findHelper;
+        private FindDialog _findDialog;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -6943,29 +6944,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void Find()
         {
-            using (var findDialog = new FindDialog(_subtitle))
-            {
-                var idx = _selectedIndex;
-
-                findDialog.Initialize(string.Empty, _findHelper);
-                if (findDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    _findHelper = findDialog.GetFindDialogHelper(idx);
-                    if (_findHelper.Find(_subtitle, null, idx, textBoxCurrentText.SelectionStart))
-                    {
-                        subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedLineIndex, true);
-                        textBoxCurrentText.SelectionStart = _findHelper.SelectedPosition;
-                        textBoxCurrentText.SelectionLength = _findHelper.FindTextLength;
-                        _findNextLastLineIndex = idx;
-                        _findNextLastTextPosition = _findHelper.SelectedPosition;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(_findHelper.FindText) && (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText))
-                    {
-                        Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
-                    }
-                }
-            }
+            _findDialog = new FindDialog(_subtitle, this);
+            var idx = _selectedIndex;
+            _findDialog.Initialize(string.Empty, _findHelper);
+            _findDialog.Show(this);
         }
 
         private int _findNextLastLineIndex = -1;
@@ -9799,6 +9781,116 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void checkBoxSeHandlesTextMerge_CheckedChanged(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = checkBoxSeHandlesTextMerge.Checked;
+        }
+
+        public void FindDialogFind(string findText)
+        {
+            _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_selectedIndex);
+            _findHelper.FindText = findText;
+            _findHelper.FindTextLength = findText.Length;
+            _findHelper.InProgress = true;
+            if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
+            {
+                if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)
+                {
+                    Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
+                }
+            }
+
+            ShowStatus(string.Format(LanguageSettings.Current.Main.SearchingForXFromLineY, _findHelper.FindText, _selectedIndex + 1));
+
+            var tb = textBoxCurrentText;
+            int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
+            bool found = _findHelper.Find(_subtitle, null, _selectedIndex, startPos);
+
+            // if we fail to find the text, we might want to start searching from the top of the file.
+            if (!found && _findHelper.StartLineIndex >= 1)
+            {
+                if (MessageBox.Show(LanguageSettings.Current.Main.FindContinue, LanguageSettings.Current.Main.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                {
+                    found = _findHelper.Find(_subtitle, null, -1);
+                }
+            }
+
+            if (found)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedLineIndex, true);
+                tb.Focus();
+                tb.SelectionStart = _findHelper.SelectedPosition;
+                tb.SelectionLength = _findHelper.FindTextLength;
+                ShowStatus(string.Format(LanguageSettings.Current.Main.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
+                _findHelper.SelectedPosition++;
+            }
+            else
+            {
+                ShowStatus(string.Format(LanguageSettings.Current.Main.XNotFound, _findHelper.FindText));
+            }
+        }
+
+        public void FindDialogFindPrevious()
+        {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
+            _findHelper.InProgress = true;
+            var tb = textBoxCurrentText;
+
+            var selectedIndex = -1;
+            if (subtitleListView1.SelectedItems.Count > 0)
+            {
+                selectedIndex = subtitleListView1.SelectedItems[0].Index;
+            }
+
+            var textBoxStart = tb.SelectionStart;
+            if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
+                _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
+            {
+                textBoxStart = tb.SelectionStart - 1;
+            }
+
+            if (_findHelper.FindPrevious(_subtitle, null, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+            {
+                tb = textBoxCurrentText;
+                subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedLineIndex, true);
+                ShowStatus(string.Format(LanguageSettings.Current.Main.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
+                tb.Focus();
+                tb.SelectionStart = _findHelper.SelectedPosition;
+                tb.SelectionLength = _findHelper.FindTextLength;
+                _findHelper.SelectedPosition--;
+            }
+            else
+            {
+                ShowStatus(string.Format(LanguageSettings.Current.Main.XNotFound, _findHelper.FindText));
+            }
+
+            _findHelper.InProgress = false;
+        }
+
+        public void FindDialogClose()
+        {
+            _findHelper.InProgress = false;
+        }
+
+        public void ReplaceDialogFind()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReplaceDialogReplace()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReplaceDialogReplaceAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReplaceDialogClose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

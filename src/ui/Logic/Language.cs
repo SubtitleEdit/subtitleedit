@@ -945,7 +945,8 @@ namespace Nikse.SubtitleEdit.Logic
             FindDialog = new LanguageStructure.FindDialog
             {
                 Title = "Find",
-                Find = "&Find",
+                FindNext = "&Find next",
+                FindPrevious = "Find &previous",
                 Normal = "&Normal",
                 CaseSensitive = "&Case sensitive",
                 RegularExpression = "Regular e&xpression",

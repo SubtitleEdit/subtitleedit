@@ -804,7 +804,8 @@ namespace Nikse.SubtitleEdit.Logic
         public class FindDialog
         {
             public string Title { get; set; }
-            public string Find { get; set; }
+            public string FindNext { get; set; }
+            public string FindPrevious { get; set; }
             public string Normal { get; set; }
             public string CaseSensitive { get; set; }
             public string RegularExpression { get; set; }

@@ -20,9 +20,9 @@ namespace Nikse.SubtitleEdit.Logic
         public bool MatchInOriginal { get; set; }
         public bool InProgress { get; set; }
 
-        public int FindTextLength { get; private set; }
+        public int FindTextLength { get; set; }
 
-        public string FindText { get; }
+        public string FindText { get; set; }
 
         public string ReplaceText { get; }
 
@@ -181,18 +181,21 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool FindPrevious(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
         {
+            //TODO: us whole word
+
+
             Success = false;
-            int index = startIndex;
-            bool first = true;
+            var index = startIndex;
+            var first = true;
             for (var i = startIndex; i >= 0; i--)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
 
                 if (originalSubtitle != null && allowEditOfOriginalSubtitle)
                 {
                     if (!first || MatchInOriginal)
                     {
-                        Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
+                        var o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
                         if (o != null)
                         {
                             if (!first)
@@ -234,8 +237,16 @@ namespace Nikse.SubtitleEdit.Logic
                     if (position - j >= 0 && position < p.Text.Length)
                     {
                         var t = p.Text.Substring(position - j, j + 1);
-                        int pos = FindPositionInText(t, 0);
-                        if (pos >= 0)
+                        var pos = FindPositionInText(t, 0);
+                        var startWholeWord = position - j < 1;
+                        if (!startWholeWord && position - j - 1 > 0)
+                        {
+                            startWholeWord = SeparatorChars.Contains(p.Text[position - j - 1]);
+                        }
+
+                        var startWholeWorkOkay = !FindReplaceType.WholeWord || startWholeWord;
+
+                        if (pos >= 0 && startWholeWorkOkay)
                         {
                             pos += position - j;
                             MatchInOriginal = false;
@@ -251,6 +262,7 @@ namespace Nikse.SubtitleEdit.Logic
                 first = false;
                 index--;
             }
+
             return false;
         }
 
@@ -363,10 +375,11 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         Success = true;
                     }
+
                     return Success;
                 }
-                string searchText = text.Substring(0, startIndex);
-                int pos = -1;
+                var searchText = text.Substring(0, startIndex);
+                var pos = -1;
                 var comparison = GetComparison();
                 var idx = searchText.LastIndexOf(FindText, startIndex, comparison);
                 while (idx >= 0)
@@ -389,12 +402,14 @@ namespace Nikse.SubtitleEdit.Logic
                     searchText = text.Substring(0, idx);
                     idx = searchText.LastIndexOf(FindText, comparison);
                 }
+
                 if (pos >= 0)
                 {
                     SelectedLineIndex = pos;
                     return true;
                 }
             }
+
             return false;
         }
 
