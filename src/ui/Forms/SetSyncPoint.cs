@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData || _mainGeneralGoToNextSubtitlePlayTranslate == e.KeyData)
             {
-                int selectedIndex = 0;
+                var selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
                 {
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainGeneralGoToPrevSubtitle == e.KeyData || _mainGeneralGoToPrevSubtitlePlayTranslate == e.KeyData)
             {
-                int selectedIndex = 0;
+                var selectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
                 {
                     selectedIndex = subtitleListView1.SelectedItems[0].Index;
@@ -353,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (subtitleListView1.SelectedItems.Count == 1)
             {
-                int index = subtitleListView1.SelectedItems[0].Index;
+                var index = subtitleListView1.SelectedItems[0].Index;
 
                 videoPlayerContainer1.Pause();
                 videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
