@@ -6245,8 +6245,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void FindDialogFindPrevious()
+        public void FindDialogFindPrevious(string findText)
         {
+            _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_subtitleListViewIndex);
+            _findHelper.FindText = findText;
+            _findHelper.FindTextLength = findText.Length;
             FindPrevious();
         }
 

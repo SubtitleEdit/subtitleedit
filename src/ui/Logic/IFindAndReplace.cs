@@ -3,7 +3,7 @@
     public interface IFindAndReplace
     {
         void FindDialogFind(string findText);
-        void FindDialogFindPrevious();
+        void FindDialogFindPrevious(string findText);
         void FindDialogClose();
 
         void ReplaceDialogFind();
