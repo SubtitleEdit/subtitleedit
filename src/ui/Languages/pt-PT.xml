@@ -1581,7 +1581,7 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <BeforeDisplayTimeAdjustment>Antes do ajuste de duração</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Duração ajustada: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Durações ajustadas: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Tempo inicial ajustado: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Tempo inicial ajustado: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Antes de corrigir erros frequentes</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Erros frequentes corrigidos nas linhas seleccionadas</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Erros frequentes corrigidos</CommonErrorsFixed>

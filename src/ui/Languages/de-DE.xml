@@ -1304,7 +1304,7 @@ Am Anfang des Dokuments weitersuchen?</ReplaceXContinue>
     <BeforeDisplayTimeAdjustment>Vor Anzeigezeitanpassung</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Anzeigezeit angepasst: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Anzeigezeiten angepasst: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Anfangszeit angepasst: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Anfangszeit angepasst: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Vor Korrigierung häufiger Fehler</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Häufige Fehler im ausgewählten Text korrigiert</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Häufige Fehler korrigiert</CommonErrorsFixed>

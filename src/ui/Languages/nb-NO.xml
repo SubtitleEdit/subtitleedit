@@ -1214,7 +1214,7 @@ Vil du starte fra toppen av dokumentet og lete en gang til?</ReplaceXContinue>
     <BeforeDisplayTimeAdjustment>Før visning av tidsjusteringer</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visningstid justert: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visningstider justert: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Starttid justert: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Starttid justert: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Før korrigering av vanlige feil</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Vanlige feil korrigert i valgte linjer</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Vanlige feil er korrigert</CommonErrorsFixed>

@@ -1578,7 +1578,7 @@ Vill du starta från början av dokumentet och fortsätta söka och ersätta?</R
     <BeforeDisplayTimeAdjustment>Före visad tidjustering</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visad tidjustering: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visa justerade tider: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Starttid justerad: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Starttid justerad: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Innan vanligt fel åtgärdas</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Vanliga fel fixade på utvalda rader</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Vanliga fel fixade</CommonErrorsFixed>

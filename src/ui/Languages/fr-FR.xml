@@ -1580,7 +1580,7 @@ Voulez-vous repartir du haut du document, continuer la recherche et remplacer ?	
     <BeforeDisplayTimeAdjustment>Avant réglage de la durée d'affichage</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Durée d'affichage ajustée : {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Durées d'affichage ajustées : {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Temps de départ ajusté : {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Temps de départ ajusté : {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Avant les corrections d'erreurs courantes</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Erreurs courantes corrigées dans les lignes sélectionnées</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Erreurs courantes corrigées</CommonErrorsFixed>

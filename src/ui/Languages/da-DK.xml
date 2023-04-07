@@ -1572,7 +1572,7 @@ Vil du starte fra toppen af ​​underteksten og fortsætte søg og erstat?</Re
     <BeforeDisplayTimeAdjustment>Før visningstider justering</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visningstider justeret: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visningstid justeret: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Start tid justeret: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Start tid justeret: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Før ret almindelige fejl</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Almindelige fejl er rettet i valgte linjer</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Ret almindelige fejl udført</CommonErrorsFixed>

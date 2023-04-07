@@ -1340,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string BeforeDisplayTimeAdjustment { get; set; }
             public string DisplayTimeAdjustedX { get; set; }
             public string DisplayTimesAdjustedX { get; set; }
-            public string StarTimeAdjustedX { get; set; }
+            public string StartTimeAdjustedX { get; set; }
             public string BeforeCommonErrorFixes { get; set; }
             public string CommonErrorsFixedInSelectedLines { get; set; }
             public string CommonErrorsFixed { get; set; }

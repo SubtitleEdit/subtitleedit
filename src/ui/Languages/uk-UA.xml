@@ -1207,7 +1207,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Перед зміною тривалостей</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Тривалість змінено: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Тривалості змінено: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Змінено початок: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Змінено початок: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Перед виправленням типових проблем</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Типові проблеми виправлено у вибраних рядках</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Типові проблеми виправлено</CommonErrorsFixed>

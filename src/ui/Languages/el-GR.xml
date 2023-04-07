@@ -1575,7 +1575,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Πριν από προσαρμογή χρόνου εμφάνισης</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Χρόνος εμφάνισης προσαρμόστηκε: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Χρόνοι εμφάνισης προσαρμόστηκαν: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Χρόνος έναρξης προσαρμόστηκε: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Χρόνος έναρξης προσαρμόστηκε: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Πριν από διορθώσεις σφαλμάτων</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Διορθώσεις σφαλμάτων επιλεγμένων γραμμών</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Σφάλματα διορθώθηκαν</CommonErrorsFixed>

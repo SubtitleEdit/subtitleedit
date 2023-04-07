@@ -5341,7 +5341,11 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, VideoAudioTrackNumber, _subtitleOriginalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs, Configuration.Settings.General.CurrentVideoIsSmpte);
                 }
 
-                MakeHistoryForUndo(_language.BeforeNew);
+                if (IsSubtitleLoaded)
+                {
+                    MakeHistoryForUndo(_language.BeforeNew);
+                }
+
                 toolStripStatusLabelProgress.Visible = false;
                 ResetSubtitle();
                 CheckSecondSubtitleReset();
@@ -12786,9 +12790,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MaskedTextBoxTextChanged(object sender, EventArgs e)
         {
-            if (_subtitleListViewIndex >= 0)
+            if (_subtitleListViewIndex >= 0 && IsSubtitleLoaded)
             {
-                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
+                MakeHistoryForUndoOnlyIfNotRecent(string.Format(_language.StartTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
 
                 int firstSelectedIndex = FirstSelectedIndex;
                 var oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);

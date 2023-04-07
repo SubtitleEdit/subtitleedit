@@ -1575,7 +1575,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <BeforeDisplayTimeAdjustment>Ennen näytön aikasäätöä</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Näyttöaika säädetty: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Näyttöajat säädetty: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Alkuaika säädetty: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Alkuaika säädetty: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Ennen tavallisten virheiden korjauksia</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Yleisiä virheitä korjattu valituilla riveillä</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Yleisiä virheitä korjattu</CommonErrorsFixed>

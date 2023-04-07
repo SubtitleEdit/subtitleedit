@@ -814,7 +814,7 @@
     <BeforeDisplayTimeAdjustment>Измењено време</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Постављено је време приказа: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Постављена су времена приказа: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Постављено почетно време: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Постављено почетно време: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Исправљене честе грешке</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Исправљене су честе грешке у изабраним линијама.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Честе грешке су исправљене.</CommonErrorsFixed>

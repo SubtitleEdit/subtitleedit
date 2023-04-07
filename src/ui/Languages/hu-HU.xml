@@ -1563,7 +1563,7 @@ Szeretné a dokumentum tetejétől kezdeni, és folytatni a keresést és a cser
     <BeforeDisplayTimeAdjustment>A megjelenítési idő beállítása előtti állapotra</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Megjelenítési idők beállítva: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Megjelenítési idő beállítva: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Kezdési idő beállítva: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Kezdési idő beállítva: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>A gyakori hibák javítása előtti állapotra</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>A gyakori hibák javítva lettek a kijelölt soroknál</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Gyakori hibák javítva</CommonErrorsFixed>

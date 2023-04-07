@@ -1206,7 +1206,7 @@ Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr ha kenderc'hel gant an e
     <BeforeDisplayTimeAdjustment>A-raok an arventennoù amzer diskouez</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Diskouez an amzer keidet : {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Amzer diskouez keidet : {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Amzer loc'hañ keidet : {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Amzer loc'hañ keidet : {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>A-raok ar reizhadennoù fazioù reoliek</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Fazioù reoliek reizhet e-barzh al linennoù diuzet</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Fazioù reoliek reizhet</CommonErrorsFixed>

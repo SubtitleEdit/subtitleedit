@@ -1264,7 +1264,7 @@ Apakah Anda ingin memulai dari bagian atas dokumen dan melanjutkan pencarian dan
     <BeforeDisplayTimeAdjustment>Sebelum penyesuaian waktu tampilan</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Waktu tampilan disesuaikan: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Waktu tampilan disesuaikan: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Waktu mulai disesuaikan: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Waktu mulai disesuaikan: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Sebelum perbaikan eror umum</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Eror umum diperbaiki pada baris terpilih</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Eror umum diperbaiki</CommonErrorsFixed>

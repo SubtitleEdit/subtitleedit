@@ -1149,7 +1149,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BeforeDisplayTimeAdjustment>表示時間の調整前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>調整された表示時間: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>調整された表示時間: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>調整された開始時間: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>調整された開始時間: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>ありがちなエラーの修正前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>選択した行のありがちなエラーが修正されました</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ありがちなエラーが修正されました</CommonErrorsFixed>

@@ -1485,7 +1485,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeDisplayTimeAdjustment = "Before display time adjustment",
                 DisplayTimesAdjustedX = "Display times adjusted: {0}",
                 DisplayTimeAdjustedX = "Display time adjusted: {0}",
-                StarTimeAdjustedX = "Start time adjusted: {0}",
+                StartTimeAdjustedX = "Start time adjusted: {0}",
                 BeforeCommonErrorFixes = "Before common error fixes",
                 CommonErrorsFixedInSelectedLines = "Common errors fixed in selected lines",
                 CommonErrorsFixed = "Common errors fixed",

@@ -1417,7 +1417,7 @@ Reiei căutarea de la începutul documentului, cu căutare și înlocuire?</Repl
     <BeforeDisplayTimeAdjustment>Înaintea afișării timpilor ajustați</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Afișează timpul ajustat: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Afișează timpii ajustați: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Timpul de pornire ajustat: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Timpul de pornire ajustat: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Înaintea reparării erorilor uzuale</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Erori uzuale reparate în linii selectate</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Erori uzuale reparate</CommonErrorsFixed>

@@ -1579,7 +1579,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeDisplayTimeAdjustment>Преди настройката на времето за показване</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Времето за показване е настроено на: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Времената за показване са настроени на: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Началното време е настроено на: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Началното време е настроено на: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Преди поправянето на грешки</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Поправени грешки в избраните редове</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Поправени грешки</CommonErrorsFixed>

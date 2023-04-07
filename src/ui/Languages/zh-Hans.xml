@@ -1570,7 +1570,7 @@ Command line: {1} {2}
     <BeforeDisplayTimeAdjustment>显示时间调整之前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>已调整显示时间: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>已调整显示时间: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>已调整开始时间: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>已调整开始时间: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>修复常规错误之前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>已修复所选行内的常规错误</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>常规错误已修复</CommonErrorsFixed>

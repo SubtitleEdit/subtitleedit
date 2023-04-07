@@ -1580,7 +1580,7 @@ Vuoi tornare all'inizio del documento e continuare a cercare per sostituire?</Re
     <BeforeDisplayTimeAdjustment>Prima di modifica tempo visualizzazione</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Tempo di visualizzazione modificato: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Tempi di visualizzazione modificati: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Inizia modifica tempi: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Inizia modifica tempi: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Prima di correggere gli errori comuni</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Errori comuni corretti nelle righe selezionate</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Errori comuni corretti</CommonErrorsFixed>

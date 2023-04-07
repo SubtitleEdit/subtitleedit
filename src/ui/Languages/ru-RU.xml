@@ -1585,7 +1585,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeDisplayTimeAdjustment>Перед изменением времени отображения</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Изменено время отображения: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Изменений времени отображения: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Изменено начальное время: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Изменено начальное время: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Перед исправлением ошибок</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Ошибки в выбранных строках исправлены</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Ошибки исправлены</CommonErrorsFixed>

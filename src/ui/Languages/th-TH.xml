@@ -1147,7 +1147,7 @@
     <BeforeDisplayTimeAdjustment>ก่อนการปรับเวลาแสดงผล</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>เวลาแสดงผลที่ปรับแล้ว: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>เวลาแสดงผลที่ปรับแล้ว: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>เวลาเริ่มต้นที่ปรับแล้ว: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>เวลาเริ่มต้นที่ปรับแล้ว: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>ก่อนแก้ไขข้อผิดพลาดทั่วไป</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>ข้อผิดพลาดทั่วไปที่แก้แล้วบนบรรทัดที่เลือก</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ข้อผิดพลาดทั่วไปที่แก้แล้ว</CommonErrorsFixed>
