@@ -1894,9 +1894,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FindDialog/Title":
                     language.FindDialog.Title = reader.Value;
                     break;
-                case "FindDialog/Find":
-                    language.FindDialog.Find = reader.Value;
-                    break;
                 case "FindDialog/Normal":
                     language.FindDialog.Normal = reader.Value;
                     break;

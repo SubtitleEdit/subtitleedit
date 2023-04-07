@@ -10,16 +10,20 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ReplaceDialog : PositionAndSizeForm
     {
+        private readonly IFindAndReplace _findAndReplaceMethods;
+
         private Regex _regEx;
         private bool _userAction;
         private bool _findNext;
         private FindReplaceDialogHelper _findHelper;
 
-        public ReplaceDialog()
+        public ReplaceDialog(IFindAndReplace findAndReplaceMethods)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+
+            _findAndReplaceMethods = findAndReplaceMethods;
 
             Text = LanguageSettings.Current.ReplaceDialog.Title;
             labelFindWhat.Text = LanguageSettings.Current.ReplaceDialog.FindWhat;
@@ -73,6 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+                Close();
             }
         }
 
@@ -116,6 +121,10 @@ namespace Nikse.SubtitleEdit.Forms
             FindOnly = false;
 
             Validate(textBoxFind.Text);
+            if (DialogResult == DialogResult.OK)
+            {
+                _findAndReplaceMethods.ReplaceDialogReplace();
+            }
         }
 
         private void ButtonReplaceAllClick(object sender, EventArgs e)
@@ -124,6 +133,10 @@ namespace Nikse.SubtitleEdit.Forms
             FindOnly = false;
 
             Validate(textBoxFind.Text);
+            if (DialogResult == DialogResult.OK)
+            {
+                _findAndReplaceMethods.ReplaceDialogReplaceAll();
+            }
         }
 
         private void Validate(string searchText)
@@ -168,6 +181,10 @@ namespace Nikse.SubtitleEdit.Forms
             FindOnly = true;
 
             Validate(textBoxFind.Text);
+            if (DialogResult == DialogResult.OK)
+            {
+                _findAndReplaceMethods.ReplaceDialogFind(); 
+            }
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
@@ -202,6 +219,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReplaceDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _findAndReplaceMethods.ReplaceDialogClose();
+
             if (!_userAction)
             {
                 DialogResult = DialogResult.Cancel;

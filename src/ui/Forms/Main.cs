@@ -47,7 +47,7 @@ using Nikse.SubtitleEdit.Forms.AudioToText;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class Main : Form, IReloadSubtitle
+    public sealed partial class Main : Form, IReloadSubtitle, IFindAndReplace
     {
         private class ComboBoxZoomItem
         {
@@ -109,6 +109,8 @@ namespace Nikse.SubtitleEdit.Forms
         private DateTime _fileDateTime;
         private string _title;
         private FindReplaceDialogHelper _findHelper;
+        private FindDialog _findDialog;
+        private ReplaceDialog _replaceDialog;
         private int _replaceStartLineIndex;
         private bool _sourceViewChange;
         private int _changeSubtitleHash = -1;
@@ -6228,80 +6230,32 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var findDialog = new FindDialog(_subtitle))
-            {
-                findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
-                findDialog.Initialize(selectedText, _findHelper);
-                if (findDialog.ShowDialog(this) != DialogResult.OK)
-                {
-                    if (_findHelper != null)
-                    {
-                        _findHelper.InProgress = false;
-                    }
+            _findDialog?.Dispose();
+            _findDialog = new FindDialog(_subtitle, this);
+            _findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
+            _findDialog.Initialize(selectedText, _findHelper);
+            _findDialog.Show(this);
+        }
 
-                    return;
-                }
-
-                _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                _findHelper.InProgress = true;
-                if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
-                {
-                    if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)
-                    {
-                        Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
-                    }
-                }
-
-                ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
-                if (InListView)
-                {
-                    var tb = GetFindReplaceTextBox();
-                    int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
-                    bool found = _findHelper.Find(_subtitle, _subtitleOriginal, _subtitleListViewIndex, startPos);
-                    tb = GetFindReplaceTextBox();
-                    // if we fail to find the text, we might want to start searching from the top of the file.
-                    if (!found && _findHelper.StartLineIndex >= 1)
-                    {
-                        if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                        {
-                            found = _findHelper.Find(_subtitle, _subtitleOriginal, -1);
-                        }
-                    }
-
-                    if (found)
-                    {
-                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
-                        tb.Focus();
-                        tb.SelectionStart = _findHelper.SelectedPosition;
-                        tb.SelectionLength = _findHelper.FindTextLength;
-                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
-                        _findHelper.SelectedPosition++;
-                    }
-                    else
-                    {
-                        ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
-                    }
-                }
-                else if (InSourceView)
-                {
-                    if (_findHelper.Find(textBoxSource, textBoxSource.SelectionStart))
-                    {
-                        textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
-                        textBoxSource.SelectionLength = _findHelper.FindTextLength;
-                        textBoxSource.ScrollToCaret();
-                        ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart)));
-                    }
-                    else
-                    {
-                        ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
-                    }
-                }
-            }
-
+        public void FindDialogClose()
+        {
             if (_findHelper != null)
             {
                 _findHelper.InProgress = false;
             }
+        }
+
+        public void FindDialogFindPrevious()
+        {
+            FindPrevious();
+        }
+
+        public void FindDialogFind(string findText)
+        {
+            _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_subtitleListViewIndex);
+            _findHelper.FindText = findText;
+            _findHelper.FindTextLength = findText.Length;
+            DialogFind(_findHelper);
         }
 
         private void FindNextToolStripMenuItemClick(object sender, EventArgs e)
@@ -6477,110 +6431,353 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonReplaceClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            Replace(null);
+            Replace();
         }
 
         private void ReplaceToolStripMenuItemClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            Replace(null);
+            Replace();
         }
 
-        private void ReplaceSourceView(ReplaceDialog replaceDialog)
+        private void ReplaceSourceViewStart()
         {
-            bool isFirst = true;
             string selectedText = textBoxSource.SelectedText;
             if (selectedText.Length == 0 && _findHelper != null)
             {
                 selectedText = _findHelper.FindText;
             }
 
-            if (replaceDialog == null)
+            if (_replaceDialog == null || _replaceDialog.IsDisposed)
             {
-                replaceDialog = new ReplaceDialog();
-                replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
-                _findHelper = _findHelper ?? replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-            }
-            else
-            {
-                isFirst = false;
+                _replaceDialog = new ReplaceDialog(this);
+                _replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
+                _findHelper = _findHelper ?? _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
             }
 
-            replaceDialog.Initialize(selectedText, _findHelper);
-            if (replaceDialog.ShowDialog(this) == DialogResult.OK)
+            _replaceDialog.Initialize(selectedText, _findHelper);
+            if (!_replaceDialog.Visible)
             {
-                _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
-                if (replaceDialog.ReplaceAll)
+                _replaceDialog.Show(this);
+            }
+        }
+
+        public void ReplaceDialogFind()
+        {
+            DialogFind(_replaceDialog.GetFindDialogHelper(_subtitleListViewIndex));
+        }
+
+        public void DialogFind(FindReplaceDialogHelper findHelper)
+        {
+            _findHelper = findHelper;
+            _findHelper.InProgress = true;
+            if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
+            {
+                if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)
                 {
-                    SourceListReplaceAll(replaceDialog, _findHelper);
-                    return;
+                    Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
+                }
+            }
+
+            ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
+            if (InListView)
+            {
+                var tb = GetFindReplaceTextBox();
+                int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
+                bool found = _findHelper.Find(_subtitle, _subtitleOriginal, _subtitleListViewIndex, startPos);
+                tb = GetFindReplaceTextBox();
+                // if we fail to find the text, we might want to start searching from the top of the file.
+                if (!found && _findHelper.StartLineIndex >= 1)
+                {
+                    if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        found = _findHelper.Find(_subtitle, _subtitleOriginal, -1);
+                    }
                 }
 
-                int replaceCount = 0;
-                var searchStringFound = false;
-                int start = textBoxSource.SelectionStart;
-                if (isFirst)
+                if (found)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
-                    _makeHistoryPaused = true;
-                    if (start >= 0)
-                    {
-                        start--;
-                    }
+                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                    tb.Focus();
+                    tb.SelectionStart = _findHelper.SelectedPosition;
+                    tb.SelectionLength = _findHelper.FindTextLength;
+                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
+                    _findHelper.SelectedPosition++;
                 }
                 else
                 {
-                    if (textBoxSource.SelectionLength > 0 && start > 0 && !replaceDialog.FindOnly)
-                    {
-                        start--;
-                    }
+                    ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
                 }
-
-                if (_findHelper.FindNext(textBoxSource.Text, start))
+            }
+            else if (InSourceView)
+            {
+                if (_findHelper.Find(textBoxSource, textBoxSource.SelectionStart))
                 {
                     textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
                     textBoxSource.SelectionLength = _findHelper.FindTextLength;
-                    if (!replaceDialog.FindOnly)
-                    {
-                        textBoxSource.SelectedText = _findHelper.ReplaceText;
-                    }
-
                     textBoxSource.ScrollToCaret();
-
-                    replaceCount++;
-                    searchStringFound = true;
-
-                    if (!replaceDialog.FindOnly)
-                    {
-                        if (_findHelper.FindNext(textBoxSource.Text, start))
-                        {
-                            textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
-                            textBoxSource.SelectionLength = _findHelper.FindTextLength;
-                            textBoxSource.ScrollToCaret();
-                        }
-
-                        Replace(replaceDialog);
-                        return;
-                    }
+                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart)));
                 }
-
-                if (replaceDialog.FindOnly)
+                else
                 {
-                    if (searchStringFound)
+                    ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
+                }
+            }
+        }
+
+        public void ReplaceDialogReplace()
+        {
+            if (InListView)
+            {
+                ReplaceDialogReplaceListView();
+            }
+            else
+            {
+                ReplaceDialogReplaceSourceView();
+            }
+        }
+
+        public void ReplaceDialogReplaceListView()
+        {
+            _findHelper.InProgress = true;
+            var line = _findHelper.SelectedLineIndex;
+            var pos = _findHelper.ReplaceFromPosition;
+            var success = _findHelper.Success;
+            var matchInOriginal = _findHelper.MatchInOriginal;
+            _findHelper = _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+            _findHelper.SelectedLineIndex = line;
+            _findHelper.SelectedPosition = pos;
+            _findHelper.Success = success;
+            _findHelper.MatchInOriginal = matchInOriginal;
+            _findHelper.InProgress = true;
+
+            ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
+            var tb = GetFindReplaceTextBox();
+            string msg = string.Empty;
+            if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
+            {
+                if (_findHelper.Success)
+                {
+                    if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                     {
-                        ShowStatus(string.Format(_language.MatchFoundX, _findHelper.FindText));
+                        ReplaceViaRegularExpression(tb, _replaceDialog.ReplaceAll);
                     }
                     else
                     {
-                        ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
+                        tb.SelectedText = _findHelper.ReplaceText;
                     }
 
-                    Replace(replaceDialog);
-                    return;
+                    msg = _language.OneReplacementMade + " ";
+                }
+            }
+            else if (tb.SelectionLength == _findHelper.FindTextLength)
+            {
+                tb.SelectedText = _findHelper.ReplaceText;
+                msg = _language.OneReplacementMade + " ";
+                _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
+            }
+
+            if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+            {
+                SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                tb = GetFindReplaceTextBox();
+                tb.Focus();
+                tb.SelectionStart = _findHelper.SelectedPosition;
+                tb.SelectionLength = _findHelper.FindTextLength;
+                if (_findHelper.FindReplaceType.FindType != FindType.RegEx)
+                {
+                    _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                 }
 
-                ReloadFromSourceView();
+                ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
+            }
+            else
+            {
+                ShowStatus(msg + string.Format(_language.XNotFound, _findHelper.FindText));
+
+                // Prompt for start over
+                if (_replaceStartLineIndex >= 1)
+                {
+                    _replaceStartLineIndex = 0;
+                    if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        SelectListViewIndexAndEnsureVisible(0);
+                        _findHelper.StartLineIndex = 0;
+                        _findHelper.SelectedLineIndex = 0;
+                        _findHelper.SelectedPosition = 0;
+                        _findHelper.ReplaceFromPosition = 0;
+                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                        {
+                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                            tb = GetFindReplaceTextBox();
+                            tb.Focus();
+                            tb.SelectionStart = _findHelper.SelectedPosition;
+                            tb.SelectionLength = _findHelper.FindTextLength;
+                            _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
+                            ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
+                        }
+                    }
+                }
+            }
+
+            _findHelper.InProgress = false;
+        }
+
+        public void ReplaceDialogReplaceSourceView()
+        {
+            _findHelper = _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+            ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
+
+            int replaceCount = 0;
+            var searchStringFound = false;
+            int start = textBoxSource.SelectionStart;
+
+            MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
+            _makeHistoryPaused = true;
+            if (start >= 0)
+            {
+                start--;
+            }
+
+            if (_findHelper.FindNext(textBoxSource.Text, start))
+            {
+                textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
+                textBoxSource.SelectionLength = _findHelper.FindTextLength;
+                if (!_replaceDialog.FindOnly)
+                {
+                    textBoxSource.SelectedText = _findHelper.ReplaceText;
+                }
+
+                textBoxSource.ScrollToCaret();
+
+                replaceCount++;
+                searchStringFound = true;
+
+                if (!_replaceDialog.FindOnly)
+                {
+                    if (_findHelper.FindNext(textBoxSource.Text, start))
+                    {
+                        textBoxSource.SelectionStart = _findHelper.SelectedLineIndex;
+                        textBoxSource.SelectionLength = _findHelper.FindTextLength;
+                        textBoxSource.ScrollToCaret();
+                    }
+
+                    Replace();
+                    return;
+                }
+            }
+
+            if (_replaceDialog.FindOnly)
+            {
+                if (searchStringFound)
+                {
+                    ShowStatus(string.Format(_language.MatchFoundX, _findHelper.FindText));
+                }
+                else
+                {
+                    ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
+                }
+
+                Replace();
+                return;
+            }
+
+            ReloadFromSourceView();
+            if (replaceCount == 0)
+            {
+                ShowStatus(_language.FoundNothingToReplace);
+            }
+            else
+            {
+                ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
+            }
+        }
+
+        public void ReplaceDialogReplaceAll()
+        {
+            _findHelper = _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+            ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
+
+            if (InListView)
+            {
+                ListViewReplaceAll(_replaceDialog, _findHelper);
+            }
+            else
+            {
+                SourceListReplaceAll(_replaceDialog, _findHelper);
+            }
+        }
+
+        public void ReplaceDialogClose()
+        {
+            if (_makeHistoryPaused)
+            {
+                RestartHistory();
+            }
+        }
+
+        public void ListViewReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
+        {
+            _makeHistoryPaused = true;
+            if (_findHelper == null)
+            {
+                _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+                _findHelper.InProgress = true;
+            }
+            else
+            {
+                var line = _findHelper.SelectedLineIndex;
+                var pos = _findHelper.ReplaceFromPosition;
+                var success = _findHelper.Success;
+                var matchInOriginal = _findHelper.MatchInOriginal;
+                _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+                _findHelper.SelectedLineIndex = line;
+                _findHelper.SelectedPosition = pos;
+                _findHelper.Success = success;
+                _findHelper.MatchInOriginal = matchInOriginal;
+                _findHelper.InProgress = true;
+            }
+
+            var isFirst = true;
+            var replaceCount = 0;
+            var searchStringFound = true;
+            var stopAtIndex = int.MaxValue;
+            var firstIndex = FirstSelectedIndex;
+            var searchedFromTop = firstIndex == 0 && _findHelper.ReplaceFromPosition == 0;
+            while (searchStringFound)
+            {
+                searchStringFound = false;
+                if (isFirst)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
+                    isFirst = false;
+                    _makeHistoryPaused = true;
+                }
+
+                if (replaceDialog.ReplaceAll)
+                {
+                    replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
+                    SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    RestoreSubtitleListviewIndices();
+
+                    _replaceStartLineIndex = 0;
+                    string msgText = _language.ReplaceContinueNotFound;
+                    if (replaceCount > 0)
+                    {
+                        msgText = string.Format(_language.ReplaceXContinue, replaceCount);
+                    }
+
+                    if (!searchedFromTop && MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    {
+                        stopAtIndex = firstIndex;
+                        _findHelper.StartLineIndex = 0;
+                        _findHelper.SelectedLineIndex = 0;
+                        replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
+                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
+                    }
+                }
+
+                UpdateSourceView();
                 if (replaceCount == 0)
                 {
                     ShowStatus(_language.FoundNothingToReplace);
@@ -6588,30 +6785,35 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
+                    SubtitleListview1.SyntaxColorAllLines(_subtitle);
                 }
             }
 
+            RestoreSubtitleListviewIndices();
             if (_makeHistoryPaused)
             {
                 RestartHistory();
             }
 
-            replaceDialog.Dispose();
+            _findHelper.InProgress = false;
         }
 
         private void SourceListReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
         {
+            _makeHistoryPaused = true;
+
             if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
             {
                 SourceListReplaceAllRegEx(replaceDialog);
                 return;
             }
 
-            int replaceCount = 0;
-            bool searchStringFound = true;
-            int start = textBoxSource.SelectionStart;
-            bool isFirst = true;
-            string text = textBoxSource.Text;
+            var replaceCount = 0;
+            var searchStringFound = true;
+            var start = textBoxSource.SelectionStart;
+            var originalSelectionStart = textBoxSource.SelectionStart;
+            var isFirst = true;
+            var text = textBoxSource.Text;
             while (searchStringFound)
             {
                 searchStringFound = false;
@@ -6641,6 +6843,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxSource.Text = text;
             ReloadFromSourceView();
+
+            if (originalSelectionStart < text.Length)
+            {
+                textBoxSource.SelectionStart = originalSelectionStart;
+            }
+            textBoxSource.SelectionLength = 0;
+
             if (replaceCount == 0)
             {
                 ShowStatus(_language.FoundNothingToReplace);
@@ -6708,11 +6917,9 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
         }
 
-        private void ReplaceListView(ReplaceDialog replaceDialog)
+        private void ReplaceListViewStart()
         {
             SaveSubtitleListviewIndices();
-            int firstIndex = FirstSelectedIndex;
-            bool isFirst = true;
             string selectedText;
             if (textBoxListViewTextOriginal.Focused)
             {
@@ -6728,11 +6935,11 @@ namespace Nikse.SubtitleEdit.Forms
                 selectedText = _findHelper.FindText;
             }
 
-            if (replaceDialog == null)
+            if (_replaceDialog == null || _replaceDialog.IsDisposed)
             {
-                replaceDialog = new ReplaceDialog();
-                replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
-                _findHelper = _findHelper ?? replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+                _replaceDialog = new ReplaceDialog(this);
+                _replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
+                _findHelper = _findHelper ?? _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 _findHelper.InProgress = true;
                 int index = 0;
 
@@ -6757,7 +6964,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                isFirst = false;
                 if (_findHelper != null)
                 {
                     selectedText = _findHelper.FindText;
@@ -6765,261 +6971,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            replaceDialog.Initialize(selectedText, _findHelper);
-            if (replaceDialog.ShowDialog(this) == DialogResult.OK)
+            _replaceDialog.Initialize(selectedText, _findHelper);
+            if (!_replaceDialog.Visible)
             {
-                if (_findHelper == null)
-                {
-                    _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.InProgress = true;
-                }
-                else
-                {
-                    int line = _findHelper.SelectedLineIndex;
-                    int pos = _findHelper.ReplaceFromPosition;
-                    bool success = _findHelper.Success;
-                    var matchInOriginal = _findHelper.MatchInOriginal;
-                    _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.SelectedLineIndex = line;
-                    _findHelper.SelectedPosition = pos;
-                    _findHelper.Success = success;
-                    _findHelper.MatchInOriginal = matchInOriginal;
-                    _findHelper.InProgress = true;
-                }
-
-                ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
-                int replaceCount = 0;
-                bool searchStringFound = true;
-                int stopAtIndex = int.MaxValue;
-                while (searchStringFound)
-                {
-                    searchStringFound = false;
-                    if (isFirst)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
-                        isFirst = false;
-                        _makeHistoryPaused = true;
-                    }
-
-                    if (replaceDialog.ReplaceAll)
-                    {
-                        replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
-                        SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                        RestoreSubtitleListviewIndices();
-
-                        if (_replaceStartLineIndex >= 1) // Prompt for start over
-                        {
-                            _replaceStartLineIndex = 0;
-                            string msgText = _language.ReplaceContinueNotFound;
-                            if (replaceCount > 0)
-                            {
-                                msgText = string.Format(_language.ReplaceXContinue, replaceCount);
-                            }
-
-                            if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                            {
-                                stopAtIndex = firstIndex;
-                                _findHelper.StartLineIndex = 0;
-                                _findHelper.SelectedLineIndex = 0;
-                                replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
-                                SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
-                            }
-                        }
-
-                        break;
-                    }
-                    else if (replaceDialog.FindOnly)
-                    {
-                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
-                        {
-                            var tb = GetFindReplaceTextBox();
-                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
-                            tb.Focus();
-                            tb.SelectionStart = _findHelper.SelectedPosition;
-                            tb.SelectionLength = _findHelper.FindTextLength;
-                            _findHelper.ReplaceFromPosition = _findHelper.SelectedPosition;
-                            _findHelper.SelectedPosition += _findHelper.FindTextLength;
-                            ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedLineIndex + 1, _findHelper.FindText));
-                            Replace(replaceDialog);
-                            if (replaceDialog != null && !replaceDialog.IsDisposed)
-                            {
-                                replaceDialog.Dispose();
-                            }
-
-                            _findHelper.InProgress = false;
-                            return;
-                        }
-
-                        if (_replaceStartLineIndex >= 1) // Prompt for start over
-                        {
-                            _replaceStartLineIndex = 0;
-                            if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                            {
-                                SelectListViewIndexAndEnsureVisible(0);
-                                _findHelper.StartLineIndex = 0;
-                                _findHelper.SelectedLineIndex = 0;
-                                _findHelper.SelectedPosition = 0;
-                                _findHelper.ReplaceFromPosition = 0;
-                                if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
-                                {
-                                    var tb = GetFindReplaceTextBox();
-                                    SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
-                                    tb.Focus();
-                                    tb.SelectionStart = _findHelper.SelectedPosition;
-                                    tb.SelectionLength = _findHelper.FindTextLength;
-                                    _findHelper.ReplaceFromPosition = _findHelper.SelectedPosition;
-                                    _findHelper.SelectedPosition += _findHelper.FindTextLength;
-                                    ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedLineIndex + 1, _findHelper.FindText));
-                                    Replace(replaceDialog);
-                                    if (replaceDialog != null)
-                                    {
-                                        replaceDialog.Dispose();
-                                    }
-
-                                    _findHelper.InProgress = false;
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                if (replaceDialog != null && !replaceDialog.IsDisposed)
-                                {
-                                    replaceDialog.Dispose();
-                                }
-
-                                _findHelper.InProgress = false;
-                                return;
-                            }
-                        }
-
-                        ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
-                    }
-                    else if (!replaceDialog.FindOnly) // replace once only
-                    {
-                        var tb = GetFindReplaceTextBox();
-                        string msg = string.Empty;
-                        if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
-                        {
-                            if (_findHelper.Success)
-                            {
-                                if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
-                                {
-                                    ReplaceViaRegularExpression(tb, replaceDialog.ReplaceAll);
-                                }
-                                else
-                                {
-                                    tb.SelectedText = _findHelper.ReplaceText;
-                                }
-
-                                msg = _language.OneReplacementMade + " ";
-                            }
-                        }
-                        else if (tb.SelectionLength == _findHelper.FindTextLength)
-                        {
-                            tb.SelectedText = _findHelper.ReplaceText;
-                            msg = _language.OneReplacementMade + " ";
-                            _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                        }
-
-                        if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
-                        {
-                            SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
-                            tb = GetFindReplaceTextBox();
-                            tb.Focus();
-                            tb.SelectionStart = _findHelper.SelectedPosition;
-                            tb.SelectionLength = _findHelper.FindTextLength;
-                            if (_findHelper.FindReplaceType.FindType != FindType.RegEx)
-                            {
-                                _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                            }
-
-                            ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
-                        }
-                        else
-                        {
-                            ShowStatus(msg + string.Format(_language.XNotFound, _findHelper.FindText));
-
-                            // Prompt for start over
-                            if (_replaceStartLineIndex >= 1)
-                            {
-                                _replaceStartLineIndex = 0;
-                                if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                                {
-                                    SelectListViewIndexAndEnsureVisible(0);
-                                    _findHelper.StartLineIndex = 0;
-                                    _findHelper.SelectedLineIndex = 0;
-                                    _findHelper.SelectedPosition = 0;
-                                    _findHelper.ReplaceFromPosition = 0;
-                                    if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
-                                    {
-                                        SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
-                                        tb = GetFindReplaceTextBox();
-                                        tb.Focus();
-                                        tb.SelectionStart = _findHelper.SelectedPosition;
-                                        tb.SelectionLength = _findHelper.FindTextLength;
-                                        _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                                        ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedLineIndex + 1));
-                                    }
-                                }
-                                else
-                                {
-                                    if (replaceDialog != null && !replaceDialog.IsDisposed)
-                                    {
-                                        replaceDialog.Dispose();
-                                    }
-
-                                    _findHelper.InProgress = false;
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                if (replaceDialog != null && !replaceDialog.IsDisposed)
-                                {
-                                    replaceDialog.Dispose();
-                                }
-
-                                _findHelper.InProgress = false;
-                                return;
-                            }
-                        }
-
-                        Replace(replaceDialog);
-                        if (replaceDialog != null && !replaceDialog.IsDisposed)
-                        {
-                            replaceDialog.Dispose();
-                        }
-
-                        _findHelper.InProgress = false;
-                        return;
-                    }
-
-                    if (_findHelper.SelectedLineIndex > stopAtIndex)
-                    {
-                        break;
-                    }
-                }
-
-                UpdateSourceView();
-                if (replaceCount == 0)
-                {
-                    ShowStatus(_language.FoundNothingToReplace);
-                }
-                else
-                {
-                    ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
-                    SubtitleListview1.SyntaxColorAllLines(_subtitle);
-                }
+                _replaceDialog.Show(this);
             }
-
-            RestoreSubtitleListviewIndices();
-            if (_makeHistoryPaused)
-            {
-                RestartHistory();
-            }
-
-            replaceDialog.Dispose();
-            _findHelper.InProgress = false;
         }
 
         private void ReplaceViaRegularExpression(SETextBox tb, bool replaceAll)
@@ -7059,15 +7015,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void Replace(ReplaceDialog replaceDialog)
+        private void Replace()
         {
             if (InSourceView)
             {
-                ReplaceSourceView(replaceDialog);
+                ReplaceSourceViewStart();
             }
             else
             {
-                ReplaceListView(replaceDialog);
+                ReplaceListViewStart();
             }
         }
 

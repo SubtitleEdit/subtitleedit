@@ -43,9 +43,8 @@
             // 
             // radioButtonRegEx
             // 
-            this.radioButtonRegEx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(15, 182);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(15, 190);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
             this.radioButtonRegEx.TabIndex = 5;
@@ -55,9 +54,8 @@
             // 
             // radioButtonCaseSensitive
             // 
-            this.radioButtonCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(15, 159);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(15, 167);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
             this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
             this.radioButtonCaseSensitive.TabIndex = 4;
@@ -67,10 +65,9 @@
             // 
             // radioButtonNormal
             // 
-            this.radioButtonNormal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
-            this.radioButtonNormal.Location = new System.Drawing.Point(15, 136);
+            this.radioButtonNormal.Location = new System.Drawing.Point(15, 144);
             this.radioButtonNormal.Name = "radioButtonNormal";
             this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
             this.radioButtonNormal.TabIndex = 3;
@@ -82,9 +79,9 @@
             // buttonReplace
             // 
             this.buttonReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReplace.Location = new System.Drawing.Point(93, 206);
+            this.buttonReplace.Location = new System.Drawing.Point(266, 54);
             this.buttonReplace.Name = "buttonReplace";
-            this.buttonReplace.Size = new System.Drawing.Size(75, 23);
+            this.buttonReplace.Size = new System.Drawing.Size(119, 23);
             this.buttonReplace.TabIndex = 7;
             this.buttonReplace.Text = "Replace";
             this.buttonReplace.UseVisualStyleBackColor = true;
@@ -94,7 +91,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(15, 25);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(265, 21);
+            this.textBoxFind.Size = new System.Drawing.Size(232, 21);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.TextChanged += new System.EventHandler(this.textBoxFind_TextChanged);
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
@@ -102,9 +99,9 @@
             // buttonReplaceAll
             // 
             this.buttonReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReplaceAll.Location = new System.Drawing.Point(174, 206);
+            this.buttonReplaceAll.Location = new System.Drawing.Point(266, 83);
             this.buttonReplaceAll.Name = "buttonReplaceAll";
-            this.buttonReplaceAll.Size = new System.Drawing.Size(103, 23);
+            this.buttonReplaceAll.Size = new System.Drawing.Size(119, 23);
             this.buttonReplaceAll.TabIndex = 8;
             this.buttonReplaceAll.Text = "Replace all";
             this.buttonReplaceAll.UseVisualStyleBackColor = true;
@@ -114,7 +111,7 @@
             // 
             this.textBoxReplace.Location = new System.Drawing.Point(15, 71);
             this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(265, 21);
+            this.textBoxReplace.Size = new System.Drawing.Size(232, 21);
             this.textBoxReplace.TabIndex = 1;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
@@ -139,9 +136,9 @@
             // buttonFind
             // 
             this.buttonFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonFind.Location = new System.Drawing.Point(12, 206);
+            this.buttonFind.Location = new System.Drawing.Point(266, 25);
             this.buttonFind.Name = "buttonFind";
-            this.buttonFind.Size = new System.Drawing.Size(75, 23);
+            this.buttonFind.Size = new System.Drawing.Size(119, 23);
             this.buttonFind.TabIndex = 6;
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
@@ -161,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 241);
+            this.ClientSize = new System.Drawing.Size(397, 221);
             this.Controls.Add(this.checkBoxWholeWord);
             this.Controls.Add(this.buttonFind);
             this.Controls.Add(this.labelFindWhat);
