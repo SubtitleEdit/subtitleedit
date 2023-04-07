@@ -1466,7 +1466,7 @@ Chcete začít od začátku dokumentu a pokračovat v hledání a nahrazování?
     <BeforeDisplayTimeAdjustment>Před úpravou času zobrazení</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Upraven čas zobrazení: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Upraveny časy zobrazení: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Upraven čas začátku: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Upraven čas začátku: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Před opravou běžných chyb</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Opraveny běžné chyby ve vybraných řádcích</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Opraveny běžné chyby</CommonErrorsFixed>

@@ -1556,7 +1556,7 @@ Ve a "Opciones -&gt; Ajustes -&gt; Herramientas" para introducir tu clave.</MsCl
     <BeforeDisplayTimeAdjustment>Antes del ajuste de la duración</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Duración ajustada: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Duraciones ajustadas: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Tiempos de inicio ajustados: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Tiempos de inicio ajustados: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Antes de corregir errores comunes</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Errores comunes corregidos en líneas seleccionadas</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Errores comunes corregidos</CommonErrorsFixed>

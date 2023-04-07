@@ -3289,8 +3289,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/DisplayTimesAdjustedX":
                     language.Main.DisplayTimesAdjustedX = reader.Value;
                     break;
-                case "Main/StarTimeAdjustedX":
-                    language.Main.StarTimeAdjustedX = reader.Value;
+                case "Main/StartTimeAdjustedX":
+                    language.Main.StartTimeAdjustedX = reader.Value;
                     break;
                 case "Main/BeforeCommonErrorFixes":
                     language.Main.BeforeCommonErrorFixes = reader.Value;

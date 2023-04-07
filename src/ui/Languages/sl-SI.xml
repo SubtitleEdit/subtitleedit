@@ -1580,7 +1580,7 @@ Ali želite začeti z vrha dokumenta ter nadaljevati iskanje in zamenjavo?</Repl
     <BeforeDisplayTimeAdjustment>Pred prilagoditvijo časa prikaza</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Prilagojen čas prikaza: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Prilagojeni časi prikaza: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Prilagojen začetni čas: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Prilagojen začetni čas: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Pred pogostimi popravki napak</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Pogoste napake, popravljene v izbranih vrsticah</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Pogoste napake odpravljene</CommonErrorsFixed>

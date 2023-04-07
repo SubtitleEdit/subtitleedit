@@ -1577,7 +1577,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BeforeDisplayTimeAdjustment>표시시간 조정 전</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>조정된 표시시간: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>조정된 표시시간: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>조정된 시작 시간: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>조정된 시작 시간: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>일반적인 오류 수정 전</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>선택한 줄의 일반적 오류가 수정되었습니다.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>일반적인 오류가 수정되었습니다!</CommonErrorsFixed>

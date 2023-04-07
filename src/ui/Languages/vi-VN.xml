@@ -1506,7 +1506,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <BeforeDisplayTimeAdjustment>Trước khi điều chỉnh thời gian hiển thị</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Hiển thị thời gian điều chỉnh: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Hiển thị thời gian điều chỉnh: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Chỉnh Start time: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Chỉnh Start time: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Trước khi sửa các lỗi phổ biến</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Các lỗi thường gặp được sửa trong các dòng hiện tại</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Các lỗi thường gặp</CommonErrorsFixed>

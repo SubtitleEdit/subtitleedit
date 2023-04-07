@@ -1561,7 +1561,7 @@ Gostaria de começar do início do documento e continuar a pesquisa e substitui�
     <BeforeDisplayTimeAdjustment>Antes do ajuste de duração</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Duração ajustada: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Durações ajustadas: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Tempo inicial ajustado: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Tempo inicial ajustado: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Antes de corrigir erros comuns</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Erros comuns corrigidos nas linhas selecionadas</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Erros comuns corrigidos</CommonErrorsFixed>

@@ -1581,7 +1581,7 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeDisplayTimeAdjustment>Before display time adjustment</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Display time adjusted: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Display times adjusted: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Start time adjusted: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Start time adjusted: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Before common error fixes</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Common errors fixed in selected lines</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Common errors fixed</CommonErrorsFixed>

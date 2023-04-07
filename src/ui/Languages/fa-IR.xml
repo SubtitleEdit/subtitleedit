@@ -1512,7 +1512,7 @@
     <BeforeDisplayTimeAdjustment>قبل از تنظیم زمان نمایش</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>زمان نمایش تنظیم شد: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>زمان نمایش تنظیم شده: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>زمان شروع تنظیم شد: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>زمان شروع تنظیم شد: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>قبل از رفع خطا مشترک</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>اشتباهات رایج در انتخاب خطوط ثابت</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>اشتباهات رایج ثابت</CommonErrorsFixed>

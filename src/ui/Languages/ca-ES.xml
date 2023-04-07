@@ -1346,7 +1346,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Abans ajustament durada</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Durada ajustada: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Durades ajustades: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Temps d'inici ajustat: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Temps d'inici ajustat: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Abans Arregla errors comuns</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Errors comuns Arreglats en selecció línies</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Errors comuns Arreglats</CommonErrorsFixed>

@@ -1396,7 +1396,7 @@ Nahi duzu agiriaren hasieratik hastea eta bilaketa eta ordezpenarekin jarraitzea
     <BeforeDisplayTimeAdjustment>Erakus denbora zehaztu aurretik</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Erakus denbora zehaztuta: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Erakus denborak zehaztuta: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Hasiera denbora zehaztuta: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Hasiera denbora zehaztuta: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Akats arruntak zuzendu aurretik</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Akats arruntak zuzenduta hautaturiko lerroetan</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Akats arruntak zuzenduta</CommonErrorsFixed>

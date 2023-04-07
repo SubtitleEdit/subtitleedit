@@ -1310,7 +1310,7 @@ Datoteka samo za čitanje!!</FileXIsReadOnly>
     <BeforeDisplayTimeAdjustment>Pre podešavanja vremena prikaza</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Prilagođeno vreme prikaza: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Prilagođena vremena prikaza: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Prilagođeno početno vreme: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Prilagođeno početno vreme: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Pre ispravljenja čestih grešaka</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Ispravljene česte greške u izabranim linijama</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Česte greške su ispravljene</CommonErrorsFixed>

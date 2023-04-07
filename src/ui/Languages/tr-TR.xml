@@ -1407,7 +1407,7 @@ Belgenin üstünden başlamak ve aramaya devam etmek veya değiştirmek ister mi
     <BeforeDisplayTimeAdjustment>Ekran zaman ayarlamadan önce</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Görüntü zamanı ayarlandı: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Görüntü zamanları ayarlandı: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Başlangıç zamanı ayarlandı: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Başlangıç zamanı ayarlandı: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Yaygın hata düzeltmelerinden önce</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Seçilen satırdaki yaygın hatalar düzeltildi</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Yaygın hatalar düzeltildi</CommonErrorsFixed>

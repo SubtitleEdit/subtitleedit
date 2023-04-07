@@ -1350,7 +1350,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeDisplayTimeAdjustment>Пред прилагодба на временскиот приказ</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Временскиот приказ е прилагоден: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Временските прикази се прилагодени{0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Почетното време е прилагодено: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Почетното време е прилагодено: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Пред поправките на чести грешки</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Поправени се честите грешки во избраните линии</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Поправени чести грешки</CommonErrorsFixed>

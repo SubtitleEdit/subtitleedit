@@ -1580,7 +1580,7 @@ Czy chcesz zacząć od początku dokumentu i kontynuować wyszukiwanie i zastęp
     <BeforeDisplayTimeAdjustment>Przed dostosowaniem czasu wyświetlania</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Dostosowano czas wyświetlania: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Dostosowano czasy wyświetlania: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Dostosowano czas rozpoczęcia: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Dostosowano czas rozpoczęcia: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Przed poprawieniem najczęstszych błędów</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Poprawiono najczęstsze błędy w wybranych liniach</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Poprawiono najczęstsze błędy</CommonErrorsFixed>

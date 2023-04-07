@@ -1249,7 +1249,7 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <BeforeDisplayTimeAdjustment>Izmijenjeno vrijeme</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Postavljeno je vrijeme prikaza: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Postavljena su vremena prikaza: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Postavljeno početno vrijeme: {0}</StarTimeAdjustedX>
+    <StartTimeAdjustedX>Postavljeno početno vrijeme: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Ispravljene česte pogreške</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Ispravljene su česte pogreške u izabranim linijama.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Česte pogreške su ispravljene.</CommonErrorsFixed>
