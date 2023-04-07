@@ -9,7 +9,9 @@
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
    * Update Finnish translation - thx Teijo S
-   * Add all EBU language codes - thx TerrorizedGakon
+   * Update Korean translation - thx domddol
+   * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
+   * List all EBU language codes - thx TerrorizedGakon
 * FIXED:
    * Fix "Add embedded subtitles" with ANSI encoding - thx Cyberyoda1411
    * Fix running Whisper CPP/Const-me after setting folder for Whisper OpenAI - thx rsmith02ct
@@ -17,6 +19,7 @@
    * Fix possible crash after "Options - Settings" - thx JDTR75
    * Fix undo/redo for text
    * Fix reading "DCinema Interop" with only bold - thx Chris
+   * Fix crash in import of SSA styles - thx librafrog
 
 
 3.6.12 (26th March 2023)
