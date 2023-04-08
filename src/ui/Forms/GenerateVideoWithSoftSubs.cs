@@ -253,17 +253,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
                 FileUtil.IsBluRaySup(fileName))
             {
-                AddListViewItem(new VideoPreviewGeneratorSub
-                {
-                    Name = Path.GetFileName(fileName),
-                    Language = "eng", //TODO: get from file name or sup
-                    Format = "Blu-ray sup",
-                    SubtitleFormat = null,
-                    IsNew = true,
-                    IsForced = false,
-                    IsDefault = false,
-                    FileName = fileName,
-                });
+                MessageBox.Show("FFmpeg does not support embedding of PGS/Blu-ray sup :(");
+
+                //AddListViewItem(new VideoPreviewGeneratorSub
+                //{
+                //    Name = Path.GetFileName(fileName),
+                //    Language = "eng", //TODO: get from file name or sup
+                //    Format = "Blu-ray sup",
+                //    SubtitleFormat = null,
+                //    IsNew = true,
+                //    IsForced = false,
+                //    IsDefault = false,
+                //    FileName = fileName,
+                //});
                 return;
             }
 
