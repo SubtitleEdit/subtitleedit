@@ -725,7 +725,8 @@ Läs mer information (webb)?</WhisperNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Hitta</Title>
-    <Find>Hitta</Find>
+    <FindNext>&amp;Hitta nästa</FindNext>
+    <FindPrevious>Hitta &amp;föregående</FindPrevious>
     <Normal>Normal</Normal>
     <CaseSensitive>Skiftlägeskänslig</CaseSensitive>
     <RegularExpression>Vanlig formulering</RegularExpression>
