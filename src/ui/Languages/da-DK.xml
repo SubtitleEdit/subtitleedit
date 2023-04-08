@@ -719,7 +719,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Find</Title>
-    <Find>Find</Find>
+    <FindNext>Find &amp;næste</FindNext>
+    <FindPrevious>Find &amp;forrige</FindPrevious>
     <Normal>Normal</Normal>
     <CaseSensitive>Versalfølsom</CaseSensitive>
     <RegularExpression>Regulært udtryk</RegularExpression>
