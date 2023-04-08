@@ -724,7 +724,8 @@ Command line: {1} {2}
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>查找</Title>
-    <Find>查找</Find>
+    <FindNext>查找下一处(&amp;F)</FindNext>
+    <FindPrevious>查找上一处(&amp;P)</FindPrevious>
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
