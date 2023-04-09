@@ -109,6 +109,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFind_Click(object sender, EventArgs e)
         {
+            FindNext();
+            buttonFind.Focus();
+        }
+
+        private void FindNext()
+        {
             var searchText = FindText;
             textBoxFind.Text = searchText;
 
@@ -145,7 +151,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ButtonFind_Click(null, null);
+                FindNext();
+                textBoxFind.Focus();
             }
         }
 
@@ -153,7 +160,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ButtonFind_Click(null, null);
+                FindNext();
+                comboBoxFind.Focus();
             }
         }
 
@@ -285,6 +293,8 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(exception.Message);
                 }
             }
+
+            buttonFindPrev.Focus();
         }
     }
 }
