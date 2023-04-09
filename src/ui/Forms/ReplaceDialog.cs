@@ -125,6 +125,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findAndReplaceMethods.ReplaceDialogReplace();
             }
+
+            buttonReplace.Focus();
         }
 
         private void ButtonReplaceAllClick(object sender, EventArgs e)
@@ -137,6 +139,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findAndReplaceMethods.ReplaceDialogReplaceAll();
             }
+
+            buttonReplaceAll.Focus();
         }
 
         private void Validate(string searchText)
@@ -172,6 +176,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindClick(object sender, EventArgs e)
         {
+            Find();
+            buttonFind.Focus();
+        }
+
+        private void Find()
+        {
             if (_findNext && _findHelper != null)
             {
                 _findHelper.ReplaceFromPosition++;
@@ -183,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
-                _findAndReplaceMethods.ReplaceDialogFind(); 
+                _findAndReplaceMethods.ReplaceDialogFind();
             }
         }
 
@@ -204,7 +214,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ButtonFindClick(null, null);
+                Find();
+                textBoxFind.Focus();
                 e.SuppressKeyPress = true;
             }
         }
