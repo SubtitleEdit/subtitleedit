@@ -380,6 +380,8 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
             var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
             var fileInfo = new FileInfo(fileName);
+            var found = false;
+
             if (FileUtil.IsBluRaySup(fileName))
             {
                 CleanUp();
@@ -421,8 +423,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                 _binSubtitles = new List<IBinaryParagraphWithPosition>(bluRaySubtitles);
                 _subtitle.Renumber();
                 FillListView(_subtitle);
+                found = true;
             }
-            else if (ext == ".mkv" || ext == ".mks")
+            
+            
+            if (!found && (ext == ".mkv" || ext == ".mks"))
             {
                 if (!OpenMatroskaFile(fileName))
                 {
@@ -437,9 +442,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 _subtitle.Renumber();
                 FillListView(_subtitle);
+                found = true;
             }
-            else if (ext == ".m2ts" || ext == ".ts" || ext == ".mts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg" ||
-                     (fileInfo.Length < 100_000_000 && TransportStreamParser.IsDvbSup(fileName)))
+
+            if (!found && (ext == ".m2ts" || ext == ".ts" || ext == ".mts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg" ||
+                     (fileInfo.Length < 100_000_000 && TransportStreamParser.IsDvbSup(fileName))))
             {
                 var videoInfo = UiUtil.GetVideoInfo(fileName);
                 if (videoInfo != null && videoInfo.FramesPerSecond > 20 && videoInfo.FramesPerSecond < 1000)
@@ -454,8 +461,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                 _subtitle.Renumber();
                 FillListView(_subtitle);
+                found = true;
             }
-            else if (ext == ".xml")
+
+
+            if (!found && ext == ".xml")
             {
                 var bdnXml = new BdnXml();
                 var enc = LanguageAutoDetect.GetEncodingFromFile(fileName, true);
@@ -476,6 +486,7 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                         _extra.Add(new Extra { IsForced = bp.IsForced, X = bp.GetPosition().Left, Y = bp.GetPosition().Top });
                     }
                     FillListView(_subtitle);
+                    found = true;
                 }
                 else
                 {
@@ -493,10 +504,12 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
                             _extra.Add(new Extra { IsForced = bp.IsForced, X = bp.GetPosition().Left, Y = bp.GetPosition().Top });
                         }
                         FillListView(_subtitle);
+                        found = true;
                     }
                 }
             }
-            else if (ext == ".ttml")
+
+            if (!found && (ext == ".ttml" || ext == ".xml" || ext == ".dfxp"))
             {
                 var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                 var f = new TimedTextBase64Image();
@@ -530,9 +543,11 @@ namespace Nikse.SubtitleEdit.Forms.BinaryEdit
 
                     _subtitle = new Subtitle(sub);
                     FillListView(_subtitle);
+                    found = true;
                 }
             }
-            else if (FileUtil.IsManzanita(fileName))
+            
+            if (!found && FileUtil.IsManzanita(fileName))
             {
                 if (!ImportSubtitleFromManzanitaTransportStream(fileName))
                 {
