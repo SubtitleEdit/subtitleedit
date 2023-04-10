@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ReplaceDialog : PositionAndSizeForm
     {
         private readonly IFindAndReplace _findAndReplaceMethods;
-
+        private readonly Keys _findNextShortcut;
         private Regex _regEx;
         private bool _userAction;
         private bool _findNext;
@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UiUtil.FixLargeFonts(this, buttonReplace);
+            _findNextShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
         }
 
         public bool ReplaceAll { get; set; }
@@ -78,6 +79,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
                 Close();
+            }
+            else if (e.KeyData == _findNextShortcut)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                var ctrl = ActiveControl;
+                Find();
+                Focus();
+                ctrl?.Focus();
             }
         }
 
