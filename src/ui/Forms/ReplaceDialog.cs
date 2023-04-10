@@ -214,9 +214,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Find();
-                textBoxFind.Focus();
                 e.SuppressKeyPress = true;
+                e.Handled = true;
+
+                Find();
+                Focus();
+                textBoxFind.Focus();
             }
         }
 

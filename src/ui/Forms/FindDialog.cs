@@ -151,7 +151,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+
                 FindNext();
+                Focus();
                 textBoxFind.Focus();
             }
         }
@@ -160,7 +164,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+
                 FindNext();
+                Focus();
                 comboBoxFind.Focus();
             }
         }
