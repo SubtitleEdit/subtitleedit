@@ -34812,5 +34812,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        private void toolStripMenuItemExportTtmlImage_Click(object sender, EventArgs e)
+        {
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.TtmlInlinePng, _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.ShowDialog(this);
+            }
+        }
     }
 }
