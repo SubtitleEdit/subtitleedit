@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             internal const string EdlClipName = "EDL_CLIPNAME";
             internal const string ImageFrame = "IMAGE/FRAME";
             internal const string Spumux = "SPUMUX";
-            internal const string TtmlInlinePng = "TTML/PNG (inline)";
+            internal const string TtmlInlinePng = "TTML SMPTE-TT/PNG (inline)";
         }
 
         internal class MakeBitmapParameter
