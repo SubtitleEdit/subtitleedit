@@ -571,6 +571,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerOriginalTextUndo = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripShowVideoControls = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemShowVideoControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportTtmlImage = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1400,6 +1401,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemExportUniPac,
             this.toolStripMenuItemExportPlainText,
             this.toolStripMenuItemExportSpumux,
+            this.toolStripMenuItemExportTtmlImage,
             this.toolStripMenuItemExportUltech130,
             this.toolStripMenuItemExportVobSubSubIdx,
             this.toolStripSeparatorExportCustomText,
@@ -5578,6 +5580,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemShowVideoControls.Text = "Show video controls";
             this.toolStripMenuItemShowVideoControls.Click += new System.EventHandler(this.toolStripMenuItemShowVideoControls_Click);
             // 
+            // toolStripMenuItemExportTtmlImage
+            // 
+            this.toolStripMenuItemExportTtmlImage.Name = "toolStripMenuItemExportTtmlImage";
+            this.toolStripMenuItemExportTtmlImage.Size = new System.Drawing.Size(255, 22);
+            this.toolStripMenuItemExportTtmlImage.Text = "TTML/PNG...";
+            this.toolStripMenuItemExportTtmlImage.Click += new System.EventHandler(this.toolStripMenuItemExportTtmlImage_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -6194,5 +6203,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripButton toolStripButtonSourceView;
         private System.Windows.Forms.ToolStripMenuItem removeTranslationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateVideoWithSoftcodedSubtitlesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportTtmlImage;
     }
 }

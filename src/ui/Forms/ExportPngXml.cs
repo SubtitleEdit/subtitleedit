@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             internal const string EdlClipName = "EDL_CLIPNAME";
             internal const string ImageFrame = "IMAGE/FRAME";
             internal const string Spumux = "SPUMUX";
+            internal const string TtmlInlinePng = "TTML/PNG (inline)";
         }
 
         internal class MakeBitmapParameter
@@ -113,6 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Dictionary<string, int> _lineHeights;
         private static int _boxBorderSize = 8;
         private int _lastIndex;
+        private Dictionary<int, string> _smpteTtmlImages = new Dictionary<int, string>();
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -603,6 +605,15 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
                 singleFile = true;
             }
+            else if (_exportType == ExportFormats.TtmlInlinePng)
+            {
+                saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveImageAs;
+                saveFileDialog1.DefaultExt = "*.ttml";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "TTML files|*.ttml|XML files|*.xml";
+                singleFile = true;
+                _smpteTtmlImages = new Dictionary<int, string>();
+            }
             else if (_exportType == ExportFormats.VobSub)
             {
                 saveFileDialog1.Title = LanguageSettings.Current.ExportPngXml.SaveVobSubAs;
@@ -679,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         Directory.CreateDirectory(folderBrowserDialog1.SelectedPath);
                     }
-                    catch 
+                    catch
                     {
                         MessageBox.Show("Please select a valid folder");
                         buttonExport.Enabled = true;
@@ -901,14 +912,20 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == ExportFormats.Spumux)
                 {
-                    string s = "<subpictures>" + Environment.NewLine +
-                               "\t<stream>" + Environment.NewLine +
-                               sb +
-                               "\t</stream>" + Environment.NewLine +
-                               "</subpictures>";
+                    var s = "<subpictures>" + Environment.NewLine +
+                            "\t<stream>" + Environment.NewLine +
+                            sb +
+                            "\t</stream>" + Environment.NewLine +
+                            "</subpictures>";
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
                     var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
                     MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
+                }
+                else if (_exportType == ExportFormats.TtmlInlinePng)
+                {
+                    File.WriteAllText(saveFileDialog1.FileName, MakeTtmlInlinePngXml(_subtitle, _smpteTtmlImages));
+                    var text = string.Format(LanguageSettings.Current.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Fcp)
                 {
@@ -1009,6 +1026,55 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
+        }
+
+        private string MakeTtmlInlinePngXml(Subtitle subtitle, Dictionary<int, string> smpteTtmlImages)
+        {
+            var template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<tt xmlns=\"http://www.w3.org/ns/ttml\"\r\n    xmlns:smpte=\"http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt\"\r\n    xmlns:ttm=\"http://www.w3.org/ns/ttml#metadata\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\"\r\n    xml:space=\"default\" xml:lang=\"eng\">\r\n    <head>\r\n        <metadata></metadata>\r\n        <layout>\r\n            <region xml:id=\"region0\" tts:extent=\"100.000000% 5.000000%\" tts:origin=\"0.000000% 86.851852%\" />\r\n        </layout>\r\n    </head>\r\n    <body></body>\r\n</tt>";
+            var xml = new XmlDocument();
+            xml.LoadXml(template);
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ttml", TimedText10.TtmlNamespace);
+            var meta = xml.SelectSingleNode("//ttml:metadata", nsmgr);
+            var body = xml.SelectSingleNode("//ttml:body", nsmgr);
+            foreach (var keyValuePair in smpteTtmlImages.OrderBy(p => p.Key))
+            {
+                var name = $"img{keyValuePair.Key}";
+
+                XmlNode image = xml.CreateElement("smpte:image", TimedText10.TtmlNamespace);
+                meta.AppendChild(image);
+                var attr = xml.CreateAttribute("imagetype");
+                attr.Value = "PNG";
+                image.Attributes.Append(attr);
+                attr = xml.CreateAttribute("encoding");
+                attr.Value = "Base64";
+                image.Attributes.Append(attr);
+                attr = xml.CreateAttribute("xml:id");
+                attr.Value = name;
+                image.Attributes.Append(attr);
+                image.InnerText = keyValuePair.Value;
+
+                var p = _subtitle.GetParagraphOrDefault(keyValuePair.Key - 1);
+                if (p != null)
+                {
+                    XmlNode pNode = xml.CreateElement("div", TimedText10.TtmlNamespace);
+                    body.AppendChild(pNode);
+                    attr = xml.CreateAttribute("begin");
+                    attr.Value = p.StartTime.ToHHMMSSFF();
+                    pNode.Attributes.Append(attr);
+                    attr = xml.CreateAttribute("end");
+                    attr.Value = p.EndTime.ToHHMMSSFF();
+                    pNode.Attributes.Append(attr);
+                    attr = xml.CreateAttribute("smpte:backgroundImage", TimedText10.TtmlNamespace);
+                    attr.Value = $"#{name}";
+                    pNode.Attributes.Append(attr);
+                    attr = xml.CreateAttribute("region");
+                    attr.Value = "region0";
+                    pNode.Attributes.Append(attr);
+                }
+            }
+
+            return xml.OuterXml.Replace("xmlns:smpte=\"http://www.w3.org/ns/ttml\"", "");
         }
 
         private void MessageBoxShowWithFolderName(string text, string folderName)
@@ -1621,6 +1687,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
+                else if (_exportType == ExportFormats.TtmlInlinePng)
+                {
+                    if (!param.Saved)
+                    {
+                        imagesSavedCount = WriteTtmlInlinePgnParagraph(imagesSavedCount, param, i);
+                        param.Saved = true;
+                    }
+                }
                 else if (_exportType == ExportFormats.Fcp)
                 {
                     if (!param.Saved)
@@ -2056,6 +2130,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             template = template.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
             template = template.Replace("[NTSC]", ntsc);
             sb.AppendLine(template);
+            return imagesSavedCount;
+        }
+
+        internal int WriteTtmlInlinePgnParagraph(int imagesSavedCount, MakeBitmapParameter param, int i)
+        {
+            string imageBase64;
+            using (var memoryStream = new MemoryStream())
+            {
+                param.Bitmap.Save(memoryStream, ImageFormat.Png);
+                imageBase64 = Convert.ToBase64String(memoryStream.ToArray());
+            }
+
+            if (!_smpteTtmlImages.ContainsKey(i))
+            {
+                imagesSavedCount++;
+                _smpteTtmlImages.Add(i, imageBase64);
+            }
+
             return imagesSavedCount;
         }
 
@@ -4130,6 +4222,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Text = ExportFormats.Spumux;
             }
+            else if (exportType == ExportFormats.TtmlInlinePng)
+            {
+                Text = ExportFormats.TtmlInlinePng;
+            }
             else
             {
                 Text = LanguageSettings.Current.ExportPngXml.Title;
@@ -4584,6 +4680,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 numericUpDownDepth3D.Enabled = true;
                 labelDepth.Enabled = true;
                 labelDepth.Text = LanguageSettings.Current.DCinemaProperties.ZPosition;
+            }
+
+            if (exportType == ExportFormats.TtmlInlinePng)
+            {
+                label3D.Visible = false;
+                comboBox3D.Visible = false;
+                numericUpDownDepth3D.Visible = false;
+                labelDepth.Visible = false;
+                labelLanguage.Visible = true;
+                labelLanguage.BringToFront();
+
+                comboBoxLanguage.Items.Clear();
+                foreach (var iso639Dash2LanguageCode in Iso639Dash2LanguageCode.List)
+                {
+                    comboBoxLanguage.Items.Add(iso639Dash2LanguageCode.ThreeLetterCode);
+                    if (_language == iso639Dash2LanguageCode.TwoLetterCode)
+                    {
+                        comboBoxLanguage.SelectedIndex = comboBoxLanguage.Items.Count - 1;
+                    }
+                }
+                comboBoxLanguage.Visible = true;
             }
 
             if (_exportType == ExportFormats.Fcp)
