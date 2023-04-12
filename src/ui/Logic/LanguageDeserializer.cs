@@ -6874,6 +6874,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/GoForward1Second":
                     language.Settings.GoForward1Second = reader.Value;
                     break;
+                case "Settings/GoBack3Seconds":
+                    language.Settings.GoBack3Seconds = reader.Value;
+                    break;
+                case "Settings/GoForward3Seconds":
+                    language.Settings.GoForward3Seconds = reader.Value;
+                    break;
                 case "Settings/GoBack5Seconds":
                     language.Settings.GoBack5Seconds = reader.Value;
                     break;
@@ -6891,9 +6897,6 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/GoForwardXLSeconds":
                     language.Settings.GoForwardXLSeconds = reader.Value;
-                    break;
-                case "Settings/GoBack3Second":
-                    language.Settings.GoBack3Second = reader.Value;
                     break;
                 case "Settings/GoToStartCurrent":
                     language.Settings.GoToStartCurrent = reader.Value;

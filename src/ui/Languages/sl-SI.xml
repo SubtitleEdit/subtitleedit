@@ -2516,7 +2516,7 @@ lahko ureja v isti datoteki s podnapisi (sodelovanje)</Information>
     <GoForwardXSSeconds>Majhen izbran čas naprej</GoForwardXSSeconds>
     <GoBackXLSeconds>Velik izbran čas nazaj</GoBackXLSeconds>
     <GoForwardXLSeconds>Velik izbran čas naprej</GoForwardXLSeconds>
-    <GoBack3Second>Tri sekunde nazaj</GoBack3Second>
+    <GoBack3Seconds>Tri sekunde nazaj</GoBack3Seconds>
     <GoToStartCurrent>Nastavi položaj videa na začetek trenutnega podnapisa</GoToStartCurrent>
     <ToggleStartEndCurrent>Preklop videa med začetkom in koncem trenutnega podnapisa</ToggleStartEndCurrent>
     <PlaySelectedLines>Predvajaj izbrane vrstice</PlaySelectedLines>

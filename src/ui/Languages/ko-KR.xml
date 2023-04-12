@@ -2516,7 +2516,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GoForwardXSSeconds>작은 선택된 시간 앞으로</GoForwardXSSeconds>
     <GoBackXLSeconds>큰 선택된 시간 뒤로</GoBackXLSeconds>
     <GoForwardXLSeconds>큰 선택된 시간 앞으로</GoForwardXLSeconds>
-    <GoBack3Second>3초 뒤로</GoBack3Second>
+    <GoBack3Seconds>3초 뒤로</GoBack3Seconds>
     <GoToStartCurrent>비디오 위치를  현재 자막의 시작으로 설정</GoToStartCurrent>
     <ToggleStartEndCurrent>현재 자막의 시작/끝 사이의 비디오 위치 전환</ToggleStartEndCurrent>
     <PlaySelectedLines>선택한 줄 재생</PlaySelectedLines>

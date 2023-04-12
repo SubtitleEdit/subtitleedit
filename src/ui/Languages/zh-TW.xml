@@ -2371,7 +2371,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <GoForwardXSSeconds>Small selected time forward</GoForwardXSSeconds>
     <GoBackXLSeconds>Large selected time back</GoBackXLSeconds>
     <GoForwardXLSeconds>Large selected time forward</GoForwardXLSeconds>
-    <GoBack3Second>Three seconds back</GoBack3Second>
+    <GoBack3Seconds>Three seconds back</GoBack3Seconds>
     <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
     <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
     <PlaySelectedLines>Play selected lines</PlaySelectedLines>

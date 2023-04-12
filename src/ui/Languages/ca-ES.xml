@@ -2174,7 +2174,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForwardXSSeconds>Temps avança seleccionat menut</GoForwardXSSeconds>
     <GoBackXLSeconds>Temps enrrere seleccionat gran</GoBackXLSeconds>
     <GoForwardXLSeconds>Temps avançat seleccionat gran</GoForwardXLSeconds>
-    <GoBack3Second>Tres segons enrrere</GoBack3Second>
+    <GoBack3Seconds>Tres segons enrrere</GoBack3Seconds>
     <GoToStartCurrent>Estableix possició de vídeo a l'inici del subtítol actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Intercanvia possició vídeo entre inici/final subtítol actual</ToggleStartEndCurrent>
     <PlayCurrent>Reprodueix subtítol actual</PlayCurrent>

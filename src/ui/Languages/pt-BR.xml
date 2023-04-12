@@ -2496,7 +2496,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <GoForwardXSSeconds>Tempo pequeno selecionado para a frente</GoForwardXSSeconds>
     <GoBackXLSeconds>Tempo grande selecionado para trás</GoBackXLSeconds>
     <GoForwardXLSeconds>Tempo grande selecionado para a frente</GoForwardXLSeconds>
-    <GoBack3Second>3 segundos para trás</GoBack3Second>
+    <GoBack3Seconds>3 segundos para trás</GoBack3Seconds>
     <GoToStartCurrent>Definir posição do vídeo como início da legenda atual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre começo/fim da legenda atual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproduzir linhas selecionadas</PlaySelectedLines>

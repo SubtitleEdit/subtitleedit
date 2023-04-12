@@ -2503,7 +2503,7 @@ Command line: {1} {2}
     <GoForwardXSSeconds>以选定的时间少量前进</GoForwardXSSeconds>
     <GoBackXLSeconds>以选定的时间回退</GoBackXLSeconds>
     <GoForwardXLSeconds>以选定的时间前进</GoForwardXLSeconds>
-    <GoBack3Second>回退 3 秒</GoBack3Second>
+    <GoBack3Seconds>回退 3 秒</GoBack3Seconds>
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
     <PlaySelectedLines>播放选定的行</PlaySelectedLines>

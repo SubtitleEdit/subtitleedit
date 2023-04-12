@@ -2518,7 +2518,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForwardXSSeconds>Кратко избраното време напред</GoForwardXSSeconds>
     <GoBackXLSeconds>Дълго избраното време назад</GoBackXLSeconds>
     <GoForwardXLSeconds>Дълго избраното време напред</GoForwardXLSeconds>
-    <GoBack3Second>Три секунди назад</GoBack3Second>
+    <GoBack3Seconds>Три секунди назад</GoBack3Seconds>
     <GoToStartCurrent>Задаване на видео поз. за старт на текущия субтитър</GoToStartCurrent>
     <ToggleStartEndCurrent>Превключване на видео поз. между начало/край на текущия субтитър</ToggleStartEndCurrent>
     <PlaySelectedLines>Възпроизв. на избраните редове</PlaySelectedLines>

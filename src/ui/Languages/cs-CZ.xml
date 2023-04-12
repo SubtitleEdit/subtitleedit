@@ -2343,7 +2343,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <GoForwardXSSeconds>O malý vybraný čas vpřed</GoForwardXSSeconds>
     <GoBackXLSeconds>O velký vybraný čas zpět</GoBackXLSeconds>
     <GoForwardXLSeconds>O velký vybraný čas vpřed</GoForwardXLSeconds>
-    <GoBack3Second>O tři sekundy zpět</GoBack3Second>
+    <GoBack3Seconds>O tři sekundy zpět</GoBack3Seconds>
     <GoToStartCurrent>Nastavit pozici videa na začátek aktuálního titulku</GoToStartCurrent>
     <ToggleStartEndCurrent>Přepnout pozici videa mezi začátkem a koncem aktuálního titulku</ToggleStartEndCurrent>
     <PlaySelectedLines>Přehrát vybrané řádky</PlaySelectedLines>

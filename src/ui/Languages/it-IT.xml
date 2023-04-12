@@ -2516,7 +2516,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <GoForwardXSSeconds>Offset di linea in avanti di 100 ms =&gt;</GoForwardXSSeconds>
     <GoBackXLSeconds>Molto tempo selezionato a sinistra</GoBackXLSeconds>
     <GoForwardXLSeconds>Molto tempo scelto avanti</GoForwardXLSeconds>
-    <GoBack3Second>Tre secondi indietro</GoBack3Second>
+    <GoBack3Seconds>Tre secondi indietro</GoBack3Seconds>
     <GoToStartCurrent>Imposta posizione video ad inizio sottotitolo attuale</GoToStartCurrent>
     <ToggleStartEndCurrent>Commuta posizione video tra inizio/fine sottotitolo attuale</ToggleStartEndCurrent>
     <PlaySelectedLines>Riproduci righe selezionate</PlaySelectedLines>

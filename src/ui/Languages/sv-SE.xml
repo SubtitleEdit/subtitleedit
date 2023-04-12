@@ -2516,7 +2516,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <GoForwardXSSeconds>Liten vald tid framåt</GoForwardXSSeconds>
     <GoBackXLSeconds>Stor vald tid tillbaka</GoBackXLSeconds>
     <GoForwardXLSeconds>Stor vald tid framåt</GoForwardXLSeconds>
-    <GoBack3Second>Tre sekunder tillbaka</GoBack3Second>
+    <GoBack3Seconds>Tre sekunder tillbaka</GoBack3Seconds>
     <GoToStartCurrent>Ställ in videopositionen till början av aktuell undertext</GoToStartCurrent>
     <ToggleStartEndCurrent>Växla videopos mellan start/slut på aktuell undertext</ToggleStartEndCurrent>
     <PlaySelectedLines>Spela valda rader</PlaySelectedLines>

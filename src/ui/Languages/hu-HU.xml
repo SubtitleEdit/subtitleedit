@@ -2498,7 +2498,7 @@ szerkesztheti ugyanazt a feliratfájlt (együttműködés)</Information>
     <GoForwardXSSeconds>Kis kiválasztott idő előre</GoForwardXSSeconds>
     <GoBackXLSeconds>Nagy kiválasztott idő vissza</GoBackXLSeconds>
     <GoForwardXLSeconds>Nagy kiválasztott idő előre</GoForwardXLSeconds>
-    <GoBack3Second>Három másodperc vissza</GoBack3Second>
+    <GoBack3Seconds>Három másodperc vissza</GoBack3Seconds>
     <GoToStartCurrent>Videó pozíció beállítása az aktuális felirat kezdetére</GoToStartCurrent>
     <ToggleStartEndCurrent>Videó pozíció váltása az aktuális felirat kezdete/vége között</ToggleStartEndCurrent>
     <PlaySelectedLines>Kijelölt sorok lejátszása</PlaySelectedLines>

@@ -2516,7 +2516,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <GoForwardXSSeconds>Mały wybrany czas do przodu</GoForwardXSSeconds>
     <GoBackXLSeconds>Duży wybrany czas do tyłu</GoBackXLSeconds>
     <GoForwardXLSeconds>Duży wybrany czas do przodu</GoForwardXLSeconds>
-    <GoBack3Second>Trzy sekundy do tyłu</GoBack3Second>
+    <GoBack3Seconds>Trzy sekundy do tyłu</GoBack3Seconds>
     <GoToStartCurrent>Ustaw pozycję wideo na początek bieżącego napisu</GoToStartCurrent>
     <ToggleStartEndCurrent>Przełącz pozycję wideo między początkiem/końcem bieżącego napisu</ToggleStartEndCurrent>
     <PlaySelectedLines>Odtwarzaj wybrane linie</PlaySelectedLines>

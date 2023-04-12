@@ -2507,7 +2507,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoForwardXSSeconds>Lille valgt tid frem</GoForwardXSSeconds>
     <GoBackXLSeconds>Stor valgt tid tilbage</GoBackXLSeconds>
     <GoForwardXLSeconds>Stor valgt tid frem</GoForwardXLSeconds>
-    <GoBack3Second>Tre sekunder tilbage</GoBack3Second>
+    <GoBack3Seconds>Tre sekunder tilbage</GoBack3Seconds>
     <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
     <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
     <PlaySelectedLines>Afspil valgte linjer</PlaySelectedLines>

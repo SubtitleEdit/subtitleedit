@@ -2518,7 +2518,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoForwardXSSeconds>Adiantar um pouco os tempos seleccionados</GoForwardXSSeconds>
     <GoBackXLSeconds>Atrasar os tempos seleccionados</GoBackXLSeconds>
     <GoForwardXLSeconds>Adiantar os tempos seleccionados</GoForwardXLSeconds>
-    <GoBack3Second>Atrasar 3 segundos</GoBack3Second>
+    <GoBack3Seconds>Atrasar 3 segundos</GoBack3Seconds>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproduzir linhas seleccionadas</PlaySelectedLines>
