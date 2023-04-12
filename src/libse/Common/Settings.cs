@@ -430,7 +430,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperModel { get; set; }
         public string WhisperLanguageCode { get; set; }
         public string WhisperLocation { get; set; }
+        public string WhisperCtranslate2Location { get; set; }
         public string WhisperXLocation { get; set; }
+        public string WhisperCppModelLocation { get; set; }
         public string WhisperExtraSettings { get; set; }
         public bool WhisperAutoAdjustTimings { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
@@ -6348,6 +6350,18 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperXLocation = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WhisperCppModelLocation");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperCppModelLocation = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("WhisperCtranslate2Location");
+            if (subNode != null)
+            {
+                settings.Tools.WhisperCtranslate2Location = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WhisperExtraSettings");
             if (subNode != null)
             {
@@ -10714,7 +10728,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperDeleteTempFiles", settings.Tools.WhisperDeleteTempFiles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WhisperModel", settings.Tools.WhisperModel);
                 textWriter.WriteElementString("WhisperLocation", settings.Tools.WhisperLocation);
+                textWriter.WriteElementString("WhisperCtranslate2Location", settings.Tools.WhisperCtranslate2Location);
                 textWriter.WriteElementString("WhisperXLocation", settings.Tools.WhisperXLocation);
+                textWriter.WriteElementString("WhisperCppModelLocation", settings.Tools.WhisperCppModelLocation);
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
                 textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
                 textWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
