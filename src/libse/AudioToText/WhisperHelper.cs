@@ -45,6 +45,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return "https://github.com/Const-me/Whisper";
             }
 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+            {
+                return "https://github.com/jordimas/whisper-ctranslate2";
+            }
+
             return "https://github.com/openai/whisper";
         }
 
@@ -84,6 +89,23 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
 
                         if (Directory.Exists(location) && File.Exists(Path.Combine(location, "whisper.exe")))
+                        {
+                            return location;
+                        }
+                    }
+                }
+
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                {
+                    var location = Configuration.Settings.Tools.WhisperCtranslate2Location;
+                    if (!string.IsNullOrEmpty(location))
+                    {
+                        if (location.EndsWith("whisper-ctranslate2.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(location))
+                        {
+                            return Path.GetDirectoryName(location);
+                        }
+
+                        if (Directory.Exists(location) && File.Exists(Path.Combine(location, "whisper-ctranslate2.exe")))
                         {
                             return location;
                         }
@@ -134,6 +156,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                                 {
                                     return Path.Combine(dir, "Scripts");
                                 }
+
+                                return null;
+                            }
+
+                            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                            {
+                                var whisperCTranslate2FullPath = Path.Combine(dir, "Scripts", "whisper-ctranslate2.exe");
+                                if (File.Exists(whisperCTranslate2FullPath))
+                                {
+                                    return Path.Combine(dir, "Scripts");
+                                }
+
+                                return null;
                             }
 
                             var whisperFullPath = Path.Combine(dir, "Scripts", "whisper.exe");
@@ -163,6 +198,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return "main";
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                {
+                    return "whisper-ctranslate2";
+                }
+
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
                 {
                     return "whisperx";
@@ -189,6 +229,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
                 {
                     var f = Path.Combine(whisperFolder, "whisperx.exe");
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
+                }
+                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+                {
+                    var f = Path.Combine(whisperFolder, "whisper-ctranslate2.exe");
                     if (File.Exists(f))
                     {
                         return f;
@@ -229,6 +277,16 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 {
                     return f;
                 }
+            }
+            else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+            {
+                var f = Path.Combine(whisperFolder, "whisper-ctranslate2");
+                if (File.Exists(f))
+                {
+                    return f;
+                }
+
+
             }
 
             return "whisper";
