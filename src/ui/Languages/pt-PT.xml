@@ -726,7 +726,8 @@ Mais informação online?</WhisperNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Localizar</Title>
-    <Find>&amp;Localizar</Find>
+    <FindNext>&amp;Localizar seguinte</FindNext>
+    <FindPrevious>Localizar &amp;anterior</FindPrevious>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
