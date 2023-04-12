@@ -6,6 +6,7 @@
    * Add new subtitle format "nVivo transcript" - thx Ashin
    * Add more mpv preview settings in UI
    * Add cmd convert param "/teletextonlypage:<number>" - thx dystopia2017
+   * Add export of TTML SMPTE-TT with inline Base64 encoded PNG images
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
@@ -13,6 +14,7 @@
    * Update Korean translation - thx domddol
    * Update Chinese translation - thx nkh0472
    * Update Russian translation - thx elfriob
+   * Update Portuguese translation - thx hugok79
    * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
    * List all EBU language codes - thx TerrorizedGakon
 * FIXED:
