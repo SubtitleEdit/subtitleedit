@@ -17034,6 +17034,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainVideo3000MsRight == e.KeyData)
+            {
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    GoBackSeconds(-3);
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
             {
                 var enc = GetCurrentEncoding();
