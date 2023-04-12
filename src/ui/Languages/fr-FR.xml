@@ -2516,7 +2516,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <GoForwardXSSeconds>Petite durée sélectionnée en avant</GoForwardXSSeconds>
     <GoBackXLSeconds>Grande durée sélectionnée en arrière</GoBackXLSeconds>
     <GoForwardXLSeconds>Grande durée sélectionnée en avant</GoForwardXLSeconds>
-    <GoBack3Second>Trois secondes en arrière</GoBack3Second>
+    <GoBack3Seconds>Trois secondes en arrière</GoBack3Seconds>
     <GoToStartCurrent>Positionner la vidéo au début du sous-titre actuel</GoToStartCurrent>
     <ToggleStartEndCurrent>Commuter la position vidéo entre début/fin du sous-titre actuel</ToggleStartEndCurrent>
     <PlaySelectedLines>Lire les lignes sélectionnées</PlaySelectedLines>

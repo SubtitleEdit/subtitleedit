@@ -2510,7 +2510,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForwardXSSeconds>Μικρή προώθηση χρόνου εμπρός</GoForwardXSSeconds>
     <GoBackXLSeconds>Μεγάλη προώθηση χρόνου πίσω</GoBackXLSeconds>
     <GoForwardXLSeconds>Μεγάλη προώθηση χρόνου εμπρός</GoForwardXLSeconds>
-    <GoBack3Second>Πίσω 3 δευτερόλεπτα</GoBack3Second>
+    <GoBack3Seconds>Πίσω 3 δευτερόλεπτα</GoBack3Seconds>
     <GoToStartCurrent>Ορισμός θέσης βίντεο στην έναρξη του επιλεγμένου υποτίτλου</GoToStartCurrent>
     <ToggleStartEndCurrent>Εναλλαγή θέσης βίντεο μεταξύ έναρξης/λήξης επιλεγμένου υποτίτλου</ToggleStartEndCurrent>
     <PlaySelectedLines>Αναπαραγωγή επιλεγμένων γραμμών</PlaySelectedLines>

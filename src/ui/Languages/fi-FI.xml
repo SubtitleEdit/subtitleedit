@@ -2505,7 +2505,7 @@ edelliseen kohtauksen vaihtoon (tai tekstitykseen)</AdjustExtendToPreviousShotCh
     <GoForwardXSSeconds>Pienen aikasiirtymän verran eteenpäin</GoForwardXSSeconds>
     <GoBackXLSeconds>Suuren aikasiirtymän verran takaisin</GoBackXLSeconds>
     <GoForwardXLSeconds>Suuren aikasiirtymän verran eteenpäin</GoForwardXLSeconds>
-    <GoBack3Second>Kolme sekuntia takaisin</GoBack3Second>
+    <GoBack3Seconds>Kolme sekuntia takaisin</GoBack3Seconds>
     <GoToStartCurrent>Siirrä videokohta nykyisen tekstityksen alkuun</GoToStartCurrent>
     <ToggleStartEndCurrent>Videokohta nykyisen tekstityksen alkuun/loppuun</ToggleStartEndCurrent>
     <PlaySelectedLines>Toista valitut rivit</PlaySelectedLines>

@@ -2252,7 +2252,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoForwardXSSeconds>Txikitu hautaturiko denbora aurrerantz</GoForwardXSSeconds>
     <GoBackXLSeconds>Handitu hautaturiko denbora atzerantz</GoBackXLSeconds>
     <GoForwardXLSeconds>Handitu hautaturiko denbora aurrerantz</GoForwardXLSeconds>
-    <GoBack3Second>Hiru segundu atzera</GoBack3Second>
+    <GoBack3Seconds>Hiru segundu atzera</GoBack3Seconds>
     <GoToStartCurrent>Ezarri bideo kokap azpidatziaren hasieran</GoToStartCurrent>
     <ToggleStartEndCurrent>Aldatu bide kokap azpidatziaren has/amai artean</ToggleStartEndCurrent>
     <PlayCurrent>Irakurri uneko azpidatzia</PlayCurrent>

@@ -2491,7 +2491,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoForwardXSSeconds>Adelantar el tiempo de los pocos seleccionados</GoForwardXSSeconds>
     <GoBackXLSeconds>Atrasar el tiempo de los muchos seleccionados</GoBackXLSeconds>
     <GoForwardXLSeconds>Adelantar el tiempo de los muchos seleccionados</GoForwardXLSeconds>
-    <GoBack3Second>Atrasar tres segundos</GoBack3Second>
+    <GoBack3Seconds>Atrasar tres segundos</GoBack3Seconds>
     <GoToStartCurrent>Fijar la posición del video al inicio del subtítulo actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar la posición del video entre el inicio y el final del subtítulo actual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproducir líneas seleccionadas</PlaySelectedLines>

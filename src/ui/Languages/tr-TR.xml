@@ -2275,7 +2275,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoForwardXSSeconds>Küçük seçilmiş zaman kadar ileri</GoForwardXSSeconds>
     <GoBackXLSeconds>Büyük seçilmiş zaman kadar geri</GoBackXLSeconds>
     <GoForwardXLSeconds>Büyük seçili zaman kadar ileri</GoForwardXLSeconds>
-    <GoBack3Second>Üç saniye geri</GoBack3Second>
+    <GoBack3Seconds>Üç saniye geri</GoBack3Seconds>
     <GoToStartCurrent>Video konumunu mevcut altyazının başlangıcına ayarla</GoToStartCurrent>
     <ToggleStartEndCurrent>Mevcut altyazının başlangıcı/bitişi arasında video konumunu değiştir</ToggleStartEndCurrent>
     <PlayCurrent>Mevcut altyazıyı oynat</PlayCurrent>

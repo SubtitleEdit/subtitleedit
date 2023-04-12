@@ -2511,13 +2511,14 @@ can edit in same subtitle file (collaboration)</Information>
     <GoForward500Milliseconds>500 ms forward</GoForward500Milliseconds>
     <GoBack1Second>One second back</GoBack1Second>
     <GoForward1Second>One second forward</GoForward1Second>
+    <GoBack3Seconds>Three seconds back</GoBack3Seconds>
+    <GoForward3Seconds>Three seconds forward</GoForward3Seconds>
     <GoBack5Seconds>Five seconds back</GoBack5Seconds>
     <GoForward5Seconds>Five seconds forward</GoForward5Seconds>
     <GoBackXSSeconds>Small selected time back</GoBackXSSeconds>
     <GoForwardXSSeconds>Small selected time forward</GoForwardXSSeconds>
     <GoBackXLSeconds>Large selected time back</GoBackXLSeconds>
     <GoForwardXLSeconds>Large selected time forward</GoForwardXLSeconds>
-    <GoBack3Second>Three seconds back</GoBack3Second>
     <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
     <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
     <PlaySelectedLines>Play selected lines</PlaySelectedLines>

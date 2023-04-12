@@ -2405,7 +2405,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <GoForwardXSSeconds>Các dòng đã chọn tới time ngắn</GoForwardXSSeconds>
     <GoBackXLSeconds>Các dòng đã chọn lùi time dài</GoBackXLSeconds>
     <GoForwardXLSeconds>Các dòng đã chọn tới time dài</GoForwardXLSeconds>
-    <GoBack3Second>Lùi 3 giây</GoBack3Second>
+    <GoBack3Seconds>Lùi 3 giây</GoBack3Seconds>
     <GoToStartCurrent>Đặt vị trí video bắt đầu từ dòng hiện tại</GoToStartCurrent>
     <ToggleStartEndCurrent>Chuyển đổi vị trí video giữa đầu/cuối phụ đề hiện tại</ToggleStartEndCurrent>
     <PlaySelectedLines>Phát các dòng đã chọn</PlaySelectedLines>

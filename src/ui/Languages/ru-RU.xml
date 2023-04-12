@@ -2530,7 +2530,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForwardXSSeconds>100 мс смещение строки положения вперёд =&gt;</GoForwardXSSeconds>
     <GoBackXLSeconds>&lt;= 5 секундное смещение строки положения назад</GoBackXLSeconds>
     <GoForwardXLSeconds>5 секундное смещение строки положения вперёд =&gt;</GoForwardXLSeconds>
-    <GoBack3Second>&lt;= 3 секундное смещение строки положения назад</GoBack3Second>
+    <GoBack3Seconds>&lt;= 3 секундное смещение строки положения назад</GoBack3Seconds>
     <GoToStartCurrent>Установить позицию видео в начало текущей строки/субтитра</GoToStartCurrent>
     <ToggleStartEndCurrent>Переключение позиции видео между началом/концом текущей строки</ToggleStartEndCurrent>
     <PlaySelectedLines>Воспроизвести выбранные линии</PlaySelectedLines>

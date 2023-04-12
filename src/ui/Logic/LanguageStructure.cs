@@ -2698,13 +2698,14 @@ namespace Nikse.SubtitleEdit.Logic
             public string GoForward500Milliseconds { get; set; }
             public string GoBack1Second { get; set; }
             public string GoForward1Second { get; set; }
+            public string GoBack3Seconds { get; set; }
+            public string GoForward3Seconds { get; set; }
             public string GoBack5Seconds { get; set; }
             public string GoForward5Seconds { get; set; }
             public string GoBackXSSeconds { get; set; }
             public string GoForwardXSSeconds { get; set; }
             public string GoBackXLSeconds { get; set; }
             public string GoForwardXLSeconds { get; set; }
-            public string GoBack3Second { get; set; }
             public string GoToStartCurrent { get; set; }
             public string ToggleStartEndCurrent { get; set; }
             public string PlaySelectedLines { get; set; }

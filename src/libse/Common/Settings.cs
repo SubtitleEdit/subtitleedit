@@ -2372,6 +2372,7 @@ $HorzAlign          =   Center
         public string MainVideoXLMsLeft { get; set; }
         public string MainVideoXLMsRight { get; set; }
         public string MainVideo3000MsLeft { get; set; }
+        public string MainVideo3000MsRight { get; set; }
         public string MainVideoGoToStartCurrent { get; set; }
         public string MainVideoToggleStartEndCurrent { get; set; }
         public string MainVideoPlaySelectedLines { get; set; }
@@ -8839,6 +8840,12 @@ $HorzAlign          =   Center
                     shortcuts.MainVideo3000MsLeft = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideo3000MsRight");
+                if (subNode != null)
+                {
+                    shortcuts.MainVideo3000MsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoGoToStartCurrent");
                 if (subNode != null)
                 {
@@ -11317,6 +11324,7 @@ $HorzAlign          =   Center
             textWriter.WriteElementString("MainVideoXLMsLeft", shortcuts.MainVideoXLMsLeft);
             textWriter.WriteElementString("MainVideoXLMsRight", shortcuts.MainVideoXLMsRight);
             textWriter.WriteElementString("MainVideo3000MsLeft", shortcuts.MainVideo3000MsLeft);
+            textWriter.WriteElementString("MainVideo3000MsRight", shortcuts.MainVideo3000MsRight);
             textWriter.WriteElementString("MainVideoGoToStartCurrent", shortcuts.MainVideoGoToStartCurrent);
             textWriter.WriteElementString("MainVideoToggleStartEndCurrent", shortcuts.MainVideoToggleStartEndCurrent);
             textWriter.WriteElementString("MainVideoPlaySelectedLines", shortcuts.MainVideoPlaySelectedLines);

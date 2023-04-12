@@ -2077,7 +2077,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForward1Second>Една секунда напред</GoForward1Second>
     <GoBack5Seconds>Пет секунди назад</GoBack5Seconds>
     <GoForward5Seconds>Пет секунди напред</GoForward5Seconds>
-    <GoBack3Second>Три секунди назад</GoBack3Second>
+    <GoBack3Seconds>Три секунди назад</GoBack3Seconds>
     <GoToStartCurrent>Постави видео позиција на почеток на тековен титл</GoToStartCurrent>
     <ToggleStartEndCurrent>Преклопи видео позиција меѓу почеток/крај на тековен титл</ToggleStartEndCurrent>
     <PlayCurrent>Пушти го тековниот титл</PlayCurrent>
