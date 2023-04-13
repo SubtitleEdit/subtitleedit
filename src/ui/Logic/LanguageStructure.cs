@@ -185,6 +185,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string Title { get; set; }
             public string Info { get; set; }
             public string WhisperInfo { get; set; }
+            public string Engine { get; set; }
             public string VoskWebsite { get; set; }
             public string WhisperWebsite { get; set; }
             public string WhisperNotFound { get; set; }

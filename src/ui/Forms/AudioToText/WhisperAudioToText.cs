@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             labelTime.Text = string.Empty;
             listViewInputFiles.Visible = false;
             labelElapsed.Text = string.Empty;
-
+            labelEngine.Text = LanguageSettings.Current.AudioToText.Engine;
             labelEngine.Left = comboBoxWhisperEngine.Left - labelEngine.Width - 5;
 
             comboBoxCharsPerSub.BeginUpdate();
