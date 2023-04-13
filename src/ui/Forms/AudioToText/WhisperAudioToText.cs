@@ -14,7 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -166,8 +165,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             comboBoxCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
             labelCharsPerSub.Left = comboBoxCharsPerSub.Left - labelCharsPerSub.Width - 9;
             labelCharsPerSub.Visible = Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp;
-
-            buttonDownload.Enabled = Configuration.Settings.Tools.WhisperChoice != WhisperChoice.CTranslate2;
         }
 
         public static void FillModels(ComboBox comboBoxModels, string lastDownloadedModel)
@@ -175,16 +172,26 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var whisperModel = WhisperHelper.GetWhisperModel();
             var modelsFolder = whisperModel.ModelFolder;
             var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.WhisperModel : lastDownloadedModel;
+            
+            if (!Directory.Exists(modelsFolder))
+            {
+                whisperModel.CreateModelFolder();
+            }
+
             comboBoxModels.Items.Clear();
 
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
             {
                 foreach (var model in whisperModel.Models)
                 {
-                    comboBoxModels.Items.Add(model);
-                    if (model.Name == selectName)
+                    var path = Path.Combine(modelsFolder, model.Folder, "model.bin");
+                    if (File.Exists(path))
                     {
-                        comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                        comboBoxModels.Items.Add(model);
+                        if (model.Name == selectName)
+                        {
+                            comboBoxModels.SelectedIndex = comboBoxModels.Items.Count - 1;
+                        }
                     }
                 }
 
@@ -194,11 +201,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
 
                 return;
-            }
-
-            if (!Directory.Exists(modelsFolder))
-            {
-                whisperModel.CreateModelFolder();
             }
 
             var models = new List<WhisperModel>();
@@ -1317,7 +1319,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             checkBoxTranslateToEnglish.Enabled = comboBoxLanguages.Text.ToLowerInvariant() != "english";
         }
 
-        private void whisperPhpOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        private void WhisperPhpOriginalChoose()
         {
             Configuration.Settings.Tools.WhisperChoice = WhisperChoice.OpenAI;
 
@@ -1345,12 +1347,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 }
             }
 
-            Init();
-        }
-
-        private void whisperCppCToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
             Init();
         }
 
@@ -1433,7 +1429,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             if (comboBoxWhisperEngine.Text == WhisperChoice.OpenAI)
             {
-                whisperPhpOriginalToolStripMenuItem_Click(null, null);
+                WhisperPhpOriginalChoose();
             }
             else if (comboBoxWhisperEngine.Text == WhisperChoice.Cpp)
             {

@@ -14,6 +14,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return new WhisperCppModel();
             }
 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+            {
+                return new WhisperCTranslate2Model();
+            }
+
             return new WhisperModel();
         }
 
@@ -23,6 +28,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
                 return ".bin";
+            }
+
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
+            {
+                return string.Empty;
             }
 
             return ".pt";
