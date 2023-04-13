@@ -353,13 +353,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var words = s.Split(' ');
-            for (int numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
+            for (var numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
             {
-                int average = s.Length / numberOfLines + 1;
-                for (int len = average; len < maximumLength; len++)
+                var average = s.Length / numberOfLines + 1;
+                for (var len = average; len < maximumLength; len++)
                 {
-                    List<int> list = SplitToX(words, numberOfLines, len);
-                    bool allOk = true;
+                    var list = SplitToX(words, numberOfLines, len);
+                    var allOk = true;
                     foreach (var lineLength in list)
                     {
                         if (lineLength > maximumLength)
@@ -367,14 +367,33 @@ namespace Nikse.SubtitleEdit.Core.Common
                             allOk = false;
                         }
                     }
+
                     if (allOk)
                     {
-                        int index = 0;
+                        var index = 0;
                         foreach (var item in list)
                         {
                             index += item;
-                            htmlTags.Add(index, Environment.NewLine);
+                            if (htmlTags.ContainsKey(index))
+                            {
+                                var v = htmlTags[index];
+                                if (v.StartsWith("</", StringComparison.Ordinal))
+                                {
+                                    v = Environment.NewLine + v;
+                                }
+                                else
+                                {
+                                    v = v + Environment.NewLine;
+                                }
+
+                                htmlTags[index] = v;
+                            }
+                            else
+                            {
+                                htmlTags.Add(index, Environment.NewLine);
+                            }
                         }
+
                         return ReInsertHtmlTagsAndCleanUp(s, htmlTags);
                     }
                 }
