@@ -57,13 +57,13 @@
             this.checkBoxTranslateToEnglish = new System.Windows.Forms.CheckBox();
             this.labelElapsed = new System.Windows.Forms.Label();
             this.contextMenuStripWhisperAdvanced = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTemporaryFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxAutoAdjustTimings = new System.Windows.Forms.CheckBox();
             this.labelCharsPerSub = new System.Windows.Forms.Label();
             this.comboBoxCharsPerSub = new System.Windows.Forms.ComboBox();
             this.comboBoxWhisperEngine = new System.Windows.Forms.ComboBox();
             this.labelEngine = new System.Windows.Forms.Label();
-            this.setCPPConstmeModelsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -370,12 +370,20 @@
             this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 70);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 48);
+            this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
+            // 
+            // setCPPConstmeModelsFolderToolStripMenuItem
+            // 
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
+            this.setCPPConstmeModelsFolderToolStripMenuItem.Click += new System.EventHandler(this.setCPPConstMeModelsFolderToolStripMenuItem_Click);
             // 
             // removeTemporaryFilesToolStripMenuItem
             // 
             this.removeTemporaryFilesToolStripMenuItem.Name = "removeTemporaryFilesToolStripMenuItem";
-            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.removeTemporaryFilesToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.removeTemporaryFilesToolStripMenuItem.Text = "Remove temporary files";
             this.removeTemporaryFilesToolStripMenuItem.Click += new System.EventHandler(this.removeTemporaryFilesToolStripMenuItem_Click);
             // 
@@ -427,12 +435,6 @@
             this.labelEngine.Size = new System.Drawing.Size(40, 13);
             this.labelEngine.TabIndex = 27;
             this.labelEngine.Text = "Engine";
-            // 
-            // setCPPConstmeModelsFolderToolStripMenuItem
-            // 
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Name = "setCPPConstmeModelsFolderToolStripMenuItem";
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
             // 
             // WhisperAudioToText
             // 

@@ -561,5 +561,29 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 WhisperEngineCTranslate2();
             }
         }
+
+        private void setCPPConstMeModelsFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var folderBrowserDialog1 = new FolderBrowserDialog())
+            {
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.WhisperCppModelLocation = folderBrowserDialog1.SelectedPath;
+                }
+            }
+        }
+
+        private void contextMenuStripWhisperAdvanced_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperCppModelLocation) &&
+                Directory.Exists(Configuration.Settings.Tools.WhisperCppModelLocation))
+            {
+                setCPPConstmeModelsFolderToolStripMenuItem.Text = $"Set CPP/Const-me models folder... [{Configuration.Settings.Tools.WhisperCppModelLocation}]";
+            }
+            else
+            {
+                setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
+            }
+        }
     }
 }

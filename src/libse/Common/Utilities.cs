@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 }
                                 else
                                 {
-                                    v = v + Environment.NewLine;
+                                    v += Environment.NewLine;
                                 }
 
                                 htmlTags[index] = v;
