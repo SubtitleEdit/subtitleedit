@@ -5,7 +5,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 {
     public class WhisperCppModel : IWhisperModel
     {
-        public string ModelFolder => Path.Combine(Configuration.DataDirectory, "Whisper", "Models");
+        public string ModelFolder
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperCppModelLocation) &&
+                    Directory.Exists(Configuration.Settings.Tools.WhisperCppModelLocation))
+                {
+                    return Configuration.Settings.Tools.WhisperCppModelLocation;
+                }
+
+                return Path.Combine(Configuration.DataDirectory, "Whisper", "Models");
+            }
+        }
 
         public void CreateModelFolder()
         {
