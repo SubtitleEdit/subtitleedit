@@ -33,13 +33,14 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.comboBoxModels = new System.Windows.Forms.ComboBox();
             this.textBoxError = new System.Windows.Forms.TextBox();
+            this.labelFileName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelPleaseWait
             // 
             this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(12, 92);
+            this.labelPleaseWait.Location = new System.Drawing.Point(12, 111);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 3;
@@ -61,7 +62,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(362, 87);
+            this.buttonCancel.Location = new System.Drawing.Point(362, 106);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -83,18 +84,29 @@
             this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxError.Location = new System.Drawing.Point(15, 69);
+            this.textBoxError.Location = new System.Drawing.Point(97, 86);
             this.textBoxError.Multiline = true;
             this.textBoxError.Name = "textBoxError";
             this.textBoxError.ReadOnly = true;
-            this.textBoxError.Size = new System.Drawing.Size(422, 12);
+            this.textBoxError.Size = new System.Drawing.Size(340, 14);
             this.textBoxError.TabIndex = 2;
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(12, 86);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 5;
+            this.labelFileName.Text = "File name";
             // 
             // WhisperModelDownload
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(449, 120);
+            this.ClientSize = new System.Drawing.Size(449, 139);
+            this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.textBoxError);
             this.Controls.Add(this.comboBoxModels);
             this.Controls.Add(this.labelPleaseWait);
@@ -122,5 +134,6 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ComboBox comboBoxModels;
         private System.Windows.Forms.TextBox textBoxError;
+        private System.Windows.Forms.Label labelFileName;
     }
 }
