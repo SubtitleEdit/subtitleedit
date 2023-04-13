@@ -328,6 +328,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Audio to text",
                 Info = "Generate text from audio via Vosk/Kaldi speech recognition",
                 WhisperInfo = "Generate text from audio via Whisper speech recognition",
+                Engine = "Engine",
                 VoskWebsite = "Vosk website",
                 WhisperWebsite = "Whisper website",
                 WhisperNotFound = "Whisper not found.\r\n\r\nRead more info (web)?",
