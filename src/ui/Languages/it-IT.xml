@@ -179,6 +179,7 @@ Nota: Controlla lo spazio libero nel disco.</WaveFileMalformed>
     <Title>Audio/video a testo</Title>
     <Info>Genera testo dall'audio tramite il riconoscimento vocale Vosk/Kaldi</Info>
     <WhisperInfo>Genera testo dall'audio tramite il riconoscimento vocale Whisper</WhisperInfo>
+    <Engine>Motore</Engine>
     <VoskWebsite>Sito web Vosk</VoskWebsite>
     <WhisperWebsite>Sito web Whisper</WhisperWebsite>
     <WhisperNotFound>Whisper non trovato.
@@ -725,7 +726,8 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Trova</Title>
-    <Find>Trova</Find>
+    <FindNext>&amp;Trova sucecssivo</FindNext>
+    <FindPrevious>Trova &amp;precedente</FindPrevious>
     <Normal>&amp;Normale</Normal>
     <CaseSensitive>&amp;Sensibile a maiuscole/minuscole</CaseSensitive>
     <RegularExpression>Espressione regolare</RegularExpression>
@@ -2510,13 +2512,14 @@ stesso file di sottotitolo (collaborazione)</Information>
     <GoForward500Milliseconds>500 ms avanti</GoForward500Milliseconds>
     <GoBack1Second>1 secondo indietro</GoBack1Second>
     <GoForward1Second>1 secondo avanti</GoForward1Second>
+    <GoBack3Seconds>3 secondi indietro</GoBack3Seconds>
+    <GoForward3Seconds>3 secondi avanti</GoForward3Seconds>
     <GoBack5Seconds>5 secondi indietro</GoBack5Seconds>
     <GoForward5Seconds>5 secondi in avanti</GoForward5Seconds>
     <GoBackXSSeconds>&lt;= Posizione offset di linea di 100 ms indietro</GoBackXSSeconds>
     <GoForwardXSSeconds>Offset di linea in avanti di 100 ms =&gt;</GoForwardXSSeconds>
     <GoBackXLSeconds>Molto tempo selezionato a sinistra</GoBackXLSeconds>
     <GoForwardXLSeconds>Molto tempo scelto avanti</GoForwardXLSeconds>
-    <GoBack3Seconds>Tre secondi indietro</GoBack3Seconds>
     <GoToStartCurrent>Imposta posizione video ad inizio sottotitolo attuale</GoToStartCurrent>
     <ToggleStartEndCurrent>Commuta posizione video tra inizio/fine sottotitolo attuale</ToggleStartEndCurrent>
     <PlaySelectedLines>Riproduci righe selezionate</PlaySelectedLines>
