@@ -66,6 +66,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 listViewInputFiles.Items.Add(audioClip.AudioFileName);
             }
+
+            WhisperAudioToText.InitializeWhisperEngines(comboBoxWhisperEngine);
         }
 
         private void Init()

@@ -125,26 +125,35 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             comboBoxCharsPerSub.Text = maxChars.ToString(CultureInfo.InvariantCulture);
 
-            comboBoxWhisperEngine.Items.Clear();
+            InitializeWhisperEngines(comboBoxWhisperEngine);
+        }
+
+        public static void InitializeWhisperEngines(ComboBox cb)
+        {
+            cb.Items.Clear();
             var engines = new List<string>()
             {
                 WhisperChoice.OpenAI,
                 WhisperChoice.Cpp,
                 WhisperChoice.ConstMe,
-                WhisperChoice.CTranslate2,
             };
+            if (Configuration.IsRunningOnWindows)
+            {
+                engines.Add(WhisperChoice.CTranslate2);
+            }
+
             foreach (var engine in engines)
             {
-                comboBoxWhisperEngine.Items.Add(engine);
+                cb.Items.Add(engine);
                 if (engine == Configuration.Settings.Tools.WhisperChoice)
                 {
-                    comboBoxWhisperEngine.SelectedIndex = comboBoxWhisperEngine.Items.Count - 1;
+                    cb.SelectedIndex = cb.Items.Count - 1;
                 }
             }
 
-            if (comboBoxWhisperEngine.SelectedIndex < 0)
+            if (cb.SelectedIndex < 0)
             {
-                comboBoxWhisperEngine.SelectedIndex = 0;
+                cb.SelectedIndex = 0;
             }
         }
 
