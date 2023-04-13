@@ -79,8 +79,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
 
             ContextMenuStrip = contextMenuStripWhisperAdvanced;
-
-            buttonDownload.Enabled = Configuration.Settings.Tools.WhisperChoice != WhisperChoice.CTranslate2;
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
