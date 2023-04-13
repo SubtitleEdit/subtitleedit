@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var whisperModel = WhisperHelper.GetWhisperModel();
             var modelsFolder = whisperModel.ModelFolder;
             var selectName = string.IsNullOrEmpty(lastDownloadedModel) ? Configuration.Settings.Tools.WhisperModel : lastDownloadedModel;
-            
+
             if (!Directory.Exists(modelsFolder))
             {
                 whisperModel.CreateModelFolder();
@@ -616,7 +616,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var whisperFolder = WhisperHelper.GetWhisperFolder() ?? string.Empty;
+            if (!File.Exists(srtFileName))
+            {
+                srtFileName = Path.Combine(whisperFolder, Path.GetFileNameWithoutExtension(waveFileName)) + ".srt";
+            }
+
             var vttFileName = Path.Combine(whisperFolder, Path.GetFileName(waveFileName) + ".vtt");
+            if (!File.Exists(vttFileName))
+            {
+                vttFileName = Path.Combine(whisperFolder, Path.GetFileNameWithoutExtension(waveFileName)) + ".vtt";
+            }
+
             if (!File.Exists(srtFileName) && !File.Exists(vttFileName))
             {
                 resultTexts = new List<ResultText>();
