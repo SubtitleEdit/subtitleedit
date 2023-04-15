@@ -397,6 +397,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <OnlyChangeAllUppercaseLines>Modifica solo tutte le righe maiuscole</OnlyChangeAllUppercaseLines>
     <AllUppercase>TUTTO MAIUSCOLO</AllUppercase>
     <AllLowercase>Tutto minuscolo</AllLowercase>
+    <ProperCase>Maiuscolo/minuscolo corretto</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Modifica maiuscole/minuscole nomi</Title>
