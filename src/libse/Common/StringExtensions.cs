@@ -573,16 +573,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     var s = input.Substring(index);
                     if (
-                        s.StartsWith("<i>") ||
-                        s.StartsWith("</i>") ||
-                        s.StartsWith("<b>") ||
-                        s.StartsWith("</b>") ||
-                        s.StartsWith("<u>") ||
-                        s.StartsWith("</u>") ||
-                        s.StartsWith("<box>") ||
-                        s.StartsWith("</box>") ||
-                        s.StartsWith("<font ") ||
-                        s.StartsWith("</font>"))
+                        s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         tagOn = true;
                         tagIndex = sb.Length;
@@ -591,7 +591,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (!tagOn && ch == '{')
                 {
                     var s = input.Substring(index);
-                    if (s.StartsWith("{\\"))
+                    if (s.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         tagOn = true;
                         tagIndex = index;
