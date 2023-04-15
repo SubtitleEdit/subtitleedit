@@ -353,5 +353,30 @@ namespace Test.Core
             var res = input.ToggleCasing(new AdvancedSubStationAlpha());
             Assert.AreEqual("how are\\nyou?", res);
         }
+
+
+        [TestMethod]
+        public void ToProperCaseFromUpper()
+        {
+            var input = "HOW ARE YOU?";
+            var res = input.ToProperCase(null);
+            Assert.AreEqual("How Are You?", res);
+        }
+
+        [TestMethod]
+        public void ToProperCaseFromLower()
+        {
+            var input = "how are you?";
+            var res = input.ToProperCase(null);
+            Assert.AreEqual("How Are You?", res);
+        }
+
+        [TestMethod]
+        public void ToProperCaseItalic()
+        {
+            var input = "<i>HOW ARE YOU?</i>";
+            var res = input.ToProperCase(null);
+            Assert.AreEqual("<i>How Are You?</i>", res);
+        }
     }
 }
