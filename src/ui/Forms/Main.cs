@@ -10880,16 +10880,6 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectionLength = length;
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to uppercase
-            {
-                int start = textBoxListViewText.SelectionStart;
-                int length = textBoxListViewText.SelectionLength;
-                var text = textBoxListViewText.SelectedText.ToggleCasing();
-                textBoxListViewText.SelectedText = text;
-                textBoxListViewText.SelectionStart = start;
-                textBoxListViewText.SelectionLength = length;
-                e.SuppressKeyPress = true;
-            }
             else if (_shortcuts.MainTextBoxToggleAutoDuration == e.KeyData) // toggle auto-duration
             {
                 if (timerAutoDuration.Enabled)
@@ -16197,6 +16187,27 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData) 
+            {
+                e.SuppressKeyPress = true;
+                if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
+                {
+                    var tb = GetFocusedTextBox();
+                    if (tb.SelectionLength > 0)
+                    {
+                        var start = tb.SelectionStart;
+                        var length = tb.SelectionLength;
+                        var text = tb.SelectedText.ToggleCasing();
+                        tb.SelectedText = text;
+                        tb.SelectionStart = start;
+                        tb.SelectionLength = length;
+                    }
+                }
+                else
+                {
+                    ToggleCasingListView();
+                }
+            }
             else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && InListView)
             {
                 toolStripMenuItemRtlUnicodeControlChars_Click(null, null);
@@ -18056,6 +18067,50 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == (Keys.Alt | Keys.Shift | Keys.Control) && e.KeyCode == Keys.F12)
             {
                 new WordSplitDictionaryGenerator().ShowDialog(this);
+            }
+        }
+
+        private void ToggleCasingListView()
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeX, LanguageSettings.Current.Settings.MainTextBoxSelectionToggleCasing));
+
+                var indices = new List<int>();
+                string first = null;
+
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    indices.Add(item.Index);
+                }
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indices)
+                {
+                    if (first == null)
+                    {
+                        first = _subtitle.Paragraphs[i].Text;
+                    }
+
+                    _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.ToggleCasing(first);
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+
+                    if (IsOriginalEditable)
+                    {
+                        var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
+                        if (original != null)
+                        {
+                            original.Text = original.Text.ToggleCasing(first);
+                            SubtitleListview1.SetOriginalText(i, original.Text);
+                        }
+                    }
+                }
+                SubtitleListview1.EndUpdate();
+
+                UpdateSourceView();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             }
         }
 
@@ -28300,8 +28355,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewTextOriginal.SelectionLength > 0)
                 {
-                    int start = textBoxListViewTextOriginal.SelectionStart;
-                    int length = textBoxListViewTextOriginal.SelectionLength;
+                    var start = textBoxListViewTextOriginal.SelectionStart;
+                    var length = textBoxListViewTextOriginal.SelectionLength;
                     textBoxListViewTextOriginal.SelectedText = textBoxListViewTextOriginal.SelectedText.ToUpperInvariant();
                     textBoxListViewTextOriginal.SelectionStart = start;
                     textBoxListViewTextOriginal.SelectionLength = length;
@@ -28310,8 +28365,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData && textBoxListViewTextOriginal.SelectionLength > 0) // selection to uppercase
             {
-                int start = textBoxListViewTextOriginal.SelectionStart;
-                int length = textBoxListViewTextOriginal.SelectionLength;
+                var start = textBoxListViewTextOriginal.SelectionStart;
+                var length = textBoxListViewTextOriginal.SelectionLength;
                 var text = textBoxListViewTextOriginal.SelectedText.ToggleCasing();
                 textBoxListViewTextOriginal.SelectedText = text;
                 textBoxListViewTextOriginal.SelectionStart = start;
