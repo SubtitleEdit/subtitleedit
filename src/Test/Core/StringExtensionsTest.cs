@@ -328,5 +328,21 @@ namespace Test.Core
             var res = input.ToggleCasing();
             Assert.AreEqual("how are you", res);
         }
+
+        [TestMethod]
+        public void ToggleCasingWithFont()
+        {
+            var input = "<font color=\"Red\">HOW ARE YOU</font>";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("<font color=\"Red\">how are you</font>", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasingAssa()
+        {
+            var input = "{\\i1}This is an example…{\\i0}";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("{\\i1}THIS IS AN EXAMPLE…{\\i0}", res);
+        }
     }
 }

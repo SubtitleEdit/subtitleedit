@@ -546,7 +546,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (var index = tags.Count - 1; index >= 0; index--)
             {
                 var keyValuePair = tags[index];
-                s = s.Insert(keyValuePair.Key, keyValuePair.Value);
+                if (keyValuePair.Key >= s.Length)
+                {
+                    s += keyValuePair.Value;
+                }
+                else
+                {
+                    s = s.Insert(keyValuePair.Key, keyValuePair.Value);
+                }
             }
 
             return s;
