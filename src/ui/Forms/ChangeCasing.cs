@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
                 FixMakeLowercase = radioButtonLowercase.Checked,
                 FixMakeProperCase = radioButtonProperCase.Checked,
                 FixProperCaseOnlyAllUppercase = checkBoxProperCaseOnlyUpper.Checked,
+                Format = subtitle.OriginalFormat,
             };
             fixCasing.Fix(subtitle);
             LinesChanged = fixCasing.NoOfLinesChanged;
