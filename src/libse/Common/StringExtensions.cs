@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -495,7 +496,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
-        public static string ToProperCase(this string input)
+        public static string ToProperCase(this string input, SubtitleFormat format)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
@@ -503,12 +504,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var sb = new StringBuilder();
-            var tags = RemoveAndSaveTags(input, sb);
+            var tags = RemoveAndSaveTags(input, sb, format);
             var properCaseText = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(sb.ToString());
             return RestoreSavedTags(properCaseText, tags);
         }
 
-        public static string ToggleCasing(this string input, string overrideFromStringInit = null)
+        public static string ToggleCasing(this string input, SubtitleFormat format, string overrideFromStringInit = null)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
@@ -516,7 +517,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var sb = new StringBuilder();
-            var tags = RemoveAndSaveTags(input, sb);
+            var tags = RemoveAndSaveTags(input, sb, format);
             var text = sb.ToString();
 
             var containsLowercase = false;
@@ -572,15 +573,35 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
-        private static List<KeyValuePair<int, string>> RemoveAndSaveTags(string input, StringBuilder sb)
+        private static List<KeyValuePair<int, string>> RemoveAndSaveTags(string input, StringBuilder sb, SubtitleFormat format)
         {
             var sbTag = new StringBuilder();
             var tags = new List<KeyValuePair<int, string>>();
             var tagOn = false;
             var tagIndex = 0;
+            var skipNext = false;
+            var isAssa = format != null
+                         && (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha));
             for (var index = 0; index < input.Length; index++)
             {
+                if (skipNext)
+                {
+                    skipNext = false;
+                    continue;
+                }
+
                 var ch = input[index];
+
+                if (!tagOn && isAssa && ch == '\\' 
+                           && (input.Substring(index).StartsWith("\\N") 
+                               || input.Substring(index).StartsWith("\\n")
+                               || input.Substring(index).StartsWith("\\h")))
+                {
+                    tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
+                    skipNext = true;
+                    continue;
+                }
+
                 if (tagOn && (ch == '>' || ch == '}'))
                 {
                     sbTag.Append(ch);
