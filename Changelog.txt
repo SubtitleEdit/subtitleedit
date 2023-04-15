@@ -7,6 +7,8 @@
    * Add more mpv preview settings in UI
    * Add cmd convert param "/teletextonlypage:<number>" - thx dystopia2017
    * Add export of TTML SMPTE-TT with inline Base64 encoded PNG images
+   * Add Whisper CTranslate2 - thx jordimas
+   * Add shortcut for 3 seconds forward - thx Cyberyoda1411
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
@@ -15,6 +17,8 @@
    * Update Chinese translation - thx nkh0472
    * Update Russian translation - thx elfriob
    * Update Portuguese translation - thx hugok79
+   * Update Italian language - thx bovirus
+   * Update Catalan translation - thx  jordimas
    * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
    * List all EBU language codes - thx TerrorizedGakon
 * FIXED:
@@ -25,6 +29,7 @@
    * Fix reading "DCinema Interop" with only bold - thx Chris
    * Fix crash in import of SSA styles - thx librafrog
    * Fix possible crash reading .ts files - thx hepalin
+   * Fix crash in split lines - thx Papai
 
 
 3.6.12 (26th March 2023)
