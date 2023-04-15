@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using System;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Test.Core
 {
@@ -277,7 +278,7 @@ namespace Test.Core
         public void ToggleCasing1()
         {
             var input = "how are you";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("How Are You", res);
         }
 
@@ -285,7 +286,7 @@ namespace Test.Core
         public void ToggleCasing1WithItalic()
         {
             var input = "how <i>are</i> you";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("How <i>Are</i> You", res);
         }
 
@@ -293,7 +294,7 @@ namespace Test.Core
         public void ToggleCasing1WithItalicStart()
         {
             var input = "<i>how</i> are you";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("<i>How</i> Are You", res);
         }
 
@@ -301,7 +302,7 @@ namespace Test.Core
         public void ToggleCasing1WithItalicEnd()
         {
             var input = "how are <i>you</i>";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("How Are <i>You</i>", res);
         }
 
@@ -309,7 +310,7 @@ namespace Test.Core
         public void ToggleCasing1WithItalicEndAndBold()
         {
             var input = "how are <i><b>you</b></i>";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("How Are <i><b>You</b></i>", res);
         }
 
@@ -317,7 +318,7 @@ namespace Test.Core
         public void ToggleCasing2()
         {
             var input = "How Are You";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("HOW ARE YOU", res);
         }
 
@@ -325,7 +326,7 @@ namespace Test.Core
         public void ToggleCasing3()
         {
             var input = "HOW ARE YOU";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("how are you", res);
         }
 
@@ -333,7 +334,7 @@ namespace Test.Core
         public void ToggleCasingWithFont()
         {
             var input = "<font color=\"Red\">HOW ARE YOU</font>";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new SubRip());
             Assert.AreEqual("<font color=\"Red\">how are you</font>", res);
         }
 
@@ -341,7 +342,7 @@ namespace Test.Core
         public void ToggleCasingAssa()
         {
             var input = "{\\i1}This is an example…{\\i0}";
-            var res = input.ToggleCasing();
+            var res = input.ToggleCasing(new AdvancedSubStationAlpha());
             Assert.AreEqual("{\\i1}THIS IS AN EXAMPLE…{\\i0}", res);
         }
     }

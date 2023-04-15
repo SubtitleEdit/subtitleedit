@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -14,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool FixMakeLowercase = false;
         public bool FixMakeProperCase = false;
         public bool FixMakeUppercase = false;
+        public SubtitleFormat Format;
 
         private readonly string _language;
         private readonly List<string> _names;
@@ -274,7 +276,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             else if (FixMakeProperCase)
             {
-                text = text.ToProperCase();
+                text = text.ToProperCase(Format);
             }
 
             if (original != text)

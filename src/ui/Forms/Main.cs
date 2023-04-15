@@ -16197,7 +16197,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var start = tb.SelectionStart;
                         var length = tb.SelectionLength;
-                        var text = tb.SelectedText.ToggleCasing();
+                        var text = tb.SelectedText.ToggleCasing(GetCurrentSubtitleFormat());
                         tb.SelectedText = text;
                         tb.SelectionStart = start;
                         tb.SelectionLength = length;
@@ -18085,6 +18085,8 @@ namespace Nikse.SubtitleEdit.Forms
                     indices.Add(item.Index);
                 }
 
+
+                var format = GetCurrentSubtitleFormat();
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indices)
                 {
@@ -18093,7 +18095,7 @@ namespace Nikse.SubtitleEdit.Forms
                         first = _subtitle.Paragraphs[i].Text;
                     }
 
-                    _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.ToggleCasing(first);
+                    _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.ToggleCasing(format, first);
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
 
                     if (IsOriginalEditable)
@@ -18101,7 +18103,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleOriginal.Paragraphs);
                         if (original != null)
                         {
-                            original.Text = original.Text.ToggleCasing(first);
+                            original.Text = original.Text.ToggleCasing(format, first);
                             SubtitleListview1.SetOriginalText(i, original.Text);
                         }
                     }
@@ -28362,16 +28364,6 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextOriginal.SelectionLength = length;
                     e.SuppressKeyPress = true;
                 }
-            }
-            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData && textBoxListViewTextOriginal.SelectionLength > 0) // selection to uppercase
-            {
-                var start = textBoxListViewTextOriginal.SelectionStart;
-                var length = textBoxListViewTextOriginal.SelectionLength;
-                var text = textBoxListViewTextOriginal.SelectedText.ToggleCasing();
-                textBoxListViewTextOriginal.SelectedText = text;
-                textBoxListViewTextOriginal.SelectionStart = start;
-                textBoxListViewTextOriginal.SelectionLength = length;
-                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainTextBoxSplitAtCursor == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {

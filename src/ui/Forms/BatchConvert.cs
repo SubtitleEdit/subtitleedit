@@ -2011,7 +2011,8 @@ namespace Nikse.SubtitleEdit.Forms
                         FixMakeUppercase = radioButtonUppercase.Checked,
                         FixMakeLowercase = radioButtonLowercase.Checked,
                         FixMakeProperCase = radioButtonProperCase.Checked,
-                        FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked
+                        FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked,
+                        Format = sub.OriginalFormat,
                     }.Fix(sub);
                 }
 
