@@ -495,7 +495,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
-        public static string ToggleCasing(this string input)
+        public static string ToggleCasing(this string input, string overrideFromStringInit = null)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
@@ -508,9 +508,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var containsLowercase = false;
             var containsUppercase = false;
-            for (var i = 0; i < text.Length; i++)
+            var stringInit = overrideFromStringInit != null ? HtmlUtil.RemoveHtmlTags(overrideFromStringInit, true) : text;
+            for (var i = 0; i < stringInit.Length; i++)
             {
-                var ch = text[i];
+                var ch = stringInit[i];
                 if (char.IsNumber(ch))
                 {
                     continue;
