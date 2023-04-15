@@ -10,12 +10,13 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class FixCasing
     {
-        public bool FixNormal = true;
-        public bool FixNormalOnlyAllUppercase = false;
-        public bool FixMakeLowercase = false;
-        public bool FixMakeProperCase = false;
-        public bool FixMakeUppercase = false;
-        public SubtitleFormat Format;
+        public bool FixNormal { get; set; }
+        public bool FixNormalOnlyAllUppercase { get; set; }
+        public bool FixMakeLowercase { get; set; }
+        public bool FixMakeProperCase { get; set; }
+        public bool FixMakeUppercase { get; set; }
+        public bool FixProperCaseOnlyAllUppercase { get; set; }
+        public SubtitleFormat Format { get; set; }
 
         private readonly string _language;
         private readonly List<string> _names;
@@ -276,7 +277,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             else if (FixMakeProperCase)
             {
-                text = text.ToProperCase(Format);
+                if (FixProperCaseOnlyAllUppercase)
+                {
+                    var stripped = HtmlUtil.RemoveHtmlTags(text, true);
+                    if (stripped == stripped.ToUpperInvariant())
+                    {
+                        text = text.ToProperCase(Format);
+                    }
+                }
+                else
+                {
+                    text = text.ToProperCase(Format);
+                }
             }
 
             if (original != text)
@@ -286,6 +298,5 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return text;
         }
-
     }
 }

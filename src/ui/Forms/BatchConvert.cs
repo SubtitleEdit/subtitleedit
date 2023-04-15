@@ -281,6 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonNormal.Text = LanguageSettings.Current.ChangeCasing.NormalCasing;
             checkBoxFixNames.Text = LanguageSettings.Current.ChangeCasing.FixNamesCasing;
             checkBoxOnlyAllUpper.Text = LanguageSettings.Current.ChangeCasing.OnlyChangeAllUppercaseLines;
+            checkBoxProperCaseOnlyUpper.Text = LanguageSettings.Current.ChangeCasing.OnlyChangeAllUppercaseLines;
             radioButtonFixOnlyNames.Text = LanguageSettings.Current.ChangeCasing.FixOnlyNamesCasing;
             radioButtonUppercase.Text = LanguageSettings.Current.ChangeCasing.AllUppercase;
             radioButtonLowercase.Text = LanguageSettings.Current.ChangeCasing.AllLowercase;
@@ -2008,10 +2009,11 @@ namespace Nikse.SubtitleEdit.Forms
                     new FixCasing(LanguageAutoDetect.AutoDetectGoogleLanguage(sub))
                     {
                         FixNormal = radioButtonNormal.Checked,
+                        FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked,
                         FixMakeUppercase = radioButtonUppercase.Checked,
                         FixMakeLowercase = radioButtonLowercase.Checked,
                         FixMakeProperCase = radioButtonProperCase.Checked,
-                        FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked,
+                        FixProperCaseOnlyAllUppercase = checkBoxProperCaseOnlyUpper.Checked,
                         Format = sub.OriginalFormat,
                     }.Fix(sub);
                 }

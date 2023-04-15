@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxChangeCasing = new System.Windows.Forms.GroupBox();
+            this.radioButtonProperCase = new System.Windows.Forms.RadioButton();
             this.checkBoxOnlyAllUpper = new System.Windows.Forms.CheckBox();
             this.checkBoxFixNames = new System.Windows.Forms.CheckBox();
             this.radioButtonFixOnlyNames = new System.Windows.Forms.RadioButton();
@@ -171,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
-            this.radioButtonProperCase = new System.Windows.Forms.RadioButton();
+            this.checkBoxProperCaseOnlyUpper = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeCasing.SuspendLayout();
@@ -314,6 +315,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxChangeCasing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeCasing.Controls.Add(this.checkBoxProperCaseOnlyUpper);
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonProperCase);
             this.groupBoxChangeCasing.Controls.Add(this.checkBoxOnlyAllUpper);
             this.groupBoxChangeCasing.Controls.Add(this.checkBoxFixNames);
@@ -323,10 +325,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
             this.groupBoxChangeCasing.Location = new System.Drawing.Point(308, 16);
             this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
-            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 182);
+            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 212);
             this.groupBoxChangeCasing.TabIndex = 308;
             this.groupBoxChangeCasing.TabStop = false;
             this.groupBoxChangeCasing.Text = "Change casing to";
+            // 
+            // radioButtonProperCase
+            // 
+            this.radioButtonProperCase.AutoSize = true;
+            this.radioButtonProperCase.Location = new System.Drawing.Point(12, 154);
+            this.radioButtonProperCase.Name = "radioButtonProperCase";
+            this.radioButtonProperCase.Size = new System.Drawing.Size(79, 17);
+            this.radioButtonProperCase.TabIndex = 13;
+            this.radioButtonProperCase.Text = "Propercase";
+            this.radioButtonProperCase.UseVisualStyleBackColor = true;
             // 
             // checkBoxOnlyAllUpper
             // 
@@ -1788,15 +1800,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
             // 
-            // radioButtonProperCase
+            // checkBoxProperCaseOnlyUpper
             // 
-            this.radioButtonProperCase.AutoSize = true;
-            this.radioButtonProperCase.Location = new System.Drawing.Point(12, 154);
-            this.radioButtonProperCase.Name = "radioButtonProperCase";
-            this.radioButtonProperCase.Size = new System.Drawing.Size(79, 17);
-            this.radioButtonProperCase.TabIndex = 13;
-            this.radioButtonProperCase.Text = "Propercase";
-            this.radioButtonProperCase.UseVisualStyleBackColor = true;
+            this.checkBoxProperCaseOnlyUpper.AutoSize = true;
+            this.checkBoxProperCaseOnlyUpper.Location = new System.Drawing.Point(29, 176);
+            this.checkBoxProperCaseOnlyUpper.Name = "checkBoxProperCaseOnlyUpper";
+            this.checkBoxProperCaseOnlyUpper.Size = new System.Drawing.Size(182, 17);
+            this.checkBoxProperCaseOnlyUpper.TabIndex = 16;
+            this.checkBoxProperCaseOnlyUpper.Text = "Only change all upper case lines.";
+            this.checkBoxProperCaseOnlyUpper.UseVisualStyleBackColor = true;
             // 
             // BatchConvert
             // 
@@ -2020,5 +2032,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxOnlyAllUpper;
         private System.Windows.Forms.CheckBox checkBoxFixNames;
         private System.Windows.Forms.RadioButton radioButtonProperCase;
+        private System.Windows.Forms.CheckBox checkBoxProperCaseOnlyUpper;
     }
 }

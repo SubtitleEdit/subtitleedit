@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixNames.Text = language.FixNamesCasing;
             radioButtonFixOnlyNames.Text = language.FixOnlyNamesCasing;
             checkBoxOnlyAllUpper.Text = language.OnlyChangeAllUppercaseLines;
+            checkBoxProperCaseOnlyUpper.Text = LanguageSettings.Current.ChangeCasing.OnlyChangeAllUppercaseLines;
             radioButtonUppercase.Text = language.AllUppercase;
             radioButtonLowercase.Text = language.AllLowercase;
             radioButtonProperCase.Text = language.ProperCase;
@@ -66,10 +67,11 @@ namespace Nikse.SubtitleEdit.Forms
             var fixCasing = new FixCasing(language)
             {
                 FixNormal = radioButtonNormal.Checked,
+                FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked,
                 FixMakeUppercase = radioButtonUppercase.Checked,
                 FixMakeLowercase = radioButtonLowercase.Checked,
                 FixMakeProperCase = radioButtonProperCase.Checked,
-                FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked
+                FixProperCaseOnlyAllUppercase = checkBoxProperCaseOnlyUpper.Checked,
             };
             fixCasing.Fix(subtitle);
             LinesChanged = fixCasing.NoOfLinesChanged;
@@ -115,6 +117,5 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixNames.Enabled = isNormalCasing;
             checkBoxOnlyAllUpper.Enabled = isNormalCasing;
         }
-
     }
 }
