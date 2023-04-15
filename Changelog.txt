@@ -2,13 +2,14 @@
 
 3.6.13 (xth May 2023) BETA
 * NEW:
-   * Add shortcut for text "color picker" - thx rRobis
    * Add new subtitle format "nVivo transcript" - thx Ashin
+   * Add Whisper CTranslate2 - thx jordimas
+   * Add "Proper Case" option in "Change casing" - thx lolipopsz
+   * Add shortcut for text "color picker" - thx rRobis
+   * Add shortcut for 3 seconds forward - thx Cyberyoda1411
    * Add more mpv preview settings in UI
    * Add cmd convert param "/teletextonlypage:<number>" - thx dystopia2017
    * Add export of TTML SMPTE-TT with inline Base64 encoded PNG images
-   * Add Whisper CTranslate2 - thx jordimas
-   * Add shortcut for 3 seconds forward - thx Cyberyoda1411
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
