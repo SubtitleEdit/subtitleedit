@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             var sb = new StringBuilder();
             var tags = RemoveAndSaveTags(input, sb, format);
-            var properCaseText = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(sb.ToString());
+            var properCaseText = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(sb.ToString().ToLowerInvariant());
             return RestoreSavedTags(properCaseText, tags);
         }
 
