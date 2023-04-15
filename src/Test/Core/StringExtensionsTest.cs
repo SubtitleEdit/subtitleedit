@@ -345,5 +345,13 @@ namespace Test.Core
             var res = input.ToggleCasing(new AdvancedSubStationAlpha());
             Assert.AreEqual("{\\i1}THIS IS AN EXAMPLE…{\\i0}", res);
         }
+
+        [TestMethod]
+        public void ToggleCasingAssaSoftLineBreak()
+        {
+            var input = "HOW ARE\\nYOU?";
+            var res = input.ToggleCasing(new AdvancedSubStationAlpha());
+            Assert.AreEqual("how are\\nyou?", res);
+        }
     }
 }
