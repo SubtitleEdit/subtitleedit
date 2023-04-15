@@ -495,6 +495,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
+        public static string ToProperCase(this string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return input;
+            }
+
+            var sb = new StringBuilder();
+            var tags = RemoveAndSaveTags(input, sb);
+            var properCaseText = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(sb.ToString());
+            return RestoreSavedTags(properCaseText, tags);
+        }
+
         public static string ToggleCasing(this string input, string overrideFromStringInit = null)
         {
             if (string.IsNullOrWhiteSpace(input))

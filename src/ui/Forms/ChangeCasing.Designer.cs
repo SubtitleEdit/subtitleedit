@@ -37,6 +37,7 @@
             this.radioButtonLowercase = new System.Windows.Forms.RadioButton();
             this.radioButtonUppercase = new System.Windows.Forms.RadioButton();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
+            this.radioButtonProperCase = new System.Windows.Forms.RadioButton();
             this.groupBoxChangeCasing.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +46,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(417, 195);
+            this.buttonCancel.Location = new System.Drawing.Point(417, 224);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 14;
@@ -57,7 +58,7 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(336, 195);
+            this.buttonOK.Location = new System.Drawing.Point(336, 224);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 12;
@@ -70,6 +71,7 @@
             this.groupBoxChangeCasing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonProperCase);
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonFixOnlyNames);
             this.groupBoxChangeCasing.Controls.Add(this.checkBoxFixNames);
             this.groupBoxChangeCasing.Controls.Add(this.checkBoxOnlyAllUpper);
@@ -78,7 +80,7 @@
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
             this.groupBoxChangeCasing.Location = new System.Drawing.Point(12, 12);
             this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
-            this.groupBoxChangeCasing.Size = new System.Drawing.Size(480, 172);
+            this.groupBoxChangeCasing.Size = new System.Drawing.Size(480, 201);
             this.groupBoxChangeCasing.TabIndex = 12;
             this.groupBoxChangeCasing.TabStop = false;
             this.groupBoxChangeCasing.Text = "Change casing to";
@@ -151,11 +153,21 @@
             this.radioButtonNormal.UseVisualStyleBackColor = true;
             this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
+            // radioButtonProperCase
+            // 
+            this.radioButtonProperCase.AutoSize = true;
+            this.radioButtonProperCase.Location = new System.Drawing.Point(11, 165);
+            this.radioButtonProperCase.Name = "radioButtonProperCase";
+            this.radioButtonProperCase.Size = new System.Drawing.Size(79, 17);
+            this.radioButtonProperCase.TabIndex = 14;
+            this.radioButtonProperCase.Text = "Propercase";
+            this.radioButtonProperCase.UseVisualStyleBackColor = true;
+            // 
             // ChangeCasing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 228);
+            this.ClientSize = new System.Drawing.Size(504, 257);
             this.Controls.Add(this.groupBoxChangeCasing);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -186,5 +198,6 @@
         private System.Windows.Forms.CheckBox checkBoxOnlyAllUpper;
         private System.Windows.Forms.CheckBox checkBoxFixNames;
         private System.Windows.Forms.RadioButton radioButtonFixOnlyNames;
+        private System.Windows.Forms.RadioButton radioButtonProperCase;
     }
 }

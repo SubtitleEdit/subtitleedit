@@ -425,6 +425,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string OnlyChangeAllUppercaseLines { get; set; }
             public string AllUppercase { get; set; }
             public string AllLowercase { get; set; }
+            public string ProperCase { get; set; }
         }
 
         public class ChangeCasingNames

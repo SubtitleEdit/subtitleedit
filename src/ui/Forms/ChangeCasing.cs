@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOnlyAllUpper.Text = language.OnlyChangeAllUppercaseLines;
             radioButtonUppercase.Text = language.AllUppercase;
             radioButtonLowercase.Text = language.AllLowercase;
+            radioButtonProperCase.Text = language.ProperCase;
             buttonOK.Text = LanguageSettings.Current.General.Ok;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
             FixLargeFonts();
@@ -37,6 +38,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.Tools.ChangeCasingChoice == "Lowercase")
             {
                 radioButtonLowercase.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.ChangeCasingChoice == "ProperCase")
+            {
+                radioButtonProperCase.Checked = true;
             }
         }
 
@@ -63,6 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
                 FixNormal = radioButtonNormal.Checked,
                 FixMakeUppercase = radioButtonUppercase.Checked,
                 FixMakeLowercase = radioButtonLowercase.Checked,
+                FixMakeProperCase = radioButtonProperCase.Checked,
                 FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked
             };
             fixCasing.Fix(subtitle);
@@ -94,6 +100,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonLowercase.Checked)
             {
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
+            }
+            else if (radioButtonProperCase.Checked)
+            {
+                Configuration.Settings.Tools.ChangeCasingChoice = "ProperCase";
             }
 
             DialogResult = DialogResult.OK;

@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool FixNormal = true;
         public bool FixNormalOnlyAllUppercase = false;
         public bool FixMakeLowercase = false;
+        public bool FixMakeProperCase = false;
         public bool FixMakeUppercase = false;
 
         private readonly string _language;
@@ -271,6 +272,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 text = text.ToLower(subtitleCulture);
             }
+            else if (FixMakeProperCase)
+            {
+                text = text.ToProperCase();
+            }
+
             if (original != text)
             {
                 NoOfLinesChanged++;

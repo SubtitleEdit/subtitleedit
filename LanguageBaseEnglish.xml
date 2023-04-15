@@ -397,6 +397,7 @@ Read more info (web)?</WhisperNotFound>
     <OnlyChangeAllUppercaseLines>Only change all uppercase lines.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALL UPPERCASE</AllUppercase>
     <AllLowercase>all lowercase</AllLowercase>
+    <ProperCase>Proper Case</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Change casing - Names</Title>
