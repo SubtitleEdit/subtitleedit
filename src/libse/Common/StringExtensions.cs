@@ -235,22 +235,22 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return -1;
             }
 
-            char c0 = pattern[0];
+            var c0 = pattern[0];
             if (pattern.Length == 1)
             {
                 return source.IndexOf(c0);
             }
 
-            int limit = source.Length - pattern.Length + 1;
+            var limit = source.Length - pattern.Length + 1;
             if (limit < 1)
             {
                 return -1;
             }
 
-            char c1 = pattern[1];
+            var c1 = pattern[1];
 
             // Find the first occurrence of the first character
-            int first = source.IndexOf(c0, 0, limit);
+            var first = source.IndexOf(c0, 0, limit);
             while (first != -1)
             {
                 // Check if the following character is the same like
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 // Check the rest of "pattern" (starting with the 3rd character)
                 var found = true;
-                for (int j = 2; j < pattern.Length; j++)
+                for (var j = 2; j < pattern.Length; j++)
                 {
                     if (source[first + j] != pattern[j])
                     {
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return -1;
             }
 
-            for (int i = 0; i < words.Length; i++)
+            for (var i = 0; i < words.Length; i++)
             {
                 var idx = s.IndexOf(words[i], comparisonType);
                 if (idx >= 0)
@@ -311,10 +311,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             const char whiteSpace = ' ';
-            int k = -1;
-            for (int i = s.Length - 1; i >= 0; i--)
+            var k = -1;
+            for (var i = s.Length - 1; i >= 0; i--)
             {
-                char ch = s[i];
+                var ch = s[i];
                 if (k < 2)
                 {
                     if (ch == whiteSpace)
@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 else if (ch != whiteSpace)
                 {
                     // only keep white space if it doesn't succeed/precede CRLF
-                    int skipCount = (ch == '\n' || ch == '\r') || (k < s.Length && (s[k] == '\n' || s[k] == '\r')) ? 1 : 2;
+                    var skipCount = (ch == '\n' || ch == '\r') || (k < s.Length && (s[k] == '\n' || s[k] == '\r')) ? 1 : 2;
 
                     // extra space found
                     if (k - (i + skipCount) >= 1)
@@ -365,8 +365,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return false;
             }
 
-            int max = s.Length;
-            for (int index = 0; index < max; index++)
+            var max = s.Length;
+            for (var index = 0; index < max; index++)
             {
                 var ch = s[index];
                 if (char.IsNumber(ch))
@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             if (Environment.NewLine == "\r\n")
             {
-                int i = 0;
+                var i = 0;
                 while (i < s.Length)
                 {
                     var ch = s[i];
@@ -397,35 +397,34 @@ namespace Nikse.SubtitleEdit.Core.Common
                         {
                             return true;
                         }
-        
+
                         i++;
                     }
                     else if (ch == '\n')
                     {
                         return true;
                     }
-        
+
                     i++;
                 }
-        
+
                 return false;
             }
-            else if (Environment.NewLine == "\n")
+
+            if (Environment.NewLine == "\n")
             {
                 return s.IndexOf('\r') >= 0;
             }
-            else
-            {
-                s = s.Replace(Environment.NewLine, string.Empty);
-                return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
-            }
+
+            s = s.Replace(Environment.NewLine, string.Empty);
+            return s.IndexOf('\n') >= 0 || s.IndexOf('\r') >= 0;
         }
-        
+
         public static string RemoveControlCharacters(this string s)
         {
-            int max = s.Length;
+            var max = s.Length;
             var newStr = new char[max];
-            int newIdx = 0;
+            var newIdx = 0;
             for (int index = 0; index < max; index++)
             {
                 var ch = s[index];
@@ -445,8 +444,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return true;
             }
 
-            int max = s.Length;
-            for (int index = 0; index < max; index++)
+            var max = s.Length;
+            for (var index = 0; index < max; index++)
             {
                 var ch = s[index];
                 if (!char.IsControl(ch) && !char.IsWhiteSpace(ch) && !UnicodeControlChars.Contains(ch))
@@ -460,9 +459,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static string RemoveControlCharactersButWhiteSpace(this string s)
         {
-            int max = s.Length;
+            var max = s.Length;
             var newStr = new char[max];
-            int newIdx = 0;
+            var newIdx = 0;
             for (int index = 0; index < max; index++)
             {
                 var ch = s[index];
@@ -496,12 +495,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s;
         }
 
-        public static string ToggleCasing(this string text)
+        public static string ToggleCasing(this string input)
         {
-            if (string.IsNullOrWhiteSpace(text) || text.ToLower() == text.ToUpper())
+            if (string.IsNullOrWhiteSpace(input))
             {
-                return text;
+                return input;
             }
+
+            var sb = new StringBuilder();
+            var tags = RemoveAndSaveTags(input, sb);
+            var text = sb.ToString();
 
             var containsLowercase = false;
             var containsUppercase = false;
@@ -525,17 +528,89 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (containsUppercase && containsLowercase)
             {
-                return text.ToUpperInvariant();
+                return RestoreSavedTags(text.ToUpperInvariant(), tags);
             }
 
-            if (containsUppercase && !containsLowercase)
+            if (containsUppercase)
             {
-                return text.ToLowerInvariant();
+                return RestoreSavedTags(text.ToLowerInvariant(), tags);
             }
 
-            return System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text);
+            return RestoreSavedTags(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(text), tags);
         }
-        
+
+        private static string RestoreSavedTags(string input, List<KeyValuePair<int, string>> tags)
+        {
+            var s = input;
+            for (var index = tags.Count - 1; index >= 0; index--)
+            {
+                var keyValuePair = tags[index];
+                s = s.Insert(keyValuePair.Key, keyValuePair.Value);
+            }
+
+            return s;
+        }
+
+        private static List<KeyValuePair<int, string>> RemoveAndSaveTags(string input, StringBuilder sb)
+        {
+            var sbTag = new StringBuilder();
+            var tags = new List<KeyValuePair<int, string>>();
+            var tagOn = false;
+            var tagIndex = 0;
+            for (var index = 0; index < input.Length; index++)
+            {
+                var ch = input[index];
+                if (tagOn && (ch == '>' || ch == '}'))
+                {
+                    sbTag.Append(ch);
+                    tagOn = false;
+                    tags.Add(new KeyValuePair<int, string>(tagIndex, sbTag.ToString()));
+                    sbTag.Clear();
+                    continue;
+                }
+
+                if (!tagOn && ch == '<')
+                {
+                    var s = input.Substring(index);
+                    if (
+                        s.StartsWith("<i>") ||
+                        s.StartsWith("</i>") ||
+                        s.StartsWith("<b>") ||
+                        s.StartsWith("</b>") ||
+                        s.StartsWith("<u>") ||
+                        s.StartsWith("</u>") ||
+                        s.StartsWith("<box>") ||
+                        s.StartsWith("</box>") ||
+                        s.StartsWith("<font ") ||
+                        s.StartsWith("</font>"))
+                    {
+                        tagOn = true;
+                        tagIndex = sb.Length;
+                    }
+                }
+                else if (!tagOn && ch == '{')
+                {
+                    var s = input.Substring(index);
+                    if (s.StartsWith("{\\"))
+                    {
+                        tagOn = true;
+                        tagIndex = index;
+                    }
+                }
+
+                if (tagOn)
+                {
+                    sbTag.Append(ch);
+                }
+                else
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return tags;
+        }
+
         public static string ToRtf(this string value)
         {
             return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + value.ToRtfPart() + @"\par" + Environment.NewLine + "}";
@@ -659,7 +734,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                    last == '-' && s.Length > 3 && s.EndsWith("--", StringComparison.Ordinal) && char.IsLetter(s[s.Length - 3]) ||
                    last == '—' && s.Length > 2 && char.IsLetter(s[s.Length - 2]);
         }
-        
+
         public static string NormalizeUnicode(this string input, Encoding encoding)
         {
             const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)

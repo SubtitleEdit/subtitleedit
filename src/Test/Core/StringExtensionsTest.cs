@@ -272,5 +272,61 @@ namespace Test.Core
             var res = CalcFactory.MakeCalculator(nameof(CalcNoSpace)).CountCharacters(input, false);
             Assert.AreEqual("HalloBye!".Length, res);
         }
+
+        [TestMethod]
+        public void ToggleCasing1()
+        {
+            var input = "how are you";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("How Are You", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalic()
+        {
+            var input = "how <i>are</i> you";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("How <i>Are</i> You", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalicStart()
+        {
+            var input = "<i>how</i> are you";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("<i>How</i> Are You", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalicEnd()
+        {
+            var input = "how are <i>you</i>";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("How Are <i>You</i>", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing1WithItalicEndAndBold()
+        {
+            var input = "how are <i><b>you</b></i>";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("How Are <i><b>You</b></i>", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing2()
+        {
+            var input = "How Are You";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("HOW ARE YOU", res);
+        }
+
+        [TestMethod]
+        public void ToggleCasing3()
+        {
+            var input = "HOW ARE YOU";
+            var res = input.ToggleCasing();
+            Assert.AreEqual("how are you", res);
+        }
     }
 }
