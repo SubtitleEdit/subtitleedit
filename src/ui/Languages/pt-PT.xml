@@ -180,6 +180,7 @@ Nota: verifique o espaço em disco.</WaveFileMalformed>
     <Title>Áudio para texto</Title>
     <Info>Gerar texto a partir de áudio via reconhecimento de voz Vosk/Kaldi</Info>
     <WhisperInfo>Gerar texto a partir de áudio via reconhecimento de voz Whisper</WhisperInfo>
+    <Engine>Mecanismo</Engine>
     <VoskWebsite>Website do Vosk</VoskWebsite>
     <WhisperWebsite>Website do Whisper</WhisperWebsite>
     <WhisperNotFound>Whisper não encontrado.
@@ -397,6 +398,7 @@ Mais informação online?</WhisperNotFound>
     <OnlyChangeAllUppercaseLines>Alterar apenas todas as linhas em maiúsculas.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TODAS MAIÚSCULAS</AllUppercase>
     <AllLowercase>todas minúsculas</AllLowercase>
+    <ProperCase>Maiúscula/minúscula apropriada</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Alterar maiúsculas - Nomes</Title>
@@ -2512,13 +2514,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoForward500Milliseconds>Adiantar 500 ms</GoForward500Milliseconds>
     <GoBack1Second>Atrasar 1 segundo</GoBack1Second>
     <GoForward1Second>Adiantar 1 segundo</GoForward1Second>
+    <GoBack3Seconds>Atrasar 3 segundos</GoBack3Seconds>
+    <GoForward3Seconds>Adiantar 3 segundos</GoForward3Seconds>
     <GoBack5Seconds>Atrasar 5 segundos</GoBack5Seconds>
     <GoForward5Seconds>Adiantar 5 segundos</GoForward5Seconds>
     <GoBackXSSeconds>Atrasar um pouco os tempos seleccionados</GoBackXSSeconds>
     <GoForwardXSSeconds>Adiantar um pouco os tempos seleccionados</GoForwardXSSeconds>
     <GoBackXLSeconds>Atrasar os tempos seleccionados</GoBackXLSeconds>
     <GoForwardXLSeconds>Adiantar os tempos seleccionados</GoForwardXLSeconds>
-    <GoBack3Seconds>Atrasar 3 segundos</GoBack3Seconds>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
     <PlaySelectedLines>Reproduzir linhas seleccionadas</PlaySelectedLines>
