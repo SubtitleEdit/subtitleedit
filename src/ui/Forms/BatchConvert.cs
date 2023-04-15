@@ -284,6 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonFixOnlyNames.Text = LanguageSettings.Current.ChangeCasing.FixOnlyNamesCasing;
             radioButtonUppercase.Text = LanguageSettings.Current.ChangeCasing.AllUppercase;
             radioButtonLowercase.Text = LanguageSettings.Current.ChangeCasing.AllLowercase;
+            radioButtonLowercase.Text = LanguageSettings.Current.ChangeCasing.ProperCase;
             if (Configuration.Settings.Tools.ChangeCasingChoice == "NamesOnly")
             {
                 radioButtonFixOnlyNames.Checked = true;
@@ -295,6 +296,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.Tools.ChangeCasingChoice == "Lowercase")
             {
                 radioButtonLowercase.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.ChangeCasingChoice == "ProperCase")
+            {
+                radioButtonProperCase.Checked = true;
             }
 
             checkBoxFixNames.Checked = Configuration.Settings.Tools.ChangeCasingNormalFixNames;
@@ -2005,6 +2010,7 @@ namespace Nikse.SubtitleEdit.Forms
                         FixNormal = radioButtonNormal.Checked,
                         FixMakeUppercase = radioButtonUppercase.Checked,
                         FixMakeLowercase = radioButtonLowercase.Checked,
+                        FixMakeProperCase = radioButtonProperCase.Checked,
                         FixNormalOnlyAllUppercase = checkBoxOnlyAllUpper.Checked
                     }.Fix(sub);
                 }
@@ -2217,6 +2223,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonLowercase.Checked)
             {
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
+            }
+            else if (radioButtonProperCase.Checked)
+            {
+                Configuration.Settings.Tools.ChangeCasingChoice = "ProperCase";
             }
 
             Configuration.Settings.Tools.ChangeCasingNormalFixNames = checkBoxFixNames.Checked;

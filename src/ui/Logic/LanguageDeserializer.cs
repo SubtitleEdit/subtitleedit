@@ -1060,6 +1060,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ChangeCasing/AllLowercase":
                     language.ChangeCasing.AllLowercase = reader.Value;
                     break;
+                case "ChangeCasing/ProperCase":
+                    language.ChangeCasing.ProperCase = reader.Value;
+                    break;
                 case "ChangeCasingNames/Title":
                     language.ChangeCasingNames.Title = reader.Value;
                     break;

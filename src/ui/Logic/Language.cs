@@ -568,6 +568,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OnlyChangeAllUppercaseLines = "Only change all uppercase lines.",
                 AllUppercase = "ALL UPPERCASE",
                 AllLowercase = "all lowercase",
+                ProperCase = "Proper Case",
             };
 
             ChangeCasingNames = new LanguageStructure.ChangeCasingNames
