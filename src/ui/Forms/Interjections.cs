@@ -20,11 +20,12 @@ namespace Nikse.SubtitleEdit.Forms
         public string GetInterjectionsSemiColonSeparatedString()
         {
             var sb = new StringBuilder();
-            foreach (string s in _interjections)
+            foreach (var s in _interjections)
             {
                 sb.Append(';');
                 sb.Append(s.Trim());
             }
+
             return sb.ToString().Trim(';');
         }
 
@@ -43,8 +44,8 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(string semiColonSeparatedList)
         {
             _interjections = new List<string>();
-            string[] arr = semiColonSeparatedList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string s in arr)
+            var arr = semiColonSeparatedList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var s in arr)
             {
                 _interjections.Add(s.Trim());
             }
@@ -62,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            string text = textBoxInterjection.Text.Trim();
+            var text = textBoxInterjection.Text.Trim();
             if (text.Length == 0)
             {
                 return;
@@ -74,12 +75,12 @@ namespace Nikse.SubtitleEdit.Forms
                 FillListBox();
                 textBoxInterjection.Text = string.Empty;
                 textBoxInterjection.Focus();
-                for (int i = 0; i < listBoxInterjections.Items.Count; i++)
+                for (var i = 0; i < listBoxInterjections.Items.Count; i++)
                 {
                     if (listBoxInterjections.Items[i].ToString() == text)
                     {
                         listBoxInterjections.SelectedIndex = i;
-                        int top = i - 5;
+                        var top = i - 5;
                         if (top < 0)
                         {
                             top = 0;
@@ -101,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             _interjections.Sort();
             listBoxInterjections.BeginUpdate();
             listBoxInterjections.Items.Clear();
-            foreach (string s in _interjections)
+            foreach (var s in _interjections)
             {
                 listBoxInterjections.Items.Add(s);
             }
@@ -110,8 +111,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonRemove_Click(object sender, EventArgs e)
         {
-            int index = listBoxInterjections.SelectedIndex;
-            string text = listBoxInterjections.Items[index].ToString();
+            var index = listBoxInterjections.SelectedIndex;
+            var text = listBoxInterjections.Items[index].ToString();
             if (index >= 0)
             {
                 if (MessageBox.Show(string.Format(LanguageSettings.Current.Settings.RemoveX, text), null, MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -152,6 +153,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonAdd.Enabled = textBoxInterjection.Text.Trim().Length > 0;
         }
-
     }
 }
