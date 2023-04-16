@@ -11,8 +11,14 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (findHelper.FindReplaceType.FindType == FindType.RegEx)
             {
-                var count = ReplaceAllRegEx(findHelper, subtitle, stopAtIndex);
-                if (allowEditOfOriginalSubtitle && subtitleOriginal?.Paragraphs.Count > 0)
+                var count = 0;
+
+                if (findHelper.FindReplaceType.SearchTranslation)
+                {
+                    count += ReplaceAllRegEx(findHelper, subtitle, stopAtIndex);
+                }
+                
+                if (allowEditOfOriginalSubtitle && findHelper.FindReplaceType.SearchOriginal && subtitleOriginal?.Paragraphs.Count > 0)
                 {
                     count += ReplaceAllRegEx(findHelper, subtitleOriginal, stopAtIndex);
                 }
@@ -20,8 +26,13 @@ namespace Nikse.SubtitleEdit.Logic
                 return count;
             }
 
-            var replaceCount = ReplaceAllNonRegEx(findHelper, subtitle, stopAtIndex);
-            if (allowEditOfOriginalSubtitle && subtitleOriginal?.Paragraphs.Count > 0)
+            var replaceCount = 0;
+            if (findHelper.FindReplaceType.SearchTranslation)
+            {
+                replaceCount += ReplaceAllNonRegEx(findHelper, subtitle, stopAtIndex);
+            }
+            
+            if (allowEditOfOriginalSubtitle && findHelper.FindReplaceType.SearchOriginal && subtitleOriginal?.Paragraphs.Count > 0)
             {
                 replaceCount += ReplaceAllNonRegEx(findHelper, subtitleOriginal, stopAtIndex);
             }
@@ -55,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static int ReplaceAllRegEx(FindReplaceDialogHelper findHelper, Subtitle subtitle, int stopAtIndex)
         {
             var replaceCount = 0;
-            for (int i = Math.Max(0, findHelper.StartLineIndex); i < subtitle.Paragraphs.Count; i++)
+            for (var i = Math.Max(0, findHelper.StartLineIndex); i < subtitle.Paragraphs.Count; i++)
             {
                 if (i >= stopAtIndex)
                 {

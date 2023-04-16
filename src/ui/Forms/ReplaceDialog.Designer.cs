@@ -39,12 +39,15 @@
             this.labelFindWhat = new System.Windows.Forms.Label();
             this.buttonFind = new System.Windows.Forms.Button();
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
+            this.comboBoxFindReplaceIn = new System.Windows.Forms.ComboBox();
+            this.labelFindReplaceIn = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // radioButtonRegEx
             // 
+            this.radioButtonRegEx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(15, 190);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(15, 235);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
             this.radioButtonRegEx.TabIndex = 5;
@@ -54,8 +57,9 @@
             // 
             // radioButtonCaseSensitive
             // 
+            this.radioButtonCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(15, 167);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(15, 212);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
             this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
             this.radioButtonCaseSensitive.TabIndex = 4;
@@ -65,9 +69,10 @@
             // 
             // radioButtonNormal
             // 
+            this.radioButtonNormal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
-            this.radioButtonNormal.Location = new System.Drawing.Point(15, 144);
+            this.radioButtonNormal.Location = new System.Drawing.Point(15, 189);
             this.radioButtonNormal.Name = "radioButtonNormal";
             this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
             this.radioButtonNormal.TabIndex = 3;
@@ -78,7 +83,7 @@
             // 
             // buttonReplace
             // 
-            this.buttonReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReplace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonReplace.Location = new System.Drawing.Point(266, 54);
             this.buttonReplace.Name = "buttonReplace";
             this.buttonReplace.Size = new System.Drawing.Size(119, 23);
@@ -98,7 +103,7 @@
             // 
             // buttonReplaceAll
             // 
-            this.buttonReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReplaceAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonReplaceAll.Location = new System.Drawing.Point(266, 83);
             this.buttonReplaceAll.Name = "buttonReplaceAll";
             this.buttonReplaceAll.Size = new System.Drawing.Size(119, 23);
@@ -135,7 +140,7 @@
             // 
             // buttonFind
             // 
-            this.buttonFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFind.Location = new System.Drawing.Point(266, 25);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(119, 23);
@@ -146,19 +151,40 @@
             // 
             // checkBoxWholeWord
             // 
+            this.checkBoxWholeWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxWholeWord.AutoSize = true;
-            this.checkBoxWholeWord.Location = new System.Drawing.Point(15, 114);
+            this.checkBoxWholeWord.Location = new System.Drawing.Point(15, 159);
             this.checkBoxWholeWord.Name = "checkBoxWholeWord";
             this.checkBoxWholeWord.Size = new System.Drawing.Size(83, 17);
             this.checkBoxWholeWord.TabIndex = 2;
             this.checkBoxWholeWord.Text = "Whole word";
             this.checkBoxWholeWord.UseVisualStyleBackColor = true;
             // 
+            // comboBoxFindReplaceIn
+            // 
+            this.comboBoxFindReplaceIn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFindReplaceIn.FormattingEnabled = true;
+            this.comboBoxFindReplaceIn.Location = new System.Drawing.Point(15, 120);
+            this.comboBoxFindReplaceIn.Name = "comboBoxFindReplaceIn";
+            this.comboBoxFindReplaceIn.Size = new System.Drawing.Size(232, 21);
+            this.comboBoxFindReplaceIn.TabIndex = 15;
+            // 
+            // labelFindReplaceIn
+            // 
+            this.labelFindReplaceIn.AutoSize = true;
+            this.labelFindReplaceIn.Location = new System.Drawing.Point(12, 104);
+            this.labelFindReplaceIn.Name = "labelFindReplaceIn";
+            this.labelFindReplaceIn.Size = new System.Drawing.Size(96, 13);
+            this.labelFindReplaceIn.TabIndex = 16;
+            this.labelFindReplaceIn.Text = "Replace/search in:";
+            // 
             // ReplaceDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(397, 221);
+            this.ClientSize = new System.Drawing.Size(397, 266);
+            this.Controls.Add(this.labelFindReplaceIn);
+            this.Controls.Add(this.comboBoxFindReplaceIn);
             this.Controls.Add(this.checkBoxWholeWord);
             this.Controls.Add(this.buttonFind);
             this.Controls.Add(this.labelFindWhat);
@@ -199,5 +225,7 @@
         private System.Windows.Forms.Label labelFindWhat;
         private System.Windows.Forms.Button buttonFind;
         private System.Windows.Forms.CheckBox checkBoxWholeWord;
+        private System.Windows.Forms.ComboBox comboBoxFindReplaceIn;
+        private System.Windows.Forms.Label labelFindReplaceIn;
     }
 }

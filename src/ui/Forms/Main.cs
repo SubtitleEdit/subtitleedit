@@ -6247,6 +6247,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findHelper.InProgress = false;
             }
+
+            Focus();
         }
 
         public void FindDialogFindPrevious(string findText)
@@ -6462,7 +6464,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _findHelper = _findHelper ?? _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
             }
 
-            _replaceDialog.Initialize(selectedText, _findHelper);
+            _replaceDialog.Initialize(selectedText, _findHelper, IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible);
             if (!_replaceDialog.Visible)
             {
                 _replaceDialog.Show(this);
@@ -6721,6 +6723,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 RestartHistory();
             }
+
+            Focus();
         }
 
         public void ListViewReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
@@ -6977,7 +6981,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            _replaceDialog.Initialize(selectedText, _findHelper);
+            _replaceDialog.Initialize(selectedText, _findHelper, IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible);
             if (!_replaceDialog.Visible)
             {
                 _replaceDialog.Show(this);

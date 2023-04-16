@@ -43,6 +43,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.FixLargeFonts(this, buttonReplace);
             _findNextShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
+
+            comboBoxFindReplaceIn.Items.Clear();
+            comboBoxFindReplaceIn.Items.Add("Translation and original");
+            comboBoxFindReplaceIn.Items.Add("Translation only");
+            comboBoxFindReplaceIn.Items.Add("Original only");
+            comboBoxFindReplaceIn.SelectedIndex = 0;
         }
 
         public bool ReplaceAll { get; set; }
@@ -63,6 +69,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 result.FindType = FindType.RegEx;
             }
+
+            result.SearchOriginal = !comboBoxFindReplaceIn.Visible ||
+                                    comboBoxFindReplaceIn.SelectedIndex == 0 ||
+                                    comboBoxFindReplaceIn.SelectedIndex == 2;
+
+            result.SearchTranslation = !comboBoxFindReplaceIn.Visible ||
+                                       comboBoxFindReplaceIn.SelectedIndex == 0 ||
+                                       comboBoxFindReplaceIn.SelectedIndex == 1;
 
             result.WholeWord = checkBoxWholeWord.Checked;
             return result;
@@ -91,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
+        internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper, bool replaceInOriginal)
         {
             _findHelper = findHelper;
             textBoxFind.Text = selectedText;
@@ -123,6 +137,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 checkBoxWholeWord.Checked = findHelper.FindReplaceType.WholeWord;
             }
+
+            labelFindReplaceIn.Visible = replaceInOriginal;
+            comboBoxFindReplaceIn.Visible = replaceInOriginal;
         }
 
         private void ButtonReplaceClick(object sender, EventArgs e)
@@ -133,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
+                var findType = GetFindType();
                 _findAndReplaceMethods.ReplaceDialogReplace();
             }
 
@@ -147,6 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
+                var findType = GetFindType();
                 _findAndReplaceMethods.ReplaceDialogReplaceAll();
             }
 
@@ -203,6 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
+                var findType = GetFindType();
                 _findAndReplaceMethods.ReplaceDialogFind();
             }
         }
