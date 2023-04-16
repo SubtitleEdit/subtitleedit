@@ -2100,6 +2100,9 @@ can edit in same subtitle file (collaboration)</Information>
     <Find>&amp;Find</Find>
     <Replace>&amp;Replace</Replace>
     <ReplaceAll>Replace &amp;all</ReplaceAll>
+    <TranslationAndOriginal>Translation and original</TranslationAndOriginal>
+    <TranslationOnly>Translation only</TranslationOnly>
+    <OriginalOnly>Original only</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restore auto backup</Title>
