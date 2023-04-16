@@ -624,7 +624,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                         s.StartsWith("<box>", StringComparison.OrdinalIgnoreCase) ||
                         s.StartsWith("</box>", StringComparison.OrdinalIgnoreCase) ||
                         s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) ||
-                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                        s.StartsWith("</font>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<span", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</span>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<rt", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</rt", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<ruby", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</ruby>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<c", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</c", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<v", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("</v>", StringComparison.OrdinalIgnoreCase))
                     {
                         tagOn = true;
                         tagIndex = sb.Length;

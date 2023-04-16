@@ -354,6 +354,14 @@ namespace Test.Core
             Assert.AreEqual("how are\\nyou?", res);
         }
 
+        [TestMethod]
+        public void ToggleCasingVoiceTag()
+        {
+            var input = "<v Johnny>How are you?";
+            var res = input.ToggleCasing(null);
+            Assert.AreEqual("<v Johnny>HOW ARE YOU?", res);
+        }
+
 
         [TestMethod]
         public void ToProperCaseFromUpper()
