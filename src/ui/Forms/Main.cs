@@ -6246,6 +6246,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null)
             {
                 _findHelper.InProgress = false;
+                _findHelper.MatchInOriginal = false;
+                _findHelper.SelectedPosition = -1;
             }
 
             Focus();
@@ -6259,11 +6261,16 @@ namespace Nikse.SubtitleEdit.Forms
             FindPrevious();
         }
 
-        public void FindDialogFind(string findText)
+        public void FindDialogFind(string findText, ReplaceType findReplaceType)
         {
             _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_subtitleListViewIndex);
             _findHelper.FindText = findText;
             _findHelper.FindTextLength = findText.Length;
+            _findHelper.FindReplaceType = findReplaceType;
+            if (findReplaceType.FindType == FindType.RegEx)
+            {
+            }
+
             DialogFind(_findHelper);
         }
 
@@ -6471,8 +6478,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ReplaceDialogFind()
+        public void ReplaceDialogFind(FindReplaceDialogHelper findReplaceDialogHelper)
         {
+            _findHelper = findReplaceDialogHelper;
+
+            if (_findHelper != null)
+            {
+                if (_findHelper.SelectedLineIndex != _subtitleListViewIndex)
+                {
+                    _findHelper.SelectedLineIndex = _subtitleListViewIndex;
+                    _findHelper.SelectedPosition = -1;
+                    _findHelper.MatchInOriginal = false;
+                    _findHelper.ReplaceFromPosition = 0;
+                }
+
+                DialogFind(_findHelper);
+                return;
+            }
+
             DialogFind(_replaceDialog.GetFindDialogHelper(_subtitleListViewIndex));
         }
 
@@ -6507,6 +6530,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (found)
                 {
                     SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                    textBoxListViewText.SelectionStart = 0;
+                    textBoxListViewText.SelectionLength = 0;
+                    textBoxListViewTextOriginal.SelectionStart = 0;
+                    textBoxListViewTextOriginal.SelectionLength = 0;
+                    tb.SelectionLength = 0;
                     tb.Focus();
                     tb.SelectionStart = _findHelper.SelectedPosition;
                     tb.SelectionLength = _findHelper.FindTextLength;
@@ -6534,7 +6562,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ReplaceDialogReplace()
+        public void ReplaceDialogReplace(FindReplaceDialogHelper findReplaceDialogHelper)
         {
             if (InListView)
             {
@@ -6589,6 +6617,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper.FindNext(_subtitle, _subtitleOriginal, _findHelper.SelectedLineIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
             {
                 SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
+                textBoxListViewText.SelectionStart = 0;
+                textBoxListViewText.SelectionLength = 0;
+                textBoxListViewTextOriginal.SelectionStart = 0;
+                textBoxListViewTextOriginal.SelectionLength = 0;
                 tb = GetFindReplaceTextBox();
                 tb.Focus();
                 tb.SelectionStart = _findHelper.SelectedPosition;
@@ -6702,7 +6734,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ReplaceDialogReplaceAll()
+        public void ReplaceDialogReplaceAll(FindReplaceDialogHelper findReplaceDialogHelper)
         {
             _findHelper = _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
             ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
@@ -6722,6 +6754,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (_makeHistoryPaused)
             {
                 RestartHistory();
+            }
+
+            if (_findHelper != null)
+            {
+                _findHelper.InProgress = false;
+                _findHelper.MatchInOriginal = false;
+                _findHelper.SelectedPosition = -1;
             }
 
             Focus();
@@ -16191,7 +16230,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData) 
+            else if (_shortcuts.MainTextBoxSelectionToggleCasing == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)

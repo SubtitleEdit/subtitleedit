@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -9783,11 +9784,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.Tools.OcrGoogleCloudVisionSeHandlesTextMerge = checkBoxSeHandlesTextMerge.Checked;
         }
 
-        public void FindDialogFind(string findText)
+        public void FindDialogFind(string findText, ReplaceType findReplaceType)
         {
             _findHelper = _findHelper ?? _findDialog.GetFindDialogHelper(_selectedIndex);
             _findHelper.FindText = findText;
             _findHelper.FindTextLength = findText.Length;
+            _findHelper.FindReplaceType = findReplaceType;
             _findHelper.InProgress = true;
             if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
             {
@@ -9875,17 +9877,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _findHelper.InProgress = false;
         }
 
-        public void ReplaceDialogFind()
+        public void ReplaceDialogFind(FindReplaceDialogHelper findReplaceDialogHelper)
         {
             throw new NotImplementedException();
         }
 
-        public void ReplaceDialogReplace()
+        public void ReplaceDialogReplace(FindReplaceDialogHelper findReplaceDialogHelper)
         {
             throw new NotImplementedException();
         }
 
-        public void ReplaceDialogReplaceAll()
+        public void ReplaceDialogReplaceAll(FindReplaceDialogHelper findReplaceDialogHelper)
         {
             throw new NotImplementedException();
         }

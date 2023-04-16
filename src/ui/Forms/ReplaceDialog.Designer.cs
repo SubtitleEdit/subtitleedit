@@ -50,7 +50,7 @@
             this.radioButtonRegEx.Location = new System.Drawing.Point(15, 235);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
-            this.radioButtonRegEx.TabIndex = 5;
+            this.radioButtonRegEx.TabIndex = 70;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
@@ -62,7 +62,7 @@
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(15, 212);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
             this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
-            this.radioButtonCaseSensitive.TabIndex = 4;
+            this.radioButtonCaseSensitive.TabIndex = 60;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
             this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
@@ -75,7 +75,7 @@
             this.radioButtonNormal.Location = new System.Drawing.Point(15, 189);
             this.radioButtonNormal.Name = "radioButtonNormal";
             this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
-            this.radioButtonNormal.TabIndex = 3;
+            this.radioButtonNormal.TabIndex = 50;
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
@@ -87,7 +87,7 @@
             this.buttonReplace.Location = new System.Drawing.Point(266, 54);
             this.buttonReplace.Name = "buttonReplace";
             this.buttonReplace.Size = new System.Drawing.Size(119, 23);
-            this.buttonReplace.TabIndex = 7;
+            this.buttonReplace.TabIndex = 88;
             this.buttonReplace.Text = "Replace";
             this.buttonReplace.UseVisualStyleBackColor = true;
             this.buttonReplace.Click += new System.EventHandler(this.ButtonReplaceClick);
@@ -107,7 +107,7 @@
             this.buttonReplaceAll.Location = new System.Drawing.Point(266, 83);
             this.buttonReplaceAll.Name = "buttonReplaceAll";
             this.buttonReplaceAll.Size = new System.Drawing.Size(119, 23);
-            this.buttonReplaceAll.TabIndex = 8;
+            this.buttonReplaceAll.TabIndex = 92;
             this.buttonReplaceAll.Text = "Replace all";
             this.buttonReplaceAll.UseVisualStyleBackColor = true;
             this.buttonReplaceAll.Click += new System.EventHandler(this.ButtonReplaceAllClick);
@@ -117,7 +117,7 @@
             this.textBoxReplace.Location = new System.Drawing.Point(15, 71);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(232, 21);
-            this.textBoxReplace.TabIndex = 1;
+            this.textBoxReplace.TabIndex = 10;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
             // labelReplaceWith
@@ -144,7 +144,7 @@
             this.buttonFind.Location = new System.Drawing.Point(266, 25);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(119, 23);
-            this.buttonFind.TabIndex = 6;
+            this.buttonFind.TabIndex = 80;
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
             this.buttonFind.Click += new System.EventHandler(this.ButtonFindClick);
@@ -156,7 +156,7 @@
             this.checkBoxWholeWord.Location = new System.Drawing.Point(15, 159);
             this.checkBoxWholeWord.Name = "checkBoxWholeWord";
             this.checkBoxWholeWord.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxWholeWord.TabIndex = 2;
+            this.checkBoxWholeWord.TabIndex = 30;
             this.checkBoxWholeWord.Text = "Whole word";
             this.checkBoxWholeWord.UseVisualStyleBackColor = true;
             // 
@@ -167,7 +167,7 @@
             this.comboBoxFindReplaceIn.Location = new System.Drawing.Point(15, 120);
             this.comboBoxFindReplaceIn.Name = "comboBoxFindReplaceIn";
             this.comboBoxFindReplaceIn.Size = new System.Drawing.Size(232, 21);
-            this.comboBoxFindReplaceIn.TabIndex = 15;
+            this.comboBoxFindReplaceIn.TabIndex = 20;
             // 
             // labelFindReplaceIn
             // 

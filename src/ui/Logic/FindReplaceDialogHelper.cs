@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Logic
             Match match;
             try
             {
+                _regEx = new Regex(FindText, RegexOptions.None, TimeSpan.FromSeconds(5));
                 match = _regEx.Match(text, startIndex);
             }
             catch (RegexMatchTimeoutException exception)
@@ -131,6 +132,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (!first)
                     {
                         position = 0;
+                        MatchInOriginal = false;
                     }
 
                     int pos;
@@ -147,11 +149,11 @@ namespace Nikse.SubtitleEdit.Logic
                             return true;
                         }
                         position = 0;
-                    }
 
-                    if (index < subtitle.Paragraphs.Count - 1)
-                    {
-                        MatchInOriginal = false;
+                        if (index < subtitle.Paragraphs.Count - 1)
+                        {
+                            MatchInOriginal = false;
+                        }
                     }
 
                     if (originalSubtitle != null && allowEditOfOriginalSubtitle && FindReplaceType.SearchOriginal)
@@ -171,8 +173,10 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                     }
+
                     first = false;
                 }
+
                 index++;
             }
 
@@ -182,8 +186,6 @@ namespace Nikse.SubtitleEdit.Logic
         public bool FindPrevious(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
         {
             //TODO: us whole word
-
-
             Success = false;
             var index = startIndex;
             var first = true;

@@ -47,7 +47,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                var result = new ReplaceType();
+                var result = new ReplaceType
+                {
+                    SearchOriginal = true,
+                    SearchTranslation = true
+                };
+
                 if (radioButtonNormal.Checked)
                 {
                     result.FindType = FindType.Normal;
@@ -136,12 +141,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonNormal.Checked)
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText);
+                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
             }
             else if (radioButtonCaseSensitive.Checked)
             {
                 DialogResult = DialogResult.OK;
-                _findAndReplaceMethods.FindDialogFind(FindText);
+                _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
             }
             else if (radioButtonRegEx.Checked)
             {
@@ -149,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled, TimeSpan.FromSeconds(5));
                     DialogResult = DialogResult.OK;
-                    _findAndReplaceMethods.FindDialogFind(FindText);
+                    _findAndReplaceMethods.FindDialogFind(FindText, FindReplaceType);
                 }
                 catch (Exception exception)
                 {
