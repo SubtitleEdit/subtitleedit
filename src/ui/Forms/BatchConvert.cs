@@ -3173,7 +3173,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private  HashSet<string> GetSearchExtBlackList()
+        private HashSet<string> GetSearchExtBlackList()
         {
             var result = new HashSet<string>
             {
@@ -3236,25 +3236,17 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             AddFromSearch(fileName, fi, "Blu-ray");
                         }
-                        else if (ext == ".mkv")
+                        else if (ext == ".mks" && FileUtil.IsBluRaySup(fileName))
                         {
-                            if (Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo)
-                            {
-                                AddFromSearch(fileName, fi, "Matroska");
-                            }
+                            AddInputFile(fileName);
+                            UpdateNumberOfFiles();
                         }
-                        else if (ext == ".mks")
+                        else if (ext == ".mkv" || ext == ".mp4")
                         {
                             if (Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo)
                             {
-                                AddFromSearch(fileName, fi, "Matroska");
-                            }
-                        }
-                        else if (ext == ".mp4")
-                        {
-                            if (Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo)
-                            {
-                                AddFromSearch(fileName, fi, "MP4");
+                                AddInputFile(fileName);
+                                UpdateNumberOfFiles();
                             }
                         }
                         else
@@ -3297,8 +3289,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+
                         progressBar1.Refresh();
                         Application.DoEvents();
+
                         if (_abort)
                         {
                             progressBar1.Value = 0;
