@@ -5671,6 +5671,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ReplaceDialog/ReplaceAll":
                     language.ReplaceDialog.ReplaceAll = reader.Value;
                     break;
+                case "ReplaceDialog/TranslationAndOriginal":
+                    language.ReplaceDialog.TranslationAndOriginal = reader.Value;
+                    break;
+                case "ReplaceDialog/TranslationOnly":
+                    language.ReplaceDialog.TranslationOnly = reader.Value;
+                    break;
+                case "ReplaceDialog/OriginalOnly":
+                    language.ReplaceDialog.OriginalOnly = reader.Value;
+                    break;
                 case "RestoreAutoBackup/Title":
                     language.RestoreAutoBackup.Title = reader.Value;
                     break;
