@@ -640,6 +640,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetMkvLanguageMenuItem();
+            alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Checked = Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
         }
 
         private void SetMkvLanguageMenuItem()
@@ -3172,47 +3173,54 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static readonly HashSet<string> SearchExtBlackList = new HashSet<string>
+        private  HashSet<string> GetSearchExtBlackList()
         {
-            ".png",
-            ".jpg",
-            ".jpeg",
-            ".tif",
-            ".tiff",
-            ".gif",
-            ".bmp",
-            ".ico",
-            ".clpi",
-            ".mpls",
-            ".wav",
-            ".mp3",
-            ".avi",
-            ".mpeg",
-            ".mpg",
-            ".tar",
-            ".docx",
-            ".pptx",
-            ".xlsx",
-            ".odt",
-            ".tex",
-            ".pdf",
-            ".dll",
-            ".exe",
-            ".rar",
-            ".7z",
-            ".zip",
-            ".tar"
-        };
+            var result = new HashSet<string>
+            {
+                ".png",
+                ".jpg",
+                ".jpeg",
+                ".tif",
+                ".tiff",
+                ".gif",
+                ".bmp",
+                ".ico",
+                ".clpi",
+                ".mpls",
+                ".wav",
+                ".mp3",
+                ".tar",
+                ".docx",
+                ".pptx",
+                ".xlsx",
+                ".odt",
+                ".tex",
+                ".pdf",
+                ".dll",
+                ".exe",
+                ".rar",
+                ".7z",
+                ".zip",
+                ".tar",
+                ".avi",
+                ".mpeg",
+                ".mpg",
+            };
+
+            return result;
+        }
 
         private void ScanFiles(IEnumerable<string> fileNames)
         {
+            var searchExtBlackList = GetSearchExtBlackList();
+
             foreach (var fileName in fileNames)
             {
                 labelStatus.Text = fileName;
                 try
                 {
                     var ext = Path.GetExtension(fileName).ToLowerInvariant();
-                    if (!SearchExtBlackList.Contains(ext))
+                    if (!searchExtBlackList.Contains(ext))
                     {
                         labelStatus.Refresh();
                         var fi = new FileInfo(fileName);
@@ -3230,15 +3238,24 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (ext == ".mkv")
                         {
-                            // skip for now
+                            if (Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo)
+                            {
+                                AddFromSearch(fileName, fi, "Matroska");
+                            }
                         }
                         else if (ext == ".mks")
                         {
-                            // skip for now
+                            if (Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo)
+                            {
+                                AddFromSearch(fileName, fi, "Matroska");
+                            }
                         }
                         else if (ext == ".mp4")
                         {
-                            // skip for now
+                            if (Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo)
+                            {
+                                AddFromSearch(fileName, fi, "MP4");
+                            }
                         }
                         else
                         {
@@ -3698,6 +3715,12 @@ namespace Nikse.SubtitleEdit.Forms
             _ocrEngine = "nOcr";
             nOCRToolStripMenuItem.Checked = true;
             tesseractToolStripMenuItem.Checked = false;
+        }
+
+        private void alsoScanVideoFilesInSearchFolderslowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo = !Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
+            alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Checked = Configuration.Settings.Tools.BatchConvertScanFolderIncludeVideo;
         }
     }
 }
