@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
+            Nikse.SubtitleEdit.Core.Common.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.Common.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxChangeCasing = new System.Windows.Forms.GroupBox();
+            this.checkBoxProperCaseOnlyUpper = new System.Windows.Forms.CheckBox();
             this.radioButtonProperCase = new System.Windows.Forms.RadioButton();
             this.checkBoxOnlyAllUpper = new System.Windows.Forms.CheckBox();
             this.checkBoxFixNames = new System.Windows.Forms.CheckBox();
@@ -172,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.labelError = new System.Windows.Forms.Label();
-            this.checkBoxProperCaseOnlyUpper = new System.Windows.Forms.CheckBox();
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeCasing.SuspendLayout();
@@ -329,6 +330,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxChangeCasing.TabIndex = 308;
             this.groupBoxChangeCasing.TabStop = false;
             this.groupBoxChangeCasing.Text = "Change casing to";
+            // 
+            // checkBoxProperCaseOnlyUpper
+            // 
+            this.checkBoxProperCaseOnlyUpper.AutoSize = true;
+            this.checkBoxProperCaseOnlyUpper.Location = new System.Drawing.Point(29, 176);
+            this.checkBoxProperCaseOnlyUpper.Name = "checkBoxProperCaseOnlyUpper";
+            this.checkBoxProperCaseOnlyUpper.Size = new System.Drawing.Size(182, 17);
+            this.checkBoxProperCaseOnlyUpper.TabIndex = 16;
+            this.checkBoxProperCaseOnlyUpper.Text = "Only change all upper case lines.";
+            this.checkBoxProperCaseOnlyUpper.UseVisualStyleBackColor = true;
             // 
             // radioButtonProperCase
             // 
@@ -1146,14 +1157,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(113, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode2;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -1694,9 +1705,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator1,
             this.convertMkvSettingsToolStripMenuItem,
-            this.toolStripMenuItemOcrEngine});
+            this.toolStripMenuItemOcrEngine,
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 148);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 192);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // addFilesToolStripMenuItem
@@ -1800,15 +1812,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelError.TabIndex = 10;
             this.labelError.Text = "labelError";
             // 
-            // checkBoxProperCaseOnlyUpper
+            // alsoScanVideoFilesInSearchFolderslowToolStripMenuItem
             // 
-            this.checkBoxProperCaseOnlyUpper.AutoSize = true;
-            this.checkBoxProperCaseOnlyUpper.Location = new System.Drawing.Point(29, 176);
-            this.checkBoxProperCaseOnlyUpper.Name = "checkBoxProperCaseOnlyUpper";
-            this.checkBoxProperCaseOnlyUpper.Size = new System.Drawing.Size(182, 17);
-            this.checkBoxProperCaseOnlyUpper.TabIndex = 16;
-            this.checkBoxProperCaseOnlyUpper.Text = "Only change all upper case lines.";
-            this.checkBoxProperCaseOnlyUpper.UseVisualStyleBackColor = true;
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Name = "alsoScanVideoFilesInSearchFolderslowToolStripMenuItem";
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = "Also scan video files in \"Search folder\" (slow)";
+            this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Click += new System.EventHandler(this.alsoScanVideoFilesInSearchFolderslowToolStripMenuItem_Click);
             // 
             // BatchConvert
             // 
@@ -2033,5 +2042,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxFixNames;
         private System.Windows.Forms.RadioButton radioButtonProperCase;
         private System.Windows.Forms.CheckBox checkBoxProperCaseOnlyUpper;
+        private System.Windows.Forms.ToolStripMenuItem alsoScanVideoFilesInSearchFolderslowToolStripMenuItem;
     }
 }
