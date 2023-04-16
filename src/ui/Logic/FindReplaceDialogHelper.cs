@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     int pos;
-                    if (!MatchInOriginal)
+                    if (!MatchInOriginal && FindReplaceType.SearchTranslation)
                     {
                         pos = FindPositionInText(p.Text, position);
                         if (pos >= 0)
@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Logic
                         MatchInOriginal = false;
                     }
 
-                    if (originalSubtitle != null && allowEditOfOriginalSubtitle)
+                    if (originalSubtitle != null && allowEditOfOriginalSubtitle && FindReplaceType.SearchOriginal)
                     {
                         var o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
                         if (o != null)
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (originalSubtitle != null && allowEditOfOriginalSubtitle)
                 {
-                    if (!first || MatchInOriginal)
+                    if ((!first || MatchInOriginal) && FindReplaceType.SearchTranslation)
                     {
                         var o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
                         if (o != null)
@@ -232,32 +232,37 @@ namespace Nikse.SubtitleEdit.Logic
                     position = p.Text.Length - 1;
                 }
 
-                for (var j = 0; j <= position; j++)
+                if (originalSubtitle != null && allowEditOfOriginalSubtitle && FindReplaceType.SearchOriginal)
                 {
-                    if (position - j >= 0 && position < p.Text.Length)
+
+                    for (var j = 0; j <= position; j++)
                     {
-                        var t = p.Text.Substring(position - j, j + 1);
-                        var pos = FindPositionInText(t, 0);
-                        var startWholeWord = position - j < 1;
-                        if (!startWholeWord && position - j - 1 > 0)
+                        if (position - j >= 0 && position < p.Text.Length)
                         {
-                            startWholeWord = SeparatorChars.Contains(p.Text[position - j - 1]);
-                        }
+                            var t = p.Text.Substring(position - j, j + 1);
+                            var pos = FindPositionInText(t, 0);
+                            var startWholeWord = position - j < 1;
+                            if (!startWholeWord && position - j - 1 > 0)
+                            {
+                                startWholeWord = SeparatorChars.Contains(p.Text[position - j - 1]);
+                            }
 
-                        var startWholeWorkOkay = !FindReplaceType.WholeWord || startWholeWord;
+                            var startWholeWorkOkay = !FindReplaceType.WholeWord || startWholeWord;
 
-                        if (pos >= 0 && startWholeWorkOkay)
-                        {
-                            pos += position - j;
-                            MatchInOriginal = false;
-                            SelectedLineIndex = index;
-                            SelectedPosition = pos;
-                            ReplaceFromPosition = pos;
-                            Success = true;
-                            return true;
+                            if (pos >= 0 && startWholeWorkOkay)
+                            {
+                                pos += position - j;
+                                MatchInOriginal = false;
+                                SelectedLineIndex = index;
+                                SelectedPosition = pos;
+                                ReplaceFromPosition = pos;
+                                Success = true;
+                                return true;
+                            }
                         }
                     }
                 }
+
                 position = 0;
                 first = false;
                 index--;
