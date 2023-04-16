@@ -2425,6 +2425,9 @@ can edit in same subtitle file (collaboration)",
                 Find = "&Find",
                 Replace = "&Replace",
                 ReplaceAll = "Replace &all",
+                TranslationAndOriginal = "Translation and original",
+                TranslationOnly = "Translation only",
+                OriginalOnly = "Original only",
             };
 
             RestoreAutoBackup = new LanguageStructure.RestoreAutoBackup

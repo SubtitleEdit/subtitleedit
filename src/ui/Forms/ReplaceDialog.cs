@@ -45,9 +45,9 @@ namespace Nikse.SubtitleEdit.Forms
             _findNextShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
 
             comboBoxFindReplaceIn.Items.Clear();
-            comboBoxFindReplaceIn.Items.Add("Translation and original");
-            comboBoxFindReplaceIn.Items.Add("Translation only");
-            comboBoxFindReplaceIn.Items.Add("Original only");
+            comboBoxFindReplaceIn.Items.Add(LanguageSettings.Current.ReplaceDialog.TranslationAndOriginal);
+            comboBoxFindReplaceIn.Items.Add(LanguageSettings.Current.ReplaceDialog.TranslationOnly);
+            comboBoxFindReplaceIn.Items.Add(LanguageSettings.Current.ReplaceDialog.OriginalOnly);
             comboBoxFindReplaceIn.SelectedIndex = 0;
         }
 
@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
                                        comboBoxFindReplaceIn.SelectedIndex == 1;
 
             result.WholeWord = checkBoxWholeWord.Checked;
+
             return result;
         }
 
@@ -150,8 +151,8 @@ namespace Nikse.SubtitleEdit.Forms
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
-                var findType = GetFindType();
-                _findAndReplaceMethods.ReplaceDialogReplace();
+                UpdateFindHelper();
+                _findAndReplaceMethods.ReplaceDialogReplace(_findHelper);
             }
 
             buttonReplace.Focus();
@@ -165,8 +166,8 @@ namespace Nikse.SubtitleEdit.Forms
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
-                var findType = GetFindType();
-                _findAndReplaceMethods.ReplaceDialogReplaceAll();
+                UpdateFindHelper();
+                _findAndReplaceMethods.ReplaceDialogReplaceAll(_findHelper);
             }
 
             buttonReplaceAll.Focus();
@@ -216,27 +217,36 @@ namespace Nikse.SubtitleEdit.Forms
                 _findHelper.ReplaceFromPosition++;
             }
 
+            UpdateFindHelper();
+
             ReplaceAll = false;
             FindOnly = true;
 
             Validate(textBoxFind.Text);
             if (DialogResult == DialogResult.OK)
             {
-                var findType = GetFindType();
-                _findAndReplaceMethods.ReplaceDialogFind();
+                _findAndReplaceMethods.ReplaceDialogFind(_findHelper);
             }
+        }
+
+        private void UpdateFindHelper()
+        {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
+            _findHelper.FindReplaceType = GetFindType();
+            _findHelper.FindText = textBoxFind.Text;
+            _findHelper.FindTextLength = textBoxFind.Text.Length;
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            if (sender == radioButtonRegEx)
-            {
-                textBoxFind.ContextMenuStrip = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
-            }
-            else
-            {
-                textBoxFind.ContextMenuStrip = null;
-            }
+            textBoxFind.ContextMenuStrip = sender == radioButtonRegEx 
+                ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) 
+                : null;
+
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
         }
 
