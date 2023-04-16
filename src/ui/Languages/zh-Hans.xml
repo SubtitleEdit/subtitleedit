@@ -178,6 +178,7 @@ Command line: {1} {2}
     <Title>音频转文字</Title>
     <Info>通过 Vosk/Kaldi 语音识别从音频生成文本</Info>
     <WhisperInfo>通过 Whisper 语音识别从音频生成文本</WhisperInfo>
+    <Engine>引擎</Engine>
     <VoskWebsite>Vosk 网站</VoskWebsite>
     <WhisperWebsite>Whisper 网站</WhisperWebsite>
     <WhisperNotFound>未找到 Whisper。
@@ -395,6 +396,7 @@ Command line: {1} {2}
     <OnlyChangeAllUppercaseLines>仅更改全部大写的行</OnlyChangeAllUppercaseLines>
     <AllUppercase>全部大写</AllUppercase>
     <AllLowercase>全部小写</AllLowercase>
+    <ProperCase>单词首字母大写</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>更改大小写 - 名称</Title>
@@ -855,6 +857,8 @@ Command line: {1} {2}
     <SolidColor>纯色</SolidColor>
     <DurationInMinutes>持续时间（分钟）</DurationInMinutes>
     <Background>背景</Background>
+    <FfmpegParameters>运行 FFmpeg 时调用如下参数:</FfmpegParameters>
+    <GenerateWithFfmpegParametersPrompt>生成 - FFmpeg 命令行参数</GenerateWithFfmpegParametersPrompt>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>生成带有内嵌字幕的视频</Title>
@@ -2497,13 +2501,14 @@ Command line: {1} {2}
     <GoForward500Milliseconds>前进 500 毫秒</GoForward500Milliseconds>
     <GoBack1Second>回退 1 秒</GoBack1Second>
     <GoForward1Second>前进 1 秒</GoForward1Second>
+    <GoBack3Seconds>回退 3 秒</GoBack3Seconds>
+    <GoForward3Seconds>前进 3 秒</GoForward3Seconds>
     <GoBack5Seconds>回退 5 秒</GoBack5Seconds>
     <GoForward5Seconds>前进 5 秒</GoForward5Seconds>
     <GoBackXSSeconds>以选定的时间少量回退</GoBackXSSeconds>
     <GoForwardXSSeconds>以选定的时间少量前进</GoForwardXSSeconds>
     <GoBackXLSeconds>以选定的时间回退</GoBackXLSeconds>
     <GoForwardXLSeconds>以选定的时间前进</GoForwardXLSeconds>
-    <GoBack3Seconds>回退 3 秒</GoBack3Seconds>
     <GoToStartCurrent>设定视频位置定位到当前字幕的起始点</GoToStartCurrent>
     <ToggleStartEndCurrent>让视频位置在当前字幕的起始点与结束点间切换跳转</ToggleStartEndCurrent>
     <PlaySelectedLines>播放选定的行</PlaySelectedLines>
@@ -2639,6 +2644,7 @@ Command line: {1} {2}
     <BDOpensInOcr>OCR</BDOpensInOcr>
     <BDOpensInEdit>编辑</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>快捷方式：在文本框中允许单个字母/数字</ShortcutsAllowSingleLetterOrNumberInTextBox>
+    <ShortcutCustomToggle>快捷方式切换自定义始/终点</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>更新文件类型关联</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>文件类型关联已更新</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>编辑自定义延续样式</CustomContinuationStyle>
@@ -2653,6 +2659,7 @@ Command line: {1} {2}
     <PreviewPause>（暂停）</PreviewPause>
     <CustomContinuationStyleNote>注意：自定义延续样式将在配置文件之间共享。</CustomContinuationStyleNote>
     <ResetCustomContinuationStyleWarning>这将覆盖对话框中的值。 你确定吗？</ResetCustomContinuationStyleWarning>
+    <ExportAsHtml>导出为 HTML...</ExportAsHtml>
   </Settings>
   <SettingsMpv>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
