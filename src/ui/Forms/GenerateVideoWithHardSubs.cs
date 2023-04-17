@@ -701,7 +701,8 @@ namespace Nikse.SubtitleEdit.Forms
                 cutStart = $"-ss {start.Hours:00}:{start.Minutes:00}:{start.Seconds:00}";
 
                 var end = GetCutEnd();
-                cutEnd = $"-to {end.Hours:00}:{end.Minutes:00}:{end.Seconds:00}";
+                var duration = end - start;
+                cutEnd = $"-t {duration.Hours:00}:{duration.Minutes:00}:{duration.Seconds:00}";
             }
 
             return VideoPreviewGenerator.GenerateHardcodedVideoFile(
