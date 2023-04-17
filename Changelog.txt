@@ -22,6 +22,8 @@
    * Update Catalan translation - thx  jordimas
    * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
    * List all EBU language codes - thx TerrorizedGakon
+   * Update Whisper CPP to v1.3.0
+   * Update Whisper Const-me to 1.11
 * FIXED:
    * Fix "Add embedded subtitles" with ANSI encoding - thx Cyberyoda1411
    * Fix running Whisper CPP/Const-me after setting folder for Whisper OpenAI - thx rsmith02ct
@@ -31,6 +33,7 @@
    * Fix crash in import of SSA styles - thx librafrog
    * Fix possible crash reading .ts files - thx hepalin
    * Fix crash in split lines - thx Papai
+   * Fix video cut duration in "Generate video with burned-in subitle" - thx Alxndr
 
 
 3.6.12 (26th March 2023)
