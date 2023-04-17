@@ -200,6 +200,8 @@ Read more info (web)?</WhisperNotFound>
     <KeepPartialTranscription>Keep partial transcription</KeepPartialTranscription>
     <TranslateToEnglish>Translate to English</TranslateToEnglish>
     <MaxCharsPerSubtitle>Max. chars per subtitle line</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Remove temporary files</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>

@@ -75,6 +75,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
+            setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.ChooseLanguage;
+            removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
 

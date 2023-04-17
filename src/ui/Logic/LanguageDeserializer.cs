@@ -541,6 +541,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/MaxCharsPerSubtitle":
                     language.AudioToText.MaxCharsPerSubtitle = reader.Value;
                     break;
+                case "AudioToText/RemoveTemporaryFiles":
+                    language.AudioToText.RemoveTemporaryFiles = reader.Value;
+                    break;
+                case "AudioToText/SetCppConstMeFolder":
+                    language.AudioToText.SetCppConstMeFolder = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
