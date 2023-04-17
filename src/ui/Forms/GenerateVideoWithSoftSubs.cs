@@ -63,6 +63,17 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeader5FileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
             buttonGenerate.Text = LanguageSettings.Current.Watermark.Generate;
             buttonCancel.Text = LanguageSettings.Current.General.Cancel;
+
+            addToolStripMenuItem.Text = LanguageSettings.Current.DvdSubRip.Add;
+            toolStripMenuItemStorageRemove.Text = LanguageSettings.Current.SubStationAlphaStyles.Remove;
+            toolStripMenuItemStorageRemoveAll.Text = LanguageSettings.Current.SubStationAlphaStyles.RemoveAll;
+            toolStripMenuItemStorageMoveUp.Text = LanguageSettings.Current.DvdSubRip.MoveUp;
+            toolStripMenuItemStorageMoveDown.Text = LanguageSettings.Current.DvdSubRip.MoveDown;
+            toggleForcedToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleForced;
+            toggleDefaultToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.ToggleDefault;
+            setLanguageToolStripMenuItem.Text = LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SetLanguage;
+            viewToolStripMenuItem.Text = LanguageSettings.Current.General.ShowPreview;
+
             promptParameterBeforeGenerateToolStripMenuItem.Text = LanguageSettings.Current.GenerateBlankVideo.GenerateWithFfmpegParametersPrompt;
             labelSubtitles.Text = string.Format(LanguageSettings.Current.GenerateVideoWithEmbeddedSubs.SubtitlesX, 0);
             labelNotSupported.Text = string.Empty;
