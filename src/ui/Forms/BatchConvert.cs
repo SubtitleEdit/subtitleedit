@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonFixOnlyNames.Text = LanguageSettings.Current.ChangeCasing.FixOnlyNamesCasing;
             radioButtonUppercase.Text = LanguageSettings.Current.ChangeCasing.AllUppercase;
             radioButtonLowercase.Text = LanguageSettings.Current.ChangeCasing.AllLowercase;
-            radioButtonLowercase.Text = LanguageSettings.Current.ChangeCasing.ProperCase;
+            radioButtonProperCase.Text = LanguageSettings.Current.ChangeCasing.ProperCase;
             if (Configuration.Settings.Tools.ChangeCasingChoice == "NamesOnly")
             {
                 radioButtonFixOnlyNames.Checked = true;
