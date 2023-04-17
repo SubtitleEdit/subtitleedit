@@ -204,6 +204,8 @@ namespace Nikse.SubtitleEdit.Logic
             public string KeepPartialTranscription { get; set; }
             public string TranslateToEnglish { get; set; }
             public string MaxCharsPerSubtitle { get; set; }
+            public string RemoveTemporaryFiles { get; set; }
+            public string SetCppConstMeFolder { get; set; }
         }
 
         public class AssaAttachments

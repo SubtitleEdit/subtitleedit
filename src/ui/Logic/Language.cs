@@ -347,6 +347,8 @@ namespace Nikse.SubtitleEdit.Logic
                 KeepPartialTranscription = "Keep partial transcription",
                 TranslateToEnglish = "Translate to English",
                 MaxCharsPerSubtitle = "Max. chars per subtitle line",
+                RemoveTemporaryFiles = "Remove temporary files",
+                SetCppConstMeFolder = "Set CPP/Const-me models folder...",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
