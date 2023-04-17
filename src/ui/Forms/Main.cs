@@ -6523,6 +6523,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
+                        _findHelper.StartLineIndex = 0;
+                        _findHelper.SelectedLineIndex = 0;
+                        _findHelper.MatchInOriginal = false;
+                        _findHelper.SelectedPosition = -1;
+                        textBoxListViewText.SelectionStart = 0;
+                        textBoxListViewText.SelectionLength = 0;
+                        textBoxListViewTextOriginal.SelectionStart = 0;
+                        textBoxListViewTextOriginal.SelectionLength = 0;
                         found = _findHelper.Find(_subtitle, _subtitleOriginal, -1);
                     }
                 }
@@ -6534,6 +6542,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.SelectionLength = 0;
                     textBoxListViewTextOriginal.SelectionStart = 0;
                     textBoxListViewTextOriginal.SelectionLength = 0;
+                    tb = GetFindReplaceTextBox();
                     tb.SelectionLength = 0;
                     tb.Focus();
                     tb.SelectionStart = _findHelper.SelectedPosition;
@@ -6821,6 +6830,12 @@ namespace Nikse.SubtitleEdit.Forms
                         stopAtIndex = firstIndex;
                         _findHelper.StartLineIndex = 0;
                         _findHelper.SelectedLineIndex = 0;
+                        _findHelper.MatchInOriginal = false;
+                        _findHelper.SelectedPosition = -1;
+                        textBoxListViewText.SelectionStart = 0;
+                        textBoxListViewText.SelectionLength = 0;
+                        textBoxListViewTextOriginal.SelectionStart = 0;
+                        textBoxListViewTextOriginal.SelectionLength = 0;
                         replaceCount = ReplaceAllHelper.ReplaceAll(_findHelper, _subtitle, _subtitleOriginal, Configuration.Settings.General.AllowEditOfOriginalSubtitle, stopAtIndex);
                         SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                     }
