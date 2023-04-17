@@ -2088,6 +2088,9 @@ Command line: {1} {2}
     <Find>查找(&amp;F)</Find>
     <Replace>替换(&amp;R)</Replace>
     <ReplaceAll>全部替换(&amp;A)</ReplaceAll>
+    <TranslationAndOriginal>翻译和原文</TranslationAndOriginal>
+    <TranslationOnly>仅翻译</TranslationOnly>
+    <OriginalOnly>仅原文</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>还原自动备份</Title>
