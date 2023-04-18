@@ -6775,6 +6775,13 @@ namespace Nikse.SubtitleEdit.Forms
             Focus();
         }
 
+        public bool GetAllowReplaceInOriginal()
+        {
+            return Configuration.Settings.General.AllowEditOfOriginalSubtitle
+                   && _subtitleOriginal != null
+                   && _subtitleOriginal.Paragraphs.Count > 0;
+        }
+
         public void ListViewReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
         {
             if (_findHelper == null)

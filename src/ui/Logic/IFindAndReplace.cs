@@ -12,5 +12,6 @@ namespace Nikse.SubtitleEdit.Logic
         void ReplaceDialogReplace(FindReplaceDialogHelper findReplaceDialogHelper);
         void ReplaceDialogReplaceAll(FindReplaceDialogHelper findReplaceDialogHelper);
         void ReplaceDialogClose();
+        bool GetAllowReplaceInOriginal();
     }
 }

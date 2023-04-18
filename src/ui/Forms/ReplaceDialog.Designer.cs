@@ -205,6 +205,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Replace";
+            this.Activated += new System.EventHandler(this.ReplaceDialog_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReplaceDialog_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormReplaceDialog_KeyDown);
             this.ResumeLayout(false);
