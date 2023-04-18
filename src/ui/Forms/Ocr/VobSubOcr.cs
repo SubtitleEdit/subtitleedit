@@ -9896,5 +9896,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             throw new NotImplementedException();
         }
+
+        public bool GetAllowReplaceInOriginal()
+        {
+            return false;
+        }
     }
 }

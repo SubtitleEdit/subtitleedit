@@ -70,11 +70,11 @@ namespace Nikse.SubtitleEdit.Forms
                 result.FindType = FindType.RegEx;
             }
 
-            result.SearchOriginal = !comboBoxFindReplaceIn.Visible ||
+            result.SearchOriginal = !comboBoxFindReplaceIn.Enabled ||
                                     comboBoxFindReplaceIn.SelectedIndex == 0 ||
                                     comboBoxFindReplaceIn.SelectedIndex == 2;
 
-            result.SearchTranslation = !comboBoxFindReplaceIn.Visible ||
+            result.SearchTranslation = !comboBoxFindReplaceIn.Enabled ||
                                        comboBoxFindReplaceIn.SelectedIndex == 0 ||
                                        comboBoxFindReplaceIn.SelectedIndex == 1;
 
@@ -139,8 +139,8 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxWholeWord.Checked = findHelper.FindReplaceType.WholeWord;
             }
 
-            labelFindReplaceIn.Visible = replaceInOriginal;
-            comboBoxFindReplaceIn.Visible = replaceInOriginal;
+            labelFindReplaceIn.Enabled = replaceInOriginal;
+            comboBoxFindReplaceIn.Enabled = replaceInOriginal;
         }
 
         private void ButtonReplaceClick(object sender, EventArgs e)
@@ -284,6 +284,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxFind_TextChanged(object sender, EventArgs e)
         {
             _findNext = false;
+        }
+
+        private void ReplaceDialog_Activated(object sender, EventArgs e)
+        {
+            var allowReplaceInOriginal = _findAndReplaceMethods.GetAllowReplaceInOriginal();
+            labelFindReplaceIn.Enabled = allowReplaceInOriginal;
+            comboBoxFindReplaceIn.Enabled = allowReplaceInOriginal;
         }
     }
 }
