@@ -200,6 +200,8 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <KeepPartialTranscription>Mantieni la trascrizione parziale</KeepPartialTranscription>
     <TranslateToEnglish>Traduci in inglese</TranslateToEnglish>
     <MaxCharsPerSubtitle>Caratteri max per riga sottotitoli</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Rimuovi file temporanei</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Imposta cartella modelli CPP/Const-me...</SetCppConstMeFolder>
   </AudioToText>
   <AssaAttachments>
     <Title>Allegati alpha sub station avanzati</Title>
@@ -2100,6 +2102,9 @@ stesso file di sottotitolo (collaborazione)</Information>
     <Find>&amp;Trova</Find>
     <Replace>&amp;Sostituisci</Replace>
     <ReplaceAll>Sostituisci &amp;tutto</ReplaceAll>
+    <TranslationAndOriginal>Traduzioni e originali</TranslationAndOriginal>
+    <TranslationOnly>Solo traduzioni</TranslationOnly>
+    <OriginalOnly>Solo originali</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Ripristino da backup automatico</Title>
