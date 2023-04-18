@@ -23024,7 +23024,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var tbText = textBoxListViewText;
             var tbOriginal = textBoxListViewTextOriginal;
-            int firstLeft = 236;
+            int firstLeft = numericUpDownDuration.Right + 9;
 
             var lbText = labelText;
             var lbTextOriginal = labelOriginalText;
