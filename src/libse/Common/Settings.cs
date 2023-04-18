@@ -324,6 +324,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool UseNoLineBreakAfter { get; set; }
         public string NoLineBreakAfterEnglish { get; set; }
         public List<string> FindHistory { get; set; }
+        public string ReplaceIn { get; set; }
         public string ExportTextFormatText { get; set; }
         public bool ExportTextRemoveStyling { get; set; }
         public bool ExportTextShowLineNumbers { get; set; }
@@ -5762,6 +5763,12 @@ $HorzAlign          =   Center
                 settings.Tools.ExportTextFormatText = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("ReplaceIn");
+            if (subNode != null)
+            {
+                settings.Tools.ReplaceIn = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportTextRemoveStyling");
             if (subNode != null)
             {
@@ -10645,6 +10652,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
                 textWriter.WriteElementString("ExportTextFormatText", settings.Tools.ExportTextFormatText);
+                textWriter.WriteElementString("ReplaceIn", settings.Tools.ReplaceIn);
                 textWriter.WriteElementString("ExportTextRemoveStyling", settings.Tools.ExportTextRemoveStyling.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportTextShowLineNumbers", settings.Tools.ExportTextShowLineNumbers.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportTextShowLineNumbersNewLine", settings.Tools.ExportTextShowLineNumbersNewLine.ToString(CultureInfo.InvariantCulture));

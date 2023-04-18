@@ -41,6 +41,7 @@
             this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
             this.comboBoxFindReplaceIn = new System.Windows.Forms.ComboBox();
             this.labelFindReplaceIn = new System.Windows.Forms.Label();
+            this.comboBoxFind = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // radioButtonRegEx
@@ -178,6 +179,15 @@
             this.labelFindReplaceIn.TabIndex = 16;
             this.labelFindReplaceIn.Text = "Replace/search in:";
             // 
+            // comboBoxFind
+            // 
+            this.comboBoxFind.FormattingEnabled = true;
+            this.comboBoxFind.Location = new System.Drawing.Point(15, 25);
+            this.comboBoxFind.Name = "comboBoxFind";
+            this.comboBoxFind.Size = new System.Drawing.Size(232, 21);
+            this.comboBoxFind.TabIndex = 1;
+            this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFind_KeyDown);
+            // 
             // ReplaceDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -195,6 +205,7 @@
             this.Controls.Add(this.radioButtonCaseSensitive);
             this.Controls.Add(this.radioButtonNormal);
             this.Controls.Add(this.buttonReplace);
+            this.Controls.Add(this.comboBoxFind);
             this.Controls.Add(this.textBoxFind);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -228,5 +239,6 @@
         private System.Windows.Forms.CheckBox checkBoxWholeWord;
         private System.Windows.Forms.ComboBox comboBoxFindReplaceIn;
         private System.Windows.Forms.Label labelFindReplaceIn;
+        private System.Windows.Forms.ComboBox comboBoxFind;
     }
 }

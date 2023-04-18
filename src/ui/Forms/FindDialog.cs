@@ -222,9 +222,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFind.Text = selectedText;
                 comboBoxFind.SelectAll();
                 comboBoxFind.Items.Clear();
-                for (int index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
+                for (var index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
                 {
-                    string s = Configuration.Settings.Tools.FindHistory[index];
+                    var s = Configuration.Settings.Tools.FindHistory[index];
                     comboBoxFind.Items.Add(s);
                 }
             }
