@@ -168,8 +168,8 @@
             this.Controls.Add(this.radioButtonCaseSensitive);
             this.Controls.Add(this.radioButtonNormal);
             this.Controls.Add(this.buttonFind);
-            this.Controls.Add(this.textBoxFind);
             this.Controls.Add(this.comboBoxFind);
+            this.Controls.Add(this.textBoxFind);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;

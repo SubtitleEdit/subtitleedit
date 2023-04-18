@@ -48,7 +48,19 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFindReplaceIn.Items.Add(LanguageSettings.Current.ReplaceDialog.TranslationAndOriginal);
             comboBoxFindReplaceIn.Items.Add(LanguageSettings.Current.ReplaceDialog.TranslationOnly);
             comboBoxFindReplaceIn.Items.Add(LanguageSettings.Current.ReplaceDialog.OriginalOnly);
-            comboBoxFindReplaceIn.SelectedIndex = 0;
+
+            if (Configuration.Settings.Tools.ReplaceIn == nameof(LanguageSettings.Current.ReplaceDialog.TranslationOnly))
+            {
+                comboBoxFindReplaceIn.SelectedIndex = 1;
+            }
+            else if (Configuration.Settings.Tools.ReplaceIn == nameof(LanguageSettings.Current.ReplaceDialog.OriginalOnly))
+            {
+                comboBoxFindReplaceIn.SelectedIndex = 2;
+            }
+            else
+            {
+                comboBoxFindReplaceIn.SelectedIndex = 0;
+            }
         }
 
         public bool ReplaceAll { get; set; }
@@ -85,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(GetFindType(), textBoxFind.Text, _regEx, textBoxReplace.Text, startLineIndex);
+            return new FindReplaceDialogHelper(GetFindType(), FindText, _regEx, textBoxReplace.Text, startLineIndex);
         }
 
         private void FormReplaceDialog_KeyDown(object sender, KeyEventArgs e)
@@ -109,7 +121,28 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper, bool replaceInOriginal)
         {
             _findHelper = findHelper;
-            textBoxFind.Text = selectedText;
+
+            if (Configuration.Settings.Tools.FindHistory.Count > 0)
+            {
+                textBoxFind.Visible = false;
+                comboBoxFind.Visible = true;
+                comboBoxFind.Text = selectedText;
+                comboBoxFind.SelectAll();
+                comboBoxFind.Items.Clear();
+                for (var index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
+                {
+                    var s = Configuration.Settings.Tools.FindHistory[index];
+                    comboBoxFind.Items.Add(s);
+                }
+            }
+            else
+            {
+                comboBoxFind.Visible = false;
+                textBoxFind.Visible = true;
+                textBoxFind.Text = selectedText;
+                textBoxFind.SelectAll();
+            }
+
             if (FindOnly && !string.IsNullOrEmpty(selectedText))
             {
                 _findNext = true;
@@ -148,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReplaceAll = false;
             FindOnly = false;
 
-            Validate(textBoxFind.Text);
+            Validate(FindText);
             if (DialogResult == DialogResult.OK)
             {
                 UpdateFindHelper();
@@ -163,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReplaceAll = true;
             FindOnly = false;
 
-            Validate(textBoxFind.Text);
+            Validate(FindText);
             if (DialogResult == DialogResult.OK)
             {
                 UpdateFindHelper();
@@ -193,7 +226,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(RegexUtils.FixNewLine(textBoxFind.Text), RegexOptions.Compiled);
+                    _regEx = new Regex(RegexUtils.FixNewLine(FindText), RegexOptions.Compiled);
                     DialogResult = DialogResult.OK;
                     _userAction = true;
                 }
@@ -222,10 +255,23 @@ namespace Nikse.SubtitleEdit.Forms
             ReplaceAll = false;
             FindOnly = true;
 
-            Validate(textBoxFind.Text);
+            Validate(FindText);
             if (DialogResult == DialogResult.OK)
             {
                 _findAndReplaceMethods.ReplaceDialogFind(_findHelper);
+            }
+        }
+
+        private string FindText
+        {
+            get
+            {
+                if (Configuration.Settings.Tools.FindHistory.Count == 0 || !comboBoxFind.Visible)
+                {
+                    return textBoxFind.Text;
+                }
+
+                return comboBoxFind.Text;
             }
         }
 
@@ -237,14 +283,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _findHelper.FindReplaceType = GetFindType();
-            _findHelper.FindText = textBoxFind.Text;
-            _findHelper.FindTextLength = textBoxFind.Text.Length;
+            _findHelper.FindText = FindText;
+            _findHelper.FindTextLength = _findHelper.FindText.Length;
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            textBoxFind.ContextMenuStrip = sender == radioButtonRegEx 
-                ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) 
+            textBoxFind.ContextMenuStrip = sender == radioButtonRegEx
+                ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind)
                 : null;
 
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
@@ -260,6 +306,19 @@ namespace Nikse.SubtitleEdit.Forms
                 Find();
                 Focus();
                 textBoxFind.Focus();
+            }
+        }
+
+        private void comboBoxFind_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+
+                Find();
+                Focus();
+                comboBoxFind.Focus();
             }
         }
 
@@ -279,6 +338,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+
+            if (comboBoxFindReplaceIn.SelectedIndex == 1)
+            {
+                Configuration.Settings.Tools.ReplaceIn = nameof(LanguageSettings.Current.ReplaceDialog.TranslationOnly);
+            }
+            else if (comboBoxFindReplaceIn.SelectedIndex == 2)
+            {
+                Configuration.Settings.Tools.ReplaceIn = nameof(LanguageSettings.Current.ReplaceDialog.OriginalOnly);
+            }
+            else
+            {
+                Configuration.Settings.Tools.ReplaceIn = nameof(LanguageSettings.Current.ReplaceDialog.TranslationAndOriginal);
+            }
+
         }
 
         private void textBoxFind_TextChanged(object sender, EventArgs e)
