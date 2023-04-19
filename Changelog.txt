@@ -20,10 +20,13 @@
    * Update Portuguese translation - thx hugok79
    * Update Italian language - thx bovirus
    * Update Catalan translation - thx  jordimas
+   * Update German translation - thx Netspark
    * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
+   * Replace: Add find/replace target + minor redesign
    * List all EBU language codes - thx TerrorizedGakon
    * Update Whisper CPP to v1.3.0
    * Update Whisper Const-me to 1.11
+   * Make main text boxes a little wider - thx Cyberyoda1411
 * FIXED:
    * Fix "Add embedded subtitles" with ANSI encoding - thx Cyberyoda1411
    * Fix running Whisper CPP/Const-me after setting folder for Whisper OpenAI - thx rsmith02ct
