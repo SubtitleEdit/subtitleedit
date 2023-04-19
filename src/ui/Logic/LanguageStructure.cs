@@ -2274,6 +2274,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string Find { get; set; }
             public string Replace { get; set; }
             public string ReplaceAll { get; set; }
+            public string FindReplaceIn { get; set; }
             public string TranslationAndOriginal { get; set; }
             public string TranslationOnly { get; set; }
             public string OriginalOnly { get; set; }

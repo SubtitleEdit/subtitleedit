@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFind.Text = LanguageSettings.Current.ReplaceDialog.Find;
             buttonReplace.Text = LanguageSettings.Current.ReplaceDialog.Replace;
             buttonReplaceAll.Text = LanguageSettings.Current.ReplaceDialog.ReplaceAll;
+            labelFindReplaceIn.Text = LanguageSettings.Current.ReplaceDialog.FindReplaceIn;
 
             if (Width < radioButtonRegEx.Right + 5)
             {

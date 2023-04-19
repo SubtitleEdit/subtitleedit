@@ -2098,10 +2098,11 @@ can edit in same subtitle file (collaboration)</Information>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Case sensitive</CaseSensitive>
     <RegularExpression>Regular e&amp;xpression</RegularExpression>
-    <ReplaceWith>Replace with</ReplaceWith>
+    <ReplaceWith>Replace with:</ReplaceWith>
     <Find>&amp;Find</Find>
     <Replace>&amp;Replace</Replace>
     <ReplaceAll>Replace &amp;all</ReplaceAll>
+    <FindReplaceIn>Replace/search in:</FindReplaceIn>
     <TranslationAndOriginal>Translation and original</TranslationAndOriginal>
     <TranslationOnly>Translation only</TranslationOnly>
     <OriginalOnly>Original only</OriginalOnly>
