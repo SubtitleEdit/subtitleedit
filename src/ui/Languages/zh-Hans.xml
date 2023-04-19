@@ -199,6 +199,8 @@ Command line: {1} {2}
     <KeepPartialTranscription>保留部分转录</KeepPartialTranscription>
     <TranslateToEnglish>翻译为英语</TranslateToEnglish>
     <MaxCharsPerSubtitle>每行字幕的最大字符数</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>移除临时文件</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
