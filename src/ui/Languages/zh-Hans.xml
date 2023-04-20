@@ -1968,7 +1968,7 @@ Command line: {1} {2}
   <MultipleReplace>
     <Title>多项替换</Title>
     <FindWhat>查找内容</FindWhat>
-    <ReplaceWith>替换</ReplaceWith>
+    <ReplaceWith>替换：</ReplaceWith>
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
