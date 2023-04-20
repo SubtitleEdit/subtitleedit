@@ -295,8 +295,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     numericUpDownDuration.Left = timeUpDownStartTime.Right + 15;
                     numericUpDownDuration.Width += 5;
-                    labelDuration.Left = numericUpDownDuration.Left - 3;
                 }
+                labelDuration.Left = numericUpDownDuration.Left;
 
                 var xDiff = timeUpDownStartTime.Top - (labelStartTime.Top + labelStartTime.Height);
                 if (xDiff < 0) // DPI auto-size fixes: see https://github.com/SubtitleEdit/subtitleedit/issues/3981
@@ -381,7 +381,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelCharactersPerSecond.Text = string.Empty;
                 labelTextLineTotal.Text = string.Empty;
                 labelStartTimeWarning.Text = string.Empty;
-                labelDurationWarning.Text = string.Empty;
                 labelVideoInfo.Text = string.Empty;
                 labelSingleLine.Text = string.Empty;
                 labelSingleLinePixels.Text = string.Empty;
@@ -621,9 +620,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 timeUpDownStartTime.SetAutoWidth();
                 numericUpDownDuration.Left = timeUpDownStartTime.Right + 4;
-                labelDurationWarning.Left = numericUpDownDuration.Left;
-                labelDuration.Left = labelDurationWarning.Left;
-
                 timeUpDownVideoPosition.SetAutoWidth();
                 timeUpDownVideoPositionAdjust.SetAutoWidth();
 
@@ -5217,7 +5213,6 @@ namespace Nikse.SubtitleEdit.Forms
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
             labelStartTimeWarning.Text = string.Empty;
-            labelDurationWarning.Text = string.Empty;
 
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
             Configuration.Settings.General.CurrentVideoIsSmpte = false;
@@ -9696,7 +9691,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count == 0)
             {
                 labelStartTimeWarning.Text = string.Empty;
-                labelDurationWarning.Text = string.Empty;
                 _subtitleListViewIndex = -1;
                 textBoxListViewText.Text = string.Empty;
                 textBoxListViewTextOriginal.Text = string.Empty;
@@ -12605,14 +12599,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            labelStartTimeWarning.Text = startTimeWarning;
-            labelDurationWarning.Text = durationWarning;
-            labelDurationWarning.Left = numericUpDownDuration.Left;
             if (!string.IsNullOrEmpty(startTimeWarning) && !string.IsNullOrEmpty(durationWarning))
             {
-                labelStartTimeWarning.Text = "Overlap";
-                labelDurationWarning.Text = "Overlap";
+                labelStartTimeWarning.TextAlign = ContentAlignment.TopLeft;
+                labelStartTimeWarning.Text = _languageGeneral.OverlapStartAndEnd;
                 ShowStatus(startTimeWarning + "  " + durationWarning, false, 4, true);
+            }
+            else if (!string.IsNullOrEmpty(startTimeWarning))
+            {
+                labelStartTimeWarning.TextAlign = ContentAlignment.TopLeft;
+                labelStartTimeWarning.Text = startTimeWarning;
+            }
+            else if (!string.IsNullOrEmpty(durationWarning))
+            {
+                labelStartTimeWarning.TextAlign = ContentAlignment.TopRight;
+                labelStartTimeWarning.Text = durationWarning;
+            }
+            else
+            {
+                labelStartTimeWarning.Text = string.Empty;
             }
         }
 
@@ -22880,7 +22885,7 @@ namespace Nikse.SubtitleEdit.Forms
                     groupBoxEdit.Height += adjustUp;
                     numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
                     numericUpDownDuration.Width += 5;
-                    labelDuration.Left = numericUpDownDuration.Left - 3;
+                    labelDuration.Left = numericUpDownDuration.Left;
 
                     // Video controls - Create
                     timeUpDownVideoPosition.Left = labelVideoPosition.Left + labelVideoPosition.Width;

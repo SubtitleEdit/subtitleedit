@@ -247,6 +247,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/OverlapNextX":
                     language.General.OverlapNextX = reader.Value;
                     break;
+                case "General/OverlapStartAndEnd":
+                    language.General.OverlapStartAndEnd = reader.Value;
+                    break;
                 case "General/Negative":
                     language.General.Negative = reader.Value;
                     break;

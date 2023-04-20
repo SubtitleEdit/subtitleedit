@@ -64,6 +64,7 @@
     <OverlapPreviousLineX>Overlap prev line ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Overlap start and end</OverlapStartAndEnd>
     <Negative>Negative</Negative>
     <RegularExpressionIsNotValid>Regular expression is not valid!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Current subtitle</CurrentSubtitle>
