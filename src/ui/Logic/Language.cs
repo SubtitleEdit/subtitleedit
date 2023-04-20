@@ -195,6 +195,7 @@ namespace Nikse.SubtitleEdit.Logic
                 OverlapPreviousLineX = "Overlap prev line ({0:#,##0.###})",
                 OverlapX = "Overlap ({0:#,##0.###})",
                 OverlapNextX = "Overlap next ({0:#,##0.###})",
+                OverlapStartAndEnd = "Overlap start and end",
                 Negative = "Negative",
                 RegularExpressionIsNotValid = "Regular expression is not valid!",
                 CurrentSubtitle = "Current subtitle",

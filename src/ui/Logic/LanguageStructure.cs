@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string OverlapPreviousLineX { get; set; }
             public string OverlapX { get; set; }
             public string OverlapNextX { get; set; }
+            public string OverlapStartAndEnd { get; set; }
             public string Negative { get; set; }
             public string RegularExpressionIsNotValid { get; set; }
             public string CurrentSubtitle { get; set; }
