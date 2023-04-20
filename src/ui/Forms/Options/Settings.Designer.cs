@@ -4080,7 +4080,7 @@
             // checkBoxTBToggleSourceView
             // 
             this.checkBoxTBToggleSourceView.AutoSize = true;
-            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(27, 312);
+            this.checkBoxTBToggleSourceView.Location = new System.Drawing.Point(27, 311);
             this.checkBoxTBToggleSourceView.Name = "checkBoxTBToggleSourceView";
             this.checkBoxTBToggleSourceView.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBToggleSourceView.TabIndex = 46;
@@ -4090,7 +4090,7 @@
             // labelTBBurnIn
             // 
             this.labelTBBurnIn.AutoSize = true;
-            this.labelTBBurnIn.Location = new System.Drawing.Point(243, 139);
+            this.labelTBBurnIn.Location = new System.Drawing.Point(243, 142);
             this.labelTBBurnIn.Name = "labelTBBurnIn";
             this.labelTBBurnIn.Size = new System.Drawing.Size(40, 13);
             this.labelTBBurnIn.TabIndex = 45;
@@ -4098,7 +4098,7 @@
             // 
             // pictureBoxTBBurnIn
             // 
-            this.pictureBoxTBBurnIn.Location = new System.Drawing.Point(256, 158);
+            this.pictureBoxTBBurnIn.Location = new System.Drawing.Point(256, 159);
             this.pictureBoxTBBurnIn.Name = "pictureBoxTBBurnIn";
             this.pictureBoxTBBurnIn.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBBurnIn.TabIndex = 44;
@@ -4117,7 +4117,7 @@
             // labelTBNetflixQualityCheck
             // 
             this.labelTBNetflixQualityCheck.AutoSize = true;
-            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(647, 136);
+            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(647, 143);
             this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
             this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
             this.labelTBNetflixQualityCheck.TabIndex = 42;
@@ -4125,7 +4125,7 @@
             // 
             // pictureBoxNetflixQualityCheck
             // 
-            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(660, 155);
+            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(660, 160);
             this.pictureBoxNetflixQualityCheck.Name = "pictureBoxNetflixQualityCheck";
             this.pictureBoxNetflixQualityCheck.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxNetflixQualityCheck.TabIndex = 41;
@@ -4134,7 +4134,7 @@
             // checkBoxNetflixQualityCheck
             // 
             this.checkBoxNetflixQualityCheck.AutoSize = true;
-            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(663, 195);
+            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(663, 198);
             this.checkBoxNetflixQualityCheck.Name = "checkBoxNetflixQualityCheck";
             this.checkBoxNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
             this.checkBoxNetflixQualityCheck.TabIndex = 40;
@@ -4152,7 +4152,7 @@
             // 
             // pictureBoxTBRemoveTextForHi
             // 
-            this.pictureBoxTBRemoveTextForHi.Location = new System.Drawing.Point(22, 162);
+            this.pictureBoxTBRemoveTextForHi.Location = new System.Drawing.Point(22, 161);
             this.pictureBoxTBRemoveTextForHi.Name = "pictureBoxTBRemoveTextForHi";
             this.pictureBoxTBRemoveTextForHi.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxTBRemoveTextForHi.TabIndex = 38;
@@ -4161,7 +4161,7 @@
             // checkBoxTBRemoveTextForHi
             // 
             this.checkBoxTBRemoveTextForHi.AutoSize = true;
-            this.checkBoxTBRemoveTextForHi.Location = new System.Drawing.Point(25, 202);
+            this.checkBoxTBRemoveTextForHi.Location = new System.Drawing.Point(25, 198);
             this.checkBoxTBRemoveTextForHi.Name = "checkBoxTBRemoveTextForHi";
             this.checkBoxTBRemoveTextForHi.Size = new System.Drawing.Size(55, 17);
             this.checkBoxTBRemoveTextForHi.TabIndex = 18;
@@ -4198,7 +4198,7 @@
             // labelTBHelp
             // 
             this.labelTBHelp.AutoSize = true;
-            this.labelTBHelp.Location = new System.Drawing.Point(561, 136);
+            this.labelTBHelp.Location = new System.Drawing.Point(561, 143);
             this.labelTBHelp.Name = "labelTBHelp";
             this.labelTBHelp.Size = new System.Drawing.Size(28, 13);
             this.labelTBHelp.TabIndex = 33;
@@ -4206,7 +4206,7 @@
             // 
             // pictureBoxHelp
             // 
-            this.pictureBoxHelp.Location = new System.Drawing.Point(560, 155);
+            this.pictureBoxHelp.Location = new System.Drawing.Point(560, 160);
             this.pictureBoxHelp.Name = "pictureBoxHelp";
             this.pictureBoxHelp.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxHelp.TabIndex = 32;
@@ -4215,7 +4215,7 @@
             // checkBoxHelp
             // 
             this.checkBoxHelp.AutoSize = true;
-            this.checkBoxHelp.Location = new System.Drawing.Point(563, 195);
+            this.checkBoxHelp.Location = new System.Drawing.Point(563, 198);
             this.checkBoxHelp.Name = "checkBoxHelp";
             this.checkBoxHelp.Size = new System.Drawing.Size(55, 17);
             this.checkBoxHelp.TabIndex = 23;
@@ -4225,7 +4225,7 @@
             // labelTBSettings
             // 
             this.labelTBSettings.AutoSize = true;
-            this.labelTBSettings.Location = new System.Drawing.Point(456, 136);
+            this.labelTBSettings.Location = new System.Drawing.Point(456, 143);
             this.labelTBSettings.Name = "labelTBSettings";
             this.labelTBSettings.Size = new System.Drawing.Size(46, 13);
             this.labelTBSettings.TabIndex = 30;
@@ -4233,7 +4233,7 @@
             // 
             // pictureBoxSettings
             // 
-            this.pictureBoxSettings.Location = new System.Drawing.Point(459, 155);
+            this.pictureBoxSettings.Location = new System.Drawing.Point(459, 160);
             this.pictureBoxSettings.Name = "pictureBoxSettings";
             this.pictureBoxSettings.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSettings.TabIndex = 29;
@@ -4242,7 +4242,7 @@
             // checkBoxSettings
             // 
             this.checkBoxSettings.AutoSize = true;
-            this.checkBoxSettings.Location = new System.Drawing.Point(462, 195);
+            this.checkBoxSettings.Location = new System.Drawing.Point(462, 198);
             this.checkBoxSettings.Name = "checkBoxSettings";
             this.checkBoxSettings.Size = new System.Drawing.Size(55, 17);
             this.checkBoxSettings.TabIndex = 22;
@@ -4252,7 +4252,7 @@
             // labelTBSpellCheck
             // 
             this.labelTBSpellCheck.AutoSize = true;
-            this.labelTBSpellCheck.Location = new System.Drawing.Point(357, 136);
+            this.labelTBSpellCheck.Location = new System.Drawing.Point(357, 143);
             this.labelTBSpellCheck.Name = "labelTBSpellCheck";
             this.labelTBSpellCheck.Size = new System.Drawing.Size(59, 13);
             this.labelTBSpellCheck.TabIndex = 27;
@@ -4260,7 +4260,7 @@
             // 
             // pictureBoxSpellCheck
             // 
-            this.pictureBoxSpellCheck.Location = new System.Drawing.Point(361, 155);
+            this.pictureBoxSpellCheck.Location = new System.Drawing.Point(361, 160);
             this.pictureBoxSpellCheck.Name = "pictureBoxSpellCheck";
             this.pictureBoxSpellCheck.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSpellCheck.TabIndex = 26;
@@ -4269,7 +4269,7 @@
             // checkBoxSpellCheck
             // 
             this.checkBoxSpellCheck.AutoSize = true;
-            this.checkBoxSpellCheck.Location = new System.Drawing.Point(362, 195);
+            this.checkBoxSpellCheck.Location = new System.Drawing.Point(362, 198);
             this.checkBoxSpellCheck.Name = "checkBoxSpellCheck";
             this.checkBoxSpellCheck.Size = new System.Drawing.Size(55, 17);
             this.checkBoxSpellCheck.TabIndex = 21;
@@ -4287,7 +4287,7 @@
             // 
             // pictureBoxVisualSync
             // 
-            this.pictureBoxVisualSync.Location = new System.Drawing.Point(145, 162);
+            this.pictureBoxVisualSync.Location = new System.Drawing.Point(145, 161);
             this.pictureBoxVisualSync.Name = "pictureBoxVisualSync";
             this.pictureBoxVisualSync.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxVisualSync.TabIndex = 20;
@@ -4296,7 +4296,7 @@
             // checkBoxVisualSync
             // 
             this.checkBoxVisualSync.AutoSize = true;
-            this.checkBoxVisualSync.Location = new System.Drawing.Point(148, 202);
+            this.checkBoxVisualSync.Location = new System.Drawing.Point(148, 198);
             this.checkBoxVisualSync.Name = "checkBoxVisualSync";
             this.checkBoxVisualSync.Size = new System.Drawing.Size(55, 17);
             this.checkBoxVisualSync.TabIndex = 19;
@@ -5165,11 +5165,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
             this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelGeneral);
-            this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
             this.Controls.Add(this.panelNetwork);
