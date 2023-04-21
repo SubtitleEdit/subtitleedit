@@ -358,6 +358,7 @@ Read more info (web)?</WhisperNotFound>
     <MkvLanguageStyleTwoLetter>Two letter language code</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Three letter language code</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Also scan video files in "Search folder" (slow)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Import image...</ImportImage>
