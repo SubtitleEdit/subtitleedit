@@ -64,6 +64,7 @@
     <OverlapPreviousLineX>Överlappa föregående rad ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Överlappa ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Överlappa nästa({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Överlappande start och slut</OverlapStartAndEnd>
     <Negative>Negativ</Negative>
     <RegularExpressionIsNotValid>Reguljärt uttryck är inte giltig!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Nuvarande undertext</CurrentSubtitle>
@@ -179,6 +180,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <Title>Ljud till text</Title>
     <Info>Generera text från ljud via Vosk/Kaldi taligenkänning</Info>
     <WhisperInfo>Generera text från ljud via Whisper taligenkänning</WhisperInfo>
+    <Engine>Motor</Engine>
     <VoskWebsite>Vosk hemsida</VoskWebsite>
     <WhisperWebsite>Whisper hemsida</WhisperWebsite>
     <WhisperNotFound>Whisper hittades inte.
@@ -199,6 +201,8 @@ Läs mer information (webb)?</WhisperNotFound>
     <KeepPartialTranscription>Behåll partiell transkription</KeepPartialTranscription>
     <TranslateToEnglish>Översätt till engelska</TranslateToEnglish>
     <MaxCharsPerSubtitle>Max.  tecken per undertextrad</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Ta bort temporära filer</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Ställ in mappen för CPP/Const-me-modeller...</SetCppConstMeFolder>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerade Sub Station Alpha-tillbehör</Title>
@@ -354,6 +358,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <MkvLanguageStyleTwoLetter>Språkkod på två bokstäver</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Språkkod på tre bokstäver</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Ingen språkkod</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Skanna även videofiler i "Sök mapp" (långsamt)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Importera bild...</ImportImage>
@@ -396,6 +401,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <OnlyChangeAllUppercaseLines>Ändra endast rader med versaler.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALLA VERSALER</AllUppercase>
     <AllLowercase>alla gemener</AllLowercase>
+    <ProperCase>Börja Med Stor Bokstav</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Ändra skiftläge - Namn</Title>
@@ -2097,6 +2103,10 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <Find>Sök</Find>
     <Replace>Ersätt</Replace>
     <ReplaceAll>Ersätt alla</ReplaceAll>
+    <FindReplaceIn>Byt ut/sök i:</FindReplaceIn>
+    <TranslationAndOriginal>Översättning och original</TranslationAndOriginal>
+    <TranslationOnly>Endast översättning</TranslationOnly>
+    <OriginalOnly>Endast original</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Återställ automatisk säkerhetskopia</Title>
@@ -2510,13 +2520,14 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <GoForward500Milliseconds>500 ms framåt</GoForward500Milliseconds>
     <GoBack1Second>En sekund bakåt</GoBack1Second>
     <GoForward1Second>En sekund framåt</GoForward1Second>
+    <GoBack3Seconds>Tre sekunder tillbaka</GoBack3Seconds>
+    <GoForward3Seconds>Tre sekunder framåt</GoForward3Seconds>
     <GoBack5Seconds>Fem sekunder bakåt</GoBack5Seconds>
     <GoForward5Seconds>Fem sekunder framåt</GoForward5Seconds>
     <GoBackXSSeconds>Liten vald tid tillbaka</GoBackXSSeconds>
     <GoForwardXSSeconds>Liten vald tid framåt</GoForwardXSSeconds>
     <GoBackXLSeconds>Stor vald tid tillbaka</GoBackXLSeconds>
     <GoForwardXLSeconds>Stor vald tid framåt</GoForwardXLSeconds>
-    <GoBack3Seconds>Tre sekunder tillbaka</GoBack3Seconds>
     <GoToStartCurrent>Ställ in videopositionen till början av aktuell undertext</GoToStartCurrent>
     <ToggleStartEndCurrent>Växla videopos mellan start/slut på aktuell undertext</ToggleStartEndCurrent>
     <PlaySelectedLines>Spela valda rader</PlaySelectedLines>
