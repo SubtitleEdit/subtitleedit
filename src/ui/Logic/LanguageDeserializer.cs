@@ -961,6 +961,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/MkvLanguageStyleEmpty":
                     language.BatchConvert.MkvLanguageStyleEmpty = reader.Value;
                     break;
+                case "BatchConvert/SearchFolderScanVideo":
+                    language.BatchConvert.SearchFolderScanVideo = reader.Value;
+                    break;
                 case "BinEdit/ImportImage":
                     language.BinEdit.ImportImage = reader.Value;
                     break;

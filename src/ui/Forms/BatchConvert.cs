@@ -261,6 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
                 tesseractToolStripMenuItem_Click(null, null);
             }
 
+            alsoScanVideoFilesInSearchFolderslowToolStripMenuItem.Text = LanguageSettings.Current.BatchConvert.SearchFolderScanVideo;
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
             buttonConvertOptionsSettings.Text = l.Settings;
             radioButtonShowEarlier.Text = LanguageSettings.Current.ShowEarlierLater.ShowEarlier.RemoveChar('&');

@@ -380,6 +380,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string MkvLanguageStyleTwoLetter { get; set; }
             public string MkvLanguageStyleThreeLetter { get; set; }
             public string MkvLanguageStyleEmpty { get; set; }
+            public string SearchFolderScanVideo { get; set; }
         }
 
         public class BinEdit

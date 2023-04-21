@@ -523,6 +523,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MkvLanguageStyleTwoLetter = "Two letter language code",
                 MkvLanguageStyleThreeLetter = "Three letter language code",
                 MkvLanguageStyleEmpty = "No language code",
+                SearchFolderScanVideo = "Also scan video files in \"Search folder\" (slow)",
             };
 
             BinEdit = new LanguageStructure.BinEdit
