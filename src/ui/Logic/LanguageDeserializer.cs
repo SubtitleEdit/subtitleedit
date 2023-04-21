@@ -7636,6 +7636,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SplitLongLines/LongestLineIsXAtY":
                     language.SplitLongLines.LongestLineIsXAtY = reader.Value;
                     break;
+                case "SplitLongLines/SplitAtLineBreaks":
+                    language.SplitLongLines.SplitAtLineBreaks = reader.Value;
+                    break;
                 case "SplitSubtitle/Title":
                     language.SplitSubtitle.Title = reader.Value;
                     break;

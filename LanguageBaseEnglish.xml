@@ -2787,6 +2787,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Number of breaks/splits: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Longest single line length is {0} at line {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Longest total line length is {0} at line {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Split at line breaks</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Split subtitle</Title>

@@ -2989,6 +2989,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string NumberOfSplits { get; set; }
             public string LongestSingleLineIsXAtY { get; set; }
             public string LongestLineIsXAtY { get; set; }
+            public string SplitAtLineBreaks { get; set; }
         }
 
         public class SplitSubtitle
