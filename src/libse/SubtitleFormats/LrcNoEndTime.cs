@@ -261,10 +261,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            foreach (var p in subtitle.Paragraphs)
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
+                var p = subtitle.Paragraphs[i];
                 p.Text = Utilities.AutoBreakLine(p.Text);
-                p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                var next = subtitle.GetParagraphOrDefault(i + 1);
+                if (next != null && !p.StartTime.IsMaxTime && !next.StartTime.IsMaxTime)
+                {
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text + "!");
+                    }
+                }
+                else if (next == null)
+                {
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text + "!");
+                }
             }
         }
 
