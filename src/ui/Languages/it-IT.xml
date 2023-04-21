@@ -64,6 +64,7 @@
     <OverlapPreviousLineX>Riga prec. sovrapposta ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Sovrapposizione ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Riga succ. sovrapposta ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Sovrapponi inizio e fine</OverlapStartAndEnd>
     <Negative>Negativo</Negative>
     <RegularExpressionIsNotValid>Espressione regolare non valida!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Sottotitolo attuale</CurrentSubtitle>
@@ -2098,10 +2099,11 @@ stesso file di sottotitolo (collaborazione)</Information>
     <Normal>&amp;Normale</Normal>
     <CaseSensitive>Maiuscolo/minuscolo</CaseSensitive>
     <RegularExpression>Espressione Regolare</RegularExpression>
-    <ReplaceWith>Sostituisci con</ReplaceWith>
+    <ReplaceWith>Sostituisci con:</ReplaceWith>
     <Find>&amp;Trova</Find>
     <Replace>&amp;Sostituisci</Replace>
     <ReplaceAll>Sostituisci &amp;tutto</ReplaceAll>
+    <FindReplaceIn>Sostituisci/cerca in:</FindReplaceIn>
     <TranslationAndOriginal>Traduzioni e originali</TranslationAndOriginal>
     <TranslationOnly>Solo traduzioni</TranslationOnly>
     <OriginalOnly>Solo originali</OriginalOnly>
