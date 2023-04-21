@@ -3141,6 +3141,7 @@ can edit in same subtitle file (collaboration)",
                 NumberOfSplits = "Number of breaks/splits: {0}",
                 LongestSingleLineIsXAtY = "Longest single line length is {0} at line {1}",
                 LongestLineIsXAtY = "Longest total line length is {0} at line {1}",
+                SplitAtLineBreaks = "Split at line breaks",
             };
 
             SplitSubtitle = new LanguageStructure.SplitSubtitle
