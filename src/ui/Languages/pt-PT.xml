@@ -65,6 +65,7 @@ E-mail: mailto:hugokarvalho@hotmail.com</TranslatedBy>
     <OverlapPreviousLineX>Sobrepor a linha anterior ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Sobrepor ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Sobrepor a seguinte ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Sobrepor início e fim</OverlapStartAndEnd>
     <Negative>Negativo</Negative>
     <RegularExpressionIsNotValid>Expressão regular não válida!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Legenda actual</CurrentSubtitle>
@@ -201,6 +202,8 @@ Mais informação online?</WhisperNotFound>
     <KeepPartialTranscription>Manter transcrição parcial</KeepPartialTranscription>
     <TranslateToEnglish>Traduzir para Inglês</TranslateToEnglish>
     <MaxCharsPerSubtitle>Máx. caracteres por linha de legenda</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Remover ficheiros temporários</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Definir pasta de modelos CPP/Const-me...</SetCppConstMeFolder>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
@@ -2101,6 +2104,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Find>&amp;Localizar</Find>
     <Replace>&amp;Substituir</Replace>
     <ReplaceAll>Substituir &amp;tudo</ReplaceAll>
+    <FindReplaceIn>Substituir/procurar em:</FindReplaceIn>
+    <TranslationAndOriginal>Tradução e original</TranslationAndOriginal>
+    <TranslationOnly>Apenas tradução</TranslationOnly>
+    <OriginalOnly>Apenas original</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restaurar a cópia de segurança automática</Title>
