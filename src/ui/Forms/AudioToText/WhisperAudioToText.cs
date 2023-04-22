@@ -125,7 +125,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 maxChars = Configuration.Settings.Tools.AudioToTextLineMaxCharsCn;
             }
 
-            comboBoxCharsPerSub.Text = maxChars.ToString(CultureInfo.InvariantCulture);
+            if (Configuration.Settings.Tools.AudioToTextUseLineMaxChars)
+            {
+                comboBoxCharsPerSub.Text = maxChars.ToString(CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                comboBoxCharsPerSub.SelectedIndex = 0;
+            }
 
             InitializeWhisperEngines(comboBoxWhisperEngine);
         }
@@ -1022,6 +1029,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             Configuration.Settings.Tools.VoskPostProcessing = checkBoxUsePostProcessing.Checked;
             Configuration.Settings.Tools.WhisperAutoAdjustTimings = checkBoxAutoAdjustTimings.Checked;
+            Configuration.Settings.Tools.AudioToTextUseLineMaxChars = comboBoxCharsPerSub.SelectedIndex > 0;
 
             DeleteTemporaryFiles(_filesToDelete);
         }

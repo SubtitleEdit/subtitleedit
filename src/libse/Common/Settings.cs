@@ -437,6 +437,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string WhisperCppModelLocation { get; set; }
         public string WhisperExtraSettings { get; set; }
         public bool WhisperAutoAdjustTimings { get; set; }
+        public bool AudioToTextUseLineMaxChars { get; set; }
         public int AudioToTextLineMaxChars { get; set; }
         public int AudioToTextLineMaxCharsJp { get; set; }
         public int AudioToTextLineMaxCharsCn { get; set; }
@@ -6395,6 +6396,12 @@ $HorzAlign          =   Center
                 settings.Tools.WhisperAutoAdjustTimings = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AudioToTextUseLineMaxChars");
+            if (subNode != null)
+            {
+                settings.Tools.AudioToTextUseLineMaxChars = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AudioToTextLineMaxChars");
             if (subNode != null)
             {
@@ -10757,6 +10764,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WhisperExtraSettings", settings.Tools.WhisperExtraSettings);
                 textWriter.WriteElementString("WhisperLanguageCode", settings.Tools.WhisperLanguageCode);
                 textWriter.WriteElementString("WhisperAutoAdjustTimings", settings.Tools.WhisperAutoAdjustTimings.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AudioToTextUseLineMaxChars", settings.Tools.AudioToTextUseLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxChars", settings.Tools.AudioToTextLineMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsJp", settings.Tools.AudioToTextLineMaxCharsJp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AudioToTextLineMaxCharsCn", settings.Tools.AudioToTextLineMaxCharsCn.ToString(CultureInfo.InvariantCulture));
