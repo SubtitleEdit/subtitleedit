@@ -341,6 +341,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         arr[1].CountCharacters(false) < Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         p.Text = newText;
+                        p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
                         deleteItems.Add(next);
                     }
                     else
