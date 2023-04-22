@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.12</Version>
-    <TranslatedBy>Последен превод на български 16.03.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 20.04.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -60,10 +60,11 @@
     <TotalLengthXSplitLine>Обща дължина: {0} (раздели реда!)</TotalLengthXSplitLine>
     <SplitLine>Раздели реда!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
-    <Overlap>Припокриване</Overlap>
-    <OverlapPreviousLineX>Застъпване с предишен ред ({0:#,##0.###})</OverlapPreviousLineX>
+    <Overlap>Застъпване</Overlap>
+    <OverlapPreviousLineX>Застъпване с предишния ред ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Застъпване с ({0:#,##0.###})</OverlapX>
-    <OverlapNextX>Застъпване на следващ ред ({0:#,##0.###})</OverlapNextX>
+    <OverlapNextX>Застъпване със следващия ред ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Застъпване на началото и края</OverlapStartAndEnd>
     <Negative>Отриц. застъпване</Negative>
     <RegularExpressionIsNotValid>Обикновения израз е невалиден!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Текущи субтитри</CurrentSubtitle>
@@ -176,6 +177,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Аудио/Видео към текст</Title>
     <Info>Генерирай текст от аудио чрез Vosk/Kaldi разпознаване на реч</Info>
     <WhisperInfo>Генерирайте текст от аудио чрез разпознаване на говор Whisper</WhisperInfo>
+    <Engine>Двигател</Engine>
     <VoskWebsite>Уебсайт на Vosk</VoskWebsite>
     <WhisperWebsite>Уебсайт Whisper</WhisperWebsite>
     <WhisperNotFound>Не е намерен Whisper. Прочетете повече информация (уеб)?</WhisperNotFound>
@@ -194,6 +196,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <KeepPartialTranscription>Запазване на частична транскрипция</KeepPartialTranscription>
     <TranslateToEnglish>Превод на английски</TranslateToEnglish>
     <MaxCharsPerSubtitle>Макс. символи в ред за субтитри</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Премахване на временни файлове</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Задаване на папка с модели CPP/Const-me...</SetCppConstMeFolder>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA</Title>
@@ -349,6 +353,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleTwoLetter>Код на две букви на езика</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Трибуквен код на езика</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Няма езиков код</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Също така сканирайте видео файлове в „Папка за търсене“ (бавно)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Импорт изобр...</ImportImage>
@@ -391,6 +396,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OnlyChangeAllUppercaseLines>Промени само редовете с Главни букви.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ВСИЧКИ ГЛАВНИ</AllUppercase>
     <AllLowercase>всички малки</AllLowercase>
+    <ProperCase>Подходящ случай</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Промяна големината на буквите - Думи</Title>
@@ -721,7 +727,8 @@ https://github.com/SubtitleEdit/subtitleedit
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Търсене на дума (израз)</Title>
-    <Find>Търсене</Find>
+    <FindNext>Намери следващата</FindNext>
+    <FindPrevious>Намери предишната</FindPrevious>
     <Normal>Нормално</Normal>
     <CaseSensitive>С отчитане на ГЛАВНИ и малки букви</CaseSensitive>
     <RegularExpression>Обикновен израз</RegularExpression>
@@ -1173,7 +1180,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Reopen>Отвори предишен файл със субтитри</Reopen>
         <Save>Запиши</Save>
         <SaveAs>Запиши като...</SaveAs>
-        <RestoreAutoBackup>Възстановяване автоматично от резервно копие...</RestoreAutoBackup>
+        <RestoreAutoBackup>Възстановяване от автоматично резервно копие...</RestoreAutoBackup>
         <FormatXProperties>{0} свойства...</FormatXProperties>
         <OpenOriginal>Отваряне на оригиналните субтитри (режим на превод)...</OpenOriginal>
         <SaveOriginal>Запис на оригиналните субтитри</SaveOriginal>
@@ -1249,7 +1256,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ConvertColorsToDialog>Конвертиране на цветовете в диалогов режим...</ConvertColorsToDialog>
         <ChangeCasing>Промяна големината на буквите...</ChangeCasing>
         <ChangeFrameRate>Промяна честотата на кадрите (fps)...</ChangeFrameRate>
-        <ChangeSpeedInPercent>Промяна на скоростта (в проценти)...</ChangeSpeedInPercent>
+        <ChangeSpeedInPercent>Промяна на скоростта (в проценти %)...</ChangeSpeedInPercent>
         <MergeShortLines>Обединяване на кратки редове...</MergeShortLines>
         <MergeDuplicateText>Обединяване на редове с еднакъв текст...</MergeDuplicateText>
         <MergeSameTimeCodes>Обединяване на редове с еднакъв времеви код...</MergeSameTimeCodes>
@@ -1579,7 +1586,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeDisplayTimeAdjustment>Преди настройката на времето за показване</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Времето за показване е настроено на: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Времената за показване са настроени на: {0}</DisplayTimesAdjustedX>
-    <StartTimeAdjustedX>Началното време е настроено на: {0}</StartTimeAdjustedX>
+    <StartTimeAdjustedX>Началното време е коригирано на: {0}</StartTimeAdjustedX>
     <BeforeCommonErrorFixes>Преди поправянето на грешки</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Поправени грешки в избраните редове</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Поправени грешки</CommonErrorsFixed>
@@ -2096,10 +2103,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <Find>Търси</Find>
     <Replace>Замени</Replace>
     <ReplaceAll>Замени всички</ReplaceAll>
+    <FindReplaceIn>Замени/търси в:</FindReplaceIn>
+    <TranslationAndOriginal>Превод и оригинал</TranslationAndOriginal>
+    <TranslationOnly>Само превод</TranslationOnly>
+    <OriginalOnly>Само оригинал</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
-    <Title>Възстановяване автоматично от резервно копие</Title>
-    <Information>Отваряне автоматично записите</Information>
+    <Title>Възстановяване от автоматично резервно копие</Title>
+    <Information>Отваряне на автоматично запазено резервно копие</Information>
     <DateAndTime>Дата и час</DateAndTime>
     <FileName>Име на файл</FileName>
     <Extension>Разширение</Extension>
@@ -2512,13 +2523,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForward500Milliseconds>500 мс напред</GoForward500Milliseconds>
     <GoBack1Second>1 сек. назад</GoBack1Second>
     <GoForward1Second>1 сек. напред</GoForward1Second>
+    <GoBack3Seconds>3 сек. назад</GoBack3Seconds>
+    <GoForward3Seconds>3 сек. напред</GoForward3Seconds>
     <GoBack5Seconds>5 сек. назад</GoBack5Seconds>
     <GoForward5Seconds>5 сек. напред</GoForward5Seconds>
     <GoBackXSSeconds>Кратко избраното време назад</GoBackXSSeconds>
     <GoForwardXSSeconds>Кратко избраното време напред</GoForwardXSSeconds>
     <GoBackXLSeconds>Дълго избраното време назад</GoBackXLSeconds>
     <GoForwardXLSeconds>Дълго избраното време напред</GoForwardXLSeconds>
-    <GoBack3Seconds>Три секунди назад</GoBack3Seconds>
     <GoToStartCurrent>Задаване на видео поз. за старт на текущия субтитър</GoToStartCurrent>
     <ToggleStartEndCurrent>Превключване на видео поз. между начало/край на текущия субтитър</ToggleStartEndCurrent>
     <PlaySelectedLines>Възпроизв. на избраните редове</PlaySelectedLines>
@@ -2656,7 +2668,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BDOpensInOcr>OCR (разпознаване на текст)</BDOpensInOcr>
     <BDOpensInEdit>Редактиране</BDOpensInEdit>
     <ShortcutsAllowSingleLetterOrNumberInTextBox>Преки пътища: Разрешава единична буква/цифра в текстовото поле</ShortcutsAllowSingleLetterOrNumberInTextBox>
-    <ShortcutCustomToggle>Превключване на пряк път по избор начало/край</ShortcutCustomToggle>
+    <ShortcutCustomToggle>Превключване на пряк път по избор за начало/край</ShortcutCustomToggle>
     <UpdateFileTypeAssociations>Обнови асоциациите типове файлове</UpdateFileTypeAssociations>
     <FileTypeAssociationsUpdated>Асоциациите на типовете файлове са актуализирани</FileTypeAssociationsUpdated>
     <CustomContinuationStyle>Редактиране на персонализиран стил на продължение</CustomContinuationStyle>
@@ -2778,6 +2790,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfSplits>Брой разделяния: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Най-дългият единичен ред има {0} символи в ред № {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Най-дългият ред общо има {0} символи в ред № {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Разделяне на нови редове</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Основни настройки за Разделяне на субтитри</Title>
