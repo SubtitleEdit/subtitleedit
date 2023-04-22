@@ -358,6 +358,7 @@ Vuoi ulteriori informazioni (web)?</WhisperNotFound>
     <MkvLanguageStyleTwoLetter>Codice lingua (due lettere)</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Codice lingua (tre lettere)</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Nessun codice lingua</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Scansiona anche file video in "Cerca cartella" (lento)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Importa immagine...</ImportImage>
@@ -2786,6 +2787,7 @@ Vuoi continuare?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Numero di divisioni: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>La singola riga più lunga è di {0} caratteri alla riga {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>La riga più lunga è di {0} caratteri alla riga {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Dividi alle interruzioni di riga</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Dividi sottotitolo</Title>
