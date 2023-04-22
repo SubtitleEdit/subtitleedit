@@ -296,6 +296,11 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownDuration.Left = timeUpDownStartTime.Right + 15;
                     numericUpDownDuration.Width += 5;
                 }
+
+                labelSingleLine.Left = textBoxListViewText.Left;
+                labelTextLineLengths.Left = textBoxListViewText.Left;
+                labelSingleLinePixels.Left = textBoxListViewText.Left;
+
                 labelDuration.Left = numericUpDownDuration.Left;
 
                 var xDiff = timeUpDownStartTime.Top - (labelStartTime.Top + labelStartTime.Height);
