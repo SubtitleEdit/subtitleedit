@@ -94,15 +94,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/22d42d3e69ce9149bfd52c07d357e4cb72b992fb602805d6bb39f331400d6742.mediu-en/"),
                 Folder = "22d42d3e69ce9149bfd52c07d357e4cb72b992fb602805d6bb39f331400d6742.mediu-en",
             },
-            //new WhisperModel - large-v1
-            //{
-            //    Name = "large",
-            //    Size = "2.1 GB",
-            //    Urls =  "MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/ea44e7a9609bd21a604b28880b85fc7dc2c373876c627a7553ce5440a8c406c1.large/"),
-            //},
             new WhisperModel
             {
-                Name = "large", // large-v2
+                Name = "large-v2",
                 Size = "2.9 GB",
                 Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/ff9f410b63b3d996274c895f6209e9b9ab01d497815b21c2d35ae336ab7d7f20.large-v2/"),
                 Folder = "ff9f410b63b3d996274c895f6209e9b9ab01d497815b21c2d35ae336ab7d7f20.large-v2",

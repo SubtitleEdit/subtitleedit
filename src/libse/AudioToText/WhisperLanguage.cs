@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     };
                 }
 
-                return new[]
+                var languages = new List<WhisperLanguage>
                 {
                     new WhisperLanguage("en", "english"),
                     new WhisperLanguage("zh", "chinese"),
@@ -61,7 +62,20 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     new WhisperLanguage("hi", "hindi"),
                     new WhisperLanguage("fi", "finnish"),
                     new WhisperLanguage("vi", "vietnamese"),
-                    new WhisperLanguage("iw", "hebrew"),
+                };
+
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
+                    Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
+                {
+                    languages.Add(new WhisperLanguage("iw", "hebrew"));
+                }
+                else
+                {
+                    languages.Add(new WhisperLanguage("he", "hebrew"));
+                }
+
+                languages.AddRange(new List<WhisperLanguage>
+                {
                     new WhisperLanguage("uk", "ukrainian"),
                     new WhisperLanguage("el", "greek"),
                     new WhisperLanguage("ms", "malay"),
@@ -140,7 +154,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     new WhisperLanguage("ba", "bashkir"),
                     new WhisperLanguage("jw", "javanese"),
                     new WhisperLanguage("su", "sundanese"),
-                };
+                });
+
+                return languages.ToArray();
             }
         }
     }
