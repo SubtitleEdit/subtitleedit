@@ -64,6 +64,7 @@
     <OverlapPreviousLineX>重叠上一行 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>重叠 ({0:#,##0.###})</OverlapX>
     <OverlapNextX>重叠下一行 ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>重叠起点和终点</OverlapStartAndEnd>
     <Negative>负值</Negative>
     <RegularExpressionIsNotValid>正则表达式无效！</RegularExpressionIsNotValid>
     <CurrentSubtitle>当前字幕</CurrentSubtitle>
@@ -356,6 +357,7 @@ Command line: {1} {2}
     <MkvLanguageStyleTwoLetter>双字母语言代码</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>三字母语言代码</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>无语言代码</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>同时扫描“搜索文件夹”中的视频文件（慢速）</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>导入图片…</ImportImage>
@@ -2086,10 +2088,11 @@ Command line: {1} {2}
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
-    <ReplaceWith>替换</ReplaceWith>
+    <ReplaceWith>替换:</ReplaceWith>
     <Find>查找(&amp;F)</Find>
     <Replace>替换(&amp;R)</Replace>
     <ReplaceAll>全部替换(&amp;A)</ReplaceAll>
+    <FindReplaceIn>替换/查找:</FindReplaceIn>
     <TranslationAndOriginal>翻译和原文</TranslationAndOriginal>
     <TranslationOnly>仅翻译</TranslationOnly>
     <OriginalOnly>仅原文</OriginalOnly>
@@ -2771,6 +2774,7 @@ Command line: {1} {2}
     <NumberOfSplits>分割数量: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>最长单行的长度为 {0} 在第 {1} 行</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>最长总行的长度是 {0} 在第 {1} 行</LongestLineIsXAtY>
+    <SplitAtLineBreaks>分割换行处</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>分割字幕</Title>
