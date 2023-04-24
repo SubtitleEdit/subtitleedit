@@ -34800,7 +34800,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     "Subtitle Edit",
                                     MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
-                    UiUtil.ShowHelp("#audio_to_text");
+                    UiUtil.ShowHelp("#audio_to_text_whisper");
                 }
             }
 
