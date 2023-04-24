@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -87,6 +88,39 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public static DateTime GetLatestSettingsTime()
+        {
+            var path = Path.Combine(Configuration.AutoBackupDirectory, "Settings");
+            if (!Directory.Exists(path))
+            {
+                return DateTime.MinValue;
+            }
+
+            var files = Directory.GetFiles(path, "*.*");
+            var fileNameList = new List<string>();
+            foreach (var fileName in files)
+            {
+                var fileNameNoPath = Path.GetFileName(fileName);
+                if (RegexFileNamePattern.IsMatch(fileNameNoPath))
+                {
+                    fileNameList.Add(fileNameNoPath);
+                }
+            }
+
+            fileNameList.Sort();
+            if (fileNameList.Count == 0)
+            {
+                return DateTime.MinValue;
+            }
+
+            if (DateTime.TryParse(fileNameList[0].Substring(0, 10), out var date))
+            {
+                return date;
+            }
+
+            return DateTime.MinValue;
+        }
+
         public static bool SaveAutoBackupSettings(Settings settings)
         {
             if (settings == null)
@@ -119,10 +153,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var fileName = $"{path}{DateTime.Now.Year:0000}-{DateTime.Now.Month:00}-{DateTime.Now.Day:00}_{DateTime.Now.Hour:00}-{DateTime.Now.Minute:00}-{DateTime.Now.Second:00}Setting.xml";
+            var fileName = $"{DateTime.Now.Year:0000}-{DateTime.Now.Month:00}-{DateTime.Now.Day:00}_{DateTime.Now.Hour:00}-{DateTime.Now.Minute:00}-{DateTime.Now.Second:00}Settings.xml";
             try
             {
-                Settings.CustomSerialize(fileName, settings);
+                Settings.CustomSerialize(Path.Combine(path, fileName), settings);
                 return true;
             }
             catch 
