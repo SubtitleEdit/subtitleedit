@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
     public sealed partial class WhisperAudioToText : Form
     {
         private readonly string _videoFileName;
+        private Subtitle _subtitle;
         private readonly int _audioTrackNumber;
         private bool _cancel;
         private bool _batchMode;
@@ -46,13 +47,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
         public Subtitle TranscribedSubtitle { get; private set; }
 
-        public WhisperAudioToText(string videoFileName, int audioTrackNumber, Form parentForm, WavePeakData wavePeaks)
+        public WhisperAudioToText(string videoFileName, Subtitle subtitle, int audioTrackNumber, Form parentForm, WavePeakData wavePeaks)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonGenerate);
             _videoFileName = videoFileName;
+            _subtitle = subtitle;
             _audioTrackNumber = audioTrackNumber;
             _parentForm = parentForm;
             _wavePeaks = wavePeaks;
@@ -75,7 +77,8 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             buttonAddFile.Text = LanguageSettings.Current.DvdSubRip.Add;
             buttonRemoveFile.Text = LanguageSettings.Current.DvdSubRip.Remove;
             buttonClear.Text = LanguageSettings.Current.DvdSubRip.Clear;
-            setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.ChooseLanguage;
+            runOnlyPostProcessingToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.OnlyRunPostProcessing;
+            setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
             removeTemporaryFilesToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.RemoveTemporaryFiles;
 
             columnHeaderFileName.Text = LanguageSettings.Current.JoinSubtitles.FileName;
@@ -93,6 +96,17 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else
             {
                 listViewInputFiles.Items.Add(videoFileName);
+            }
+
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+            {
+                runOnlyPostProcessingToolStripMenuItem.Visible = false;
+                toolStripSeparatorRunOnlyPostprocessing.Visible = false;
+            }
+            else
+            {
+                runOnlyPostProcessingToolStripMenuItem.Visible = true;
+                toolStripSeparatorRunOnlyPostprocessing.Visible = true;
             }
 
             textBoxLog.Visible = false;
@@ -1491,11 +1505,46 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperCppModelLocation) &&
                 Directory.Exists(Configuration.Settings.Tools.WhisperCppModelLocation))
             {
-                setCPPConstmeModelsFolderToolStripMenuItem.Text = $"Set CPP/Const-me models folder... [{Configuration.Settings.Tools.WhisperCppModelLocation}]";
+                setCPPConstmeModelsFolderToolStripMenuItem.Text = $"{LanguageSettings.Current.AudioToText.SetCppConstMeFolder} [{Configuration.Settings.Tools.WhisperCppModelLocation}]";
             }
             else
             {
-                setCPPConstmeModelsFolderToolStripMenuItem.Text = "Set CPP/Const-me models folder...";
+                setCPPConstmeModelsFolderToolStripMenuItem.Text = LanguageSettings.Current.AudioToText.SetCppConstMeFolder;
+            }
+        }
+
+        private void runOnlyPostProcessingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                var postProcessor = new AudioToTextPostProcessor(_languageCode)
+                {
+                    ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
+                };
+
+                WavePeakData wavePeaks = null;
+                if (checkBoxAutoAdjustTimings.Checked)
+                {
+                    wavePeaks = _wavePeaks ?? MakeWavePeaks();
+                }
+
+                if (checkBoxAutoAdjustTimings.Checked && wavePeaks != null)
+                {
+                    _subtitle = WhisperTimingFixer.ShortenLongTexts(_subtitle);
+                    _subtitle = WhisperTimingFixer.ShortenViaWavePeaks(_subtitle, wavePeaks);
+                }
+
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, _subtitle, true, true, true, true, true, true);
+                DialogResult = DialogResult.OK;
+            }
+            finally
+            {
+                buttonGenerate.Enabled = true;
+                buttonDownload.Enabled = true;
+                buttonBatchMode.Enabled = true;
+                comboBoxLanguages.Enabled = true;
+                comboBoxModels.Enabled = true;
             }
         }
     }

@@ -34813,7 +34813,7 @@ namespace Nikse.SubtitleEdit.Forms
                 CloseVideoToolStripMenuItemClick(sender, e);
             }
 
-            using (var form = new WhisperAudioToText(oldVideoFileName, _videoAudioTrackNumber, this, audioVisualizer?.WavePeaks))
+            using (var form = new WhisperAudioToText(oldVideoFileName, _subtitle, _videoAudioTrackNumber, this, audioVisualizer?.WavePeaks))
             {
                 var result = form.ShowDialog(this);
 
