@@ -765,6 +765,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public bool WebVttUseXTimestampMap { get; set; }
         public bool WebVttUseMultipleXTimestampMap { get; set; }
+        public bool WebVttMergeLinesWithSameText { get; set; }
         public long WebVttTimescale { get; set; }
         public string WebVttCueAn1 { get; set; }
         public string WebVttCueAn2 { get; set; }
@@ -6940,6 +6941,12 @@ $HorzAlign          =   Center
                 {
                     settings.SubtitleSettings.WebVttUseMultipleXTimestampMap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
+
+                subNode = node.SelectSingleNode("WebVttMergeLinesWithSameText");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttMergeLinesWithSameText = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
             }
 
             // Proxy
@@ -10898,6 +10905,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BluRaySupForceMergeAll", settings.SubtitleSettings.BluRaySupForceMergeAll.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseMultipleXTimestampMap", settings.SubtitleSettings.WebVttUseMultipleXTimestampMap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WebVttMergeLinesWithSameText", settings.SubtitleSettings.WebVttMergeLinesWithSameText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("Proxy", string.Empty);
