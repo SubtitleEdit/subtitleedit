@@ -203,6 +203,7 @@ Read more info (web)?</WhisperNotFound>
     <MaxCharsPerSubtitle>Max. chars per subtitle line</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Remove temporary files</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Set CPP/Const-me models folder...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Run only post-processing/adjust timings</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha attachments</Title>

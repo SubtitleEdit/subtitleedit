@@ -1534,8 +1534,12 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     _subtitle = WhisperTimingFixer.ShortenLongTexts(_subtitle);
                     _subtitle = WhisperTimingFixer.ShortenViaWavePeaks(_subtitle, wavePeaks);
                 }
+                else if (!checkBoxUsePostProcessing.Checked)
+                {
+                    return;
+                }
 
-                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, _subtitle, true, true, true, true, true, true);
+                TranscribedSubtitle = postProcessor.Fix(AudioToTextPostProcessor.Engine.Whisper, _subtitle, checkBoxUsePostProcessing.Checked, true, true, true, true, true);
                 DialogResult = DialogResult.OK;
             }
             finally

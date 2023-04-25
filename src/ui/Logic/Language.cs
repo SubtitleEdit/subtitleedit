@@ -350,7 +350,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MaxCharsPerSubtitle = "Max. chars per subtitle line",
                 RemoveTemporaryFiles = "Remove temporary files",
                 SetCppConstMeFolder = "Set CPP/Const-me models folder...",
-                OnlyRunPostProcessing = "",
+                OnlyRunPostProcessing = "Run only post-processing/adjust timings",
             };
 
             AssaAttachments = new LanguageStructure.AssaAttachments
