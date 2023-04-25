@@ -550,6 +550,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AudioToText/SetCppConstMeFolder":
                     language.AudioToText.SetCppConstMeFolder = reader.Value;
                     break;
+                case "AudioToText/OnlyRunPostProcessing":
+                    language.AudioToText.OnlyRunPostProcessing = reader.Value;
+                    break;
                 case "AssaAttachments/Title":
                     language.AssaAttachments.Title = reader.Value;
                     break;
