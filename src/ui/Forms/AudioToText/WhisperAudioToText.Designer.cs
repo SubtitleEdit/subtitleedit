@@ -64,6 +64,8 @@
             this.comboBoxCharsPerSub = new System.Windows.Forms.ComboBox();
             this.comboBoxWhisperEngine = new System.Windows.Forms.ComboBox();
             this.labelEngine = new System.Windows.Forms.Label();
+            this.runOnlyPostProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorRunOnlyPostprocessing = new System.Windows.Forms.ToolStripSeparator();
             this.groupBoxModels.SuspendLayout();
             this.groupBoxInputFiles.SuspendLayout();
             this.contextMenuStripWhisperAdvanced.SuspendLayout();
@@ -367,10 +369,12 @@
             // contextMenuStripWhisperAdvanced
             // 
             this.contextMenuStripWhisperAdvanced.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.runOnlyPostProcessingToolStripMenuItem,
+            this.toolStripSeparatorRunOnlyPostprocessing,
             this.setCPPConstmeModelsFolderToolStripMenuItem,
             this.removeTemporaryFilesToolStripMenuItem});
             this.contextMenuStripWhisperAdvanced.Name = "contextMenuStripWhisperAdvanced";
-            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 48);
+            this.contextMenuStripWhisperAdvanced.Size = new System.Drawing.Size(259, 98);
             this.contextMenuStripWhisperAdvanced.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWhisperAdvanced_Opening);
             // 
             // setCPPConstmeModelsFolderToolStripMenuItem
@@ -435,6 +439,18 @@
             this.labelEngine.Size = new System.Drawing.Size(40, 13);
             this.labelEngine.TabIndex = 27;
             this.labelEngine.Text = "Engine";
+            // 
+            // runOnlyPostProcessingToolStripMenuItem
+            // 
+            this.runOnlyPostProcessingToolStripMenuItem.Name = "runOnlyPostProcessingToolStripMenuItem";
+            this.runOnlyPostProcessingToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.runOnlyPostProcessingToolStripMenuItem.Text = "Run only post processing";
+            this.runOnlyPostProcessingToolStripMenuItem.Click += new System.EventHandler(this.runOnlyPostProcessingToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorRunOnlyPostprocessing
+            // 
+            this.toolStripSeparatorRunOnlyPostprocessing.Name = "toolStripSeparatorRunOnlyPostprocessing";
+            this.toolStripSeparatorRunOnlyPostprocessing.Size = new System.Drawing.Size(255, 6);
             // 
             // WhisperAudioToText
             // 
@@ -519,5 +535,7 @@
         private System.Windows.Forms.ComboBox comboBoxWhisperEngine;
         private System.Windows.Forms.Label labelEngine;
         private System.Windows.Forms.ToolStripMenuItem setCPPConstmeModelsFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem runOnlyPostProcessingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorRunOnlyPostprocessing;
     }
 }
