@@ -357,9 +357,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Text = RemoveWeirdRepeatingHeader(paragraph.Text);
             }
 
-            var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 1);
-            subtitle.Paragraphs.Clear();
-            subtitle.Paragraphs.AddRange(merged.Paragraphs);
+            if (Configuration.Settings.SubtitleSettings.WebVttMergeLinesWithSameText)
+            {
+                var merged = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(subtitle, false, 1);
+                subtitle.Paragraphs.Clear();
+                subtitle.Paragraphs.AddRange(merged.Paragraphs);
+            }
+
+            subtitle.Renumber();
 
             if (header.Length > 0)
             {
