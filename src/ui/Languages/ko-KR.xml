@@ -64,6 +64,7 @@
     <OverlapPreviousLineX>이전 줄보다 빠름 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>중복됨! ({0:#,##0.###})</OverlapX>
     <OverlapNextX>현재 시작이 다음 시작보다 느림 ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>시작 및 끝 중복</OverlapStartAndEnd>
     <Negative>음수값!</Negative>
     <RegularExpressionIsNotValid>정규 표현식이 유효하지 않습니다!</RegularExpressionIsNotValid>
     <CurrentSubtitle>현재 자막</CurrentSubtitle>
@@ -175,6 +176,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Title>오디오를 텍스트로</Title>
     <Info>Vosk/Kaldi 음성 인식을 통해 오디오로 텍스트 만들기</Info>
     <WhisperInfo>Whisper 음성 인식을 통해 오디오로 텍스트 만들기</WhisperInfo>
+    <Engine>엔진</Engine>
     <VoskWebsite>Vosk 홈페이지</VoskWebsite>
     <WhisperWebsite>Whisper 웹사이트</WhisperWebsite>
     <WhisperNotFound>Whisper을 찾을 수 없음!
@@ -195,6 +197,9 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <KeepPartialTranscription>일부 전사 유지</KeepPartialTranscription>
     <TranslateToEnglish>영어로 번역</TranslateToEnglish>
     <MaxCharsPerSubtitle>자막 줄당 최대 문자 수</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>임시 파일 제거</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>CPP/Const-me 모델 폴더 설정...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>후처리 및 타이밍 조정만 실행</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha 첨부파일</Title>
@@ -350,6 +355,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MkvLanguageStyleTwoLetter>두 문자 언어 코드</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>세 문자 언어 코드</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>언어 코드 없음</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>또한 "검색 폴더"에서 비디오 파일 검색 (느림)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>이미지 가져오기...</ImportImage>
@@ -392,6 +398,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <OnlyChangeAllUppercaseLines>줄 전체가 대문자인 경우 수정</OnlyChangeAllUppercaseLines>
     <AllUppercase>모두 대문자</AllUppercase>
     <AllLowercase>모두 소문자</AllLowercase>
+    <ProperCase>모든 단어의 시작은 대문자</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>* 이름의 대/소문자 변경</Title>
@@ -1737,7 +1744,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <BeforeToggleDialogDashes>대화 대시(-) 전환 전</BeforeToggleDialogDashes>
     <ExportPlainTextAs>일반 텍스트 파일로 내보내기</ExportPlainTextAs>
     <TextFiles>텍스트 파일</TextFiles>
-    <SubtitleExported>내보낸 자막</SubtitleExported>
+    <SubtitleExported>자막 내보내기 완료</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>라인 {0} - 읽기 오류: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>라인 {0} - 타임코드 판독 오류: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>라인 {0} - 자막 번호 오류: {1}</LineNumberXExpectedNumberFromSourceLineY>
@@ -1818,12 +1825,12 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <ConvertFrom>변환 대상:</ConvertFrom>
     <ConvertTo>변환 결과:</ConvertTo>
     <CopyToClipboard>클립보드에 복사</CopyToClipboard>
-    <CloseOnInsert>삽입 시 닫기</CloseOnInsert>
+    <CloseOnInsert>삽입 시 닫음</CloseOnInsert>
     <Insert>삽입</Insert>
     <Length>길이</Length>
-    <Mass>질량</Mass>
-    <Volume>볼륨</Volume>
-    <Area>영역</Area>
+    <Mass>무게</Mass>
+    <Volume>체적</Volume>
+    <Area>면적</Area>
     <Time>시간</Time>
     <Temperature>온도</Temperature>
     <Velocity>속도</Velocity>
@@ -1838,18 +1845,18 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Micrometers>마이크로미터</Micrometers>
     <Nanometers>나노미터</Nanometers>
     <Angstroms>옹스트롬</Angstroms>
-    <MilesTerrestial>마일 (지상)</MilesTerrestial>
-    <MilesNautical>마일 (해상)</MilesNautical>
+    <MilesTerrestial>마일(지상)</MilesTerrestial>
+    <MilesNautical>마일(해상)</MilesNautical>
     <Yards>야드</Yards>
     <Feet>피트</Feet>
     <Inches>인치</Inches>
     <Chains>체인</Chains>
     <Fathoms>패덤스</Fathoms>
-    <Hands>손</Hands>
-    <Rods>막대 </Rods>
+    <Hands>핸드</Hands>
+    <Rods>로드</Rods>
     <Spans>뼘</Spans>
-    <LongTonnes>긴 톤</LongTonnes>
-    <ShortTonnes>짧은 톤</ShortTonnes>
+    <LongTonnes>롱톤</LongTonnes>
+    <ShortTonnes>숏톤</ShortTonnes>
     <Tonnes>톤</Tonnes>
     <Kilos>킬로그램</Kilos>
     <Grams>그램</Grams>
@@ -1859,8 +1866,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Ounces>온스</Ounces>
     <Carats>캐럿</Carats>
     <Drams>드람</Drams>
-    <Grains>곡물</Grains>
-    <Stones>돌</Stones>
+    <Grains>그레인</Grains>
+    <Stones>스톤</Stones>
     <CubicKilometers>입방 킬로미터</CubicKilometers>
     <CubicMeters>입방 미터</CubicMeters>
     <Litres>리터</Litres>
@@ -1871,16 +1878,16 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CubicFTs>입방 피트</CubicFTs>
     <CubicInches>입방 인치</CubicInches>
     <OilBarrels>오일 배럴</OilBarrels>
-    <GallonUS>갤런 (미국)</GallonUS>
-    <QuartsUS>쿼트 (미국)</QuartsUS>
-    <PintsUS>파인트 (미국)</PintsUS>
-    <FluidOuncesUS>유체 온스 (미국)</FluidOuncesUS>
+    <GallonUS>갤런(미국)</GallonUS>
+    <QuartsUS>쿼트(미국)</QuartsUS>
+    <PintsUS>파인트(미국)</PintsUS>
+    <FluidOuncesUS>유체 온스(미국)</FluidOuncesUS>
     <Bushels>부셸</Bushels>
     <Pecks>펙스</Pecks>
-    <GallonsUK>갤런 (영국)</GallonsUK>
-    <QuartsUK>쿼트 (영국)</QuartsUK>
-    <PintsUK>파인트 (영국)</PintsUK>
-    <FluidOuncesUK>유체 온스 (영국)</FluidOuncesUK>
+    <GallonsUK>갤런(영국)</GallonsUK>
+    <QuartsUK>쿼트(영국)</QuartsUK>
+    <PintsUK>파인트(영국)</PintsUK>
+    <FluidOuncesUK>유체 온스(영국)</FluidOuncesUK>
     <SquareKilometers>평방 킬로미터</SquareKilometers>
     <SquareMeters>평방 미터</SquareMeters>
     <SquareCentimeters>제곱 센티미터</SquareCentimeters>
@@ -1916,10 +1923,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Btus>비티유</Btus>
     <Watts>와트</Watts>
     <Horsepower>마력</Horsepower>
-    <Atmospheres>대기</Atmospheres>
+    <Atmospheres>기압</Atmospheres>
     <Bars>바</Bars>
     <Pascals>파스칼</Pascals>
-    <MillimetersOfMercury>수은 밀리미터</MillimetersOfMercury>
+    <MillimetersOfMercury>수은주 밀리미터</MillimetersOfMercury>
     <PoundPerSquareInch>평방 인치당 파운드 력</PoundPerSquareInch>
     <KilogramPerSquareCentimeter>평방 센티미터당 킬로그램 력</KilogramPerSquareCentimeter>
     <KiloPascals>킬로파스칼</KiloPascals>
@@ -2097,6 +2104,10 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <Find>찾기(&amp;F)</Find>
     <Replace>바꾸기(&amp;R)</Replace>
     <ReplaceAll>모두 바꾸기(&amp;A)</ReplaceAll>
+    <FindReplaceIn>찾기/바꾸기 대상:</FindReplaceIn>
+    <TranslationAndOriginal>번역 및 원본</TranslationAndOriginal>
+    <TranslationOnly>번역만</TranslationOnly>
+    <OriginalOnly>원본만</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>자동 백업 자막 불러오기</Title>
@@ -2510,13 +2521,14 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <GoForward500Milliseconds>0.5초 앞으로</GoForward500Milliseconds>
     <GoBack1Second>1초 뒤로</GoBack1Second>
     <GoForward1Second>1초 앞으로</GoForward1Second>
+    <GoBack3Seconds>3초 뒤로</GoBack3Seconds>
+    <GoForward3Seconds>3초 앞으로</GoForward3Seconds>
     <GoBack5Seconds>5초 뒤로</GoBack5Seconds>
     <GoForward5Seconds>5초 앞으로</GoForward5Seconds>
     <GoBackXSSeconds>작은 선택된 시간 뒤로</GoBackXSSeconds>
     <GoForwardXSSeconds>작은 선택된 시간 앞으로</GoForwardXSSeconds>
     <GoBackXLSeconds>큰 선택된 시간 뒤로</GoBackXLSeconds>
     <GoForwardXLSeconds>큰 선택된 시간 앞으로</GoForwardXLSeconds>
-    <GoBack3Seconds>3초 뒤로</GoBack3Seconds>
     <GoToStartCurrent>비디오 위치를  현재 자막의 시작으로 설정</GoToStartCurrent>
     <ToggleStartEndCurrent>현재 자막의 시작/끝 사이의 비디오 위치 전환</ToggleStartEndCurrent>
     <PlaySelectedLines>선택한 줄 재생</PlaySelectedLines>
@@ -2775,6 +2787,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <NumberOfSplits>분할/줄바꿈: {0}개</NumberOfSplits>
     <LongestSingleLineIsXAtY>최고 긴 줄: [{1}]번 - 문자수: {0}개 -&gt; 이 줄을 보려면 여기를 클릭!</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>최고 긴 자막: [{1}]번 - 문자수: {0}개 -&gt; 이 줄을 보려면 여기를 클릭!</LongestLineIsXAtY>
+    <SplitAtLineBreaks>줄바꿈에서 분할</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>* 자막 분할</Title>
