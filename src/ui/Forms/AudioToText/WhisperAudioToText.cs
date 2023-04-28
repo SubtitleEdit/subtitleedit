@@ -154,16 +154,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         public static void InitializeWhisperEngines(ComboBox cb)
         {
             cb.Items.Clear();
-            var engines = new List<string>()
-            {
-                WhisperChoice.OpenAI,
-                WhisperChoice.Cpp,
-                WhisperChoice.ConstMe,
-            };
+            var engines = new List<string>();
+            engines.Add(WhisperChoice.OpenAI);
+            engines.Add(WhisperChoice.Cpp);
             if (Configuration.IsRunningOnWindows)
             {
-                engines.Add(WhisperChoice.CTranslate2);
+                engines.Add(WhisperChoice.ConstMe);
             }
+            engines.Add(WhisperChoice.CTranslate2);
+            engines.Add(WhisperChoice.WhisperX);
 
             foreach (var engine in engines)
             {
@@ -1462,6 +1461,36 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Init();
         }
 
+        private void WhisperEngineWhisperX()
+        {
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.WhisperX;
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var path = WhisperHelper.GetWhisperFolder();
+                if (string.IsNullOrEmpty(path))
+                {
+                    using (var openFileDialog1 = new OpenFileDialog())
+                    {
+                        openFileDialog1.Title = "Locate whisperx.exe (Python version)";
+                        openFileDialog1.FileName = string.Empty;
+                        openFileDialog1.Filter = "whisperx.exe|whisperx.exe";
+
+                        if (openFileDialog1.ShowDialog() != DialogResult.OK || !openFileDialog1.FileName.EndsWith("whisperx.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                            comboBoxWhisperEngine.Text = WhisperChoice.Cpp;
+                        }
+                        else
+                        {
+                            Configuration.Settings.Tools.WhisperXLocation = openFileDialog1.FileName;
+                        }
+                    }
+                }
+            }
+
+            Init();
+        }
 
         private void comboBoxWhisperEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1486,6 +1515,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (comboBoxWhisperEngine.Text == WhisperChoice.CTranslate2)
             {
                 WhisperEngineCTranslate2();
+            }
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.WhisperX)
+            {
+                WhisperEngineWhisperX();
             }
         }
 

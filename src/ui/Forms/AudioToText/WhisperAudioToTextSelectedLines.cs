@@ -452,9 +452,34 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Init();
         }
 
-        private void whisperCppCToolStripMenuItem_Click(object sender, EventArgs e)
+        private void WhisperEngineWhisperX()
         {
-            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.WhisperX;
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var path = WhisperHelper.GetWhisperFolder();
+                if (string.IsNullOrEmpty(path))
+                {
+                    using (var openFileDialog1 = new OpenFileDialog())
+                    {
+                        openFileDialog1.Title = "Locate whisperx.exe (Python version)";
+                        openFileDialog1.FileName = string.Empty;
+                        openFileDialog1.Filter = "whisperx.exe|whisperx.exe";
+
+                        if (openFileDialog1.ShowDialog() != DialogResult.OK || !openFileDialog1.FileName.EndsWith("whisperx.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                            comboBoxWhisperEngine.Text = WhisperChoice.Cpp;
+                        }
+                        else
+                        {
+                            Configuration.Settings.Tools.WhisperXLocation = openFileDialog1.FileName;
+                        }
+                    }
+                }
+            }
+
             Init();
         }
 
@@ -462,11 +487,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
         {
             Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
             removeTemporaryFilesToolStripMenuItem.Checked = Configuration.Settings.Tools.WhisperDeleteTempFiles;
-        }
-
-        private void labelCpp_Click(object sender, EventArgs e)
-        {
-            contextMenuStripWhisperAdvanced.Show(MousePosition);
         }
 
         private void whisperConstMeGPUToolStripMenuItem_Click(object sender, EventArgs e)
@@ -532,7 +552,6 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Init();
         }
 
-
         private void comboBoxWhisperEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxWhisperEngine.Text == Configuration.Settings.Tools.WhisperChoice)
@@ -556,6 +575,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (comboBoxWhisperEngine.Text == WhisperChoice.CTranslate2)
             {
                 WhisperEngineCTranslate2();
+            }
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.WhisperX)
+            {
+                WhisperEngineWhisperX();
             }
         }
 
