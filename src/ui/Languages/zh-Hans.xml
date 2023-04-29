@@ -202,6 +202,7 @@ Command line: {1} {2}
     <MaxCharsPerSubtitle>每行字幕的最大字符数</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>移除临时文件</RemoveTemporaryFiles>
     <SetCppConstMeFolder>设置 CPP/Const-me 模型文件夹...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>仅进行后处理/调整时间</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Advanced Sub Station Alpha字幕附件</Title>
