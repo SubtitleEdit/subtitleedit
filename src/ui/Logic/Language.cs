@@ -1447,6 +1447,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LoadedEmptyOrShort = "Loaded empty or very short subtitle {0}",
                 FileIsEmptyOrShort = "File is empty or very short!",
                 FileNotFound = "File not found: {0}",
+                FileLocked = "Unable to open file as it is in use by another program: {0}",
                 SavedSubtitleX = "Saved subtitle {0}",
                 SavedOriginalSubtitleX = "Saved original subtitle {0}",
                 FileOnDiskModified = "File on disk modified",

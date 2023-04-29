@@ -609,5 +609,22 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return validator.IsValid;
             }
         }
+
+        public static bool IsFileLocked(string fileName)
+        {
+            try
+            {
+                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

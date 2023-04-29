@@ -1542,6 +1542,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
     <LoadedEmptyOrShort>Loaded empty or very short subtitle {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>File is empty or very short!</FileIsEmptyOrShort>
     <FileNotFound>File not found: {0}</FileNotFound>
+    <FileLocked>Unable to open file as it is in use by another program: {0}</FileLocked>
     <SavedSubtitleX>Saved subtitle {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>File on disk modified</FileOnDiskModified>

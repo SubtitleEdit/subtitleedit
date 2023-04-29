@@ -1307,6 +1307,7 @@ namespace Nikse.SubtitleEdit.Logic
             public string LoadedEmptyOrShort { get; set; }
             public string FileIsEmptyOrShort { get; set; }
             public string FileNotFound { get; set; }
+            public string FileLocked { get; set; }
             public string SavedSubtitleX { get; set; }
             public string SavedOriginalSubtitleX { get; set; }
             public string FileOnDiskModified { get; set; }
