@@ -67,7 +67,8 @@ namespace Nikse.SubtitleEdit.Forms
         private bool InListView => !textBoxSource.Visible;
         private bool InSourceView => textBoxSource.Visible;
         private int MinGapBetweenLines => Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-        private bool IsOriginalEditable => _subtitleOriginal != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle;
+        private bool _isOriginalActive;
+        private bool IsOriginalEditable => _isOriginalActive && Configuration.Settings.General.AllowEditOfOriginalSubtitle;
 
         private Subtitle _subtitle = new Subtitle();
         private Subtitle _subtitleOriginal = new Subtitle();
@@ -987,7 +988,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = _subtitle.Paragraphs.IndexOf(e.Paragraph);
             if (index < 0)
             {
-                if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
+                if (IsOriginalEditable)
                 {
                     index = _subtitleOriginal.GetIndex(e.Paragraph);
                     if (index >= 0)
@@ -1226,7 +1227,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs[index] = p;
 
             p.StartTime.TotalMilliseconds = e.Paragraph.StartTime.TotalMilliseconds;
-            if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible)
+            if (IsOriginalEditable)
             {
                 var original = Utilities.GetOriginalParagraph(index, e.BeforeParagraph, _subtitleOriginal.Paragraphs);
                 if (original != null)
@@ -1316,7 +1317,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MovePrevNext(e, beforeParagraph, index);
 
-                if (original != null)
+                if (original != null && IsOriginalEditable)
                 {
                     original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
                     original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
@@ -1371,7 +1372,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MovePrevNext(e, beforeParagraph, index);
 
                     var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleOriginal.Paragraphs);
-                    if (original != null)
+                    if (original != null && IsOriginalEditable)
                     {
                         original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
                         original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
@@ -1391,7 +1392,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _makeHistoryPaused = true;
 
                     MovePrevNext(e, beforeParagraph, index);
-                    if (_subtitleOriginal != null)
+                    if (_subtitleOriginal != null && IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -1463,7 +1464,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds += e.AdjustMs;
                     SubtitleListview1.SetStartTimeAndDurationBackground(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
 
-                    if (_subtitleOriginal != null)
+                    if (_subtitleOriginal != null && IsOriginalEditable)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, oldParagraph, _subtitleOriginal.Paragraphs);
                         if (original != null)
@@ -1487,7 +1488,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (prev != null)
                     {
                         Paragraph originalPrev = null;
-                        if (_subtitleOriginal != null && SubtitleListview1.IsOriginalTextColumnVisible)
+                        if (IsOriginalEditable)
                         {
                             originalPrev = Utilities.GetOriginalParagraph(index - 1, prev, _subtitleOriginal.Paragraphs);
                         }
@@ -4623,7 +4624,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                 _subtitleListViewIndex = -1;
                 _changeSubtitleHash = GetFastSubtitleHash();
-                if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+                if (IsOriginalEditable)
                 {
                     _subtitleOriginal.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                     _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
@@ -5225,6 +5226,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelStartTimeWarning.Text = string.Empty;
 
+            _isOriginalActive = false;
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
             Configuration.Settings.General.CurrentVideoIsSmpte = false;
             smpteTimeModedropFrameToolStripMenuItem.Checked = false;
@@ -5622,17 +5624,9 @@ namespace Nikse.SubtitleEdit.Forms
                 RestoreSubtitleListviewIndices();
             }
 
-            if (oldAllowEditOfOriginalSubtitle != Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+            if (oldAllowEditOfOriginalSubtitle != Configuration.Settings.General.AllowEditOfOriginalSubtitle && _isOriginalActive)
             {
-                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                {
-                    AddOriginal();
-                }
-                else
-                {
-                    RemoveOriginal(false, false);
-                }
-
+                textBoxListViewTextOriginal.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
                 Main_ResizeEnd(null, null);
             }
 
@@ -6783,9 +6777,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool GetAllowReplaceInOriginal()
         {
-            return Configuration.Settings.General.AllowEditOfOriginalSubtitle
-                   && _subtitleOriginal != null
-                   && _subtitleOriginal.Paragraphs.Count > 0;
+            return IsOriginalEditable;
         }
 
         public void ListViewReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
@@ -7904,7 +7896,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.HistoryItems[_undoIndex].RedoParagraphs.Add(new Paragraph(p));
                         }
 
-                        if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null)
+                        if (IsOriginalEditable)
                         {
                             foreach (var p in _subtitleOriginal.Paragraphs)
                             {
@@ -7920,7 +7912,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _subtitle.HistoryItems[_undoIndex].RedoParagraphs[selectedIndex].Text =
                                 textBoxListViewText.Text;
-                            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null &&
+                            if (IsOriginalEditable &&
                                 selectedIndex < _subtitle.HistoryItems[_undoIndex].RedoParagraphsOriginal.Count)
                             {
                                 _subtitle.HistoryItems[_undoIndex].RedoParagraphsOriginal[selectedIndex].Text =
@@ -7984,7 +7976,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("Undo failed at undo index: " + _undoIndex);
+                            Debug.WriteLine("Undo failed at undo index: " + _undoIndex);
                         }
 
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphs = null;
@@ -9765,7 +9757,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewTextOriginal.BackColor = SystemColors.WindowFrame;
 
                 textBoxListViewText.Enabled = true;
-                textBoxListViewTextOriginal.Enabled = true;
+                textBoxListViewTextOriginal.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
                 timeUpDownStartTime.Enabled = true;
                 numericUpDownDuration.Enabled = true;
                 buttonPrevious.Enabled = true;
@@ -10262,7 +10254,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
                     FixVerticalScrollBars(textBoxListViewText);
 
-                    if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+                    if (_isOriginalActive)
                     {
                         InitializeListViewEditBoxOriginal(p, firstSelectedIndex);
                         labelOriginalCharactersPerSecond.Left = textBoxListViewTextOriginal.Left + (textBoxListViewTextOriginal.Width - labelOriginalCharactersPerSecond.Width);
@@ -12339,7 +12331,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nextParagraph.Text = mergeResult.Item2;
                 }
 
-                if (_subtitleOriginal != null)
+                if (IsOriginalEditable)
                 {
                     var original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleOriginal.Paragraphs);
                     var originalNext = Utilities.GetOriginalParagraph(firstSelectedIndex + 1, nextParagraph, _subtitleOriginal.Paragraphs);
@@ -12790,7 +12782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    textBoxListViewTextOriginal.Enabled = true;
+                    textBoxListViewTextOriginal.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
                     textBoxListViewTextOriginal.BackColor = textBoxListViewTextOriginal.Focused ? SystemColors.Highlight : SystemColors.WindowFrame;
                     textBoxListViewTextOriginal.TextChanged -= TextBoxListViewTextOriginalTextChanged;
                     textBoxListViewTextOriginal.Text = original.Text;
@@ -21797,36 +21789,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetupOriginalEdit()
         {
+            _isOriginalActive = true;
+
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal.Paragraphs.Count > 0)
             {
                 InsertMissingParagraphs(_subtitle, _subtitleOriginal);
                 InsertMissingParagraphs(_subtitleOriginal, _subtitle);
-
-                buttonUnBreak.Visible = false;
-                buttonAutoBreak.Visible = false;
-                buttonSplitLine.Visible = false;
-
-                textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
-                textBoxListViewTextOriginal.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                textBoxListViewTextOriginal.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
-                textBoxListViewTextOriginal.Width = textBoxListViewText.Width;
-                textBoxListViewTextOriginal.Visible = true;
-                labelOriginalText.Text = _languageGeneral.OriginalText;
-                labelOriginalText.Visible = true;
-                labelOriginalCharactersPerSecond.Visible = true;
-                labelTextOriginalLineLengths.Visible = true;
-                labelOriginalSingleLine.Visible = true;
-                labelOriginalSingleLinePixels.Visible = true;
-                labelTextOriginalLineTotal.Visible = true;
-
-                labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
-                labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
-                Main_Resize(null, null);
-                _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
-
-                SetTitle();
             }
+
+            buttonUnBreak.Visible = false;
+            buttonAutoBreak.Visible = false;
+            buttonSplitLine.Visible = false;
+
+            textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+            textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
+            textBoxListViewTextOriginal.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+            textBoxListViewTextOriginal.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
+            textBoxListViewTextOriginal.Width = textBoxListViewText.Width;
+            textBoxListViewTextOriginal.Visible = true;
+            textBoxListViewTextOriginal.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
+            labelOriginalText.Text = _languageGeneral.OriginalText;
+            labelOriginalText.Visible = true;
+            labelOriginalCharactersPerSecond.Visible = true;
+            labelTextOriginalLineLengths.Visible = true;
+            labelOriginalSingleLine.Visible = true;
+            labelOriginalSingleLinePixels.Visible = true;
+            labelTextOriginalLineTotal.Visible = true;
+
+            labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
+            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+            Main_Resize(null, null);
+            _changeOriginalSubtitleHash = GetFastSubtitleOriginalHash();
+
+            SetTitle();
 
             SubtitleListview1.ShowOriginalTextColumn(_languageGeneral.OriginalText);
             SubtitleListview1.AutoSizeAllColumns(this);
@@ -23104,8 +23099,7 @@ namespace Nikse.SubtitleEdit.Forms
             lbText.Left = firstLeft;
             lbSingleLine.Left = firstLeft;
 
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0 &&
-                textBoxListViewTextOriginal.Visible)
+            if (_isOriginalActive)
             {
                 tbText.Width = (groupBoxEdit.Width - (tbText.Left + 10)) / 2;
                 tbOriginal.Left = tbText.Left + tbText.Width + 3;
@@ -28643,6 +28637,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveOriginal(bool removeFromListView, bool updateRecentFiles)
         {
+            _isOriginalActive = false;
             if (removeFromListView)
             {
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.TextOriginal);
@@ -29341,6 +29336,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.ShowOriginalTextColumn(_languageGeneral.OriginalText);
                 _subtitleListViewIndex = -1;
+                _isOriginalActive = true;
                 SubtitleListview1.Fill(_subtitle, _subtitleOriginal);
                 SubtitleListview1.SelectIndexAndEnsureVisible(oldIndex, true);
                 textBoxListViewText.Focus();
@@ -34911,6 +34907,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _subtitleOriginalFileName = null;
                 _subtitleOriginal = new Subtitle();
+                _isOriginalActive = false;
 
                 var selectIndices = SubtitleListview1.GetSelectedIndices();
                 RemoveOriginal(true, true);
