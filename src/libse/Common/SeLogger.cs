@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
             catch
             {
-                throw exception;
+                // ignore
             }
         }
 
