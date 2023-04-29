@@ -3190,6 +3190,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/FileNotFound":
                     language.Main.FileNotFound = reader.Value;
                     break;
+                case "Main/FileLocked":
+                    language.Main.FileLocked = reader.Value;
+                    break;
                 case "Main/SavedSubtitleX":
                     language.Main.SavedSubtitleX = reader.Value;
                     break;

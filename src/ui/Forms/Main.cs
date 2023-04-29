@@ -2756,6 +2756,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (FileUtil.IsFileLocked(fileName))
+            {
+                MessageBox.Show(string.Format(_language.FileLocked, fileName));
+                return;
+            }
+
             _lastAutoSave = DateTime.UtcNow.Ticks;
             bool videoFileLoaded = false;
             _formatManuallyChanged = false;
