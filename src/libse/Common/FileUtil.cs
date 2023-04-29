@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Ports;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -619,8 +620,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     stream.Close();
                 }
             }
-            catch (IOException)
+            catch (IOException exception)
             {
+                SeLogger.Error(exception);
                 return true;
             }
 
