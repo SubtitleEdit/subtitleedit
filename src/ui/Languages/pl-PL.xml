@@ -64,6 +64,7 @@
     <OverlapPreviousLineX>Nakładanie się na poprzednią linię ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Nakładanie się ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Nakładanie się na następną linię ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Nakładanie się początku i końca</OverlapStartAndEnd>
     <Negative>Negatywny</Negative>
     <RegularExpressionIsNotValid>Wyrażenie regularne jest nieprawidłowe!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Bieżące napisy</CurrentSubtitle>
@@ -179,6 +180,7 @@ Uwaga: Sprawdź ilość wolnego miejsca na dysku.</WaveFileMalformed>
     <Title>Audio na tekst</Title>
     <Info>Generowanie tekstu z audio za pomocą funkcji rozpoznawania mowy Vosk/Kaldi</Info>
     <WhisperInfo>Generowanie tekstu z audio za pomocą funkcji rozpoznawania mowy Whisper</WhisperInfo>
+    <Engine>Silnik</Engine>
     <VoskWebsite>Strona internetowa Vosk</VoskWebsite>
     <WhisperWebsite>Strona internetowa Whisper</WhisperWebsite>
     <WhisperNotFound>Nie znaleziono aplikacji Whisper.
@@ -199,6 +201,9 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <KeepPartialTranscription>Zachowaj częściową transkrypcję</KeepPartialTranscription>
     <TranslateToEnglish>Przetłumacz na angielski</TranslateToEnglish>
     <MaxCharsPerSubtitle>Max. znaków na linię napisów</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Usuń pliki tymczasowe</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Ustaw folder modeli CPP/Const-me...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Uruchom tylko przetwarzanie końcowe/dostosuj czasy</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Załączniki Advanced Sub Station Alpha</Title>
@@ -354,6 +359,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <MkvLanguageStyleTwoLetter>Dwuliterowy kod języka</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Trzyliterowy kod języka</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Brak kodu języka</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Skanuj także pliki wideo w "Folder wyszukiwania" (wolno)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Importuj obraz...</ImportImage>
@@ -396,6 +402,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <OnlyChangeAllUppercaseLines>Zmień tylko wszystkie linie pisane dużymi literami</OnlyChangeAllUppercaseLines>
     <AllUppercase>WSZYSTKIE DUŻE LITERY</AllUppercase>
     <AllLowercase>wszystkie małe litery</AllLowercase>
+    <ProperCase>Duże pierwsze litery wyrazów</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Zmiana pisowni - Nazwy własne</Title>
@@ -725,7 +732,8 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Znajdź</Title>
-    <Find>&amp;Znajdź</Find>
+    <FindNext>&amp;Znajdź następne wystąpienie</FindNext>
+    <FindPrevious>Znajdź &amp;poprzednie wystąpienie</FindPrevious>
     <Normal>&amp;Normalny tryb wyszukiwania</Normal>
     <CaseSensitive>Uwzględnij wielkość liter</CaseSensitive>
     <RegularExpression>Wyrażenie &amp;regularne</RegularExpression>
@@ -860,8 +868,8 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
   </GenerateBlankVideo>
   <GenerateVideoWithBurnedInSubs>
     <Title>Wygeneruj wideo z wtopionymi napisami</Title>
-    <InfoAssaOff>Uwaga: Obsługiwana jest stylizacja Advanced Substation Alpha.</InfoAssaOff>
-    <InfoAssaOn>Uwaga: Zostanie zastosowana stylizacja Advanced Substation Alpha :)</InfoAssaOn>
+    <InfoAssaOff>Uwaga: Obsługiwana jest stylizacja Advanced SubStation Alpha.</InfoAssaOff>
+    <InfoAssaOn>Uwaga: Zostanie zastosowana stylizacja Advanced SubStation Alpha :)</InfoAssaOn>
     <XGeneratedWithBurnedInSubsInX>Wygenerowano "{0}" z wtopionymi napisami w {1}.</XGeneratedWithBurnedInSubsInX>
     <TimeRemainingMinutes>Pozostały czas: {0} minut</TimeRemainingMinutes>
     <TimeRemainingSeconds>Pozostały czas: {0} sekund</TimeRemainingSeconds>
@@ -885,7 +893,7 @@ Chcesz przeczytać więcej informacji (w sieci)?</WhisperNotFound>
     <GetEndPosition>Pobierz pozycję zakończenia</GetEndPosition>
   </GenerateVideoWithBurnedInSubs>
   <GenerateVideoWithEmbeddedSubs>
-    <Title>Generuj wideo z osadzonymi napisami</Title>
+    <Title>Generuj wideo z dodanymi/usuniętymi osadzonymi napisami</Title>
     <InputVideoFile>Wejściowy plik wideo</InputVideoFile>
     <SubtitlesX>Napisy ({0})</SubtitlesX>
     <SetLanguage>Ustaw język...</SetLanguage>
@@ -1295,7 +1303,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
         <GenerateTextFromVideo>Wygeneruj tekst z wideo...</GenerateTextFromVideo>
         <GenerateBlankVideo>Wygeneruj puste wideo...</GenerateBlankVideo>
         <GenerateVideoWithBurnedInSub>Wygeneruj wideo z wtopionymi napisami...</GenerateVideoWithBurnedInSub>
-        <GenerateVideoWithEmbeddedSubs>Wygeneruj wideo z osadzonymi napisami...</GenerateVideoWithEmbeddedSubs>
+        <GenerateVideoWithEmbeddedSubs>Wygeneruj wideo z dodanymi/usuniętymi osadzonymi napisami...</GenerateVideoWithEmbeddedSubs>
         <VideoAudioToTextX>Audio na tekst ({0})...</VideoAudioToTextX>
         <ImportChaptersFromVideo>Importuj rozdziały z wideo</ImportChaptersFromVideo>
         <GenerateImportShotChanges>Generuj/importuj zmiany kadru...</GenerateImportShotChanges>
@@ -1534,6 +1542,7 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
     <LoadedEmptyOrShort>Wczytany plik napisów {0} jest pusty lub bardzo krótki</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Plik jest pusty lub bardzo krótki!</FileIsEmptyOrShort>
     <FileNotFound>Nie znaleziono pliku: {0}</FileNotFound>
+    <FileLocked>Nie można otworzyć pliku ponieważ jest on używany przez inny program: {0}</FileLocked>
     <SavedSubtitleX>Napisy zapisano w pliku {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Zapisano oryginalne napisy {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Zmodyfikowano plik na dysku</FileOnDiskModified>
@@ -2097,6 +2106,10 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <Find>&amp;Znajdź</Find>
     <Replace>Zas&amp;tąp</Replace>
     <ReplaceAll>Zastąp &amp;wszystko</ReplaceAll>
+    <FindReplaceIn>Zastąp/Szukaj w:</FindReplaceIn>
+    <TranslationAndOriginal>Tłumaczenie i oryginał</TranslationAndOriginal>
+    <TranslationOnly>Tylko tłumaczenie</TranslationOnly>
+    <OriginalOnly>Tylko oryginał</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Przywróć automatyczną kopię zapasową</Title>
@@ -2510,13 +2523,14 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <GoForward500Milliseconds>500 ms do przodu</GoForward500Milliseconds>
     <GoBack1Second>Jedna sekunda do tyłu</GoBack1Second>
     <GoForward1Second>Jedna sekunda do przodu</GoForward1Second>
+    <GoBack3Seconds>Trzy sekundy do tyłu</GoBack3Seconds>
+    <GoForward3Seconds>Trzy sekundy do przodu</GoForward3Seconds>
     <GoBack5Seconds>Pięć sekund do tyłu</GoBack5Seconds>
     <GoForward5Seconds>Pięć sekund do przodu</GoForward5Seconds>
     <GoBackXSSeconds>Mały wybrany czas do tyłu</GoBackXSSeconds>
     <GoForwardXSSeconds>Mały wybrany czas do przodu</GoForwardXSSeconds>
     <GoBackXLSeconds>Duży wybrany czas do tyłu</GoBackXLSeconds>
     <GoForwardXLSeconds>Duży wybrany czas do przodu</GoForwardXLSeconds>
-    <GoBack3Seconds>Trzy sekundy do tyłu</GoBack3Seconds>
     <GoToStartCurrent>Ustaw pozycję wideo na początek bieżącego napisu</GoToStartCurrent>
     <ToggleStartEndCurrent>Przełącz pozycję wideo między początkiem/końcem bieżącego napisu</ToggleStartEndCurrent>
     <PlaySelectedLines>Odtwarzaj wybrane linie</PlaySelectedLines>
@@ -2775,6 +2789,7 @@ Kontynuować?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Liczba przełamanych/podzielonych: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków&lt;</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Podział w miejscach przełamywania linii</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
