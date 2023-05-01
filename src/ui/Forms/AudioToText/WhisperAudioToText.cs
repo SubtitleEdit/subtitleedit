@@ -215,8 +215,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             {
                 foreach (var model in whisperModel.Models)
                 {
-                    var path = Path.Combine(modelsFolder, model.Folder, "model.bin");
-                    if (File.Exists(path))
+                    var path = modelsFolder;
+                    var parts = model.Folder.Split('/', '\\').ToList();
+                    path = Path.Combine(path, parts[0]);
+
+                    if (Directory.Exists(path))
                     {
                         comboBoxModels.Items.Add(model);
                         if (model.Name == selectName)

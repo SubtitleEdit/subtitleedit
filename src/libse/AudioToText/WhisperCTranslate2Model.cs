@@ -19,11 +19,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         private readonly string[] _fileNames = { "model.bin", "config.json", "vocabulary.txt", "tokenizer.json" };
 
-        public string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "whisper-ctranslate2");
+        public string ModelFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "huggingface", "hub");
 
         public void CreateModelFolder()
         {
             var cacheFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache");
+            if (!Directory.Exists(cacheFolder))
+            {
+                Directory.CreateDirectory(cacheFolder);
+            }
+
+            cacheFolder = Path.Combine(cacheFolder, "hub");
             if (!Directory.Exists(cacheFolder))
             {
                 Directory.CreateDirectory(cacheFolder);
@@ -42,64 +48,71 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 Name = "tiny.en",
                 Size = "74 MB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/c4d1be0a2003ce00bb721abd23e7a34925a6f0c0d21d5c416f11c763ee7f7b15.tiny-en/"),
-                Folder = "c4d1be0a2003ce00bb721abd23e7a34925a6f0c0d21d5c416f11c763ee7f7b15.tiny-en",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-tiny.en/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-tiny.en/snapshots/7d45cf02c1ed72d240c0dbf99d544d19bef1b5a3",
             },
             new WhisperModel
             {
                 Name = "tiny",
                 Size = "74 MB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/dc6a7765cdc8ae7822b1c3068a2f966eddc2549eda7e67406cae915a8c19430c.tiny/"),
-                Folder = "dc6a7765cdc8ae7822b1c3068a2f966eddc2549eda7e67406cae915a8c19430c.tiny",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-tiny/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-tiny/snapshots/518d6e0b5a068b278f66842b17377f9523de5cd1",
             },
             new WhisperModel
             {
                 Name = "base.en",
                 Size = "142 MB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/2ca96777261aeadd48e30bc5f26fd3ee462f4921dbc1f38dfd826a67c761c9b2.base-en/"),
-                Folder = "2ca96777261aeadd48e30bc5f26fd3ee462f4921dbc1f38dfd826a67c761c9b2.base-en",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-base.en/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-base.en/snapshots/88b03866a4066bb4a97c12258abb82b1e9af0121",
             },
             new WhisperModel
             {
                 Name = "base",
                 Size = "142 MB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/d7c4df31737340263ce37933bda1e77a38367dbb09cda7433ce1ee0c58ce1a60.base/"),
-                Folder = "d7c4df31737340263ce37933bda1e77a38367dbb09cda7433ce1ee0c58ce1a60.base",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-base/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-base/snapshots/a80717a3a48b1b28aa687bca146cb7301feae1b1",
             },
             new WhisperModel
             {
                 Name = "small.en",
                 Size = "472 MB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/e2c14bb0f6a8a69afe12fbe1d82fa0c41494d4bde9615bdf399da5665f43cbc4.small-en/"),
-                Folder = "e2c14bb0f6a8a69afe12fbe1d82fa0c41494d4bde9615bdf399da5665f43cbc4.small-en",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-small.en/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-small.en/snapshots/e0e3c0a16c844a994ca4d6d1318ce35f68236052",
             },
             new WhisperModel
             {
                 Name = "small",
                 Size = "472 MB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/936cd99363be80fa388c0c5006e846d8cd42834c6cf8156a7c300723a3bf929f.small/"),
-                Folder = "936cd99363be80fa388c0c5006e846d8cd42834c6cf8156a7c300723a3bf929f.small",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-small/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-small/snapshots/2ec96c5472da50d38d40c0cfe0602af2e94b4c8a",
             },
             new WhisperModel
             {
                 Name = "medium",
                 Size = "1.5 GB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/d8b91e278db3041c3b41bf879716281edf5cfa7b0025823cc174b5429877d2bc.medium/"),
-                Folder = "d8b91e278db3041c3b41bf879716281edf5cfa7b0025823cc174b5429877d2bc.medium",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-medium/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-medium/snapshots/7832330bcea9a8d5fd6d6637c49fe5d256e98277",
             },
             new WhisperModel
             {
                 Name = "medium.en",
                 Size = "1.5 GB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/22d42d3e69ce9149bfd52c07d357e4cb72b992fb602805d6bb39f331400d6742.mediu-en/"),
-                Folder = "22d42d3e69ce9149bfd52c07d357e4cb72b992fb602805d6bb39f331400d6742.mediu-en",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-medium.en/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-medium.en/snapshots/f972a5fa3be9378617b8fedc0bb00facbdbb1bf9",
+            },
+            new WhisperModel
+            {
+                Name = "large-v1",
+                Size = "2.9 GB",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-large-v1/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-large-v1/snapshots/e46e40f0408853a954b7ded6683808b7ecd14390",
             },
             new WhisperModel
             {
                 Name = "large-v2",
                 Size = "2.9 GB",
-                Urls = MakeUrls("https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/ff9f410b63b3d996274c895f6209e9b9ab01d497815b21c2d35ae336ab7d7f20.large-v2/"),
-                Folder = "ff9f410b63b3d996274c895f6209e9b9ab01d497815b21c2d35ae336ab7d7f20.large-v2",
+                Urls = MakeUrls("https://huggingface.co/guillaumekln/faster-whisper-large-v2/resolve/main"),
+                Folder = "models--guillaumekln--faster-whisper-large-v2/snapshots/fecb99cc227a240ccd295d99b6c9026e7a179508",
             },
         };
 
