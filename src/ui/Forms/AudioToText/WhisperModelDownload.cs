@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Vosk;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -88,10 +89,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 if (!string.IsNullOrEmpty(LastDownloadedModel.Folder))
                 {
-                    folder = Path.Combine(folder, LastDownloadedModel.Folder);
-                    if (!Directory.Exists(folder))
+                    var parts = LastDownloadedModel.Folder.Split('/', '\\');
+                    foreach (var part in parts)
                     {
-                        Directory.CreateDirectory(folder);
+                        folder = Path.Combine(folder, part);
+                        if (!Directory.Exists(folder))
+                        {
+                            Directory.CreateDirectory(folder);
+                        }
                     }
                 }
 
@@ -160,7 +165,11 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             var path = WhisperHelper.GetWhisperModel().ModelFolder;
             if (!string.IsNullOrEmpty(model.Folder))
             {
-                path = Path.Combine(path, model.Folder);
+                var parts = model.Folder.Split('/', '\\');
+                foreach (var part in parts)
+                {
+                    path = Path.Combine(path, part);
+                }
             }
 
             if (model.Urls.Length > 1)
