@@ -1537,6 +1537,7 @@ Command line: {1} {2}
     <LoadedEmptyOrShort>已加载空白或很短的字幕 "{0}"</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>文件是空的或者太短！</FileIsEmptyOrShort>
     <FileNotFound>文件未找到: {0}</FileNotFound>
+    <FileLocked>文件正被其他程序占用，因此无法打开: {0}</FileLocked>
     <SavedSubtitleX>字幕 "{0}" 已保存</SavedSubtitleX>
     <SavedOriginalSubtitleX>原始字幕 "{0}" 已保存</SavedOriginalSubtitleX>
     <FileOnDiskModified>磁盘上的文件已修改</FileOnDiskModified>
