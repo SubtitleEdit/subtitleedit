@@ -2996,22 +2996,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static string ToggleSymbols(string tag, string text, string endTag = "")
+        public static string ToggleSymbols(string tag, string text, string endTag = null)
         {
-            string pre = string.Empty;
-            string post = string.Empty;
+            var pre = string.Empty;
+            var post = string.Empty;
             text = SplitStartTags(text, ref pre);
             text = SplitEndTags(text, ref post);
 
-            if (text.Contains(tag))
+            if (!string.IsNullOrEmpty(tag) && text.Contains(tag) || string.IsNullOrEmpty(tag) && !string.IsNullOrEmpty(endTag) && text.Contains(endTag))
             {
-                if (string.IsNullOrEmpty(endTag))
+                if (!string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
+                {
+                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                }
+                else if (string.IsNullOrEmpty(endTag) && !string.IsNullOrEmpty(tag))
                 {
                     text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
-                else
+                else if (!string.IsNullOrEmpty(endTag))
                 {
-                    text = pre + text.Replace(tag, string.Empty).Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                    text = pre + text.Replace(endTag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                 }
             }
             else
@@ -3029,7 +3033,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, string.IsNullOrEmpty(endTag) ? tag : endTag, post);
+                    text = string.Format("{0}{1}{2}{3}{4}", pre, tag, text, endTag ?? tag, post);
                 }
             }
 
@@ -3045,7 +3049,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = s.Remove(0, pre.Length);
             }
 
-            bool updated = true;
+            var updated = true;
             while (updated)
             {
                 updated = false;
