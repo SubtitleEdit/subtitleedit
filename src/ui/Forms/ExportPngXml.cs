@@ -5465,7 +5465,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     panelShadowColor.BackColor = colorChooser.Color;
                     subtitleListView1_SelectedIndexChanged(null, null);
-                    numericUpDownShadowTransparency.Value = colorChooser.Color.A;
+                    if (colorChooser.Color.A < numericUpDownShadowTransparency.Minimum)
+                    {
+                        numericUpDownShadowTransparency.Value = numericUpDownShadowTransparency.Minimum;
+                    }
+                    else if (colorChooser.Color.A > numericUpDownShadowTransparency.Maximum)
+                    {
+                        numericUpDownShadowTransparency.Value = numericUpDownShadowTransparency.Maximum;
+                    }
+                    else
+                    {
+                        numericUpDownShadowTransparency.Value = colorChooser.Color.A;
+                    }
                 }
             }
         }
