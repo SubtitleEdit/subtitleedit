@@ -5537,7 +5537,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Start);
                 }
 
-
                 if (Configuration.Settings.Tools.ListViewShowColumnEndTime)
                 {
                     SubtitleListview1.ShowEndColumn(LanguageSettings.Current.General.EndTime);

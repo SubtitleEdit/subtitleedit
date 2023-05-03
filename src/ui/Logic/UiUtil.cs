@@ -656,6 +656,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 using (var g = Graphics.FromHwnd(IntPtr.Zero))
                 {
+                    timeUpDown.Font = GetDefaultFont();
+                    timeUpDown.MaskedTextBox.Font = GetDefaultFont();
+                    timeUpDown.MaskedTextBox.ForeColor = ForeColor;
                     var width = g.MeasureString("00:00:00.000", form.Font).Width;
                     if (timeUpDown.MaskedTextBox.Width < width - 3)
                     {
