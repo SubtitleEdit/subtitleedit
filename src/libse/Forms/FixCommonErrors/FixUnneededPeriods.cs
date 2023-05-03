@@ -33,25 +33,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             procText = procText.Replace(".......", "......");
                         }
-
-                        //var insertIndexes = new List<int>();
-                        //for (var j = 0; j < procText.Length; j++)
-                        //{
-                        //    if (procText[j] == '…')
-                        //    {
-                        //        var startOk = j == 0 || procText[j - 1] != '…';
-                        //        var endOk = j == procText.Length - 1 || procText[j + 1] != '…';
-                        //        if (startOk && endOk)
-                        //        {
-                        //            insertIndexes.Add(j);
-                        //        }
-                        //    }
-                        //}
-
-                        //foreach (var insertIndex in insertIndexes.OrderByDescending(idx => idx))
-                        //{
-                        //    procText = procText.Insert(insertIndex, "…");
-                        //}
                     }
                     else
                     {
