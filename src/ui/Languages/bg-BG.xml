@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.6.12</Version>
-    <TranslatedBy>Последен превод на български 20.04.2023: KalinM</TranslatedBy>
+    <TranslatedBy>Последен превод на български 03.05.2023: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -187,9 +187,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChooseLanguage>Избери език</ChooseLanguage>
     <OpenModelsFolder>Отвори папката с модели</OpenModelsFolder>
     <LoadingVoskModel>Моделът за разпознаване на реч Vosk се зарежда...</LoadingVoskModel>
-    <Transcribing>Предаване запис на аудио към текс...</Transcribing>
+    <Transcribing>Предаване запис на аудио към текст...</Transcribing>
     <TranscribingXOfY>Предаване запис на аудио към текстов файл {0} от {1}...</TranscribingXOfY>
-    <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видеоизточника</XFilesSavedToVideoSourceFolder>
+    <XFilesSavedToVideoSourceFolder>{0} файлове, записани в папката с видео източника</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Използвайте последваща обработка (сливане на редове, коригиране на главни букви, пунктуация и други)</UsePostProcessing>
     <AutoAdjustTimings>Авт. регулиране на времената</AutoAdjustTimings>
     <BatchMode>Пакетен режим</BatchMode>
@@ -198,6 +198,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MaxCharsPerSubtitle>Макс. символи в ред за субтитри</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Премахване на временни файлове</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Задаване на папка с модели CPP/Const-me...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Изпълнявайте само последваща обработка/коригиране на времената</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Приложения за SSA</Title>
@@ -353,7 +354,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleTwoLetter>Код на две букви на езика</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Трибуквен код на езика</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Няма езиков код</MkvLanguageStyleEmpty>
-    <SearchFolderScanVideo>Също така сканирайте видео файлове в „Папка за търсене“ (бавно)</SearchFolderScanVideo>
+    <SearchFolderScanVideo>Също така сканирайте видео файлове в «Папка за търсене» (бавно)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Импорт изобр...</ImportImage>
@@ -1538,6 +1539,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LoadedEmptyOrShort>Зареден е файл с празни или много малки субтитри {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Файлът е празен или много малък!</FileIsEmptyOrShort>
     <FileNotFound>Файлът не е намерен: {0}</FileNotFound>
+    <FileLocked>Файлът не може да се отвори, тъй като се използва от друга програма: {0}</FileLocked>
     <SavedSubtitleX>Записани субтитри в {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Записани оригинални субтитри в {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Файлът на диска е променен</FileOnDiskModified>
@@ -1597,7 +1599,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextingForHearingImpairedRemovedXLines>Премахнат текст за увредени със слуха: {0} реда</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Субтитрите са разделени</SubtitleSplitted>
     <SubtitleAppendPrompt>Това ще добави съществуващите субтитри към текущо заредените субтитри,
-които вече трябва да са синхронизирани с видеофайла.
+които вече трябва да са синхронизирани с видео файла.
 
 Искате ли да продължите?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Обединяване на файлове със субтитри</SubtitleAppendPromptTitle>
@@ -1804,14 +1806,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <HideVideoControls>Скриване на видео управлението</HideVideoControls>
     <GeneratingWaveformInBackground>Генериране вълнова форма на зв. сигнал във фонов режим...</GeneratingWaveformInBackground>
     <AutoBackupSaved>Автоматичното архивиране е запазено</AutoBackupSaved>
-    <UsingOnlyFrontCenterChannel>Използване само на предния централен аудиоканал</UsingOnlyFrontCenterChannel>
+    <UsingOnlyFrontCenterChannel>Използване само на предния централен аудио канал</UsingOnlyFrontCenterChannel>
     <BeforeConvertingColorsToDialog>Преди да конвертирате цветовете в диалогов режим</BeforeConvertingColorsToDialog>
     <ConvertedColorsToDialog>Конвертирани цветове в диалогов режим</ConvertedColorsToDialog>
-    <PleaseInstallVideoPlayer>Моля, инсталирайте видео плейър</PleaseInstallVideoPlayer>
+    <PleaseInstallVideoPlayer>Моля, инсталирайте видео плеър</PleaseInstallVideoPlayer>
     <UnableToPlayMediaFile>SE не можа да възпроизведе видео/аудио файла (или файлът не е валиден видео/аудио файл).</UnableToPlayMediaFile>
-    <SubtitleEditNeedsVideoPlayer>Subtitle Edit се нуждае от видео плейър.</SubtitleEditNeedsVideoPlayer>
-    <UseRecommendMpv>За използване на препоръчания видео плейър «mpv», кликнете върху бутона по-долу.</UseRecommendMpv>
-    <DownloadAndUseMpv>Изтегляне и използване на «mpv» като видео плейър</DownloadAndUseMpv>
+    <SubtitleEditNeedsVideoPlayer>Subtitle Edit се нуждае от видео плеър.</SubtitleEditNeedsVideoPlayer>
+    <UseRecommendMpv>За използване на препоръчания видео плеър «mpv», кликнете върху бутона по-долу.</UseRecommendMpv>
+    <DownloadAndUseMpv>Изтегляне и използване на «mpv» като видео плеър</DownloadAndUseMpv>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Избор на субтитри от файл Matroska</Title>
@@ -2235,7 +2237,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Преминаване на видео позиция - 0,5 сек и пауза</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Преминаване на видео позиция - 1 сек и пускане</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Преминаване в текстовото поле и пауза на видео позиция</MainListViewEditTextAndPause>
-    <VideoFileName>Име на видеофайла</VideoFileName>
+    <VideoFileName>Име на видео файла</VideoFileName>
     <ExistingFileName>Съществуващо име на файла</ExistingFileName>
     <AutoBackup>Авт. архив на:</AutoBackup>
     <AutoBackupEveryMinute>Всяка минута</AutoBackupEveryMinute>
@@ -2644,7 +2646,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Крайна точка на токена</MicrosoftTranslateTokenEndpoint>
     <FontNote>Забележка: Тези настройки на шрифта са само за потребителския интерфейс за редактиране на субтитрите.
-Настройването на шрифта за субтитри обикновено се извършва във видеоплеъра, но може да бъде направено и при използване на формат на субтитрите
+Настройването на шрифта за субтитри обикновено се извършва във видео плеъра, но може да бъде направено и при използване на формат на субтитрите
 с вградена информация за шрифта, като «Настройки Sub Station Alpha» или чрез експортиране на формати, базирани на изображения.</FontNote>
     <RestoreDefaultSettings>Възстановяване на настройките по подразбиране</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Всички настройки ще бъдат възстановени до стойностите по подразбиране
