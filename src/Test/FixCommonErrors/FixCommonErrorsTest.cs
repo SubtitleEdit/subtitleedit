@@ -2454,16 +2454,6 @@ namespace Test.FixCommonErrors
             Assert.AreEqual("但是......但是我們必須等待。", sub.Paragraphs[0].Text);
         }
 
-        //[TestMethod]
-        //public void FixUnneededPeriodsTestChineseDoChange2()
-        //{
-        //    var sub = new Subtitle();
-        //    sub.Paragraphs.Add(new Paragraph("但是…但是我們必須等待。", 0, 1000));
-        //    var fup = new FixUnneededPeriods();
-        //    fup.Fix(sub, new EmptyFixCallback { Language = "zh" });
-        //    Assert.AreEqual("但是……但是我們必須等待。", sub.Paragraphs[0].Text);
-        //}
-
         [TestMethod]
         public void FixCommas1()
         {
