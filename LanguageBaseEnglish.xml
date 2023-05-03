@@ -2478,7 +2478,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleQuotes>Toggle quotes</ToggleQuotes>
     <ToggleHiTags>Toggle HI tags</ToggleHiTags>
-    <ToggleCustomTags>Toggle custom tags</ToggleCustomTags>
+    <ToggleCustomTags>Toggle custom tags (surround with)</ToggleCustomTags>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
     <AlignmentN1>Alignment bottom left - {\an1}</AlignmentN1>
