@@ -378,23 +378,6 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                     return _breakTranslation;
                 });
             }
-            //catch (TranslationException translationException)
-            //{
-            //    if (translationException.InnerException != null && !IsAvailableNetworkActive())
-            //    {
-            //        ShowNetworkError(translationException.InnerException);
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show(translationException.Message + Environment.NewLine +
-            //                        translationException.InnerException?.Source + ": " + translationException.InnerException?.Message);
-            //    }
-            //}
-            //catch (Exception exception)
-            //{
-            //    SeLogger.Error(exception);
-            //    ShowNetworkError(exception);
-            //}
             finally
             {
                 labelPleaseWait.Visible = false;
@@ -460,6 +443,22 @@ namespace Nikse.SubtitleEdit.Forms.Translate
                 var cleanText = CleanText(paragraphTargetText, lastIndex);
                 TranslatedSubtitle.Paragraphs[lastIndex].Text = cleanText;
             }
+
+            if (comboBoxParagraphHandling.Text != LanguageSettings.Current.GoogleTranslate.ProcessorSingle)
+            {
+                for (var i = 0; i < TranslatedSubtitle.Paragraphs.Count - 1; i++)
+                {
+                    var p = TranslatedSubtitle.Paragraphs[i];
+                    var next = TranslatedSubtitle.Paragraphs[i + 1];
+                    if (!string.IsNullOrEmpty(p.Text) && string.IsNullOrEmpty(next.Text) &&
+                        next.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds < 10000)
+                    {
+                        p.EndTime = next.EndTime;
+                    }
+                }
+                TranslatedSubtitle.RemoveEmptyLines();
+            }
+
             subtitleListViewTarget.BeginUpdate();
             subtitleListViewTarget.Fill(TranslatedSubtitle);
             subtitleListViewTarget.SelectIndexAndEnsureVisible(lastIndex);
