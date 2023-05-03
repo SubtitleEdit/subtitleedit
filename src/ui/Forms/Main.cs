@@ -16246,7 +16246,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                 }
 
-                if (!string.IsNullOrEmpty(openingTag) && !string.IsNullOrEmpty(closingTag))
+                if (!string.IsNullOrEmpty(openingTag) || !string.IsNullOrEmpty(closingTag))
                 {
                     if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
                     {
@@ -30172,7 +30172,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(tag))
+                if (string.IsNullOrWhiteSpace(tag) && string.IsNullOrEmpty(endTag))
                 {
                     return;
                 }
