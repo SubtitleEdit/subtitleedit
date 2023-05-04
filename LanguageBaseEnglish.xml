@@ -1500,15 +1500,15 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <InsertNewSubtitleAtVideoPosition>&amp;Insert new subtitle at video pos</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Play from just before &amp;text</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Play from just before text</PlayFromJustBeforeText>
       <PlayFromBeginning>Play from beginning of video</PlayFromBeginning>
       <Pause>Pause</Pause>
       <GoToSubtitlePositionAndPause>Go to sub position and pause</GoToSubtitlePositionAndPause>
-      <SetStartTime>Set &amp;start time</SetStartTime>
-      <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
+      <SetStartTime>Set start time</SetStartTime>
+      <SetEndTimeAndGoToNext>Set end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
-      <SetEndTime>Set e&amp;nd time</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>Set sta&amp;rt and offset the rest</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>Set end time</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>Set start and offset the rest</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
       <AutoTranslate>Auto-translate</AutoTranslate>
