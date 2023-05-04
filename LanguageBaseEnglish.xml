@@ -1507,7 +1507,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <SetStartTime>Set start time</SetStartTime>
       <SetEndTimeAndGoToNext>Set end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
-      <SetEndTime>Set e&amp;nd time</SetEndTime>
+      <SetEndTime>Set end time</SetEndTime>
       <SetStartTimeAndOffsetTheRest>Set start and offset the rest</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
