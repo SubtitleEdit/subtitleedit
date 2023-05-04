@@ -16183,11 +16183,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.Focused || textBoxListViewTextOriginal.Focused)
                 {
-                    SurroundWithTag("\"", selectedTextOnly: true);
+                    SurroundWithTag("\"", "\"", selectedTextOnly: true);
                 }
                 else
                 {
-                    SurroundWithTag("\"");
+                    SurroundWithTag("\"", "\"");
                 }
 
                 e.SuppressKeyPress = true;
