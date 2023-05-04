@@ -2067,7 +2067,7 @@ namespace Nikse.SubtitleEdit.Logic
                     AutoContinueInXSeconds = "Auto continue in {0} seconds",
                     StillTypingAutoContinueStopped = "Still typing... auto continue stopped",
 
-                    InsertNewSubtitleAtVideoPosition = "&Insert new subtitle at video pos",
+                    InsertNewSubtitleAtVideoPosition = "Insert new subtitle at video pos",
                     InsertNewSubtitleAtVideoPositionNoTextBoxFocus = "Insert new subtitle at video pos (no text box focus)",
                     Auto = "Auto",
                     PlayFromJustBeforeText = "Play from just before text",
