@@ -10897,7 +10897,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
             {
-                SurroundWithTag(Configuration.Settings.Tools.MusicSymbol, selectedTextOnly: true);
+                SurroundWithTag(Configuration.Settings.Tools.MusicSymbol, Configuration.Settings.Tools.MusicSymbol, selectedTextOnly: true);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainInsertBefore)
@@ -30148,7 +30148,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemSurroundWithMusicSymbolsClick(object sender, EventArgs e)
         {
             string tag = Configuration.Settings.Tools.MusicSymbol;
-            SurroundWithTag(tag);
+            SurroundWithTag(tag, tag);
         }
 
         private void SurroundWithTag(string tag, string endTag = "", bool selectedTextOnly = false)
