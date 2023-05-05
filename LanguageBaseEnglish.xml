@@ -1497,7 +1497,7 @@ To use an API key, go to "Options -&gt; Settings -&gt; Tools" to enter your Goog
       <AutoContinueInOneSecond>Auto continue in one second</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continue in {0} seconds</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Still typing... auto continue stopped</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Insert new subtitle at video pos</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Insert new subtitle at video pos</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Insert new subtitle at video pos (no text box focus)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Play from just before text</PlayFromJustBeforeText>
