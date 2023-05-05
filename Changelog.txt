@@ -26,7 +26,7 @@
    * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
    * Replace: Add find/replace target + minor redesign
    * List all EBU language codes - thx TerrorizedGakon
-   * Update Whisper CPP to v1.3.0
+   * Update Whisper CPP to v1.4.0
    * Update Whisper Const-me to 1.11
    * Make main text boxes a little wider - thx Cyberyoda1411
    * Allow raw VTT preview in mpv - thx DeicPro
