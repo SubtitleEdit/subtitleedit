@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -52,6 +53,12 @@ namespace Nikse.SubtitleEdit.Controls
         private VideoPlayer _videoPlayer;
 
         public float FontSizeFactor { get; set; }
+
+        private static readonly List<Type> AllowedFormats = new List<Type>
+        {
+            new WebVTT().GetType(),
+            new WebVTTFileWithLineNumber().GetType(),
+        };
 
         public VideoPlayer VideoPlayer
         {
@@ -462,7 +469,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                var format = new AdvancedSubStationAlpha();
+                SubtitleFormat format = new AdvancedSubStationAlpha();
                 string text;
 
                 if (subtitle.Header != null && subtitle.Header.Contains("lang=\"ja\"", StringComparison.Ordinal) && subtitle.Header.Contains("bouten-", StringComparison.Ordinal))
@@ -516,6 +523,11 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                             }
                         }
+                    }
+
+                    if (AllowedFormats.Contains(uiFormat.GetType()))
+                    {
+                        format = uiFormat;
                     }
 
                     var hash = subtitle.GetFastHashCode(null);
