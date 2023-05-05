@@ -884,7 +884,7 @@ $HorzAlign          =   Center
                 CurrentDCinemaFontUri = DCinemaFontFile;
                 CurrentDCinemaFontId = "Arial";
             }
-            CurrentDCinemaIssueDate = DateTime.Now.ToString("s") + ".000-00:00";
+            CurrentDCinemaIssueDate = DateTime.Now.ToString("s");
             CurrentDCinemaMovieTitle = "title";
             CurrentDCinemaReelNumber = "1";
             CurrentDCinemaFontColor = Color.White;
