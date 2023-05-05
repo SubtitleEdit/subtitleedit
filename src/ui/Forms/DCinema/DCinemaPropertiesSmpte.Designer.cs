@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.textBoxIssueDate.Name = "textBoxIssueDate";
             this.textBoxIssueDate.Size = new System.Drawing.Size(274, 20);
             this.textBoxIssueDate.TabIndex = 4;
-            this.textBoxIssueDate.Text = "2005-07-14T21:52:02.000-00:00";
+            this.textBoxIssueDate.Text = "2005-07-14T21:52:02";
             // 
             // labelIssueDate
             // 
