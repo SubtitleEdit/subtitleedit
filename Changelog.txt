@@ -10,6 +10,7 @@
    * Add more mpv preview settings in UI
    * Add cmd convert param "/teletextonlypage:<number>" - thx dystopia2017
    * Add export of TTML SMPTE-TT with inline Base64 encoded PNG images
+   * Add new settings for webvtt auto merge
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
@@ -21,12 +22,17 @@
    * Update Italian language - thx bovirus
    * Update Catalan translation - thx  jordimas
    * Update German translation - thx Netspark
+   * Update Bulgarian translation - thx Калин
    * Find/Replace are no longer modal windows - thx Cyberyoda1411/domddol
    * Replace: Add find/replace target + minor redesign
    * List all EBU language codes - thx TerrorizedGakon
    * Update Whisper CPP to v1.3.0
    * Update Whisper Const-me to 1.11
    * Make main text boxes a little wider - thx Cyberyoda1411
+   * Allow raw VTT preview in mpv - thx DeicPro
+   * Make custom "Toogle custom tags (surround with)" work with empty start or end tag
+   * Fix common errors Chinese issue with six dots - thx TokerX
+   * Keep original text box visible when not allowing edit of original - thx OmrSi
 * FIXED:
    * Fix "Add embedded subtitles" with ANSI encoding - thx Cyberyoda1411
    * Fix running Whisper CPP/Const-me after setting folder for Whisper OpenAI - thx rsmith02ct
@@ -37,6 +43,8 @@
    * Fix possible crash reading .ts files - thx hepalin
    * Fix crash in split lines - thx Papai
    * Fix video cut duration in "Generate video with burned-in subitle" - thx Alxndr
+   * Fix "Insert after" with minimum gap zero ms - thx steam3d
+   * Fix crash in image export - thx dimailer
 
 
 3.6.12 (26th March 2023)
@@ -728,6 +736,7 @@
    * Update Tesseract 5 Alpha to "2021-05-06" - thx iGom
    * Add French letters in OCR char inspect - thx tormento
    * Handle Unicode control char in "Remove empty lines" - thx igenaya
+   * Improve audio-to-text post processing a little - thx oep42
 * FIXED:
    * Fix for unwanted line copy with alt+arrow-up/down fast - thx Nathália
    * Fix for reading BDSup position - thx akaicat
