@@ -483,6 +483,39 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Init();
         }
 
+
+        private void WhisperEngineStableTs()
+        {
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.StableTs;
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var path = WhisperHelper.GetWhisperFolder();
+                if (string.IsNullOrEmpty(path))
+                {
+                    using (var openFileDialog1 = new OpenFileDialog())
+                    {
+                        openFileDialog1.Title = "Locate stable-ts.exe (Python version)";
+                        openFileDialog1.FileName = string.Empty;
+                        openFileDialog1.Filter = "stable-ts.exe|stable-ts.exe";
+
+                        if (openFileDialog1.ShowDialog() != DialogResult.OK
+                            || !openFileDialog1.FileName.EndsWith("stable-ts.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                            comboBoxWhisperEngine.Text = WhisperChoice.Cpp;
+                        }
+                        else
+                        {
+                            Configuration.Settings.Tools.WhisperStableTsLocation = openFileDialog1.FileName;
+                        }
+                    }
+                }
+            }
+
+            Init();
+        }
+
         private void removeTemporaryFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.WhisperDeleteTempFiles = !Configuration.Settings.Tools.WhisperDeleteTempFiles;
@@ -579,6 +612,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (comboBoxWhisperEngine.Text == WhisperChoice.WhisperX)
             {
                 WhisperEngineWhisperX();
+            }
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.StableTs)
+            {
+                WhisperEngineStableTs();
             }
         }
 

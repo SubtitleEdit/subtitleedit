@@ -60,6 +60,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 return "https://github.com/jordimas/whisper-ctranslate2";
             }
 
+            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+            {
+                return "https://github.com/jianfch/stable-ts";
+            }
+
             return "https://github.com/openai/whisper";
         }
 
@@ -141,6 +146,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperStableTsLocation))
+                {
+                    if (Configuration.Settings.Tools.WhisperStableTsLocation.EndsWith("stable-ts.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Configuration.Settings.Tools.WhisperStableTsLocation))
+                    {
+                        return Path.GetDirectoryName(Configuration.Settings.Tools.WhisperStableTsLocation);
+                    }
+
+                    if (Directory.Exists(Configuration.Settings.Tools.WhisperStableTsLocation) && File.Exists(Path.Combine(Configuration.Settings.Tools.WhisperStableTsLocation, "stable-ts.exe")))
+                    {
+                        return Configuration.Settings.Tools.WhisperStableTsLocation;
+                    }
+                }
+
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
                 {
                     var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Const-me");
@@ -173,6 +191,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
                             {
                                 var whisperCTranslate2FullPath = Path.Combine(dir, "Scripts", "whisper-ctranslate2.exe");
+                                if (File.Exists(whisperCTranslate2FullPath))
+                                {
+                                    return Path.Combine(dir, "Scripts");
+                                }
+
+                                return null;
+                            }
+
+                            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+                            {
+                                var whisperCTranslate2FullPath = Path.Combine(dir, "Scripts", "stable-ts.exe");
                                 if (File.Exists(whisperCTranslate2FullPath))
                                 {
                                     return Path.Combine(dir, "Scripts");
@@ -223,6 +252,11 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return "main";
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+                {
+                    return "stable-ts";
+                }
+
                 return "whisper";
             }
 
@@ -247,6 +281,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
                 {
                     var f = Path.Combine(whisperFolder, "whisper-ctranslate2.exe");
+                    if (File.Exists(f))
+                    {
+                        return f;
+                    }
+                }
+                else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+                {
+                    var f = Path.Combine(whisperFolder, "stable-ts.exe");
                     if (File.Exists(f))
                     {
                         return f;
@@ -295,8 +337,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 {
                     return f;
                 }
-
-
+            }
+            else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+            {
+                var f = Path.Combine(whisperFolder, "stable-ts");
+                if (File.Exists(f))
+                {
+                    return f;
+                }
             }
 
             return "whisper";

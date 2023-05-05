@@ -162,6 +162,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 engines.Add(WhisperChoice.ConstMe);
             }
             engines.Add(WhisperChoice.CTranslate2);
+            engines.Add(WhisperChoice.StableTs);
             engines.Add(WhisperChoice.WhisperX);
 
             foreach (var engine in engines)
@@ -960,6 +961,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             }
 
             var outputSrt = string.Empty;
+            var postParams = string.Empty;
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp ||
                 Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
             {
@@ -971,10 +973,15 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                     Configuration.Settings.Tools.WhisperExtraSettings = string.Empty;
                 }
             }
+            else if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
+            {
+                var srtFileName = Path.GetFileNameWithoutExtension(waveFileName);
+                postParams = $" -o {srtFileName}.srt";
+            }
 
             var w = WhisperHelper.GetWhisperPathAndFileName();
             var m = WhisperHelper.GetWhisperModelForCmdLine(model);
-            var parameters = $"--language {language} --model \"{m}\" {outputSrt}{translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"";
+            var parameters = $"--language {language} --model \"{m}\" {outputSrt}{translateToEnglish}{Configuration.Settings.Tools.WhisperExtraSettings} \"{waveFileName}\"{postParams}";
 
             SeLogger.Error($"{w} {parameters}");
 
@@ -1495,6 +1502,38 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             Init();
         }
 
+        private void WhisperEngineStableTs()
+        {
+            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.StableTs;
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var path = WhisperHelper.GetWhisperFolder();
+                if (string.IsNullOrEmpty(path))
+                {
+                    using (var openFileDialog1 = new OpenFileDialog())
+                    {
+                        openFileDialog1.Title = "Locate stable-ts.exe (Python version)";
+                        openFileDialog1.FileName = string.Empty;
+                        openFileDialog1.Filter = "stable-ts.exe|stable-ts.exe";
+
+                        if (openFileDialog1.ShowDialog() != DialogResult.OK
+                            || !openFileDialog1.FileName.EndsWith("stable-ts.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Configuration.Settings.Tools.WhisperChoice = WhisperChoice.Cpp;
+                            comboBoxWhisperEngine.Text = WhisperChoice.Cpp;
+                        }
+                        else
+                        {
+                            Configuration.Settings.Tools.WhisperStableTsLocation = openFileDialog1.FileName;
+                        }
+                    }
+                }
+            }
+
+            Init();
+        }
+
         private void comboBoxWhisperEngine_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxWhisperEngine.Text == Configuration.Settings.Tools.WhisperChoice)
@@ -1522,6 +1561,10 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
             else if (comboBoxWhisperEngine.Text == WhisperChoice.WhisperX)
             {
                 WhisperEngineWhisperX();
+            }
+            else if (comboBoxWhisperEngine.Text == WhisperChoice.StableTs)
+            {
+                WhisperEngineStableTs();
             }
         }
 
