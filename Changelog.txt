@@ -10,7 +10,7 @@
    * Add more mpv preview settings in UI
    * Add cmd convert param "/teletextonlypage:<number>" - thx dystopia2017
    * Add export of TTML SMPTE-TT with inline Base64 encoded PNG images
-   * Add new settings for webvtt auto merge
+   * Add new settings for WebVTT auto merge
 * IMPROVED:
    * Update Hebrew translation - thx אלחנן 
    * Update Slovenian translation - thx Jadran
@@ -29,9 +29,9 @@
    * Update Whisper CPP to v1.4.0
    * Update Whisper Const-me to 1.11
    * Make main text boxes a little wider - thx Cyberyoda1411
-   * Allow raw VTT preview in mpv - thx DeicPro
-   * Make custom "Toogle custom tags (surround with)" work with empty start or end tag
-   * Fix common errors Chinese issue with six dots - thx TokerX
+   * Allow raw WebVTT preview in mpv - thx DeicPro
+   * Make "Toogle custom tags (surround with)" work with empty start or end tag
+   * Make "Fix common errors" ignore Chinese six dots - thx TokerX
    * Keep original text box visible when not allowing edit of original - thx OmrSi
 * FIXED:
    * Fix "Add embedded subtitles" with ANSI encoding - thx Cyberyoda1411
