@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
                 engines.Add(WhisperChoice.ConstMe);
             }
             engines.Add(WhisperChoice.CTranslate2);
-            engines.Add(WhisperChoice.StableTs);
+          //  engines.Add(WhisperChoice.StableTs);
             engines.Add(WhisperChoice.WhisperX);
 
             foreach (var engine in engines)
