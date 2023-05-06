@@ -20,13 +20,13 @@
     <HidePreview>Скрыть пред-просмотр</HidePreview>
     <SubtitleFiles>Файлы субтитров</SubtitleFiles>
     <AllFiles>Все файлы</AllFiles>
-    <VideoFiles>Файлы видео</VideoFiles>
+    <VideoFiles>Видеофайлы</VideoFiles>
     <Images>Изображения</Images>
     <Fonts>Шрифты</Fonts>
-    <AudioFiles>Файлы аудио</AudioFiles>
+    <AudioFiles>Аудиофайлы</AudioFiles>
     <OpenSubtitle>Открыть субтитры…</OpenSubtitle>
-    <OpenVideoFile>Открыть файл видео…</OpenVideoFile>
-    <OpenVideoFileTitle>Открыть файл видео…</OpenVideoFileTitle>
+    <OpenVideoFile>Открыть видеофайл…</OpenVideoFile>
+    <OpenVideoFileTitle>Открыть видеофайл…</OpenVideoFileTitle>
     <NoVideoLoaded>Видео не загружено</NoVideoLoaded>
     <OnlineVideoFeatureNotAvailable>Функция недоступна для онлайн-видео</OnlineVideoFeatureNotAvailable>
     <VideoInformation>Информация о видео</VideoInformation>
@@ -62,9 +62,10 @@
     <SplitLine>Разделить строку!</SplitLine>
     <NotAvailable>Н/Д</NotAvailable>
     <Overlap>Наложение</Overlap>
-    <OverlapPreviousLineX>Наложение на предыдущий ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapPreviousLineX>Налож. на пред-щий ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Наложение ({0:#,##0.###})</OverlapX>
-    <OverlapNextX>Наложение на следующий ({0:#,##0.###})</OverlapNextX>
+    <OverlapNextX>Налож. на след-щий ({0:#,##0.###})</OverlapNextX>
+    <OverlapStartAndEnd>Наложение начало и конец</OverlapStartAndEnd>
     <Negative>Отрицательная</Negative>
     <RegularExpressionIsNotValid>Ошибка в регулярном выражении!</RegularExpressionIsNotValid>
     <CurrentSubtitle>Текущий субтитр</CurrentSubtitle>
@@ -183,6 +184,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Аудио в текст</Title>
     <Info>Создание текста из аудио с помощью системы распознавания речи Vosk/Kaldi</Info>
     <WhisperInfo>Создание текста из аудио с помощью системы распознавания речи Whisper</WhisperInfo>
+    <Engine>Движок:</Engine>
     <VoskWebsite>Сайт Vosk</VoskWebsite>
     <WhisperWebsite>Сайт Whisper</WhisperWebsite>
     <WhisperNotFound>Whisper не найден.
@@ -194,7 +196,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OpenModelsFolder>Папка моделей</OpenModelsFolder>
     <LoadingVoskModel>Загрузка модели распознавания речи Vosk…</LoadingVoskModel>
     <Transcribing>Преобразование аудио в текст…</Transcribing>
-    <TranscribingXOfY>Преобразование аудио в текст — файл {0} из {1}…</TranscribingXOfY>
+    <TranscribingXOfY>Преобразование аудио в текст - файл {0} из {1}…</TranscribingXOfY>
     <XFilesSavedToVideoSourceFolder>{0} файлов сохранено в исходной папке с видео</XFilesSavedToVideoSourceFolder>
     <UsePostProcessing>Постобработка (объединение строк, исправление регистра, пунктуация и т.д.)</UsePostProcessing>
     <AutoAdjustTimings>Автоматическая настройка таймингов</AutoAdjustTimings>
@@ -202,6 +204,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <KeepPartialTranscription>Сохранить частичную транскрипцию</KeepPartialTranscription>
     <TranslateToEnglish>Перевести на английский</TranslateToEnglish>
     <MaxCharsPerSubtitle>Макс. символов в строке</MaxCharsPerSubtitle>
+    <RemoveTemporaryFiles>Удалять временные файлы</RemoveTemporaryFiles>
+    <SetCppConstMeFolder>Установить папку моделей CPP/Const-me…</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Запускать только постобработку/настраивать тайминги</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Вложения Advanced SubStation Alpha</Title>
@@ -357,6 +362,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MkvLanguageStyleTwoLetter>Двухбуквенный код языка</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Трёхбуквенный код языка</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Код языка отсутствует</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Сканировать видеофайлы в «Папке поиска» (медленно)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Импорт изображения…</ImportImage>
@@ -399,6 +405,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <OnlyChangeAllUppercaseLines>Изменить только все строки с верхним регистром</OnlyChangeAllUppercaseLines>
     <AllUppercase>ВСЕ ЗАГЛАВНЫЕ</AllUppercase>
     <AllLowercase>все строчные</AllLowercase>
+    <ProperCase>Все С Заглавной</ProperCase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Изменение регистра - Имена</Title>
@@ -1245,7 +1252,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <FixRtlViaUnicodeControlCharacters>Исправить ПнЛ через управляющие символы Unicode (для выбранных строк)</FixRtlViaUnicodeControlCharacters>
         <RemoveUnicodeControlCharacters>Удалить управляющие символы Unicode (из выбранных строк)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Обратить начало/конец ПнЛ (для выделенных строк)</ReverseRightToLeftStartEnd>
-        <ShowOriginalTextInAudioAndVideoPreview>Показать исходный текст в предпросмотре аудио/видео</ShowOriginalTextInAudioAndVideoPreview>
+        <ShowOriginalTextInAudioAndVideoPreview>Показывать исходный текст в предпросмотре аудио/видео</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Изменить выбор…</ModifySelection>
         <InverseSelection>Инвертировать выбор</InverseSelection>
       </Edit>
@@ -1292,11 +1299,11 @@ https://github.com/SubtitleEdit/subtitleedit
       </Tools>
       <Video>
         <Title>Видео</Title>
-        <OpenVideo>Открыть файл видео…</OpenVideo>
+        <OpenVideo>Открыть видеофайл…</OpenVideo>
         <OpenVideoFromUrl>Открыть видео по ссылке…</OpenVideoFromUrl>
         <OpenDvd>Открыть DVD…</OpenDvd>
         <ChooseAudioTrack>Выбор аудио трека</ChooseAudioTrack>
-        <CloseVideo>Закрыть файл видео</CloseVideo>
+        <CloseVideo>Закрыть видеофайл</CloseVideo>
         <OpenSecondSubtitle>Открыть второй (вспомогательный) файл субтитров…</OpenSecondSubtitle>
         <SetVideoOffset>Задать видео задержку…</SetVideoOffset>
         <SmptTimeMode>SMPTE разметка (с пропуском кадров)</SmptTimeMode>
@@ -1542,6 +1549,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LoadedEmptyOrShort>Загруженный файл субтитров {0} пуст или очень маленький</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Файл является пустым или очень маленьким!</FileIsEmptyOrShort>
     <FileNotFound>Файл не найден: {0}</FileNotFound>
+    <FileLocked>Не удаётся открыть файл, так как он используется другой программой: {0}</FileLocked>
     <SavedSubtitleX>Субтитры сохранены в файле {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Исходные субтитры сохранены в {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>файл на диске изменён</FileOnDiskModified>
@@ -1826,8 +1834,8 @@ https://github.com/SubtitleEdit/subtitleedit
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Конвертер величин</Title>
-    <ConvertFrom>Из</ConvertFrom>
-    <ConvertTo>В</ConvertTo>
+    <ConvertFrom>Конвертировать из</ConvertFrom>
+    <ConvertTo>Конвертировать в</ConvertTo>
     <CopyToClipboard>Копировать в буфер</CopyToClipboard>
     <CloseOnInsert>Закрыть после вставки</CloseOnInsert>
     <Insert>Вставить</Insert>
@@ -1869,14 +1877,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <Pounds>Фунты</Pounds>
     <Ounces>Унции</Ounces>
     <Carats>Караты</Carats>
-    <Drams>Драмы</Drams>
-    <Grains>Зерновые</Grains>
-    <Stones>Камни</Stones>
-    <CubicKilometers>Кубические километры</CubicKilometers>
+    <Drams>Драхмы</Drams>
+    <Grains>Граны</Grains>
+    <Stones>Стоуны</Stones>
+    <CubicKilometers>Кубич. километры</CubicKilometers>
     <CubicMeters>Кубические метры</CubicMeters>
     <Litres>Литры</Litres>
-    <CubicCentimeters>Кубические сантиметры</CubicCentimeters>
-    <CubicMillimeters>Кубические миллиметры</CubicMillimeters>
+    <CubicCentimeters>Кубич. сантиметры</CubicCentimeters>
+    <CubicMillimeters>Кубич. миллиметры</CubicMillimeters>
     <CubicMiles>Кубические мили</CubicMiles>
     <CubicYards>Кубические ярды</CubicYards>
     <CubicFTs>Кубические футы</CubicFTs>
@@ -1888,14 +1896,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <FluidOuncesUS>Унции жидкости (США)</FluidOuncesUS>
     <Bushels>Бушели</Bushels>
     <Pecks>Пеки</Pecks>
-    <GallonsUK>Галлоны (Великобритания)</GallonsUK>
-    <QuartsUK>Кварты (Великобритания)</QuartsUK>
-    <PintsUK>Пинты (Великобритания)</PintsUK>
-    <FluidOuncesUK>Унции жидкости (Великобритания)</FluidOuncesUK>
-    <SquareKilometers>Квадратных километров</SquareKilometers>
+    <GallonsUK>Галлоны (UK)</GallonsUK>
+    <QuartsUK>Кварты (UK)</QuartsUK>
+    <PintsUK>Пинты (UK)</PintsUK>
+    <FluidOuncesUK>Унции жидкости (UK)</FluidOuncesUK>
+    <SquareKilometers>Квадр. километров</SquareKilometers>
     <SquareMeters>Квадратные метры</SquareMeters>
-    <SquareCentimeters>Квадратные сантиметры</SquareCentimeters>
-    <SquareMillimeters>Квадратные миллиметры</SquareMillimeters>
+    <SquareCentimeters>Квадр. сантиметры</SquareCentimeters>
+    <SquareMillimeters>Квадр. миллиметры</SquareMillimeters>
     <SquareMiles>Квадратные мили</SquareMiles>
     <SquareYards>Квадратные ярды</SquareYards>
     <SquareFTs>Квадратные футы</SquareFTs>
@@ -1924,15 +1932,15 @@ https://github.com/SubtitleEdit/subtitleedit
     <Calories>Калории</Calories>
     <Ergs>Эргы</Ergs>
     <ElectronVolts>Электрон-Вольты</ElectronVolts>
-    <Btus>Бтус</Btus>
-    <Watts>Вт</Watts>
+    <Btus>БТЕ</Btus>
+    <Watts>Ватт</Watts>
     <Horsepower>Лошадиные силы</Horsepower>
     <Atmospheres>Атмосфер</Atmospheres>
     <Bars>Бары</Bars>
     <Pascals>Паскали</Pascals>
-    <MillimetersOfMercury>Миллиметры ртути</MillimetersOfMercury>
-    <PoundPerSquareInch>Фунт-сила на квадратный дюйм</PoundPerSquareInch>
-    <KilogramPerSquareCentimeter>Килограмм-сила на квадратный сантиметр</KilogramPerSquareCentimeter>
+    <MillimetersOfMercury>мм ртутного столба</MillimetersOfMercury>
+    <PoundPerSquareInch>Фунт на квадр. дюйм</PoundPerSquareInch>
+    <KilogramPerSquareCentimeter>кг на квадр. сантиметр</KilogramPerSquareCentimeter>
     <KiloPascals>Килопаскали</KiloPascals>
   </MeasurementConverter>
   <MergeDoubleLines>
@@ -2108,6 +2116,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <Find>Найти</Find>
     <Replace>Заменить</Replace>
     <ReplaceAll>Заменить все</ReplaceAll>
+    <FindReplaceIn>Заменить/Найти в:</FindReplaceIn>
+    <TranslationAndOriginal>Перевод и оригинал</TranslationAndOriginal>
+    <TranslationOnly>Только перевод</TranslationOnly>
+    <OriginalOnly>Только оригинал</OriginalOnly>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Восстановить авто копию</Title>
@@ -2147,7 +2159,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <General>Общие</General>
     <SubtitleFormats>Форматы субтитров</SubtitleFormats>
     <Toolbar>Панель инструментов</Toolbar>
-    <VideoPlayer>Видео проигрыватель</VideoPlayer>
+    <VideoPlayer>Видеопроигрыватель</VideoPlayer>
     <WaveformAndSpectrogram>Форма сигнала/Спектрограмма</WaveformAndSpectrogram>
     <Tools>Инструменты</Tools>
     <WordLists>Список слов</WordLists>
@@ -2293,12 +2305,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformBackgroundColor>Цвет фона</WaveformBackgroundColor>
     <WaveformCursorColor>Цвет курсора</WaveformCursorColor>
     <WaveformTextColor>Цвет текста</WaveformTextColor>
-    <WaveformTextFontSize>Размер текстового шрифта</WaveformTextFontSize>
+    <WaveformTextFontSize>Размер текста</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Очистить папки «Spectrograms» и «Waveforms»</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Папки «Waveforms» и «Spectrograms» содержат {0} файлов ({1:0.00} Mб)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Спектрограмма</Spectrogram>
     <GenerateSpectrogram>Создавать спектрограмму</GenerateSpectrogram>
-    <SpectrogramAppearance>Внешний вид спектрограммы</SpectrogramAppearance>
+    <SpectrogramAppearance>Вид спектрограммы</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Градиентная заливка одним цветом</SpectrogramOneColorGradient>
     <SpectrogramClassic>Классический</SpectrogramClassic>
     <WaveformUseFFmpeg>Использовать FFmpeg для извлечения звука</WaveformUseFFmpeg>
@@ -2379,7 +2391,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MusicSymbolsReplace>Символы на замену (через запятую)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жёсткие правила</FixCommonOcrErrorsUseHardcodedRules>
     <UseWordSplitList>Использовать список разделения слов (OCR + FCE)</UseWordSplitList>
-    <AvoidPropercase>Избегать заглавных букв в каждом слове</AvoidPropercase>
+    <AvoidPropercase>Предотвращать каждое слово с заглавной буквы</AvoidPropercase>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Испр. корот. время отображ. (разреш. измен. начал. времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Пропустить первый шаг (выбор правил исправления)</FixCommonErrorsSkipStepOne>
     <DefaultFormat>Формат по умолчанию</DefaultFormat>
@@ -2524,13 +2536,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForward500Milliseconds>500 мс вперёд</GoForward500Milliseconds>
     <GoBack1Second>1 сек. назад</GoBack1Second>
     <GoForward1Second>1 сек. вперёд</GoForward1Second>
-    <GoBack5Seconds>5 секунд назад</GoBack5Seconds>
-    <GoForward5Seconds>5 секунд вперёд</GoForward5Seconds>
+    <GoBack3Seconds>3 сек. назад</GoBack3Seconds>
+    <GoForward3Seconds>3 сек. вперёд</GoForward3Seconds>
+    <GoBack5Seconds>5 сек. назад</GoBack5Seconds>
+    <GoForward5Seconds>5 сек. вперёд</GoForward5Seconds>
     <GoBackXSSeconds>&lt;= 100 мс смещение строки положения назад</GoBackXSSeconds>
     <GoForwardXSSeconds>100 мс смещение строки положения вперёд =&gt;</GoForwardXSSeconds>
     <GoBackXLSeconds>&lt;= 5 секундное смещение строки положения назад</GoBackXLSeconds>
     <GoForwardXLSeconds>5 секундное смещение строки положения вперёд =&gt;</GoForwardXLSeconds>
-    <GoBack3Seconds>&lt;= 3 секундное смещение строки положения назад</GoBack3Seconds>
     <GoToStartCurrent>Установить позицию видео в начало текущей строки/субтитра</GoToStartCurrent>
     <ToggleStartEndCurrent>Переключение позиции видео между началом/концом текущей строки</ToggleStartEndCurrent>
     <PlaySelectedLines>Воспроизвести выбранные линии</PlaySelectedLines>
@@ -2791,6 +2804,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfSplits>Количество разделений: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Наибольшее число символов {0} в строке № {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Наибольшее общее число символов {0} в строке № {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Разделение при переносе строки</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Разделение субтитров</Title>
