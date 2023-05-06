@@ -1492,18 +1492,18 @@ Command line: {1} {2}
       <AutoContinueInOneSecond>1 秒后自动继续</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>{0} 秒后自动继续</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>仍然输入... 自动继续已停止</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>在视频位置插入新字幕(&amp;I)</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>在视频位置插入新字幕</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>在当前视频位置插入新字幕 (且不将操作焦点定位到文本框)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>自动</Auto>
-      <PlayFromJustBeforeText>从文本前播放(&amp;T)</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>从文本前播放</PlayFromJustBeforeText>
       <PlayFromBeginning>从视频开头播放</PlayFromBeginning>
       <Pause>暂停</Pause>
       <GoToSubtitlePositionAndPause>转到字幕位置并暂停</GoToSubtitlePositionAndPause>
-      <SetStartTime>设为起始时间(&amp;S)</SetStartTime>
-      <SetEndTimeAndGoToNext>设为结束时间并转到下一行(&amp;E)</SetEndTimeAndGoToNext>
+      <SetStartTime>设为起始时间</SetStartTime>
+      <SetEndTimeAndGoToNext>设为结束时间并转到下一行</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>通过结束时间调整 {0}</AdjustedViaEndTime>
       <SetEndTime>设为结束时间(&amp;N)</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>设为起始时间并偏移其余(&amp;R)</SetStartTimeAndOffsetTheRest>
+      <SetStartTimeAndOffsetTheRest>设为起始时间并偏移其余</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>在网上搜索文本</SearchTextOnline>
       <GoogleTranslate>谷歌翻译</GoogleTranslate>
       <AutoTranslate>自动翻译</AutoTranslate>
@@ -2466,7 +2466,7 @@ Command line: {1} {2}
     <ToggleDialogDashes>在对话内容前使用破折号</ToggleDialogDashes>
     <ToggleQuotes>切换引号</ToggleQuotes>
     <ToggleHiTags>切换HI标签</ToggleHiTags>
-    <ToggleCustomTags>切换自定义标签</ToggleCustomTags>
+    <ToggleCustomTags>切换自定义标签（环绕）</ToggleCustomTags>
     <ToggleMusicSymbols>使用音乐符号</ToggleMusicSymbols>
     <Alignment>对齐 (所选行)</Alignment>
     <AlignmentN1>左下对齐 - {\an1}</AlignmentN1>
