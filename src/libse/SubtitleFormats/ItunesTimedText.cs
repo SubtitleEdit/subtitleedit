@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var hasAlignmentTags = subtitle.Paragraphs.Any(p => p.Text.Contains("{\\an", StringComparison.Ordinal));
             var headerStyles = GetStylesFromHeader(subtitle.Header);
-            var isDefaultAlignmentBottom = body.Attributes["region"] == null && body.Attributes["region"].InnerText == "bottom";
+            var isDefaultAlignmentBottom = body != null && body.Attributes != null && body.Attributes["region"] != null && body.Attributes["region"].InnerText == "bottom";
             foreach (var p in subtitle.Paragraphs)
             {
                 var paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
