@@ -1497,18 +1497,18 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
       <AutoContinueInOneSecond>Continua automaticamente tra 1 secondo</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Continua automaticamente tra {0} secondi</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Immissione testo... continua automaticamente fermato</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Inserisci nuovo a posizione video</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Inserisci nuovo a posizione video</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserisci nuovo sottotitolo per il video (non concentrarti sulla casella di testo)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Automatico</Auto>
-      <PlayFromJustBeforeText>Riproduci dal testo &amp;precedente</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Riproduci dal testo precedente</PlayFromJustBeforeText>
       <PlayFromBeginning>Riproduci dall'inizio del video</PlayFromBeginning>
       <Pause>Pausa</Pause>
       <GoToSubtitlePositionAndPause>Vai a posiz. sottotitolo e pausa</GoToSubtitlePositionAndPause>
-      <SetStartTime>Imposta &amp;tempo iniziale</SetStartTime>
-      <SetEndTimeAndGoToNext>Imposta tempo &amp;finale + prox</SetEndTimeAndGoToNext>
+      <SetStartTime>Imposta tempo iniziale</SetStartTime>
+      <SetEndTimeAndGoToNext>Imposta tempo finale e vai a successivo</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Regolato via tempo finale {0}</AdjustedViaEndTime>
-      <SetEndTime>Imposta t&amp;empo finale</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>Imposta ini&amp;zio e sposta il resto</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>Imposta tempo finale</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>Imposta inizio e sposta il resto</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Cerca testo online</SearchTextOnline>
       <GoogleTranslate>Traduttore Google</GoogleTranslate>
       <AutoTranslate>Auto-Traduci</AutoTranslate>
@@ -1542,6 +1542,7 @@ Per usare una chiave API vai su "Opzioni -&gt; Impostazioni -&gt; Strumenti" per
     <LoadedEmptyOrShort>Caricato sottotitolo vuoto o troppo corto {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Il file è vuoto o troppo corto!</FileIsEmptyOrShort>
     <FileNotFound>File non trovato: {0}</FileNotFound>
+    <FileLocked>Impossibile aprire il file poiché è usato da un altro programma: {0}</FileLocked>
     <SavedSubtitleX>Sottotitolo salvato {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Sottotitolo originale salvato {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Modificato il file sul disco</FileOnDiskModified>
@@ -2477,7 +2478,7 @@ stesso file di sottotitolo (collaborazione)</Information>
     <ToggleDialogDashes>Attiva/disattiva trattini di dialogo</ToggleDialogDashes>
     <ToggleQuotes>Attiva/disattiva virgolette</ToggleQuotes>
     <ToggleHiTags>Modifica le etichette per problemi di udito</ToggleHiTags>
-    <ToggleCustomTags>Attiva/disattiva tag personalizzati</ToggleCustomTags>
+    <ToggleCustomTags>Attiva/disattiva tag personalizzati (con surround)</ToggleCustomTags>
     <ToggleMusicSymbols>Attiva/Disattiva i simboli musicali</ToggleMusicSymbols>
     <Alignment>Allinea (righe selezionate)</Alignment>
     <AlignmentN1>Allinea in basso a sinistra - {\an1}</AlignmentN1>
