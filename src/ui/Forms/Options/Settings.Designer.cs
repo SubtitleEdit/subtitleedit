@@ -2170,9 +2170,9 @@
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl1);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch1);
-            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 323);
+            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(0, 345);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 197);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(851, 175);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -2379,7 +2379,7 @@
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
             this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(0, 160);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
-            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 160);
+            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(851, 182);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
             // 
@@ -2450,7 +2450,7 @@
             this.groupBoxMpvBorder.Controls.Add(this.numericUpDownMpvShadowWidth);
             this.groupBoxMpvBorder.Controls.Add(this.numericUpDownMpvOutline);
             this.groupBoxMpvBorder.Controls.Add(this.labelMpvShadow);
-            this.groupBoxMpvBorder.Location = new System.Drawing.Point(547, 45);
+            this.groupBoxMpvBorder.Location = new System.Drawing.Point(547, 68);
             this.groupBoxMpvBorder.Name = "groupBoxMpvBorder";
             this.groupBoxMpvBorder.Size = new System.Drawing.Size(285, 105);
             this.groupBoxMpvBorder.TabIndex = 13;
@@ -5165,10 +5165,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1092, 574);
             this.Controls.Add(this.labelUpdateFileTypeAssociationsStatus);
+            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelToolBar);
             this.Controls.Add(this.panelTools);
             this.Controls.Add(this.panelWaveform);
-            this.Controls.Add(this.panelVideoPlayer);
             this.Controls.Add(this.panelGeneral);
             this.Controls.Add(this.panelShortcuts);
             this.Controls.Add(this.panelFont);
