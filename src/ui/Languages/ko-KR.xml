@@ -535,7 +535,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <VobFiles>VOB 파일</VobFiles>
     <Add>추가</Add>
     <Remove>제거</Remove>
-    <Clear>모두 제거</Clear>
+    <Clear>제거</Clear>
     <MoveUp>위로</MoveUp>
     <MoveDown>아래로</MoveDown>
     <Languages>언어</Languages>
@@ -1496,15 +1496,15 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
       <InsertNewSubtitleAtVideoPosition>재생 위치에 새 자막 삽입</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>비디오 위치에 새 자막 삽입 (텍스트 상자 포커스 없음)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>자동</Auto>
-      <PlayFromJustBeforeText>텍스트 직전부터 재생(&amp;T)</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>텍스트 직전부터 재생</PlayFromJustBeforeText>
       <PlayFromBeginning>비디오 시작점에서 재생</PlayFromBeginning>
       <Pause>중지</Pause>
       <GoToSubtitlePositionAndPause>자막 위치로 이동</GoToSubtitlePositionAndPause>
-      <SetStartTime>시작 시간 설정(&amp;S)</SetStartTime>
-      <SetEndTimeAndGoToNext>종료점 정하고 다음으로(&amp;E)</SetEndTimeAndGoToNext>
+      <SetStartTime>시작 시간 설정</SetStartTime>
+      <SetEndTimeAndGoToNext>종료점 정하고 다음으로</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>종료 시간 {0}을(를) 통해 조정했습니다.</AdjustedViaEndTime>
-      <SetEndTime>종료 시간 설정(&amp;N)</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>시작점 정하고 나머지를 보정(&amp;R)</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>종료 시간 설정</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>시작점 정하고 나머지를 보정</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>인터넷으로 텍스트 검색</SearchTextOnline>
       <GoogleTranslate>Google 번역</GoogleTranslate>
       <AutoTranslate>자동 번역</AutoTranslate>
@@ -1538,6 +1538,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <LoadedEmptyOrShort>비어 있거나 아주 짧은 자막 {0}을 로드했습니다.</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>파일이 없거나 너무 작습니다!</FileIsEmptyOrShort>
     <FileNotFound>파일을 찾을 수 없습니다: {0}</FileNotFound>
+    <FileLocked>다른 프로그램에서 사용 중이라 파일을 열 수 없습니다: {0}</FileLocked>
     <SavedSubtitleX>{0} 자막을 저장했습니다.</SavedSubtitleX>
     <SavedOriginalSubtitleX>원본 자막 {0}을 저장했습니다.</SavedOriginalSubtitleX>
     <FileOnDiskModified>디스크 상의 파일이 변경되었습니다.</FileOnDiskModified>
@@ -2288,8 +2289,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <WaveformAutoGen>비디오를 열 때 파형 자동 생성</WaveformAutoGen>
     <WaveformBorderHitMs1>다음 시간 이하로 테두리 표시:</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>밀리초</WaveformBorderHitMs2>
-    <WaveformColor>색상</WaveformColor>
-    <WaveformSelectedColor>선택된 색상</WaveformSelectedColor>
+    <WaveformColor>파형 색상</WaveformColor>
+    <WaveformSelectedColor>선택시 색상</WaveformSelectedColor>
     <WaveformBackgroundColor>배경 색상</WaveformBackgroundColor>
     <WaveformCursorColor>커서 색상</WaveformCursorColor>
     <WaveformTextColor>텍스트 색상</WaveformTextColor>
@@ -2368,8 +2369,8 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <CpsLineLengthStyleCalcAll>모든 문자 수</CpsLineLengthStyleCalcAll>
     <CpsLineLengthStyleCalcNoSpaceCpsOnly>모든 공백을 제외한 수, 초당 문자만</CpsLineLengthStyleCalcNoSpaceCpsOnly>
     <CpsLineLengthStyleCalcNoSpace>모든 공백을 제외한 수</CpsLineLengthStyleCalcNoSpace>
-    <CpsLineLengthStyleCalcCjk>CJK 1, 라틴어 0.5</CpsLineLengthStyleCalcCjk>
-    <CpsLineLengthStyleCalcCjkNoSpace>CJK 1, 라틴어 0.5, 공백 0</CpsLineLengthStyleCalcCjkNoSpace>
+    <CpsLineLengthStyleCalcCjk>한중일 1, 라틴어 0.5</CpsLineLengthStyleCalcCjk>
+    <CpsLineLengthStyleCalcCjkNoSpace>한중일 1, 라틴어 0.5, 공백 0</CpsLineLengthStyleCalcCjkNoSpace>
     <CpsLineLengthStyleCalcIgnoreArabicDiacritics>아랍어 분음부 무시</CpsLineLengthStyleCalcIgnoreArabicDiacritics>
     <CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>아랍어 분음부/공백 무시</CpsLineLengthStyleCalcIgnoreArabicDiacriticsNoSpace>
     <CpsLineLengthStyleCalcNoSpaceOrPunctuation>공백 또는 구두점()[]-:;,.!? 없음</CpsLineLengthStyleCalcNoSpaceOrPunctuation>
@@ -2579,7 +2580,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MergeSelectedLines>선택한 줄 병합</MergeSelectedLines>
     <MergeSelectedLinesAndAutoBreak>선택한 줄 병합하고 자동 줄바꿈</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>선택한 줄 병합하고 줄바꿈 제거</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>선택한 줄 병합하고 공백없이 줄바꿈 제거 (CJK)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesAndUnbreakCjk>선택한 줄 병합하고 공백없이 줄바꿈 제거 (한중일)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>선택한 줄 병합, 첫번째 있는 텍스트만 유지</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>선택한 줄의 이중언어 병합</MergeSelectedLinesBilingual>
     <MergeWithPreviousBilingual>이전 이중언어와 병합</MergeWithPreviousBilingual>
@@ -2595,7 +2596,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MergeWithPreviousAndBreak>이전과 병합하고 자동 줄바꿈</MergeWithPreviousAndBreak>
     <MergeWithNextAndBreak>다음과 병합하고 자동 줄바꿈</MergeWithNextAndBreak>
     <MergeWithPrevious>이전과 병합</MergeWithPrevious>
-    <ShortcutIsAlreadyDefinedX>이미 정의된 단축키: {0}</ShortcutIsAlreadyDefinedX>
+    <ShortcutIsAlreadyDefinedX>이미 지정된 단축키: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>비디오/오디오 미리 보기에서 번역본 및 원본 전환</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>문자열, 텍스트 삭제</ListViewColumnDelete>
     <ListViewColumnDeleteAndShiftUp>문자열, 텍스트 삭제하고 위로</ListViewColumnDeleteAndShiftUp>
@@ -2622,7 +2623,7 @@ FFmpeg를 다운로드하고 사용하시겠습니까?</FfmpegNotFound>
     <MainTextBoxAutoBreakFromPosAndGoToNext>커서 위치에서 첫 번째 공간에 줄바꿈하고 다음으로 이동</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxDictate>받아쓰기(키 다운=녹화 시작, 키 업=녹화 종료)</MainTextBoxDictate>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
-    <MainTextBoxUnbreakNoSpace>공백없이 줄바꿈 제거 (CJK)</MainTextBoxUnbreakNoSpace>
+    <MainTextBoxUnbreakNoSpace>공백없이 줄바꿈 제거 (한중일)</MainTextBoxUnbreakNoSpace>
     <MainTextBoxAssaIntellisense>ASSA 태그 도우미 표시</MainTextBoxAssaIntellisense>
     <MainTextBoxAssaRemoveTag>커서에서 ASSA 태그 제거</MainTextBoxAssaRemoveTag>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
