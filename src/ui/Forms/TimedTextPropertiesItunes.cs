@@ -138,6 +138,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            comboBoxStyleAttribute.SelectedIndex = 0;
+            if (Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute == "style")
+            {
+                comboBoxStyleAttribute.SelectedIndex = 1;
+            }
+
             textBoxTopOrigin.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin;
             textBoxTopExtent.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent;
             textBoxBottomOrigin.Text = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin;
@@ -323,6 +329,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent = textBoxTopExtent.Text;
             Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin = textBoxBottomOrigin.Text;
             Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent = textBoxBottomExtent.Text;
+            Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute = comboBoxStyleAttribute.Text;
 
             DialogResult = DialogResult.OK;
         }
