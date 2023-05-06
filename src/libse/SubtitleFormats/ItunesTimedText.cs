@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -236,29 +237,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            var hasAlignmentTags = subtitle.Paragraphs.Any(p => p.Text.Contains("{\\an", StringComparison.Ordinal));
             var headerStyles = GetStylesFromHeader(subtitle.Header);
+            var isDefaultAlignmentBottom = body.Attributes["region"] == null && body.Attributes["region"].InnerText == "bottom";
             foreach (var p in subtitle.Paragraphs)
             {
                 var paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
                 var text = p.Text;
 
-                var regionP = xml.CreateAttribute("region");
-                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                if (hasAlignmentTags || isDefaultAlignmentBottom) 
                 {
-                    if (hasTopRegion)
+                    var regionP = xml.CreateAttribute("region");
+                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     {
-                        regionP.InnerText = "top";
+                        if (hasTopRegion)
+                        {
+                            regionP.InnerText = "top";
+                            paragraph.Attributes.Append(regionP);
+                        }
+                    }
+                    else if (hasBottomRegion)
+                    {
+                        regionP.InnerText = "bottom";
                         paragraph.Attributes.Append(regionP);
                     }
-                }
-                else if (hasBottomRegion)
-                {
-                    regionP.InnerText = "bottom";
-                    paragraph.Attributes.Append(regionP);
-                }
-                if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
-                {
-                    text = text.Remove(0, 6);
+
+                    if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
+                    {
+                        text = text.Remove(0, 6);
+                    }
                 }
 
                 if (convertedFromSubStationAlpha)
