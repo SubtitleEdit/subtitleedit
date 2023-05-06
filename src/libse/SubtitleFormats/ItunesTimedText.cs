@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
                 var text = p.Text;
 
-                if (hasAlignmentTags || isDefaultAlignmentBottom) 
+                if (hasAlignmentTags || !isDefaultAlignmentBottom) 
                 {
                     var regionP = xml.CreateAttribute("region");
                     if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             styles.Push(currentStyle);
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                             paragraph.AppendChild(currentStyle);
-                            var attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
+                            var attr = CreateParagraphStyleAttribute(xml);
                             attr.InnerText = "italic";
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
@@ -413,6 +413,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return xmlString;
+        }
+
+        private static XmlAttribute CreateParagraphStyleAttribute(XmlDocument xml)
+        {
+            if (string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute) ||
+                Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute == "tts:fontStyle")
+            {
+                return xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
+            }
+
+            return xml.CreateAttribute(Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute);
         }
     }
 }
