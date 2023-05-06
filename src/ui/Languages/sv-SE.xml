@@ -203,6 +203,7 @@ Läs mer information (webb)?</WhisperNotFound>
     <MaxCharsPerSubtitle>Max.  tecken per undertextrad</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Ta bort temporära filer</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Ställ in mappen för CPP/Const-me-modeller...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Kör endast efterbearbetning/justera tider</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Avancerade Sub Station Alpha-tillbehör</Title>
@@ -1540,6 +1541,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din nycke
     <LoadedEmptyOrShort>Laddad tom eller mycket kort text {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Filen är tom eller mycket kort!</FileIsEmptyOrShort>
     <FileNotFound>Filen hittades inte: {0}</FileNotFound>
+    <FileLocked>Det går inte att öppna filen eftersom den används av ett annat program: {0}</FileLocked>
     <SavedSubtitleX>Sparad text {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Spara original textning {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fil på disk modifierad</FileOnDiskModified>
@@ -2786,6 +2788,7 @@ Fortsätt?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Antal delningar: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Längsta enkelradslängden är {0} på rad {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Längsta totala radlängd är {0} på rad {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Dela vid radbrytningar</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Dela undertext</Title>
