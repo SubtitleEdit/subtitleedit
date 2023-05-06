@@ -6233,10 +6233,28 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var left = 0;
+            var top = 0;
+            if (_findDialog != null)
+            {
+                left = _findDialog.Left;
+                top = _findDialog.Top;
+            }
+
             _findDialog?.Dispose();
             _findDialog = new FindDialog(_subtitle, this);
             _findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
             _findDialog.Initialize(selectedText, _findHelper);
+
+            if (left <= 0 || top <= 0)
+            {
+                left = Width / 2 - _findDialog.Width / 2;
+                top = Height / 2 - _findDialog.Height / 2;
+            }
+
+            _findDialog.Left = left;
+            _findDialog.Top = top;
+
             _findDialog.Show(this);
         }
 
@@ -6468,6 +6486,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _replaceDialog = new ReplaceDialog(this);
                 _replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
                 _findHelper = _findHelper ?? _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+
+                _replaceDialog.Left = Width / 2 - _replaceDialog.Width / 2;
+                _replaceDialog.Top = Height / 2 - _replaceDialog.Height / 2;
             }
 
             _replaceDialog.Initialize(selectedText, _findHelper, IsOriginalEditable && SubtitleListview1.IsOriginalTextColumnVisible);
@@ -7006,6 +7027,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_replaceDialog == null || _replaceDialog.IsDisposed)
             {
                 _replaceDialog = new ReplaceDialog(this);
+                _replaceDialog.Left = Width / 2 - _replaceDialog.Width / 2;
+                _replaceDialog.Top = Height / 2 - _replaceDialog.Height / 2;
                 _replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
                 _findHelper = _findHelper ?? _replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 _findHelper.InProgress = true;
