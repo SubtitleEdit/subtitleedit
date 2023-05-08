@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
     public class GoogleTranslator2 : ITranslationStrategy
     {
         private readonly string _apiKey;
-        private readonly HttpClient _httpClient;
+        private readonly IDownloader _httpClient;
 
         public string GetName()
         {
@@ -35,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Translate.Service
         public GoogleTranslator2(string apiKey)
         {
             _apiKey = apiKey;
-            _httpClient = HttpClientHelper.MakeHttpClient();
+            _httpClient = DownloaderFactory.MakeHttpClient();
             _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/language/translate/v2/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.Http;
 
 namespace Nikse.SubtitleEdit.Forms.AudioToText
 {
@@ -81,13 +82,14 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
             try
             {
-                var httpClient = HttpClientHelper.MakeHttpClient();
+                var httpClient = DownloaderFactory.MakeHttpClient();
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(downloadUrl, downloadStream, new Progress<float>((progress) =>
                     {
                         var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
                         labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
+                        labelPleaseWait.Refresh();
                     }), _cancellationTokenSource.Token);
 
                     while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)

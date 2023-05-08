@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 ShowInstalledPlugins();
 
-                using (var httpClient = HttpClientHelper.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
@@ -301,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = HttpClientHelper.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 using (var downloadStream = new MemoryStream())
                 {
                     var downloadTask = httpClient.DownloadAsync(url, downloadStream, new Progress<float>((progress) =>
@@ -508,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = HttpClientHelper.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
                     _updatingAllPluginsCount = 0;
                     _updatingAllPlugins = true;

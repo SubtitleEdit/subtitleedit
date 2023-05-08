@@ -809,7 +809,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             EbuStlNewLineRows = 2;
 
             PacVerticalTop = 1;
-            PacVerticalCenter = 5;
+            PacVerticalCenter = 6;
             PacVerticalBottom = 11;
 
             DvdStudioProHeader = @"$VertAlign          =   Bottom
@@ -1470,6 +1470,7 @@ $HorzAlign          =   Center
         public bool DarkThemeShowListViewGridLines { get; set; }
         public bool ShowBetaStuff { get; set; }
         public bool DebugTranslationSync { get; set; }
+        public bool UseLegacyDownloader { get; set; }
 
         public GeneralSettings()
         {
@@ -4477,6 +4478,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.DebugTranslationSync = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("UseLegacyDownloader");
+            if (subNode != null)
+            {
+                settings.General.UseLegacyDownloader = Convert.ToBoolean(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("NewEmptyDefaultMs");
@@ -10456,6 +10463,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DarkThemeShowListViewGridLines", settings.General.DarkThemeShowListViewGridLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DebugTranslationSync", settings.General.DebugTranslationSync.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("UseLegacyDownloader", settings.General.UseLegacyDownloader.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();

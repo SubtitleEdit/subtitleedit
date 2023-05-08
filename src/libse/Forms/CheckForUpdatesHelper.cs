@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             try
             {
-                using (var httpClient = HttpClientHelper.MakeHttpClient())
+                using (var httpClient = DownloaderFactory.MakeHttpClient())
                 {
                     _changeLog = httpClient.GetStringAsync(ChangeLogUrl).Result;
                 }
