@@ -1,5 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.AudioToText;
-using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Http;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms.AudioToText
 
                 foreach (var url in LastDownloadedModel.Urls)
                 {
-                    var httpClient = HttpClientHelper.MakeHttpClient();
+                    var httpClient = DownloaderFactory.MakeHttpClient();
                     currentDownloadUrl = url;
                     _downloadFileName = MakeDownloadFileName(LastDownloadedModel, url) + ".$$$";
                     labelFileName.Text = url.Split('/').Last();
