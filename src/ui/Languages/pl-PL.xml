@@ -1497,18 +1497,18 @@ Aby użyć klucza API przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby
       <AutoContinueInOneSecond>Automatycznie kontynuuj po 1 sekundzie</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Automatycznie kontynuuj po {0} sekundach</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Trwa pisanie... przejście do następnego napisu zostało zatrzymane</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Wstaw nowe napisy w pozycji wideo</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>Wstaw nowe napisy w pozycji wideo</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Wstaw nowe napisy w pozycji wideo (bez koncentracji na polu tekstowym)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Odtwarzaj tuż przed &amp;tekstem</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Odtwarzaj tuż przed tekstem</PlayFromJustBeforeText>
       <PlayFromBeginning>Odtwarzaj od początku wideo</PlayFromBeginning>
       <Pause>Pauza</Pause>
       <GoToSubtitlePositionAndPause>Idź do pozycji napisów i pauza</GoToSubtitlePositionAndPause>
-      <SetStartTime>Ustaw czas &amp;rozpoczęcia</SetStartTime>
-      <SetEndTimeAndGoToNext>Ustaw koni&amp;ec &amp;&amp; Idź do następ.</SetEndTimeAndGoToNext>
+      <SetStartTime>Ustaw czas rozpoczęcia</SetStartTime>
+      <SetEndTimeAndGoToNext>Ustaw koniec &amp;&amp; Idź do następ.</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Dostosowano za pomocą czasu zakończenia {0}</AdjustedViaEndTime>
-      <SetEndTime>Ustaw c&amp;zas zakończenia</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>Ustaw sta&amp;rt &amp;&amp; Przesuń pozost.</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>Ustaw czas zakończenia</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>Ustaw start &amp;&amp; Przesuń pozost.</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Wyszukaj tekst online</SearchTextOnline>
       <GoogleTranslate>Tłumacz Google</GoogleTranslate>
       <AutoTranslate>Tłumacz automatycznie</AutoTranslate>
@@ -2264,7 +2264,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - darmowy, otwarty i wieloplatformowy odtwarzacz multimedialny</MpvPlayerDescription>
-    <MpvHandlesPreviewText>mpv obsługuje tekst podglądu</MpvHandlesPreviewText>
+    <MpvHandlesPreviewText>mpv obsługuje podgląd tekstu</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ścieżka do VLC (wymagana tylko w przypadku korzystania z przenośnej wersji VLC)</VlcBrowseToLabel>
@@ -2478,7 +2478,7 @@ może edytować ten sam plik napisów (współpraca)</Information>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleQuotes>Przełącz cudzysłowy</ToggleQuotes>
     <ToggleHiTags>Przełącz tagi dla osób niedosłyszących</ToggleHiTags>
-    <ToggleCustomTags>Przełącz tagi niestandardowe</ToggleCustomTags>
+    <ToggleCustomTags>Przełącz tagi niestandardowe (z otaczającymi)</ToggleCustomTags>
     <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (wybrane linie)</Alignment>
     <AlignmentN1>Wyrównanie - u dołu po lewej - {\an1}</AlignmentN1>
