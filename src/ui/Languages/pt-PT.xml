@@ -204,6 +204,7 @@ Mais informação online?</WhisperNotFound>
     <MaxCharsPerSubtitle>Máx. caracteres por linha de legenda</MaxCharsPerSubtitle>
     <RemoveTemporaryFiles>Remover ficheiros temporários</RemoveTemporaryFiles>
     <SetCppConstMeFolder>Definir pasta de modelos CPP/Const-me...</SetCppConstMeFolder>
+    <OnlyRunPostProcessing>Executar apenas os tempos de pós-processamento/ajuste</OnlyRunPostProcessing>
   </AudioToText>
   <AssaAttachments>
     <Title>Anexos Advanced Sub Station Alpha</Title>
@@ -359,6 +360,7 @@ Mais informação online?</WhisperNotFound>
     <MkvLanguageStyleTwoLetter>Código de idioma com 2 letras</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Código de idioma com 3 letras</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Sem código de idioma</MkvLanguageStyleEmpty>
+    <SearchFolderScanVideo>Verificar também ficheiros de vídeo na "Pasta de pesquisa" (lento)</SearchFolderScanVideo>
   </BatchConvert>
   <BinEdit>
     <ImportImage>Importar imagem...</ImportImage>
@@ -1491,23 +1493,23 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
       <PlayCurrent>&amp;Reproduzir actual</PlayCurrent>
       <Next>&amp;Próximo &gt;</Next>
       <Playing>A reproduzir...</Playing>
-      <RepeatingLastTime>A Repetir... última vez</RepeatingLastTime>
-      <RepeatingXTimesLeft>A Repetir... faltam {0} vezes</RepeatingXTimesLeft>
-      <AutoContinueInOneSecond>Auto continuar num segundo</AutoContinueInOneSecond>
-      <AutoContinueInXSeconds>Auto continuar em {0} segundos</AutoContinueInXSeconds>
-      <StillTypingAutoContinueStopped>Escrever automático parado</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Inserir linha nesta posição</InsertNewSubtitleAtVideoPosition>
+      <RepeatingLastTime>A repetir... última vez</RepeatingLastTime>
+      <RepeatingXTimesLeft>A repetir... faltam {0} vezes</RepeatingXTimesLeft>
+      <AutoContinueInOneSecond>Auto-continuar daqui a um segundo</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>Auto-continuar daqui a {0} segundos</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>Ainda a escrever... auto-continuar interrompido</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>Inserir linha nesta posição</InsertNewSubtitleAtVideoPosition>
       <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Inserir nova linha na posição do vídeo (sem enfoque do quadro de texto)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Reproduzir antes do &amp;texto</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Reproduzir antes do texto</PlayFromJustBeforeText>
       <PlayFromBeginning>Reproduzir do início</PlayFromBeginning>
       <Pause>Pausar</Pause>
       <GoToSubtitlePositionAndPause>Ir à posição da linha e pausar</GoToSubtitlePositionAndPause>
-      <SetStartTime>Definir t&amp;empo inicial</SetStartTime>
-      <SetEndTimeAndGoToNext>Definir t&amp;empo final/seguinte</SetEndTimeAndGoToNext>
+      <SetStartTime>Definir tempo inicial</SetStartTime>
+      <SetEndTimeAndGoToNext>Definir tempo final e ir para seguinte</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjustado através do tempo final {0}</AdjustedViaEndTime>
-      <SetEndTime>Definir tempo fi&amp;nal</SetEndTime>
-      <SetStartTimeAndOffsetTheRest>Defini&amp;r início e compensar o resto</SetStartTimeAndOffsetTheRest>
+      <SetEndTime>Definir tempo final</SetEndTime>
+      <SetStartTimeAndOffsetTheRest>Definir início e compensar o resto</SetStartTimeAndOffsetTheRest>
       <SearchTextOnline>Procurar texto online</SearchTextOnline>
       <GoogleTranslate>Google Tradutor</GoogleTranslate>
       <AutoTranslate>Tradução automática</AutoTranslate>
@@ -1541,7 +1543,8 @@ Para usar a chave API, vá a "Opções -&gt; Definições -&gt; Ferramentas" par
     <LoadedEmptyOrShort>Legenda carregada em branco ou muito pequena {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Ficheiro vazio ou muito pequeno!</FileIsEmptyOrShort>
     <FileNotFound>Ficheiro não encontrado: {0}</FileNotFound>
-    <SavedSubtitleX>Legenda guardada com êxito {0}</SavedSubtitleX>
+    <FileLocked>Não é possível abrir o ficheiro porque está a ser usado por outro programa: {0}</FileLocked>
+    <SavedSubtitleX>Legenda guardada {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Legenda original guardada {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Ficheiro foi modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual do disco em {4} {5}?</OverwriteModifiedFile>
@@ -2476,7 +2479,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleDialogDashes>Alternar travessões</ToggleDialogDashes>
     <ToggleQuotes>Alternar aspas</ToggleQuotes>
     <ToggleHiTags>Alternar etiquetas de Deficientes Auditivos</ToggleHiTags>
-    <ToggleCustomTags>Alternar etiquetas personalizadas</ToggleCustomTags>
+    <ToggleCustomTags>Alternar etiquetas personalizadas (rodear com)</ToggleCustomTags>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
@@ -2787,6 +2790,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <NumberOfSplits>Número de quebras/divisões: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>O comprimento da maior linha individual é {0} na linha {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>O comprimento da maior linha é {0} na linha {1}</LongestLineIsXAtY>
+    <SplitAtLineBreaks>Dividir nas quebras de linha</SplitAtLineBreaks>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Dividir legenda</Title>
