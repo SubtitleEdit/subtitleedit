@@ -333,15 +333,12 @@ namespace UpdateAssemblyInfo
         //debug: "..\..\ui\Properties\AssemblyInfo.cs.template" "..\..\src\libse\Properties\AssemblyInfo.cs.template"
         private static int Main(string[] args)
         {
-            if (IsRCVersion())
-            {
-                return 0;
-            }
+            var isRC = IsRCVersion();
 
             var myName = Environment.GetCommandLineArgs()[0];
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
 
-            if (args.Length == 1 && Environment.GetCommandLineArgs()[1] == "winget")
+            if (!isRC && args.Length == 1 && Environment.GetCommandLineArgs()[1] == "winget")
             {
                 GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 UpdateWinGet(latestRepositoryVersion);
@@ -360,8 +357,14 @@ namespace UpdateAssemblyInfo
             {
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
                 var libSeTemplateFileName = Environment.GetCommandLineArgs()[2];
-                GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 var currentVersion = GetCurrentVersion(seTemplateFileName);
+                var latestRepositoryVersion = GetCurrentVersion(seTemplateFileName);
+                var currentRepositoryVersion = GetCurrentVersion(seTemplateFileName);
+                if (!isRC)
+                {
+                    GetRepositoryVersions(out currentRepositoryVersion, out latestRepositoryVersion);
+                }
+
                 var updateTemplateFile = false;
                 VersionInfo newVersion;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)

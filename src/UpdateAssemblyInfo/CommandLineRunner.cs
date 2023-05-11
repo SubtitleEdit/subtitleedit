@@ -32,7 +32,9 @@ namespace UpdateAssemblyInfo
                     CreateNoWindow = true
                 }
             };
+
             p.OutputDataReceived += OutputDataReceived;
+
             try
             {
                 p.Start();
@@ -41,6 +43,7 @@ namespace UpdateAssemblyInfo
             {
                 return false;
             }
+
             p.BeginOutputReadLine(); // Async reading of output to prevent deadlock
             if (p.WaitForExit(5000))
             {
@@ -51,6 +54,7 @@ namespace UpdateAssemblyInfo
 
                 return p.ExitCode == 0;
             }
+
             return false;
         }
 
