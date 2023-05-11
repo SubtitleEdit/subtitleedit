@@ -45,6 +45,7 @@
    * Fix video cut duration in "Generate video with burned-in subitle" - thx Alxndr
    * Fix "Insert after" with minimum gap zero ms - thx steam3d
    * Fix crash in image export - thx dimailer
+   * Fix (re-enable) "full frame" for export FCP + image - thx Anders
 
 
 3.6.12 (26th March 2023)
