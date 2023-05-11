@@ -4362,7 +4362,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             labelImagePrefix.Text = LanguageSettings.Current.ExportPngXml.ImagePrefix;
             textBoxImagePrefix.Left = labelImagePrefix.Left + labelImagePrefix.Width + 3;
-            textBoxImagePrefix.Width = comboBoxFrameRate.Right - textBoxImagePrefix.Left;
+            textBoxImagePrefix.Width = comboBoxFrameRate.Left - textBoxImagePrefix.Left - 3;
 
             buttonBorderColor.Text = LanguageSettings.Current.ExportPngXml.BorderColor;
             labelBorderWidth.Text = LanguageSettings.Current.ExportPngXml.BorderStyle;
@@ -4454,7 +4454,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             bool showImageFormat = exportType == ExportFormats.Fab || exportType == ExportFormats.ImageFrame || exportType == ExportFormats.Stl || exportType == ExportFormats.Fcp || exportType == ExportFormats.BdnXml;
             if (exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp)
             {
-                checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
+                checkBoxFullFrameImage.Visible = true;
             }
             else
             {
