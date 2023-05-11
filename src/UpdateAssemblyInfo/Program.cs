@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -313,9 +314,30 @@ namespace UpdateAssemblyInfo
             Console.Write(WorkInProgress);
         }
 
+        private static bool IsRCVersion()
+        {
+            var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+            var clrTags = new CommandLineRunner();
+            var gitPath = GetGitPath();
+            if (clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags", workingDirectory))
+            {
+                if (clrTags.Result.Contains("RC"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         //debug: "..\..\ui\Properties\AssemblyInfo.cs.template" "..\..\src\libse\Properties\AssemblyInfo.cs.template"
         private static int Main(string[] args)
         {
+            if (IsRCVersion())
+            {
+                return 0;
+            }
+
             var myName = Environment.GetCommandLineArgs()[0];
             myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
 
