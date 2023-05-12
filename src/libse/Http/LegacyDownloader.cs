@@ -99,6 +99,11 @@ namespace Nikse.SubtitleEdit.Core.Http
                 }
             }
 
+            if (_httpClient.BaseAddress != null)
+            {
+                url = _httpClient.BaseAddress.AbsoluteUri.TrimEnd('/') + "/" + url.TrimStart('/');
+            }
+
             return await Task.Run(() => webClient.DownloadStringTaskAsync(new Uri(url))).ConfigureAwait(false);
         }
 
