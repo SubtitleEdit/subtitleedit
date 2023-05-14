@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.6.13 (xth May 2023) BETA
+3.6.13 (14th May 2023)
 * NEW:
    * Add new subtitle format "nVivo transcript" - thx Ashin
    * Add Whisper CTranslate2 - thx jordimas
@@ -43,7 +43,7 @@
    * Fix possible crash reading .ts files - thx hepalin
    * Fix crash in split lines - thx Papai
    * Fix video cut duration in "Generate video with burned-in subitle" - thx Alxndr
-   * Fix "Insert after" with minimum gap zero ms - thx steam3d
+   * Fix "Insert after" with a minimum gap of zero ms - thx steam3d
    * Fix crash in image export - thx dimailer
    * Fix (re-enable) "full frame" for export FCP + image - thx Anders
 
