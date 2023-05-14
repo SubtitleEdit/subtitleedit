@@ -767,7 +767,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         private static readonly Regex RegexWebVttColor = new Regex(@"<c.[a-z]*>", RegexOptions.Compiled);
-        private static readonly Regex RegexWebVttColorHex = new Regex(@"<c.[a-z]*\d+>", RegexOptions.Compiled);
+        private static readonly Regex RegexWebVttColorHex = new Regex(@"<c.[a-z0123456789]*>", RegexOptions.Compiled);
 
         internal static string ColorWebVttToHtml(string text)
         {
@@ -783,7 +783,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (match.Success)
             {
                 var value = match.Value.Substring(3, match.Value.Length - 4);
-                if (match.Value.StartsWith("<c.color", StringComparison.Ordinal))
+                if (match.Value.StartsWith("<c.color", StringComparison.Ordinal) && 
+                    match.Length == 15 && match.Value.EndsWith('>'))
                 {
                     value = "#" + match.Value.Substring(3 + 5, match.Value.Length - 4 - 5);
                 }
