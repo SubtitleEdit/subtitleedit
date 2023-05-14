@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -54,11 +55,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public float FontSizeFactor { get; set; }
 
-        private static readonly List<Type> AllowedFormats = new List<Type>
-        {
-            new WebVTT().GetType(),
-            new WebVTTFileWithLineNumber().GetType(),
-        };
+        private readonly List<string> _allowedMpvNativePreviewFormats = new List<string>();
 
         public VideoPlayer VideoPlayer
         {
@@ -238,6 +235,11 @@ namespace Nikse.SubtitleEdit.Controls
             PictureBoxFastForwardOverMouseLeave(null, null);
 
             _labelTimeCode.Click += LabelTimeCodeClick;
+
+            if (Configuration.Settings.General.MpvAllowNativePreview != null)
+            {
+                _allowedMpvNativePreviewFormats = Configuration.Settings.General.MpvAllowNativePreview.Split(';').ToList();
+            }
         }
 
         private bool _showDuration = true;
@@ -525,7 +527,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                     }
 
-                    if (AllowedFormats.Contains(uiFormat.GetType()))
+                    if (_allowedMpvNativePreviewFormats.Contains(uiFormat.Name))
                     {
                         format = uiFormat;
                     }
