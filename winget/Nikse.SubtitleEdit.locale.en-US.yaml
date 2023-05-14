@@ -1,22 +1,28 @@
-# Created using wingetcreate 1.1.2.0
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
+# Created using wingetcreate 1.2.5.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.4.0.schema.json
 
 PackageIdentifier: Nikse.SubtitleEdit
-PackageVersion: 3.6.12.0
+PackageVersion: 3.6.13.0
 PackageLocale: en-US
 Publisher: Nikse
 PublisherUrl: https://www.nikse.dk/
+PublisherSupportUrl: https://www.nikse.dk/subtitleedit/help
 Author: Nikolaj Olsson
 PackageName: Subtitle Edit
 PackageUrl: https://www.nikse.dk/subtitleedit
 License: GPL-3.0-only
-LicenseUrl: https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/LICENSE.txt
+LicenseUrl: https://github.com/SubtitleEdit/subtitleedit/blob/main/LICENSE.txt
+Copyright: Copyright 2001-2023, Nikse
 ShortDescription: Subtitle Edit is a free and open source editor for video subtitles.
 Moniker: subtitleedit
 Tags:
-- open-source
-- subtitle-editor
-ReleaseNotesUrl: https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/Changelog.txt
+- audio
+- caption
+- subtitle
+- video
+ReleaseNotesUrl: https://github.com/SubtitleEdit/subtitleedit/blob/main/Changelog.txt
+Documentations:
+- DocumentLabel: Videos
+  DocumentUrl: https://www.nikse.dk/subtitleedit/video
 ManifestType: defaultLocale
-ManifestVersion: 1.2.0
-
+ManifestVersion: 1.4.0
