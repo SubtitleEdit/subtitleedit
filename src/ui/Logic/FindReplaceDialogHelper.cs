@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SelectedPosition { get; set; }
         public int ReplaceFromPosition { get; set; }
         public int StartLineIndex { get; set; }
+        public string StartFindText { get; set; }
         public bool MatchInOriginal { get; set; }
         public bool InProgress { get; set; }
 
@@ -41,6 +42,11 @@ namespace Nikse.SubtitleEdit.Logic
             _regEx = regEx;
             FindTextLength = findText.Length;
             StartLineIndex = startLineIndex;
+            if (StartLineIndex == 0)
+            {
+                StartFindText = findText;
+            }
+
             MatchInOriginal = false;
         }
 

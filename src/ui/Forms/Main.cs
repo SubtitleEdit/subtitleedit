@@ -6349,11 +6349,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (_findHelper.StartLineIndex >= 1)
+                        if (_findHelper.StartLineIndex >= 1 || _findHelper.FindText != _findHelper.StartFindText)
                         {
                             if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                             {
                                 _findHelper.StartLineIndex = 0;
+                                _findHelper.StartFindText = _findHelper.FindText;
                                 if (_findHelper.Find(_subtitle, _subtitleOriginal, 0))
                                 {
                                     SelectListViewIndexAndEnsureVisible(_findHelper.SelectedLineIndex);
@@ -6539,11 +6540,12 @@ namespace Nikse.SubtitleEdit.Forms
                 bool found = _findHelper.Find(_subtitle, _subtitleOriginal, _subtitleListViewIndex, startPos);
                 tb = GetFindReplaceTextBox();
                 // if we fail to find the text, we might want to start searching from the top of the file.
-                if (!found && _findHelper.StartLineIndex >= 1)
+                if (!found && _findHelper.StartLineIndex >= 1 || _findHelper.FindText != _findHelper.StartFindText)
                 {
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         _findHelper.StartLineIndex = 0;
+                        _findHelper.StartFindText = _findHelper.FindText;
                         _findHelper.SelectedLineIndex = 0;
                         _findHelper.MatchInOriginal = false;
                         _findHelper.SelectedPosition = -1;
@@ -6666,13 +6668,14 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(msg + string.Format(_language.XNotFound, _findHelper.FindText));
 
                 // Prompt for start over
-                if (_replaceStartLineIndex >= 1)
+                if (_replaceStartLineIndex >= 1 || _findHelper.FindText != _findHelper.StartFindText)
                 {
                     _replaceStartLineIndex = 0;
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         SelectListViewIndexAndEnsureVisible(0);
                         _findHelper.StartLineIndex = 0;
+                        _findHelper.StartFindText = _findHelper.FindText;
                         _findHelper.SelectedLineIndex = 0;
                         _findHelper.SelectedPosition = 0;
                         _findHelper.ReplaceFromPosition = 0;
@@ -6854,6 +6857,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         stopAtIndex = firstIndex;
                         _findHelper.StartLineIndex = 0;
+                        _findHelper.StartFindText = _findHelper.FindText;
                         _findHelper.SelectedLineIndex = 0;
                         _findHelper.MatchInOriginal = false;
                         _findHelper.SelectedPosition = -1;
@@ -10313,6 +10317,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null && !_findHelper.InProgress)
             {
                 _findHelper.StartLineIndex = _subtitleListViewIndex;
+                _findHelper.StartFindText = _findHelper.FindText;
                 _findHelper.SelectedLineIndex = _subtitleListViewIndex;
                 _findHelper.SelectedPosition = 0;
                 _findHelper.ReplaceFromPosition = 0;
