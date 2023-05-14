@@ -3451,6 +3451,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxDeleteLines.Visible = false;
             groupBoxAssaChangeRes.Visible = false;
             groupBoxConvertColorsToDialog.Visible = false;
+            groupBoxSortBy.Visible = false;
+            groupBoxMergeSameTimeCodes.Visible = false;
 
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
