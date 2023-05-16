@@ -152,6 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /teletextonly");
                 _stdOutWriter.WriteLine("        /teletextonlypage:<page number>");
                 _stdOutWriter.WriteLine("        /track-number:<comma separated track number list>");
+                _stdOutWriter.WriteLine("        /profile:<profile name");
                 //_stdOutWriter.WriteLine("        /ocrdb:<ocr db/dictionary> (e.g. \"eng\" or \"latin\")");
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
@@ -427,6 +428,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 var forcedOnly = GetArgument(unconsumedArguments, "forcedonly").Length > 0;
                 var teletextOnlyPage = GetArgument(unconsumedArguments, "teletextonlypage:");
                 var teletextOnly = GetArgument(unconsumedArguments, "teletextonly").Length > 0;
+                
+                var profileName = GetArgument(unconsumedArguments, "profile:");
+                if (!string.IsNullOrEmpty(profileName))
+                {
+                    LoadProfile(profileName);
+                }
 
                 var patterns = new List<string>();
 
@@ -877,6 +884,30 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
 
             return (count == converted && errors == 0) ? 0 : 1;
+        }
+
+        private static void LoadProfile(string profileName)
+        {
+            var profile = Configuration.Settings.General.Profiles.FirstOrDefault(p => p.Name.Equals(profileName, StringComparison.OrdinalIgnoreCase));
+            if (profile == null)
+            {
+                return;
+            }
+
+            var gs = Configuration.Settings.General;
+            gs.CurrentProfile = profileName;
+            gs.SubtitleLineMaximumLength = profile.SubtitleLineMaximumLength;
+            gs.MaxNumberOfLines = profile.MaxNumberOfLines;
+            gs.MergeLinesShorterThan = profile.MergeLinesShorterThan;
+            gs.SubtitleMaximumCharactersPerSeconds =(double) profile.SubtitleMaximumCharactersPerSeconds;
+            gs.SubtitleOptimalCharactersPerSeconds = (double)profile.SubtitleOptimalCharactersPerSeconds;
+            gs.SubtitleMaximumDisplayMilliseconds = profile.SubtitleMaximumDisplayMilliseconds;
+            gs.SubtitleMinimumDisplayMilliseconds = profile.SubtitleMinimumDisplayMilliseconds;
+            gs.SubtitleMaximumWordsPerMinute = (double)profile.SubtitleMaximumWordsPerMinute;
+            gs.CpsLineLengthStrategy = profile.CpsLineLengthStrategy;
+            gs.MinimumMillisecondsBetweenLines = profile.MinimumMillisecondsBetweenLines;
+            gs.DialogStyle = profile.DialogStyle;
+            gs.ContinuationStyle = profile.ContinuationStyle;
         }
 
         private static SubtitleFormat GetTargetFormat(string targetFormat, IEnumerable<SubtitleFormat> formats)
