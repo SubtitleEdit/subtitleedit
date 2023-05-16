@@ -6349,7 +6349,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (_findHelper.StartLineIndex >= 1 || _findHelper.FindText != _findHelper.StartFindText)
+                        if (!(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0)) 
                         {
                             if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                             {
@@ -6540,7 +6540,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool found = _findHelper.Find(_subtitle, _subtitleOriginal, _subtitleListViewIndex, startPos);
                 tb = GetFindReplaceTextBox();
                 // if we fail to find the text, we might want to start searching from the top of the file.
-                if (!found && _findHelper.StartLineIndex >= 1 || _findHelper.FindText != _findHelper.StartFindText)
+                if (!found && !(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0)) 
                 {
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
@@ -6668,7 +6668,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(msg + string.Format(_language.XNotFound, _findHelper.FindText));
 
                 // Prompt for start over
-                if (_replaceStartLineIndex >= 1 || _findHelper.FindText != _findHelper.StartFindText)
+                if (!(_subtitleListViewIndex == 0 && _findHelper.SelectedPosition <= 0)) 
                 {
                     _replaceStartLineIndex = 0;
                     if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
