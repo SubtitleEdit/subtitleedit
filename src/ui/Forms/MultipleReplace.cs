@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var doc = new XmlDocument { XmlResolver = null };
+            var doc = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             doc.Load(fileName);
 
             var replaceNodes = doc.DocumentElement?.SelectNodes("//MultipleSearchAndReplaceItem");
@@ -773,7 +773,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<MultipleSearchAndReplaceGroup> ImportGroupsFile(string fileName)
         {
             var list = new List<MultipleSearchAndReplaceGroup>();
-            var doc = new XmlDocument { XmlResolver = null };
+            var doc = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             doc.Load(fileName);
             var groups = doc.DocumentElement?.SelectNodes("//Group");
             if (groups != null)
