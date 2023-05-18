@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
             subtitleListViewSource.AutoSizeColumns();
             subtitleListViewSource.AutoSizeColumns();
             UiUtil.FixLargeFonts(this, buttonOK);
+            ActiveControl = buttonTranslate;
         }
 
         internal void Initialize(Subtitle subtitle, Subtitle target, string title, Encoding encoding, SubtitleFormat subtitleFormat)
@@ -326,6 +327,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             ReadLanguageSettings();
             Translate();
+            buttonOK.Focus();
         }
 
         public static bool IsAvailableNetworkActive()
