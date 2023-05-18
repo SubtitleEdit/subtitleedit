@@ -379,6 +379,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     return path;
                 }
 
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite\{prefix.ToUpperInvariant()}\{fileName}");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite\{prefix.ToUpperInvariant()}64\{fileName}");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
                 path = $@"C:\Program Files (x86)\{prefix.ToUpperInvariant()}\{fileName}";
                 if (File.Exists(path))
                 {
@@ -441,6 +453,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite Codec Pack\{prefix.ToUpperInvariant()}\{fileName}");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite\{prefix.ToUpperInvariant()}\{fileName}");
                 if (File.Exists(path))
                 {
                     return path;
