@@ -614,7 +614,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
-                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.None))
+                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     stream.Close();
                 }
