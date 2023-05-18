@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonShowEarlierClick(object sender, EventArgs e)
         {
-            TimeCode tc = timeUpDownAdjust.TimeCode;
+            var tc = timeUpDownAdjust.TimeCode;
             if (tc != null && tc.TotalMilliseconds > 0)
             {
                 _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
