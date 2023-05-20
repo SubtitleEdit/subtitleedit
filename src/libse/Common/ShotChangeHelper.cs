@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -80,8 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static double GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
         {
             var nextShotChangeInSeconds = shotChanges.Concat(new[] { double.MaxValue }).First(x => x >= currentTime.TotalSeconds); // will return maxValue if empty
-            var outCueGapInMs = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
-            return (nextShotChangeInSeconds * 1000) - outCueGapInMs;
+            return (nextShotChangeInSeconds * 1000) - BeautifyTimeCodes.GetOutCuesGapMs();
         }
     }
 }
