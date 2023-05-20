@@ -105,6 +105,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\CuesPreviewView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\SETextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -254,6 +257,18 @@
     </Compile>
     <Compile Include="Forms\BatchConvertTsSettings.Designer.cs">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodes.Designer.cs">
+      <DependentUpon>BeautifyTimeCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodesProfile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BeautifyTimeCodesProfile.Designer.cs">
+      <DependentUpon>BeautifyTimeCodesProfile.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BinaryEdit\BinEdit.cs">
       <SubType>Form</SubType>
@@ -1469,6 +1484,7 @@
     <Compile Include="Logic\TaskbarList.cs" />
     <Compile Include="Logic\TextDesigner.cs" />
     <Compile Include="Logic\TextWidth.cs" />
+    <Compile Include="Logic\TimeCodesGenerator.cs" />
     <Compile Include="Logic\UiEbuSaveHelper.cs" />
     <Compile Include="Logic\UiGetPacEncoding.cs" />
     <Compile Include="Logic\UiGetYouTubeAnnotationStyles.cs" />
@@ -1575,6 +1591,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertTsSettings.resx">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BeautifyTimeCodes.resx">
+      <DependentUpon>BeautifyTimeCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BeautifyTimeCodesProfile.resx">
+      <DependentUpon>BeautifyTimeCodesProfile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BinaryEdit\BinEdit.resx">
       <DependentUpon>BinEdit.cs</DependentUpon>
@@ -2193,6 +2215,7 @@
     <None Include="Resources\color-picker-small2.png" />
     <None Include="Resources\rec32.png" />
     <None Include="Resources\Help32.png" />
+    <Content Include="Icons\BeautifyTimeCodes.png" />
     <Content Include="SE2.ico" />
     <None Include="Resources\SE.ico" />
     <None Include="Hunspellx64.dll">

@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
     {
         public List<double> ShotChangesInSeconds = new List<double>();
         private readonly double _frameRate = 25;
+        private readonly double _duration = 0;
         private readonly string _videoFileName;
         private bool _abort;
         private bool _pause;
@@ -30,6 +31,10 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             if (videoInfo != null && videoInfo.FramesPerSecond > 1)
             {
                 _frameRate = videoInfo.FramesPerSecond;
+            }
+            if (videoInfo != null && videoInfo.TotalMilliseconds > 0)
+            {
+                _duration = videoInfo.TotalMilliseconds;
             }
 
             _videoFileName = videoFileName;
@@ -338,6 +343,7 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
             buttonOK.Enabled = false;
             progressBar1.Visible = true;
             progressBar1.Style = ProgressBarStyle.Marquee;
+            labelProgress.Visible = true;
             buttonImportWithFfmpeg.Enabled = false;
             numericUpDownThreshold.Enabled = false;
             Cursor = Cursors.WaitCursor;
@@ -380,9 +386,27 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
 
         private void UpdateImportTextBox()
         {
+            if (_duration > 0 && _shotChangesGenerator.LastSeconds > 0)
+            {
+                if (progressBar1.Style != ProgressBarStyle.Blocks)
+                {
+                    progressBar1.Style = ProgressBarStyle.Blocks;
+                    progressBar1.Maximum = Convert.ToInt32(_duration);
+                }
+
+                progressBar1.Value = Convert.ToInt32(_shotChangesGenerator.LastSeconds);
+                labelProgress.Text = FormatSeconds(_shotChangesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration);
+            }
+
             textBoxGenerate.Text = _shotChangesGenerator.GetTimeCodesString();
             textBoxGenerate.SelectionStart = textBoxGenerate.Text.Length;
             textBoxGenerate.ScrollToCaret();
+        }
+
+        private string FormatSeconds(double seconds)
+        {
+            TimeSpan t = TimeSpan.FromSeconds(seconds);
+            return t.ToString(@"hh\:mm\:ss");
         }
 
         private void ImportShotChanges_Shown(object sender, EventArgs e)
