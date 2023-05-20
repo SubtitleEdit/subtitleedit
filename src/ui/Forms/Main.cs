@@ -5951,6 +5951,7 @@ namespace Nikse.SubtitleEdit.Forms
                 TryLoadIcon(toolStripButtonHelp, "Help");
                 TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
                 TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
+                TryLoadIcon(toolStripButtonSourceView, "SourceView");
             }
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
