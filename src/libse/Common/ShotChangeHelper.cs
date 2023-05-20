@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -71,6 +72,16 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 File.Delete(shotChangesFileName);
             }
+        }
+
+
+        // Util functions
+
+        public static double GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
+        {
+            var nextShotChangeInSeconds = shotChanges.Concat(new[] { double.MaxValue }).First(x => x >= currentTime.TotalSeconds); // will return maxValue if empty
+            var outCueGapInMs = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
+            return (nextShotChangeInSeconds * 1000) - outCueGapInMs;
         }
     }
 }

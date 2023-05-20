@@ -1943,6 +1943,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
             {
+                // TODO shot changes
                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                 if (adjustmentType == LanguageSettings.Current.AdjustDisplayDuration.Percent)
                 {

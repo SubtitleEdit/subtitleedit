@@ -308,6 +308,7 @@
             this.checkBoxCheckShotChanges.TabIndex = 111;
             this.checkBoxCheckShotChanges.Text = "Check shot changes";
             this.checkBoxCheckShotChanges.UseVisualStyleBackColor = true;
+            this.checkBoxCheckShotChanges.CheckedChanged += new System.EventHandler(this.checkBoxCheckShotChanges_CheckedChanged);
             // 
             // ApplyDurationLimits
             // 

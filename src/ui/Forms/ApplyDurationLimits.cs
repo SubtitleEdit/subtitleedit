@@ -1,7 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -16,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Timer _refreshTimer = new Timer();
         private readonly Color _warningColor = Color.FromArgb(255, 253, 145);
         private Subtitle _unfixables = new Subtitle();
+        private List<double> _shotChanges = new List<double>();
 
         public ApplyDurationLimits()
         {
@@ -74,9 +77,20 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        public void Initialize(Subtitle subtitle)
+        public void Initialize(Subtitle subtitle, List<double> shotChanges = null)
         {
             _subtitle = subtitle;
+
+            if (shotChanges != null)
+            {
+                _shotChanges = shotChanges;
+                checkBoxCheckShotChanges.Enabled = true;
+            }
+            else
+            {
+                checkBoxCheckShotChanges.Enabled = false;
+            }
+
             GeneratePreview();
         }
 
@@ -154,16 +168,29 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var next = _working.GetParagraphOrDefault(i + 1);
                     var wantedEndMs = p.StartTime.TotalMilliseconds + minDisplayTime;
-                    if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    var bestEndMs = double.MaxValue;
+                    
+                    // First check for next subtitle
+                    if (next != null)
+                    {
+                        bestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+
+                    // Then check for next shot change (if option is checked, and if any are supplied) -- keeping earliest time
+                    if (checkBoxCheckShotChanges.Checked && _shotChanges.Count > 0)
+                    {
+                        bestEndMs = Math.Min(bestEndMs, ShotChangeHelper.GetNextShotChangeMinusGapInMs(_shotChanges, p.EndTime));
+                    }
+                    
+                    if (wantedEndMs <= bestEndMs)
                     {
                         AddFix(p, wantedEndMs, DefaultBackColor);
                     }
                     else
                     {
-                        var nextBestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (nextBestEndMs > p.EndTime.TotalMilliseconds)
+                        if (bestEndMs > p.EndTime.TotalMilliseconds)
                         {
-                            AddFix(p, nextBestEndMs, _warningColor);
+                            AddFix(p, bestEndMs, _warningColor);
                             _unfixables.Paragraphs.Add(new Paragraph(p) { Extra = "Warning" });
                         }
                         else
@@ -326,6 +353,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void checkBoxCheckShotChanges_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
         }
     }
 }
