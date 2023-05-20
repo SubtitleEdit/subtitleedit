@@ -341,6 +341,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int AdjustDurationPercent { get; set; }
         public string AdjustDurationLast { get; set; }
         public bool AdjustDurationExtendOnly { get; set; }
+        public bool AdjustDurationExtendCheckShotChanges { get; set; }
         public bool ChangeSpeedAllowOverlap { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
         public bool AutoBreakDashEarly { get; set; }
@@ -349,6 +350,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool AutoBreakPreferBottomHeavy { get; set; }
         public double AutoBreakPreferBottomPercent { get; set; }
         public bool ApplyMinimumDurationLimit { get; set; }
+        public bool ApplyMinimumDurationLimitCheckShotChanges { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
         public int MergeShortLinesMaxGap { get; set; }
         public int MergeShortLinesMaxChars { get; set; }
@@ -575,6 +577,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
             AdjustDurationExtendOnly = true;
+            AdjustDurationExtendCheckShotChanges = true;
             AutoBreakCommaBreakEarly = false;
             AutoBreakDashEarly = true;
             AutoBreakLineEndingEarly = false;
@@ -582,6 +585,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             AutoBreakPreferBottomHeavy = true;
             AutoBreakPreferBottomPercent = 5;
             ApplyMinimumDurationLimit = true;
+            ApplyMinimumDurationLimitCheckShotChanges = true;
             ApplyMaximumDurationLimit = true;
             MergeShortLinesMaxGap = 250;
             MergeShortLinesMaxChars = 55;
@@ -1262,6 +1266,7 @@ $HorzAlign          =   Center
         public bool ShowToolbarBurnIn { get; set; }
         public bool ShowToolbarSpellCheck { get; set; }
         public bool ShowToolbarNetflixGlyphCheck { get; set; }
+        public bool ShowToolbarBeautifyTimeCodes { get; set; }
         public bool ShowToolbarSettings { get; set; }
         public bool ShowToolbarHelp { get; set; }
 
@@ -1485,6 +1490,7 @@ $HorzAlign          =   Center
             ShowToolbarVisualSync = true;
             ShowToolbarSpellCheck = true;
             ShowToolbarNetflixGlyphCheck = true;
+            ShowToolbarBeautifyTimeCodes = true;
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
             ShowToolbarToggleSourceView = true;
@@ -2776,6 +2782,209 @@ $HorzAlign          =   Center
         }
     }
 
+    public class BeautifyTimeCodesSettings
+    {
+        public bool AlignTimeCodes { get; set; }
+        public bool ExtractExactTimeCodes { get; set; }
+        public bool SnapToShotChanges { get; set; }
+        public BeautifyTimeCodesProfile Profile { get; set; }
+
+        public BeautifyTimeCodesSettings()
+        {
+            AlignTimeCodes = true;
+            ExtractExactTimeCodes = false;
+            SnapToShotChanges = true;
+            Profile = new BeautifyTimeCodesProfile();
+        }
+
+        public class BeautifyTimeCodesProfile
+        {
+            // General
+            public int Gap { get; set; }
+
+            // In cues
+            public int InCuesGap { get; set; }
+            public int InCuesLeftGreenZone { get; set; }
+            public int InCuesLeftRedZone { get; set; }
+            public int InCuesRightRedZone { get; set; }
+            public int InCuesRightGreenZone { get; set; }
+
+            // Out cues
+            public int OutCuesGap { get; set; }
+            public int OutCuesLeftGreenZone { get; set; }
+            public int OutCuesLeftRedZone { get; set; }
+            public int OutCuesRightRedZone { get; set; }
+            public int OutCuesRightGreenZone { get; set; }
+
+            // Connected subtitles
+            public int ConnectedSubtitlesLeftGap { get; set; }
+            public int ConnectedSubtitlesRightGap { get; set; }
+            public ConnectedSubtitlesBehaviorEnum ConnectedSubtitlesBehavior { get; set; }
+            public int ConnectedSubtitlesLeftGreenZone { get; set; }
+            public int ConnectedSubtitlesLeftRedZone { get; set; }
+            public int ConnectedSubtitlesRightRedZone { get; set; }
+            public int ConnectedSubtitlesRightGreenZone { get; set; }
+            public int ConnectedSubtitlesTreatConnected { get; set; }
+
+            // Chaining
+            public bool ChainingGeneralUseZones { get; set; }
+            public int ChainingGeneralMaxGap { get; set; }
+            public int ChainingGeneralLeftGreenZone { get; set; }
+            public int ChainingGeneralLeftRedZone { get; set; }
+            public ChainingGeneralShotChangeBehaviorEnum ChainingGeneralShotChangeBehavior { get; set; }
+            public bool ChainingInCueOnShotUseZones { get; set; }
+            public int ChainingInCueOnShotMaxGap { get; set; }
+            public int ChainingInCueOnShotLeftGreenZone { get; set; }
+            public int ChainingInCueOnShotLeftRedZone { get; set; }
+            public bool ChainingOutCueOnShotUseZones { get; set; }
+            public int ChainingOutCueOnShotMaxGap { get; set; }
+            public int ChainingOutCueOnShotRightRedZone { get; set; }
+            public int ChainingOutCueOnShotRightGreenZone { get; set; }
+
+            public enum Preset : int
+            {
+                Default = 0,
+                Netflix = 1,
+                SDI = 2,
+            }
+
+            public enum ConnectedSubtitlesBehaviorEnum : int
+            {
+                SnapClosestCueToShotChange = 0,
+                SnapInCueToShotChange = 1,
+                SnapOutCueToShotChange = 2
+            }
+
+            public enum ChainingGeneralShotChangeBehaviorEnum : int
+            {
+                DontChain = 0,
+                ExtendCrossingShotChange = 1,
+                ExtendUntilShotChange = 2
+            }
+
+            public BeautifyTimeCodesProfile(Preset preset = Preset.Default)
+            {
+                if (preset == Preset.Netflix)
+                {
+                    Gap = 2;
+
+                    InCuesGap = 0;
+                    InCuesLeftGreenZone = 12;
+                    InCuesLeftRedZone = 7;
+                    InCuesRightRedZone = 7;
+                    InCuesRightGreenZone = 12;
+
+                    OutCuesGap = 2;
+                    OutCuesLeftGreenZone = 12;
+                    OutCuesLeftRedZone = 7;
+                    OutCuesRightRedZone = 7;
+                    OutCuesRightGreenZone = 12;
+
+                    ConnectedSubtitlesLeftGap = 2;
+                    ConnectedSubtitlesRightGap = 0;
+                    ConnectedSubtitlesBehavior = ConnectedSubtitlesBehaviorEnum.SnapInCueToShotChange;
+                    ConnectedSubtitlesLeftGreenZone = 12;
+                    ConnectedSubtitlesLeftRedZone = 7;
+                    ConnectedSubtitlesRightRedZone = 7;
+                    ConnectedSubtitlesRightGreenZone = 12;
+                    ConnectedSubtitlesTreatConnected = 180;
+
+                    ChainingGeneralUseZones = false;
+                    ChainingGeneralMaxGap = 500;
+                    ChainingGeneralLeftGreenZone = 12;
+                    ChainingGeneralLeftRedZone = 12;
+                    ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+                    ChainingInCueOnShotUseZones = false;
+                    ChainingInCueOnShotMaxGap = 500;
+                    ChainingInCueOnShotLeftGreenZone = 12;
+                    ChainingInCueOnShotLeftRedZone = 12;
+                    ChainingOutCueOnShotUseZones = false;
+                    ChainingOutCueOnShotMaxGap = 500;
+                    ChainingOutCueOnShotRightRedZone = 12;
+                    ChainingOutCueOnShotRightGreenZone = 12;
+                }
+                else if (preset == Preset.SDI)
+                {
+                    Gap = 4;
+
+                    InCuesGap = 2;
+                    InCuesLeftGreenZone = 12;
+                    InCuesLeftRedZone = 7;
+                    InCuesRightRedZone = 7;
+                    InCuesRightGreenZone = 12;
+
+                    OutCuesGap = 2;
+                    OutCuesLeftGreenZone = 12;
+                    OutCuesLeftRedZone = 7;
+                    OutCuesRightRedZone = 7;
+                    OutCuesRightGreenZone = 12;
+
+                    ConnectedSubtitlesLeftGap = 2;
+                    ConnectedSubtitlesRightGap = 2;
+                    ConnectedSubtitlesBehavior = ConnectedSubtitlesBehaviorEnum.SnapClosestCueToShotChange;
+                    ConnectedSubtitlesLeftGreenZone = 12;
+                    ConnectedSubtitlesLeftRedZone = 7;
+                    ConnectedSubtitlesRightRedZone = 7;
+                    ConnectedSubtitlesRightGreenZone = 12;
+                    ConnectedSubtitlesTreatConnected = 240;
+
+                    ChainingGeneralUseZones = false;
+                    ChainingGeneralMaxGap = 1000;
+                    ChainingGeneralLeftGreenZone = 25;
+                    ChainingGeneralLeftRedZone = 24;
+                    ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendCrossingShotChange;
+                    ChainingInCueOnShotUseZones = false;
+                    ChainingInCueOnShotMaxGap = 1000;
+                    ChainingInCueOnShotLeftGreenZone = 25;
+                    ChainingInCueOnShotLeftRedZone = 24;
+                    ChainingOutCueOnShotUseZones = false;
+                    ChainingOutCueOnShotMaxGap = 1000;
+                    ChainingOutCueOnShotRightRedZone = 24;
+                    ChainingOutCueOnShotRightGreenZone = 25;
+                }
+                else
+                {
+                    Gap = 3;
+
+                    InCuesGap = 0;
+                    InCuesLeftGreenZone = 2;
+                    InCuesLeftRedZone = 2;
+                    InCuesRightRedZone = 5;
+                    InCuesRightGreenZone = 5;
+
+                    OutCuesGap = 0;
+                    OutCuesLeftGreenZone = 10;
+                    OutCuesLeftRedZone = 10;
+                    OutCuesRightRedZone = 2;
+                    OutCuesRightGreenZone = 12;
+
+                    ConnectedSubtitlesLeftGap = 3;
+                    ConnectedSubtitlesRightGap = 0;
+                    ConnectedSubtitlesBehavior = ConnectedSubtitlesBehaviorEnum.SnapClosestCueToShotChange;
+                    ConnectedSubtitlesLeftGreenZone = 2;
+                    ConnectedSubtitlesLeftRedZone = 2;
+                    ConnectedSubtitlesRightRedZone = 2;
+                    ConnectedSubtitlesRightGreenZone = 2;
+                    ConnectedSubtitlesTreatConnected = 180;
+
+                    ChainingGeneralUseZones = false;
+                    ChainingGeneralMaxGap = 1000;
+                    ChainingGeneralLeftGreenZone = 25;
+                    ChainingGeneralLeftRedZone = 24;
+                    ChainingGeneralShotChangeBehavior = ChainingGeneralShotChangeBehaviorEnum.ExtendUntilShotChange;
+                    ChainingInCueOnShotUseZones = false;
+                    ChainingInCueOnShotMaxGap = 1000;
+                    ChainingInCueOnShotLeftGreenZone = 25;
+                    ChainingInCueOnShotLeftRedZone = 24;
+                    ChainingOutCueOnShotUseZones = false;
+                    ChainingOutCueOnShotMaxGap = 500;
+                    ChainingOutCueOnShotRightRedZone = 11;
+                    ChainingOutCueOnShotRightGreenZone = 12;
+                }
+            }
+        }
+    }
+
     public class CompareSettings
     {
         public bool ShowOnlyDifferences { get; set; }
@@ -2810,6 +3019,7 @@ $HorzAlign          =   Center
         public RemoveTextForHearingImpairedSettings RemoveTextForHearingImpaired { get; set; }
         public SubtitleBeaming SubtitleBeaming { get; set; }
         public List<MultipleSearchAndReplaceGroup> MultipleSearchAndReplaceGroups { get; set; }
+        public BeautifyTimeCodesSettings BeautifyTimeCodes { get; set; }
 
         public void Reset()
         {
@@ -2829,6 +3039,7 @@ $HorzAlign          =   Center
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
             Compare = new CompareSettings();
+            BeautifyTimeCodes = new BeautifyTimeCodesSettings();
         }
 
         private Settings()
@@ -3277,6 +3488,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowToolbarNetflixGlyphCheck = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarBeautifyTimeCodes");
+            if (subNode != null)
+            {
+                settings.General.ShowToolbarBeautifyTimeCodes = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ShowToolbarSettings");
@@ -5879,6 +6096,12 @@ $HorzAlign          =   Center
                 settings.Tools.AdjustDurationExtendOnly = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("AdjustDurationExtendCheckShotChanges");
+            if (subNode != null)
+            {
+                settings.Tools.AdjustDurationExtendCheckShotChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ChangeSpeedAllowOverlap");
             if (subNode != null)
             {
@@ -5925,6 +6148,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ApplyMinimumDurationLimit = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("ApplyMinimumDurationLimitCheckShotChanges");
+            if (subNode != null)
+            {
+                settings.Tools.ApplyMinimumDurationLimitCheckShotChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ApplyMaximumDurationLimit");
@@ -8044,6 +8273,225 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     settings.SubtitleBeaming.BorderWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+            }
+
+            // Beautify time codes
+            node = doc.DocumentElement.SelectSingleNode("BeautifyTimeCodes");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("AlignTimeCodes");
+                if (subNode != null)
+                {
+                    settings.BeautifyTimeCodes.AlignTimeCodes = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("ExtractExactTimeCodes");
+                if (subNode != null)
+                {
+                    settings.BeautifyTimeCodes.ExtractExactTimeCodes = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("SnapToShotChanges");
+                if (subNode != null)
+                {
+                    settings.BeautifyTimeCodes.SnapToShotChanges = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                var profileNode = node.SelectSingleNode("Profile");
+                if (profileNode != null)
+                {
+                    subNode = profileNode.SelectSingleNode("Gap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.Gap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("InCuesGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.InCuesGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("InCuesLeftGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("InCuesLeftRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.InCuesLeftRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("InCuesRightRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.InCuesRightRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("InCuesRightGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("OutCuesGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.OutCuesGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("OutCuesLeftGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("OutCuesLeftRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.OutCuesLeftRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("OutCuesRightRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("OutCuesRightGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesLeftGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesRightGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesBehavior");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ConnectedSubtitlesBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ConnectedSubtitlesBehaviorEnum), subNode.InnerText);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesLeftGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesLeftRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesRightRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesRightGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesTreatConnected");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingGeneralUseZones");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingGeneralMaxGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingGeneralLeftGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingGeneralLeftRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingGeneralShotChangeBehavior");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingGeneralShotChangeBehaviorEnum), subNode.InnerText);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingInCueOnShotUseZones");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingInCueOnShotMaxGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingInCueOnShotLeftGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingInCueOnShotLeftRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotUseZones");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotMaxGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotRightRedZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ChainingOutCueOnShotRightGreenZone");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
                 }
             }
 
@@ -10272,6 +10720,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ShowToolbarBurnIn", settings.General.ShowToolbarBurnIn.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowToolbarBeautifyTimeCodes", settings.General.ShowToolbarBeautifyTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString(CultureInfo.InvariantCulture));
@@ -10714,6 +11163,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
                 textWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationExtendCheckShotChanges", settings.Tools.AdjustDurationExtendCheckShotChanges.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ChangeSpeedAllowOverlap", settings.Tools.ChangeSpeedAllowOverlap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakDashEarly", settings.Tools.AutoBreakDashEarly.ToString(CultureInfo.InvariantCulture));
@@ -10722,6 +11172,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoBreakPreferBottomHeavy", settings.Tools.AutoBreakPreferBottomHeavy.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakPreferBottomPercent", settings.Tools.AutoBreakPreferBottomPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ApplyMinimumDurationLimitCheckShotChanges", settings.Tools.ApplyMinimumDurationLimitCheckShotChanges.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
@@ -11157,6 +11608,46 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BorderColor", settings.SubtitleBeaming.BorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BorderWidth", settings.SubtitleBeaming.BorderWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("BeautifyTimeCodes", string.Empty);
+                textWriter.WriteElementString("AlignTimeCodes", settings.BeautifyTimeCodes.AlignTimeCodes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExtractExactTimeCodes", settings.BeautifyTimeCodes.ExtractExactTimeCodes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SnapToShotChanges", settings.BeautifyTimeCodes.SnapToShotChanges.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteStartElement("Profile", string.Empty);
+                textWriter.WriteElementString("Gap", settings.BeautifyTimeCodes.Profile.Gap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("InCuesGap", settings.BeautifyTimeCodes.Profile.InCuesGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("InCuesLeftGreenZone", settings.BeautifyTimeCodes.Profile.InCuesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("InCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.InCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("InCuesRightRedZone", settings.BeautifyTimeCodes.Profile.InCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("InCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.InCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OutCuesGap", settings.BeautifyTimeCodes.Profile.OutCuesGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OutCuesLeftGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OutCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OutCuesRightRedZone", settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OutCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesBehavior", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesBehavior.ToString());
+                textWriter.WriteElementString("ConnectedSubtitlesLeftGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesLeftRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesRightRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesRightGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesTreatConnected", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingGeneralUseZones", settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingGeneralMaxGap", settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingGeneralLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingGeneralLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingGeneralShotChangeBehavior", settings.BeautifyTimeCodes.Profile.ChainingGeneralShotChangeBehavior.ToString());
+                textWriter.WriteElementString("ChainingInCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingInCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingInCueOnShotLeftGreenZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingInCueOnShotLeftRedZone", settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingOutCueOnShotUseZones", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingOutCueOnShotMaxGap", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingOutCueOnShotRightRedZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightRedZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ChainingOutCueOnShotRightGreenZone", settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteEndElement();
                 textWriter.WriteEndElement();
 
                 textWriter.WriteEndElement();

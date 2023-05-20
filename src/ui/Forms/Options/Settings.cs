@@ -142,6 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
+            checkBoxBeautifyTimeCodes.Checked = gs.ShowToolbarBeautifyTimeCodes;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
             comboBoxFrameRate.Items.Clear();
@@ -387,6 +388,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBBurnIn.Text = language.BurnIn;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
+            labelTBBeautifyTimeCodes.Text = language.BeautifyTimeCodes;
             labelToggleSourceView.Text = language.ToggleView;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
@@ -402,6 +404,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxTBBurnIn.Text = LanguageSettings.Current.General.Visible;
             checkBoxSpellCheck.Text = LanguageSettings.Current.General.Visible;
             checkBoxNetflixQualityCheck.Text = LanguageSettings.Current.General.Visible;
+            checkBoxBeautifyTimeCodes.Text = LanguageSettings.Current.General.Visible;
             checkBoxSettings.Text = LanguageSettings.Current.General.Visible;
             checkBoxHelp.Text = LanguageSettings.Current.General.Visible;
             checkBoxTBToggleSourceView.Text = LanguageSettings.Current.General.Visible;
@@ -455,6 +458,10 @@ namespace Nikse.SubtitleEdit.Forms.Options
             labelTBNetflixQualityCheck.Left = Math.Max(labelTBHelp.Right, checkBoxHelp.Right) + 18;
             pictureBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
             checkBoxNetflixQualityCheck.Left = labelTBNetflixQualityCheck.Left;
+
+            labelTBBeautifyTimeCodes.Left = Math.Max(labelTBNetflixQualityCheck.Right, checkBoxNetflixQualityCheck.Right) + 18;
+            pictureBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
+            checkBoxBeautifyTimeCodes.Left = labelTBBeautifyTimeCodes.Left;
 
 
             groupBoxMiscellaneous.Text = language.General;
@@ -668,6 +675,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             checkBoxWaveformSingleClickSelect.Text = language.WaveformSingleClickSelect;
             checkBoxWaveformSnapToShotChanges.Text = language.WaveformSnapToShotChanges;
+            buttonEditShotChangesProfile.Text = language.WaveformEditShotChangesProfile;
             checkBoxWaveformAutoGen.Text = language.WaveformAutoGen;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
@@ -1053,6 +1061,8 @@ namespace Nikse.SubtitleEdit.Forms.Options
             {
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
             }
+
+            buttonEditShotChangesProfile.Left = checkBoxWaveformSnapToShotChanges.Left + checkBoxWaveformSnapToShotChanges.Width + 16;
 
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             checkBoxFfmpegUseCenterChannel.Checked = gs.FFmpegUseCenterChannelOnly;
@@ -1832,7 +1842,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help, Image toggleSourceView)
+                               Image visualSync, Image burnIn, Image spellCheck, Image netflixGlyphCheck, Image beautifyTimeCodes, Image settings, Image help, Image toggleSourceView)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -1848,6 +1858,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             pictureBoxTBBurnIn.Image = (Image)burnIn.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
+            pictureBoxBeautifyTimeCodes.Image = (Image)beautifyTimeCodes.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }
@@ -1869,6 +1880,7 @@ namespace Nikse.SubtitleEdit.Forms.Options
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
             gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
+            gs.ShowToolbarBeautifyTimeCodes = checkBoxBeautifyTimeCodes.Checked;
             gs.ShowToolbarHelp = checkBoxHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
@@ -3603,6 +3615,14 @@ namespace Nikse.SubtitleEdit.Forms.Options
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
                 panelMpvBackColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonEditShotChangesProfile_Click(object sender, EventArgs e)
+        {
+            using (var form = new BeautifyTimeCodesProfile(0))
+            {
+                form.ShowDialog(this);
             }
         }
     }

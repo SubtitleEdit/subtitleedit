@@ -231,6 +231,7 @@
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
+            this.buttonEditShotChangesProfile = new System.Windows.Forms.Button();
             this.checkBoxWaveformAutoGen = new System.Windows.Forms.CheckBox();
             this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
             this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
@@ -325,6 +326,9 @@
             this.labelTBBurnIn = new System.Windows.Forms.Label();
             this.pictureBoxTBBurnIn = new System.Windows.Forms.PictureBox();
             this.checkBoxTBBurnIn = new System.Windows.Forms.CheckBox();
+            this.labelTBBeautifyTimeCodes = new System.Windows.Forms.Label();
+            this.pictureBoxBeautifyTimeCodes = new System.Windows.Forms.PictureBox();
+            this.checkBoxBeautifyTimeCodes = new System.Windows.Forms.CheckBox();
             this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
             this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
             this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
@@ -476,6 +480,7 @@
             this.groupBoxShowToolBarButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBeautifyTimeCodes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
@@ -2997,6 +3002,7 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.buttonEditShotChangesProfile);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformAutoGen);
             this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.buttonWaveformCursorColor);
@@ -3032,6 +3038,16 @@
             this.groupBoxWaveformAppearence.TabIndex = 0;
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
+            // 
+            // buttonEditShotChangesProfile
+            // 
+            this.buttonEditShotChangesProfile.Location = new System.Drawing.Point(524, 157);
+            this.buttonEditShotChangesProfile.Name = "buttonEditShotChangesProfile";
+            this.buttonEditShotChangesProfile.Size = new System.Drawing.Size(136, 23);
+            this.buttonEditShotChangesProfile.TabIndex = 36;
+            this.buttonEditShotChangesProfile.Text = "Edit profile...";
+            this.buttonEditShotChangesProfile.UseVisualStyleBackColor = true;
+            this.buttonEditShotChangesProfile.Click += new System.EventHandler(this.buttonEditShotChangesProfile_Click);
             // 
             // checkBoxWaveformAutoGen
             // 
@@ -4014,6 +4030,9 @@
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBBurnIn);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBBurnIn);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBBeautifyTimeCodes);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxBeautifyTimeCodes);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxBeautifyTimeCodes);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
@@ -4113,6 +4132,33 @@
             this.checkBoxTBBurnIn.TabIndex = 20;
             this.checkBoxTBBurnIn.Text = "Visible";
             this.checkBoxTBBurnIn.UseVisualStyleBackColor = true;
+            // 
+            // labelTBBeautifyTimeCodes
+            // 
+            this.labelTBBeautifyTimeCodes.AutoSize = true;
+            this.labelTBBeautifyTimeCodes.Location = new System.Drawing.Point(742, 136);
+            this.labelTBBeautifyTimeCodes.Name = "labelTBBeautifyTimeCodes";
+            this.labelTBBeautifyTimeCodes.Size = new System.Drawing.Size(101, 13);
+            this.labelTBBeautifyTimeCodes.TabIndex = 45;
+            this.labelTBBeautifyTimeCodes.Text = "Beautify time codes";
+            // 
+            // pictureBoxBeautifyTimeCodes
+            // 
+            this.pictureBoxBeautifyTimeCodes.Location = new System.Drawing.Point(751, 155);
+            this.pictureBoxBeautifyTimeCodes.Name = "pictureBoxBeautifyTimeCodes";
+            this.pictureBoxBeautifyTimeCodes.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxBeautifyTimeCodes.TabIndex = 44;
+            this.pictureBoxBeautifyTimeCodes.TabStop = false;
+            // 
+            // checkBoxBeautifyTimeCodes
+            // 
+            this.checkBoxBeautifyTimeCodes.AutoSize = true;
+            this.checkBoxBeautifyTimeCodes.Location = new System.Drawing.Point(754, 195);
+            this.checkBoxBeautifyTimeCodes.Name = "checkBoxBeautifyTimeCodes";
+            this.checkBoxBeautifyTimeCodes.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxBeautifyTimeCodes.TabIndex = 43;
+            this.checkBoxBeautifyTimeCodes.Text = "Visible";
+            this.checkBoxBeautifyTimeCodes.UseVisualStyleBackColor = true;
             // 
             // labelTBNetflixQualityCheck
             // 
@@ -5261,6 +5307,7 @@
             this.groupBoxShowToolBarButtons.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxToggleSourceView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBBurnIn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBeautifyTimeCodes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
@@ -5653,6 +5700,9 @@
         private System.Windows.Forms.CheckBox checkBoxLiveSpellCheck;
         private System.Windows.Forms.CheckBox checkBoxDarkThemeShowListViewGridLines;
         private System.Windows.Forms.GroupBox groupBoxFontInUI;
+        private System.Windows.Forms.Label labelTBBeautifyTimeCodes;
+        private System.Windows.Forms.PictureBox pictureBoxBeautifyTimeCodes;
+        private System.Windows.Forms.CheckBox checkBoxBeautifyTimeCodes;
         private System.Windows.Forms.GroupBox groupBoxToolsMisc;
         private System.Windows.Forms.ComboBox comboBoxBDOpensIn;
         private System.Windows.Forms.Label labelBDOpensIn;
@@ -5701,5 +5751,6 @@
         private System.Windows.Forms.Button buttonMpvOutlineColor;
         private System.Windows.Forms.Panel panelMpvPrimaryColor;
         private System.Windows.Forms.Button buttonMpvPrimaryColor;
+        private System.Windows.Forms.Button buttonEditShotChangesProfile;
     }
 }

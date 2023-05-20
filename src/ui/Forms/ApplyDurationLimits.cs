@@ -25,8 +25,10 @@ namespace Nikse.SubtitleEdit.Forms
             Text = LanguageSettings.Current.ApplyDurationLimits.Title;
             checkBoxMinDuration.Text = LanguageSettings.Current.Settings.DurationMinimumMilliseconds;
             checkBoxMaxDuration.Text = LanguageSettings.Current.Settings.DurationMaximumMilliseconds;
+            checkBoxCheckShotChanges.Text = LanguageSettings.Current.ApplyDurationLimits.CheckShotChanges;
             checkBoxMinDuration.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimit;
             checkBoxMaxDuration.Checked = Configuration.Settings.Tools.ApplyMaximumDurationLimit;
+            checkBoxCheckShotChanges.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimitCheckShotChanges;
             labelNote.Text = LanguageSettings.Current.AdjustDisplayDuration.Note;
             numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
@@ -48,6 +50,8 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDurationMin.Left = Math.Max(numericUpDownDurationMin.Left, numericUpDownDurationMax.Left);
                 numericUpDownDurationMax.Left = Math.Max(numericUpDownDurationMin.Left, numericUpDownDurationMax.Left);
             }
+
+            checkBoxCheckShotChanges.Left = numericUpDownDurationMin.Left + numericUpDownDurationMin.Width + 16;
             FixLargeFonts();
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
@@ -228,6 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.ApplyMinimumDurationLimit = checkBoxMinDuration.Checked;
             Configuration.Settings.Tools.ApplyMaximumDurationLimit = checkBoxMaxDuration.Checked;
+            Configuration.Settings.Tools.ApplyMinimumDurationLimitCheckShotChanges = checkBoxCheckShotChanges.Checked;
 
             _onlyListFixes = false;
             _working = new Subtitle(_subtitle);
