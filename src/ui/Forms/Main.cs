@@ -7470,27 +7470,29 @@ namespace Nikse.SubtitleEdit.Forms
                 if (adjustDisplayTime.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+                    List<double> shotChanges = adjustDisplayTime.CheckShotChanges ? audioVisualizer.ShotChanges : new List<double>();
+
                     if (adjustDisplayTime.AdjustUsingPercent)
                     {
                         double percent = double.Parse(adjustDisplayTime.AdjustValue);
-                        _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndices);
+                        _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndices, shotChanges);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture) + "%"));
                     }
                     else if (adjustDisplayTime.AdjustUsingSeconds)
                     {
                         double seconds = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
-                        _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndices);
+                        _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndices, shotChanges);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture)));
                     }
                     else if (adjustDisplayTime.AdjustUsingRecalc)
                     {
                         double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
-                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices, (double)adjustDisplayTime.OptimalCharactersPerSecond, adjustDisplayTime.ExtendOnly);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices, (double)adjustDisplayTime.OptimalCharactersPerSecond, adjustDisplayTime.ExtendOnly, shotChanges);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     }
                     else
                     { // fixed duration
-                        _subtitle.SetFixedDuration(selectedIndices, adjustDisplayTime.FixedMilliseconds);
+                        _subtitle.SetFixedDuration(selectedIndices, adjustDisplayTime.FixedMilliseconds, shotChanges);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.FixedMilliseconds));
                     }
 
@@ -30305,11 +30307,11 @@ namespace Nikse.SubtitleEdit.Forms
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                     }
 
-                    applyDurationLimits.Initialize(selectedLines);
+                    applyDurationLimits.Initialize(selectedLines, audioVisualizer.ShotChanges);
                 }
                 else
                 {
-                    applyDurationLimits.Initialize(_subtitle);
+                    applyDurationLimits.Initialize(_subtitle, audioVisualizer.ShotChanges);
                 }
 
                 if (applyDurationLimits.ShowDialog(this) == DialogResult.OK)
