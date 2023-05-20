@@ -146,6 +146,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     }
                 }
 
+                if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
+                {
+                    var path = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                        "anaconda3", "envs", "whisperx", "Scripts", "whisperx.exe");
+                    if (File.Exists(path))
+                    {
+                        return path;
+                    }
+                }
+
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs && !string.IsNullOrEmpty(Configuration.Settings.Tools.WhisperStableTsLocation))
                 {
                     if (Configuration.Settings.Tools.WhisperStableTsLocation.EndsWith("stable-ts.exe", StringComparison.InvariantCultureIgnoreCase) && File.Exists(Configuration.Settings.Tools.WhisperStableTsLocation))
