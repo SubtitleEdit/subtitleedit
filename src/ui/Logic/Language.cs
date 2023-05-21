@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ExtractTimeCodes = "Extract time codes",
                 CancelTimeCodes = "Cancel",
                 GroupShotChanges = "Shot changes",
-                SnapToShotChanges = "Snap cues to shot changes according to profile",
+                SnapToShotChanges = "Snap cues to shot changes",
                 ImportShotChanges = "Generate / import shot changes...",
                 EditProfile = "Edit profile...",
                 NoTimeCodesLoaded = "No time codes loaded",
