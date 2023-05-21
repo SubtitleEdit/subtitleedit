@@ -391,11 +391,11 @@ namespace Nikse.SubtitleEdit.Forms.ShotChanges
                 if (progressBar1.Style != ProgressBarStyle.Blocks)
                 {
                     progressBar1.Style = ProgressBarStyle.Blocks;
-                    progressBar1.Maximum = Convert.ToInt32(_duration);
+                    progressBar1.Maximum = Convert.ToInt32(_duration / 1000);
                 }
 
                 progressBar1.Value = Convert.ToInt32(_shotChangesGenerator.LastSeconds);
-                labelProgress.Text = FormatSeconds(_shotChangesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration);
+                labelProgress.Text = FormatSeconds(_shotChangesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration / 1000);
             }
 
             textBoxGenerate.Text = _shotChangesGenerator.GetTimeCodesString();
