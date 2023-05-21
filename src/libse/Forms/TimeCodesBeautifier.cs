@@ -171,8 +171,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private double FindNewBestCueTime(double cueTime, bool isInCue)
         {
             var cueTimeFrame = SubtitleFormat.MillisecondsToFrames(cueTime, _frameRate);
-            var previousShotChange = new List<int> { -1 }.Concat(_shotChangesFrames).Last(x => x <= cueTimeFrame); // will return -1 if non found
-            var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= cueTimeFrame); // will return maxValue if non found
+            var previousShotChange = new List<int> { -1 }.Concat(_shotChangesFrames).Last(x => x <= cueTimeFrame); // will return -1 if none found
+            var nextShotChange = _shotChangesFrames.Concat(new List<int> { int.MaxValue }).First(x => x >= cueTimeFrame); // will return maxValue if none found
 
             // If both not found, return self
             if (previousShotChange < 0 && nextShotChange == int.MaxValue)

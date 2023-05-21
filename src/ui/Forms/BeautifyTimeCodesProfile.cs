@@ -48,38 +48,38 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownGap.Value = settings.Gap;
 
             numericUpDownInCuesGap.Value = settings.InCuesGap;
-            numericUpDownInCuesLeftGreenZone.Value = settings.InCuesLeftGreenZone;
             numericUpDownInCuesLeftRedZone.Value = settings.InCuesLeftRedZone;
             numericUpDownInCuesRightRedZone.Value = settings.InCuesRightRedZone;
+            numericUpDownInCuesLeftGreenZone.Value = settings.InCuesLeftGreenZone;
             numericUpDownInCuesRightGreenZone.Value = settings.InCuesRightGreenZone;
 
             numericUpDownOutCuesGap.Value = settings.OutCuesGap;
-            numericUpDownOutCuesLeftGreenZone.Value = settings.OutCuesLeftGreenZone;
             numericUpDownOutCuesLeftRedZone.Value = settings.OutCuesLeftRedZone;
             numericUpDownOutCuesRightRedZone.Value = settings.OutCuesRightRedZone;
+            numericUpDownOutCuesLeftGreenZone.Value = settings.OutCuesLeftGreenZone;
             numericUpDownOutCuesRightGreenZone.Value = settings.OutCuesRightGreenZone;
 
             numericUpDownConnectedSubtitlesLeftGap.Value = settings.ConnectedSubtitlesLeftGap;
             numericUpDownConnectedSubtitlesRightGap.Value = settings.ConnectedSubtitlesRightGap;
             comboBoxConnectedSubtitlesBehavior.SelectedIndex = (int)settings.ConnectedSubtitlesBehavior;
-            numericUpDownConnectedSubtitlesLeftGreenZone.Value = settings.ConnectedSubtitlesLeftGreenZone;
             numericUpDownConnectedSubtitlesLeftRedZone.Value = settings.ConnectedSubtitlesLeftRedZone;
             numericUpDownConnectedSubtitlesRightRedZone.Value = settings.ConnectedSubtitlesRightRedZone;
+            numericUpDownConnectedSubtitlesLeftGreenZone.Value = settings.ConnectedSubtitlesLeftGreenZone;
             numericUpDownConnectedSubtitlesRightGreenZone.Value = settings.ConnectedSubtitlesRightGreenZone;
             numericUpDownConnectedSubtitlesTreatConnected.Value = settings.ConnectedSubtitlesTreatConnected;
 
             radioButtonChainingGeneralZones.Checked = settings.ChainingGeneralUseZones;
             radioButtonChainingGeneralMaxGap.Checked = !settings.ChainingGeneralUseZones;
             numericUpDownChainingGeneralMaxGap.Value = settings.ChainingGeneralMaxGap;
-            numericUpDownChainingGeneralLeftGreenZone.Value = settings.ChainingGeneralLeftGreenZone;
             numericUpDownChainingGeneralLeftRedZone.Value = settings.ChainingGeneralLeftRedZone;
+            numericUpDownChainingGeneralLeftGreenZone.Value = settings.ChainingGeneralLeftGreenZone;
             comboBoxChainingGeneralShotChangeBehavior.SelectedIndex = (int)settings.ChainingGeneralShotChangeBehavior;
 
             radioButtonChainingInCueOnShotZones.Checked = settings.ChainingInCueOnShotUseZones;
             radioButtonChainingInCueOnShotMaxGap.Checked = !settings.ChainingInCueOnShotUseZones;
             numericUpDownChainingInCueOnShotMaxGap.Value = settings.ChainingInCueOnShotMaxGap;
-            numericUpDownChainingInCueOnShotLeftGreenZone.Value = settings.ChainingInCueOnShotLeftGreenZone;
             numericUpDownChainingInCueOnShotLeftRedZone.Value = settings.ChainingInCueOnShotLeftRedZone;
+            numericUpDownChainingInCueOnShotLeftGreenZone.Value = settings.ChainingInCueOnShotLeftGreenZone;
 
             radioButtonChainingOutCueOnShotZones.Checked = settings.ChainingOutCueOnShotUseZones;
             radioButtonChainingOutCueOnShotMaxGap.Checked = !settings.ChainingOutCueOnShotUseZones;
@@ -225,6 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
         private void numericUpDown_ValueChanged(object sender, EventArgs e)
         {
+            ValidateZones();
             RefreshControls();
         }
 
@@ -249,6 +250,21 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownConnectedSubtitlesRightGap.Value = numericUpDownGap.Value;
             }
+        }
+
+        private void ValidateZones()
+        {
+            numericUpDownInCuesLeftGreenZone.Minimum = numericUpDownInCuesLeftRedZone.Value;
+            numericUpDownInCuesRightGreenZone.Minimum = numericUpDownInCuesRightRedZone.Value;
+            numericUpDownOutCuesLeftGreenZone.Minimum = numericUpDownOutCuesLeftRedZone.Value;
+            numericUpDownOutCuesRightGreenZone.Minimum = numericUpDownOutCuesRightRedZone.Value;
+
+            numericUpDownConnectedSubtitlesLeftGreenZone.Minimum = numericUpDownConnectedSubtitlesLeftRedZone.Value;
+            numericUpDownConnectedSubtitlesRightGreenZone.Minimum = numericUpDownConnectedSubtitlesRightRedZone.Value;
+
+            numericUpDownChainingGeneralLeftGreenZone.Minimum = numericUpDownChainingGeneralLeftRedZone.Value;
+            numericUpDownChainingInCueOnShotLeftGreenZone.Minimum = numericUpDownChainingInCueOnShotLeftRedZone.Value;
+            numericUpDownChainingOutCueOnShotRightGreenZone.Minimum = numericUpDownChainingOutCueOnShotRightRedZone.Value;
         }
     }
 }
