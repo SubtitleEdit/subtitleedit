@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     // Then we have a free in cue
                     if (!result)
                     {
-                        FixInCue(p);
+                        FixInCue(paragraph);
                     }
 
 
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     // Then we have a free out cue
                     if (!result)
                     {
-                        FixOutCue(p);
+                        FixOutCue(paragraph);
                     }
 
                     // Report progress
@@ -88,53 +88,108 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
         }
 
-        private bool FixConnectedSubtitles(bool isInCue, Paragraph left = null, Paragraph right = null)
+        private bool FixConnectedSubtitles(bool isInCue, Paragraph leftParagraph = null, Paragraph rightParagraph = null)
         {
-            if (left == null || right == null)
+            if (leftParagraph == null || rightParagraph == null)
             {
                 return false;
             }
 
-            var distance = right.StartTime.TotalMilliseconds - left.EndTime.TotalMilliseconds;
+            var newLeftOutCueTime = leftParagraph.EndTime.TotalMilliseconds;
+            var newRightInCueTime = rightParagraph.StartTime.TotalMilliseconds;
+            
+            var distance = newRightInCueTime - newLeftOutCueTime;
             var subtitlesAreConnected = distance < Configuration.Settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesTreatConnected;
 
             if (subtitlesAreConnected)
             {
-                // TODO fix
-                return true;
+                // Check if we should do something with shot changes
+                if (_shotChangesFrames.Count > 0)
+                {
+                    // TODO
+                }
+                else
+                {
+                    // Just chain them
+                    newLeftOutCueTime = newRightInCueTime - TimeCodesBeautifierUtils.GetGapMs(_frameRate);
+                }
             }
             else
             {
                 return false;
             }
-        }
 
-        private bool FixChainableSubtitles(bool isInCue, Paragraph left = null, Paragraph right = null)
-        {
-            if (left == null || right == null)
-            {
-                return false;
-            }
-
-            // TODO fix
-
+            // Align (if needed) and update cues
+            AlignAndSetCue(leftParagraph, false, newLeftOutCueTime);
+            AlignAndSetCue(rightParagraph, true, newRightInCueTime);
 
             return true;
         }
 
-        private void FixInCue(int index)
+        private bool FixChainableSubtitles(bool isInCue, Paragraph leftParagraph = null, Paragraph rightParagraph = null)
         {
-            FixCue(index, true);
+            if (leftParagraph == null || rightParagraph == null)
+            {
+                return false;
+            }
+
+            var newLeftOutCueTime = leftParagraph.EndTime.TotalMilliseconds;
+            var newRightInCueTime = rightParagraph.StartTime.TotalMilliseconds;
+
+            var distance = newRightInCueTime - newLeftOutCueTime;
+
+            // Check if we should do something with shot changes
+            if (_shotChangesFrames.Count > 0)
+            {
+                // TODO
+            }
+            else
+            {
+                // Use general settings
+                if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones)
+                {
+                    // TODO
+                }
+                else
+                {
+                    // Check general distance
+                    if (distance < Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap)
+                    {
+                        // Just chain them
+                        newLeftOutCueTime = newRightInCueTime - TimeCodesBeautifierUtils.GetGapMs(_frameRate);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Align (if needed) and update cues
+            AlignAndSetCue(leftParagraph, false, newLeftOutCueTime);
+            AlignAndSetCue(rightParagraph, true, newRightInCueTime);
+
+            return true;
         }
 
-        private void FixOutCue(int index)
+        private void FixInCue(Paragraph paragraph)
         {
-            FixCue(index, false);
+            FixCue(paragraph, true);
         }
 
-        private void FixCue(int index, bool isInCue)
+        private void FixOutCue(Paragraph paragraph)
         {
-            var newTime = isInCue ? _subtitle.Paragraphs[index].StartTime.TotalMilliseconds : _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+            FixCue(paragraph, false);
+        }
+
+        private void FixCue(Paragraph paragraph, bool isInCue)
+        {
+            if (paragraph == null)
+            {
+                return;
+            }
+
+            var newTime = isInCue ? paragraph.StartTime.TotalMilliseconds : paragraph.EndTime.TotalMilliseconds;
 
             // Check if we should do something with shot changes
             if (_shotChangesFrames.Count > 0)
@@ -142,30 +197,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 newTime = FindNewBestCueTime(newTime, isInCue);
             }
 
-            // Check if we should align to time codes
-            if (_alignTimeCodes)
-            {
-                // Check if we have extracted exact time codes
-                if (_timeCodes.Count > 0)
-                {
-                    newTime = _timeCodes.Aggregate((x, y) => Math.Abs(x - newTime) < Math.Abs(y - newTime) ? x : y);
-                }
-                else
-                {
-                    var newTimeFrames = SubtitleFormat.MillisecondsToFrames(newTime, _frameRate);
-                    newTime = SubtitleFormat.FramesToMilliseconds(newTimeFrames, _frameRate);
-                }
-            }
-
-            // Finally, update time
-            if (isInCue)
-            {
-                _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = newTime;
-            }
-            else
-            {
-                _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = newTime;
-            }
+            // Align (if needed) and update cue
+            AlignAndSetCue(paragraph, isInCue, newTime);
         }
 
         private double FindNewBestCueTime(double cueTime, bool isInCue)
@@ -269,7 +302,35 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             return cueTime;
         }
-        
+
+        private void AlignAndSetCue(Paragraph paragraph, bool isInCue, double newTime)
+        {
+            // Check if we should align to time codes
+            if (_alignTimeCodes)
+            {
+                // Check if we have extracted exact time codes
+                if (_timeCodes.Count > 0)
+                {
+                    newTime = _timeCodes.Aggregate((x, y) => Math.Abs(x - newTime) < Math.Abs(y - newTime) ? x : y);
+                }
+                else
+                {
+                    var newTimeFrames = SubtitleFormat.MillisecondsToFrames(newTime, _frameRate);
+                    newTime = SubtitleFormat.FramesToMilliseconds(newTimeFrames, _frameRate);
+                }
+            }
+
+            // Finally, update time
+            if (isInCue)
+            {
+                paragraph.StartTime.TotalMilliseconds = newTime;
+            }
+            else
+            {
+                paragraph.EndTime.TotalMilliseconds = newTime;
+            }
+        }
+
 
         // Delegates
 
@@ -281,6 +342,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public static double GetFrameDurationMs(double? frameRate = null)
         {
             return TimeCode.BaseUnit / (frameRate ?? Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static double GetGapMs(double? frameRate = null)
+        {
+            return GetFrameDurationMs(frameRate) * Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
         }
 
         public static double GetInCuesGapMs(double? frameRate = null)
