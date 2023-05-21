@@ -149,7 +149,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSnapToShotChanges.Enabled = false;
             panelShotChanges.Enabled = false;
             labelTimeCodesStatus.Enabled = false;
-            checkBoxAlignTimeCodes.Enabled = false;
             checkBoxExtractExactTimeCodes.Enabled = false;
             buttonExtractTimeCodes.Enabled = false;
             buttonCancelTimeCodes.Visible = true;
@@ -187,7 +186,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSnapToShotChanges.Enabled = true;
             panelShotChanges.Enabled = true;
             labelTimeCodesStatus.Enabled = true;
-            checkBoxAlignTimeCodes.Enabled = true;
             checkBoxExtractExactTimeCodes.Enabled = true;
             buttonExtractTimeCodes.Enabled = true;
             buttonCancelTimeCodes.Visible = false;
@@ -276,8 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
             TimeCodesBeautifier timeCodesBeautifier = new TimeCodesBeautifier(
                 FixedSubtitle, 
                 _frameRate,
-                checkBoxAlignTimeCodes.Checked,
-                checkBoxExtractExactTimeCodes.Checked ? _timeCodes : new List<double>(),
+                checkBoxExtractExactTimeCodes.Checked ? _timeCodes : new List<double>(), // ditto
                 checkBoxSnapToShotChanges.Checked ? _shotChanges : new List<double>()
             );
             timeCodesBeautifier.ProgressChanged += delegate(double progress)

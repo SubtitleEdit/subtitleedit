@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(414, 354);
+            this.buttonOK.Location = new System.Drawing.Point(415, 350);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(495, 354);
+            this.buttonCancel.Location = new System.Drawing.Point(496, 350);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -95,6 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAlignTimeCodes.AutoSize = true;
             this.checkBoxAlignTimeCodes.Checked = true;
             this.checkBoxAlignTimeCodes.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAlignTimeCodes.Enabled = false;
             this.checkBoxAlignTimeCodes.Location = new System.Drawing.Point(10, 22);
             this.checkBoxAlignTimeCodes.Name = "checkBoxAlignTimeCodes";
             this.checkBoxAlignTimeCodes.Size = new System.Drawing.Size(224, 19);
@@ -193,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxShotChanges.Controls.Add(this.panelShotChanges);
             this.groupBoxShotChanges.Location = new System.Drawing.Point(12, 170);
             this.groupBoxShotChanges.Name = "groupBoxShotChanges";
-            this.groupBoxShotChanges.Size = new System.Drawing.Size(558, 140);
+            this.groupBoxShotChanges.Size = new System.Drawing.Size(558, 101);
             this.groupBoxShotChanges.TabIndex = 2;
             this.groupBoxShotChanges.TabStop = false;
             this.groupBoxShotChanges.Text = "Shot changes";
@@ -218,10 +219,9 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelShotChanges.Controls.Add(this.buttonImportShotChanges);
             this.panelShotChanges.Controls.Add(this.labelShotChangesStatus);
-            this.panelShotChanges.Controls.Add(this.buttonEditProfile);
             this.panelShotChanges.Location = new System.Drawing.Point(6, 47);
             this.panelShotChanges.Name = "panelShotChanges";
-            this.panelShotChanges.Size = new System.Drawing.Size(546, 87);
+            this.panelShotChanges.Size = new System.Drawing.Size(546, 48);
             this.panelShotChanges.TabIndex = 2;
             // 
             // buttonImportShotChanges
@@ -246,9 +246,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonEditProfile
             // 
-            this.buttonEditProfile.Location = new System.Drawing.Point(23, 57);
+            this.buttonEditProfile.Location = new System.Drawing.Point(11, 279);
             this.buttonEditProfile.Name = "buttonEditProfile";
-            this.buttonEditProfile.Size = new System.Drawing.Size(149, 23);
+            this.buttonEditProfile.Size = new System.Drawing.Size(178, 28);
             this.buttonEditProfile.TabIndex = 3;
             this.buttonEditProfile.Text = "Edit profile...";
             this.buttonEditProfile.UseVisualStyleBackColor = true;
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(12, 320);
+            this.progressBar.Location = new System.Drawing.Point(12, 316);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(558, 23);
             this.progressBar.TabIndex = 5;
@@ -269,9 +269,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(582, 389);
+            this.ClientSize = new System.Drawing.Size(582, 385);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.groupBoxShotChanges);
+            this.Controls.Add(this.buttonEditProfile);
             this.Controls.Add(this.groupBoxTimeCodes);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
