@@ -188,29 +188,53 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return true;
         }
 
-        private void FixInCue(Paragraph paragraph)
+        private void FixInCue(int index)
         {
-            FixCue(paragraph, true);
+            FixCue(index, true);
         }
 
-        private void FixOutCue(Paragraph paragraph)
+        private void FixOutCue(int index)
         {
-            FixCue(paragraph, false);
+            FixCue(index, false);
         }
 
-        private void FixCue(Paragraph paragraph, bool isInCue)
+        private void FixCue(int index, bool isInCue)
         {
-            if (paragraph == null)
-            {
-                return;
-            }
-
+            var paragraph = _subtitle.Paragraphs[index];
             var newCueFrame = SubtitleFormat.MillisecondsToFrames(isInCue ? paragraph.StartTime.TotalMilliseconds : paragraph.EndTime.TotalMilliseconds, _frameRate);
 
             // Check if we should do something with shot changes
             if (_shotChangesFrames.Count > 0)
             {
-                newCueFrame = FindNewBestCueFrame(newCueFrame, isInCue);
+                var bestCueFrame = FindNewBestCueFrame(newCueFrame, isInCue);
+
+                // Check if adjacent subtitle is not in the way
+                if (isInCue)
+                {
+                    var previousParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index - 1);
+                    if (previousParagraph != null)
+                    {
+                        var previousOutCueFrame = SubtitleFormat.MillisecondsToFrames(previousParagraph.EndTime.TotalMilliseconds, _frameRate);
+                        newCueFrame = Math.Max(bestCueFrame, previousOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
+                    }
+                    else
+                    {
+                        newCueFrame = bestCueFrame;
+                    }
+                }
+                else
+                {
+                    var nextParagraph = _subtitle.Paragraphs.ElementAtOrDefault(index + 1);
+                    if (nextParagraph != null)
+                    {
+                        var nextInCueFrame = SubtitleFormat.MillisecondsToFrames(nextParagraph.StartTime.TotalMilliseconds, _frameRate);
+                        newCueFrame = Math.Min(bestCueFrame, nextInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap);
+                    }
+                    else
+                    {
+                        newCueFrame = bestCueFrame;
+                    }
+                }
             }
 
             // Align and update cue
