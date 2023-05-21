@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxTimeCodes
             // 
-            this.groupBoxTimeCodes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxTimeCodes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTimeCodes.Controls.Add(this.checkBoxAlignTimeCodes);
             this.groupBoxTimeCodes.Controls.Add(this.panelTimeCodes);
@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxShotChanges
             // 
-            this.groupBoxShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxShotChanges.Controls.Add(this.checkBoxSnapToShotChanges);
             this.groupBoxShotChanges.Controls.Add(this.panelShotChanges);
@@ -213,8 +213,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // panelShotChanges
             // 
-            this.panelShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.panelShotChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelShotChanges.Controls.Add(this.buttonImportShotChanges);
             this.panelShotChanges.Controls.Add(this.labelShotChangesStatus);
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // progressBar
             // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(12, 320);
             this.progressBar.Name = "progressBar";

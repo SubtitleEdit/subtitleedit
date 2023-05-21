@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Forms.ShotChanges;
 using Nikse.SubtitleEdit.Logic;
 
@@ -19,16 +20,15 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private readonly Subtitle _subtitle;
         private readonly VideoInfo _videoInfo;
-        private readonly double _frameRate = 25;
-        private readonly double _duration = 0;
+        private readonly double _frameRate;
+        private readonly double _duration;
         private readonly string _videoFileName;
 
         private List<double> _timeCodes = new List<double>();
         private List<double> _shotChanges = new List<double>();
 
-        public List<double> ShotChangesInSeconds = new List<double>();
+        public List<double> ShotChangesInSeconds = new List<double>(); // For storing imported/generated shot changes that will be returned to the main form
         public Subtitle FixedSubtitle { get; private set; }
-        public int FixedCount { get; private set; }
 
         private bool _abortTimeCodes;
         private TimeCodesGenerator _timeCodesGenerator;
@@ -42,6 +42,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (videoInfo != null && videoInfo.FramesPerSecond > 1)
             {
                 _frameRate = videoInfo.FramesPerSecond;
+            }
+            else
+            {
+                _frameRate = Configuration.Settings.General.CurrentFrameRate;
             }
 
             if (videoInfo != null && videoInfo.TotalMilliseconds > 0)
@@ -214,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 progressBarExtractTimeCodes.Value = Convert.ToInt32(_timeCodesGenerator.LastSeconds);
-                labelExtractTimeCodesProgress.Text = FormatSeconds(_timeCodesGenerator.LastSeconds) + " / " + FormatSeconds(_duration);
+                labelExtractTimeCodesProgress.Text = FormatSeconds(_timeCodesGenerator.LastSeconds) + @" / " + FormatSeconds(_duration);
             }
         }
 
@@ -249,20 +253,39 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             // Validation
-            if (checkBoxExtractExactTimeCodes.Enabled && _timeCodes.Count == 0)
+            if (checkBoxExtractExactTimeCodes.Checked && _timeCodes.Count == 0) // we check the extract checkbox here, otherwise it should just calculate the time codes based on frame rate
             {
                 MessageBox.Show(this, string.Format(LanguageSettings.Current.BeautifyTimeCodes.NoTimeCodesLoadedError, LanguageSettings.Current.BeautifyTimeCodes.ExtractTimeCodes), LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (checkBoxSnapToShotChanges.Enabled && _shotChanges.Count == 0)
+            if (checkBoxSnapToShotChanges.Checked && _shotChanges.Count == 0)
             {
                 MessageBox.Show(this, string.Format(LanguageSettings.Current.BeautifyTimeCodes.NoShotChangesLoadedError, LanguageSettings.Current.BeautifyTimeCodes.ImportShotChanges), LanguageSettings.Current.General.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            // Prepare
+            groupBoxTimeCodes.Enabled = false;
+            groupBoxShotChanges.Enabled = false;
+            buttonOK.Enabled = false;
+
             // Actual processing
-            // TODO
+            FixedSubtitle = new Subtitle(_subtitle);
+
+            TimeCodesBeautifier timeCodesBeautifier = new TimeCodesBeautifier(
+                FixedSubtitle, 
+                _frameRate,
+                checkBoxAlignTimeCodes.Checked,
+                checkBoxExtractExactTimeCodes.Checked ? _timeCodes : new List<double>(),
+                checkBoxSnapToShotChanges.Checked ? _shotChanges : new List<double>()
+            );
+            timeCodesBeautifier.ProgressChanged += delegate(double progress)
+            {
+                progressBar.Value = Convert.ToInt32(progress * 100);
+                Application.DoEvents();
+            };
+            timeCodesBeautifier.Beautify();
 
             // Save settings
             Configuration.Settings.BeautifyTimeCodes.AlignTimeCodes = checkBoxAlignTimeCodes.Checked;
