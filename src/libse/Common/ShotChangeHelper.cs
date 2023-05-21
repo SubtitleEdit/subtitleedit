@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static double GetNextShotChangeMinusGapInMs(List<double> shotChanges, TimeCode currentTime)
         {
             var nextShotChangeInSeconds = shotChanges.Concat(new[] { double.MaxValue }).First(x => x >= currentTime.TotalSeconds); // will return maxValue if empty
-            return (nextShotChangeInSeconds * 1000) - BeautifyTimeCodes.GetOutCuesGapMs();
+            return (nextShotChangeInSeconds * 1000) - TimeCodesBeautifierUtils.GetOutCuesGapMs();
         }
     }
 }

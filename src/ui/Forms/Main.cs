@@ -34108,7 +34108,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var form = new BeautifyTimeCodes(_subtitle, _videoInfo, _videoFileName, audioVisualizer.ShotChanges))
             {
-                if (form.ShowDialog(this) == DialogResult.OK && form.FixedCount > 0)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     int index = FirstSelectedIndex;
                     if (index < 0)
