@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     // Check result
                     if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRedZone)
                     {
-                        // Both are in red zones! We will use the closest shot change to align
+                        // Both are in red zones! We will use the closest shot change to align the cues around
                         if (Math.Abs(newLeftOutCueFrame - bestLeftOutCueFrameInfo.cueFrame) < Math.Abs(newRightInCueFrame - bestRightInCueFrameInfo.cueFrame))
                         {
                             var fixInfo = GetFixedConnectedSubtitlesCueFrames(leftParagraph, rightParagraph, bestLeftOutCueFrameInfo.cueFrame);
@@ -128,8 +128,35 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     else if ((bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone) && 
                              (bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone || bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone))
                     {
-                        // Both are in green zone!
-                        // TODO
+                        // Both are in green zones! Check cases...
+                        if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone)
+                        {
+                            // Both cues want to go backward. Most likely both are in the same shot change's green zone
+                            // For now, put the right in cue on the edge of the green zone, and push the previous subtitle backward
+                            newRightInCueFrame = bestRightInCueFrameInfo.cueFrame;
+                            newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone)
+                        {
+                            // Cues want to be pulled apart. Highly unlikely. There is probably a shot change in the middle of them and no red zone set
+                            // For now, let the left cue take priority, so put the right in cue on the edge of the green zone, and push the previous subtitle backward
+                            newRightInCueFrame = bestLeftOutCueFrameInfo.cueFrame;
+                            newLeftOutCueFrame = newRightInCueFrame - Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToLeftGreenZone)
+                        {
+                            // Cues want to be pushed together. The connect subtitles are most likely between two shot changes that are close together
+                            // For now, let the left cue take priority, so put the left out cue on the edge of the green zone, and push the next subtitle forward
+                            newLeftOutCueFrame = bestLeftOutCueFrameInfo.cueFrame;
+                            newRightInCueFrame = newLeftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
+                        else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone && bestRightInCueFrameInfo.result == FindBestCueResult.SnappedToRightGreenZone)
+                        {
+                            // Both cues want to go forward. Most likely both are in the same shot change's green zone
+                            // For now, put the left out cue on the edge of the green zone, and push the next subtitle forward
+                            newLeftOutCueFrame = bestLeftOutCueFrameInfo.cueFrame;
+                            newRightInCueFrame = newLeftOutCueFrame + Configuration.Settings.BeautifyTimeCodes.Profile.Gap;
+                        }
                     }
                     else if (bestLeftOutCueFrameInfo.result == FindBestCueResult.SnappedToRedZone) // Other cases... Red zone snapping has priority
                     {
@@ -300,7 +327,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             // Check if we should do something with shot changes
             if (_shotChangesFrames.Count > 0)
             {
-                
+                // TODO
             }
             else
             {
