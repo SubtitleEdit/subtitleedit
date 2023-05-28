@@ -2817,9 +2817,10 @@ $HorzAlign          =   Center
             public int OutCuesRightGreenZone { get; set; }
 
             // Connected subtitles
-            public int ConnectedSubtitlesLeftGap { get; set; }
-            public int ConnectedSubtitlesRightGap { get; set; }
-            public ConnectedSubtitlesBehaviorEnum ConnectedSubtitlesBehavior { get; set; }
+            public int ConnectedSubtitlesInCueClosestLeftGap { get; set; }
+            public int ConnectedSubtitlesInCueClosestRightGap { get; set; }
+            public int ConnectedSubtitlesOutCueClosestLeftGap { get; set; }
+            public int ConnectedSubtitlesOutCueClosestRightGap { get; set; }
             public int ConnectedSubtitlesLeftGreenZone { get; set; }
             public int ConnectedSubtitlesLeftRedZone { get; set; }
             public int ConnectedSubtitlesRightRedZone { get; set; }
@@ -2848,13 +2849,6 @@ $HorzAlign          =   Center
                 SDI = 2,
             }
 
-            public enum ConnectedSubtitlesBehaviorEnum : int
-            {
-                SnapClosestCueToShotChange = 0,
-                SnapInCueToShotChange = 1,
-                SnapOutCueToShotChange = 2
-            }
-
             public enum ChainingGeneralShotChangeBehaviorEnum : int
             {
                 DontChain = 0,
@@ -2880,9 +2874,10 @@ $HorzAlign          =   Center
                     OutCuesRightRedZone = 7;
                     OutCuesRightGreenZone = 12;
 
-                    ConnectedSubtitlesLeftGap = 2;
-                    ConnectedSubtitlesRightGap = 0;
-                    ConnectedSubtitlesBehavior = ConnectedSubtitlesBehaviorEnum.SnapInCueToShotChange;
+                    ConnectedSubtitlesInCueClosestLeftGap = 2;
+                    ConnectedSubtitlesInCueClosestRightGap = 0;
+                    ConnectedSubtitlesOutCueClosestLeftGap = 2;
+                    ConnectedSubtitlesOutCueClosestRightGap = 0;
                     ConnectedSubtitlesLeftGreenZone = 12;
                     ConnectedSubtitlesLeftRedZone = 7;
                     ConnectedSubtitlesRightRedZone = 7;
@@ -2919,9 +2914,10 @@ $HorzAlign          =   Center
                     OutCuesRightRedZone = 7;
                     OutCuesRightGreenZone = 12;
 
-                    ConnectedSubtitlesLeftGap = 2;
-                    ConnectedSubtitlesRightGap = 2;
-                    ConnectedSubtitlesBehavior = ConnectedSubtitlesBehaviorEnum.SnapClosestCueToShotChange;
+                    ConnectedSubtitlesInCueClosestLeftGap = 2;
+                    ConnectedSubtitlesInCueClosestRightGap = 2;
+                    ConnectedSubtitlesOutCueClosestLeftGap = 2;
+                    ConnectedSubtitlesOutCueClosestRightGap = 2;
                     ConnectedSubtitlesLeftGreenZone = 12;
                     ConnectedSubtitlesLeftRedZone = 7;
                     ConnectedSubtitlesRightRedZone = 7;
@@ -2958,9 +2954,10 @@ $HorzAlign          =   Center
                     OutCuesRightRedZone = 2;
                     OutCuesRightGreenZone = 12;
 
-                    ConnectedSubtitlesLeftGap = 3;
-                    ConnectedSubtitlesRightGap = 0;
-                    ConnectedSubtitlesBehavior = ConnectedSubtitlesBehaviorEnum.SnapClosestCueToShotChange;
+                    ConnectedSubtitlesInCueClosestLeftGap = 3;
+                    ConnectedSubtitlesInCueClosestRightGap = 0;
+                    ConnectedSubtitlesOutCueClosestLeftGap = 0;
+                    ConnectedSubtitlesOutCueClosestRightGap = 3;
                     ConnectedSubtitlesLeftGreenZone = 2;
                     ConnectedSubtitlesLeftRedZone = 2;
                     ConnectedSubtitlesRightRedZone = 2;
@@ -8367,22 +8364,28 @@ $HorzAlign          =   Center
                         settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                     }
 
-                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesLeftGap");
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesInCueClosestLeftGap");
                     if (subNode != null)
                     {
-                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestLeftGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                     }
 
-                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesRightGap");
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesInCueClosestRightGap");
                     if (subNode != null)
                     {
-                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestRightGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                     }
 
-                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesBehavior");
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesOutCueClosestLeftGap");
                     if (subNode != null)
                     {
-                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ConnectedSubtitlesBehaviorEnum)Enum.Parse(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ConnectedSubtitlesBehaviorEnum), subNode.InnerText);
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestLeftGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                    }
+
+                    subNode = profileNode.SelectSingleNode("ConnectedSubtitlesOutCueClosestRightGap");
+                    if (subNode != null)
+                    {
+                        settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestRightGap = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
                     }
 
                     subNode = profileNode.SelectSingleNode("ConnectedSubtitlesLeftGreenZone");
@@ -11626,9 +11629,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OutCuesLeftRedZone", settings.BeautifyTimeCodes.Profile.OutCuesLeftRedZone.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OutCuesRightRedZone", settings.BeautifyTimeCodes.Profile.OutCuesRightRedZone.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OutCuesRightGreenZone", settings.BeautifyTimeCodes.Profile.OutCuesRightGreenZone.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightGap.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ConnectedSubtitlesBehavior", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesBehavior.ToString());
+                textWriter.WriteElementString("ConnectedSubtitlesInCueClosestLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestLeftGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesInCueClosestRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesInCueClosestRightGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesOutCueClosestLeftGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestLeftGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ConnectedSubtitlesOutCueClosestRightGap", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesOutCueClosestRightGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConnectedSubtitlesLeftGreenZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftGreenZone.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConnectedSubtitlesLeftRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesLeftRedZone.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ConnectedSubtitlesRightRedZone", settings.BeautifyTimeCodes.Profile.ConnectedSubtitlesRightRedZone.ToString(CultureInfo.InvariantCulture));
