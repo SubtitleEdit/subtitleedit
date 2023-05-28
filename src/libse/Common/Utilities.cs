@@ -480,13 +480,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             // do not auto break dialogs or music symbol
             if (text.Contains(Environment.NewLine) && (text.IndexOf('-') >= 0 || text.IndexOf('♪') >= 0))
             {
-                var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
-                if (noTagLines.Count == 2)
+                var sanitizedLines = RemoveUnicodeControlChars(HtmlUtil.RemoveHtmlTags(text, true)).SplitToLines();
+                if (sanitizedLines.Count == 2)
                 {
-                    var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
+                    var arr0 = sanitizedLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     if (language == "ar")
                     {
-                        if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
+                        if (arr0.EndsWith('-') && sanitizedLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
                         {
                             if (Configuration.Settings.Tools.AutoBreakDashEarly)
                             {
@@ -496,7 +496,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else
                     {
-                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
+                        if (arr0.StartsWith('-') && sanitizedLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
                         {
                             if (Configuration.Settings.Tools.AutoBreakDashEarly)
                             {
@@ -504,15 +504,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
                         }
                     }
-                    if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') || noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
+                    if (sanitizedLines[0].StartsWith('♪') && sanitizedLines[0].EndsWith('♪') || sanitizedLines[1].StartsWith('♪') && sanitizedLines[0].EndsWith('♪'))
                     {
                         return input;
                     }
-                    if (noTagLines[0].StartsWith('[') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
+                    if (sanitizedLines[0].StartsWith('[') && sanitizedLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (sanitizedLines[1].StartsWith('-') || sanitizedLines[1].StartsWith('['))))
                     {
                         return input;
                     }
-                    if (noTagLines[0].StartsWith('-') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
+                    if (sanitizedLines[0].StartsWith('-') && sanitizedLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (sanitizedLines[1].StartsWith('-') || sanitizedLines[1].StartsWith('['))))
                     {
                         if (Configuration.Settings.Tools.AutoBreakDashEarly)
                         {
@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (Configuration.Settings.Tools.AutoBreakDashEarly &&
-                    dialogHelper.IsDialog(noTagLines) && noTagLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
+                    dialogHelper.IsDialog(sanitizedLines) && sanitizedLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
                 {
                     return input;
                 }
