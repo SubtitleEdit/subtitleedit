@@ -47,16 +47,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     // Check if we have connected subtitles
                     var result = FixConnectedSubtitles(true, previousParagraph, paragraph);
 
-                    // Check if we have chainable subtitles
+                    // If not, check if we have chainable subtitles
                     if (!result)
                     {
                         result = FixChainableSubtitles(true, previousParagraph, paragraph);
                     }
 
-                    // Then we have a free in cue
+                    // If not, then we have a free in cue
                     if (!result)
                     {
-                        FixInCue(paragraph);
+                        FixInCue(p);
                     }
 
 
@@ -67,16 +67,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     // Check if we have connected subtitles
                     result = FixConnectedSubtitles(false, paragraph, nextParagraph);
 
-                    // Check if we have chainable subtitles
+                    // If not, check if we have chainable subtitles
                     if (!result)
                     {
                         result = FixChainableSubtitles(true, paragraph, nextParagraph);
                     }
 
-                    // Then we have a free out cue
+                    // If not, then we have a free out cue
                     if (!result)
                     {
-                        FixOutCue(paragraph);
+                        FixOutCue(p);
                     }
 
                     // Report progress
